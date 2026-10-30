@@ -105,6 +105,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
     ));
+    const C4_DIRECTED_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-corpus.json"
+    ));
+    const C4_DIRECTED_RELATIONSHIPS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-visual-corpus.json"
+    ));
     const C4_ELEMENT_COLORS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-element-colors-11.16.1-corpus.json"
@@ -160,6 +168,54 @@ mod apple {
     const C4_BOUNDARY_TYPES_VISUAL_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-boundary-types-11.16.1-visual-corpus.json"
+    ));
+    const C4_ELEMENT_TYPES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-element-types-11.16.1-corpus.json"
+    ));
+    const C4_ELEMENT_TYPES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-element-types-11.16.1-visual-corpus.json"
+    ));
+    const C4_TAGS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-tags-11.16.1-corpus.json"
+    ));
+    const C4_TAGS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-tags-11.16.1-visual-corpus.json"
+    ));
+    const C4_LINKS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-links-11.16.1-corpus.json"
+    ));
+    const C4_LINKS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-links-11.16.1-visual-corpus.json"
+    ));
+    const C4_SPRITES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-sprites-11.16.1-corpus.json"
+    ));
+    const C4_SPRITES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-sprites-11.16.1-visual-corpus.json"
+    ));
+    const C4_ELEMENT_STYLE_METADATA_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-element-style-metadata-11.16.1-corpus.json"
+    ));
+    const C4_ELEMENT_STYLE_METADATA_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-element-style-metadata-11.16.1-visual-corpus.json"
+    ));
+    const C4_TITLE_PREAMBLE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-title-preamble-11.16.1-corpus.json"
+    ));
+    const C4_TITLE_PREAMBLE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-title-preamble-11.16.1-visual-corpus.json"
     ));
     const C4_RELATIONSHIP_COLORS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -4941,6 +4997,69 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_pinned_mermaid_c4_directed_relationships_to_png() {
+        let syntax: Value = serde_json::from_str(C4_DIRECTED_RELATIONSHIPS_CORPUS)
+            .expect("C4 directed relationship corpus JSON");
+        let visual: Value = serde_json::from_str(C4_DIRECTED_RELATIONSHIPS_VISUAL_CORPUS)
+            .expect("C4 directed relationship visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"]
+            .as_array()
+            .expect("C4 directed relationship fixtures");
+        let visual_names = visual["fixtures"]
+            .as_array()
+            .expect("C4 directed relationship visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+        let directions = ["up", "down", "left", "right"];
+
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual_names[index], fixture["name"]);
+            let diagram = parse_c4_diagram(
+                fixture["source"].as_str().expect("C4 directed relationship source"),
+            )
+            .expect("C4 directed relationship fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            let diagram_ir::StructuralRelationshipMetadata::C4(metadata) = layout.relationships[0]
+                .metadata
+                .as_ref()
+                .expect("directed relationship layout metadata");
+            assert_eq!(
+                metadata.direction.map(diagram_ir::C4RelationshipDirection::as_str),
+                Some(directions[index % directions.len()])
+            );
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert_eq!(
+                scene.metadata.as_ref().and_then(|metadata| {
+                    metadata.get("c4.relationship.0.direction")
+                }),
+                Some(&directions[index % directions.len()].to_string())
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#6b7280")
+            )));
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_directed_relationships_{index}_e2e.png");
+            write_png(&pixels, &path).expect("C4 directed relationship PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
     fn render_pinned_mermaid_c4_element_colors_to_png() {
         let syntax: Value = serde_json::from_str(C4_ELEMENT_COLORS_CORPUS)
             .expect("C4 element color corpus JSON");
@@ -5145,6 +5264,17 @@ line "Target" [35, 50, 68, 82]"##,
         let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
         let layout = layout_structural_diagram(&diagram);
         assert!(layout.groups.iter().all(|group| group.style.stroke_dash.is_none()));
+        let expected_types = ["node", "node", "nodeL", "nodeR"];
+        for (group, expected_type) in layout.groups.iter().zip(expected_types) {
+            let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+                node_type,
+                ..
+            }) = &group.metadata
+            else {
+                panic!("expected C4 deployment node layout metadata");
+            };
+            assert_eq!(node_type.as_str(), expected_type);
+        }
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
@@ -5155,6 +5285,13 @@ line "Target" [35, 50, 68, 82]"##,
             title_font: font_spec("Helvetica", 16.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
+        let metadata = scene.metadata.as_ref().expect("C4 deployment scene metadata");
+        for (index, expected_type) in expected_types.iter().enumerate() {
+            assert_eq!(
+                metadata.get(&format!("c4.group.{index}.deploymentNodeType")),
+                Some(&expected_type.to_string())
+            );
+        }
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_c4_deployment_nodes_0_e2e.png").unwrap();
         assert!(pixels.width > 0 && pixels.height > 0);
@@ -5183,6 +5320,320 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_c4_boundary_types_0_e2e.png").unwrap();
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_element_types_to_png() {
+        let syntax: Value = serde_json::from_str(C4_ELEMENT_TYPES_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_ELEMENT_TYPES_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixture = &syntax["fixtures"][0];
+        assert_eq!(visual["fixtures"][0], fixture["name"]);
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes[0].stereotype.as_deref(), Some("person"));
+        assert_eq!(layout.nodes[1].stereotype.as_deref(), Some("external_person"));
+        assert_eq!(layout.nodes[19].stereotype.as_deref(), Some("external_component_queue"));
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(
+            instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.rx == 7.0 && ellipse.ry == 7.0
+        )).count(), 2);
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_element_types_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_tags_to_png() {
+        let syntax: Value = serde_json::from_str(C4_TAGS_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_TAGS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixture = &syntax["fixtures"][0];
+        assert_eq!(visual["fixtures"][0], fixture["name"]);
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        for (id, expected) in [
+            ("user", "actor"),
+            ("api", "backend"),
+            ("web", "ui"),
+            ("worker", "async"),
+        ] {
+            let node = layout.nodes.iter().find(|node| node.id == id).unwrap();
+            let Some(diagram_ir::StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref()
+            else {
+                panic!("expected layout C4 node metadata");
+            };
+            assert_eq!(metadata.tags.as_deref(), Some(expected));
+        }
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let metadata = scene.metadata.as_ref().expect("C4 tag scene metadata");
+        for (index, node) in layout.nodes.iter().enumerate() {
+            let Some(diagram_ir::StructuralNodeMetadata::C4(node_metadata)) = node.metadata.as_ref()
+            else {
+                continue;
+            };
+            if let Some(tags) = &node_metadata.tags {
+                assert_eq!(metadata.get(&format!("c4.node.{index}.tags")), Some(tags));
+            }
+        }
+        for (index, group) in layout.groups.iter().enumerate() {
+            let tags = match group.metadata.as_ref() {
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary { tags, .. })
+                | Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { tags, .. }) => tags,
+                _ => continue,
+            };
+            if let Some(tags) = tags {
+                assert_eq!(metadata.get(&format!("c4.group.{index}.tags")), Some(tags));
+            }
+        }
+        for (index, relationship) in layout.relationships.iter().enumerate() {
+            let Some(diagram_ir::StructuralRelationshipMetadata::C4(relationship_metadata)) =
+                relationship.metadata.as_ref()
+            else {
+                continue;
+            };
+            if let Some(tags) = &relationship_metadata.tags {
+                assert_eq!(
+                    metadata.get(&format!("c4.relationship.{index}.tags")),
+                    Some(tags)
+                );
+            }
+        }
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_tags_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_links_to_png() {
+        let syntax: Value = serde_json::from_str(C4_LINKS_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_LINKS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixture = &syntax["fixtures"][0];
+        assert_eq!(visual["fixtures"][0], fixture["name"]);
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        for node in &layout.nodes {
+            let Some(diagram_ir::StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref()
+            else {
+                continue;
+            };
+            assert!(metadata.link.is_some());
+        }
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let metadata = scene.metadata.as_ref().expect("C4 link scene metadata");
+        for (index, node) in layout.nodes.iter().enumerate() {
+            let Some(diagram_ir::StructuralNodeMetadata::C4(node_metadata)) = node.metadata.as_ref()
+            else {
+                continue;
+            };
+            let link = node_metadata.link.as_ref().unwrap();
+            assert_eq!(metadata.get(&format!("c4.node.{index}.link.url")), Some(link));
+            assert!(metadata.contains_key(&format!("c4.node.{index}.link.bounds")));
+        }
+        for (index, group) in layout.groups.iter().enumerate() {
+            let link = match group.metadata.as_ref() {
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary { link, .. })
+                | Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { link, .. }) => link,
+                _ => continue,
+            };
+            let link = link.as_ref().unwrap();
+            assert_eq!(metadata.get(&format!("c4.group.{index}.link.url")), Some(link));
+            assert!(metadata.contains_key(&format!("c4.group.{index}.link.bounds")));
+        }
+        for (index, relationship) in layout.relationships.iter().enumerate() {
+            let Some(diagram_ir::StructuralRelationshipMetadata::C4(relationship_metadata)) =
+                relationship.metadata.as_ref()
+            else {
+                continue;
+            };
+            let link = relationship_metadata.link.as_ref().unwrap();
+            assert_eq!(
+                metadata.get(&format!("c4.relationship.{index}.link.url")),
+                Some(link)
+            );
+        }
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_links_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_sprites_to_png() {
+        let syntax: Value = serde_json::from_str(C4_SPRITES_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_SPRITES_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let diagram =
+            parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let metadata = scene.metadata.as_ref().unwrap();
+        for index in 0..layout.nodes.len() {
+            assert!(metadata.contains_key(&format!("c4.node.{index}.sprite")));
+        }
+        assert_eq!(
+            metadata.get("c4.group.0.sprite").map(String::as_str),
+            Some("host.png")
+        );
+        for index in 0..layout.relationships.len() {
+            assert!(metadata.contains_key(&format!("c4.relationship.{index}.sprite")));
+        }
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_sprites_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_element_style_metadata_to_png() {
+        let syntax: Value = serde_json::from_str(C4_ELEMENT_STYLE_METADATA_CORPUS).unwrap();
+        let visual: Value =
+            serde_json::from_str(C4_ELEMENT_STYLE_METADATA_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let diagram =
+            parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let metadata = scene.metadata.as_ref().unwrap();
+        assert_eq!(
+            metadata.get("c4.node.0.shape").map(String::as_str),
+            Some("RoundedBoxShape()")
+        );
+        assert_eq!(
+            metadata.get("c4.node.0.legendText").map(String::as_str),
+            Some("User legend")
+        );
+        let zone_index = layout.groups.iter().position(|group| group.id == "zone").unwrap();
+        let host_index = layout.groups.iter().position(|group| group.id == "host").unwrap();
+        assert_eq!(
+            metadata
+                .get(&format!("c4.group.{zone_index}.shape"))
+                .map(String::as_str),
+            Some("EightSidedShape()")
+        );
+        assert_eq!(
+            metadata
+                .get(&format!("c4.group.{host_index}.sprite"))
+                .map(String::as_str),
+            Some("host-style.png")
+        );
+        let pixels = render(&scene);
+        write_png(
+            &pixels,
+            "/tmp/mermaid_c4_element_style_metadata_0_e2e.png",
+        )
+        .unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_title_preamble_to_png() {
+        let syntax: Value = serde_json::from_str(C4_TITLE_PREAMBLE_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_TITLE_PREAMBLE_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().unwrap();
+        let visual_names = visual["fixtures"].as_array().unwrap();
+
+        for (index, (fixture, visual_name)) in fixtures.iter().zip(visual_names).enumerate() {
+            assert_eq!(visual_name, &fixture["name"]);
+            let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+            let expected_title = diagram.title.clone().unwrap();
+            let layout = layout_structural_diagram(&diagram);
+            assert_eq!(layout.title.as_ref(), Some(&expected_title));
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color {
+                        r: 255,
+                        g: 255,
+                        b: 255,
+                        a: 255,
+                    },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::GlyphRun(_)
+            )));
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_title_preamble_{index}_e2e.png");
+            write_png(&pixels, &path).unwrap();
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
     }
 
     #[test]

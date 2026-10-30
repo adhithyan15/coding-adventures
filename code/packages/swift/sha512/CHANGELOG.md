@@ -2,6 +2,10 @@
 
 All notable changes to the SHA-512 Swift package will be documented in this file.
 
+## [0.1.1] - Unreleased
+
+- Consume the bounded HF04 corpus and preserve both halves of the streaming length counter.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

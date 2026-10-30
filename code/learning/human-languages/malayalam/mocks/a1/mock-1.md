@@ -7,6 +7,7 @@ Administration: reading 20 minutes, listening 18, writing 20, speaking 10 with
 
 ### Signs and forms — items 1–7
 
+<!-- mock-part:a1-reading-signs-and-forms -->
 1. **പ്രവേശനം** — A entrance / B exit / C closed
 2. **പുറത്ത്** — A inside / B outside / C upstairs
 3. **ഇന്ന് അടച്ചിരിക്കുന്നു** — A open today / B closed today / C closes tomorrow
@@ -14,9 +15,11 @@ Administration: reading 20 minutes, listening 18, writing 20, speaking 10 with
 5. Form **പേര്: മീര** — A name / B city / C language
 6. Form **നഗരം: ജയ്പൂർ** — A name / B city / C time
 7. Form **ഭാഷ: മലയാളം** — A Malayalam / B English / C Marathi
+<!-- /mock-part:a1-reading-signs-and-forms -->
 
 ### Short messages — items 8–14
 
+<!-- mock-part:a1-reading-short-messages -->
 8. **ഞാൻ അഞ്ചു മണിക്ക് വരും.** A I will come at five. / B I came at five. / C I leave at four.
 9. **ഇന്ന് സ്കൂൾ അടച്ചിരിക്കുന്നു.** A School is closed today. / B School opens today. / C School is far.
 10. **ദയവായി വെള്ളം കൊണ്ടുവരൂ.** A Please bring water. / B Please make tea. / C Please sit.
@@ -24,9 +27,11 @@ Administration: reading 20 minutes, listening 18, writing 20, speaking 10 with
 12. **എനിക്ക് ചായ വേണം.** A I want tea. / B I have tea. / C I do not drink tea.
 13. **നാളെ വീണ്ടും കാണാം.** A We will meet again tomorrow. / B We met yesterday. / C Come today.
 14. **ഞാൻ വീട്ടിലാണ്.** A I am at home. / B I am going home. / C My house is new.
+<!-- /mock-part:a1-reading-short-messages -->
 
 ### Personal descriptions — items 15–20
 
+<!-- mock-part:a1-reading-personal-descriptions -->
 - **അമൻ ഡൽഹിയിൽ നിന്നാണ്. അവൻ മലയാളം സംസാരിക്കുന്നു; അവന് ചായ ഇഷ്ടമാണ്.**
 - **ലീല ജയ്പൂരിൽ നിന്നാണ്. അവൾ മലയാളവും ഇംഗ്ലീഷും സംസാരിക്കുന്നു. അവൾക്ക് വെള്ളം വേണം.**
 - **രവി ആഗ്രയിൽ നിന്നാണ്. അവൻ ബസിൽ സ്കൂളിലേക്ക് പോകുന്നു.**
@@ -37,24 +42,30 @@ Administration: reading 20 minutes, listening 18, writing 20, speaking 10 with
 18. Who travels by bus? A Aman / B Lila / C Ravi
 19. Who likes tea? A Aman / B Lila / C Ravi
 20. Who is from Agra? A Aman / B Lila / C Ravi
+<!-- /mock-part:a1-reading-personal-descriptions -->
 
 ## Listening — 18 minutes
 
 Read each script twice at 90–110 words per minute.
 
+<!-- mock-part:a1-listening-announcements -->
 1. **ശ്രദ്ധിക്കൂ, ബസ് അഞ്ചു മിനിറ്റിൽ വരും.** A bus in 5 minutes / B train at 5 / C school in 5 minutes
 2. **ഇന്ന് ലൈബ്രറി അടച്ചിരിക്കുന്നു.** A library closed / B school closed / C library open
 3. **വെള്ളം പുറത്താണ്.** A water outside / B tea inside / C bus outside
 4. **ദയവായി ഇവിടെ ഇരിക്കൂ.** A sit here / B wait outside / C stand here
 5. **ക്ലാസ് ഒമ്പതു മണിക്ക് തുടങ്ങും.** A class starts at 9 / B bus leaves at 9 / C class ends at 9
 6. **കട ഇന്ന് തുറന്നിരിക്കുന്നു.** A shop open today / B shop closed today / C shop opens tomorrow
+<!-- /mock-part:a1-listening-announcements -->
+<!-- mock-part:a1-listening-short-exchanges -->
 7. A: **നിന്റെ പേര് എന്താണ്?** B: **എന്റെ പേര് നീൽ ആണ്.** A asks about: A name / B city / C language
 8. A: **സുഖമാണോ?** B: **എനിക്ക് സുഖമാണ്.** B is: A fine / B tired / C at home
 9. A: **ചായയോ വെള്ളമോ?** B: **വെള്ളം, ദയവായി.** B chooses: A tea / B water / C neither
 10. A: **നിങ്ങൾ എവിടെ നിന്നാണ്?** B: **ഞാൻ ഭോപ്പാലിൽ നിന്നാണ്.** B is from: A Delhi / B Bhopal / C Jaipur
 11. A: **ബസ് എപ്പോൾ വരും?** B: **പത്തു മണിക്ക്.** The bus comes at: A 5 / B 9 / C 10
 12. A: **നിങ്ങൾ മലയാളം സംസാരിക്കുമോ?** B: **അതെ, കുറച്ച്.** B speaks: A no Malayalam / B some Malayalam / C only English
+<!-- /mock-part:a1-listening-short-exchanges -->
 
+<!-- mock-part:a1-listening-personal-account -->
 Account for items 13–17:
 
 **എന്റെ പേര് സാറ ആണ്. ഞാൻ പുണെയിൽ താമസിക്കുന്നു. രാവിലെ ഏഴ് മണിക്ക്
@@ -66,6 +77,7 @@ Account for items 13–17:
 15. She gets up at: A 7 / B 8 / C 12
 16. She goes to work by: A train / B bus / C bicycle
 17. In the evening she: A studies Malayalam / B drinks tea at work / C meets a teacher
+<!-- /mock-part:a1-listening-personal-account -->
 
 ## Writing — 20 minutes
 
@@ -73,18 +85,28 @@ Use one continuous 20-minute clock: spend 7 minutes on the practical form and
 13 minutes on the named-reader message. Move on when the first 7 minutes end;
 stop when the full 20 minutes end. Review the attempt later, outside this paper.
 
+<!-- mock-part:a1-writing-practical-form -->
 1. Complete all fields independently in Malayalam script: **പേര്**, **നഗരം**,
    **ഭാഷ**, **രാവിലെ എഴുന്നേൽക്കുന്ന സമയം**, **ഇഷ്ടപ്പെട്ട പാനം**,
    **ഇന്നത്തെ തീയതി**.
+<!-- /mock-part:a1-writing-practical-form -->
+<!-- mock-part:a1-writing-reader-purpose-message -->
 2. Write 30–40 Malayalam words to a new classmate named **റീമ**. Introduce
    yourself, say your city and one language, and propose a place and time to
    meet. The reader and purpose must be clear.
+<!-- /mock-part:a1-writing-reader-purpose-message -->
 
 ## Speaking — 10 minutes
 
+<!-- mock-part:a1-speaking-personal-interview -->
 1. Interview: answer five questions about your name, city, languages, daily
    routine, and one preference.
+<!-- /mock-part:a1-speaking-personal-interview -->
+<!-- mock-part:a1-speaking-prepared-description -->
 2. Prepare for five minutes, then describe a familiar person, place, object, or
    routine for one minute.
+<!-- /mock-part:a1-speaking-prepared-description -->
+<!-- mock-part:a1-speaking-transactional-role-play -->
 3. Role-play: at a café, greet the server, ask for one drink, ask its price, and
    close politely.
+<!-- /mock-part:a1-speaking-transactional-role-play -->

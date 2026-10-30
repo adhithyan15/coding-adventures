@@ -22,6 +22,12 @@ it can represent falls within an excluded subtree. It then requires each
 remaining name, including every expansion of a wildcard, to stay within a
 permitted subtree when a permitted set is present.
 
+For mixed DNS/IP values, `evaluate_dns_name_subtrees` evaluates an explicit
+borrowed DNS component so later path policy can separately require the
+repository-owned IP evaluator. The original `evaluate_dns_names` whole-value
+entry point continues to reject any retained IP subtree, preventing existing
+callers from silently dropping that policy.
+
 ## Security boundary
 
 The package uses repository-owned `der-asn1` and `der-tlv` only. It shares the
@@ -30,15 +36,16 @@ array, validates exact tags and canonical DER framing, and keeps input bytes
 out of diagnostics. Unknown, duplicate, reversed, or empty top-level fields,
 unsupported GeneralName choices, invalid IP widths, minimum/maximum distances,
 and trailing fields fail closed. Each top-level constraint field and the
-presented-name collection are capped at 256. DNS evaluation is allocation-free,
-fails closed if any IP subtree remains unevaluated, validates all constraints
-before matching, gives exclusion precedence, distinguishes wildcard overlap
-from wildcard containment, and uses strict ASCII label, leading-dot, and
-complete-leftmost-label wildcard rules with case-insensitive label-boundary
-comparison.
+presented-name collection are capped at 256. Both DNS evaluation entry points
+are allocation-free, validate all constraints before matching, give exclusion
+precedence, distinguish wildcard overlap from wildcard containment, and use
+strict ASCII label, leading-dot, and complete-leftmost-label wildcard rules
+with case-insensitive label-boundary comparison. The whole-value entry point
+also fails closed if any IP subtree remains unevaluated.
 
 Successful decoding or evaluation proves only that supplied strings satisfy
-the decoded supported DNS subtree sets. It does not extract names from a
+the supplied supported DNS subtree sets. Component evaluation does not prove
+that IP constraints were evaluated. The package does not extract names from a
 certificate, bind the result to exact certificate or selected-anchor evidence,
 evaluate IP or other non-DNS subtrees, construct or validate a path, grant
 trust, check
