@@ -1828,6 +1828,27 @@ policy and decoding, handshake state, repository-owned record protection,
 certificate-path validation, revocation, TLS transport, and HTTP composition
 remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-certificate-request-message` prerequisite now
+decodes one exact TLS 1.3 `CertificateRequest` body. A caller-owned limit
+bounds the one-byte-length-prefixed `certificate_request_context`, and the
+existing generic extension-block limits bound the complete extension payload
+and retained entry count. The message-specific decoder rejects an empty
+extension vector while leaving individual extension requirements to later
+policy. Success borrows the exact body, request context, and ordered
+duplicate-free opaque extensions without allocation. Empty and non-empty
+contexts remain structural data, unknown extensions remain unclassified, and
+stable failures retain no context or extension bytes.
+
+This syntax layer does not authorize `CertificateRequest` in a main or
+post-handshake state, enforce an empty main-handshake context, establish
+connection-wide context uniqueness or unpredictability, require or decode the
+`signature_algorithms` extension, authorize client authentication, access a
+client key or credential, produce a client certificate or signature, update a
+transcript, send an alert, derive keys, protect records, validate certificates,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those semantic, credential, audit, trace, and external-effect decisions remain
+future reviewed composition work. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-inner-plaintext` prerequisite now specifies the
 authenticated cleartext syntax inside a protected TLS 1.3 record. Its decoder
 first bounds the complete caller-supplied cleartext, scans backward only within
