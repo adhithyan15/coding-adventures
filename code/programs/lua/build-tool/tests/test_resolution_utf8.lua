@@ -153,7 +153,7 @@ local function shell_quote(value)
     return "'" .. value:gsub("'", "'\"'\"'") .. "'"
 end
 
-local function active_lua_executable(arguments)
+local function active_lua_executable(arguments, windows)
     -- Lua exposes arguments that preceded the script at negative indexes.
     -- arg[-1] is the interpreter for a direct script, but launchers such as
     -- LuaRocks' Busted wrapper insert -e chunks between it and the script.
@@ -162,7 +162,26 @@ local function active_lua_executable(arguments)
     while arguments[index - 1] ~= nil do
         index = index - 1
     end
-    return arguments[index]
+    local executable = arguments[index]
+    if windows and not executable:find("[\\/]") and
+        not executable:lower():match("%.exe$") then
+        -- LuaRocks' Windows wrapper can retain the bare configured token
+        -- `lua`. Ask cmd.exe for the executable specifically so a lua.cmd or
+        -- other same-named wrapper cannot be selected on the second launch.
+        executable = executable .. ".exe"
+    end
+    return executable
+end
+
+local function shell_command(parts, windows)
+    local command = table.concat(parts, " ")
+    if windows then
+        -- cmd /C strips a leading quote using special first/last-quote rules.
+        -- Give /S an explicit outer pair so the inner executable and argument
+        -- quotes survive exactly, including the output redirections.
+        return 'cmd.exe /d /s /c "' .. command .. '"'
+    end
+    return command
 end
 
 describe("Lua rockspec UTF-8 resolution contract", function()
@@ -215,15 +234,41 @@ describe("Lua rockspec UTF-8 resolution contract", function()
     end)
 
     it("finds the active interpreter behind launcher options", function()
-        assert.are.equal("lua", active_lua_executable({[-1] = "lua"}))
+        assert.are.equal("lua", active_lua_executable({[-1] = "lua"}, false))
+        assert.are.equal("lua.exe", active_lua_executable({[-1] = "lua"}, true))
         assert.are.equal(
             "C:\\Lua\\lua.exe",
             active_lua_executable({
                 [-3] = "C:\\Lua\\lua.exe",
                 [-2] = "-e",
                 [-1] = "require('luarocks.loader')",
-            })
+            }, true)
         )
+        assert.are.equal(
+            'cmd.exe /d /s /c ""C:\\Lua\\lua.exe" "..\\build.lua" 2>"stderr.txt""',
+            shell_command({
+                '"C:\\Lua\\lua.exe"',
+                '"..\\build.lua"',
+                '2>"stderr.txt"',
+            }, true)
+        )
+    end)
+
+    it("preserves child exit and spaced redirection through the shell helper", function()
+        local root = new_temporary_root()
+        local output_path = root .. "/probe output.txt"
+        local command = shell_command({
+            shell_quote(active_lua_executable(arg, is_windows)),
+            "-e",
+            shell_quote("io.write('probe'); os.exit(7)"),
+            "1>" .. shell_quote(output_path),
+        }, is_windows)
+
+        local success, _, exit_code = os.execute(command)
+        if success then exit_code = 0 end
+
+        assert.are.equal(7, exit_code)
+        assert.are.equal("probe", read_file(output_path))
     end)
 
     it("rejects malformed, overlong, surrogate, and out-of-range sequences", function()
@@ -261,8 +306,8 @@ describe("Lua rockspec UTF-8 resolution contract", function()
         local _, root = materialize_fixture("resolution-lua-invalid-utf8.json")
         local stdout_path = root .. "/stdout.txt"
         local stderr_path = root .. "/stderr.txt"
-        local command = table.concat({
-            shell_quote(active_lua_executable(arg)),
+        local command = shell_command({
+            shell_quote(active_lua_executable(arg, is_windows)),
             shell_quote("../build.lua"),
             "--root",
             shell_quote(root),
@@ -272,7 +317,7 @@ describe("Lua rockspec UTF-8 resolution contract", function()
             "lua",
             "1>" .. shell_quote(stdout_path),
             "2>" .. shell_quote(stderr_path),
-        }, " ")
+        }, is_windows)
 
         local success, _, exit_code = os.execute(command)
         if success then exit_code = 0 end
