@@ -1,0 +1,7 @@
+[package]
+name = "tls13-handshake"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free TLS 1.3 handshake-message framing"
+
+[dependencies]

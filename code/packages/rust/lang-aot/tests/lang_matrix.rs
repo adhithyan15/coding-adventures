@@ -1020,18 +1020,43 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
-    // A negative argument. Not on Vm / Jit: the `<` on the parameter reaches
-    // vm-core as `call_builtin "<"`, which it does not register
-    // (`UnknownOpcode("builtin \"<\"")`, with or without an `(x : int)`
-    // annotation) — a capability gap, not a sign bug. Not on Clr / Beam: not
-    // probed (no `dotnet` / `erl` where this row was added), and no other row
-    // proves a comparison on a function parameter there.
+    // A negative argument. #18463 registers vm-core's dynamic ordering
+    // builtins, so the `<` on the unannotated parameter also runs on Vm / Jit.
+    // Not on Clr / Beam: not probed (no `dotnet` / `erl` where this row was
+    // added), and no other row proves a comparison on a function parameter
+    // there.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (f x) (if (< x 0) 42 7)) (f -5)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Twig — the other three dynamic ordering builtins on Vm / Jit (#18463),
+    // nested so each has its own wrong answer: a broken `<=` gives 3, `>`
+    // gives 2, and `>=` gives 1. `-5` sits on the boundary of `>=`
+    // (non-strict) and below zero (sign).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (<= x 0) (if (> x -10) (if (>= x -5) 42 1) 2) 3)) (f -5)",
+        expect: Expect::Exit(42),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `pair?` on a parameter (#18463): the shared lowering turns `cons`/`car`/
+    // `cdr`/`null?` into heap ops but leaves `pair?` a `call_builtin`, which
+    // vm-core now registers. A cell answers 40, an integer 2: a `pair?` stuck
+    // at true gives 80, and one stuck at false gives 4.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (pair? x) 40 2)) (+ (f (cons 1 2)) (f 5))",
+        expect: Expect::Exit(42),
+        backends: &[Vm, Jit],
         release: None,
         case: None,
     },
@@ -6961,6 +6986,72 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(2) ^ entier(2) ^ entier(1)) * sign(pick())) mod 5); output(result) end",
         expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Checked integer div/mod may connect nested static normalizers while a
+    // following reduction keeps the final widening exact.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) div entier(5)) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Equal checked conditional branches may connect nested static
+    // normalizers without widening their wide integer result early.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; boolean flag; real procedure pick; pick := 3.5; real result; flag := choose(); result := entier((abs(if flag then entier(-9007199254740993) div entier(5) else entier(-9007199254740990) div entier(5)) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Canonical exact real-function identities may connect nested static
+    // normalizers without widening their wide integer neighbor early.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(cos(entier(0)))) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("2"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Exact perfect-square roots may connect nested static normalizers without
+    // routing a wide integer radicand through binary64.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372030926249001)))) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `entier(sqrt(n))` keeps a non-square wide integer radicand exact and
+    // reduces to its mathematical floor root before any binary64 widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `entier(-sqrt(n))` keeps a non-square wide integer radicand exact and
+    // applies floor semantics through the negated ceiling root.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -15386,9 +15477,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
     let expected = [
         // Twig: 49 rows on all eight columns, #18453's four negative-operand
         // comparison rows (three on all eight and one on NativeAot / Llvm /
-        // Wasm / Jvm), then #18483's five negative-operand comparison rows on
-        // six columns (all but Clr / Beam).
-        (Language::Twig, 58, 450),
+        // Wasm / Jvm / Vm / Jit), #18463's two extra dynamic compare / `pair?`
+        // rows on Vm and Jit only, then #18483's five negative-operand
+        // comparison rows on six columns (all but Clr / Beam).
+        (Language::Twig, 60, 456),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),
@@ -17816,6 +17908,173 @@ fn algol_powered_nested_wide_static_integer_normalizers_run_on_every_available_s
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but powered nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_reduced_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("abs(entier(-9007199254740993) div entier(5)) * sign(pick())) mod 5")
+        })
+        .expect(
+            "the reduced nested wide-static-normalizer ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but reduced nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "if flag then entier(-9007199254740993) div entier(5) else entier(-9007199254740990) div entier(5)",
+                )
+        })
+        .expect(
+            "the conditional nested wide-static-normalizer ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_identity_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("entier(-9007199254740993) + entier(cos(entier(0)))")
+        })
+        .expect(
+            "the identity nested wide-static-normalizer ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but identity nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_perfect_square_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("entier(sqrt(entier(9223372030926249001)))")
+        })
+        .expect(
+            "the perfect-square nested wide-static-normalizer ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but perfect-square nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_floor_root_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("entier(sqrt(entier(9223372030926249000)))")
+        })
+        .expect(
+            "the floor-root nested wide-static-normalizer ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but floor-root nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_signed_floor_root_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("entier(-sqrt(entier(9223372030926249000)))")
+        })
+        .expect(
+            "the signed floor-root nested wide-static-normalizer ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but signed floor-root nested wide static integer normalizers did not complete"
             );
             continue;
         };

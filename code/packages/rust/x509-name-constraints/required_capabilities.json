@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-name-constraints",
   "capabilities": [],
-  "justification": "Pure allocation-free structural decoding and caller-supplied DNS subtree evaluation for reviewed-anchor NameConstraints contents. It performs no filesystem, network, process, environment, clock, key, signing, cryptographic verification, trust-root selection, or certificate-path access."
+  "justification": "Pure allocation-free structural decoding of caller-supplied DNS and IP NameConstraints plus caller-supplied DNS subtree evaluation. It performs no filesystem, network, process, environment, clock, key, signing, cryptographic verification, trust-root selection, or certificate-path access."
 }
