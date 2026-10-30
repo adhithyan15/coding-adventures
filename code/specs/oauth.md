@@ -804,6 +804,20 @@ out-of-range signature representatives, and recovers the exact modulus-width
 RSAVP1 encoded message with repository-owned arithmetic. It adds no private-key
 operation, hashing, padding interpretation, certificate-signature verdict,
 path trust, or transport readiness; it is not by itself a verifier.
+A bounded `rsa-pss-sha256-signature` composition now verifies one exact public
+RSASSA-PSS signature for the fixed SHA-256, MGF1-SHA-256, 32-byte-salt profile.
+It accepts only a previously validated RSA public key, an exact modulus-width
+signature, an already-computed 32-byte message digest, exact caller-owned DB
+scratch, and caller-owned RSA and encoded-message ceilings. It derives
+`emBits = modBits - 1`, applies the repository-owned RSA public operation, and
+requires the complete fixed-profile EMSA-PSS verdict. Its borrowed non-copyable
+evidence binds the exact key, signature bytes, and message digest used.
+
+This signature evidence does not hash a message, parse RSA-PSS parameters or a
+certificate, choose an algorithm or issuer, establish certificate roles or a
+path, select trust roots, check time, names, or revocation, process TLS or HTTP,
+authorize OAuth transport, or perform any external effect. It is not evidence
+of certificate, HTTPS, or live-provider readiness.
 A bounded, data-driven `rsa-pss-encoded-message-layout` prerequisite now
 validates the public outer layout consumed by a future RFC 8017 EMSA-PSS
 verifier. Caller policy supplies the selected hash length, salt length, and an
