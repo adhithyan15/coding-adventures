@@ -822,6 +822,21 @@ select an implementation, hash, run MGF1, validate PSS encoding, parse or
 operate on an RSA key, apply RSAVP1, or establish a signature verdict.
 Certificate processing, path and hostname validation, trust roots, revocation,
 TLS, HTTP, OAuth transport, and network effects remain unavailable.
+
+A bounded `x509-rsassa-pss-parameters` prerequisite now decodes the public
+RFC 4055 / RFC 8017 parameter structure carried by an X.509 signature
+AlgorithmIdentifier. It requires `id-RSASSA-PSS` with present parameters,
+handles the four explicitly tagged fields in canonical order, applies omitted
+defaults, accepts the specified SHA identifier parameter forms, and recognizes
+the explicit SHA-1, MGF1-SHA-1, and trailer-field-1 defaults required for RFC
+4055 signature-validation compatibility. It rejects an explicit default salt
+length under DER omission rules and preserves independent message hash, MGF1
+hash, salt length, and trailer field values for later policy.
+
+This decoded structure grants no algorithm approval, implementation routing,
+key authority, signature verdict, certificate role, path or hostname
+validation, trust root, revocation, TLS, HTTP, OAuth transport, or network
+effect. Concrete HTTPS remains unavailable.
 A bounded `x509-rsa-pkcs1-v1-5-sha256-signature` composition now verifies one
 exact certificate signature with repository-owned primitives. It requires the
 canonical `sha256WithRSAEncryption` identifier with present NULL parameters,
