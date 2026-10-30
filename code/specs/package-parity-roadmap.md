@@ -20160,3 +20160,15 @@ TypeScript wasm-types, Rust X.509, and Mermaid C4 work. Normal merge
 changes neither launcher repair path. Auto-merge remains disabled; exact-head
 validation, independent review, a normal non-force push, and a completely
 fresh terminal hosted matrix are still mandatory.
+
+Fresh run `41084365806` then proved the repaired launcher on exact reviewed
+head `ae085ee95c1d8f0a6d24f6075bc4e13fa5902b7b`: Windows build job
+`124163082997` completed successfully. The remaining matrix was still running
+when main advanced to `8ade9e7e201ac3f2c37230ec9afd493d167755bc`
+through the TypeScript wasm-leb128 node:test migration. Its wasm-leb128 package
+and shared wasm-types lockfile changes do not overlap the Lua/Go graph-diff
+implementation, launcher regression, lesson, or lifecycle paths. Normal merge
+`8b19b41b452d7cbc5c9ad80ca01a045f37f58b01` preserves both histories. The
+previous exact-head results cannot authorize merge after another lifecycle
+push, so validation, independent review, and a completely fresh terminal
+matrix remain mandatory; auto-merge stays disabled.
