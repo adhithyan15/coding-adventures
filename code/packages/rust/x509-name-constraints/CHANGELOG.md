@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 — 2026-10-30
+
+- Added an explicit borrowed DNS-component evaluator for later composition
+  with separate IP NameConstraints policy.
+- Preserved the whole-value DNS evaluator's fail-closed rejection of retained
+  IP subtrees and bounded all three caller-supplied collections.
+
 ## 0.4.0 — 2026-10-29
 
 - Added bounded complete-DER retention for exact 8-octet IPv4 and 32-octet

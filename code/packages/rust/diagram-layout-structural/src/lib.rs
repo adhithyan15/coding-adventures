@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.35.0";
+pub const VERSION: &str = "0.39.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -325,7 +325,11 @@ fn node_width(node: &StructuralNode, architecture_config: Option<&ArchitectureCo
         .map(str::len)
         .max()
         .unwrap_or(0);
-    let text_w = (label_width.max(max_entry) as f64 * char_width + 24.0).ceil();
+    let stereotype_width = structural_stereotype(node).map_or(0, |value| value.len());
+    let horizontal_padding = if c4_person_type(node).is_some() { 80.0 } else { 24.0 };
+    let text_w = (label_width.max(max_entry).max(stereotype_width) as f64 * char_width
+        + horizontal_padding)
+        .ceil();
     let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
         MIN_NODE_W * config.icon_size / 80.0
     });
@@ -356,7 +360,9 @@ fn node_header_height(
     architecture_config: Option<&ArchitectureConfig>,
     font_size: f64,
 ) -> f64 {
-    let base_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
+    let base_height = if c4_person_type(node).is_some() {
+        64.0_f64.max(font_size * 3.2)
+    } else if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
         architecture_config.map_or(72.0, |config| config.icon_size * 0.9).max(font_size * 2.4)
     } else {
         HEADER_H.max(font_size * 2.4)
@@ -367,6 +373,17 @@ fn node_header_height(
         base_height.max((label_lines + stereotype_lines) as f64 * font_size * 1.4 + 16.0)
     } else {
         base_height
+    }
+}
+
+fn c4_person_type(node: &StructuralNode) -> Option<&str> {
+    match node.metadata.as_ref() {
+        Some(StructuralNodeMetadata::C4(metadata))
+            if matches!(metadata.element_type.as_str(), "person" | "external_person") =>
+        {
+            Some(metadata.element_type.as_str())
+        }
+        _ => None,
     }
 }
 
@@ -385,6 +402,13 @@ fn architecture_icon_text(node: &StructuralNode) -> Option<&str> {
             metadata.icon_text.as_deref()
         }
         _ => None,
+    }
+}
+
+fn structural_stereotype(node: &StructuralNode) -> Option<String> {
+    match node.metadata.as_ref() {
+        Some(StructuralNodeMetadata::C4(metadata)) => Some(metadata.element_type.clone()),
+        _ => node.stereotype.clone(),
     }
 }
 
@@ -467,9 +491,10 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
                 width: nw,
                 height: nh,
                 header: node.label.clone(),
-                stereotype: node.stereotype.clone(),
+                stereotype: structural_stereotype(node),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
+                metadata: node.metadata.clone(),
                 style: structural_style(node, architecture_config),
                 compartments: comps,
             },
@@ -556,9 +581,10 @@ fn layout_directional_nodes(
                 width,
                 height,
                 header: node.label.clone(),
-                stereotype: node.stereotype.clone(),
+                stereotype: structural_stereotype(node),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
+                metadata: node.metadata.clone(),
                 style: structural_style(node, architecture_config),
                 compartments,
             },
@@ -1468,6 +1494,7 @@ fn layout_relationships(
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
                 label,
+                metadata: rel.metadata.clone(),
                 style: structural_relationship_style(rel),
             })
         })
@@ -1589,7 +1616,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.35.0");
+        assert_eq!(crate::VERSION, "0.39.0");
     }
 
     #[test]
