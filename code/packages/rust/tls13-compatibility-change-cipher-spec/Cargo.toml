@@ -1,0 +1,7 @@
+[package]
+name = "tls13-compatibility-change-cipher-spec"
+version = "0.1.0"
+edition = "2021"
+description = "Exact TLS 1.3 compatibility ChangeCipherSpec body framing"
+
+[dependencies]
