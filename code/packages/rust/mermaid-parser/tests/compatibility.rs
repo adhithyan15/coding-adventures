@@ -149,6 +149,14 @@ const C4_LINKS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-links-11.16.1-visual-corpus.json"
 ));
+const C4_SPRITES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-sprites-11.16.1-corpus.json"
+));
+const C4_SPRITES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-sprites-11.16.1-visual-corpus.json"
+));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -2983,6 +2991,44 @@ fn pinned_c4_links_reach_semantic_ir() {
             panic!("expected C4 relationship metadata");
         };
         assert_eq!(metadata.link.as_deref(), Some(expected));
+    }
+}
+
+#[test]
+fn pinned_c4_sprites_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_SPRITES_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_SPRITES_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let diagram =
+        parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    for (node, expected) in diagram
+        .nodes
+        .iter()
+        .zip(["person.png", "api.png", "worker.png"])
+    {
+        let Some(diagram_ir::StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref()
+        else {
+            panic!("expected C4 node metadata")
+        };
+        assert_eq!(metadata.sprite.as_deref(), Some(expected));
+    }
+    let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { sprite, .. }) =
+        diagram.groups[0].metadata.as_ref()
+    else {
+        panic!("expected deployment metadata")
+    };
+    assert_eq!(sprite.as_deref(), Some("host.png"));
+    for (relationship, expected) in diagram
+        .relationships
+        .iter()
+        .zip(["call.png", "queue.png"])
+    {
+        let Some(diagram_ir::StructuralRelationshipMetadata::C4(metadata)) =
+            relationship.metadata.as_ref()
+        else {
+            panic!("expected relationship metadata")
+        };
+        assert_eq!(metadata.sprite.as_deref(), Some(expected));
     }
 }
 

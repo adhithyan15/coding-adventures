@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.159.0";
+pub const VERSION: &str = "0.160.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14351,6 +14351,7 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
         element_type: c4_element_type(macro_name).into(),
         technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
         description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
+        sprite: keyed("$sprite").or_else(|| positional(if uses_technology { 4 } else { 3 })),
         tags: keyed("$tags").or_else(|| positional(if uses_technology { 5 } else { 4 })),
         link: keyed("$link").or_else(|| positional(if uses_technology { 6 } else { 5 })),
     })
@@ -14398,6 +14399,7 @@ fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGrou
                 },
                 technology: argument("$type", 2),
                 description: argument("$descr", 3),
+                sprite: argument("$sprite", 4),
                 tags: argument("$tags", 5),
                 link: argument("$link", 6),
             })
@@ -14463,6 +14465,7 @@ fn c4_relationship_metadata(
         },
         technology: keyed("$techn").or_else(|| positional(3)),
         description: keyed("$descr").or_else(|| positional(4)),
+        sprite: keyed("$sprite").or_else(|| positional(5)),
         tags: keyed("$tags").or_else(|| positional(6)),
         link: keyed("$link").or_else(|| positional(7)),
     })
@@ -20016,7 +20019,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.159.0");
+        assert_eq!(crate::VERSION, "0.160.0");
     }
 
     #[test]
