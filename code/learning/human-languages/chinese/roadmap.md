@@ -257,6 +257,12 @@ rows in all. Chinese attains A1: 641 headwords and 172 verbs at or below A1. Nex
 the A2 rung, whose two missing spine nodes are talking about the future and reading
 practical texts.
 
+Two original A1 four-skill timed mock forms are authored as separate papers,
+examiner keys, rubrics, and manifests. They assess a small, taught-word A1
+sample rather than adding lesson time. The mocks remain project-defined and
+pending qualified independent Chinese-language review; no official HSK
+equivalence or readiness is claimed.
+
 ## The A2 core (delivered, chapters 147-157)
 
 Eleven hand-authored chapters, 78 lessons. `SPINE-TALK-ABOUT-FUTURE` (chapters
