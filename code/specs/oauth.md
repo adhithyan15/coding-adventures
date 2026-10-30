@@ -2252,6 +2252,27 @@ open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `http1-request-host-authority` prerequisite now validates
+one caller-borrowed ASCII DNS name and optional non-zero port under explicit
+caller limits, then encodes the exact HTTP/1 `Host` field value into
+caller-owned storage. DNS labels use the LDH profile, cannot be empty or exceed
+63 bytes, and cannot begin or end with a hyphen. A terminal root dot, URI
+delimiters, whitespace, controls, IPv4/IPv6 literals including legacy numeric
+spellings, Unicode, and other non-DNS authority forms fail closed. Encoding
+lowercases the DNS name and appends the
+caller-supplied port in shortest decimal form only after proving the complete
+output fits, so an undersized output remains unchanged. Stable failures retain
+no hostname, port, length, or output bytes, and Debug redacts the borrowed
+hostname.
+
+This syntax boundary does not parse a URL, decide whether a configured port is
+the scheme default, create the surrounding `Host` field line, compare the
+authority with a request target, TLS SNI, certificate identity, or provider
+configuration, authorize a destination, perform DNS or I/O, release a
+credential, emit provider or trace audit events, or provide HTTP, OAuth, or
+live-provider transport. Those semantic bindings and external effects remain
+separate. Concrete HTTPS remains unavailable.
+
 An allocation-free `http1-response-head` prerequisite now decodes one strict
 HTTP/1.0 or HTTP/1.1 response head from a caller-borrowed byte stream. Explicit
 caller limits bound the complete head, every line, and the retained header
