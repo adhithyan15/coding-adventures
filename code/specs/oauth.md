@@ -773,6 +773,20 @@ issuer key and proves only that the key verified those exact signed bytes.
 Issuer selection and linkage, algorithm routing, certificate
 roles, path construction and validation, trust roots, time, names, revocation,
 TLS, HTTP, and network effects remain separate blockers.
+A bounded sibling `x509-rsa-pkcs1-v1-5-sha384-signature` composition now binds
+the SHA-384 encoded-message prerequisite to one exact decoded certificate, an
+already policy-validated issuer RSA key, the bounded repository-owned RSA
+public operation, and the repository-owned SHA-384 implementation. It requires
+the canonical `sha384WithRSAEncryption` identifier with present NULL
+parameters and a byte-aligned signature, hashes the preserved
+`TBSCertificate` DER, and returns non-copyable evidence retaining the exact
+certificate and issuer key only after the complete canonical encoded message
+passes. The pure public-data verifier performs no credential access, signing,
+storage, clock acquisition, or external effect, so it emits no runtime audit
+event. Issuer selection and linkage, data-driven algorithm routing,
+certificate roles, path construction and validation, trust roots, time,
+names, revocation, TLS, HTTP, and network effects remain separate blockers;
+concrete HTTPS remains unavailable.
 A bounded sibling `x509-rsa-pkcs1-v1-5-sha512-signature` composition now binds
 the SHA-512 encoded-message prerequisite to one exact decoded certificate, an
 already policy-validated issuer RSA key, the bounded repository-owned RSA
