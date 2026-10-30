@@ -1,0 +1,7 @@
+[package]
+name = "rsa-pss-algorithm-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Data-driven RFC 8017 RSA-PSS verification profile policy"
+
+[dependencies]

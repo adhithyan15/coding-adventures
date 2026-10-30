@@ -1,12 +1,12 @@
-//! Release-codegen regression gate for the fixed-memory ChaCha20 and Poly1305
-//! boundaries.
+//! Release-codegen regression gate for the fixed-memory ChaCha20, Poly1305,
+//! and combined ChaCha20-Poly1305 AEAD boundaries.
 //!
 //! Source ownership alone cannot prove that optimized code retains the wipes
 //! for the reusable keystream and both key-derived word states. This test asks
 //! the active Rust compiler for optimized LLVM IR and checks the exact exported
 //! boundaries, fixed-schedule core helpers, and secret-state drop paths. It
 //! deliberately makes no claim about the allocation-returning compatibility
-//! APIs or combined AEAD composition.
+//! APIs.
 
 use std::fs;
 use std::path::Path;
@@ -19,6 +19,9 @@ const POLY1305_EXPORTED_SYMBOL: &str = "coding_adventures_poly1305_mac_fixed_ir_
 const POLY1305_BLOCK_SYMBOL: &str = "coding_adventures_poly1305_process_block_ir_audit";
 const POLY1305_FINALIZE_SYMBOL: &str = "coding_adventures_poly1305_finalize_ir_audit";
 const POLY1305_WIPE_SYMBOL: &str = "coding_adventures_poly1305_state_wipe_ir_audit";
+const AEAD_ENCRYPT_SYMBOL: &str = "coding_adventures_chacha20_poly1305_encrypt_fixed_ir_audit";
+const AEAD_DECRYPT_SYMBOL: &str = "coding_adventures_chacha20_poly1305_decrypt_fixed_ir_audit";
+const AEAD_TAG_EQUAL_SYMBOL: &str = "coding_adventures_chacha20_poly1305_tag_equal_ir_audit";
 
 #[test]
 fn optimized_fixed_boundaries_scrub_secret_owners_without_allocating() {
@@ -80,6 +83,10 @@ fn optimized_fixed_boundaries_scrub_secret_owners_without_allocating() {
     let poly1305_block = exported_function_body(&ir, POLY1305_BLOCK_SYMBOL);
     let poly1305_finalize = exported_function_body(&ir, POLY1305_FINALIZE_SYMBOL);
     let poly1305_wipe = exported_function_body(&ir, POLY1305_WIPE_SYMBOL);
+    let aead_encrypt = exported_function_body(&ir, AEAD_ENCRYPT_SYMBOL);
+    let aead_decrypt = exported_function_body(&ir, AEAD_DECRYPT_SYMBOL);
+    let aead_tag = rust_function_body(&ir, "poly1305_aead_tag_fixed");
+    let aead_tag_equal = exported_function_body(&ir, AEAD_TAG_EQUAL_SYMBOL);
 
     for function in [
         fixed,
@@ -89,6 +96,10 @@ fn optimized_fixed_boundaries_scrub_secret_owners_without_allocating() {
         poly1305_block,
         poly1305_finalize,
         poly1305_wipe,
+        aead_encrypt,
+        aead_decrypt,
+        aead_tag,
+        aead_tag_equal,
     ] {
         assert_no_allocator(function);
     }
@@ -168,6 +179,87 @@ fn optimized_fixed_boundaries_scrub_secret_owners_without_allocating() {
         poly1305_word_wipes, 24,
         "Poly1305 state wipe must scrub all 24 words:\n{poly1305_wipe}"
     );
+
+    for (name, function) in [("encrypt", aead_encrypt), ("decrypt", aead_decrypt)] {
+        assert_eq!(
+            alloca_names(function, 64, 1),
+            ["%block.i"],
+            "fixed AEAD {name} must derive the one-time key through one wipe-on-drop block:\n{function}"
+        );
+        assert_eq!(
+            alloca_names(function, 32, 1),
+            ["%poly1305_key"],
+            "fixed AEAD {name} must retain one copied one-time key owner:\n{function}"
+        );
+        assert!(
+            zeroize_calls(function, "%block.i", 64) >= 2,
+            "fixed AEAD {name} must scrub the key-derivation block on success and unwind:\n{function}"
+        );
+        assert!(
+            zeroize_calls(function, "%poly1305_key", 32) >= 2,
+            "fixed AEAD {name} must scrub the one-time key on success and unwind:\n{function}"
+        );
+        assert!(
+            function.contains("chacha20_block_into"),
+            "fixed AEAD {name} must derive the one-time key with counter zero:\n{function}"
+        );
+        assert!(
+            function.contains("poly1305_aead_tag_fixed"),
+            "fixed AEAD {name} must authenticate through the audited padded layout:\n{function}"
+        );
+    }
+
+    assert_eq!(
+        alloca_names(aead_decrypt, 16, 1),
+        ["%computed_tag"],
+        "fixed AEAD decryption must retain one wipe-on-drop recomputed tag:\n{aead_decrypt}"
+    );
+    assert!(
+        zeroize_calls(aead_decrypt, "%computed_tag", 16) >= 3,
+        "recomputed tag must be scrubbed on authenticated, rejected, and unwind paths:\n{aead_decrypt}"
+    );
+    let compare_position = aead_decrypt
+        .find(AEAD_TAG_EQUAL_SYMBOL)
+        .expect("fixed decryption must compare the complete tag");
+    let decrypt_position = aead_decrypt
+        .find(EXPORTED_SYMBOL)
+        .expect("fixed decryption must invoke fixed ChaCha20");
+    assert!(
+        compare_position < decrypt_position,
+        "fixed decryption must authenticate before writing plaintext:\n{aead_decrypt}"
+    );
+
+    assert_eq!(
+        alloca_names(aead_tag, 16, 8),
+        ["%block"],
+        "AEAD authentication must use one reusable padded block:\n{aead_tag}"
+    );
+    assert_eq!(
+        alloca_names(aead_tag, 192, 8),
+        ["%state"],
+        "AEAD authentication must use one wipe-on-drop Poly1305 state:\n{aead_tag}"
+    );
+    assert_eq!(
+        zeroize_calls(aead_tag, "%block", 16),
+        2,
+        "AEAD padded block must be scrubbed on success and unwind:\n{aead_tag}"
+    );
+    let aead_state_drops = aead_tag
+        .lines()
+        .filter(|line| is_call(line) && line.contains(POLY1305_WIPE_SYMBOL))
+        .count();
+    assert_eq!(
+        aead_state_drops, 2,
+        "AEAD Poly1305 state must be scrubbed on success and unwind:\n{aead_tag}"
+    );
+
+    assert_no_conditional_control_flow(aead_tag_equal);
+    for forbidden in ["memcmp", "bcmp"] {
+        assert!(
+            !aead_tag_equal.contains(forbidden),
+            "fixed tag comparison must not lower to early-exit {forbidden}:\n{aead_tag_equal}"
+        );
+    }
 }
 
 fn assert_no_allocator(function: &str) {

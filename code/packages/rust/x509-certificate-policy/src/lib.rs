@@ -4,9 +4,11 @@
 //! deliberately embeds no general extension or algorithm registry, trust,
 //! cryptographic authority, clock, TLS, or network. Its role gate enforces only
 //! algorithm-independent relationships among Basic Constraints, Key Usage,
-//! and Extended Key Usage. Its algorithm gate selects one exact caller-supplied
-//! profile without parsing keys or signatures or choosing a verifier; an outer
-//! non-copyable result can bind that profile to one exact certificate object.
+//! and Extended Key Usage. Its validated critical-extension policy bounds and
+//! retains the exact caller-supplied recognized-OID set. Its algorithm gate
+//! selects one exact caller-supplied profile without parsing keys or signatures
+//! or choosing a verifier; an outer non-copyable result can bind that profile
+//! to one exact certificate object.
 //! Its server-identity gate decodes one Subject Alternative Name extension and
 //! applies the repository-owned DNS-ID/IP-ID matcher without Common Name
 //! fallback. Its validity gate classifies an explicit caller-owned observation
@@ -37,6 +39,98 @@ use x509_name::X509Name;
 use x509_subject_alt_name::{decode_subject_alt_name, SUBJECT_ALT_NAME_OID};
 use x509_time::X509Time;
 use x509_validity::X509ValidityStatus;
+
+/// Maximum recognized OIDs in one validated critical-extension policy.
+pub const MAX_X509_CRITICAL_EXTENSION_POLICY_IDENTIFIERS: usize = 256;
+
+/// Stable critical-extension policy construction failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CriticalExtensionPolicyDefinitionErrorKind {
+    TooManyIdentifiers,
+    InvalidIdentifier,
+    DuplicateIdentifier,
+}
+
+/// A redacted invalid-policy error that retains no OID arcs.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CriticalExtensionPolicyDefinitionError {
+    kind: X509CriticalExtensionPolicyDefinitionErrorKind,
+}
+
+impl X509CriticalExtensionPolicyDefinitionError {
+    const fn new(kind: X509CriticalExtensionPolicyDefinitionErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509CriticalExtensionPolicyDefinitionErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509CriticalExtensionPolicyDefinitionError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 critical extension policy definition error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl Error for X509CriticalExtensionPolicyDefinitionError {}
+
+/// One bounded caller-supplied set of recognized critical-extension OIDs.
+///
+/// This value is recognition policy only. It does not decode or semantically
+/// validate any extension. An empty set recognizes no critical extensions.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CriticalExtensionPolicy<'a> {
+    recognized_identifiers: &'a [&'a [u64]],
+}
+
+impl<'a> X509CriticalExtensionPolicy<'a> {
+    pub fn new(
+        recognized_identifiers: &'a [&'a [u64]],
+    ) -> Result<Self, X509CriticalExtensionPolicyDefinitionError> {
+        if recognized_identifiers.len() > MAX_X509_CRITICAL_EXTENSION_POLICY_IDENTIFIERS {
+            return Err(X509CriticalExtensionPolicyDefinitionError::new(
+                X509CriticalExtensionPolicyDefinitionErrorKind::TooManyIdentifiers,
+            ));
+        }
+        for (index, identifier) in recognized_identifiers.iter().copied().enumerate() {
+            if !valid_oid_arcs(identifier) {
+                return Err(X509CriticalExtensionPolicyDefinitionError::new(
+                    X509CriticalExtensionPolicyDefinitionErrorKind::InvalidIdentifier,
+                ));
+            }
+            if recognized_identifiers[..index].contains(&identifier) {
+                return Err(X509CriticalExtensionPolicyDefinitionError::new(
+                    X509CriticalExtensionPolicyDefinitionErrorKind::DuplicateIdentifier,
+                ));
+            }
+        }
+        Ok(Self {
+            recognized_identifiers,
+        })
+    }
+
+    pub const fn recognized_identifiers(self) -> &'a [&'a [u64]] {
+        self.recognized_identifiers
+    }
+
+    pub fn recognizes(self, identifier: ObjectIdentifier<'_>) -> bool {
+        self.recognized_identifiers
+            .iter()
+            .any(|expected| identifier.equals(expected))
+    }
+}
+
+const fn valid_oid_arcs(identifier: &[u64]) -> bool {
+    if identifier.len() < 2 || identifier[0] > 2 {
+        return false;
+    }
+    identifier[0] == 2 || identifier[1] < 40
+}
 
 /// Exact parameter-presence policy for one AlgorithmIdentifier.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -777,6 +871,49 @@ pub struct ValidatedCertificateRolePolicy<'certificate, 'encoded> {
     role_extensions: ValidatedCertificateRoleExtensions<'encoded>,
 }
 
+/// Non-copyable role evidence retaining one validated critical-extension policy.
+///
+/// This binds the exact policy-data set, critical-extension check, role check,
+/// and decoded certificate object. Recognition remains distinct from semantic
+/// extension validation and grants no path, signature, trust, or transport
+/// authority.
+pub struct ValidatedCertificateRoleCriticalExtensionPolicy<'certificate, 'encoded, 'policy> {
+    role_policy: ValidatedCertificateRolePolicy<'certificate, 'encoded>,
+    critical_extension_policy: X509CriticalExtensionPolicy<'policy>,
+}
+
+impl<'certificate, 'encoded, 'policy>
+    ValidatedCertificateRoleCriticalExtensionPolicy<'certificate, 'encoded, 'policy>
+{
+    pub const fn certificate(&self) -> &'certificate X509Certificate<'encoded> {
+        self.role_policy.certificate()
+    }
+
+    pub const fn role_extensions(&self) -> &ValidatedCertificateRoleExtensions<'encoded> {
+        self.role_policy.role_extensions()
+    }
+
+    pub const fn critical_extension_policy(&self) -> X509CriticalExtensionPolicy<'policy> {
+        self.critical_extension_policy
+    }
+}
+
+impl fmt::Debug for ValidatedCertificateRoleCriticalExtensionPolicy<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ValidatedCertificateRoleCriticalExtensionPolicy")
+            .field("role", &self.role_extensions().role())
+            .field(
+                "recognized_identifier_count",
+                &self
+                    .critical_extension_policy
+                    .recognized_identifiers()
+                    .len(),
+            )
+            .finish_non_exhaustive()
+    }
+}
+
 impl<'certificate, 'encoded> ValidatedCertificateRolePolicy<'certificate, 'encoded> {
     pub const fn certificate(&self) -> &'certificate X509Certificate<'encoded> {
         self.certificate
@@ -1126,6 +1263,14 @@ pub fn validate_critical_extensions<'a>(
     Ok(())
 }
 
+/// Require one validated data policy to recognize every critical extension.
+pub fn validate_critical_extensions_with_policy(
+    certificate: &X509Certificate<'_>,
+    policy: X509CriticalExtensionPolicy<'_>,
+) -> Result<(), X509CertificatePolicyError> {
+    validate_critical_extensions(certificate, |identifier| policy.recognizes(identifier))
+}
+
 /// Decode and validate algorithm-independent certificate-role extensions.
 ///
 /// One decoder shares `limits` across every present Basic Constraints, Key
@@ -1262,5 +1407,29 @@ pub fn validate_certificate_role_policy<'certificate, 'encoded>(
     Ok(ValidatedCertificateRolePolicy {
         certificate,
         role_extensions,
+    })
+}
+
+/// Validate data-driven critical-extension recognition and role semantics.
+///
+/// The returned non-copyable evidence retains the exact validated OID policy
+/// beside the exact certificate-bound role result. Recognized extensions
+/// outside the role gate still require separate semantic validation.
+pub fn validate_certificate_role_with_critical_extension_policy<'certificate, 'encoded, 'policy>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    role: X509CertificateRole,
+    limits: Asn1Limits,
+    critical_extension_policy: X509CriticalExtensionPolicy<'policy>,
+) -> Result<
+    ValidatedCertificateRoleCriticalExtensionPolicy<'certificate, 'encoded, 'policy>,
+    X509CertificateRolePolicyError,
+> {
+    let role_policy = validate_certificate_role_policy(certificate, role, limits, |identifier| {
+        critical_extension_policy.recognizes(identifier)
+    })?;
+
+    Ok(ValidatedCertificateRoleCriticalExtensionPolicy {
+        role_policy,
+        critical_extension_policy,
     })
 }

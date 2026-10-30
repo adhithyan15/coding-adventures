@@ -5,8 +5,10 @@ edition = "2021"
 description = "Allocation-free policy for selecting strict OCSP AIA locators"
 
 [dependencies]
+der-asn1 = { path = "../der-asn1" }
 x509-authority-information-access = { path = "../x509-authority-information-access" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
 
 [dev-dependencies]
-der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
 x509-extension = { path = "../x509-extension" }

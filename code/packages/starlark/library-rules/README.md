@@ -43,7 +43,7 @@ All library rules share these parameters:
 - **deps** — Dependencies as `"language/package-name"` strings (e.g., `["python/transistors"]`)
 
 Some rules have additional parameters:
-- **test_runner** — Python: pytest/unittest. Ruby: minitest/rspec. TypeScript: vitest/jest.
+- **test_runner** — Python: pytest/unittest. Ruby: minitest/rspec. TypeScript: vitest/node.
 
 ## How the Build Tool Uses These
 
