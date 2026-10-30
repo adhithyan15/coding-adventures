@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-30
+
+### Added
+
+- Added a non-copyable path-length transition that consumes one authenticated
+  complete-intermediate-policy proof and retains it with the advanced state.
+- Added self-issued success and exhausted non-self-issued rejection coverage.
+
+### Security
+
+- The transition derives role, self-issued classification, and any
+  `pathLenConstraint` only from the exact retained intermediate policy. It
+  grants no path ordering, later link, constraint, trust, revocation, TLS,
+  HTTP, OAuth, credential, provider, audit, trace, or network authority.
+
 ## [0.2.0] - 2026-10-30
 
 ### Added
