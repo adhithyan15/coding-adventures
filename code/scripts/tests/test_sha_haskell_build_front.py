@@ -10,6 +10,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[3]
+CI_WORKFLOW = ROOT / ".github/workflows/ci.yml"
+CI_COMMAND = (
+    "python3 -m unittest discover -s code/scripts/tests "
+    "-p 'test_sha_haskell_build_front.py'"
+)
 FRONTS = {
     "sha1": (ROOT / "code/packages/haskell/sha1/BUILD", "test all"),
     "sha256": (
@@ -21,6 +26,9 @@ FRONTS = {
 
 
 class ShaHaskellBuildFrontTests(unittest.TestCase):
+    def test_required_ci_runs_this_contract_suite(self):
+        self.assertIn(CI_COMMAND, CI_WORKFLOW.read_text(encoding="utf-8"))
+
     def run_front(
         self, front: Path, platform: str, status: int = 0
     ) -> subprocess.CompletedProcess[str]:
