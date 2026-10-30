@@ -8,6 +8,7 @@ skip:
 NEWLINE            = /\r?\n/
 HEADER             = /C4Context|C4Container|C4Component|C4Dynamic|C4Deployment/
 TITLE              = /title[ \t]+[^\r\n]+/
+ACC_DESCRIPTION    = /accDescription[ \t]+[^\r\n#;]+/
 ACC_DESCR_BLOCK    = /accDescr[ \t]*\{[^}]*\}/
 ACC_TITLE          = /accTitle[ \t]*:[^\r\n]*/
 ACC_DESCR          = /accDescr[ \t]*:[^\r\n]*/
