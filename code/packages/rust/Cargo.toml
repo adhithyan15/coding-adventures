@@ -889,6 +889,7 @@ members = [
     "ieee802154-security",
     "http1",
     "http1-response-head",
+    "http1-chunked-wire-budget",
     "websocket-core",
     "websocket-runtime",
     "http1-client",
@@ -1376,6 +1377,7 @@ members = [
   "x509-ocsp-rsa-pkcs1-v1-5-sha256-signature",
   "x509-ocsp-rsa-pkcs1-v1-5-sha384-signature",
   "x509-ocsp-rsa-pkcs1-v1-5-sha512-signature",
+  "x509-ocsp-rsa-signature-routing",
   "x509-ocsp-cert-id-binding",
   "x509-ocsp-revocation-policy",
   "x509-ocsp-responder-id-binding",
@@ -1395,4 +1397,5 @@ members = [
   "tls13-key-update-message",
   "rsa-pkcs1-v1-5-sha384",
   "rsa-pkcs1-v1-5-sha512",
+  "x509-ip-name-constraint-policy",
 ]

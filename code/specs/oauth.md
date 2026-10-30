@@ -1281,6 +1281,20 @@ and caller-limit exhaustion continue to fail closed with redacted categories.
 This remains fixed-path DNS policy only: it does not implement other name
 forms, generalized path construction or validation, revocation, TLS, HTTP,
 OAuth transport, or network authority.
+A bounded `x509-ip-name-constraint-policy` prerequisite now owns the RFC 5280
+IPv4 and IPv6 subnet-matching rule independently of DER parsing. Caller policy
+supplies ordered permitted and excluded `iPAddress` constraint values in the
+standard address-plus-CIDR-mask form and presented Subject Alternative Name IP
+address octets. The allocation-free evaluator requires exact 8- or 32-octet
+constraints, exact 4- or 16-octet presented addresses, contiguous CIDR masks,
+fixed collection ceilings, matching address families, exclusion precedence,
+and membership in a permitted subnet whenever a permitted set exists. Stable
+failures retain only a category and collection index. This policy does not
+decode NameConstraints or Subject Alternative Name, extract certificate names,
+bind evidence to a certificate or path, process DNS or other GeneralName forms,
+construct or validate a path, verify signatures, grant trust, check revocation,
+perform TLS or HTTP, authorize OAuth transport, or cause an external effect;
+concrete HTTPS remains unavailable.
 A bounded `x509-revocation-policy` prerequisite now evaluates one explicit
 caller-supplied certificate-status observation at one explicit validated time.
 The status must be `good`; `revoked` and `unknown` fail closed. A successful
@@ -1460,6 +1474,24 @@ bind a response or `CertID` to a certificate or constructed path, apply
 certificate role or extension policy, decide freshness or revocation, fetch or
 cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-rsa-signature-routing` prerequisite now consumes the
+non-copyable response/key evidence from `x509-ocsp-rsa-algorithm-policy` and
+routes its selected profile index through an explicit caller-owned table to
+one reviewed fixed repository-owned verifier. The initial table vocabulary is
+limited to the RSA PKCS #1 v1.5 SHA-256 and SHA-512 OCSP verifiers. Missing and
+duplicate routes fail before cryptography, while a route that names a verifier
+inconsistent with the selected profile fails that verifier's exact algorithm
+identifier and parameter checks. Success retains both the consumed algorithm
+policy evidence and the fixed-verifier result, binding the same exact response
+and validated key across policy selection, routing, and cryptographic
+verification. Routes and inputs are public policy and response/key data, so
+this layer performs no credential access, edit, signing operation, provider
+action, audit or trace emission, I/O, or external effect. It does not authorize
+or match a responder, bind `CertID` or status to a certificate or constructed
+path, apply certificate role or extension policy, decide freshness or
+revocation, establish trust, fetch data, read a clock, or grant TLS, HTTP,
+OAuth transport, or network authority. Concrete HTTPS remains unavailable.
 
 A bounded `x509-ocsp-responder-id-binding` prerequisite now matches one exact
 structurally decoded `BasicOCSPResponse` to one exact decoded candidate
