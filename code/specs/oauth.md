@@ -959,6 +959,20 @@ signature work, applies no reviewed-anchor constraints, constructs no
 multi-hop path, and does not check revocation, perform TLS or HTTP, authorize
 OAuth transport, or open a network connection; concrete HTTPS remains
 unavailable.
+A bounded follow-up now applies the exact selected reviewed anchor's optional
+DNS NameConstraints bytes to every dNSName in that retained SHA-384 target's
+Subject Alternative Name. Separate caller-owned ASN.1 budgets bound the
+reviewed-root constraint decoder and target SAN decoder. An unconstrained
+selected anchor succeeds without manufacturing DNS evidence; malformed
+constraints, a missing or malformed target SAN, unsupported constraint forms,
+and names outside the permitted subtrees fail with payload-free categories.
+The non-copyable result retains the complete SHA-384 reviewed server-link proof
+and optional constrained-name evidence together, preventing another target or
+snapshot entry from being substituted after evaluation. This remains one
+direct fixed-algorithm link and one supported DNS-policy subset: it does not
+construct or validate a multi-hop path, apply intermediate or IP constraints,
+check revocation or hostnames, perform TLS or HTTP, authorize OAuth transport,
+or open a network connection; concrete HTTPS remains unavailable.
 A bounded sibling `x509-rsa-sha512-issuer-link` composition now authenticates
 one directed child-to-candidate-issuer link for the exact RSA PKCS #1 v1.5
 SHA-512 certificate algorithm. Caller-owned Name policy is invoked exactly once

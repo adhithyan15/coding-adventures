@@ -17,10 +17,21 @@ The crate consumes:
 Binding succeeds only when both inputs retain the same decoded target object.
 Byte-equal independently decoded certificates are deliberately rejected.
 
-This composition performs no new parsing or signature work. It does not apply
-reviewed-anchor constraints, construct or validate a multi-hop path, check
-revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
-connection. It does not make concrete HTTPS or live-provider use ready.
+`validate_x509_rsa_sha384_reviewed_server_anchor_policy` then derives the
+selected reviewed anchor's optional NameConstraints bytes and the exact
+target certificate only from that consumed binding. Separate caller-owned
+ASN.1 limits bound the reviewed-root constraint decoder and target Subject
+Alternative Name decoder. A constrained anchor requires every target dNSName
+to satisfy the supported permitted subtree set; malformed inputs, unsupported
+constraint forms, and missing SAN fail with payload-free categories. The
+non-copyable result retains the complete binding and optional constrained-name
+evidence.
+
+This composition performs no new signature work. It does not apply IP or
+intermediate constraints, construct or validate a multi-hop path, verify a
+hostname, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+open a network connection. It does not make concrete HTTPS or live-provider
+use ready.
 
 ## Validation
 
