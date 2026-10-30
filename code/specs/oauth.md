@@ -822,6 +822,19 @@ select an implementation, hash, run MGF1, validate PSS encoding, parse or
 operate on an RSA key, apply RSAVP1, or establish a signature verdict.
 Certificate processing, path and hostname validation, trust roots, revocation,
 TLS, HTTP, OAuth transport, and network effects remain unavailable.
+
+A bounded, data-driven `rsa-pss-message-prime` prerequisite now constructs the
+public hash input consumed by a future RFC 8017 EMSA-PSS verifier. Caller policy
+supplies the selected `mHash` length, salt length, and an `M'` byte ceiling.
+Only after exact input and output lengths pass does the encoder write the
+canonical `M' = zeroes(8) || mHash || salt` bytes into caller-owned memory and
+return borrowed non-copyable evidence for the exact output and copied fields.
+
+This `M'` evidence does not hash the message or `M'`, compare `H`, run MGF1,
+validate a PSS data block, parse or operate on an RSA key, apply RSAVP1, select
+an algorithm, or establish a signature verdict. Certificate processing, path
+and hostname validation, trust roots, revocation, TLS, HTTP, OAuth transport,
+and network effects remain unavailable.
 A bounded `x509-rsa-pkcs1-v1-5-sha256-signature` composition now verifies one
 exact certificate signature with repository-owned primitives. It requires the
 canonical `sha256WithRSAEncryption` identifier with present NULL parameters,
