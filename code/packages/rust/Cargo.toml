@@ -1364,6 +1364,7 @@ members = [
   "x509-rsa-pkcs1-v1-5-sha384-signature",
   "x509-rsa-pkcs1-v1-5-sha512-signature",
   "x509-rsa-sha256-issuer-link",
+  "x509-rsa-sha384-issuer-link",
   "x509-rsa-sha512-issuer-link",
   "x509-rsa-sha256-reviewed-anchor-link",
   "x509-rsa-sha256-reviewed-server-link",
