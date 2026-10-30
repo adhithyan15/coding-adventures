@@ -1685,6 +1685,18 @@ a constructed path, interpret extensions or status, decide freshness or
 revocation, fetch or cache data, read a clock, or grant TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS remains unavailable.
 
+An allocation-free `x509-ocsp-cert-id-encoding` prerequisite now validates one
+exact canonical hash `AlgorithmIdentifier` and one exact canonical positive
+certificate serial number under caller-owned ASN.1 limits, retains those exact
+inputs with two caller-owned issuer-hash byte strings, and encodes the RFC 6960
+`CertID` structure into caller-owned output only after complete nested-length
+and capacity preflight. It neither selects nor authorizes the algorithm,
+computes either hash, requires a particular digest length, binds the values to
+certificates, proves an issuer relationship, or creates a complete OCSP
+request. It performs no certificate-path, trust, revocation, clock, nonce,
+DNS, TLS, HTTP, I/O, audit, trace, credential, OAuth-transport, or network
+operation. Concrete HTTPS and live-provider readiness remain unavailable.
+
 A bounded `x509-ocsp-revocation-policy` follow-up now consumes that exact
 non-copyable `CertID` binding and one explicit validated caller-owned time. It
 derives status, `thisUpdate`, and `nextUpdate` only from the exact retained
