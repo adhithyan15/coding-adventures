@@ -13,7 +13,10 @@ interpreter and any launcher options at negative `arg` indexes; scan the
 contiguous negative entries to the lowest index because LuaRocks launchers may
 put `-e` chunks at `arg[-1]`. On Windows that entry may still be the configured
 bare token `lua`, so request `lua.exe` explicitly rather than selecting a
-same-named command wrapper.
+same-named command wrapper. Replay the complete negative-index prefix, not only
+the executable: dropping LuaRocks' `-e` loader chunk can make the child lose
+native modules, silently take a shell fallback, and exercise different behavior
+from the process under test.
 
 Quoting the executable alone is also insufficient under `cmd /C`: when a
 command starts with a quote and contains further quoted arguments or
