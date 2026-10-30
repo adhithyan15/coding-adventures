@@ -811,6 +811,19 @@ issuer, and validated key. The composition does not process other critical
 extensions, validity, path length, name constraints, trust anchors, path
 construction, revocation, TLS, HTTP, or network effects, so concrete HTTPS
 remains unavailable.
+A bounded sibling `x509-rsa-sha384-issuer-link` composition now authenticates
+one directed child-to-candidate-issuer link for the exact RSA PKCS #1 v1.5
+SHA-384 algorithm. It invokes caller-owned Name policy exactly once in the
+child-issuer to candidate-subject direction, requires the exact candidate to
+pass issuing-CA role checks and caller-supplied RSA key-strength policy, and
+then verifies the child's preserved signed bytes with the merged repository-
+owned SHA-384 certificate verifier. Non-copyable evidence binds the exact
+child, candidate issuer, and validated key. This fixed-algorithm slice performs
+no credential access, signing, storage, audit or trace emission, I/O, or
+external effect. It does not route algorithms, process all critical
+extensions, validate time or path length, apply name constraints, select or
+validate trust, check revocation, perform TLS or HTTP, or authorize OAuth
+transport. Concrete HTTPS remains unavailable.
 A bounded sibling `x509-rsa-sha512-issuer-link` composition now authenticates
 one directed child-to-candidate-issuer link for the exact RSA PKCS #1 v1.5
 SHA-512 certificate algorithm. Caller-owned Name policy is invoked exactly once
