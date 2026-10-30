@@ -42,6 +42,10 @@
 
 ### Fixed
 
+- Diff selection now rejects more than 4 MiB of first-seen unique glob
+  declarations before normalization, even when no paths changed. Package-root
+  classification uses one reusable changed-path index and preflights all
+  slash-prefix materialization against an explicit 50,000,000-unit ceiling.
 - Strict diff globs now treat the package root as a zero-component relative
   path, so `*` and `?` cannot select it while a whole `**` segment can.
 - Glob character-class compilation and folded package-root validation are

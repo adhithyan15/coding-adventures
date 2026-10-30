@@ -16,6 +16,8 @@ local MAX_SOURCE_GLOBS = 256
 local MAX_PATH_SCALARS = 512
 local MAX_NAME_SCALARS = 240
 local MAX_MATCH_WORK = 50000000
+local MAX_UNIQUE_GLOB_VALIDATION_WORK = 4194304
+local MAX_ROOT_CLASSIFICATION_WORK = 50000000
 local MAX_BOUNDARY_DEPTH = 16
 local MAX_BOUNDARY_NODES = 65536
 local MAX_BOUNDARY_CONTAINERS = 4096
@@ -567,6 +569,7 @@ local function validate_diff_input(input, graph)
     local package_count = dense_count(rawget(input, "packages"), MAX_PACKAGES,
         "DIFF_PACKAGE_INVALID", "DIFF_PACKAGE_INVALID")
     local packages, names, validated_globs = {}, {}, {}
+    local unique_glob_validation_work = 0
     for index = 1, package_count do
         local raw_package = inert_record(rawget(rawget(input, "packages"), index),
             "DIFF_PACKAGE_INVALID")
@@ -587,6 +590,16 @@ local function validate_diff_input(input, graph)
                 "DIFF_GLOB_INVALID")
             local factor = validated_globs[glob]
             if factor == nil then
+                -- Charge immutable UTF-8 declaration bytes before NFC and
+                -- syntax validation.  Per-package cardinality alone permits
+                -- more than a million distinct maximum-length patterns; a
+                -- zero-path request would otherwise validate all of them
+                -- without ever reaching match-work preflight.
+                local validation_work = #glob + 1
+                require_contract(validation_work
+                    <= MAX_UNIQUE_GLOB_VALIDATION_WORK - unique_glob_validation_work,
+                    "DIFF_MATCH_LIMIT_EXCEEDED")
+                unique_glob_validation_work = unique_glob_validation_work + validation_work
                 require_contract(valid_portable_glob(glob), "DIFF_GLOB_INVALID")
                 validate_glob_syntax(glob)
                 factor = scalar_length(glob) + 1
@@ -885,36 +898,76 @@ local function boundary_reverse_index(input, packages)
     return consumers
 end
 
-local function inside(path, root)
-    return path == root or path:sub(1, #root + 1) == root .. "/"
-end
-
-local function relative_path(path, root)
-    return path == root and "" or path:sub(#root + 2)
-end
-
 local function basename(path)
     return path:match("([^/]+)$") or ""
 end
 
-local function preflight_match_work(packages, changed_paths, changed_count)
-    if changed_count == 0 then return end
+-- Ancestor lookup below materializes one prefix for every slash.  Charge the
+-- byte scan and every possible prefix before creating any of them, so even
+-- maximum-cardinality slash-heavy inputs have an explicit operation ceiling.
+local function preflight_root_classification(changed_paths, changed_count)
     local total = 0
-    for _, package in ipairs(packages) do
-        if package.source_mode == "strict_globs" then
-            for index = 1, changed_count do
-                local path = rawget(changed_paths, index)
-                if inside(path, package.rel_path) then
-                    local relative = relative_path(path, package.rel_path)
-                    if not BUILD_FRONTS[basename(relative)] then
-                        local path_factor = scalar_length(relative) + 1
-                        require_contract(package.pattern_factor == 0
-                            or package.pattern_factor
-                                <= (MAX_MATCH_WORK - total) // path_factor,
-                            "DIFF_MATCH_LIMIT_EXCEEDED")
-                        total = total + package.pattern_factor * path_factor
+    for path_index = 1, changed_count do
+        local path = rawget(changed_paths, path_index)
+        local path_work = #path
+        require_contract(path_work <= MAX_ROOT_CLASSIFICATION_WORK - total,
+            "DIFF_MATCH_LIMIT_EXCEEDED")
+        total = total + path_work
+        for position = 1, #path do
+            if path:byte(position) == 47 then
+                require_contract(position <= MAX_ROOT_CLASSIFICATION_WORK - total,
+                    "DIFF_MATCH_LIMIT_EXCEEDED")
+                total = total + position
+            end
+        end
+    end
+end
+
+-- Package roots are unique and cannot contain one another after validation.
+-- Index them once, then inspect only a changed path's own slash ancestors.
+-- This replaces the package-by-path cross product with at most one byte scan
+-- and one lookup per path component.
+local function index_changed_paths(packages, changed_paths, changed_count)
+    local roots = {}
+    for index, package in ipairs(packages) do roots[package.rel_path] = index end
+    local package_indexes, relatives = {}, {}
+    for path_index = 1, changed_count do
+        local path = rawget(changed_paths, path_index)
+        local package_index = roots[path]
+        local relative = package_index and "" or false
+        if package_index == nil then
+            for position = #path, 1, -1 do
+                if path:byte(position) == 47 then
+                    package_index = roots[path:sub(1, position - 1)]
+                    if package_index ~= nil then
+                        relative = path:sub(position + 1)
+                        break
                     end
                 end
+            end
+        end
+        package_indexes[path_index] = package_index or 0
+        relatives[path_index] = relative
+    end
+    return {package_indexes = package_indexes, relatives = relatives}
+end
+
+local function preflight_match_work(packages, indexed_paths, changed_count)
+    if changed_count == 0 then return end
+    local total = 0
+    for path_index = 1, changed_count do
+        local package_index = indexed_paths.package_indexes[path_index]
+        if package_index ~= 0 then
+            local package = packages[package_index]
+            local relative = indexed_paths.relatives[path_index]
+            if package.source_mode == "strict_globs"
+                    and not BUILD_FRONTS[basename(relative)] then
+                local path_factor = scalar_length(relative) + 1
+                require_contract(package.pattern_factor == 0
+                    or package.pattern_factor
+                        <= (MAX_MATCH_WORK - total) // path_factor,
+                    "DIFF_MATCH_LIMIT_EXCEEDED")
+                total = total + package.pattern_factor * path_factor
             end
         end
     end
@@ -941,7 +994,7 @@ local function sorted_set(values)
 end
 
 local function select_diff(packages, graph, forced, forced_count, changed_paths,
-        changed_count, policy, boundary_consumers)
+        changed_count, policy, boundary_consumers, indexed_paths)
     local changed, strict_candidates = {}, {}
     for index = 1, forced_count do changed[rawget(forced, index)] = true end
     local unknown = false
@@ -950,22 +1003,22 @@ local function select_diff(packages, graph, forced, forced_count, changed_paths,
         local consumers = boundary_consumers[path]
         local known = consumers ~= nil and next(consumers) ~= nil
         if consumers then for name in pairs(consumers) do changed[name] = true end end
-        for _, package in ipairs(packages) do
-            if inside(path, package.rel_path) then
-                known = true
-                local relative = relative_path(path, package.rel_path)
-                local selected = package.source_mode == "package_prefix"
-                    or BUILD_FRONTS[basename(relative)] == true
-                if selected then
-                    changed[package.name] = true
-                else
-                    local candidates = strict_candidates[package.name]
-                    if candidates == nil then
-                        candidates = {}
-                        strict_candidates[package.name] = candidates
-                    end
-                    candidates[#candidates + 1] = relative
+        local package_index = indexed_paths.package_indexes[index]
+        if package_index ~= 0 then
+            local package = packages[package_index]
+            known = true
+            local relative = indexed_paths.relatives[index]
+            local selected = package.source_mode == "package_prefix"
+                or BUILD_FRONTS[basename(relative)] == true
+            if selected then
+                changed[package.name] = true
+            else
+                local candidates = strict_candidates[package.name]
+                if candidates == nil then
+                    candidates = {}
+                    strict_candidates[package.name] = candidates
                 end
+                candidates[#candidates + 1] = relative
             end
         end
         if not known then unknown = true end
@@ -1032,10 +1085,12 @@ function GraphDiff.evaluate_diff_selection(input)
         require_contract(graph_levels(graph) ~= nil, "DIFF_EDGE_CYCLE")
         local packages, forced, forced_count, changed_paths, changed_count, policy =
             validate_diff_input(input, graph)
+        preflight_root_classification(changed_paths, changed_count)
+        local indexed_paths = index_changed_paths(packages, changed_paths, changed_count)
         local boundary_consumers = boundary_reverse_index(input, packages)
-        preflight_match_work(packages, changed_paths, changed_count)
+        preflight_match_work(packages, indexed_paths, changed_count)
         return success(select_diff(packages, graph, forced, forced_count, changed_paths,
-            changed_count, policy, boundary_consumers))
+            changed_count, policy, boundary_consumers, indexed_paths))
     end)
 end
 

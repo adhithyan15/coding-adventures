@@ -78,17 +78,21 @@ The build tool follows a pipeline:
    prerequisite closures, recognizes only exact BUILD fronts, and supports
    package-prefix and strict portable-glob source modes.
 
-   Strict glob syntax is validated with a linear, allocation-light scalar scan;
-   one operation-local string cache reuses that complete validation and its
-   scalar work factor across packages. Matching then compiles one pattern at a
-   time, reuses it across the candidate paths for that package, and releases it
-   before compiling the next pattern.
+   First-seen unique glob declarations are charged by immutable UTF-8 byte
+   length against a 4 MiB operation ceiling before normalization or syntax
+   validation. Strict glob syntax is then validated with a linear,
+   allocation-light scalar scan; one operation-local string cache reuses that
+   complete validation and its scalar work factor across packages. Matching
+   compiles one pattern at a time, reuses it across the candidate paths for
+   that package, and releases it before compiling the next pattern.
    Empty package-relative paths contain zero components, so only a whole `**`
    segment can match a package root. Folded package roots are sorted with
    separator-aware ordering and checked adjacently, avoiding both pairwise
-   comparisons and per-segment trie nodes. Before the first match, the
-   evaluator charges the full pattern/path cross product against one
-   50,000,000-unit operation ceiling.
+   comparisons and per-segment trie nodes. Changed paths are classified once
+   through exact package-root and slash-ancestor lookups, then the resulting
+   index is reused by preflight and selection. Prefix materialization and the
+   full pattern/path cross product are each charged before use against an
+   explicit 50,000,000-unit operation ceiling.
    Optional repository source-boundary data is bounded as an inert decoded
    object graph, verified with its domain-separated SHA-256 digest, and
    reversed so one shared input can select every registered consumer. The

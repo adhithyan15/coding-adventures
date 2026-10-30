@@ -356,6 +356,81 @@ describe("process-free Lua graph and diff selection", function()
             GraphDiff.evaluate_diff_selection(simple_diff(packages)))
     end)
 
+    it("bounds aggregate unique maximum glob validation with zero changed paths", function()
+        local packages = {}
+        local serial = 0
+        for package_index = 1, 9 do
+            local globs = {}
+            for glob_index = 1, 256 do
+                serial = serial + 1
+                globs[glob_index] = string.format("%08d", serial)
+                    .. string.rep("😀", 504)
+            end
+            packages[package_index] = {
+                name = string.format("fixture/unique%d", package_index),
+                rel_path = string.format("code/unique%d", package_index),
+                source_mode = "strict_globs",
+                source_globs = globs,
+            }
+        end
+
+        local started = os.clock()
+        local actual = GraphDiff.evaluate_diff_selection(simple_diff(packages))
+        local elapsed = os.clock() - started
+        assert.same({ok = false, code = "DIFF_MATCH_LIMIT_EXCEEDED"}, actual)
+        assert.is_true(elapsed < 5,
+            string.format("unique glob validation took %.2f seconds", elapsed))
+    end)
+
+    it("indexes full-scale disjoint package roots and changed paths", function()
+        local packages, changed_paths = {}, {}
+        local prefix = string.rep("a", 500)
+        for index = 1, 4096 do
+            packages[index] = {
+                name = string.format("fixture/p%04d", index),
+                rel_path = prefix .. string.format("%04d", index),
+                source_mode = "strict_globs",
+                source_globs = {},
+            }
+            changed_paths[index] = prefix .. string.format("b%04d", index)
+        end
+        local input = simple_diff(packages)
+        input.unknown_path_policy = "all"
+        input.changed_paths = changed_paths
+
+        local started = os.clock()
+        local actual = GraphDiff.evaluate_diff_selection(input)
+        local elapsed = os.clock() - started
+        assert.is_true(actual.ok, actual.code)
+        assert.equals(4096, #actual.value.changed_packages)
+        assert.equals(4096, #actual.value.affected_packages)
+        assert.same({}, actual.value.prerequisite_packages)
+        assert.equals("fixture/p0001", actual.value.changed_packages[1])
+        assert.equals("fixture/p4096", actual.value.changed_packages[4096])
+        assert.is_true(elapsed < 12,
+            string.format("indexed root classification took %.2f seconds", elapsed))
+    end)
+
+    it("bounds slash-heavy package-root classification before prefix allocation", function()
+        local packages, changed_paths = {}, {}
+        local path_prefix = string.rep("a/", 250)
+        for index = 1, 1024 do
+            packages[index] = package_prefix(
+                string.format("fixture/p%04d", index),
+                string.format("code/p%04d", index))
+            changed_paths[index] = path_prefix .. string.format("%04d", index)
+        end
+        local input = simple_diff(packages)
+        input.changed_paths = changed_paths
+
+        local started = os.clock()
+        local actual = GraphDiff.evaluate_diff_selection(input)
+        local elapsed = os.clock() - started
+        assert.same({ok = false, code = "DIFF_MATCH_LIMIT_EXCEEDED"}, actual)
+        assert.is_true(elapsed < 5,
+            string.format("root classification preflight took %.2f seconds", elapsed))
+    end)
+
     it("ignores hostile extra fields without weakening metatable rejection", function()
         local package = package_prefix("fixture/a", "code/a")
         local input = simple_diff({package})
