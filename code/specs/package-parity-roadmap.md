@@ -20107,3 +20107,19 @@ Normal merge `7e6327e370d50ed29d282071f71aff5909f9fe69` preserves both histories
 changes no Lua/Go graph-diff or lifecycle path. Auto-merge remains disabled;
 independent exact-head review and a completely fresh hosted matrix are required
 before a guarded merge.
+
+The independently reviewed second repair then advanced the remote branch to
+`2dc4e6a5ca1e0171717b415fea8a044a7b439d3c`, but GitHub's PR object remained
+stale at failed head `6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0` and attached
+no checks to the new commit. Old-head results are not reusable, so auto-merge
+remains disabled until the PR object exposes the exact reviewed head and a
+completely fresh matrix.
+
+During that publication-state delay, main advanced to
+`ac8d401b1341b6b84097b23bb8c27401f3422b4d` through the TypeScript
+irc-net-stdlib node:test migration and Mermaid C4 sprite metadata compatibility.
+Those paths do not overlap the Lua/Go graph-diff implementation, launcher
+repair, lesson, or lifecycle surfaces. Normal merge
+`b1d2c6213cb68ea6a827fe84a5b46080d26e6708` preserves both histories; the
+resulting exact head must be revalidated and independently reviewed before the
+next normal push.

@@ -21,10 +21,10 @@
     18725
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-30T14:10:11Z",
+    "observed_at": "2026-10-30T14:40:11Z",
     "pr_number": 18725,
-    "head_revision": "6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0",
-    "action": "Fresh hosted run 41066604833 failed only in Windows job 124101800050 because cmd /C stripped the leading quote from the absolute Lua executable, corrupting later quoted arguments and redirections; 151 other Lua tests passed. Auto-merge remains disabled. Repair 82f0e58dc56fb8613abe8faf0854ad52d6cbf46e adds the required cmd.exe /d /s /c outer quote layer, an exact Windows command-shape check, and a host-executed exit/redirection probe. Current main fac92baec6b9e76860516e825e26f845b394c28e is normally merged; require independent exact-head review and a completely fresh hosted matrix before guarded auto-merge.",
+    "head_revision": "2dc4e6a5ca1e0171717b415fea8a044a7b439d3c",
+    "action": "The independently reviewed second Windows repair reached the remote branch at 2dc4e6a5ca1e0171717b415fea8a044a7b439d3c, but GitHub's PR object remained stale at failed head 6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0 and attached no fresh checks. Old-head results are not reusable and auto-merge remains disabled. Main then advanced path-disjointly to ac8d401b1341b6b84097b23bb8c27401f3422b4d and was normally merged; require exact-head review and a new non-force push before a completely fresh hosted matrix.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2723,6 +2723,11 @@
       "second_retry_main_revision": "fac92baec6b9e76860516e825e26f845b394c28e",
       "second_retry_main_merge_revision": "7e6327e370d50ed29d282071f71aff5909f9fe69",
       "second_retry_main_notes": "Before the second repair could publish, main advanced through the path-disjoint TypeScript irc-proto node:test migration and Rust X.509 SHA-512 intermediate-policy link. A normal merge preserves both histories and changes no Lua/Go graph-diff or lifecycle path. Exact-head validation and independent review remain required before the non-force retry push.",
+      "second_retry_branch_revision": "2dc4e6a5ca1e0171717b415fea8a044a7b439d3c",
+      "pr_head_sync_notes": "The remote branch ref advanced normally to the independently reviewed second repair, but GitHub's PR object remained stale at 6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0 with only the failed old-head checks. Those checks are not reusable, and no merge action is permitted until the PR object exposes the exact reviewed head and a fresh terminal matrix.",
+      "third_retry_main_revision": "ac8d401b1341b6b84097b23bb8c27401f3422b4d",
+      "third_retry_main_merge_revision": "b1d2c6213cb68ea6a827fe84a5b46080d26e6708",
+      "third_retry_main_notes": "While the PR head event remained stale, main advanced through the path-disjoint TypeScript irc-net-stdlib node:test migration and Mermaid C4 sprite metadata compatibility. A normal merge preserves both histories and changes no Lua/Go graph-diff implementation, launcher repair, lesson, or lifecycle path. Revalidate and independently review the resulting exact head before the next normal push.",
       "selection_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
       "selection_notes": "Selected as the highest-leverage package-path-independent implementation while Ruby dependency-hashing PR #18555 occupied the publication slot. It tied Ruby and Rust graph/diff at three direct and five total unfinished descendants; Lua had no package-path collision and could advance locally. After SHA-512 PR #18583 merged and freed the parity publication slot, a fresh priority pass kept this independently reviewed, implementation-complete item ahead of the prepared Rust graph/diff item because it is already current-main reconciled and includes its required Go fixture routing.",
       "implementation_revision": "5bcc662b1f79b315837982a8828d36afada3a154",
