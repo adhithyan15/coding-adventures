@@ -1413,6 +1413,7 @@ members = [
   "tls13-cipher-suite-policy",
   "tls13-certificate-verify-input",
   "tls13-hkdf-label",
+  "tls13-key-schedule",
   "tls13-supported-versions",
   "tls13-traffic-key-material",
   "tls13-server-name",
