@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.161.0";
+pub const VERSION: &str = "0.162.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14045,9 +14045,11 @@ fn upsert_er_node(
 
 /// Parse Mermaid C4 macros into the shared structural IR.
 pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
-    parse_mermaid_c4_ast(source)?;
+    let front_matter_title = mermaid_front_matter_value(source, "title");
+    let preprocessed = preprocess_mermaid_source(source)?;
+    parse_mermaid_c4_ast(&preprocessed.source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_c4(source));
+    let mut cursor = TokenCursor::new(tokenize_mermaid_c4(&preprocessed.source));
     cursor.skip_terminators();
     let header = cursor
         .consume_if("HEADER")
@@ -14062,7 +14064,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     };
     cursor.skip_terminators();
 
-    let mut title = None;
+    let mut title = front_matter_title;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
     let mut render_config = StructuralRenderConfig {
@@ -20102,7 +20104,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.161.0");
+        assert_eq!(crate::VERSION, "0.162.0");
     }
 
     #[test]

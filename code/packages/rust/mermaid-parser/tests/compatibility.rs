@@ -21,6 +21,14 @@ const C4_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
 ));
+const C4_TITLE_PREAMBLE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-title-preamble-11.16.1-corpus.json"
+));
+const C4_TITLE_PREAMBLE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-title-preamble-11.16.1-visual-corpus.json"
+));
 const C4_RELATIONSHIP_ARROWS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-corpus.json"
@@ -3085,6 +3093,31 @@ fn pinned_c4_element_style_metadata_reaches_semantic_ir() {
     assert_eq!(technology.as_deref(), Some("Container runtime"));
     assert_eq!(sprite.as_deref(), Some("host-style.png"));
     assert_eq!(style_overrides.legend_text.as_deref(), Some("Host legend"));
+}
+
+#[test]
+fn pinned_c4_title_preamble_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_TITLE_PREAMBLE_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_TITLE_PREAMBLE_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+
+    let expected_titles = ["Banking landscape", "Production container view"];
+    for ((fixture, visual_name), expected_title) in
+        fixtures.iter().zip(visual_names).zip(expected_titles)
+    {
+        assert_eq!(visual_name, &fixture["name"]);
+        let source = fixture["source"].as_str().unwrap();
+        assert_eq!(
+            detect_mermaid_type(source).unwrap(),
+            mermaid_parser::MermaidDiagramType::C4
+        );
+        let diagram = parse_c4_diagram(source).unwrap();
+        assert_eq!(diagram.title.as_deref(), Some(expected_title));
+        assert_eq!(diagram.nodes.len(), 2);
+        assert_eq!(diagram.relationships.len(), 1);
+    }
 }
 
 #[test]

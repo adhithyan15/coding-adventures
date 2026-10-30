@@ -170,6 +170,11 @@ is incomplete.
 C4 accessibility titles and single-line or block descriptions are grammar-first
 and survive semantic IR plus structural layout into backend-neutral PaintScene
 metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
+diagram titles may come from YAML front matter or an inline `title` statement,
+with inline titles taking precedence. Standard Mermaid init directives and comments
+are removed before C4 grammar parsing while preserving source line positions; the
+resolved title then survives semantic IR, structural layout, and backend-neutral
+text paint. C4
 bidirectional and backward relationships also preserve their authored endpoint
 arrows through structural layout and backend-neutral PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
