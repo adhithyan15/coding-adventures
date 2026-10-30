@@ -888,6 +888,7 @@ members = [
     "ieee802154-core",
     "ieee802154-security",
     "http1",
+    "http1-fixed-request-body",
     "http1-response-head",
     "http1-chunked-wire-budget",
     "websocket-core",
