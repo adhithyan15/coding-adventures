@@ -697,6 +697,19 @@ exponent without allocation, and enforces caller-supplied inclusive
 modulus-bit and exponent-allowlist policy. It adds no modular arithmetic,
 signature verification, general algorithm registry, or cryptographic
 authority.
+A bounded `x509-rsa-algorithm-policy` composition now binds that exact RSA key
+validation to existing data-driven certificate algorithm-profile evidence.
+The SubjectPublicKeyInfo is derived only from the exact decoded certificate
+retained by the non-copyable profile result; callers separately supply the RSA
+modulus range, exponent allowlist, and nested ASN.1 budget. Success retains the
+selected profile, exact certificate object, and RSA key borrowed from that
+certificate, preventing a detached or independently decoded key from being
+substituted. The pure public-data composition performs no credential access,
+signing, storage, clock acquisition, audit, provider, I/O, or external effect.
+It does not choose a signature verifier, authenticate the certificate, assign
+a role, construct or validate a path, establish trust, check names or
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
 A separate bounded `rsa-pkcs1-v1-5-sha256` prerequisite now validates the
 complete modulus-width encoded message produced by a future RSA public
 operation. It accepts only the exact RFC 8017 `00 01 || PS || 00 ||
