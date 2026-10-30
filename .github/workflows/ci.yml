@@ -766,6 +766,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_image_codec_png_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_typescript_tsconfig_portability.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_sha_haskell_build_front.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_capability_gate.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_tracked_artifact_unicode17.py'

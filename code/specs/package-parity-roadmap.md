@@ -19802,3 +19802,202 @@ reviewed. Then mark the PR ready and require a completely fresh hosted matrix
 on the resulting exact lifecycle head; guarded squash auto-merge remains
 disabled until every exact-head check is terminal and acceptable and GitHub
 still reports the PR mergeable.
+
+### PR #18566 merge and exact post-inventory reconciliation
+
+GitHub records Swift RESP PR #18566 merged at exact reviewed head
+`8bfb4d692d74f305d47398c6cc51ea6e60d5f916`. The live rollup contains 40
+terminal acceptable checks: 10 successes, 29 expected path-gated skips, and one
+neutral CodeQL aggregate. The squash merge landed at
+`2026-10-29T09:06:45Z` as
+`9d0843dc86975a0442bcc86c9ccd765eed3c20a8`. No check or review was bypassed,
+and the active parity publication slot is now clear.
+
+The mandatory schema-3 refresh on that exact merged main records 1,605
+established implementation identities, 4,904 established package slots, and
+1,647 all-reported identities. Its completion bands are 1,122 singletons with
+15,708 missing slots, 181 two-to-four-lane identities with 2,282 gaps, 123
+five-to-nine-lane identities with 937 gaps, and 179 ten-to-fifteen-lane
+identities with 244 gaps. OCaml remains emerging at five packages; canonical
+collisions and unknown language buckets remain zero.
+
+Relative to the stored `83f1871e` inventory, exact merged main adds 93 BUILD
+roots across 84 identity names and removes none. The earlier pre-merge count of
+92/83 was correct before Swift RESP became the final root. Fifteen touched
+names map to existing owners: Dart/Swift binary-tree; Swift bloom-filter,
+hash-functions, hash-map, hash-set, hyperloglog, data-store protocol, RESP, and
+skip-list; emerging C/C++ bounded-json; C#/F# document HTML; Python gradient
+descent; Ruby matrix; Kotlin Micro QR; and Haskell Starlark compiler.
+
+The 69 genuinely new established identities are now fully mapped before
+reprioritization. Fifty-one Rust-only functional or gate-level CPU identities,
+including ZPU and IBM System/370, extend the existing historical-architecture
+family classifier with exact package paths rather than creating duplicate
+singleton owners. Five established neural-framework roots plus emerging C/C++
+roots gain a shared-corpus conformance owner. Rust SHA-384 gains a neutral
+primitive owner. Five fixed-memory TLS 1.3 record prerequisites gain a blocked
+decomposition owner, and eleven OCSP/AIA authentication and revocation-binding
+packages gain a supplied-input/authority boundary owner excluded from
+autonomous delivery. The durable evidence is
+`package-parity-audits/20261029-swift-resp-postmerge-inventory.json`; root
+presence grants no behavioral, native, coverage, security, or authority credit.
+
+After this classification, `sha512-existing-lane-hf04-conformance-audit` is
+the highest-leverage dependency-ready bounded portable owner: it has no
+unfinished prerequisite, two direct unfinished children, and eighteen total
+unfinished descendants. Its HF04, shared-fixture, and twelve established
+SHA-512 package paths do not overlap open PR #18495 or the prepared Lua/Rust
+graph-diff work. It is recommended but not selected here; create its dedicated
+worktree only after this reconciliation is independently reviewed. The active
+PR list remains empty, and this reconciliation does not publish or push.
+
+### SHA-512 HF04 conformance selection
+
+Independent review issued SHIP for exact reconciliation head
+`16d1607e3a784a732e9a3580f7669e6180526460`: the 93-root mapping, 69 new
+identities, owner registrations, inventory counts, 1,562-owner DAG, Swift RESP
+merge receipt, and priority graph all reproduce. Select
+`sha512-existing-lane-hf04-conformance-audit` from that reviewed head on branch
+`codex/sha512-hf04-conformance-audit`. It has no unfinished prerequisite, two
+direct unfinished children, and eighteen total unfinished descendants. Scope
+stays bounded to HF04, one neutral fixture corpus, and the twelve established
+SHA-512 lanes; emerging C/C++/OCaml lanes, Java/Kotlin/Dart ports, HMAC
+composition, host-crypto substitution, secret custody, and authority remain
+separately owned or out of scope. No live PR or prepared graph/diff branch
+overlaps the selected implementation paths.
+
+### SHA-512 HF04 local implementation
+
+The selected owner is locally repaired and complete at exact implementation
+head `f2efcaebbbd8c403ee4af3544420f72385ca46cd`, following bounded-contract and
+fixture commit `8b3c1073806ba431a47a4bb6daf15de66ca0e83b`, initial twelve-lane
+implementation `ead3c5829b6d7463c7c2f16d88b3efc53c823ed0`, and whole-corpus repair
+`43ae6d23523632c459f001f70316b6a1f5de5894`, with Rust pre-decode byte bounding
+at `b8695d393ea405b3498231653608b03df4c26d99`. The revised HF04 contract and
+3,220-byte neutral corpus carry nine byte-exact digest vectors with portable
+chunk plans plus six allocation-free 128-bit length-field vectors. All twelve
+established lanes consume the digest witnesses dynamically; each lane also
+checks the full length-field transformation without allocating an enormous
+message. Streaming lanes exercise incremental updates, non-destructive
+finalization, continuation, ownership, and copy independence where exposed.
+
+The audit repaired truncated high length words in C#, F#, Go, Lua, Perl,
+Python, Ruby, Swift, and streaming Rust; unsafe Number-based streaming counts
+in TypeScript; and update-sized retained buffers in C#, F#, Go, Python, Ruby,
+Rust, and Swift. Follow-up review drove strict bounded whole-corpus readers in
+all twelve lanes, each enforcing exact tags/fields, lowercase even hex, digest
+and length syntax, chunk bounds and exact sums before decoding while retaining
+exactly nine digest and six length witnesses. Python now snapshots contiguous
+byte views before preflight/state mutation and handles multi-byte memoryviews;
+non-contiguous views fail atomically. Perl rejects UTF-8-flagged text with the
+stable byte-string error. Go and Rust now pin continuation after snapshot, and
+Go's `Write` contract documents overflow.
+
+Native results at the repaired head are C# 15 tests at 100% line, Elixir 25 at
+100%, F# 15 at 100% line, Go 31 at 89.2%, Haskell 6, Lua 25, Perl 64
+assertions, Python 46 at 95.69%, Ruby 42 runs/148 assertions, Rust 33 plus four
+doc tests, Swift 31, and TypeScript 44 at 100%. Python Ruff and mypy,
+TypeScript build, and Rust Clippy with warnings denied pass. Package-native
+cleans plus exact artifact deletion leave no SHA-512 build/test residue, without cleaning the
+shared Rust target. Existing capability profiles remain empty, no new
+dependency or authority is introduced, and Java/Kotlin/Dart ports, emerging
+C/C++/OCaml lanes, HMAC, secret custody, and host-crypto substitution remain
+outside this owner. No additional backlog identity was discovered: every
+repair belongs to this selected owner, so no new work needs registration
+before exact-head review. This branch remains local and unpublished pending
+that review.
+
+### SHA-512 bounded-reader repair and current-main inventory refresh
+
+The final corpus-reader review found a resource-bound gap shared by all twelve
+test lanes: each parser capped decoded bytes, but its file front could first
+materialize an unbounded file. Exact repair head
+`e7b9b097a7e66b2ea89548ef9eedbd0d821af8f0` now reads at most 4,097 bytes
+through every real file loader and rejects the extra byte before unbounded
+allocation. Rust no longer embeds the fixture at compile time and exercises the
+on-disk runtime reader; Haskell uses one strict bounded read and therefore has
+no file-size/read mutation window. Every lane adds a real oversized-file
+regression while retaining strict whole-corpus validation and the nine V/six L
+witnesses.
+
+Native results are now C# 16 tests at 100% line, Elixir 26 at 100%, F# 16 at
+100% line, Go 32 at 89.2%, Haskell 7, Lua 26, Perl 65 assertions, Python 47 at
+95.69%, Ruby 43 runs/149 assertions, Rust 34 plus four doc tests, Swift 32, and
+TypeScript 45 at 100%. The Haskell test suite gains only strict bytestring and
+temporary-file support; production capabilities and authority remain empty.
+Package-native cleans plus explicit bounded artifact deletion leave all twelve
+SHA-512 package paths clean while preserving the shared Rust target.
+
+Current `origin/main` first advanced from the stored exact
+`9d0843dc86975a0442bcc86c9ccd765eed3c20a8` inventory to
+`f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0`, merged normally as
+`865d3ec36d6cf1c16ac44bda5c52b8c369bc383c`. A final fetch found main at
+`4f7cc78855a816ee944b22b0b73fd425bab596c2`; the second normal merge
+`1686ebbb6650537850629512fa8bf11ef5a59e05` preserves both histories and adds
+no further BUILD root. The complete intervening BUILD delta is therefore one
+added root and one new established identity:
+`code/packages/rust/tls13-traffic-key-material`. It is a Rust-only fixed-memory
+suite-bound traffic-key/static-IV derivation boundary and is registered under
+the existing blocked `tls13-fixed-memory-record-prerequisite-stack-classification`
+owner. It requires neutral decomposition and exact SHA-384, HMAC, HKDF,
+suite-policy, zeroization, and AEAD prerequisites before any portable delivery;
+it grants no TLS, HTTPS, handshake, custody, trust, constant-time, network, or
+deployment qualification.
+
+The exact schema-3 refresh records 1,606 established identities, 4,905
+established slots, and 1,648 all-reported identities. Completion bands are
+1,123 singletons with 15,722 missing slots, 181 two-to-four-lane identities
+with 2,282 gaps, 123 five-to-nine-lane identities with 937 gaps, and 179
+ten-to-fifteen-lane identities with 244 gaps. OCaml remains emerging at five
+packages; collisions and unknown buckets remain zero. The durable receipt is
+`package-parity-audits/20261029-sha512-main-merge-inventory.json`. No other
+intervening BUILD identity exists, and the new blocked TLS owner does not alter
+the in-progress SHA-512 selection or its two direct/eighteen total unfinished
+descendants.
+
+Final publication review also records one inherited ledger repair before the
+next prioritization: current main contains duplicate merge-receipt keys in
+`python-gradient-descent-build-front-coverage`. The duplicate values agree
+apart from equivalent note wording, so no current graph or inventory result
+changes, but strict JSON readers reject the object. New pending owner
+`package-parity-state-duplicate-merge-receipt-cleanup` must remove only the
+redundant keys, preserve the exact receipt, and add strict duplicate-key state
+validation. The verified Swift RESP postmerge refresh now truthfully marks its
+local SHA-512 successor as selected while retaining no external successor.
+
+A final pre-publication fetch advanced main once more to
+`3657ab050dbc879c5c8f4b6a68f5c24ebc9bd02f` through the Mermaid C4
+relationship-details merge. Normal merge
+`fc0aba1a337b6d4ab883188123f29c612dbe9459` preserves both histories. The
+intervening paths are confined to existing Mermaid grammar, Rust diagram and
+Mermaid packages, tests, and DG04; no BUILD root, package identity, SHA-512
+path, state path, roadmap path, or changelog rank changed. The refreshed
+inventory and priority receipts therefore remain exact.
+
+Immediately before publication, main advanced again to
+`c807d952a36a9c3ff7aefad2c8cfe91e2dd4044e` through the powered ALGOL
+normalizer merge. Normal merge
+`8089de7dffeebb3f5faaec4651a77416eba0d51a` changes only existing Rust ALGOL
+compiler, lang-aot, package changelog, and language-matrix paths. It adds no
+BUILD root or identity and overlaps no SHA-512, state, roadmap, or root
+changelog-rank path, so the reviewed inventory and selection remain exact.
+
+Live main then advanced to `e54161212491f94f0e141910dacf8f2913aa32b6`
+through the TaskApp Qt empty-board drop-zone repair. Normal merge
+`57e804ef4cbc22f798cabf9130170e24cf13374a` changes only existing
+`mosaic-emit-qt`, TaskApp, native-control contract, task-app specification, and
+lesson paths. It adds no BUILD root or identity and overlaps no SHA-512,
+state, roadmap, or root changelog-rank path; inventory and selection receipts
+remain exact.
+
+#### Draft PR #18583 publication receipt
+
+Publish independently reviewed exact current-main head
+`46eef47d8c74786e5ebee9c2c87a7b74c6e4f163` as draft PR #18583 over exact
+base `e54161212491f94f0e141910dacf8f2913aa32b6` at
+`2026-10-29T14:38:24Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.
