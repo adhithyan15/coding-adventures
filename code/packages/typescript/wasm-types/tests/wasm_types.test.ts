@@ -19,7 +19,8 @@
  *   - WasmModule can be populated
  */
 
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   VERSION,
   ValueType,
@@ -50,7 +51,7 @@ import type {
 
 describe("VERSION", () => {
   it("has a version", () => {
-    expect(VERSION).toBe("0.1.0");
+    assert.equal(VERSION, "0.1.0");
   });
 });
 
@@ -60,32 +61,32 @@ describe("VERSION", () => {
 
 describe("ValueType", () => {
   it("I32 = 0x7F", () => {
-    expect(ValueType.I32).toBe(0x7f);
+    assert.equal(ValueType.I32, 0x7f);
   });
 
   it("I64 = 0x7E", () => {
-    expect(ValueType.I64).toBe(0x7e);
+    assert.equal(ValueType.I64, 0x7e);
   });
 
   it("F32 = 0x7D", () => {
-    expect(ValueType.F32).toBe(0x7d);
+    assert.equal(ValueType.F32, 0x7d);
   });
 
   it("F64 = 0x7C", () => {
-    expect(ValueType.F64).toBe(0x7c);
+    assert.equal(ValueType.F64, 0x7c);
   });
 
   it("all four type codes are distinct", () => {
     const codes = [ValueType.I32, ValueType.I64, ValueType.F32, ValueType.F64];
     const unique = new Set(codes);
-    expect(unique.size).toBe(4);
+    assert.equal(unique.size, 4);
   });
 
   it("type codes are in descending order from 0x7F", () => {
     // WASM spec: I32 > I64 > F32 > F64 numerically
-    expect(ValueType.I32).toBeGreaterThan(ValueType.I64);
-    expect(ValueType.I64).toBeGreaterThan(ValueType.F32);
-    expect(ValueType.F32).toBeGreaterThan(ValueType.F64);
+    assert.ok(ValueType.I32 > ValueType.I64);
+    assert.ok(ValueType.I64 > ValueType.F32);
+    assert.ok(ValueType.F32 > ValueType.F64);
   });
 });
 
@@ -95,7 +96,7 @@ describe("ValueType", () => {
 
 describe("BlockType", () => {
   it("EMPTY = 0x40", () => {
-    expect(BlockType.EMPTY).toBe(0x40);
+    assert.equal(BlockType.EMPTY, 0x40);
   });
 });
 
@@ -105,19 +106,19 @@ describe("BlockType", () => {
 
 describe("ExternalKind", () => {
   it("FUNCTION = 0x00", () => {
-    expect(ExternalKind.FUNCTION).toBe(0x00);
+    assert.equal(ExternalKind.FUNCTION, 0x00);
   });
 
   it("TABLE = 0x01", () => {
-    expect(ExternalKind.TABLE).toBe(0x01);
+    assert.equal(ExternalKind.TABLE, 0x01);
   });
 
   it("MEMORY = 0x02", () => {
-    expect(ExternalKind.MEMORY).toBe(0x02);
+    assert.equal(ExternalKind.MEMORY, 0x02);
   });
 
   it("GLOBAL = 0x03", () => {
-    expect(ExternalKind.GLOBAL).toBe(0x03);
+    assert.equal(ExternalKind.GLOBAL, 0x03);
   });
 
   it("all four external kinds are distinct", () => {
@@ -128,7 +129,7 @@ describe("ExternalKind", () => {
       ExternalKind.GLOBAL,
     ];
     const unique = new Set(kinds);
-    expect(unique.size).toBe(4);
+    assert.equal(unique.size, 4);
   });
 });
 
@@ -138,7 +139,7 @@ describe("ExternalKind", () => {
 
 describe("FUNCREF", () => {
   it("FUNCREF = 0x70", () => {
-    expect(FUNCREF).toBe(0x70);
+    assert.equal(FUNCREF, 0x70);
   });
 });
 
@@ -149,16 +150,16 @@ describe("FUNCREF", () => {
 describe("FuncType", () => {
   it("construction with params and results", () => {
     const ft = makeFuncType([ValueType.I32, ValueType.I64], [ValueType.F64]);
-    expect(ft.params).toEqual([ValueType.I32, ValueType.I64]);
-    expect(ft.results).toEqual([ValueType.F64]);
+    assert.deepEqual(ft.params, [ValueType.I32, ValueType.I64]);
+    assert.deepEqual(ft.results, [ValueType.F64]);
   });
 
   it("with empty params and empty results", () => {
     const ft = makeFuncType([], []);
-    expect(ft.params).toEqual([]);
-    expect(ft.results).toEqual([]);
-    expect(ft.params.length).toBe(0);
-    expect(ft.results.length).toBe(0);
+    assert.deepEqual(ft.params, []);
+    assert.deepEqual(ft.results, []);
+    assert.equal(ft.params.length, 0);
+    assert.equal(ft.results.length, 0);
   });
 
   it("with multiple params (variadic style)", () => {
@@ -166,31 +167,31 @@ describe("FuncType", () => {
       [ValueType.I32, ValueType.I32, ValueType.I32],
       [ValueType.I32]
     );
-    expect(ft.params.length).toBe(3);
-    expect(ft.results.length).toBe(1);
-    expect(ft.params[0]).toBe(ValueType.I32);
-    expect(ft.params[1]).toBe(ValueType.I32);
-    expect(ft.params[2]).toBe(ValueType.I32);
-    expect(ft.results[0]).toBe(ValueType.I32);
+    assert.equal(ft.params.length, 3);
+    assert.equal(ft.results.length, 1);
+    assert.equal(ft.params[0], ValueType.I32);
+    assert.equal(ft.params[1], ValueType.I32);
+    assert.equal(ft.params[2], ValueType.I32);
+    assert.equal(ft.results[0], ValueType.I32);
   });
 
   it("with only results (no params)", () => {
     const ft = makeFuncType([], [ValueType.I32]);
-    expect(ft.params).toEqual([]);
-    expect(ft.results).toEqual([ValueType.I32]);
+    assert.deepEqual(ft.params, []);
+    assert.deepEqual(ft.results, [ValueType.I32]);
   });
 
   it("equality — two identical FuncTypes have equal fields", () => {
     const ft1 = makeFuncType([ValueType.I32], [ValueType.I64]);
     const ft2 = makeFuncType([ValueType.I32], [ValueType.I64]);
-    expect(ft1.params).toEqual(ft2.params);
-    expect(ft1.results).toEqual(ft2.results);
+    assert.deepEqual(ft1.params, ft2.params);
+    assert.deepEqual(ft1.results, ft2.results);
   });
 
   it("is structurally immutable — params array is frozen", () => {
     const ft = makeFuncType([ValueType.I32], [ValueType.I64]);
-    expect(Object.isFrozen(ft.params)).toBe(true);
-    expect(Object.isFrozen(ft.results)).toBe(true);
+    assert.equal(Object.isFrozen(ft.params), true);
+    assert.equal(Object.isFrozen(ft.results), true);
   });
 });
 
@@ -201,25 +202,25 @@ describe("FuncType", () => {
 describe("Limits", () => {
   it("with only min (max = null)", () => {
     const limits: Limits = { min: 1, max: null };
-    expect(limits.min).toBe(1);
-    expect(limits.max).toBeNull();
+    assert.equal(limits.min, 1);
+    assert.equal(limits.max, null);
   });
 
   it("with min and max", () => {
     const limits: Limits = { min: 2, max: 16 };
-    expect(limits.min).toBe(2);
-    expect(limits.max).toBe(16);
+    assert.equal(limits.min, 2);
+    assert.equal(limits.max, 16);
   });
 
   it("min = 0 is valid (no initial pages)", () => {
     const limits: Limits = { min: 0, max: null };
-    expect(limits.min).toBe(0);
-    expect(limits.max).toBeNull();
+    assert.equal(limits.min, 0);
+    assert.equal(limits.max, null);
   });
 
   it("min = max is valid (fixed size)", () => {
     const limits: Limits = { min: 4, max: 4 };
-    expect(limits.min).toBe(limits.max);
+    assert.equal(limits.min, limits.max);
   });
 });
 
@@ -230,14 +231,14 @@ describe("Limits", () => {
 describe("MemoryType", () => {
   it("construction with unbounded limits", () => {
     const mt: MemoryType = { limits: { min: 1, max: null } };
-    expect(mt.limits.min).toBe(1);
-    expect(mt.limits.max).toBeNull();
+    assert.equal(mt.limits.min, 1);
+    assert.equal(mt.limits.max, null);
   });
 
   it("construction with bounded limits", () => {
     const mt: MemoryType = { limits: { min: 1, max: 8 } };
-    expect(mt.limits.min).toBe(1);
-    expect(mt.limits.max).toBe(8);
+    assert.equal(mt.limits.min, 1);
+    assert.equal(mt.limits.max, 8);
   });
 });
 
@@ -248,15 +249,15 @@ describe("MemoryType", () => {
 describe("TableType", () => {
   it("construction with funcref and unbounded limits", () => {
     const tt: TableType = { elementType: FUNCREF, limits: { min: 10, max: null } };
-    expect(tt.elementType).toBe(0x70);
-    expect(tt.limits.min).toBe(10);
-    expect(tt.limits.max).toBeNull();
+    assert.equal(tt.elementType, 0x70);
+    assert.equal(tt.limits.min, 10);
+    assert.equal(tt.limits.max, null);
   });
 
   it("construction with funcref and bounded limits", () => {
     const tt: TableType = { elementType: FUNCREF, limits: { min: 0, max: 100 } };
-    expect(tt.elementType).toBe(FUNCREF);
-    expect(tt.limits.max).toBe(100);
+    assert.equal(tt.elementType, FUNCREF);
+    assert.equal(tt.limits.max, 100);
   });
 });
 
@@ -267,20 +268,20 @@ describe("TableType", () => {
 describe("GlobalType", () => {
   it("immutable i32 global", () => {
     const gt: GlobalType = { valueType: ValueType.I32, mutable: false };
-    expect(gt.valueType).toBe(ValueType.I32);
-    expect(gt.mutable).toBe(false);
+    assert.equal(gt.valueType, ValueType.I32);
+    assert.equal(gt.mutable, false);
   });
 
   it("mutable f64 global", () => {
     const gt: GlobalType = { valueType: ValueType.F64, mutable: true };
-    expect(gt.valueType).toBe(ValueType.F64);
-    expect(gt.mutable).toBe(true);
+    assert.equal(gt.valueType, ValueType.F64);
+    assert.equal(gt.mutable, true);
   });
 
   it("mutable and immutable are distinguishable", () => {
     const immut: GlobalType = { valueType: ValueType.I32, mutable: false };
     const mut: GlobalType = { valueType: ValueType.I32, mutable: true };
-    expect(immut.mutable).not.toBe(mut.mutable);
+    assert.notEqual(immut.mutable, mut.mutable);
   });
 });
 
@@ -296,10 +297,10 @@ describe("Import", () => {
       kind: ExternalKind.FUNCTION,
       typeInfo: 2,
     };
-    expect(imp.moduleName).toBe("env");
-    expect(imp.name).toBe("add");
-    expect(imp.kind).toBe(ExternalKind.FUNCTION);
-    expect(imp.typeInfo).toBe(2);
+    assert.equal(imp.moduleName, "env");
+    assert.equal(imp.name, "add");
+    assert.equal(imp.kind, ExternalKind.FUNCTION);
+    assert.equal(imp.typeInfo, 2);
   });
 
   it("table import", () => {
@@ -310,8 +311,8 @@ describe("Import", () => {
       kind: ExternalKind.TABLE,
       typeInfo: tt,
     };
-    expect(imp.kind).toBe(ExternalKind.TABLE);
-    expect(imp.typeInfo).toEqual(tt);
+    assert.equal(imp.kind, ExternalKind.TABLE);
+    assert.deepEqual(imp.typeInfo, tt);
   });
 
   it("memory import", () => {
@@ -322,8 +323,8 @@ describe("Import", () => {
       kind: ExternalKind.MEMORY,
       typeInfo: mt,
     };
-    expect(imp.kind).toBe(ExternalKind.MEMORY);
-    expect(imp.typeInfo).toEqual(mt);
+    assert.equal(imp.kind, ExternalKind.MEMORY);
+    assert.deepEqual(imp.typeInfo, mt);
   });
 
   it("global import", () => {
@@ -334,8 +335,8 @@ describe("Import", () => {
       kind: ExternalKind.GLOBAL,
       typeInfo: gt,
     };
-    expect(imp.kind).toBe(ExternalKind.GLOBAL);
-    expect(imp.typeInfo).toEqual(gt);
+    assert.equal(imp.kind, ExternalKind.GLOBAL);
+    assert.deepEqual(imp.typeInfo, gt);
   });
 });
 
@@ -350,9 +351,9 @@ describe("Export", () => {
       kind: ExternalKind.FUNCTION,
       index: 0,
     };
-    expect(exp.name).toBe("main");
-    expect(exp.kind).toBe(ExternalKind.FUNCTION);
-    expect(exp.index).toBe(0);
+    assert.equal(exp.name, "main");
+    assert.equal(exp.kind, ExternalKind.FUNCTION);
+    assert.equal(exp.index, 0);
   });
 
   it("memory export", () => {
@@ -361,8 +362,8 @@ describe("Export", () => {
       kind: ExternalKind.MEMORY,
       index: 0,
     };
-    expect(exp.kind).toBe(ExternalKind.MEMORY);
-    expect(exp.index).toBe(0);
+    assert.equal(exp.kind, ExternalKind.MEMORY);
+    assert.equal(exp.index, 0);
   });
 
   it("global export", () => {
@@ -371,8 +372,8 @@ describe("Export", () => {
       kind: ExternalKind.GLOBAL,
       index: 1,
     };
-    expect(exp.kind).toBe(ExternalKind.GLOBAL);
-    expect(exp.index).toBe(1);
+    assert.equal(exp.kind, ExternalKind.GLOBAL);
+    assert.equal(exp.index, 1);
   });
 
   it("table export", () => {
@@ -381,7 +382,7 @@ describe("Export", () => {
       kind: ExternalKind.TABLE,
       index: 0,
     };
-    expect(exp.kind).toBe(ExternalKind.TABLE);
+    assert.equal(exp.kind, ExternalKind.TABLE);
   });
 });
 
@@ -396,9 +397,9 @@ describe("Global", () => {
       globalType: { valueType: ValueType.I32, mutable: false },
       initExpr: new Uint8Array([0x41, 0x2a, 0x0b]),
     };
-    expect(glob.globalType.valueType).toBe(ValueType.I32);
-    expect(glob.globalType.mutable).toBe(false);
-    expect(glob.initExpr).toEqual(new Uint8Array([0x41, 0x2a, 0x0b]));
+    assert.equal(glob.globalType.valueType, ValueType.I32);
+    assert.equal(glob.globalType.mutable, false);
+    assert.deepEqual(glob.initExpr, new Uint8Array([0x41, 0x2a, 0x0b]));
   });
 
   it("mutable global with f64 init", () => {
@@ -410,10 +411,10 @@ describe("Global", () => {
       globalType: { valueType: ValueType.F64, mutable: true },
       initExpr: initBytes,
     };
-    expect(glob.globalType.mutable).toBe(true);
-    expect(glob.initExpr.length).toBe(10);
-    expect(glob.initExpr[0]).toBe(0x44); // f64.const opcode
-    expect(glob.initExpr[glob.initExpr.length - 1]).toBe(0x0b); // end
+    assert.equal(glob.globalType.mutable, true);
+    assert.equal(glob.initExpr.length, 10);
+    assert.equal(glob.initExpr[0], 0x44); // f64.const opcode
+    assert.equal(glob.initExpr[glob.initExpr.length - 1], 0x0b); // end
   });
 });
 
@@ -429,10 +430,10 @@ describe("Element", () => {
       offsetExpr: new Uint8Array([0x41, 0x00, 0x0b]), // i32.const 0; end
       functionIndices: [0, 1, 2],
     };
-    expect(elem.tableIndex).toBe(0);
-    expect(elem.offsetExpr).toEqual(new Uint8Array([0x41, 0x00, 0x0b]));
-    expect(elem.functionIndices).toEqual([0, 1, 2]);
-    expect(elem.functionIndices.length).toBe(3);
+    assert.equal(elem.tableIndex, 0);
+    assert.deepEqual(elem.offsetExpr, new Uint8Array([0x41, 0x00, 0x0b]));
+    assert.deepEqual(elem.functionIndices, [0, 1, 2]);
+    assert.equal(elem.functionIndices.length, 3);
   });
 
   it("empty functionIndices is valid", () => {
@@ -441,7 +442,7 @@ describe("Element", () => {
       offsetExpr: new Uint8Array([0x41, 0x00, 0x0b]),
       functionIndices: [],
     };
-    expect(elem.functionIndices.length).toBe(0);
+    assert.equal(elem.functionIndices.length, 0);
   });
 
   it("non-zero table offset", () => {
@@ -451,9 +452,9 @@ describe("Element", () => {
       offsetExpr: new Uint8Array([0x41, 0x05, 0x0b]),
       functionIndices: [10, 11],
     };
-    expect(elem.offsetExpr[1]).toBe(5);
-    expect(elem.functionIndices[0]).toBe(10);
-    expect(elem.functionIndices[1]).toBe(11);
+    assert.equal(elem.offsetExpr[1], 5);
+    assert.equal(elem.functionIndices[0], 10);
+    assert.equal(elem.functionIndices[1], 11);
   });
 });
 
@@ -469,10 +470,10 @@ describe("DataSegment", () => {
       offsetExpr: new Uint8Array([0x41, 0x00, 0x0b]), // i32.const 0; end
       data: new Uint8Array([0x48, 0x69]), // "Hi"
     };
-    expect(seg.memoryIndex).toBe(0);
-    expect(seg.offsetExpr).toEqual(new Uint8Array([0x41, 0x00, 0x0b]));
-    expect(seg.data).toEqual(new Uint8Array([0x48, 0x69]));
-    expect(seg.data.length).toBe(2);
+    assert.equal(seg.memoryIndex, 0);
+    assert.deepEqual(seg.offsetExpr, new Uint8Array([0x41, 0x00, 0x0b]));
+    assert.deepEqual(seg.data, new Uint8Array([0x48, 0x69]));
+    assert.equal(seg.data.length, 2);
   });
 
   it("empty data segment is valid", () => {
@@ -481,7 +482,7 @@ describe("DataSegment", () => {
       offsetExpr: new Uint8Array([0x41, 0x00, 0x0b]),
       data: new Uint8Array(0),
     };
-    expect(seg.data.length).toBe(0);
+    assert.equal(seg.data.length, 0);
   });
 
   it("non-zero offset", () => {
@@ -491,8 +492,8 @@ describe("DataSegment", () => {
       offsetExpr: new Uint8Array([0x41, 0x80, 0x02, 0x0b]),
       data: new Uint8Array([0xde, 0xad, 0xbe, 0xef]),
     };
-    expect(seg.offsetExpr.length).toBe(4);
-    expect(seg.data).toEqual(new Uint8Array([0xde, 0xad, 0xbe, 0xef]));
+    assert.equal(seg.offsetExpr.length, 4);
+    assert.deepEqual(seg.data, new Uint8Array([0xde, 0xad, 0xbe, 0xef]));
   });
 });
 
@@ -507,12 +508,13 @@ describe("FunctionBody", () => {
       locals: [ValueType.I32, ValueType.I32],
       code: new Uint8Array([0x20, 0x00, 0x20, 0x01, 0x6a, 0x0b]),
     };
-    expect(body.locals).toEqual([ValueType.I32, ValueType.I32]);
-    expect(body.code).toEqual(
-      new Uint8Array([0x20, 0x00, 0x20, 0x01, 0x6a, 0x0b])
+    assert.deepEqual(body.locals, [ValueType.I32, ValueType.I32]);
+    assert.deepEqual(
+      body.code,
+      new Uint8Array([0x20, 0x00, 0x20, 0x01, 0x6a, 0x0b]),
     );
-    expect(body.locals.length).toBe(2);
-    expect(body.code.length).toBe(6);
+    assert.equal(body.locals.length, 2);
+    assert.equal(body.code.length, 6);
   });
 
   it("no locals — empty locals list", () => {
@@ -520,8 +522,8 @@ describe("FunctionBody", () => {
       locals: [],
       code: new Uint8Array([0x0b]), // just end
     };
-    expect(body.locals.length).toBe(0);
-    expect(body.code[0]).toBe(0x0b);
+    assert.equal(body.locals.length, 0);
+    assert.equal(body.code[0], 0x0b);
   });
 
   it("mixed local types", () => {
@@ -529,9 +531,9 @@ describe("FunctionBody", () => {
       locals: [ValueType.I32, ValueType.F64, ValueType.I64],
       code: new Uint8Array([0x0b]),
     };
-    expect(body.locals[0]).toBe(ValueType.I32);
-    expect(body.locals[1]).toBe(ValueType.F64);
-    expect(body.locals[2]).toBe(ValueType.I64);
+    assert.equal(body.locals[0], ValueType.I32);
+    assert.equal(body.locals[1], ValueType.F64);
+    assert.equal(body.locals[2], ValueType.I64);
   });
 });
 
@@ -545,14 +547,14 @@ describe("CustomSection", () => {
       name: "name",
       data: new Uint8Array([0x01, 0x02, 0x03]),
     };
-    expect(cs.name).toBe("name");
-    expect(cs.data).toEqual(new Uint8Array([0x01, 0x02, 0x03]));
+    assert.equal(cs.name, "name");
+    assert.deepEqual(cs.data, new Uint8Array([0x01, 0x02, 0x03]));
   });
 
   it("empty data is valid", () => {
     const cs: CustomSection = { name: "producers", data: new Uint8Array(0) };
-    expect(cs.name).toBe("producers");
-    expect(cs.data.length).toBe(0);
+    assert.equal(cs.name, "producers");
+    assert.equal(cs.data.length, 0);
   });
 
   it("any name is valid", () => {
@@ -560,7 +562,7 @@ describe("CustomSection", () => {
       name: "my.custom.tool",
       data: new Uint8Array([0xff]),
     };
-    expect(cs.name).toBe("my.custom.tool");
+    assert.equal(cs.name, "my.custom.tool");
   });
 });
 
@@ -571,18 +573,18 @@ describe("CustomSection", () => {
 describe("WasmModule", () => {
   it("starts with all empty arrays and null start", () => {
     const mod = new WasmModule();
-    expect(mod.types).toEqual([]);
-    expect(mod.imports).toEqual([]);
-    expect(mod.functions).toEqual([]);
-    expect(mod.tables).toEqual([]);
-    expect(mod.memories).toEqual([]);
-    expect(mod.globals).toEqual([]);
-    expect(mod.exports).toEqual([]);
-    expect(mod.start).toBeNull();
-    expect(mod.elements).toEqual([]);
-    expect(mod.code).toEqual([]);
-    expect(mod.data).toEqual([]);
-    expect(mod.customs).toEqual([]);
+    assert.deepEqual(mod.types, []);
+    assert.deepEqual(mod.imports, []);
+    assert.deepEqual(mod.functions, []);
+    assert.deepEqual(mod.tables, []);
+    assert.deepEqual(mod.memories, []);
+    assert.deepEqual(mod.globals, []);
+    assert.deepEqual(mod.exports, []);
+    assert.equal(mod.start, null);
+    assert.deepEqual(mod.elements, []);
+    assert.deepEqual(mod.code, []);
+    assert.deepEqual(mod.data, []);
+    assert.deepEqual(mod.customs, []);
   });
 
   it("can be populated with types and functions", () => {
@@ -591,24 +593,24 @@ describe("WasmModule", () => {
     mod.types.push(ft);
     mod.functions.push(0);
 
-    expect(mod.types.length).toBe(1);
-    expect(mod.types[0]).toEqual(ft);
-    expect(mod.functions[0]).toBe(0);
+    assert.equal(mod.types.length, 1);
+    assert.deepEqual(mod.types[0], ft);
+    assert.equal(mod.functions[0], 0);
   });
 
   it("can be populated with memories", () => {
     const mod = new WasmModule();
     const mt: MemoryType = { limits: { min: 1, max: null } };
     mod.memories.push(mt);
-    expect(mod.memories.length).toBe(1);
-    expect(mod.memories[0].limits.min).toBe(1);
+    assert.equal(mod.memories.length, 1);
+    assert.equal(mod.memories[0].limits.min, 1);
   });
 
   it("can set the start function", () => {
     const mod = new WasmModule();
-    expect(mod.start).toBeNull();
+    assert.equal(mod.start, null);
     mod.start = 3;
-    expect(mod.start).toBe(3);
+    assert.equal(mod.start, 3);
   });
 
   it("can be populated with imports and exports", () => {
@@ -623,10 +625,10 @@ describe("WasmModule", () => {
     mod.imports.push(imp);
     mod.exports.push(exp);
 
-    expect(mod.imports.length).toBe(1);
-    expect(mod.exports.length).toBe(1);
-    expect(mod.imports[0].moduleName).toBe("env");
-    expect(mod.exports[0].name).toBe("main");
+    assert.equal(mod.imports.length, 1);
+    assert.equal(mod.exports.length, 1);
+    assert.equal(mod.imports[0].moduleName, "env");
+    assert.equal(mod.exports[0].name, "main");
   });
 
   it("can be populated with globals, elements, data, and customs", () => {
@@ -653,10 +655,10 @@ describe("WasmModule", () => {
     mod.data.push(seg);
     mod.customs.push(cs);
 
-    expect(mod.globals.length).toBe(1);
-    expect(mod.elements.length).toBe(1);
-    expect(mod.data.length).toBe(1);
-    expect(mod.customs.length).toBe(1);
+    assert.equal(mod.globals.length, 1);
+    assert.equal(mod.elements.length, 1);
+    assert.equal(mod.data.length, 1);
+    assert.equal(mod.customs.length, 1);
   });
 
   it("multiple instances are independent", () => {
@@ -665,7 +667,7 @@ describe("WasmModule", () => {
     mod1.types.push(makeFuncType([ValueType.I32], []));
 
     // mod2 should still be empty
-    expect(mod2.types.length).toBe(0);
-    expect(mod1.types.length).toBe(1);
+    assert.equal(mod2.types.length, 0);
+    assert.equal(mod1.types.length, 1);
   });
 });

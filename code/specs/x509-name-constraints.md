@@ -1,4 +1,4 @@
-# DNS NameConstraints Structure and Evaluation
+# DNS and IP NameConstraints Structure with DNS Evaluation
 
 ## Status
 
@@ -6,13 +6,16 @@ Specification for the repository-owned structural decoders for optional
 reviewed-root snapshot `name_constraints` contents and complete certificate
 NameConstraints extension values. The snapshot bytes are SEQUENCE contents:
 no X.509 extension wrapper and no outer universal SEQUENCE tag or length. That
-decoder remains restricted to one non-empty `permittedSubtrees [0]` field. The
-complete-DER decoder accepts non-empty permitted and excluded dNSName fields,
+decoder remains restricted to one non-empty permitted-DNS
+`permittedSubtrees [0]` field. The complete-DER decoder accepts non-empty
+permitted and excluded fields containing dNSName and iPAddress subtrees,
 independently or together in schema order. A separate bounded evaluator applies
-both sets to caller-supplied, already-decoded DNS subjectAltName values. None of
-these operations constructs a path, binds evidence to a certificate or anchor,
-grants trust, verifies a reference hostname, checks revocation, performs TLS or
-HTTP, authorizes OAuth transport, or opens a network connection.
+DNS sets to caller-supplied, already-decoded DNS subjectAltName values and fails
+closed if either retained IP set is non-empty. IP subnet evaluation remains a
+separate policy boundary. Standalone decoding and evaluation do not construct a
+path, bind evidence to a certificate or anchor, grant trust, verify a reference
+hostname, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+open a network connection.
 
 ## Standards Boundary
 
@@ -34,10 +37,13 @@ GeneralSubtree ::= SEQUENCE {
 The module uses implicit tagging. Each supported subtree field starts with an
 exact context-specific constructed tag `[0]` or `[1]`; that tag replaces the
 universal SEQUENCE tag for `GeneralSubtrees`. Every child is an exact universal
-constructed `GeneralSubtree` SEQUENCE. Its sole supported field is an exact
-primitive context-specific dNSName `[2]` whose contents are non-empty IA5String
-bytes. A complete extension value carries the outer universal SEQUENCE; the
-reviewed snapshot contents form carries only the exact `[0]` field.
+constructed `GeneralSubtree` SEQUENCE. The complete-DER decoder supports either
+an exact primitive context-specific dNSName `[2]` whose contents are non-empty
+IA5String bytes or an exact primitive context-specific iPAddress `[7]` whose
+contents are an 8-octet IPv4 address-plus-mask value or a 32-octet IPv6
+address-plus-mask value. A complete extension value carries the outer universal
+SEQUENCE. The reviewed snapshot contents form carries only the exact `[0]`
+field and remains restricted to dNSName `[2]`.
 
 This decoder rejects all other shapes, including:
 
@@ -45,8 +51,10 @@ This decoder rejects all other shapes, including:
 - an empty permitted- or excluded-subtree collection;
 - duplicate fields or excluded-before-permitted field order;
 - a non-SEQUENCE GeneralSubtree;
-- a base using any GeneralName choice other than dNSName `[2]`;
+- a base using any GeneralName choice other than dNSName `[2]` or, for the
+  complete-DER entry point only, iPAddress `[7]`;
 - an empty or non-ASCII dNSName;
+- an iPAddress value whose length is not exactly 8 or 32 octets;
 - encoded `minimum` or `maximum` distance fields; and
 - any trailing GeneralSubtree field.
 
@@ -55,10 +63,12 @@ use the default minimum of zero and omit maximum, and this bounded slice does
 not implement distance evaluation. A later extension may add that behavior
 only with its own policy and adversarial tests.
 
-The decoder does not interpret DNS constraint syntax. In particular, a
-leading dot such as `.tr` is retained byte-for-byte after IA5 validation. The
-evaluator owns the supported DNS syntax and subtree semantics described below;
-self-issued-certificate handling remains future path-policy work.
+The decoder does not interpret DNS constraint syntax or IP mask semantics. In
+particular, a leading dot such as `.tr` is retained byte-for-byte after IA5 validation. The
+complete decoder likewise retains each exact IP address-plus-mask byte slice
+without deciding whether its mask is CIDR-contiguous. Separate evaluators own
+the supported DNS and IP policy semantics; self-issued-certificate handling
+remains future path-policy work.
 
 ## DNS Subtree Evaluation
 
@@ -99,17 +109,22 @@ evaluation; the evaluator never accepts merely because another SAN matches.
 
 ```rust
 pub const MAX_DNS_SUBTREES: usize = 256;
+pub const MAX_GENERAL_SUBTREES: usize = MAX_DNS_SUBTREES;
 pub const MAX_PRESENTED_DNS_NAMES: usize = 256;
 
 pub struct NameConstraints<'a> {
-    // fixed-capacity borrowed DNS subtree strings in wire order
+    // fixed-capacity borrowed DNS strings and IP byte slices
 }
 
 impl<'a> NameConstraints<'a> {
     pub fn permitted_dns_subtrees(&self) -> &[&'a str];
     pub fn excluded_dns_subtrees(&self) -> &[&'a str];
+    pub fn permitted_ip_subtrees(&self) -> &[&'a [u8]];
+    pub fn excluded_ip_subtrees(&self) -> &[&'a [u8]];
     pub fn permitted_len(&self) -> usize;
     pub fn excluded_len(&self) -> usize;
+    pub fn permitted_ip_len(&self) -> usize;
+    pub fn excluded_ip_len(&self) -> usize;
     pub fn len(&self) -> usize;
     pub fn is_empty(&self) -> bool;
 }
@@ -130,21 +145,30 @@ pub fn evaluate_dns_names(
 ) -> Result<ConstrainedDnsNames, DnsConstraintError>;
 ```
 
-The result stores borrowed strings in two independently capped fixed-capacity
-arrays. No count or wire length controls an allocation. More than
-`MAX_DNS_SUBTREES` entries in either class fail before another value is
-retained.
+The result stores borrowed DNS strings and IP byte slices in fixed-capacity
+arrays. DNS and IP entries share one `MAX_GENERAL_SUBTREES` total-entry ceiling
+within each top-level permitted or excluded field; they are not independently
+capped ways to double the accepted field size. Each form is exposed in its wire
+order relative to other entries of that form. `len()` counts all retained DNS
+and IP subtrees across both fields. No count or wire length controls an
+allocation. A 257th mixed-form entry fails before another value is retained.
 
 All traversal uses the caller's `Asn1Decoder`. The top-level subtree fields,
-every GeneralSubtree SEQUENCE, and every dNSName consume the same total-element
-budget. Opening a subtree field and each GeneralSubtree use the same
+every GeneralSubtree SEQUENCE, and every dNSName or iPAddress consume the same
+total-element budget. Opening a subtree field and each GeneralSubtree use the same
 constructed-depth limit. Canonical identifier and length checks remain owned
-by `der-tlv`, while typed tag and IA5 checks remain owned by `der-asn1`.
+by `der-tlv`, while typed tag, IA5, and implicit OCTET STRING checks remain
+owned by `der-asn1`.
 
 The presented-name collection is capped at `MAX_PRESENTED_DNS_NAMES`. Combined
-with each decoder `MAX_DNS_SUBTREES` cap and the DNS textual length bounds,
+with each decoder `MAX_GENERAL_SUBTREES` cap and the DNS textual length bounds,
 evaluation has a fixed worst-case comparison budget and performs no allocation.
 Successful evidence retains only the evaluated name count, not hostile names.
+Before DNS constraint validation or matching, the DNS evaluator rejects any
+decoded value with a non-empty permitted or excluded IP set using the stable
+`UnevaluatedIpSubtrees` category. This prevents all current DNS-only path
+consumers from treating retained IP constraints as if that name form were
+absent.
 
 ## Exact Direct-Link Composition
 
@@ -180,11 +204,20 @@ structure's budget cannot increase the bounded work inside the other. Together
 with the 256-name and 256-subtree caps, this gives a fixed upper bound without
 heap allocation in the NameConstraints decoder or evaluator.
 
+Complete-DER intermediate-policy consumers use the same DNS evaluator after
+decoding. They propagate `UnevaluatedIpSubtrees` as a policy failure whenever a
+permitted or excluded IP subtree is retained. They must not downgrade that
+failure, skip the IP form, or treat it as an absent constraint. A later
+composition may replace this fail-closed boundary only by evaluating the exact
+retained IP constraints against the exact path-bound target IP identities.
+
 ## Errors and Offsets
 
 Errors expose only a stable category and numeric offset. They retain no input
 bytes or decoded names. Offsets are relative to the first octet of the supplied
-NameConstraints SEQUENCE contents.
+byte slice: the `[0]` field for snapshot contents or the outer SEQUENCE for a
+complete certificate-extension value. Invalid IP-length offsets identify the
+first octet of the IP value contents.
 
 Required categories distinguish:
 
@@ -196,25 +229,31 @@ Required categories distinguish:
 - unsupported GeneralName bases;
 - empty DNS subtrees;
 - invalid IA5 DNS subtrees; and
+- invalid IP subtree lengths; and
 - unsupported or trailing GeneralSubtree fields.
 
 Failed reads preserve the shared decoder and cursor transactionality promised
 by `der-asn1`. Diagnostics must not include hostile constraint text.
 
-Evaluation errors distinguish too many presented names, invalid permitted or
-excluded subtree syntax, invalid presented-name syntax, an excluded presented
-name, and a presented name outside all permitted subtrees. They expose only the
-stable category and the index in the relevant collection. Debug and display
-output never retain or print a DNS name or constraint.
+Evaluation errors distinguish too many presented names, retained but
+unevaluated IP subtrees, invalid permitted or excluded DNS subtree syntax,
+invalid presented-name syntax, an excluded presented name, and a presented
+name outside all permitted subtrees. They expose only the stable category and
+the index in the relevant collection. `UnevaluatedIpSubtrees` uses index zero
+because it identifies a missing policy stage rather than hostile payload.
+Debug and display output never retain or print a DNS name, IP value, or
+constraint.
 
 ## Adversarial Matrix
 
 Decoder tests cover the exact reviewed bytes `a0 07 30 05 82 03 2e 74 72`,
 permitted-only, excluded-only, and combined full-DER values, schema order,
-duplicates, multiple data-driven DNS subtrees, independent capacity
-boundaries, empty and malformed containers,
+duplicates, multiple data-driven DNS subtrees, exact IPv4 and IPv6 constraint
+widths, mixed DNS/IP fields, one shared mixed-form capacity boundary per field,
+empty and malformed containers,
 universal/application/private/primitive/wrong-number
 top-level tags, wrong GeneralSubtree tags, every unsupported GeneralName tag,
+every invalid IP length around the exact 8/32 widths, snapshot rejection of IP,
 empty and non-ASCII DNS values, minimum/maximum/trailing fields, shared depth
 and element exhaustion, payload-local offsets, and redacted diagnostics.
 
@@ -224,6 +263,8 @@ constraints and names, empty collections, complete-leftmost-label wildcards,
 every syntax category, the 256-name boundary, unmatched-name failure after
 another match, complete constraint prevalidation, deterministic indices, and
 redacted diagnostics.
+They also cover fail-closed DNS evaluation for both retained permitted and
+excluded IP subtrees before any DNS name can be accepted.
 
 Composition tests cover absent constraints, the exact reviewed `.tr` bytes,
 multiple target DNS names, DNS-absent SANs, malformed selected constraint bytes,
@@ -232,9 +273,10 @@ optional success evidence, and payload-free diagnostics.
 
 ## Deliberate Non-Goals
 
-This slice does not decode the surrounding X.509 Extension structure, parse
-non-DNS constraints, perform IDNA conversion, evaluate directory names or IP
-constraints, construct a generalized multi-hop path, apply
+This slice does not decode the surrounding X.509 Extension structure, validate
+IP mask contiguity, evaluate IP subtrees or any GeneralName other than DNS,
+perform IDNA conversion, evaluate directory names, construct a generalized
+multi-hop path, apply
 self-issued-certificate rules, check revocation, perform TLS or HTTP, authorize
 OAuth transport, or open a network connection. Successful standalone decoding
 and evaluation retain their narrow meanings. Successful direct-link composition
