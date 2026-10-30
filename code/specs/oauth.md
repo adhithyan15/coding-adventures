@@ -1388,6 +1388,22 @@ policy, decide freshness or revocation, fetch or cache data, read a clock, or
 grant path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete
 HTTPS remains unavailable.
 
+A parallel bounded `x509-ocsp-rsa-pkcs1-v1-5-sha384-signature` prerequisite
+verifies one structurally decoded `BasicOCSPResponse` with one separately
+policy-validated RSA public key. It accepts only the exact
+`sha384WithRSAEncryption` algorithm identifier with canonical present NULL
+parameters, requires a byte-aligned signature BIT STRING, hashes the preserved
+canonical `ResponseData` DER with the repository-owned SHA-384 implementation,
+applies the bounded repository-owned RSA public operation, and validates the
+complete PKCS #1 v1.5 SHA-384 encoded message. Success returns non-copyable
+evidence retaining the exact response and validated public key. The pure
+public-data verifier performs no credential access, signing, storage, clock
+acquisition, or external effect, so it emits no runtime audit event. It does
+not route algorithms, select or authorize the responder key, bind response
+status to a certificate or path, decide freshness or revocation, establish
+trust, perform TLS or HTTP, or authorize OAuth transport. Concrete HTTPS
+remains unavailable.
+
 A parallel bounded `x509-ocsp-rsa-pkcs1-v1-5-sha512-signature` prerequisite
 verifies one structurally decoded `BasicOCSPResponse` with one separately
 policy-validated RSA public key. It accepts only the exact
