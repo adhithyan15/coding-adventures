@@ -1441,6 +1441,17 @@ The direct reviewed-server anchor-policy composition is the sole consumer in
 this slice that binds that evaluator to certificate and anchor evidence. It
 does not make the standalone decoder or evaluator authoritative, and complete
 path validation, revocation, TLS, HTTP, and OAuth transport remain unavailable.
+A bounded component follow-up now accepts explicit borrowed permitted-DNS and
+excluded-DNS subtree slices separately from presented DNS names. It retains the
+same allocation-free syntax validation, exclusion precedence, wildcard rules,
+and 256-entry ceilings while allowing later path policy to compose DNS and IP
+evaluation over one decoded mixed-form NameConstraints value. The existing
+whole-value DNS entry point still fails closed whenever any retained IP
+subtree remains unevaluated. The component entry point does not itself prove
+that IP constraints were evaluated, bind names or constraints to exact
+certificate/path evidence, establish trust, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or cause an external effect; concrete HTTPS
+remains unavailable.
 A bounded two-link evidence-binding follow-up now consumes one authenticated
 child-to-intermediate path-length transition together with one authenticated
 intermediate-to-reviewed-root link. It fails closed unless the complete
