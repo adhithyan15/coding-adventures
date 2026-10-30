@@ -5,7 +5,8 @@
  * Test vectors come from the WebAssembly spec and LLVM's LEB128 documentation.
  */
 
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   VERSION,
   LEB128Error,
@@ -21,15 +22,15 @@ import {
 
 describe("wasm-leb128 metadata", () => {
   it("has a version", () => {
-    expect(VERSION).toBe("0.1.0");
+    assert.equal(VERSION, "0.1.0");
   });
 
   it("exports LEB128Error as an Error subclass", () => {
     const err = new LEB128Error("test");
-    expect(err).toBeInstanceOf(Error);
-    expect(err).toBeInstanceOf(LEB128Error);
-    expect(err.name).toBe("LEB128Error");
-    expect(err.message).toBe("test");
+    assert.ok(err instanceof Error);
+    assert.ok(err instanceof LEB128Error);
+    assert.equal(err.name, "LEB128Error");
+    assert.equal(err.message, "test");
   });
 });
 
@@ -43,16 +44,16 @@ describe("decodeUnsigned", () => {
   // 0x00 has no continuation bit, payload = 0.
   it("decodes zero", () => {
     const [value, bytes] = decodeUnsigned(new Uint8Array([0x00]));
-    expect(value).toBe(0);
-    expect(bytes).toBe(1);
+    assert.equal(value, 0);
+    assert.equal(bytes, 1);
   });
 
   // Test case 2: One-byte unsigned (single byte, no continuation bit)
   // [0x03] → value=3, bytesConsumed=1
   it("decodes one-byte value (3)", () => {
     const [value, bytes] = decodeUnsigned(new Uint8Array([0x03]));
-    expect(value).toBe(3);
-    expect(bytes).toBe(1);
+    assert.equal(value, 3);
+    assert.equal(bytes, 1);
   });
 
   // Test case 4: Multi-byte (the canonical ULEB128 example)
@@ -74,8 +75,8 @@ describe("decodeUnsigned", () => {
     const [value, bytes] = decodeUnsigned(
       new Uint8Array([0xe5, 0x8e, 0x26])
     );
-    expect(value).toBe(624485);
-    expect(bytes).toBe(3);
+    assert.equal(value, 624485);
+    assert.equal(bytes, 3);
   });
 
   // Test case 5: Maximum u32 value (4294967295 = 0xFFFFFFFF)
@@ -94,8 +95,8 @@ describe("decodeUnsigned", () => {
     const [value, bytes] = decodeUnsigned(
       new Uint8Array([0xff, 0xff, 0xff, 0xff, 0x0f])
     );
-    expect(value).toBe(4294967295);
-    expect(bytes).toBe(5);
+    assert.equal(value, 4294967295);
+    assert.equal(bytes, 5);
   });
 
   // Test case 10: Non-zero offset
@@ -106,30 +107,32 @@ describe("decodeUnsigned", () => {
     //         skip  624485 encoded here   skip
     const data = new Uint8Array([0xaa, 0xe5, 0x8e, 0x26, 0xbb]);
     const [value, bytes] = decodeUnsigned(data, 1);
-    expect(value).toBe(624485);
-    expect(bytes).toBe(3);
+    assert.equal(value, 624485);
+    assert.equal(bytes, 3);
   });
 
   // Test case 9: Unterminated sequence
   // [0x80, 0x80] — both bytes have continuation bit set, no terminator
   it("throws LEB128Error for unterminated sequence", () => {
-    expect(() => decodeUnsigned(new Uint8Array([0x80, 0x80]))).toThrow(
-      LEB128Error
+    assert.throws(
+      () => decodeUnsigned(new Uint8Array([0x80, 0x80])),
+      LEB128Error,
     );
   });
 
   // Empty array should also throw
   it("throws LEB128Error for empty input", () => {
-    expect(() => decodeUnsigned(new Uint8Array([]))).toThrow(LEB128Error);
+    assert.throws(() => decodeUnsigned(new Uint8Array([])), LEB128Error);
   });
 
   // Sequence too long (more than 5 bytes with continuation bits)
   it("throws LEB128Error for sequence exceeding 5 bytes", () => {
-    expect(() =>
-      decodeUnsigned(
-        new Uint8Array([0x80, 0x80, 0x80, 0x80, 0x80, 0x01])
-      )
-    ).toThrow(LEB128Error);
+    assert.throws(
+      () => decodeUnsigned(
+        new Uint8Array([0x80, 0x80, 0x80, 0x80, 0x80, 0x01]),
+      ),
+      LEB128Error,
+    );
   });
 });
 
@@ -141,8 +144,8 @@ describe("decodeSigned", () => {
   // Test case 1: Zero
   it("decodes zero", () => {
     const [value, bytes] = decodeSigned(new Uint8Array([0x00]));
-    expect(value).toBe(0);
-    expect(bytes).toBe(1);
+    assert.equal(value, 0);
+    assert.equal(bytes, 1);
   });
 
   // Test case 3: One-byte signed negative
@@ -155,8 +158,8 @@ describe("decodeSigned", () => {
   //   result = 126 | -(1 << 7) = 126 | -128 = -2  ✓
   it("decodes one-byte signed negative (-2)", () => {
     const [value, bytes] = decodeSigned(new Uint8Array([0x7e]));
-    expect(value).toBe(-2);
-    expect(bytes).toBe(1);
+    assert.equal(value, -2);
+    assert.equal(bytes, 1);
   });
 
   // Test case 6: Maximum i32 value (2147483647 = 0x7FFFFFFF)
@@ -165,8 +168,8 @@ describe("decodeSigned", () => {
     const [value, bytes] = decodeSigned(
       new Uint8Array([0xff, 0xff, 0xff, 0xff, 0x07])
     );
-    expect(value).toBe(2147483647);
-    expect(bytes).toBe(5);
+    assert.equal(value, 2147483647);
+    assert.equal(bytes, 5);
   });
 
   // Test case 7: Minimum i32 value (-2147483648 = 0x80000000)
@@ -184,8 +187,8 @@ describe("decodeSigned", () => {
     const [value, bytes] = decodeSigned(
       new Uint8Array([0x80, 0x80, 0x80, 0x80, 0x78])
     );
-    expect(value).toBe(-2147483648);
-    expect(bytes).toBe(5);
+    assert.equal(value, -2147483648);
+    assert.equal(bytes, 5);
   });
 
   // Test case 10: Non-zero offset for signed
@@ -193,14 +196,15 @@ describe("decodeSigned", () => {
     // [0xFF, 0x7E, 0x00] — read 0x7E at offset 1 → -2
     const data = new Uint8Array([0xff, 0x7e, 0x00]);
     const [value, bytes] = decodeSigned(data, 1);
-    expect(value).toBe(-2);
-    expect(bytes).toBe(1);
+    assert.equal(value, -2);
+    assert.equal(bytes, 1);
   });
 
   // Test case 9: Unterminated for signed
   it("throws LEB128Error for unterminated sequence", () => {
-    expect(() => decodeSigned(new Uint8Array([0x80, 0x80]))).toThrow(
-      LEB128Error
+    assert.throws(
+      () => decodeSigned(new Uint8Array([0x80, 0x80])),
+      LEB128Error,
     );
   });
 });
@@ -211,25 +215,27 @@ describe("decodeSigned", () => {
 
 describe("encodeUnsigned", () => {
   it("encodes zero", () => {
-    expect(encodeUnsigned(0)).toEqual(new Uint8Array([0x00]));
+    assert.deepEqual(encodeUnsigned(0), new Uint8Array([0x00]));
   });
 
   it("encodes small value (3)", () => {
-    expect(encodeUnsigned(3)).toEqual(new Uint8Array([0x03]));
+    assert.deepEqual(encodeUnsigned(3), new Uint8Array([0x03]));
   });
 
   it("encodes 624485", () => {
     // 624485 = 0b0001_0011_0000_0111_0110_0101
     // 7-bit groups (LE): 0x65=101, 0x0E=14, 0x26=38
     // With continuation bits: [0xE5, 0x8E, 0x26]
-    expect(encodeUnsigned(624485)).toEqual(
-      new Uint8Array([0xe5, 0x8e, 0x26])
+    assert.deepEqual(
+      encodeUnsigned(624485),
+      new Uint8Array([0xe5, 0x8e, 0x26]),
     );
   });
 
   it("encodes max u32 (4294967295)", () => {
-    expect(encodeUnsigned(4294967295)).toEqual(
-      new Uint8Array([0xff, 0xff, 0xff, 0xff, 0x0f])
+    assert.deepEqual(
+      encodeUnsigned(4294967295),
+      new Uint8Array([0xff, 0xff, 0xff, 0xff, 0x0f]),
     );
   });
 });
@@ -240,26 +246,28 @@ describe("encodeUnsigned", () => {
 
 describe("encodeSigned", () => {
   it("encodes zero", () => {
-    expect(encodeSigned(0)).toEqual(new Uint8Array([0x00]));
+    assert.deepEqual(encodeSigned(0), new Uint8Array([0x00]));
   });
 
   it("encodes positive value (3)", () => {
-    expect(encodeSigned(3)).toEqual(new Uint8Array([0x03]));
+    assert.deepEqual(encodeSigned(3), new Uint8Array([0x03]));
   });
 
   it("encodes -2", () => {
-    expect(encodeSigned(-2)).toEqual(new Uint8Array([0x7e]));
+    assert.deepEqual(encodeSigned(-2), new Uint8Array([0x7e]));
   });
 
   it("encodes max i32 (2147483647)", () => {
-    expect(encodeSigned(2147483647)).toEqual(
-      new Uint8Array([0xff, 0xff, 0xff, 0xff, 0x07])
+    assert.deepEqual(
+      encodeSigned(2147483647),
+      new Uint8Array([0xff, 0xff, 0xff, 0xff, 0x07]),
     );
   });
 
   it("encodes min i32 (-2147483648)", () => {
-    expect(encodeSigned(-2147483648)).toEqual(
-      new Uint8Array([0x80, 0x80, 0x80, 0x80, 0x78])
+    assert.deepEqual(
+      encodeSigned(-2147483648),
+      new Uint8Array([0x80, 0x80, 0x80, 0x80, 0x78]),
     );
   });
 });
@@ -278,8 +286,8 @@ describe("round-trip unsigned encode/decode", () => {
     it(`round-trips unsigned ${v}`, () => {
       const encoded = encodeUnsigned(v);
       const [decoded, bytesConsumed] = decodeUnsigned(encoded);
-      expect(decoded).toBe(v);
-      expect(bytesConsumed).toBe(encoded.length);
+      assert.equal(decoded, v);
+      assert.equal(bytesConsumed, encoded.length);
     });
   }
 });
@@ -295,8 +303,8 @@ describe("round-trip signed encode/decode", () => {
     it(`round-trips signed ${v}`, () => {
       const encoded = encodeSigned(v);
       const [decoded, bytesConsumed] = decodeSigned(encoded);
-      expect(decoded).toBe(v);
-      expect(bytesConsumed).toBe(encoded.length);
+      assert.equal(decoded, v);
+      assert.equal(bytesConsumed, encoded.length);
     });
   }
 });

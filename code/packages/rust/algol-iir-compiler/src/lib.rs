@@ -3661,7 +3661,18 @@ impl Compiler {
             .clone();
         let target_name = self.resolve_procedure_identity(&name);
         if self.proc_sigs.contains_key(&target_name)
-            || !matches!(target_name.as_str(), "abs" | "sign" | "entier")
+            || !matches!(
+                target_name.as_str(),
+                "abs"
+                    | "sign"
+                    | "entier"
+                    | "sqrt"
+                    | "sin"
+                    | "cos"
+                    | "arctan"
+                    | "ln"
+                    | "exp"
+            )
         {
             return None;
         }
@@ -3669,13 +3680,82 @@ impl Compiler {
         if actuals.len() != 1 {
             return None;
         }
+        if target_name == "entier" {
+            if let Some(value) = self.exact_static_integer_floor_root_value(actuals[0]) {
+                return Some(value);
+            }
+        }
         let value = self.exact_static_integer_normalizer_operand_value(actuals[0])?;
         match target_name.as_str() {
             "abs" => value.checked_abs(),
             "sign" => Some(value.signum()),
             "entier" => Some(value),
+            "sqrt" if value >= 0 => {
+                let value = value as u64;
+                let root = value.isqrt();
+                (root * root == value).then_some(root as i64)
+            }
+            "sin" | "arctan" if value == 0 => Some(0),
+            "cos" | "exp" if value == 0 => Some(1),
+            "ln" if value == 1 => Some(0),
             _ => None,
         }
+    }
+
+    /// Preserve `entier(sqrt(n))` in the exact integer domain even when `n`
+    /// is not a perfect square. A unary minus produces the mathematical floor
+    /// of the negative root, so a non-square uses the negated ceiling root.
+    /// Shadowed built-ins and dynamic operands stay outside the proof.
+    fn exact_static_integer_floor_root_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        self.exact_static_integer_signed_floor_root_value(node, false)
+    }
+
+    fn exact_static_integer_signed_floor_root_value(
+        &self,
+        node: &GrammarASTNode,
+        negative: bool,
+    ) -> Option<i64> {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.exact_static_integer_signed_floor_root_value(child, negative);
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return match sign {
+                "+" => self.exact_static_integer_signed_floor_root_value(child, negative),
+                "-" => self.exact_static_integer_signed_floor_root_value(child, !negative),
+                _ => None,
+            };
+        }
+        if node.rule_name != "proc_call" {
+            let children = direct_nodes(node);
+            return (direct_tokens(node).is_empty() && children.len() == 1)
+                .then(|| {
+                    self.exact_static_integer_signed_floor_root_value(children[0], negative)
+                })?;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if target_name != "sqrt" || self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        let value = self.exact_static_integer_normalizer_operand_value(actuals[0])?;
+        if value < 0 {
+            return None;
+        }
+        let value = value as u64;
+        let root = value.isqrt();
+        if !negative {
+            return Some(root as i64);
+        }
+        let magnitude = root + u64::from(root * root != value);
+        i64::try_from(magnitude).ok()?.checked_neg()
     }
 
     /// Evaluate checked integer arithmetic around nested static normalizers.
@@ -16535,12 +16615,13 @@ mod tests {
         for source in [
             "begin real procedure pick; pick := 3.5; real factor, result; factor := 81.0; result := entier((entier(sqrt(factor)) div 3) * ((2 * sign(pick())) + 2)); output(result) end",
             "begin real procedure pick; pick := -2.25; real factor, result; factor := 144.0; result := entier(abs(entier(sqrt(factor)) mod 5) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(10 div 3)) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; integer factor; real result; factor := 243; result := entier((entier(sqrt(factor div 3)) div 3) * ((2 * sign(pick())) + 2)); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((entier(sqrt(abs(((10 div 3) + (7 mod 4)) ^ 2))) div 2) * sign(pick())); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
-                    "an exact square root of a checked integral tracked-real reduction remains exact around a sign-rooted transform for {source:?}: {error}"
+                    "an exact floor or perfect-square root of a checked integral tracked-real reduction remains exact around a sign-rooted transform for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
@@ -16558,13 +16639,12 @@ mod tests {
             "begin real procedure pick; pick := 3.5; real factor, result; factor := 80.0; result := entier((entier(sqrt(factor)) div 3) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 81.0; real factor, result; factor := pick(); result := entier((entier(sqrt(factor)) div 3) * sign(pick())); output(result) end",
             "begin real procedure sqrt(x); value x; real x; sqrt := 9.0; real factor, result; factor := 81.0; result := entier((entier(sqrt(factor)) div 3) * sign(factor)); output(result) end",
-            "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(10 div 3)) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(4 - (10 div 2))) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; integer factor; real result; factor := entier(pick()); result := entier(entier(sqrt(factor div 3)) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(81 div 0)) * sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "inexact, dynamic, and overridden square roots must remain outside the checked static integer reduction proof",
+                "negative, dynamic, and overridden roots must remain outside the checked static integer reduction proof",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
@@ -17093,6 +17173,103 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "unequal, procedure-calling, and effectful conditional normalizer forms must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_identity_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(cos(entier(0)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(ln(entier(1)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "exact standard-function identities may compose between wide static integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(cos(entier(1)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure cos(x); value x; real x; cos := 1; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(cos(entier(0)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 0; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(cos(dynamic()))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "nonidentity, overridden, and procedure-calling identity normalizers must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_perfect_square_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372030926249001)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(81)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "exact perfect-square roots may compose between wide static integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure sqrt(x); value x; real x; sqrt := 3; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(81)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 81; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(-1)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "overridden, procedure-calling, and negative roots must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_floor_root_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "exact floor roots may compose between wide static integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(-1)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure sqrt(x); value x; real x; sqrt := 8; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 80; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure entier(x); value x; real x; entier := x; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "negative, overridden, procedure-calling, and shadowed floor roots must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_signed_floor_root_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-(-sqrt(entier(80))))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "signed exact floor roots may compose between wide static integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(entier(-1)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure sqrt(x); value x; real x; sqrt := 8; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 80; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "negative radicands, overridden roots, and procedure-calling signed roots must fail closed",
             );
         }
     }

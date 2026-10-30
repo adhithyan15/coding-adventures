@@ -220,6 +220,18 @@ still schema v1, so their lessons declare no knowledge atoms and no payoff there
 could honestly claim to assess anything. A placeholder would hide debt the HL05
 gap report is meant to surface; the entries land as those chapters migrate.
 
+## Assessment evidence status
+
+The two timed pre-A1 mock forms are bound to
+[`task-shapes/pre-a1.json`](./task-shapes/pre-a1.json) by one manifest per form.
+Each manifest covers every published reading, listening, writing, and speaking
+part at the published timing, and every part is anchored to visible evidence in
+the learner paper, answer key, and shared rubric. The paired examiner scripts
+remain separate and confidential. This closes the repository's structural
+mock-source contract only: it does not supply qualified recordings, independent
+human review, standard setting, book-only validation, learner readiness, or
+learner attainment.
+
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
