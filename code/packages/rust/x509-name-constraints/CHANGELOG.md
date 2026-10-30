@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 — 2026-10-29
+
+- Added bounded IPv4 and IPv6 permitted/excluded subtree evaluation with
+  exact-family matching and exclusion precedence.
+- Rejected non-contiguous masks and network bases with non-zero host bits
+  before examining any presented address.
+- Added a mixed DNS/IP entry point while keeping both single-form evaluators
+  fail-closed when the other retained form remains unevaluated.
+
 ## 0.4.0 — 2026-10-29
 
 - Added bounded complete-DER retention for exact 8-octet IPv4 and 32-octet

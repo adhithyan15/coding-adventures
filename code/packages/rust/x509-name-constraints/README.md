@@ -22,6 +22,14 @@ it can represent falls within an excluded subtree. It then requires each
 remaining name, including every expansion of a wildcard, to stay within a
 permitted subtree when a permitted set is present.
 
+A parallel evaluator accepts typed IPv4 and IPv6 addresses. It validates every
+retained address-and-mask value as canonical CIDR: mask bits are one contiguous
+most-significant prefix, and masked-out network host bits are zero. Matching is
+family-exact, excluded prefixes take precedence, and a non-empty permitted set
+requires every presented address to match at least one prefix. The DNS-only and
+IP-only entry points refuse mixed retained constraints. A combined entry point
+evaluates both forms and returns only payload-free counts after both pass.
+
 ## Security boundary
 
 The package uses repository-owned `der-asn1` and `der-tlv` only. It shares the
@@ -37,11 +45,11 @@ from wildcard containment, and uses strict ASCII label, leading-dot, and
 complete-leftmost-label wildcard rules with case-insensitive label-boundary
 comparison.
 
-Successful decoding or evaluation proves only that supplied strings satisfy
-the decoded supported DNS subtree sets. It does not extract names from a
-certificate, bind the result to exact certificate or selected-anchor evidence,
-evaluate IP or other non-DNS subtrees, construct or validate a path, grant
-trust, check
+Successful decoding or evaluation proves only that supplied typed names
+satisfy the decoded supported DNS and IP subtree sets. It does not extract
+names from a certificate, bind the result to exact certificate or
+selected-anchor evidence, evaluate other GeneralName forms, construct or
+validate a path, grant trust, check
 revocation, verify a signature, perform TLS or HTTP, authorize OAuth transport,
 or open a network connection.
 

@@ -1,10 +1,9 @@
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 use x509_name_constraints::{
-    decode_name_constraints, evaluate_dns_and_ip_names, evaluate_dns_names,
-    evaluate_ip_addresses, DnsConstraintErrorKind, IpConstraintError,
-    IpConstraintErrorKind, IpConstraintSyntaxError, NameConstraintEvaluationErrorKind,
-    MAX_PRESENTED_IP_ADDRESSES,
+    decode_name_constraints, evaluate_dns_and_ip_names, evaluate_dns_names, evaluate_ip_addresses,
+    DnsConstraintErrorKind, IpConstraintError, IpConstraintErrorKind, IpConstraintSyntaxError,
+    NameConstraintEvaluationErrorKind, MAX_PRESENTED_IP_ADDRESSES,
 };
 
 fn der_length(length: usize) -> Vec<u8> {
@@ -118,9 +117,7 @@ fn ipv6_prefixes_match_exactly_within_their_family() {
     assert!(evaluate_ip(
         &[&permitted],
         &[&excluded],
-        &[IpAddr::V6(Ipv6Addr::new(
-            0x2001, 0x0db8, 1, 0, 0, 0, 0, 1,
-        ))],
+        &[IpAddr::V6(Ipv6Addr::new(0x2001, 0x0db8, 1, 0, 0, 0, 0, 1,))],
     )
     .is_ok());
     assert_eq!(
@@ -203,12 +200,8 @@ fn mixed_constraints_require_the_combined_entry_point() {
         IpConstraintErrorKind::UnevaluatedDnsSubtrees
     );
 
-    let evaluated = evaluate_dns_and_ip_names(
-        &constraints,
-        &["api.example.test"],
-        &addresses,
-    )
-    .unwrap();
+    let evaluated =
+        evaluate_dns_and_ip_names(&constraints, &["api.example.test"], &addresses).unwrap();
     assert_eq!(evaluated.dns_count(), 1);
     assert_eq!(evaluated.ip_count(), 1);
     assert_eq!(evaluated.total_count(), 2);
@@ -226,13 +219,33 @@ fn mixed_constraints_require_the_combined_entry_point() {
 }
 
 #[test]
+fn combined_evaluation_validates_every_constraint_before_presented_names() {
+    let invalid_ip = [192, 0, 2, 0, 255, 0, 255, 0];
+    let encoded = encoded_constraints(&[b"example.test"], &[&invalid_ip], &[], &[]);
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let constraints = decode_name_constraints(&mut decoder, &encoded).unwrap();
+
+    let error = evaluate_dns_and_ip_names(
+        &constraints,
+        &["invalid_name"],
+        &[IpAddr::V4(Ipv4Addr::new(192, 0, 2, 1))],
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        NameConstraintEvaluationErrorKind::Ip(IpConstraintErrorKind::InvalidPermittedSubtree(
+            IpConstraintSyntaxError::NonContiguousMask,
+        ),)
+    );
+    assert_eq!(error.item_index(), 0);
+}
+
+#[test]
 fn presented_ip_capacity_is_exact_and_checked_before_matching() {
     let permitted = [0, 0, 0, 0, 0, 0, 0, 0];
     let addresses = vec![IpAddr::V4(Ipv4Addr::LOCALHOST); MAX_PRESENTED_IP_ADDRESSES];
     assert_eq!(
-        evaluate_ip(&[&permitted], &[], &addresses)
-            .unwrap()
-            .count(),
+        evaluate_ip(&[&permitted], &[], &addresses).unwrap().count(),
         MAX_PRESENTED_IP_ADDRESSES
     );
 

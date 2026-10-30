@@ -1,10 +1,11 @@
 //! # DNS and IP NameConstraints structure
 //!
 //! This crate decodes a narrow, bounded RFC 5280 structure and evaluates its
-//! permitted and excluded DNS or IP subtrees. A separate policy evaluates DNS
-//! constraints against caller-supplied names; IP matching remains a separate
-//! boundary. The crate deliberately grants no certificate-evidence, path,
-//! trust-root, or TLS authority.
+//! permitted and excluded DNS or IP subtrees. Separate DNS-only and IP-only
+//! entry points fail closed on the other retained name form, while a combined
+//! policy evaluates both against caller-supplied typed names. The crate
+//! deliberately grants no certificate-evidence, path, trust-root, or TLS
+//! authority.
 
 #![deny(unsafe_code)]
 
@@ -15,6 +16,7 @@ use der_asn1::{
 use der_tlv::{DerTag, TagClass};
 use std::error::Error;
 use std::fmt;
+use std::net::IpAddr;
 
 const SEQUENCE_TAG: u32 = 16;
 const PERMITTED_SUBTREES_TAG: u32 = 0;
@@ -31,6 +33,8 @@ pub const MAX_DNS_SUBTREES: usize = 256;
 pub const MAX_GENERAL_SUBTREES: usize = MAX_DNS_SUBTREES;
 /// Maximum presented DNS names evaluated against one constraints value.
 pub const MAX_PRESENTED_DNS_NAMES: usize = 256;
+/// Maximum presented IP addresses evaluated against one constraints value.
+pub const MAX_PRESENTED_IP_ADDRESSES: usize = 256;
 
 /// Stable syntax failures for DNS constraints and presented DNS names.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -105,6 +109,149 @@ impl ConstrainedDnsNames {
 
     pub const fn is_empty(self) -> bool {
         self.count == 0
+    }
+}
+
+/// Stable syntax failures for one encoded IP address-and-mask subtree.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum IpConstraintSyntaxError {
+    InvalidLength,
+    NonContiguousMask,
+    NonCanonicalNetwork,
+}
+
+/// Stable payload-free IP constraint evaluation failures.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum IpConstraintErrorKind {
+    TooManyPresentedIpAddresses,
+    UnevaluatedDnsSubtrees,
+    InvalidPermittedSubtree(IpConstraintSyntaxError),
+    InvalidExcludedSubtree(IpConstraintSyntaxError),
+    PresentedIpAddressExcluded,
+    PresentedIpAddressNotPermitted,
+}
+
+/// One redacted IP evaluation failure and its relevant collection index.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct IpConstraintError {
+    kind: IpConstraintErrorKind,
+    item_index: usize,
+}
+
+impl IpConstraintError {
+    const fn new(kind: IpConstraintErrorKind, item_index: usize) -> Self {
+        Self { kind, item_index }
+    }
+
+    pub const fn kind(self) -> IpConstraintErrorKind {
+        self.kind
+    }
+
+    pub const fn item_index(self) -> usize {
+        self.item_index
+    }
+}
+
+impl fmt::Display for IpConstraintError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 IP constraint error {:?} at item {}",
+            self.kind, self.item_index
+        )
+    }
+}
+
+impl Error for IpConstraintError {}
+
+/// Payload-free evidence that all supplied IP addresses satisfied the constraints.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ConstrainedIpAddresses {
+    count: usize,
+}
+
+impl ConstrainedIpAddresses {
+    pub const fn count(self) -> usize {
+        self.count
+    }
+
+    pub const fn is_empty(self) -> bool {
+        self.count == 0
+    }
+}
+
+/// Stable payload-free failures from combined DNS and IP evaluation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum NameConstraintEvaluationErrorKind {
+    Dns(DnsConstraintErrorKind),
+    Ip(IpConstraintErrorKind),
+}
+
+/// One redacted combined evaluation failure and its relevant collection index.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct NameConstraintEvaluationError {
+    kind: NameConstraintEvaluationErrorKind,
+    item_index: usize,
+}
+
+impl NameConstraintEvaluationError {
+    const fn dns(error: DnsConstraintError) -> Self {
+        Self {
+            kind: NameConstraintEvaluationErrorKind::Dns(error.kind()),
+            item_index: error.item_index(),
+        }
+    }
+
+    const fn ip(error: IpConstraintError) -> Self {
+        Self {
+            kind: NameConstraintEvaluationErrorKind::Ip(error.kind()),
+            item_index: error.item_index(),
+        }
+    }
+
+    pub const fn kind(self) -> NameConstraintEvaluationErrorKind {
+        self.kind
+    }
+
+    pub const fn item_index(self) -> usize {
+        self.item_index
+    }
+}
+
+impl fmt::Display for NameConstraintEvaluationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 combined name constraint error {:?} at item {}",
+            self.kind, self.item_index
+        )
+    }
+}
+
+impl Error for NameConstraintEvaluationError {}
+
+/// Payload-free evidence that both supported name forms satisfied the constraints.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ConstrainedDnsAndIpNames {
+    dns_count: usize,
+    ip_count: usize,
+}
+
+impl ConstrainedDnsAndIpNames {
+    pub const fn dns_count(self) -> usize {
+        self.dns_count
+    }
+
+    pub const fn ip_count(self) -> usize {
+        self.ip_count
+    }
+
+    pub const fn total_count(self) -> usize {
+        self.dns_count + self.ip_count
+    }
+
+    pub const fn is_empty(self) -> bool {
+        self.dns_count == 0 && self.ip_count == 0
     }
 }
 
@@ -289,6 +436,20 @@ pub fn evaluate_dns_names(
         ));
     }
 
+    evaluate_dns_names_inner(constraints, presented_dns_names)
+}
+
+fn evaluate_dns_names_inner(
+    constraints: &NameConstraints<'_>,
+    presented_dns_names: &[&str],
+) -> Result<ConstrainedDnsNames, DnsConstraintError> {
+    if presented_dns_names.len() > MAX_PRESENTED_DNS_NAMES {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::TooManyPresentedDnsNames,
+            MAX_PRESENTED_DNS_NAMES,
+        ));
+    }
+
     let mut validated_permitted = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
     for (index, subtree) in constraints.permitted_dns_subtrees().iter().enumerate() {
         validated_permitted[index] = validate_constraint(subtree).map_err(|reason| {
@@ -341,6 +502,171 @@ pub fn evaluate_dns_names(
     Ok(ConstrainedDnsNames {
         count: presented_dns_names.len(),
     })
+}
+
+/// Evaluate presented IP subjectAltName values against IP-only constraints.
+///
+/// This entry point refuses retained DNS subtrees so a caller cannot silently
+/// skip that name form. Use [`evaluate_dns_and_ip_names`] for mixed values.
+pub fn evaluate_ip_addresses(
+    constraints: &NameConstraints<'_>,
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedIpAddresses, IpConstraintError> {
+    if presented_ip_addresses.len() > MAX_PRESENTED_IP_ADDRESSES {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::TooManyPresentedIpAddresses,
+            MAX_PRESENTED_IP_ADDRESSES,
+        ));
+    }
+    if constraints.permitted_len() != 0 || constraints.excluded_len() != 0 {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::UnevaluatedDnsSubtrees,
+            0,
+        ));
+    }
+
+    evaluate_ip_addresses_inner(constraints, presented_ip_addresses)
+}
+
+/// Evaluate both supported GeneralName forms without silently dropping either.
+pub fn evaluate_dns_and_ip_names(
+    constraints: &NameConstraints<'_>,
+    presented_dns_names: &[&str],
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedDnsAndIpNames, NameConstraintEvaluationError> {
+    // Validate every retained constraint before examining either presented
+    // collection. The second calls below repeat that bounded validation while
+    // applying the names, keeping the internal evidence local and unforgeable.
+    evaluate_dns_names_inner(constraints, &[]).map_err(NameConstraintEvaluationError::dns)?;
+    evaluate_ip_addresses_inner(constraints, &[]).map_err(NameConstraintEvaluationError::ip)?;
+
+    let dns = evaluate_dns_names_inner(constraints, presented_dns_names)
+        .map_err(NameConstraintEvaluationError::dns)?;
+    let ip = evaluate_ip_addresses_inner(constraints, presented_ip_addresses)
+        .map_err(NameConstraintEvaluationError::ip)?;
+    Ok(ConstrainedDnsAndIpNames {
+        dns_count: dns.count(),
+        ip_count: ip.count(),
+    })
+}
+
+fn evaluate_ip_addresses_inner(
+    constraints: &NameConstraints<'_>,
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedIpAddresses, IpConstraintError> {
+    if presented_ip_addresses.len() > MAX_PRESENTED_IP_ADDRESSES {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::TooManyPresentedIpAddresses,
+            MAX_PRESENTED_IP_ADDRESSES,
+        ));
+    }
+
+    validate_ip_subtrees(
+        constraints.permitted_ip_subtrees(),
+        IpSubtreeClass::Permitted,
+    )?;
+    validate_ip_subtrees(constraints.excluded_ip_subtrees(), IpSubtreeClass::Excluded)?;
+
+    for (index, address) in presented_ip_addresses.iter().enumerate() {
+        let excluded = constraints.excluded_ip_subtrees().iter().any(|encoded| {
+            validate_ip_subtree(encoded).is_ok_and(|subtree| ip_address_matches(address, subtree))
+        });
+        if excluded {
+            return Err(IpConstraintError::new(
+                IpConstraintErrorKind::PresentedIpAddressExcluded,
+                index,
+            ));
+        }
+
+        let permitted = constraints.permitted_ip_len() == 0
+            || constraints.permitted_ip_subtrees().iter().any(|encoded| {
+                validate_ip_subtree(encoded)
+                    .is_ok_and(|subtree| ip_address_matches(address, subtree))
+            });
+        if !permitted {
+            return Err(IpConstraintError::new(
+                IpConstraintErrorKind::PresentedIpAddressNotPermitted,
+                index,
+            ));
+        }
+    }
+
+    Ok(ConstrainedIpAddresses {
+        count: presented_ip_addresses.len(),
+    })
+}
+
+#[derive(Clone, Copy)]
+enum IpSubtreeClass {
+    Permitted,
+    Excluded,
+}
+
+fn validate_ip_subtrees(
+    subtrees: &[&[u8]],
+    class: IpSubtreeClass,
+) -> Result<(), IpConstraintError> {
+    for (index, encoded) in subtrees.iter().enumerate() {
+        validate_ip_subtree(encoded).map_err(|reason| {
+            let kind = match class {
+                IpSubtreeClass::Permitted => IpConstraintErrorKind::InvalidPermittedSubtree(reason),
+                IpSubtreeClass::Excluded => IpConstraintErrorKind::InvalidExcludedSubtree(reason),
+            };
+            IpConstraintError::new(kind, index)
+        })?;
+    }
+    Ok(())
+}
+
+#[derive(Clone, Copy)]
+struct ValidIpSubtree<'a> {
+    network: &'a [u8],
+    mask: &'a [u8],
+}
+
+fn validate_ip_subtree(encoded: &[u8]) -> Result<ValidIpSubtree<'_>, IpConstraintSyntaxError> {
+    let address_length = match encoded.len() {
+        8 => 4,
+        32 => 16,
+        _ => return Err(IpConstraintSyntaxError::InvalidLength),
+    };
+    let (network, mask) = encoded.split_at(address_length);
+
+    let mut zero_seen = false;
+    for byte in mask {
+        for shift in (0..8).rev() {
+            let set = byte & (1 << shift) != 0;
+            if set && zero_seen {
+                return Err(IpConstraintSyntaxError::NonContiguousMask);
+            }
+            zero_seen |= !set;
+        }
+    }
+    if network
+        .iter()
+        .zip(mask)
+        .any(|(address_byte, mask_byte)| address_byte & !mask_byte != 0)
+    {
+        return Err(IpConstraintSyntaxError::NonCanonicalNetwork);
+    }
+
+    Ok(ValidIpSubtree { network, mask })
+}
+
+fn ip_address_matches(address: &IpAddr, subtree: ValidIpSubtree<'_>) -> bool {
+    match address {
+        IpAddr::V4(address) => ip_octets_match(&address.octets(), subtree),
+        IpAddr::V6(address) => ip_octets_match(&address.octets(), subtree),
+    }
+}
+
+fn ip_octets_match(address: &[u8], subtree: ValidIpSubtree<'_>) -> bool {
+    address.len() == subtree.network.len()
+        && address.iter().zip(subtree.network).zip(subtree.mask).all(
+            |((address_byte, network_byte), mask_byte)| {
+                address_byte & mask_byte == network_byte & mask_byte
+            },
+        )
 }
 
 #[derive(Clone, Copy)]
