@@ -2586,6 +2586,28 @@ open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-key-share` prerequisite now binds exact TLS 1.3
+`KeyShareEntry` values to the existing caller-selected named-group policy.
+Client construction validates each public key-exchange value against the
+selected group's immutable wire length, rejects an empty or duplicate group
+list, and encodes the complete two-byte-length-prefixed ClientHello extension
+data only after proving caller-owned output capacity. Decoding applies the same
+policy and fixed registry-sized entry ceiling before retaining borrowed public
+key-exchange bytes. ServerHello decoding accepts exactly one entry and fails
+closed unless its selected group appeared in the exact retained client offer.
+Stable failures retain no group identifiers, public-key bytes, lengths, or
+output contents.
+
+This public framing and selection evidence does not implement
+HelloRetryRequest, bind `supported_groups`, generate entropy or an ephemeral
+private key, invoke X25519 or P-256, validate a peer point beyond the selected
+group's exact wire length, reject a low-order key, derive or retain a shared
+secret, update a transcript, process a handshake, derive traffic secrets,
+protect records, validate certificates, establish trust, enforce revocation,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Reviewed key-agreement execution and handshake-state composition remain
+prerequisites, and concrete HTTPS remains unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

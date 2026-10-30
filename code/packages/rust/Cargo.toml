@@ -1409,6 +1409,7 @@ members = [
   "tls13-supported-versions",
   "tls13-traffic-key-material",
   "tls13-named-group-policy",
+  "tls13-key-share",
   "tls13-key-update-message",
   "tls13-compatibility-change-cipher-spec",
   "tls13-certificate-request-message",
