@@ -200,13 +200,46 @@ pub enum VerifiedX509RsaPolicySignature<
     ),
 }
 
-impl VerifiedX509RsaPolicySignature<'_, '_, '_, '_> {
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    VerifiedX509RsaPolicySignature<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
     #[must_use]
     pub const fn verifier(&self) -> X509RsaSignatureVerifier {
         match self {
             Self::Sha256(_) => X509RsaSignatureVerifier::RsaPkcs1V15Sha256,
             Self::Sha384(_) => X509RsaSignatureVerifier::RsaPkcs1V15Sha384,
             Self::Sha512(_) => X509RsaSignatureVerifier::RsaPkcs1V15Sha512,
+        }
+    }
+
+    /// Return the exact child-certificate algorithm policy consumed by the
+    /// selected fixed verifier.
+    #[must_use]
+    pub const fn child_algorithm_policy(
+        &self,
+    ) -> &ValidatedCertificateAlgorithmPolicy<'child_certificate, 'child_encoded> {
+        match self {
+            Self::Sha256(verified) => verified.child_algorithm_policy(),
+            Self::Sha384(verified) => verified.child_algorithm_policy(),
+            Self::Sha512(verified) => verified.child_algorithm_policy(),
+        }
+    }
+
+    /// Return the exact issuer-certificate RSA algorithm and key policy
+    /// consumed by the selected fixed verifier.
+    #[must_use]
+    pub const fn issuer_rsa_algorithm_policy(
+        &self,
+    ) -> &ValidatedX509RsaAlgorithmPolicy<'issuer_certificate, 'issuer_encoded> {
+        match self {
+            Self::Sha256(verified) => verified.issuer_rsa_algorithm_policy(),
+            Self::Sha384(verified) => verified.issuer_rsa_algorithm_policy(),
+            Self::Sha512(verified) => verified.issuer_rsa_algorithm_policy(),
         }
     }
 }

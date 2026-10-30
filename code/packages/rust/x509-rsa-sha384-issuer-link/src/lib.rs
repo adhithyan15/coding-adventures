@@ -21,6 +21,7 @@ use x509_certificate_policy::{
     ValidatedCertificateRolePolicy, X509CertificateIssuerLinkErrorKind, X509CertificateRole,
     X509CertificateRoleErrorKind,
 };
+use x509_intermediate_certificate_policy::ValidatedX509IntermediateCertificatePolicy;
 use x509_name::X509Name;
 use x509_rsa_algorithm_policy::ValidatedX509RsaAlgorithmPolicy;
 use x509_rsa_pkcs1_v1_5_sha384_signature::{
@@ -152,6 +153,45 @@ impl fmt::Display for X509RsaSha384IssuerPolicyLinkError {
 
 impl std::error::Error for X509RsaSha384IssuerPolicyLinkError {}
 
+/// Stable complete-intermediate-policy binding failures with no payload data.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha384IntermediateIssuerPolicyLinkErrorKind {
+    /// The complete intermediate policy is not for the authenticated issuer.
+    EvidenceMismatch,
+}
+
+/// A redacted complete-intermediate-policy binding failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha384IntermediateIssuerPolicyLinkError {
+    kind: X509RsaSha384IntermediateIssuerPolicyLinkErrorKind,
+}
+
+impl X509RsaSha384IntermediateIssuerPolicyLinkError {
+    const fn evidence_mismatch() -> Self {
+        Self {
+            kind: X509RsaSha384IntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch,
+        }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaSha384IntermediateIssuerPolicyLinkErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha384IntermediateIssuerPolicyLinkError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-384 intermediate issuer policy-link error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha384IntermediateIssuerPolicyLinkError {}
+
 /// Non-copyable evidence for one exact child-to-candidate-issuer link.
 ///
 /// This proves only the directed Name-policy result, issuing-CA role, RSA key
@@ -259,6 +299,66 @@ impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
 impl fmt::Debug for VerifiedX509RsaSha384IssuerPolicyLink<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedX509RsaSha384IssuerPolicyLink")
+    }
+}
+
+/// Non-copyable evidence binding one authenticated SHA-384 issuer link to
+/// complete intermediate policy for that exact decoded issuer object.
+///
+/// The retained intermediate policy covers certificate-wide critical
+/// extensions and issuing-CA role, data-driven algorithm policy, self-issued
+/// classification, and explicit-time validity. This wrapper does not advance
+/// path length, evaluate NameConstraints, authenticate another link, establish
+/// trust, check revocation, or grant TLS or network authority.
+pub struct VerifiedX509RsaSha384IntermediateIssuerPolicyLink<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    issuer_policy_link: VerifiedX509RsaSha384IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    intermediate_policy:
+        ValidatedX509IntermediateCertificatePolicy<'issuer_certificate, 'issuer_encoded>,
+}
+
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    VerifiedX509RsaSha384IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    /// Return the consumed authenticated policy-bound issuer link.
+    #[must_use]
+    pub const fn issuer_policy_link(
+        &self,
+    ) -> &VerifiedX509RsaSha384IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.issuer_policy_link
+    }
+
+    /// Return complete policy for the exact authenticated intermediate.
+    #[must_use]
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'issuer_certificate, 'issuer_encoded> {
+        &self.intermediate_policy
+    }
+}
+
+impl fmt::Debug for VerifiedX509RsaSha384IntermediateIssuerPolicyLink<'_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509RsaSha384IntermediateIssuerPolicyLink")
     }
 }
 
@@ -394,5 +494,50 @@ pub fn verify_x509_rsa_sha384_issuer_link_with_policies<
         candidate_issuer,
         issuer_role_policy,
         issuer_rsa_algorithm_policy,
+    })
+}
+
+/// Bind one authenticated SHA-384 issuer link to complete policy for its exact
+/// intermediate certificate object.
+///
+/// Pointer identity is required before either proof is retained. Encoded-byte
+/// equality cannot attach policy from an independently decoded certificate to
+/// the issuer that authenticated the child. Success grants no additional path,
+/// trust, revocation, transport, or network authority.
+pub fn bind_x509_rsa_sha384_intermediate_issuer_policy_link<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    issuer_policy_link: VerifiedX509RsaSha384IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+) -> Result<
+    VerifiedX509RsaSha384IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha384IntermediateIssuerPolicyLinkError,
+> {
+    if !std::ptr::eq(
+        issuer_policy_link.candidate_issuer(),
+        intermediate_policy.certificate(),
+    ) {
+        return Err(X509RsaSha384IntermediateIssuerPolicyLinkError::evidence_mismatch());
+    }
+
+    Ok(VerifiedX509RsaSha384IntermediateIssuerPolicyLink {
+        issuer_policy_link,
+        intermediate_policy,
     })
 }

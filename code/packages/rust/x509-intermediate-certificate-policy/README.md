@@ -14,12 +14,18 @@ caller-owned `X509Time` observation. The non-copyable success value retains
 all consumed inputs plus the validity result, giving later path code one
 non-mixable intermediate-certificate policy boundary.
 
+A follow-up consumes that complete boundary and inspects only its exact
+certificate for NameConstraints. Absence is retained as `None`; a present
+extension must be critical and must decode under a separate caller-owned ASN.1
+budget. Success retains borrowed DNS/IP constraints beside the complete
+non-copyable intermediate evidence for later path policy.
+
 The caller still owns critical-extension recognition, algorithm profiles, Name
-comparison semantics, and trustworthy time acquisition. The crate does not
-authenticate adjacent certificate links, advance path-length state, apply
-name constraints, construct or validate a certification path, select trust,
-check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
-network connection.
+comparison semantics, and trustworthy time acquisition. Decoding does not
+evaluate any constraint against a certificate. The crate does not authenticate
+adjacent certificate links, advance path-length state, construct or validate a
+certification path, apply anchor constraints, select trust, check revocation,
+perform TLS or HTTP, authorize OAuth transport, or open a network connection.
 
 ## Development
 
