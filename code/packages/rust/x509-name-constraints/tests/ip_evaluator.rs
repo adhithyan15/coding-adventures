@@ -147,36 +147,31 @@ fn address_families_never_cross_match() {
 }
 
 #[test]
-fn masks_and_network_bases_must_be_canonical_cidr_prefixes() {
+fn masks_must_be_contiguous_and_host_bits_are_masked() {
     let valid = [192, 0, 2, 0, 255, 255, 255, 0];
     let non_contiguous_mask = [192, 0, 2, 0, 255, 0, 255, 0];
     let host_bits_set = [192, 0, 2, 1, 255, 255, 255, 0];
 
-    let cases = [
-        (
-            non_contiguous_mask.as_slice(),
-            IpConstraintSyntaxError::NonContiguousMask,
-        ),
-        (
-            host_bits_set.as_slice(),
-            IpConstraintSyntaxError::NonCanonicalNetwork,
-        ),
-    ];
-    for (invalid, reason) in cases {
-        let error = evaluate_ip(&[&valid, invalid], &[], &[]).unwrap_err();
-        assert_eq!(
-            error.kind(),
-            IpConstraintErrorKind::InvalidPermittedSubtree(reason)
-        );
-        assert_eq!(error.item_index(), 1);
+    let error = evaluate_ip(&[&valid, &non_contiguous_mask], &[], &[]).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        IpConstraintErrorKind::InvalidPermittedSubtree(IpConstraintSyntaxError::NonContiguousMask)
+    );
+    assert_eq!(error.item_index(), 1);
 
-        let error = evaluate_ip(&[], &[&valid, invalid], &[]).unwrap_err();
-        assert_eq!(
-            error.kind(),
-            IpConstraintErrorKind::InvalidExcludedSubtree(reason)
-        );
-        assert_eq!(error.item_index(), 1);
-    }
+    let error = evaluate_ip(&[], &[&valid, &non_contiguous_mask], &[]).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        IpConstraintErrorKind::InvalidExcludedSubtree(IpConstraintSyntaxError::NonContiguousMask)
+    );
+    assert_eq!(error.item_index(), 1);
+
+    assert!(evaluate_ip(
+        &[&host_bits_set],
+        &[],
+        &[IpAddr::V4(Ipv4Addr::new(192, 0, 2, 42))],
+    )
+    .is_ok());
 }
 
 #[test]

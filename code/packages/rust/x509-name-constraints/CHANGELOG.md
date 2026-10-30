@@ -4,8 +4,9 @@
 
 - Added bounded IPv4 and IPv6 permitted/excluded subtree evaluation with
   exact-family matching and exclusion precedence.
-- Rejected non-contiguous masks and network bases with non-zero host bits
-  before examining any presented address.
+- Composed the repository-owned `x509-ip-name-constraint-policy` primitive so
+  non-contiguous masks fail before any presented address is inspected and
+  masked-out address bits do not affect subnet matching.
 - Added a mixed DNS/IP entry point while keeping both single-form evaluators
   fail-closed when the other retained form remains unevaluated.
 

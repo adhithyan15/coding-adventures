@@ -22,17 +22,19 @@ it can represent falls within an excluded subtree. It then requires each
 remaining name, including every expansion of a wildcard, to stay within a
 permitted subtree when a permitted set is present.
 
-A parallel evaluator accepts typed IPv4 and IPv6 addresses. It validates every
-retained address-and-mask value as canonical CIDR: mask bits are one contiguous
-most-significant prefix, and masked-out network host bits are zero. Matching is
-family-exact, excluded prefixes take precedence, and a non-empty permitted set
-requires every presented address to match at least one prefix. The DNS-only and
-IP-only entry points refuse mixed retained constraints. A combined entry point
-evaluates both forms and returns only payload-free counts after both pass.
+A parallel evaluator accepts typed IPv4 and IPv6 addresses and composes the
+repository-owned `x509-ip-name-constraint-policy` primitive. Mask bits must be
+one contiguous most-significant prefix, and masked-out address bits do not
+affect subnet matching. Matching is family-exact, excluded prefixes take
+precedence, and a non-empty permitted set requires every presented address to
+match at least one prefix. The DNS-only and IP-only entry points refuse mixed
+retained constraints. A combined entry point evaluates both forms and returns
+only payload-free counts after both pass.
 
 ## Security boundary
 
-The package uses repository-owned `der-asn1` and `der-tlv` only. It shares the
+The package uses only repository-owned `der-asn1`, `der-tlv`, and
+`x509-ip-name-constraint-policy`. It shares the
 caller's depth and total-element limits, stores borrowed names in a fixed-size
 array, validates exact tags and canonical DER framing, and keeps input bytes
 out of diagnostics. Unknown, duplicate, reversed, or empty top-level fields,

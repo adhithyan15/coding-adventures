@@ -7,3 +7,4 @@ description = "Bounded DNS and IP NameConstraints decoding and evaluation"
 [dependencies]
 der-asn1 = { path = "../der-asn1" }
 der-tlv = { path = "../der-tlv" }
+x509-ip-name-constraint-policy = { path = "../x509-ip-name-constraint-policy" }

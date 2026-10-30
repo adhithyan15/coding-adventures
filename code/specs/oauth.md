@@ -1195,11 +1195,11 @@ contiguity, evaluate a presented IP address, bind constraints to a certificate
 or path, grant trust, check revocation, verify a signature, perform TLS or
 HTTP, authorize OAuth transport, or cause an external effect; concrete HTTPS
 remains unavailable.
-A bounded IP constraint evaluator now validates every retained IPv4 or IPv6
-address-and-mask subtree as one canonical CIDR prefix before examining any
-presented address. Masks must contain one contiguous most-significant-bit
-prefix, network bases must have every masked-out host bit cleared, and matching
-never crosses address families. Excluded subtrees take precedence; when a
+A bounded IP constraint evaluator now composes the shared repository-owned IP
+name-constraint policy for every retained IPv4 or IPv6 address-and-mask subtree
+before examining any presented address. Masks must contain one contiguous
+most-significant-bit prefix, masked-out address bits do not affect subnet
+matching, and matching never crosses address families. Excluded subtrees take precedence; when a
 permitted IP set is present, every presented address must fall within at least
 one permitted prefix. The IP-only entry point fails closed while DNS subtrees
 remain unevaluated, matching the existing DNS-only refusal of retained IP

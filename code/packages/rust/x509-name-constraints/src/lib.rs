@@ -17,6 +17,14 @@ use der_tlv::{DerTag, TagClass};
 use std::error::Error;
 use std::fmt;
 use std::net::IpAddr;
+use x509_ip_name_constraint_policy::{
+    evaluate_ip_name_constraints, IpNameConstraintError, IpNameConstraintErrorKind,
+};
+
+pub use x509_ip_name_constraint_policy::{
+    ConstrainedIpAddresses, IpConstraintSyntaxError, PresentedIpAddressSyntaxError,
+    MAX_PRESENTED_IP_ADDRESSES,
+};
 
 const SEQUENCE_TAG: u32 = 16;
 const PERMITTED_SUBTREES_TAG: u32 = 0;
@@ -33,9 +41,6 @@ pub const MAX_DNS_SUBTREES: usize = 256;
 pub const MAX_GENERAL_SUBTREES: usize = MAX_DNS_SUBTREES;
 /// Maximum presented DNS names evaluated against one constraints value.
 pub const MAX_PRESENTED_DNS_NAMES: usize = 256;
-/// Maximum presented IP addresses evaluated against one constraints value.
-pub const MAX_PRESENTED_IP_ADDRESSES: usize = 256;
-
 /// Stable syntax failures for DNS constraints and presented DNS names.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DnsNameSyntaxError {
@@ -112,21 +117,16 @@ impl ConstrainedDnsNames {
     }
 }
 
-/// Stable syntax failures for one encoded IP address-and-mask subtree.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum IpConstraintSyntaxError {
-    InvalidLength,
-    NonContiguousMask,
-    NonCanonicalNetwork,
-}
-
 /// Stable payload-free IP constraint evaluation failures.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum IpConstraintErrorKind {
+    TooManyPermittedSubtrees,
+    TooManyExcludedSubtrees,
     TooManyPresentedIpAddresses,
     UnevaluatedDnsSubtrees,
     InvalidPermittedSubtree(IpConstraintSyntaxError),
     InvalidExcludedSubtree(IpConstraintSyntaxError),
+    InvalidPresentedIpAddress(PresentedIpAddressSyntaxError),
     PresentedIpAddressExcluded,
     PresentedIpAddressNotPermitted,
 }
@@ -163,22 +163,6 @@ impl fmt::Display for IpConstraintError {
 }
 
 impl Error for IpConstraintError {}
-
-/// Payload-free evidence that all supplied IP addresses satisfied the constraints.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct ConstrainedIpAddresses {
-    count: usize,
-}
-
-impl ConstrainedIpAddresses {
-    pub const fn count(self) -> usize {
-        self.count
-    }
-
-    pub const fn is_empty(self) -> bool {
-        self.count == 0
-    }
-}
 
 /// Stable payload-free failures from combined DNS and IP evaluation.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -561,112 +545,73 @@ fn evaluate_ip_addresses_inner(
         ));
     }
 
-    validate_ip_subtrees(
+    // Preserve the shared primitive's constraint-first contract across the
+    // typed adapter: validate every retained subtree before reading even one
+    // caller-supplied address. The second call below repeats that bounded
+    // validation while applying the adapted addresses.
+    evaluate_ip_name_constraints(
         constraints.permitted_ip_subtrees(),
-        IpSubtreeClass::Permitted,
-    )?;
-    validate_ip_subtrees(constraints.excluded_ip_subtrees(), IpSubtreeClass::Excluded)?;
+        constraints.excluded_ip_subtrees(),
+        &[],
+    )
+    .map_err(map_ip_constraint_error)?;
 
+    let mut address_octets = [[0u8; 16]; MAX_PRESENTED_IP_ADDRESSES];
+    let mut address_lengths = [0usize; MAX_PRESENTED_IP_ADDRESSES];
     for (index, address) in presented_ip_addresses.iter().enumerate() {
-        let excluded = constraints.excluded_ip_subtrees().iter().any(|encoded| {
-            validate_ip_subtree(encoded).is_ok_and(|subtree| ip_address_matches(address, subtree))
-        });
-        if excluded {
-            return Err(IpConstraintError::new(
-                IpConstraintErrorKind::PresentedIpAddressExcluded,
-                index,
-            ));
-        }
-
-        let permitted = constraints.permitted_ip_len() == 0
-            || constraints.permitted_ip_subtrees().iter().any(|encoded| {
-                validate_ip_subtree(encoded)
-                    .is_ok_and(|subtree| ip_address_matches(address, subtree))
-            });
-        if !permitted {
-            return Err(IpConstraintError::new(
-                IpConstraintErrorKind::PresentedIpAddressNotPermitted,
-                index,
-            ));
-        }
-    }
-
-    Ok(ConstrainedIpAddresses {
-        count: presented_ip_addresses.len(),
-    })
-}
-
-#[derive(Clone, Copy)]
-enum IpSubtreeClass {
-    Permitted,
-    Excluded,
-}
-
-fn validate_ip_subtrees(
-    subtrees: &[&[u8]],
-    class: IpSubtreeClass,
-) -> Result<(), IpConstraintError> {
-    for (index, encoded) in subtrees.iter().enumerate() {
-        validate_ip_subtree(encoded).map_err(|reason| {
-            let kind = match class {
-                IpSubtreeClass::Permitted => IpConstraintErrorKind::InvalidPermittedSubtree(reason),
-                IpSubtreeClass::Excluded => IpConstraintErrorKind::InvalidExcludedSubtree(reason),
-            };
-            IpConstraintError::new(kind, index)
-        })?;
-    }
-    Ok(())
-}
-
-#[derive(Clone, Copy)]
-struct ValidIpSubtree<'a> {
-    network: &'a [u8],
-    mask: &'a [u8],
-}
-
-fn validate_ip_subtree(encoded: &[u8]) -> Result<ValidIpSubtree<'_>, IpConstraintSyntaxError> {
-    let address_length = match encoded.len() {
-        8 => 4,
-        32 => 16,
-        _ => return Err(IpConstraintSyntaxError::InvalidLength),
-    };
-    let (network, mask) = encoded.split_at(address_length);
-
-    let mut zero_seen = false;
-    for byte in mask {
-        for shift in (0..8).rev() {
-            let set = byte & (1 << shift) != 0;
-            if set && zero_seen {
-                return Err(IpConstraintSyntaxError::NonContiguousMask);
+        match address {
+            IpAddr::V4(address) => {
+                address_octets[index][..4].copy_from_slice(&address.octets());
+                address_lengths[index] = 4;
             }
-            zero_seen |= !set;
+            IpAddr::V6(address) => {
+                address_octets[index].copy_from_slice(&address.octets());
+                address_lengths[index] = 16;
+            }
         }
     }
-    if network
-        .iter()
-        .zip(mask)
-        .any(|(address_byte, mask_byte)| address_byte & !mask_byte != 0)
-    {
-        return Err(IpConstraintSyntaxError::NonCanonicalNetwork);
+    let mut encoded_addresses: [&[u8]; MAX_PRESENTED_IP_ADDRESSES] =
+        [&[]; MAX_PRESENTED_IP_ADDRESSES];
+    for index in 0..presented_ip_addresses.len() {
+        encoded_addresses[index] = &address_octets[index][..address_lengths[index]];
     }
 
-    Ok(ValidIpSubtree { network, mask })
+    evaluate_ip_name_constraints(
+        constraints.permitted_ip_subtrees(),
+        constraints.excluded_ip_subtrees(),
+        &encoded_addresses[..presented_ip_addresses.len()],
+    )
+    .map_err(map_ip_constraint_error)
 }
 
-fn ip_address_matches(address: &IpAddr, subtree: ValidIpSubtree<'_>) -> bool {
-    match address {
-        IpAddr::V4(address) => ip_octets_match(&address.octets(), subtree),
-        IpAddr::V6(address) => ip_octets_match(&address.octets(), subtree),
-    }
-}
-
-fn ip_octets_match(address: &[u8], subtree: ValidIpSubtree<'_>) -> bool {
-    address.len() == subtree.network.len()
-        && address.iter().zip(subtree.network).zip(subtree.mask).all(
-            |((address_byte, network_byte), mask_byte)| {
-                address_byte & mask_byte == network_byte & mask_byte
-            },
-        )
+fn map_ip_constraint_error(error: IpNameConstraintError) -> IpConstraintError {
+    let kind = match error.kind() {
+        IpNameConstraintErrorKind::TooManyPermittedConstraints => {
+            IpConstraintErrorKind::TooManyPermittedSubtrees
+        }
+        IpNameConstraintErrorKind::TooManyExcludedConstraints => {
+            IpConstraintErrorKind::TooManyExcludedSubtrees
+        }
+        IpNameConstraintErrorKind::TooManyPresentedAddresses => {
+            IpConstraintErrorKind::TooManyPresentedIpAddresses
+        }
+        IpNameConstraintErrorKind::InvalidPermittedConstraint(reason) => {
+            IpConstraintErrorKind::InvalidPermittedSubtree(reason)
+        }
+        IpNameConstraintErrorKind::InvalidExcludedConstraint(reason) => {
+            IpConstraintErrorKind::InvalidExcludedSubtree(reason)
+        }
+        IpNameConstraintErrorKind::InvalidPresentedAddress(reason) => {
+            IpConstraintErrorKind::InvalidPresentedIpAddress(reason)
+        }
+        IpNameConstraintErrorKind::PresentedAddressExcluded => {
+            IpConstraintErrorKind::PresentedIpAddressExcluded
+        }
+        IpNameConstraintErrorKind::PresentedAddressNotPermitted => {
+            IpConstraintErrorKind::PresentedIpAddressNotPermitted
+        }
+    };
+    IpConstraintError::new(kind, error.item_index())
 }
 
 #[derive(Clone, Copy)]
