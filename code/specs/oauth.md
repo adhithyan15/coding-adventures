@@ -1848,6 +1848,25 @@ trust roots, check revocation, perform I/O, open a socket, authorize HTTP or
 OAuth transport, or replace `tls-platform`. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-compatibility-change-cipher-spec` prerequisite now
+owns only the exact RFC 8446 middlebox-compatibility ChangeCipherSpec body.
+Exact decoding accepts the single canonical octet `0x01` and rejects empty,
+trailing, or differently valued bodies with payload-free categories. Encoding
+writes that same canonical octet into caller-owned output only after complete
+capacity validation and leaves extra capacity untouched. The returned typed
+value is unforgeable outside the package and retains no caller bytes.
+
+This body codec receives content already delimited from an unprotected
+ChangeCipherSpec record. It does not authorize such a record in any handshake
+state, decide whether to send or silently discard it, include or exclude bytes
+from a transcript, accept protected ChangeCipherSpec content, sequence a
+ClientHello, ServerHello, HelloRetryRequest, or Finished message, send an
+alert, derive keys, protect records, validate certificates, establish trust,
+enforce revocation, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. A future state machine must restrict compatibility records
+to the RFC 8446 window and keep them outside the handshake transcript.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-extension-block` prerequisite now decodes the generic
 two-byte-length-prefixed extension-vector syntax shared by TLS 1.3 handshake
 messages. Caller-owned limits bound the complete payload and retained entry
