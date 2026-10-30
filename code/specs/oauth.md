@@ -1144,6 +1144,16 @@ to a different path certificate. The binding does not authenticate any path
 link, validate the terminal certificate's role or self-signature, apply anchor
 constraints, or provide complete path validation, revocation, TLS, HTTP, OAuth
 transport, or network authority.
+A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
+path together with certificate-wide role-policy evidence. It fails closed
+unless the role evidence retains the identical decoded terminal certificate
+object and authorizes that object as an issuing CA, then retains the complete
+critical-extension recognition and role proof with the constructed path and
+reviewed-root selection. Byte-equal independent decodes and end-entity role
+evidence fail before retention. This does not authenticate any path link,
+validate the anchor self-signature or algorithm, apply anchor constraints,
+check time or revocation, perform TLS or HTTP, authorize OAuth transport, or
+grant network authority. Concrete HTTPS remains unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
