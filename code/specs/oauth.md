@@ -1800,6 +1800,20 @@ read a clock, decide revocation, validate a path, establish trust, perform TLS
 or HTTP, authorize OAuth transport, open a socket, or access a credential.
 Concrete HTTPS remains unavailable.
 
+An allocation-free `x509-ocsp-request` prerequisite now validates one exact
+caller-supplied RFC 6960 `CertID` with the repository-owned structural decoder
+and wraps those same canonical DER bytes into the minimal unsigned request
+shape containing exactly one `Request`. The encoder omits the default version,
+requestor name, per-request extensions, request extensions, and optional
+signature; it preflights every nested DER length and caller-owned output
+capacity before writing, and success retains the exact validated identifier
+with the encoded request. Stable failures expose no identifier, hash, serial,
+or output bytes. This framing slice does not choose or compute a hash, bind the
+identifier to target or issuer certificates, add a nonce, authorize a
+responder or destination, perform DNS, TLS, HTTP, caching, or I/O, emit audit
+or trace events, access a credential, decide revocation, authorize OAuth
+transport, or open a network connection. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-record` prerequisite now owns only the outer RFC
 8446 record framing needed by a future repository-owned TLS client. It decodes
 and encodes strict five-byte TLS record headers plus borrowed fragments,
