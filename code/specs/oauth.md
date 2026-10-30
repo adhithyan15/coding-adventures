@@ -1087,6 +1087,21 @@ intermediate name constraints, validate the target's role, purpose, or
 hostname, check revocation, perform TLS or HTTP, authorize OAuth transport, or
 cause an external effect. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A stronger additive two-link follow-up now consumes the existing authenticated
+SHA-512 intermediate path-length proof together with the same policy-bound
+intermediate-to-reviewed-root link. It fails closed unless the complete
+intermediate policy retained by the advanced proof and the child authenticated
+by the reviewed parent proof refer to the same exact decoded certificate
+object. Success retains the authenticated child link, complete intermediate
+policy, advanced path-length state, reviewed parent link, and exact root
+selection in one distinct non-copyable result. The initial state remains
+caller-owned and is not derived from anchor policy. This pure public-data
+composition performs no credential access, signing, storage, clock
+acquisition, audit event, trace emission, or external effect. It does not
+construct or search a path, apply anchor or intermediate constraints, validate
+target role, purpose, identity, or hostname, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
+and live-provider readiness remain unavailable.
 A bounded `x509-rsa-sha512-reviewed-server-link` composition now consumes one
 exact target-server policy result together with one authenticated RSA SHA-512
 issuer link terminating at a reviewed root. It fails closed unless both

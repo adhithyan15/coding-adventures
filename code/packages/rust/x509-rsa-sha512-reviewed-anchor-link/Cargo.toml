@@ -1,6 +1,6 @@
 [package]
 name = "x509-rsa-sha512-reviewed-anchor-link"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Exact RSA SHA-512 issuer-policy and reviewed-root evidence binding"
 
@@ -12,6 +12,7 @@ x509-webpki-root-anchor-selection = { path = "../x509-webpki-root-anchor-selecti
 der-asn1 = { path = "../der-asn1" }
 rsa-public-operation = { path = "../rsa-public-operation" }
 x509-certificate = { path = "../x509-certificate" }
+x509-certificate-path-length-policy = { path = "../x509-certificate-path-length-policy" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-intermediate-certificate-policy = { path = "../x509-intermediate-certificate-policy" }
 x509-rsa-algorithm-policy = { path = "../x509-rsa-algorithm-policy" }

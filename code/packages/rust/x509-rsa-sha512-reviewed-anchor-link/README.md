@@ -22,8 +22,16 @@ exact decoded intermediate object; byte-equal independent decodes fail closed.
 The returned non-copyable evidence keeps complete intermediate policy, both
 authenticated links, and the exact reviewed-root selection together.
 
+`bind_x509_rsa_sha512_authenticated_intermediate_path_to_reviewed_anchor`
+provides the stronger additive boundary. It consumes the existing
+path-length-advanced authenticated intermediate proof instead of the narrower
+link proof, applies the same exact-object join to the reviewed parent link, and
+retains the advanced state with both authenticated links, complete
+intermediate policy, and reviewed-root selection. The earlier API remains
+available for callers that have not yet advanced path length.
+
 This is not complete certificate-path validation. It does not apply anchor
-name constraints, derive or advance path-length state, validate target role,
+name constraints, derive an initial path-length state, validate target role,
 purpose, time, hostname, or revocation, search a path, perform TLS or HTTP, or
 authorize OAuth network access. The pinned `webpki-roots` snapshot remains
 reviewed public data only; no external TLS, X.509, or cryptographic
