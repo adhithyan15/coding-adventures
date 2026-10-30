@@ -20,6 +20,13 @@ name constraints, construct or validate a complete path, select a reviewed
 trust anchor, check revocation, perform TLS or HTTP, emit audit or trace
 events, or make OAuth HTTPS/live-provider use ready.
 
+The stronger policy-link entry point consumes certificate-wide critical-
+extension and issuing-CA role evidence plus certificate-bound, data-driven RSA
+algorithm/key evidence. It rejects evidence retained from any other decoded
+certificate object before invoking Name policy or RSA verification, then
+retains the exact evidence in its result. The entry point fixes SHA-384 in its
+type and never treats algorithm-policy data as verifier routing authority.
+
 ## Validation
 
 ```bash
