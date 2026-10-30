@@ -379,16 +379,24 @@ class TestGenerateCommands:
         t = Target(rule="ts_library", name="pkg")
         cmds = generate_commands(t)
         assert cmds == [
-            "npm install --silent",
-            "npx vitest run --coverage",
+            "npm ci --quiet",
+            "npm exec --offline -- vitest run --coverage",
+        ]
+
+    def test_ts_library_node_runner(self):
+        t = Target(rule="ts_library", name="pkg", test_runner="node")
+        assert generate_commands(t) == [
+            "npm ci --quiet",
+            "npm run build --silent",
+            "npm run test:coverage --silent",
         ]
 
     def test_ts_binary(self):
         t = Target(rule="ts_binary", name="cli")
         cmds = generate_commands(t)
         assert cmds == [
-            "npm install --silent",
-            "npx vitest run --coverage",
+            "npm ci --quiet",
+            "npm exec --offline -- vitest run --coverage",
         ]
 
     # --- Rust rules ---

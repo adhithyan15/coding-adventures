@@ -49,6 +49,45 @@ impl fmt::Display for X509RsaSha384ReviewedAnchorLinkError {
 
 impl std::error::Error for X509RsaSha384ReviewedAnchorLinkError {}
 
+/// Stable, payload-free two-link reviewed-path binding failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha384ReviewedIntermediatePathErrorKind {
+    /// The adjacent links do not retain the same decoded intermediate object.
+    EvidenceMismatch,
+}
+
+/// A redacted two-link reviewed-path binding failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha384ReviewedIntermediatePathError {
+    kind: X509RsaSha384ReviewedIntermediatePathErrorKind,
+}
+
+impl X509RsaSha384ReviewedIntermediatePathError {
+    const fn evidence_mismatch() -> Self {
+        Self {
+            kind: X509RsaSha384ReviewedIntermediatePathErrorKind::EvidenceMismatch,
+        }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaSha384ReviewedIntermediatePathErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha384ReviewedIntermediatePathError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-384 reviewed intermediate-path error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha384ReviewedIntermediatePathError {}
+
 /// Non-copyable evidence that one authenticated SHA-384 issuer-policy link
 /// terminates at the exact certificate selected from the reviewed root set.
 ///
@@ -149,5 +188,144 @@ pub fn bind_x509_rsa_sha384_issuer_link_to_reviewed_anchor<
     Ok(BoundX509RsaSha384ReviewedAnchorLink {
         verified_issuer_link,
         reviewed_anchor,
+    })
+}
+
+/// Non-copyable evidence joining one authenticated target-to-intermediate
+/// SHA-384 link to one authenticated intermediate-to-reviewed-root SHA-384
+/// link.
+///
+/// Both complete policy-bound link proofs remain retained. This wrapper does
+/// not derive path-length state, apply name constraints, search a path, check
+/// revocation, or grant TLS or network authority.
+pub struct BoundX509RsaSha384ReviewedIntermediatePath<
+    'child_certificate,
+    'child_encoded,
+    'intermediate_certificate,
+    'intermediate_encoded,
+    'parent_child_certificate,
+    'parent_child_encoded,
+    'root_certificate,
+    'root_encoded,
+> {
+    authenticated_child_link: VerifiedX509RsaSha384IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+    >,
+    reviewed_parent_link: BoundX509RsaSha384ReviewedAnchorLink<
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+}
+
+impl<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >
+    BoundX509RsaSha384ReviewedIntermediatePath<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >
+{
+    /// Return the consumed target-to-intermediate authenticated link.
+    #[must_use]
+    pub const fn authenticated_child_link(
+        &self,
+    ) -> &VerifiedX509RsaSha384IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+    > {
+        &self.authenticated_child_link
+    }
+
+    /// Return the consumed intermediate-to-reviewed-root binding.
+    #[must_use]
+    pub const fn reviewed_parent_link(
+        &self,
+    ) -> &BoundX509RsaSha384ReviewedAnchorLink<
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    > {
+        &self.reviewed_parent_link
+    }
+}
+
+impl fmt::Debug for BoundX509RsaSha384ReviewedIntermediatePath<'_, '_, '_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509RsaSha384ReviewedIntermediatePath")
+    }
+}
+
+/// Join two authenticated SHA-384 links only when they retain the same exact
+/// decoded intermediate certificate object.
+///
+/// Encoded-byte equality is deliberately insufficient: the candidate issuer
+/// from the first link must be pointer-identical to the child authenticated by
+/// the reviewed parent link.
+pub fn bind_x509_rsa_sha384_intermediate_path_to_reviewed_anchor<
+    'child_certificate,
+    'child_encoded,
+    'intermediate_certificate,
+    'intermediate_encoded,
+    'parent_child_certificate,
+    'parent_child_encoded,
+    'root_certificate,
+    'root_encoded,
+>(
+    authenticated_child_link: VerifiedX509RsaSha384IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+    >,
+    reviewed_parent_link: BoundX509RsaSha384ReviewedAnchorLink<
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+) -> Result<
+    BoundX509RsaSha384ReviewedIntermediatePath<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+    X509RsaSha384ReviewedIntermediatePathError,
+> {
+    if !std::ptr::eq(
+        authenticated_child_link.candidate_issuer(),
+        reviewed_parent_link.verified_issuer_link().child(),
+    ) {
+        return Err(X509RsaSha384ReviewedIntermediatePathError::evidence_mismatch());
+    }
+
+    Ok(BoundX509RsaSha384ReviewedIntermediatePath {
+        authenticated_child_link,
+        reviewed_parent_link,
     })
 }

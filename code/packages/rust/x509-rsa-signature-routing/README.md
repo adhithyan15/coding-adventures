@@ -6,6 +6,10 @@ v1.5 SHA-256, SHA-384, or SHA-512 signature verifier. The issuer key is derived
 only from separately consumed exact issuer-certificate RSA key-policy evidence.
 Missing and duplicate routes fail before RSA work, and success retains both
 non-copyable policy inputs with the exact fixed-verifier result.
+Verifier-independent accessors borrow those same retained child and issuer
+policy objects from every success variant, allowing later path and reviewed-
+anchor composition to enforce exact object identity without reopening the
+fixed-verifier enum or accepting detached certificates and keys.
 
 This is a narrow public-data cryptographic composition boundary. It does not
 decide issuer Name linkage or role, recognize extensions, construct or
