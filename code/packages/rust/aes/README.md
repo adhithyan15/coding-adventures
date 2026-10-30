@@ -5,6 +5,13 @@ following FIPS 197. Supports AES-128, AES-192, and AES-256.
 
 Uses GF(2^8) arithmetic from the companion `gf256` crate (polynomial 0x11B).
 
+The package also exposes `aes128_encrypt_block_fixed`, a narrower AES-128
+encryption boundary for later record-protection composition. It uses fixed
+wipe-on-drop storage for copied key material and state, writes into a
+caller-owned output array, performs no allocation, and computes SubBytes with
+fixed-work GF(2^8) arithmetic instead of secret-indexed table lookups. The
+legacy APIs remain educational and compatibility surfaces.
+
 ## What This Package Teaches
 
 - **Substitution-Permutation Network (SPN)** — how all 16 bytes of the state are
@@ -78,9 +85,26 @@ assert_eq!(sbox()[0x00], 0x63); // FIPS 197 Figure 7
 assert_eq!(inv_sbox()[0x63], 0x00);
 ```
 
+For the fixed-memory AES-128 boundary:
+
+```rust
+use coding_adventures_aes::aes128_encrypt_block_fixed;
+
+let key = [0u8; 16];
+let plaintext = [0u8; 16];
+let mut ciphertext = [0u8; 16];
+aes128_encrypt_block_fixed(&plaintext, &key, &mut ciphertext);
+```
+
+This function encrypts one block only. It is not AES-GCM, does not authenticate
+data or manage nonces, and does not provide TLS or HTTPS. Fixed-memory AES-192
+and AES-256 are also outside this boundary.
+
 ## Stack in This Repository
 
 - This package implements `SE02` (symmetric encryption layer 2 — AES).
 - Depends on `gf256` for GF(2^8) arithmetic.
+- Depends on the repository-owned `zeroize` package for fixed-boundary secret
+  cleanup.
 - The companion `coding_adventures_des` package implements `SE01` (DES).
 - See `code/specs/` for full algorithm specifications.
