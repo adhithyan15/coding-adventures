@@ -419,7 +419,20 @@ The delivery order is:
    injected or caller-owned authorities.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
-   before any socket is opened.
+   before any socket is opened. A strict allocation-free response body-framing
+   policy now rejects transfer coding until a reviewed decoder exists, rejects
+   duplicate or noncanonical `Content-Length`, binds explicit body limits to
+   fixed-length and optionally close-delimited consumption, and handles
+   bodyless, HEAD, and CONNECT framing precedence without reading a body. It
+   requires request semantics from the exact emitted request and permits
+   close-delimited framing only through trusted caller policy, never response
+   data. It does not retrofit or authorize the existing permissive `http1` or
+   `http1-client` packages; later composition must use a separately reviewed
+   strict CRLF response-head decoder and preserve exact request binding before
+   applying this policy. It performs no I/O, credential interpretation or
+   release, provider action, audit, trace, or external effect. Response syntax
+   decoding, transfer decoding, body reads, TLS, sockets, and live-provider
+   transport remain unavailable.
 9. **Provider data fixtures:** a language-neutral, zero-dependency conformance
    contract now drives synthetic public RFC 9207, distinct-redirect, device,
    confidential, user-defined, and fail-closed metadata profiles through the
@@ -555,6 +568,16 @@ lengths, and the rule that a path length cannot appear unless CA is true while
 preserving arbitrarily large canonical integers as borrowed bytes. It does not
 grant CA authority, enforce certificate-wide criticality or Key Usage policy,
 build paths, verify signatures, or select trust roots.
+A bounded `x509-authority-key-identifier` semantic layer now recognizes the
+RFC 5280 Authority Key Identifier OID and decodes the exact non-critical,
+keyIdentifier-only profile under the generic extension's retained ASN.1 depth
+and work budgets. It rejects empty or over-policy identifiers and fails closed
+on the currently unsupported authorityCertIssuer and
+authorityCertSerialNumber forms. It does not compare identifiers, select or
+authenticate an issuer, construct or validate a path, select trust, verify a
+signature, process revocation, grant TLS or HTTP authority, or perform an
+external effect.
+
 A bounded `x509-subject-key-identifier` semantic layer now recognizes only the
 RFC 5280 Subject Key Identifier OID and decodes its exact encapsulated OCTET
 STRING without allocation. A caller-selected nonzero byte ceiling is checked
@@ -783,6 +806,22 @@ high bits, requires the complete zero padding and `0x01` delimiter, and
 recomputes `H = SHA-384(0x00^8 || mHash || salt)` before a full 48-byte
 comparison. Public size and scratch failures occur before scratch mutation;
 stable failures retain no message, digest, salt, padding, or offset bytes.
+
+A bounded `rsa-pss-sha384-signature` composition now verifies one exact public
+RSASSA-PSS signature for the fixed SHA-384, MGF1-SHA-384, 48-byte-salt
+profile. It accepts only a previously validated RSA public key, an exact
+modulus-width signature, an already-computed 48-byte message digest, exact
+caller-owned DB scratch, and caller-owned RSA and encoded-message ceilings. It
+derives `emBits = modBits - 1`, applies the repository-owned RSA public
+operation, and requires the complete fixed-profile EMSA-PSS verdict. Its
+borrowed non-copyable evidence binds the exact key, signature bytes, and
+message digest used.
+
+This signature evidence does not hash a message, parse RSA-PSS parameters or a
+certificate, choose an algorithm or issuer, establish certificate roles or a
+path, select trust roots, check time, names, or revocation, process TLS or HTTP,
+authorize OAuth transport, or perform any external effect. It is not evidence
+of certificate, HTTPS, or live-provider readiness.
 
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
@@ -1573,6 +1612,23 @@ contiguity, evaluate a presented IP address, bind constraints to a certificate
 or path, grant trust, check revocation, verify a signature, perform TLS or
 HTTP, authorize OAuth transport, or cause an external effect; concrete HTTPS
 remains unavailable.
+A bounded IP constraint evaluator now composes the shared repository-owned IP
+name-constraint policy for every retained IPv4 or IPv6 address-and-mask subtree
+before examining any presented address. Masks must contain one contiguous
+most-significant-bit prefix, masked-out address bits do not affect subnet
+matching, and matching never crosses address families. Excluded subtrees take precedence; when a
+permitted IP set is present, every presented address must fall within at least
+one permitted prefix. The IP-only entry point fails closed while DNS subtrees
+remain unevaluated, matching the existing DNS-only refusal of retained IP
+subtrees. A combined bounded entry point evaluates both supported name forms
+and releases only payload-free DNS and IP counts after both policies pass, so
+mixed critical constraints cannot silently lose one form. Inputs are typed,
+caller-supplied SAN values; errors retain only a stable category and collection
+index. This does not bind either result to a certificate, intermediate,
+selected anchor, or constructed path, process any other GeneralName form,
+generalize path validation, check revocation, perform TLS or HTTP, authorize
+OAuth transport, access a credential, or cause an external effect. Concrete
+HTTPS remains unavailable.
 A separate bounded evaluator initially validated every decoded permitted DNS
 subtree before matching caller-supplied DNS names. It enforces strict ASCII labels,
 case-insensitive label-boundary matching, the reviewed leading-dot semantics,
@@ -2688,6 +2744,25 @@ transcript and key-schedule composition, certificate validation, TLS record
 protection, and HTTP composition remain blockers. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-no-psk-server-flight` policy now sequences the
+already decoded server authentication flight after `ServerHello` for the
+repository's no-PSK TLS 1.3 client path. It requires
+`EncryptedExtensions`, accepts one optional `CertificateRequest`, then requires
+`Certificate`, `CertificateVerify`, and `Finished` exactly once and in order.
+Unexpected messages fail without advancing state. Completion retains whether
+client authentication was requested and makes that requirement available to
+later client-flight policy. A future composition must require that policy to
+consume the retained value rather than allowing callers to ignore it.
+
+This ordering layer does not accept PSK or early-data handshakes, sequence the
+initial hellos or the client flight, decode or semantically validate a body,
+update a transcript, authenticate `CertificateVerify` or `Finished`, validate
+a certificate or path, check identity or revocation, access a credential or
+signing key, produce a client certificate or signature, emit an alert, derive
+keys, protect records, perform I/O, authorize HTTP or OAuth transport, or open
+a network connection. Full handshake state and all of those compositions
+remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-key-update-message` prerequisite now owns the exact
 one-octet RFC 8446 section 4.6.3 `KeyUpdate` handshake body. Exact decoding
 accepts only `update_not_requested` and `update_requested`, rejects truncated,
@@ -2841,6 +2916,24 @@ trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
 open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
+
+An allocation-free `http1-request-header-field` prerequisite now validates and
+encodes one deliberately narrow HTTP/1 request field line into caller-owned
+storage. Caller limits bound the token-only field name, ASCII field value, and
+complete line. Values may be empty or contain internal space and horizontal
+tab, but leading or trailing optional whitespace, controls, DEL, and non-ASCII
+bytes fail closed. The encoder emits the exact validated name, colon, one
+space, value, and CRLF only after proving the complete output fits, so a small
+output remains unchanged. Success retains borrowed name and potentially
+sensitive value bytes plus the exact encoded length without allocation. Stable
+failures retain no field bytes or lengths, and Debug redacts both inputs.
+
+This syntax boundary does not authorize a field name or value, interpret or
+release a credential, detect duplicate or conflicting fields, enforce Host or
+body-framing policy, compose a request head, perform TLS, read or write a
+socket, emit provider or trace audit events, or authorize HTTP or OAuth
+transport. Those semantic and external-effect policies remain separate.
+Concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-key-share` prerequisite now binds exact TLS 1.3
 `KeyShareEntry` values to the existing caller-selected named-group policy.
