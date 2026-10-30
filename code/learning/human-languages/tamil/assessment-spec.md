@@ -4,9 +4,11 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1, A1, and B2 task inventories are
-checked in, while A2, B1, C1, and C2 inventories, mocks, calibration, and human
-validation remain backlog
+**Status:** target specified; the pre-A1, A1, and B2 task shapes and the A1 and
+B2 content inventories are checked in, while A2, B1, C1, and C2 inventories,
+mocks, calibration, and human validation remain backlog. The B2 content
+inventory is deliberately partial at 0/36 demands and does not establish exam
+readiness.
 
 This specification names the assessment that the complete Tamil book must
 eventually prepare a book-only learner to pass. It is not an external
