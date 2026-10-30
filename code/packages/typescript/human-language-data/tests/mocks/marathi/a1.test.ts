@@ -12,6 +12,16 @@ const numberedItems = (text: string, start: string, end?: string) => {
   const to = end === undefined ? text.length : text.indexOf(end, from + start.length);
   return text.slice(from, to).match(/^\d+\./gmu)?.length ?? 0;
 };
+const part = (text: string, id: string) => text.split(`<!-- mock-part:${id} -->`)[1]
+  ?.split(`<!-- /mock-part:${id} -->`)[0] ?? "";
+const wordCount = (text: string) => text
+  .replaceAll("**", "")
+  .replace(/^\s*\d+\.\s*/u, "")
+  .replace(/[·,:;.?!]/gu, " ")
+  .trim()
+  .split(/\s+/u)
+  .filter(Boolean)
+  .length;
 
 const partIds = [
   "a1-reading-signs-and-forms",
@@ -85,6 +95,21 @@ describe("Marathi A1 timed mock pair", () => {
       expect(numberedItems(paper, "## Listening", "## Writing")).toBe(17);
       expect(numberedItems(paper, "## Writing", "## Speaking")).toBe(2);
       expect(numberedItems(paper, "## Speaking")).toBe(3);
+
+      const readingRanges = [
+        ["a1-reading-signs-and-forms", 70, 90],
+        ["a1-reading-short-messages", 90, 120],
+        ["a1-reading-personal-descriptions", 90, 140],
+      ] as const;
+      for (const [id, minimum, maximum] of readingRanges) {
+        const stimulus = part(paper, id).match(/\*\*([\s\S]*?)\*\*/u)?.[1] ?? "";
+        expect(wordCount(stimulus), id).toBeGreaterThanOrEqual(minimum);
+        expect(wordCount(stimulus), id).toBeLessThanOrEqual(maximum);
+      }
+      expect(wordCount(part(paper, "a1-writing-practical-form"))).toBeGreaterThanOrEqual(40);
+      expect(wordCount(part(paper, "a1-writing-practical-form"))).toBeLessThanOrEqual(70);
+      expect(wordCount(part(paper, "a1-writing-reader-purpose-message"))).toBeGreaterThanOrEqual(25);
+      expect(wordCount(part(paper, "a1-writing-reader-purpose-message"))).toBeLessThanOrEqual(50);
 
       const script = read(`mock-${form}-examiner-script.md`);
       expect(script).toContain("60–90 second window");
