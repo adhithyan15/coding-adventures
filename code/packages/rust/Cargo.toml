@@ -1377,6 +1377,7 @@ members = [
   "x509-rsa-sha512-reviewed-anchor-link",
   "x509-rsa-sha256-reviewed-anchor-link",
   "x509-rsa-sha384-reviewed-anchor-link",
+  "x509-rsa-sha384-reviewed-server-link",
   "x509-rsa-sha256-reviewed-server-link",
   "x509-server-certificate-policy",
   "x509-intermediate-certificate-policy",

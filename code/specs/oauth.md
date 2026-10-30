@@ -910,6 +910,19 @@ construct or validate a path, check target identity, validity, purpose, path
 length, or revocation, perform TLS or HTTP, emit audit or trace events, access
 credentials, or authorize OAuth transport or network effects. Concrete HTTPS
 and live-provider readiness remain unavailable.
+A bounded `x509-rsa-sha384-reviewed-server-link` composition now consumes one
+exact target-server policy result together with one authenticated RSA SHA-384
+issuer link terminating at a reviewed root. It fails closed unless both
+non-copyable inputs retain the same exact decoded target certificate object,
+then retains the complete target policy and reviewed-link evidence together.
+Encoded-byte equality is deliberately insufficient, preventing independently
+decoded certificates from contributing mixed evidence. This pure public-data
+binding performs no credential access, signing, storage, clock acquisition,
+audit event, trace emission, or external effect. It performs no new parsing or
+signature work, applies no reviewed-anchor constraints, constructs no
+multi-hop path, and does not check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection; concrete HTTPS remains
+unavailable.
 A bounded sibling `x509-rsa-sha512-issuer-link` composition now authenticates
 one directed child-to-candidate-issuer link for the exact RSA PKCS #1 v1.5
 SHA-512 certificate algorithm. Caller-owned Name policy is invoked exactly once
