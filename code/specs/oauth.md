@@ -2757,6 +2757,30 @@ revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
 connection. Extension-block and handshake composition remain prerequisites,
 and concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-server-hello-message` prerequisite now decodes one
+already-delimited RFC 8446 `ServerHello` body. Caller-owned limits bound the
+complete body, extension-vector payload, and retained extension count. The
+decoder enforces the fixed TLS 1.3 legacy version `0x0303`, the zero legacy
+compression method, the zero-to-32-byte session-id echo, exact body
+consumption, and the structure's minimum extension-vector payload. It retains
+the exact random and unclassified cipher-suite identifier, then composes the
+repository-owned generic extension-block decoder so malformed lengths,
+trailing bytes, duplicate extension types, and resource exhaustion fail
+closed. Stable failures contain only a category and body-local offset, and
+diagnostics omit random, session-id, and extension bytes.
+
+This structural boundary does not classify the `HelloRetryRequest` random,
+interpret or authorize extension contents, require or validate
+`supported_versions`, bind the session-id echo or cipher-suite selection to an
+original `ClientHello`, enforce the downgrade sentinel, send alerts, advance a
+handshake, derive keys, protect records, parse or validate certificates,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. ClientHello construction,
+context-specific extension and selection policy, handshake state,
+repository-owned signature verification, certificate name/path validation,
+trust-root and revocation integration, TLS transport, and HTTP composition
+remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-server-name` prerequisite now owns the exact RFC
 6066 ClientHello `server_name` extension data used by a future repository-owned
 TLS 1.3 client. It validates one borrowed ASCII DNS hostname under explicit
