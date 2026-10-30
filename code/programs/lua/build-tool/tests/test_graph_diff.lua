@@ -529,8 +529,8 @@ describe("process-free Lua graph and diff selection", function()
     it("indexes relevant max-shape boundary exclusions", function()
         local rules = {}
         for rule_index = 1, 56 do
-            local excluded = {}
-            for excluded_index = 1, 1024 do
+            local excluded = {"roots/p0001"}
+            for excluded_index = 2, 1024 do
                 excluded[excluded_index] = string.format("excluded/rule-%d/root-%d",
                     rule_index, excluded_index)
             end
@@ -558,9 +558,32 @@ describe("process-free Lua graph and diff selection", function()
         input.boundary = boundary
         local actual = GraphDiff.evaluate_diff_selection(input)
         assert.is_true(actual.ok, actual.code)
-        assert.equals(4096, #actual.value.changed_packages)
-        assert.equals("fixture/p0001", actual.value.changed_packages[1])
-        assert.equals("fixture/p4096", actual.value.changed_packages[4096])
+        assert.equals(4095, #actual.value.changed_packages)
+        assert.equals("fixture/p0002", actual.value.changed_packages[1])
+        assert.equals("fixture/p4096", actual.value.changed_packages[4095])
+    end)
+
+    it("gives an exact boundary root precedence over an exclusion", function()
+        local boundary = boundary_document({{
+            id = "exact-precedence",
+            input_origin = "repository",
+            applies_to = {exact_roots = json_array({"roots/exact"}),
+                descendant_roots = json_array({"roots"}),
+                excluded_roots = json_array({"roots/exact"})},
+            inputs = json_array({{path = "shared/relevant-input",
+                role = "cross_package_exact"}}),
+            reason = "exact roots take precedence",
+            owner = "test-owner",
+        }})
+        local input = simple_diff({package_prefix("fixture/exact", "roots/exact")})
+        input.changed_paths = {"shared/relevant-input"}
+        input.boundary_sha256 = boundary_digest(boundary)
+        input.boundary = boundary
+        assert.same({ok = true, value = {
+            changed_packages = {"fixture/exact"},
+            affected_packages = {"fixture/exact"},
+            prerequisite_packages = {},
+        }}, GraphDiff.evaluate_diff_selection(input))
     end)
 
     it("ignores hostile extra fields without weakening metatable rejection", function()
