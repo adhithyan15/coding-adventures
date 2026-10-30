@@ -1,0 +1,10 @@
+[package]
+name = "tls13-transcript"
+version = "0.1.0"
+edition = "2021"
+description = "Cipher-suite-bound fixed-memory TLS 1.3 transcript hashing"
+
+[dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_sha384 = { path = "../sha384" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }

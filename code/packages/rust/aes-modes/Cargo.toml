@@ -6,6 +6,7 @@ description = "AES modes of operation — ECB, CBC, CTR, GCM"
 
 [dependencies]
 coding_adventures_aes = { path = "../aes" }
+coding_adventures_zeroize = { path = "../zeroize" }
 
 [dev-dependencies]
 hex = "0.4"

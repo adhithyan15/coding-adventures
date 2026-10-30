@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0 - 2026-10-30
+
+### Added
+
+- Added a non-copyable binding between exact target-server policy and an
+  authenticated RSA SHA-512 target-to-intermediate-to-reviewed-root proof.
+- Added an exact decoded-target identity gate and retained access to both
+  complete consumed inputs.
+
+### Security
+
+- Independently decoded byte-equal targets cannot contribute mixed policy and
+  authenticated-link evidence.
+- This evidence join grants no path construction, path-length, constraint,
+  hostname, revocation, TLS, HTTP, OAuth, or network authority.
+
 ## 0.2.0 - 2026-10-30
 
 ### Added
