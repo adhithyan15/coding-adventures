@@ -891,6 +891,19 @@ external effect. It does not apply anchor constraints, validate target role,
 purpose, validity, or identity, construct or validate a multi-hop path, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection; concrete HTTPS remains unavailable.
+A bounded `x509-rsa-sha512-reviewed-server-link` composition now consumes one
+exact target-server policy result together with one authenticated RSA SHA-512
+issuer link terminating at a reviewed root. It fails closed unless both
+non-copyable inputs retain the same exact decoded target certificate object,
+then retains the complete target policy and reviewed-link evidence together.
+Encoded-byte equality is deliberately insufficient, preventing independently
+decoded certificates from contributing mixed evidence. This pure public-data
+binding performs no credential access, signing, storage, clock acquisition,
+audit event, trace emission, or external effect. It performs no new parsing or
+signature work, applies no reviewed-anchor constraints, constructs no
+multi-hop path, and does not check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection; concrete HTTPS remains
+unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each
