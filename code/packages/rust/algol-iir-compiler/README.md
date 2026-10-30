@@ -326,6 +326,27 @@ overrides, other calls, and unreduced wide results remain conservative.
 Bounded nonnegative right-associative powers may connect them too. Exponents
 use the existing 4,096 cap and every powered intermediate is checked in `i64`;
 negative or oversized exponents and overflow remain conservative.
+Checked integer `div` and `mod` may connect nested normalizers too. Zero
+divisors, `i64::MIN div -1`, procedure-calling divisors, and unreduced wide
+results remain conservative.
+Conditional expressions may connect nested normalizers when their selector is
+side-effect-free and static or every branch proves the same checked integer
+result. Effectful selectors, unequal branches, procedure-calling branches, and
+unreduced wide results remain conservative.
+Canonical standard-function identities may connect those normalizers too:
+`sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and `ln(1)`. Non-identity inputs,
+user overrides, other calls, and overflowing checked arithmetic remain
+conservative.
+Exact nonnegative perfect squares may pass through `sqrt` in the same chain,
+including radicands beyond binary64's exact integer range. Negative and
+non-square radicands, user overrides, and dynamic operands remain conservative.
+An enclosing built-in `entier` may also reduce a non-square nonnegative exact
+integer `sqrt` to its mathematical floor root before widening. Negative
+radicands, shadowed built-ins, and dynamic operands remain conservative.
+A unary minus around that `sqrt` preserves the exact mathematical floor too,
+using the negated ceiling root for non-squares. Repeated unary signs are
+checked without widening; negative radicands and dynamic roots still fail
+closed.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.

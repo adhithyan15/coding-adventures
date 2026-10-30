@@ -225,13 +225,73 @@ fn assert_expected_callees(function: &str) {
         };
         let callee = &before_arguments[at + 1..];
         assert!(
-            callee.starts_with("llvm.")
-                || (callee.starts_with("_ZN25coding_adventures_zeroize13zeroize_bytes17h")
-                    && callee.ends_with('E'))
-                || (callee.starts_with("_ZN4core9panicking16panic_in_cleanup17h")
-                    && callee.ends_with('E')),
+            callee.starts_with("llvm.") || is_expected_rust_helper(callee),
             "fixed AES contains unexpected callee @{callee}: {line}"
         );
+    }
+}
+
+/// Admit exactly the two reviewed Rust paths under either mangling scheme.
+/// Crate hashes distinguish builds; they must never widen the allowed path.
+fn is_expected_rust_helper(callee: &str) -> bool {
+    [
+        (
+            "_ZN25coding_adventures_zeroize13zeroize_bytes17h",
+            "_RNvC",
+            "25coding_adventures_zeroize13zeroize_bytes",
+        ),
+        (
+            "_ZN4core9panicking16panic_in_cleanup17h",
+            "_RNvNtC",
+            "4core9panicking16panic_in_cleanup",
+        ),
+    ]
+    .iter()
+    .any(|(legacy_prefix, v0_prefix, path)| {
+        let legacy = callee
+            .strip_prefix(legacy_prefix)
+            .and_then(|tail| tail.strip_suffix('E'))
+            .is_some_and(|hash| hash.len() == 16 && hash.bytes().all(|b| b.is_ascii_hexdigit()));
+        let v0 = callee.strip_prefix(v0_prefix).is_some_and(|tail| {
+            let path_tail = if let Some(disambiguated) = tail.strip_prefix('s') {
+                let Some((hash, path_tail)) = disambiguated.split_once('_') else {
+                    return false;
+                };
+                if !hash.bytes().all(|byte| byte.is_ascii_alphanumeric()) {
+                    return false;
+                }
+                path_tail
+            } else {
+                tail
+            };
+            path_tail == *path
+        });
+        legacy || v0
+    })
+}
+
+#[test]
+fn helper_allowlist_accepts_legacy_and_v0_paths_only() {
+    for callee in [
+        "_ZN25coding_adventures_zeroize13zeroize_bytes17h0123456789abcdefE",
+        "_ZN4core9panicking16panic_in_cleanup17hfedcba9876543210E",
+        "_RNvCs2xMqgm6MVc5_25coding_adventures_zeroize13zeroize_bytes",
+        "_RNvNtCskADBYZwJmSU_4core9panicking16panic_in_cleanup",
+        "_RNvC25coding_adventures_zeroize13zeroize_bytes",
+    ] {
+        assert_expected_callees(&format!("call void @{callee}(ptr %state)"));
+    }
+    for callee in [
+        "_RNvCs2xMqgm6MVc5_25coding_adventures_zeroize13zeroize_bytes_extra",
+        "_RNvCs2xMqgm6MVc5_13foreign_crate13zeroize_bytes",
+        "_RNvCsbad$hash_25coding_adventures_zeroize13zeroize_bytes",
+        "_RNvNtCskADBYZwJmSU_4core9panicking16panic_in_cleanup_extra",
+        "_ZN25coding_adventures_zeroize13zeroize_bytes17hnot_a_hex_hash__E",
+    ] {
+        assert!(std::panic::catch_unwind(|| {
+            assert_expected_callees(&format!("call void @{callee}(ptr %state)"));
+        })
+        .is_err());
     }
 }
 

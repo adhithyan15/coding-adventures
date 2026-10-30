@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/chacha20-poly1305",
   "capabilities": [],
-  "justification": "Pure in-process computation using only the repository-owned zeroize primitive for secret-memory scrubbing. No filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, audit, provider action, or external effect."
+  "justification": "Pure in-process ChaCha20, Poly1305, and fixed-memory ChaCha20-Poly1305 AEAD computation using only the repository-owned zeroize primitive for secret-memory scrubbing. No filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, audit, provider action, or external effect."
 }

@@ -15,6 +15,10 @@
 
 ### Security
 
+- Recognize exact legacy and v0 encodings of the two reviewed Rust helper
+  paths in the optimized-IR gate. Validate build disambiguators and reject
+  foreign paths, helper suffixes, and malformed hashes without widening the
+  closed helper allowlist or changing the cryptographic implementation.
 - The fixed boundary scrubs copied state, expanded keys, and scratch buffers on
   return or unwind. Legacy allocation-backed and table-indexing APIs remain
   compatibility surfaces and are not promoted to production TLS use.

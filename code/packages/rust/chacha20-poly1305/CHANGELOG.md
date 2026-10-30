@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add allocation-free `aead_encrypt_fixed` and `aead_decrypt_fixed` RFC 8439
+  composition with exact caller-owned outputs, preflighted length and counter
+  bounds, authenticate-before-decrypt semantics, fixed-schedule tag comparison,
+  and wipe-on-drop one-time-key and recomputed-tag storage.
+- Add the allocation-free `poly1305_mac_fixed` boundary with caller-owned tag
+  output, a branchless five-limb block core and final reduction, wipe-on-drop
+  derived state, and RFC 8439, independent multi-block, plus block-edge
+  equivalence coverage.
 - Add the allocation-free `chacha20_xor_fixed` boundary with exact
   caller-owned output, preflighted 32-bit counter exhaustion, stable
   payload-free errors, and fixed-round secret processing.

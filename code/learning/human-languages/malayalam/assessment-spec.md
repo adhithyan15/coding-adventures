@@ -243,12 +243,15 @@ For each rung, implementation must add:
 
 1. the four-skill JSON task inventory named by `assessment.json`;
 2. two complete timed mock forms with fresh input and prompts;
-3. a shared analytic rubric plus task-specific scoring notes;
-4. one answer key per mock, including acceptable regional alternatives;
-5. rater training samples, double-scoring evidence, and adjudication records;
-6. the pre-registered book-only human-validation report.
+3. one manifest per mock that selects every published task-shape part at the
+   published timing and binds that part to a visible span in the learner paper,
+   rubric, and answer key;
+4. a shared analytic rubric plus task-specific scoring notes;
+5. one answer key per mock, including acceptable regional alternatives;
+6. rater training samples, double-scoring evidence, and adjudication records;
+7. the pre-registered book-only human-validation report.
 
-Until items 1–4 exist, reports may say **target contracted** only. After a
+Until items 1–5 exist, reports may say **target contracted** only. After a
 learner passes both mocks they may say **mock ready**. Only the pre-registered
 human study can support **learner proven**, and its result must never be inferred
 from corpus coverage.
