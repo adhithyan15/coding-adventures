@@ -3,15 +3,12 @@ use x509_authority_information_access::{
     decode_authority_information_access, AuthorityInformationAccess, ID_AD_OCSP_OID,
 };
 use x509_certificate::{decode_x509_certificate, X509Certificate};
-use x509_certificate_policy::{
-    validate_certificate_role_policy, X509CertificateRole,
-};
+use x509_certificate_policy::{validate_certificate_role_policy, X509CertificateRole};
 use x509_extension::decode_x509_extension;
 use x509_ocsp_aia_locator_policy::{
     select_unique_x509_certificate_ocsp_aia_locator, select_unique_x509_ocsp_aia_locator,
-    X509OcspAiaLocatorErrorKind, X509OcspAiaLocatorPolicy,
-    X509OcspAiaLocatorPolicyErrorKind, X509OcspAiaSchemePolicy,
-    X509OcspCertificateAiaLocatorErrorKind, MAX_ALLOWED_SCHEMES,
+    X509OcspAiaLocatorErrorKind, X509OcspAiaLocatorPolicy, X509OcspAiaLocatorPolicyErrorKind,
+    X509OcspAiaSchemePolicy, X509OcspCertificateAiaLocatorErrorKind, MAX_ALLOWED_SCHEMES,
     MAX_EXPLICIT_PORTS_PER_SCHEME,
 };
 
@@ -173,6 +170,36 @@ fn certificate_binding_preserves_locator_policy_failures_without_payload() {
         error.kind(),
         X509OcspCertificateAiaLocatorErrorKind::Locator(
             X509OcspAiaLocatorErrorKind::DisallowedScheme
+        )
+    );
+}
+
+#[test]
+fn certificate_binding_validates_policy_before_certificate_data() {
+    let mut encoded = fixture(APPLE_LEAF_HEX);
+    let aia_oid_tlv = [0x06, 0x08, 0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x01, 0x01];
+    let offset = encoded
+        .windows(aia_oid_tlv.len())
+        .position(|window| window == aia_oid_tlv)
+        .unwrap();
+    encoded[offset + aia_oid_tlv.len() - 1] = 0x02;
+    let certificate = decode_certificate(&encoded);
+    let role_policy = end_entity_role_policy(&certificate);
+    let policy = X509OcspAiaLocatorPolicy::new(&[], 512, 253, 256);
+
+    let error = select_unique_x509_certificate_ocsp_aia_locator(
+        role_policy,
+        Asn1Limits::default(),
+        &policy,
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspCertificateAiaLocatorErrorKind::Locator(
+            X509OcspAiaLocatorErrorKind::InvalidPolicy(
+                X509OcspAiaLocatorPolicyErrorKind::NoAllowedSchemes
+            )
         )
     );
 }
