@@ -1,3 +1,4 @@
 cd ../wasm-leb128 && npm ci --quiet
 npm ci --quiet
-npx vitest run --coverage
+npm run build --silent
+npm run test:coverage --silent

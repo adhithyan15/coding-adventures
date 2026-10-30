@@ -17,7 +17,32 @@ This crate implements:
    nonce (draft-irtf-cfrg-xchacha §2.3), built as HChaCha20 → standard
    ChaCha20-Poly1305 with a 12-byte sub-nonce
 
-## Fixed-memory ChaCha20 prerequisite
+## Fixed-memory TLS prerequisites
+
+### ChaCha20-Poly1305 AEAD
+
+`aead_encrypt_fixed` and `aead_decrypt_fixed` compose the fixed-memory
+ChaCha20 and Poly1305 primitives into the exact
+[RFC 8439 section 2.8](https://www.rfc-editor.org/rfc/rfc8439#section-2.8)
+AEAD.
+They accept caller-owned inputs and exact-length outputs, allocate no heap
+memory, validate public lengths and the complete counter range before
+encryption changes either output, and retain all key-derived temporaries in
+wipe-on-drop owners. Decryption recomputes and compares all 16 authentication
+tag bytes before writing any plaintext, so authentication failure leaves the
+caller-owned output unchanged.
+
+The caller remains responsible for unique key/nonce pairs. These functions do
+not select a TLS cipher suite, derive or retain traffic keys, reserve TLS record
+nonces, enforce per-key record limits, frame or protect TLS records, coordinate
+key updates, process a handshake, validate certificates, establish trust,
+check revocation, perform I/O, authorize HTTP or OAuth transport, or make TLS
+or HTTPS available. The allocation-returning AEAD and XChaCha20 APIs remain
+compatibility and educational surfaces rather than production TLS entry
+points. Repository-owned record-protection composition remains a separate
+prerequisite.
+
+### ChaCha20
 
 `chacha20_xor_fixed` is the bounded stream-cipher boundary intended for later
 TLS 1.3 AEAD composition. It accepts exact caller-owned input and output
@@ -27,14 +52,30 @@ and uses one reusable wipe-on-drop keystream block. The original and working
 do not branch on key or input-byte values, and the boundary does not allocate.
 Callers must still prevent reuse of any key, nonce, and counter position.
 
-This function is not authenticated encryption. It does not compute or verify
-Poly1305, select a TLS cipher suite, derive or own traffic keys, construct TLS
-record nonces, enforce per-key record limits, frame records, perform a TLS
+This function is not authenticated encryption. Callers that need the reviewed
+combined boundary use `aead_encrypt_fixed` or `aead_decrypt_fixed`. Raw
+ChaCha20 still does not compute or verify Poly1305, select a TLS cipher suite,
+derive or own traffic keys, construct TLS record nonces, enforce per-key record
+limits, frame records, perform a TLS handshake, validate certificates,
+establish trust, check revocation, perform I/O, authorize HTTP or OAuth
+transport, or make TLS or HTTPS available.
+
+### Poly1305
+
+`poly1305_mac_fixed` is the bounded one-time authenticator prerequisite for
+later TLS 1.3 AEAD composition. It writes the 16-byte tag into caller-owned
+fixed memory, performs no allocation, and uses the standard five 26-bit-limb
+construction. Every full block follows one fixed multiplication and reduction
+schedule; final conditional reduction uses masks rather than secret-dependent
+control flow. Clamped key limbs, accumulator limbs, the addition pad,
+multiplication products, and carry workspace share one wipe-on-drop owner, and
+the reusable 16-byte message block is also scrubbed on return.
+
+Poly1305 keys are one-time keys: callers must never reuse a key for a different
+message. This primitive does not derive or reserve that key, compare tags,
+encrypt or decrypt data, select a TLS cipher suite, protect records, perform a
 handshake, validate certificates, establish trust, check revocation, perform
-I/O, authorize HTTP or OAuth transport, or make TLS or HTTPS available. The
-legacy allocation-returning ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain
-compatibility/educational surfaces and are not promoted to the production TLS
-boundary by this addition.
+I/O, authorize HTTP or OAuth transport, or make TLS or HTTPS available.
 
 Used in TLS 1.3, WireGuard, SSH, Chrome/Android (RFC 8439), and — for
 the extended-nonce flavour — libsodium `secretbox_xchacha20poly1305`,
@@ -94,6 +135,8 @@ key-derived state and keystream storage.
 - All RFC 8439 and draft-irtf-cfrg-xchacha test vectors pass exactly
 - The fixed-memory ChaCha20 boundary rejects output-length and counter-range
   failures before output changes
+- The fixed-memory AEAD boundary authenticates before decrypting and leaves
+  plaintext output unchanged on every authentication failure
 
 ## Portable Conformance
 

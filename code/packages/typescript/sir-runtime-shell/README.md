@@ -69,8 +69,8 @@ backtick(`"${process.execPath}" -e "process.exit(1)"`);             // ""  (non-
 
 ```bash
 npm ci
-npx tsc --noEmit      # strict typecheck
-npx vitest run --coverage
+npm run build
+npm run test:coverage
 ```
 
 ## License
