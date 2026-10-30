@@ -29,9 +29,10 @@ Assessment](assessment-spec.md) from pre-A1 through C2. Its machine-readable
 writing, and speaking, the full gentle writing ladder, and two timed mocks at
 every rung. This names the destination; it does not claim that the current book
 is exam-ready or that the future certificate is externally accredited. The two
-pre-A1 learner papers now have separate keys, examiner scripts, a shared rubric,
-and fail-closed manifests covering all twelve published task-shape parts. They
-are structural project evidence only: recording provenance, qualified review,
+pre-A1 learner papers and two A1 learner papers now have separate keys, paired
+examiner scripts, shared rung-owned rubrics, and fail-closed manifests covering
+all twelve published pre-A1 parts and all eleven published A1 parts. They are
+structural project evidence only: recording provenance, qualified review,
 standard setting, calibration, and book-only human validation remain explicit
 backlog, as do the later-rung mock bundles.
 
