@@ -6024,6 +6024,27 @@ fn emit_host_drop_target_qml(
     writeln!(out, "{inner}ColumnLayout {{").unwrap();
     writeln!(out, "{nested}id: {content_id}").unwrap();
     writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    // The existing ColumnLayout preserves this narrow authored flex shape.
+    // Keep rejected values unread so the degradation report stays honest.
+    if let Some(part) = node.part_name.as_deref() {
+        let props = part_style_props(node, ctx).unwrap_or(&[]);
+        let raw = |name: &str| props.iter().find(|p| p.name == name).map(|p| p.value.trim().trim_matches('"'));
+        let layers = collect_state_layers(node, part, ctx.part_styles);
+        let static_layout = !layers.iter().any(|layer| layer.props.iter().any(|p|
+            matches!(p.name.as_str(), "display" | "flex-direction" | "gap")));
+        if raw("min-height").is_some() && raw("display") == Some("flex")
+            && raw("flex-direction") == Some("column") && static_layout
+        {
+            if let Some(gap) = raw("gap").and_then(qml_px_or_none)
+                .filter(|v| v.parse::<f64>().is_ok_and(|n| n >= 0.0))
+            {
+                writeln!(out, "{nested}spacing: {gap}").unwrap();
+                for name in ["display", "flex-direction", "gap"] {
+                    record_style_read(props, name);
+                }
+            }
+        }
+    }
     out.push_str(&emit_qml_children(&node.children, depth + 2, false, ctx)?);
     writeln!(out, "{inner}}}").unwrap();
     writeln!(out, "{inner}DropArea {{").unwrap();
@@ -17015,6 +17036,61 @@ mod tests {
             1,
             "onDrop payload must be constructed by exactly one target callback:\n{out}"
         );
+    }
+
+    #[test]
+    fn drop_target_column_gap_is_numeric_static_and_reported_honestly() {
+        let (iface, layout) = drag_family_fixture();
+        for (display, direction, gap, supported) in [
+            ("\"flex\"", "\"column\"", "9", true),
+            ("flex", "column", "0px", true),
+            ("grid", "column", "9", false),
+            ("flex", "row", "9", false),
+            ("flex", "column", "-1", false),
+            ("flex", "column", "100%", false),
+            ("flex", "column", "NaN", false),
+            ("flex", "column", "9; Qt.quit()", false),
+        ] {
+            let style = style_with_part("Board", "lane", vec![
+                ("min-height", "60"), ("display", display),
+                ("flex-direction", direction), ("gap", gap)]);
+            let out = from_pipeline(&iface, &layout, &style).unwrap().output;
+            let content = out.split("id: mosaicDropTarget1Content").nth(1).unwrap()
+                .split("DropArea {").next().unwrap();
+            assert_eq!(content.contains("spacing:"), supported, "{gap}: {content}");
+            let drops = dropped_style_properties(&iface, &layout, &style);
+            for name in ["display", "flex-direction", "gap"] {
+                assert_eq!(drops.iter().any(|d| d.name == name), !supported, "{gap}: {name}");
+            }
+        }
+    }
+
+    #[test]
+    fn drop_target_gap_keeps_state_overrides_and_unpinned_targets_reported() {
+        let (iface, mut layout) = drag_family_fixture();
+        layout.root.children[1].props.push(drag_prop(
+            "state-when-hover", LayoutPropValue::Expr("true".to_string())));
+        for overridden in ["display", "flex-direction", "gap"] {
+            let mut style = style_with_part("Board", "lane", vec![
+                ("min-height", "60"), ("display", "flex"),
+                ("flex-direction", "column"), ("gap", "9")]);
+            style.parts[0].states.push(mosstyle_compiler::StateStyle {
+                slot: None, slot_is_bool: false, state: "hover".to_string(),
+                transitions: vec![], props: vec![sp(overridden, "0")],
+            });
+            let out = from_pipeline(&iface, &layout, &style).unwrap().output;
+            let content = out.split("id: mosaicDropTarget1Content").nth(1).unwrap()
+                .split("DropArea {").next().unwrap();
+            assert!(!content.contains("spacing:"), "{overridden}: {content}");
+            assert!(dropped_style_properties(&iface, &layout, &style)
+                .iter().any(|d| d.name == overridden));
+        }
+        let style = style_with_part("Board", "lane", vec![
+            ("display", "flex"), ("flex-direction", "column"), ("gap", "9")]);
+        let out = from_pipeline(&iface, &layout, &style).unwrap().output;
+        let content = out.split("id: mosaicDropTarget1Content").nth(1).unwrap()
+            .split("DropArea {").next().unwrap();
+        assert!(!content.contains("spacing:"));
     }
 
     #[test]
