@@ -63,7 +63,7 @@ Read the profiles and match each detail.
 15. Who lives in Pune? A सीमा / B रोहन / C मीरा
 16. Who likes milk? A सीमा / B रोहन / C मीरा
 17. Who gets up at eight? A सीमा / B रोहन / C मीरा
-18. Who goes by bus? A सीमा / B रोहन / C मीरा
+18. Who goes to school by bus? A सीमा / B रोहन / C मीरा
 19. Who walks with a friend? A सीमा / B रोहन / C मीरा
 20. On Saturday they meet in: A मुंबई / B नाशिक / C पुणे
 <!-- /mock-part:a1-reading-personal-descriptions -->
@@ -94,7 +94,7 @@ script. Choose A, B, or C.
 14. She lives in: A Pune / B Mumbai / C Nashik
 15. She leaves home at: A seven / B eight / C nine
 16. At noon she: A studies alone / B eats with a friend / C goes home
-17. In the evening she: A reads Marathi / B travels by bus / C drinks milk
+17. At home in the evening she: A reads Marathi / B travels by bus / C drinks milk
 <!-- /mock-part:a1-listening-personal-account -->
 
 ## Writing — 20 minutes

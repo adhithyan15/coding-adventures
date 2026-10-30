@@ -142,4 +142,20 @@ describe("Marathi A1 timed mock pair", () => {
     expect(rubric).toContain("recording provenance");
     expect(rubric).toContain("independent human validation");
   });
+
+  it("keeps the two potentially overlapping mock-1 details single-keyed", () => {
+    const paper = read("mock-1.md");
+    const script = read("mock-1-examiner-script.md");
+    const key = read("mock-1-answer-key.md");
+
+    expect(paper).toContain("18. Who goes to school by bus? A सीमा / B रोहन / C मीरा");
+    expect(paper).toContain(
+      "17. At home in the evening she: A reads Marathi / B travels by bus / C drinks milk",
+    );
+    expect(script.replace(/\s+/gu, " ")).toContain(
+      "मी बसने घरी येते. घरी मी चहा घेते आणि मराठी पुस्तक वाचते.",
+    );
+    expect(key).toContain("15 A; 16 B; 17 C; 18 A; 19 C; 20 C.");
+    expect(key).toContain("13 A; 14 A; 15 B; 16 B; 17 A.");
+  });
 });
