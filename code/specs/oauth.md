@@ -780,6 +780,15 @@ recomputes `H = SHA-384(0x00^8 || mHash || salt)` before a full 48-byte
 comparison. Public size and scratch failures occur before scratch mutation;
 stable failures retain no message, digest, salt, padding, or offset bytes.
 
+A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
+RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
+It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
+`DB` into exact caller-owned scratch space, clears only the declared unused
+high bits, requires the complete zero padding and `0x01` delimiter, and
+recomputes `H = SHA-512(0x00^8 || mHash || salt)` before a full 64-byte
+comparison. Public size and scratch failures occur before scratch mutation;
+stable failures retain no message, digest, salt, padding, or offset bytes.
+
 This encoded-message verdict does not parse RSA-PSS AlgorithmIdentifier
 parameters or a key, perform RSAVP1, bind the recovered bytes to a signature or
 certificate, choose a TLS signature scheme, process a handshake, validate a
