@@ -141,6 +141,14 @@ const C4_TAGS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-tags-11.16.1-visual-corpus.json"
 ));
+const C4_LINKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-links-11.16.1-corpus.json"
+));
+const C4_LINKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-links-11.16.1-visual-corpus.json"
+));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -2928,6 +2936,53 @@ fn pinned_c4_tags_reach_semantic_ir() {
             panic!("expected C4 relationship metadata");
         };
         assert_eq!(metadata.tags.as_deref(), Some(expected));
+    }
+}
+
+#[test]
+fn pinned_c4_links_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_LINKS_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_LINKS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixture = &syntax["fixtures"][0];
+    assert_eq!(visual["fixtures"][0], fixture["name"]);
+    let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+
+    for (id, expected) in [
+        ("user", "https://example.com/user"),
+        ("api", "https://example.com/api"),
+        ("web", "https://example.com/web"),
+        ("worker", "https://example.com/worker"),
+    ] {
+        let node = diagram.nodes.iter().find(|node| node.id == id).unwrap();
+        let Some(diagram_ir::StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref()
+        else {
+            panic!("expected C4 node metadata");
+        };
+        assert_eq!(metadata.link.as_deref(), Some(expected));
+    }
+    for (id, expected) in [
+        ("edge", "https://example.com/edge"),
+        ("host", "https://example.com/host"),
+    ] {
+        let group = diagram.groups.iter().find(|group| group.id == id).unwrap();
+        let link = match group.metadata.as_ref().unwrap() {
+            diagram_ir::StructuralGroupMetadata::C4Boundary { link, .. }
+            | diagram_ir::StructuralGroupMetadata::C4DeploymentNode { link, .. } => link,
+            _ => panic!("expected C4 group metadata"),
+        };
+        assert_eq!(link.as_deref(), Some(expected));
+    }
+    for (relationship, expected) in diagram.relationships.iter().zip([
+        "https://example.com/calls",
+        "https://example.com/queues",
+    ]) {
+        let Some(diagram_ir::StructuralRelationshipMetadata::C4(metadata)) =
+            relationship.metadata.as_ref()
+        else {
+            panic!("expected C4 relationship metadata");
+        };
+        assert_eq!(metadata.link.as_deref(), Some(expected));
     }
 }
 
