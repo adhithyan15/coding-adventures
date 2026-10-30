@@ -27,6 +27,9 @@ use x509_certificate_policy::{
     X509CertificatePurposeErrorKind, X509CertificatePurposePolicy, X509CertificateRole,
     X509CertificateServerIdentityErrorKind, X509CertificateValidityErrorKind,
 };
+use x509_subject_alt_name::{
+    decode_subject_alt_name, SubjectAltNameErrorKind, SubjectAlternativeName,
+};
 use x509_time::X509Time;
 
 /// Stable, payload-free server-certificate policy failure categories.
@@ -74,6 +77,44 @@ impl fmt::Display for X509ServerCertificatePolicyError {
 }
 
 impl std::error::Error for X509ServerCertificatePolicyError {}
+
+/// Stable, payload-free target-SAN retention failure categories.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509ServerSubjectAlternativeNamePolicyErrorKind {
+    /// The successful identity token's indexed extension was unavailable.
+    IdentityExtensionUnavailable,
+    /// The exact indexed extension failed Subject Alternative Name decoding.
+    InvalidSubjectAlternativeName(SubjectAltNameErrorKind),
+}
+
+/// A redacted target-SAN retention failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509ServerSubjectAlternativeNamePolicyError {
+    kind: X509ServerSubjectAlternativeNamePolicyErrorKind,
+}
+
+impl X509ServerSubjectAlternativeNamePolicyError {
+    const fn new(kind: X509ServerSubjectAlternativeNamePolicyErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    pub const fn kind(self) -> X509ServerSubjectAlternativeNamePolicyErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509ServerSubjectAlternativeNamePolicyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 server Subject Alternative Name policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509ServerSubjectAlternativeNamePolicyError {}
 
 /// Non-copyable policy evidence for one exact decoded server certificate.
 ///
@@ -128,6 +169,44 @@ impl<'certificate, 'encoded> ValidatedX509ServerCertificatePolicy<'certificate, 
 impl fmt::Debug for ValidatedX509ServerCertificatePolicy<'_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("ValidatedX509ServerCertificatePolicy")
+    }
+}
+
+/// Non-copyable server policy retaining its exact decoded SAN collection.
+///
+/// This value proves only that the Subject Alternative Name extension selected
+/// by the retained identity result was decoded under the supplied budget. It
+/// does not evaluate NameConstraints or establish path, trust, or revocation
+/// policy.
+pub struct ValidatedX509ServerSubjectAlternativeNamePolicy<'certificate, 'encoded> {
+    server_policy: ValidatedX509ServerCertificatePolicy<'certificate, 'encoded>,
+    subject_alternative_name: SubjectAlternativeName<'encoded>,
+}
+
+impl<'certificate, 'encoded>
+    ValidatedX509ServerSubjectAlternativeNamePolicy<'certificate, 'encoded>
+{
+    /// Return the complete consumed target-server policy.
+    pub const fn server_policy(
+        &self,
+    ) -> &ValidatedX509ServerCertificatePolicy<'certificate, 'encoded> {
+        &self.server_policy
+    }
+
+    /// Return the exact certificate retained by the server policy.
+    pub const fn certificate(&self) -> &'certificate x509_certificate::X509Certificate<'encoded> {
+        self.server_policy.certificate()
+    }
+
+    /// Borrow the decoded SAN collection from the exact indexed extension.
+    pub const fn subject_alternative_name(&self) -> &SubjectAlternativeName<'encoded> {
+        &self.subject_alternative_name
+    }
+}
+
+impl fmt::Debug for ValidatedX509ServerSubjectAlternativeNamePolicy<'_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509ServerSubjectAlternativeNamePolicy")
     }
 }
 
@@ -186,5 +265,45 @@ pub fn validate_x509_server_certificate_policy<'certificate, 'encoded>(
         identity,
         validity,
         purpose,
+    })
+}
+
+/// Retain the exact SAN collection selected by complete server policy.
+///
+/// The extension index comes only from the consumed successful SAN identity
+/// result and is applied only to its retained certificate. Re-decoding uses a
+/// fresh explicit caller-owned budget and does not accept another certificate
+/// or extension from the caller.
+pub fn validate_x509_server_subject_alternative_name_policy<'certificate, 'encoded>(
+    server_policy: ValidatedX509ServerCertificatePolicy<'certificate, 'encoded>,
+    extension_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509ServerSubjectAlternativeNamePolicy<'certificate, 'encoded>,
+    X509ServerSubjectAlternativeNamePolicyError,
+> {
+    let extension_index = server_policy.identity().extension_index();
+    let extension = server_policy
+        .certificate()
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| extensions.get(extension_index))
+        .ok_or_else(|| {
+            X509ServerSubjectAlternativeNamePolicyError::new(
+                X509ServerSubjectAlternativeNamePolicyErrorKind::IdentityExtensionUnavailable,
+            )
+        })?;
+    let mut decoder = der_asn1::Asn1Decoder::new(extension_limits);
+    let subject_alternative_name =
+        decode_subject_alt_name(&mut decoder, extension).map_err(|error| {
+            X509ServerSubjectAlternativeNamePolicyError::new(
+                X509ServerSubjectAlternativeNamePolicyErrorKind::InvalidSubjectAlternativeName(
+                    error.kind(),
+                ),
+            )
+        })?;
+
+    Ok(ValidatedX509ServerSubjectAlternativeNamePolicy {
+        server_policy,
+        subject_alternative_name,
     })
 }
