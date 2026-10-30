@@ -1017,6 +1017,21 @@ length, name constraints, or revocation, perform TLS or HTTP, access
 credentials, sign data, emit an external audit/provider effect, authorize
 OAuth transport, or grant network authority. Concrete HTTPS remains
 unavailable.
+A bounded `x509-rsa-constructed-path-signature-routing` composition now binds
+that data-driven RSA verifier to one exact adjacent pair projected from a
+constructed certificate path. It consumes certificate-bound child algorithm
+policy, certificate-wide issuing-CA role policy, and certificate-bound issuer
+RSA algorithm/key policy only when all three retain the exact decoded objects
+projected by the path. Cross-certificate evidence and non-CA issuers fail
+before RSA work. Caller-owned profile routes then invoke exactly one reviewed
+RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512 verifier, and non-copyable
+success retains the complete path projection, issuer role policy, algorithm
+policies, validated issuer key, and fixed-verifier result together. The
+construction's caller-owned Name comparison is not upgraded into a complete
+RFC 5280 Name rule, and this one-link composition does not validate another
+adjacency, path length, constraints, a terminal trust anchor, target policy,
+revocation, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
+remains unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each
