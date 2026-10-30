@@ -203,8 +203,12 @@ semantic IR; shape row limits control structural layout while both values lower
 to backend-neutral PaintScene metadata. C4 directional relationship macros,
 including their short and long spellings, preserve typed direction hints through
 semantic and layout IR into PaintScene metadata while retaining the pinned
-renderer's ordinary portable relationship geometry. C4 remains partial while its remaining
-macro semantics and visual corpus are incomplete.
+renderer's ordinary portable relationship geometry. Keyed and positional custom
+tags on elements, boundaries, deployment nodes, and relationships likewise survive
+typed semantic metadata and structural layout into PaintScene metadata. They do
+not alter geometry or styling because pinned Mermaid 11.16.1 stores tags without
+rendering them. C4 remains partial while its remaining macro semantics and visual
+corpus are incomplete.
 
 ## Required New Semantic Families
 

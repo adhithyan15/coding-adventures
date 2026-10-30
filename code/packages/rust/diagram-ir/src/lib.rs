@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-pub const VERSION: &str = "0.95.0";
+pub const VERSION: &str = "0.96.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -2381,6 +2381,7 @@ pub struct C4NodeMetadata {
     pub element_type: String,
     pub technology: Option<String>,
     pub description: Option<String>,
+    pub tags: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -2423,11 +2424,15 @@ pub struct StructuralNode {
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralGroupMetadata {
     Architecture { icon_name: String },
-    C4Boundary { boundary_type: String },
+    C4Boundary {
+        boundary_type: String,
+        tags: Option<String>,
+    },
     C4DeploymentNode {
         node_type: C4DeploymentNodeType,
         technology: Option<String>,
         description: Option<String>,
+        tags: Option<String>,
     },
 }
 
@@ -2490,6 +2495,7 @@ pub struct C4RelationshipMetadata {
     pub direction: Option<C4RelationshipDirection>,
     pub technology: Option<String>,
     pub description: Option<String>,
+    pub tags: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -2606,6 +2612,7 @@ pub struct LayoutedStructuralNode {
     pub stereotype: Option<String>,
     pub icon_name: Option<String>,
     pub icon_text: Option<String>,
+    pub metadata: Option<StructuralNodeMetadata>,
     pub style: ResolvedDiagramStyle,
     pub compartments: Vec<LayoutedCompartment>,
 }
@@ -3288,7 +3295,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.95.0");
+        assert_eq!(VERSION, "0.96.0");
     }
     #[test]
     fn default_direction_is_tb() {
