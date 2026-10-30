@@ -16,11 +16,15 @@ use core::fmt;
 use der_asn1::Asn1Limits;
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate::X509Certificate;
+use x509_certificate_path_length_policy::{
+    X509CertificatePathLengthError, X509CertificatePathLengthState,
+};
 use x509_certificate_policy::{
     validate_certificate_issuer_link, validate_certificate_role_extensions,
     ValidatedCertificateRolePolicy, X509CertificateIssuerLinkErrorKind, X509CertificateRole,
     X509CertificateRoleErrorKind,
 };
+use x509_intermediate_certificate_policy::ValidatedX509IntermediateCertificatePolicy;
 use x509_name::X509Name;
 use x509_rsa_algorithm_policy::ValidatedX509RsaAlgorithmPolicy;
 use x509_rsa_pkcs1_v1_5_sha512_signature::{
@@ -152,6 +156,45 @@ impl fmt::Display for X509RsaSha512IssuerPolicyLinkError {
 
 impl std::error::Error for X509RsaSha512IssuerPolicyLinkError {}
 
+/// Stable complete-intermediate-policy binding failures with no payload data.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha512IntermediateIssuerPolicyLinkErrorKind {
+    /// The complete intermediate policy is not for the authenticated issuer.
+    EvidenceMismatch,
+}
+
+/// A redacted complete-intermediate-policy binding failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha512IntermediateIssuerPolicyLinkError {
+    kind: X509RsaSha512IntermediateIssuerPolicyLinkErrorKind,
+}
+
+impl X509RsaSha512IntermediateIssuerPolicyLinkError {
+    const fn evidence_mismatch() -> Self {
+        Self {
+            kind: X509RsaSha512IntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch,
+        }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaSha512IntermediateIssuerPolicyLinkErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha512IntermediateIssuerPolicyLinkError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-512 intermediate issuer policy-link error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha512IntermediateIssuerPolicyLinkError {}
+
 /// Non-copyable evidence for one exact child-to-candidate-issuer link.
 ///
 /// This proves only the directed Name-policy result, issuing-CA role, RSA key
@@ -259,6 +302,122 @@ impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
 impl fmt::Debug for VerifiedX509RsaSha512IssuerPolicyLink<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedX509RsaSha512IssuerPolicyLink")
+    }
+}
+
+/// Non-copyable evidence binding one authenticated SHA-512 issuer link to
+/// complete intermediate policy for that exact decoded issuer object.
+///
+/// The retained intermediate policy covers certificate-wide critical
+/// extensions and issuing-CA role, data-driven algorithm policy, self-issued
+/// classification, and explicit-time validity. This wrapper does not advance
+/// path length, evaluate NameConstraints, authenticate another link, establish
+/// trust, check revocation, or grant TLS or network authority.
+pub struct VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    issuer_policy_link: VerifiedX509RsaSha512IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    intermediate_policy:
+        ValidatedX509IntermediateCertificatePolicy<'issuer_certificate, 'issuer_encoded>,
+}
+
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    /// Return the consumed authenticated policy-bound issuer link.
+    #[must_use]
+    pub const fn issuer_policy_link(
+        &self,
+    ) -> &VerifiedX509RsaSha512IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.issuer_policy_link
+    }
+
+    /// Return complete policy for the exact authenticated intermediate.
+    #[must_use]
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'issuer_certificate, 'issuer_encoded> {
+        &self.intermediate_policy
+    }
+}
+
+impl fmt::Debug for VerifiedX509RsaSha512IntermediateIssuerPolicyLink<'_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509RsaSha512IntermediateIssuerPolicyLink")
+    }
+}
+
+/// Non-copyable evidence for one authenticated intermediate path-length step.
+///
+/// The retained authenticated-intermediate proof binds one exact child link to
+/// complete policy for the exact issuing intermediate. The retained state is
+/// the result of applying the existing path-length transition from that same
+/// intermediate policy. This proves neither the intermediate's parent link nor
+/// path ordering, adjacency to another step, complete validation, or trust.
+pub struct ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    authenticated_intermediate: VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    /// Return the consumed authenticated intermediate proof.
+    #[must_use]
+    pub const fn authenticated_intermediate(
+        &self,
+    ) -> &VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.authenticated_intermediate
+    }
+
+    /// Return the advanced path-length state.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug for ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<'_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509RsaSha512AuthenticatedIntermediatePathLength")
     }
 }
 
@@ -394,5 +553,89 @@ pub fn verify_x509_rsa_sha512_issuer_link_with_policies<
         candidate_issuer,
         issuer_role_policy,
         issuer_rsa_algorithm_policy,
+    })
+}
+
+/// Bind one authenticated SHA-512 issuer link to complete policy for its exact
+/// intermediate certificate object.
+///
+/// Pointer identity is required before either proof is retained. Encoded-byte
+/// equality cannot attach policy from an independently decoded certificate to
+/// the issuer that authenticated the child. Success grants no additional path,
+/// trust, revocation, transport, or network authority.
+pub fn bind_x509_rsa_sha512_intermediate_issuer_policy_link<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    issuer_policy_link: VerifiedX509RsaSha512IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+) -> Result<
+    VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha512IntermediateIssuerPolicyLinkError,
+> {
+    if !std::ptr::eq(
+        issuer_policy_link.candidate_issuer(),
+        intermediate_policy.certificate(),
+    ) {
+        return Err(X509RsaSha512IntermediateIssuerPolicyLinkError::evidence_mismatch());
+    }
+
+    Ok(VerifiedX509RsaSha512IntermediateIssuerPolicyLink {
+        issuer_policy_link,
+        intermediate_policy,
+    })
+}
+
+/// Advance path-length state from one authenticated intermediate proof.
+///
+/// The transition derives role, self-issued classification, and any decoded
+/// `pathLenConstraint` only from the complete intermediate policy retained by
+/// `authenticated_intermediate`. Success consumes and retains that proof with
+/// the advanced state so this composition boundary cannot silently discard the
+/// authenticated adjacent link. It does not authenticate the intermediate's
+/// own issuer, establish ordering, or validate a complete path.
+pub fn advance_x509_rsa_sha512_authenticated_intermediate_path_length<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    path_length_state: X509CertificatePathLengthState,
+    authenticated_intermediate: VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+) -> Result<
+    ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509CertificatePathLengthError,
+> {
+    let path_length_state = path_length_state
+        .advance_validated_intermediate_ca(authenticated_intermediate.intermediate_policy())?;
+
+    Ok(ValidatedX509RsaSha512AuthenticatedIntermediatePathLength {
+        authenticated_intermediate,
+        path_length_state,
     })
 }

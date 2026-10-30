@@ -497,7 +497,8 @@ reviewable:
 - [x] Ruby Gemfiles and gemspecs: declarations are parsed without executing
   Ruby; only literal paths to tracked gemspecs with the same declared name are
   local, and all remaining gem names are checked against the exact current
-  eight-name set.
+  seven-name set. The development-only `irb` declaration was removed because
+  it is a non-removable default gem on the supported Ruby runtime.
 - [x] Go modules and tool installs: requirements are local only through a
   tracked replacement whose target declares the same module path; remote tool
   acquisition in automation and `go:generate` directives is frozen at zero.

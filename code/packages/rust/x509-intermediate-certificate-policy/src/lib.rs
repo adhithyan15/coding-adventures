@@ -9,16 +9,22 @@
 //! This crate consumes the certificate-bound evidence produced by
 //! `x509-certificate-policy`, checks exact object identity, requires the
 //! issuing-CA role, and derives validity from the retained certificate at one
-//! explicit caller-owned observation. It performs no path traversal, link
-//! authentication, trust-anchor decision, revocation, TLS, or network work.
+//! explicit caller-owned observation. A follow-up binds optional critical
+//! NameConstraints decoding to that exact intermediate evidence. It performs
+//! no path traversal, constraint evaluation, link authentication, trust-anchor
+//! decision, revocation, TLS, or network work.
 
 #![deny(unsafe_code)]
 
 use core::fmt;
+use der_asn1::{Asn1Decoder, Asn1Limits};
 use x509_certificate_policy::{
     validate_certificate_validity_at, ClassifiedCertificateSelfIssued,
     ValidatedCertificateAlgorithmPolicy, ValidatedCertificateRolePolicy,
     ValidatedCertificateValidity, X509CertificateRole, X509CertificateValidityErrorKind,
+};
+use x509_name_constraints::{
+    decode_name_constraints, NameConstraints, NameConstraintsErrorKind, NAME_CONSTRAINTS_OID,
 };
 use x509_time::X509Time;
 
@@ -64,6 +70,46 @@ impl fmt::Display for X509IntermediateCertificatePolicyError {
 }
 
 impl std::error::Error for X509IntermediateCertificatePolicyError {}
+
+/// Stable optional NameConstraints policy failure categories.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509IntermediateNameConstraintsPolicyErrorKind {
+    /// RFC 5280 requires a present NameConstraints extension to be critical.
+    NonCriticalNameConstraints,
+    /// The critical extension value did not satisfy the supported structure.
+    InvalidNameConstraints(NameConstraintsErrorKind),
+}
+
+/// A redacted intermediate NameConstraints policy failure.
+///
+/// The error retains no certificate, extension, subtree, or offset bytes.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509IntermediateNameConstraintsPolicyError {
+    kind: X509IntermediateNameConstraintsPolicyErrorKind,
+}
+
+impl X509IntermediateNameConstraintsPolicyError {
+    const fn new(kind: X509IntermediateNameConstraintsPolicyErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable failure category.
+    pub const fn kind(self) -> X509IntermediateNameConstraintsPolicyErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509IntermediateNameConstraintsPolicyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 intermediate NameConstraints policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509IntermediateNameConstraintsPolicyError {}
 
 /// Non-copyable policy evidence for one exact decoded intermediate certificate.
 ///
@@ -116,6 +162,46 @@ impl fmt::Debug for ValidatedX509IntermediateCertificatePolicy<'_, '_> {
     }
 }
 
+/// Non-copyable optional NameConstraints evidence for one exact intermediate.
+///
+/// The retained base evidence already binds role, algorithm, self-issued, and
+/// validity policy to this certificate. A present decoded value proves only
+/// structural validity and criticality; it has not been applied to a path.
+pub struct ValidatedX509IntermediateNameConstraintsPolicy<'certificate, 'encoded> {
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded>,
+    name_constraints: Option<NameConstraints<'encoded>>,
+}
+
+impl<'certificate, 'encoded>
+    ValidatedX509IntermediateNameConstraintsPolicy<'certificate, 'encoded>
+{
+    /// Return the complete consumed intermediate-certificate policy.
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded> {
+        &self.intermediate_policy
+    }
+
+    /// Return the exact certificate retained by the complete evidence.
+    pub const fn certificate(&self) -> &'certificate x509_certificate::X509Certificate<'encoded> {
+        self.intermediate_policy.certificate()
+    }
+
+    /// Return decoded constraints when the exact certificate carried them.
+    pub fn name_constraints(&self) -> Option<&NameConstraints<'encoded>> {
+        self.name_constraints.as_ref()
+    }
+}
+
+impl fmt::Debug for ValidatedX509IntermediateNameConstraintsPolicy<'_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ValidatedX509IntermediateNameConstraintsPolicy")
+            .field("has_name_constraints", &self.name_constraints.is_some())
+            .finish_non_exhaustive()
+    }
+}
+
 /// Compose intermediate-certificate policy for one exact decoded object.
 ///
 /// Object identity and the issuing-CA role are checked before validity. The
@@ -156,5 +242,57 @@ pub fn validate_x509_intermediate_certificate_policy<'certificate, 'encoded>(
         algorithm_policy,
         self_issued_classification,
         validity,
+    })
+}
+
+/// Decode optional critical NameConstraints from one validated intermediate.
+///
+/// Absence succeeds with explicit `None`. Criticality is checked before the
+/// caller-owned structural decoder budget is spent. Success retains the
+/// complete input evidence, so callers cannot attach the decoded constraints
+/// to another certificate. This function does not evaluate the constraints.
+pub fn validate_x509_intermediate_name_constraints_policy<'certificate, 'encoded>(
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded>,
+    limits: Asn1Limits,
+) -> Result<
+    ValidatedX509IntermediateNameConstraintsPolicy<'certificate, 'encoded>,
+    X509IntermediateNameConstraintsPolicyError,
+> {
+    let extension = intermediate_policy
+        .certificate()
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| {
+            extensions
+                .iter()
+                .find(|extension| extension.extension_id().equals(NAME_CONSTRAINTS_OID))
+        });
+
+    let name_constraints = match extension {
+        None => None,
+        Some(extension) => {
+            if !extension.critical() {
+                return Err(X509IntermediateNameConstraintsPolicyError::new(
+                    X509IntermediateNameConstraintsPolicyErrorKind::NonCriticalNameConstraints,
+                ));
+            }
+            let mut decoder = Asn1Decoder::new(limits);
+            Some(
+                decode_name_constraints(&mut decoder, extension.extension_value()).map_err(
+                    |error| {
+                        X509IntermediateNameConstraintsPolicyError::new(
+                            X509IntermediateNameConstraintsPolicyErrorKind::InvalidNameConstraints(
+                                error.kind(),
+                            ),
+                        )
+                    },
+                )?,
+            )
+        }
+    };
+
+    Ok(ValidatedX509IntermediateNameConstraintsPolicy {
+        intermediate_policy,
+        name_constraints,
     })
 }

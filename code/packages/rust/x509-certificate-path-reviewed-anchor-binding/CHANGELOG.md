@@ -14,11 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   constructed certificate path and reviewed Web PKI root-anchor evidence.
 - Added non-copyable evidence retaining both complete inputs and stable,
   payload-free errors for target-only paths and evidence mismatches.
+- Added exact-object binding between reviewed-terminal evidence and complete
+  certificate-wide issuing-CA role-policy evidence.
 
 ### Security
 
 - Target-only paths, reviewed nonterminal candidates, and byte-equal
   independently decoded certificates fail closed.
-- Binding grants no link authentication, certificate-role, self-signature,
-  algorithm, validity, constraint, hostname, revocation, TLS, HTTP, OAuth, or
-  network authority.
+- Reviewed-terminal role policy for another decoded object and exact terminal
+  end-entity role evidence fail closed.
+- Binding grants no link authentication, self-signature, algorithm, validity,
+  constraint, hostname, revocation, TLS, HTTP, OAuth, or network authority.

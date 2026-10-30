@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.156.0";
+pub const VERSION: &str = "0.162.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14045,9 +14045,11 @@ fn upsert_er_node(
 
 /// Parse Mermaid C4 macros into the shared structural IR.
 pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
-    parse_mermaid_c4_ast(source)?;
+    let front_matter_title = mermaid_front_matter_value(source, "title");
+    let preprocessed = preprocess_mermaid_source(source)?;
+    parse_mermaid_c4_ast(&preprocessed.source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_c4(source));
+    let mut cursor = TokenCursor::new(tokenize_mermaid_c4(&preprocessed.source));
     cursor.skip_terminators();
     let header = cursor
         .consume_if("HEADER")
@@ -14062,7 +14064,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     };
     cursor.skip_terminators();
 
-    let mut title = None;
+    let mut title = front_matter_title;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
     let mut render_config = StructuralRenderConfig {
@@ -14276,7 +14278,9 @@ fn parse_c4_arguments(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseErro
                 let value = parse_c4_argument_value(cursor)?;
                 format!("{}={value}", token.value)
             }
-            "STRING" | "IDENTIFIER" | "NUMBER" => parse_c4_argument_value(cursor)?,
+            "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION" => {
+                parse_c4_argument_value(cursor)?
+            }
             _ => return Err(token_error(&token, "expected C4 argument")),
         };
         args.push(value);
@@ -14288,7 +14292,10 @@ fn parse_c4_arguments(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseErro
 
 fn parse_c4_argument_value(cursor: &mut TokenCursor) -> Result<String, ParseError> {
     let token = cursor.current().clone();
-    if !matches!(token_name(&token), "STRING" | "IDENTIFIER" | "NUMBER") {
+    if !matches!(
+        token_name(&token),
+        "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION"
+    ) {
         return Err(token_error(&token, "expected C4 argument value"));
     }
     Ok(cursor.advance().value.clone())
@@ -14307,7 +14314,7 @@ fn apply_c4_element_style(
         let mut style = nodes[index].style.clone().unwrap_or_default();
         apply_c4_element_color_arguments(args, &mut style);
         nodes[index].style = Some(style);
-        apply_c4_element_technology_arguments(args, &mut nodes[index]);
+        apply_c4_element_metadata_arguments(args, &mut nodes[index]);
         return;
     }
     let Some(group) = groups.iter_mut().find(|group| group.id == *id) else {
@@ -14316,20 +14323,84 @@ fn apply_c4_element_style(
     let mut style = group.style.clone().unwrap_or_default();
     apply_c4_element_color_arguments(args, &mut style);
     group.style = Some(style);
+    apply_c4_group_element_metadata_arguments(args, group);
 }
 
-fn apply_c4_element_technology_arguments(args: &[String], node: &mut StructuralNode) {
-    let technology = args.iter().skip(1).enumerate().find_map(|(position, argument)| {
-        let (key, value) = argument
-            .split_once('=')
-            .map_or((None, argument.as_str()), |(key, value)| (Some(key), value));
-        let is_technology = key == Some("$techn") || (key.is_none() && position == 6);
-        (is_technology && !value.is_empty()).then(|| value.to_string())
-    });
-    let Some(technology) = technology else { return };
+fn c4_element_style_argument(args: &[String], key: &str, position: usize) -> Option<String> {
+    args.iter()
+        .find_map(|argument| {
+            argument
+                .split_once('=')
+                .filter(|(argument_key, value)| *argument_key == key && !value.is_empty())
+                .map(|(_, value)| value.to_string())
+        })
+        .or_else(|| {
+            args.get(position)
+                .filter(|value| !value.is_empty() && !value.starts_with('$'))
+                .cloned()
+        })
+}
+
+fn apply_c4_style_override_arguments(
+    args: &[String],
+    overrides: &mut diagram_ir::C4ElementStyleOverrides,
+) {
+    if let Some(value) = c4_element_style_argument(args, "$shadowing", 4) {
+        overrides.shadowing = Some(value);
+    }
+    if let Some(value) = c4_element_style_argument(args, "$shape", 5) {
+        overrides.shape = Some(value);
+    }
+    if let Some(value) = c4_element_style_argument(args, "$legendText", 8) {
+        overrides.legend_text = Some(value);
+    }
+    if let Some(value) = c4_element_style_argument(args, "$legendSprite", 9) {
+        overrides.legend_sprite = Some(value);
+    }
+}
+
+fn apply_c4_element_metadata_arguments(args: &[String], node: &mut StructuralNode) {
     let Some(StructuralNodeMetadata::C4(metadata)) = node.metadata.as_mut() else { return };
-    metadata.technology = Some(technology);
-    rebuild_c4_compartments(node);
+    let technology = c4_element_style_argument(args, "$techn", 7);
+    if let Some(value) = c4_element_style_argument(args, "$sprite", 6) {
+        metadata.sprite = Some(value);
+    }
+    if let Some(value) = technology.as_ref() {
+        metadata.technology = Some(value.clone());
+    }
+    apply_c4_style_override_arguments(args, &mut metadata.style_overrides);
+    if technology.is_some() {
+        rebuild_c4_compartments(node);
+    }
+}
+
+fn apply_c4_group_element_metadata_arguments(args: &[String], group: &mut StructuralGroup) {
+    let Some(metadata) = group.metadata.as_mut() else { return };
+    let technology = c4_element_style_argument(args, "$techn", 7);
+    let sprite = c4_element_style_argument(args, "$sprite", 6);
+    match metadata {
+        StructuralGroupMetadata::C4Boundary {
+            technology: group_technology,
+            sprite: group_sprite,
+            style_overrides,
+            ..
+        }
+        | StructuralGroupMetadata::C4DeploymentNode {
+            technology: group_technology,
+            sprite: group_sprite,
+            style_overrides,
+            ..
+        } => {
+            if let Some(value) = technology {
+                *group_technology = Some(value);
+            }
+            if let Some(value) = sprite {
+                *group_sprite = Some(value);
+            }
+            apply_c4_style_override_arguments(args, style_overrides);
+        }
+        _ => {}
+    }
 }
 
 fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata {
@@ -14351,6 +14422,10 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
         element_type: c4_element_type(macro_name).into(),
         technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
         description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
+        sprite: keyed("$sprite").or_else(|| positional(if uses_technology { 4 } else { 3 })),
+        tags: keyed("$tags").or_else(|| positional(if uses_technology { 5 } else { 4 })),
+        link: keyed("$link").or_else(|| positional(if uses_technology { 6 } else { 5 })),
+        style_overrides: Default::default(),
     })
 }
 
@@ -14389,21 +14464,50 @@ fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGrou
     match macro_name {
         "Deployment_Node" | "Node" | "Node_L" | "Node_R" => {
             Some(StructuralGroupMetadata::C4DeploymentNode {
+                node_type: match macro_name {
+                    "Node_L" => diagram_ir::C4DeploymentNodeType::Left,
+                    "Node_R" => diagram_ir::C4DeploymentNodeType::Right,
+                    _ => diagram_ir::C4DeploymentNodeType::Node,
+                },
                 technology: argument("$type", 2),
                 description: argument("$descr", 3),
+                sprite: argument("$sprite", 4),
+                tags: argument("$tags", 5),
+                link: argument("$link", 6),
+                style_overrides: Default::default(),
             })
         }
         "Enterprise_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
             boundary_type: "ENTERPRISE".into(),
+            technology: None,
+            sprite: None,
+            tags: argument("$tags", 2),
+            link: argument("$link", 3),
+            style_overrides: Default::default(),
         }),
         "System_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
             boundary_type: "SYSTEM".into(),
+            technology: None,
+            sprite: None,
+            tags: argument("$tags", 2),
+            link: argument("$link", 3),
+            style_overrides: Default::default(),
         }),
         "Container_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
             boundary_type: "CONTAINER".into(),
+            technology: None,
+            sprite: None,
+            tags: argument("$tags", 2),
+            link: argument("$link", 3),
+            style_overrides: Default::default(),
         }),
         "Boundary" => Some(StructuralGroupMetadata::C4Boundary {
             boundary_type: argument("$type", 2).unwrap_or_else(|| "system".into()),
+            technology: None,
+            sprite: None,
+            tags: argument("$tags", 3),
+            link: argument("$link", 4),
+            style_overrides: Default::default(),
         }),
         _ => None,
     }
@@ -14446,6 +14550,9 @@ fn c4_relationship_metadata(
         },
         technology: keyed("$techn").or_else(|| positional(3)),
         description: keyed("$descr").or_else(|| positional(4)),
+        sprite: keyed("$sprite").or_else(|| positional(5)),
+        tags: keyed("$tags").or_else(|| positional(6)),
+        link: keyed("$link").or_else(|| positional(7)),
     })
 }
 
@@ -19997,7 +20104,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.156.0");
+        assert_eq!(crate::VERSION, "0.162.0");
     }
 
     #[test]
