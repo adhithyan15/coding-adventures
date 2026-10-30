@@ -875,6 +875,19 @@ message or `M'`, compare `H`, parse or operate on an RSA key, apply RSAVP1,
 select an algorithm, or establish a signature verdict. Certificate processing,
 path and hostname validation, trust roots, revocation, TLS, HTTP, OAuth
 transport, and network effects remain unavailable.
+
+A bounded, data-driven `rsa-pss-data-block` prerequisite now validates the
+public unmasked data block consumed by a future RFC 8017 EMSA-PSS verifier.
+Caller policy supplies the selected salt length and a data-block byte ceiling.
+The gate requires the exact canonical `DB = PS || 0x01 || salt` structure,
+proves every `PS` octet is zero under that ceiling, and returns borrowed
+non-copyable evidence retaining the complete block and exact selected salt.
+
+This data-block evidence does not run MGF1, clear unused high bits, hash the
+message or `M'`, compare `H`, parse or operate on an RSA key, apply RSAVP1,
+select an algorithm, or establish a signature verdict. Certificate processing,
+path and hostname validation, trust roots, revocation, TLS, HTTP, OAuth
+transport, and network effects remain unavailable.
 A bounded, data-driven `rsa-pss-algorithm-policy` prerequisite now validates
 already-decoded public RSA-PSS parameters. Caller policy supplies an exact
 allowlist of message-hash, MGF1-hash, and salt-length profiles plus a salt-work

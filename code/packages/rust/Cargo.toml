@@ -1426,6 +1426,7 @@ members = [
   "rsa-pkcs1-v1-5-sha512",
   "x509-ip-name-constraint-policy",
   "rsa-pss-algorithm-policy",
+  "rsa-pss-data-block",
   "x509-rsassa-pss-parameters",
   "rsa-pss-message-prime",
 ]
