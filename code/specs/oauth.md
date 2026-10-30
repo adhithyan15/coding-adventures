@@ -1812,6 +1812,28 @@ authorize a responder, bind any response to a certificate or constructed path,
 decide freshness or revocation, fetch or cache data, read a clock, or grant
 path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
 remains unavailable.
+A bounded `x509-ocsp-response-nonce-policy` prerequisite now applies the strict
+RFC 8954 response-echo branch to one already decoded `ResponseData` value. The
+caller supplies the exact nonce sent in its corresponding request; this policy
+requires the modern 32-octet client nonce, requires one non-critical
+`id-pkix-ocsp-nonce` response extension and no other outer response extension,
+decodes the extension's embedded `Nonce` OCTET STRING without resetting the
+caller's DER depth or element budget, and compares all 32 response octets with
+the repository-owned full-scan equality primitive. Missing, malformed,
+critical, unexpected, or mismatched response extensions fail closed with
+stable payload-free categories. Non-copyable success evidence retains the
+exact `ResponseData` object and requested nonce, preventing a detached echo
+verdict from being attached to another response or request. The required-echo
+branch deliberately rejects RFC 8954's permitted responder
+nonce omission; a deployment choosing a nonce-less freshness strategy needs a
+separate policy and cannot reinterpret this rejection as a revocation verdict.
+This effect-free policy does not generate randomness, construct or send an
+OCSP request, authenticate the response signature, authorize a responder, bind
+status to a certificate or path, decide freshness or revocation, fetch or cache
+data, read a clock, establish trust, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority. It is not yet consumed by the
+authenticated target-revocation composition, so concrete HTTPS remains
+unavailable.
 A bounded `x509-ocsp-basic-response` prerequisite now composes exactly one RFC
 6960 `BasicOCSPResponse` SEQUENCE under a shared caller-owned DER depth,
 element, length, OID-arc, extension-count, response-count, and fixed
