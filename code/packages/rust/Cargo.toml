@@ -1366,6 +1366,7 @@ members = [
   "x509-certificate-path-server-policy-binding",
   "x509-certificate-path-length-policy",
   "x509-ocsp-rsa-pkcs1-v1-5-sha256-signature",
+  "x509-ocsp-rsa-pkcs1-v1-5-sha512-signature",
   "x509-ocsp-cert-id-binding",
   "x509-ocsp-revocation-policy",
   "x509-ocsp-responder-id-binding",
