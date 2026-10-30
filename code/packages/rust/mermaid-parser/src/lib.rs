@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.154.0";
+pub const VERSION: &str = "0.155.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14345,9 +14345,36 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
         })
     };
     StructuralNodeMetadata::C4(C4NodeMetadata {
+        element_type: c4_element_type(macro_name).into(),
         technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
         description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
     })
+}
+
+fn c4_element_type(macro_name: &str) -> &'static str {
+    match macro_name {
+        "Person" => "person",
+        "Person_Ext" => "external_person",
+        "System" => "system",
+        "SystemDb" => "system_db",
+        "SystemQueue" => "system_queue",
+        "System_Ext" => "external_system",
+        "SystemDb_Ext" => "external_system_db",
+        "SystemQueue_Ext" => "external_system_queue",
+        "Container" => "container",
+        "ContainerDb" => "container_db",
+        "ContainerQueue" => "container_queue",
+        "Container_Ext" => "external_container",
+        "ContainerDb_Ext" => "external_container_db",
+        "ContainerQueue_Ext" => "external_container_queue",
+        "Component" => "component",
+        "ComponentDb" => "component_db",
+        "ComponentQueue" => "component_queue",
+        "Component_Ext" => "external_component",
+        "ComponentDb_Ext" => "external_component_db",
+        "ComponentQueue_Ext" => "external_component_queue",
+        _ => "element",
+    }
 }
 
 fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGroupMetadata> {
@@ -19957,7 +19984,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.154.0");
+        assert_eq!(crate::VERSION, "0.155.0");
     }
 
     #[test]
