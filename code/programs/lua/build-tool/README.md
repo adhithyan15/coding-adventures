@@ -53,9 +53,8 @@ The build tool follows a pipeline:
    runtime does not look for a fixture in the checkout.
 
    This is a process-free library surface, not yet incremental CLI execution.
-   Repository-boundary union and reverse-diff selection, native no-follow and
-   stable-identity reads, and persistent cache behavior have separate owners
-   and are not claimed here. For a caller-supplied
+   Native no-follow and stable-identity reads and persistent cache behavior
+   have separate owners and are not claimed here. For a caller-supplied
    snapshot, `collect_source_files` accepts `language`, canonical
    `package_root`, `mode` (`extension` or `declared_sources`), the checked
    `registry_sha256`, `declared_srcs`, and candidate `{path, kind, content_hex}`
@@ -71,6 +70,38 @@ The build tool follows a pipeline:
    The packaged projection is checked by native tests against the complete
    reviewed neutral registry and its domain-separated SHA-256 digest. Changes
    to that registry require a reviewed update to the packaged Lua data.
+
+9. **Graph and Diff Selection** (`lib/build_tool/graph_diff.lua`): Validate and
+   evaluate caller-supplied package graphs and changed repository paths without
+   reading a checkout or invoking Git. The core emits canonical dependency
+   edges and prerequisite-first levels, computes deterministic affected and
+   prerequisite closures, recognizes only exact BUILD fronts, and supports
+   package-prefix and strict portable-glob source modes.
+
+   First-seen unique glob declarations are charged by immutable UTF-8 byte
+   length against a 4 MiB operation ceiling before normalization or syntax
+   validation. Strict glob syntax is then validated with a linear,
+   allocation-light scalar scan; one operation-local string cache reuses that
+   complete validation and its scalar work factor across packages. Matching
+   compiles one pattern at a time, reuses it across the candidate paths for
+   that package, and releases it before compiling the next pattern.
+   Empty package-relative paths contain zero components, so only a whole `**`
+   segment can match a package root. Folded package roots are sorted with
+   separator-aware ordering and checked adjacently, avoiding both pairwise
+   comparisons and per-segment trie nodes. Changed paths are classified once
+   through exact package-root and slash-ancestor lookups, then the resulting
+   index is reused by preflight and selection. Prefix materialization and the
+   full pattern/path cross product are each charged before use against an
+   explicit 50,000,000-unit operation ceiling.
+   Optional repository source-boundary data is bounded as an inert decoded
+   object graph and verified with its domain-separated SHA-256 digest before
+   request-dependent resource preflights. Only rules naming a changed input
+   are indexed; exact and descendant scopes use root maps, exclusions use
+   sets, and selection retains only package/path bits rather than expanding
+   every possible input-consumer pair. One shared input can still select every
+   registered consumer. The native suite dynamically consumes and pins all
+   eight graph and twelve diff-selection fixtures; CLI activation remains a
+   separate tranche.
 
 ## OCaml and Dune Discovery
 

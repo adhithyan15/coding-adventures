@@ -2,6 +2,10 @@
 
 All notable changes to the SHA-512 Lua package will be documented in this file.
 
+## [0.1.1] - Unreleased
+
+- Consume the bounded HF04 corpus and encode both halves of SHA-512's length field.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

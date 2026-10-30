@@ -1,20 +1,29 @@
-use der_asn1::Asn1Limits;
+use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_policy::{
-    validate_certificate_algorithm_policy, validate_certificate_role_policy,
-    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile, X509CertificateRole,
+    classify_certificate_self_issued, validate_certificate_algorithm_policy,
+    validate_certificate_role_policy, X509AlgorithmParametersPolicy,
+    X509CertificateAlgorithmProfile, X509CertificateRole,
+};
+use x509_intermediate_certificate_policy::{
+    validate_x509_intermediate_certificate_policy, ValidatedX509IntermediateCertificatePolicy,
 };
 use x509_rsa_algorithm_policy::{
     validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
 };
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_sha512_issuer_link::{
-    verify_x509_rsa_sha512_issuer_link_with_policies, VerifiedX509RsaSha512IssuerPolicyLink,
+    bind_x509_rsa_sha512_intermediate_issuer_policy_link,
+    verify_x509_rsa_sha512_issuer_link_with_policies,
+    VerifiedX509RsaSha512IntermediateIssuerPolicyLink, VerifiedX509RsaSha512IssuerPolicyLink,
 };
 use x509_rsa_sha512_reviewed_anchor_link::{
+    bind_x509_rsa_sha512_intermediate_path_to_reviewed_anchor,
     bind_x509_rsa_sha512_issuer_link_to_reviewed_anchor, X509RsaSha512ReviewedAnchorLinkErrorKind,
+    X509RsaSha512ReviewedIntermediatePathErrorKind,
 };
+use x509_time::{decode_x509_time, X509Time};
 use x509_webpki_root_anchor_selection::select_reviewed_webpki_root_anchor;
 
 const ROOT_HEX: &str = include_str!("fixtures/d_trust_br_root_ca_2_2023.der.hex");
@@ -76,6 +85,39 @@ fn rsa_algorithm_policy<'certificate, 'encoded>(
     .unwrap()
 }
 
+fn observed_time() -> X509Time {
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    decode_x509_time(decoder.decode_exact(b"\x17\x0d261101000000Z").unwrap()).unwrap()
+}
+
+fn intermediate_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+) -> ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded> {
+    let profiles = [X509CertificateAlgorithmProfile::new(
+        SHA512_WITH_RSA_ENCRYPTION_OID,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        RSA_ENCRYPTION_OID,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        2_048,
+        8_192,
+        2_048,
+        8_192,
+    )
+    .unwrap()];
+    let algorithm_policy = validate_certificate_algorithm_policy(certificate, &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(certificate, |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+
+    validate_x509_intermediate_certificate_policy(
+        role_policy(certificate),
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap()
+}
+
 fn strongest_link<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>(
     child: &'child_certificate X509Certificate<'child_encoded>,
     issuer: &'issuer_certificate X509Certificate<'issuer_encoded>,
@@ -92,6 +134,27 @@ fn strongest_link<'child_certificate, 'child_encoded, 'issuer_certificate, 'issu
         role_policy(issuer),
         rsa_algorithm_policy(issuer),
         RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap()
+}
+
+fn strongest_intermediate_link<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    child: &'child_certificate X509Certificate<'child_encoded>,
+    issuer: &'issuer_certificate X509Certificate<'issuer_encoded>,
+) -> VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    bind_x509_rsa_sha512_intermediate_issuer_policy_link(
+        strongest_link(child, issuer),
+        intermediate_policy(issuer),
     )
     .unwrap()
 }
@@ -138,6 +201,101 @@ fn rejects_reviewed_anchor_evidence_from_a_distinct_byte_equal_object() {
     assert_eq!(
         error.to_string(),
         "X.509 RSA SHA-512 reviewed-anchor link error EvidenceMismatch"
+    );
+    assert!(!error.to_string().contains("D-TRUST"));
+}
+
+#[test]
+fn binds_two_authenticated_sha512_links_through_the_exact_intermediate() {
+    let encoded = root_fixture();
+    let child = decode(&encoded);
+    let intermediate = decode(&encoded);
+    let root = decode(&encoded);
+    let authenticated_child_link = strongest_intermediate_link(&child, &intermediate);
+    let authenticated_parent_link = strongest_link(&intermediate, &root);
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&root).unwrap();
+    let reviewed_parent_link = bind_x509_rsa_sha512_issuer_link_to_reviewed_anchor(
+        authenticated_parent_link,
+        reviewed_anchor,
+    )
+    .unwrap();
+
+    let reviewed_path = bind_x509_rsa_sha512_intermediate_path_to_reviewed_anchor(
+        authenticated_child_link,
+        reviewed_parent_link,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        reviewed_path
+            .authenticated_child_link()
+            .issuer_policy_link()
+            .child(),
+        &child
+    ));
+    assert!(std::ptr::eq(
+        reviewed_path
+            .authenticated_child_link()
+            .issuer_policy_link()
+            .candidate_issuer(),
+        &intermediate
+    ));
+    assert!(std::ptr::eq(
+        reviewed_path
+            .authenticated_child_link()
+            .intermediate_policy()
+            .certificate(),
+        &intermediate
+    ));
+    assert!(std::ptr::eq(
+        reviewed_path
+            .reviewed_parent_link()
+            .verified_issuer_link()
+            .child(),
+        &intermediate
+    ));
+    assert!(std::ptr::eq(
+        reviewed_path
+            .reviewed_parent_link()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        &root
+    ));
+    assert_eq!(
+        format!("{reviewed_path:?}"),
+        "BoundX509RsaSha512ReviewedIntermediatePath"
+    );
+}
+
+#[test]
+fn rejects_two_links_with_byte_equal_distinct_intermediates() {
+    let encoded = root_fixture();
+    let child = decode(&encoded);
+    let first_intermediate = decode(&encoded);
+    let second_intermediate = decode(&encoded);
+    let root = decode(&encoded);
+    let authenticated_child_link = strongest_intermediate_link(&child, &first_intermediate);
+    let authenticated_parent_link = strongest_link(&second_intermediate, &root);
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&root).unwrap();
+    let reviewed_parent_link = bind_x509_rsa_sha512_issuer_link_to_reviewed_anchor(
+        authenticated_parent_link,
+        reviewed_anchor,
+    )
+    .unwrap();
+
+    let error = bind_x509_rsa_sha512_intermediate_path_to_reviewed_anchor(
+        authenticated_child_link,
+        reviewed_parent_link,
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha512ReviewedIntermediatePathErrorKind::EvidenceMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA SHA-512 reviewed intermediate-path error EvidenceMismatch"
     );
     assert!(!error.to_string().contains("D-TRUST"));
 }

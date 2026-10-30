@@ -1,0 +1,6 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "Metal-to-PNG coverage for pinned C4 link metadata without link-driven geometry",
+  "fixtures": ["c4-custom-links"]
+}
