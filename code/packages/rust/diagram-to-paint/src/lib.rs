@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.85.0";
+pub const VERSION: &str = "0.86.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7332,6 +7332,9 @@ where
             if let Some(tags) = &metadata.tags {
                 scene_metadata.insert(format!("c4.node.{index}.tags"), tags.clone());
             }
+            if let Some(sprite) = &metadata.sprite {
+                scene_metadata.insert(format!("c4.node.{index}.sprite"), sprite.clone());
+            }
             if let Some(link) = &metadata.link {
                 let prefix = format!("c4.node.{index}.link");
                 scene_metadata.insert(format!("{prefix}.url"), link.clone());
@@ -7353,6 +7356,7 @@ where
                 Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
                     node_type,
                     tags,
+                    sprite,
                     ..
                 }) => {
                     scene_metadata.insert(
@@ -7361,6 +7365,9 @@ where
                     );
                     if let Some(tags) = tags {
                         scene_metadata.insert(format!("c4.group.{index}.tags"), tags.clone());
+                    }
+                    if let Some(sprite) = sprite {
+                        scene_metadata.insert(format!("c4.group.{index}.sprite"), sprite.clone());
                     }
                 }
                 _ => {}
@@ -7393,6 +7400,9 @@ where
             }
             if let Some(tags) = &metadata.tags {
                 scene_metadata.insert(format!("c4.relationship.{index}.tags"), tags.clone());
+            }
+            if let Some(sprite) = &metadata.sprite {
+                scene_metadata.insert(format!("c4.relationship.{index}.sprite"), sprite.clone());
             }
             if let Some(link) = &metadata.link {
                 scene_metadata.insert(format!("c4.relationship.{index}.link.url"), link.clone());
@@ -10282,7 +10292,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.85.0");
+        assert_eq!(crate::VERSION, "0.86.0");
     }
 
     #[test]
