@@ -36,6 +36,29 @@ The compatibility `match_path` helper converts invalid syntax to a non-match
 without panicking; BUILD-file hosts use the typed API and complete-list
 preflight above so invalid input remains distinguishable from a non-match.
 
+The reusable `graph_diff` core accepts only caller-supplied values. It
+canonicalizes graph edges and prerequisite-first levels, performs exact
+package and shared-repository-input selection, and returns either one complete
+result or one stable error code. Strict-glob work is preflighted across the
+whole operation with the neutral 50,000,000 Unicode-scalar ceiling before the
+first match, while first-seen glob declarations are charged by exact UTF-8
+bytes against a separate 4 MiB ceiling before normalization. Repository-boundary
+inputs are depth, node, container, and string bounded; their versioned canonical
+SHA-256 and schema are verified before request-dependent path-classification
+preflights. The core never reads a checkout or acquires process, environment,
+clock, randomness, or network authority.
+
+Diff validation retains only compact per-package glob work factors. After the
+whole-operation preflight succeeds, one validated pattern is compiled at a
+time and reused across that package's indexed candidate paths. Package roots
+use segment-ordered collision validation, changed paths use an allocation-free
+ancestor index with an explicit 50,000,000-unit prefix-work ceiling instead of
+a package-by-path cross product, and shared boundary rules expand only for
+changed input paths. Relevant descendant-boundary rules apply the same explicit
+ceiling to package-root prefix classification. This keeps zero-path and
+max-shape inert snapshots from materializing unused token trees or
+input-consumer products.
+
 ## Building
 
 ```bash
@@ -99,6 +122,7 @@ The tool is organized into focused modules, each responsible for one aspect of t
 8. **reporter** — Terminal-friendly build report formatting
 9. **validator** — Pure build-contract, orphan-crate, and tracked-artifact validation
 10. **toolchain_detection** — Pure bounded snapshot evaluation for extra CI toolchain declarations
+11. **graph_diff** — Pure bounded graph and diff-selection evaluation for inert snapshots
 
 Tracked-artifact snapshots explicitly require Unicode 17.0.0. The validator's
 exactly pinned `oxixml-unicode` tables cover NFC, NFKC, full default folding,
@@ -147,6 +171,12 @@ per-front and aggregate resource ceilings, empty platform-front precedence,
 exact CRLF parsing, null-versus-empty schedules, aliases, forced toolchains,
 error precedence, and fresh deterministic result maps without reading the
 filesystem or invoking Git, processes, environment variables, or the network.
+
+Graph/diff conformance tests dynamically enumerate and pin the exact eight
+`graph-*.json` and twelve `diff-selection-*.json` neutral cases, including the
+shared-input multi-consumer reverse index, deterministic transitive closures,
+strict character classes, unknown-path policies, repository-boundary digest,
+and the exact-at/over 50,000,000 match-work boundary.
 
 ## Discovery and metadata diagnostics
 
