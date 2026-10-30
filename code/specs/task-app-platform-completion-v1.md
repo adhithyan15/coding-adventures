@@ -537,3 +537,18 @@ notes path and reject heading-only output for a detailed changelog. Existing
 artifact coverage and unsigned-platform limitations remain unchanged. Never
 rewrite the immutable v0.5.10 release to repair this presentation defect.
 
+## Selected fidelity slice: Qt Board drop layout (#18563)
+
+After the audited v0.5.15 checkpoint, lower the Board drop target's static
+`display: flex`, `flex-direction: column`, and finite nonnegative pixel gap
+to its existing inner ColumnLayout and spacing. Limit this bridge to targets
+already authoring min-height, so unrelated Calendar targets stay unchanged.
+State overrides or unsupported display/direction/gap values remain reported;
+do not claim general CSS flex support. Test both themes and reduce the exact
+Qt diagnostic budget only by the three verified Board declarations.
+
+
+Upstream reconciliation: #18481 merged during this slice. Its net reporting
+change makes main total 80; removing the same three Board declarations yields
+77. Preserve Calendar gap 1, width 1, and flex-grow 5. Both-theme analysis
+verifies these combined counts; the earlier 79-to-76 expectation is superseded.

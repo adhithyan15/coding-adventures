@@ -119,14 +119,8 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "box-shadow": 1,
         "box-sizing": 1,
         "color": 2,
-        # #18559 reaches col-drop for its minimum height. These existing
-        # declarations were previously invisible, not newly broken. #18563
-        # owns their lowering; keep each count bounded to that one part.
-        "display": 1,
-        "flex-direction": 1,
-        # One gap is col-drop's newly reached existing declaration; the other
-        # is calendar-cell-drop, reached after its flex-grow was consumed.
-        "gap": 2,
+        # Board layout trio lowers; Calendar gap remains explicit.
+        "gap": 1,
         # UI21 §2.2: flex-grow on a direct Row/Column child now lowers to
         # Layout.fillWidth / fillHeight, so task-name and content-scroll
         # left the report. What remains grows from inside an If branch or
