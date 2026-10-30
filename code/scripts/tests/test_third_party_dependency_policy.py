@@ -341,6 +341,653 @@ cmd = "npx vitest run"
                 policy.build_npm_tool_inventory(root, [], [manifest])
 
 
+class PythonToolTests(unittest.TestCase):
+    def test_collects_pip_pipx_and_uv_tool_packages(self) -> None:
+        commands = """
+python3 -m pip install --quiet jsonschema==4.26.0 fonttools
+pip install --no-deps -e ../matrix -e . build
+pip install -e ".[dev]" > /dev/null 2>&1
+uv pip install --system pytest pytest-cov
+uv tool install --with ruff mypy
+uv tool run --from black black --check .
+uvx --with typing-extensions pyright .
+pipx run --spec hatch hatch build
+echo "pip install imaginary-package"
+# pip install imaginary-package
+cmd = "python -m pip install requests"
+"""
+
+        self.assertEqual(
+            policy.python_tool_names(commands),
+            {
+                "black",
+                "build",
+                "fonttools",
+                "hatch",
+                "jsonschema",
+                "mypy",
+                "pyright",
+                "pytest",
+                "pytest-cov",
+                "requests",
+                "ruff",
+                "typing-extensions",
+            },
+        )
+
+    def test_named_direct_urls_are_counted_and_unnamed_urls_are_rejected(
+        self,
+    ) -> None:
+        self.assertEqual(
+            policy.python_tool_names(
+                "pip install 'named-tool @ https://example.invalid/tool.whl'"
+            ),
+            {"named-tool"},
+        )
+        with self.assertRaisesRegex(policy.PolicyError, "must use a package name"):
+            policy.python_tool_names(
+                "python -m pip install https://example.invalid/tool.whl"
+            )
+
+    def test_rejects_requirements_file_indirection_and_missing_values(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "declare packages inline"):
+            policy.python_tool_names("pip install -r requirements.txt")
+        with self.assertRaisesRegex(policy.PolicyError, "requires a value"):
+            policy.python_tool_names("uv pip install --index-url")
+        with self.assertRaisesRegex(policy.PolicyError, "requires a Python package"):
+            policy.python_tool_names("uvx --from")
+
+    def test_sparse_inventory_reads_sources_and_package_scripts_from_index(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            workflow = root / ".github" / "workflows" / "ci.yml"
+            manifest = root / "app" / "package.json"
+            workflow.parent.mkdir(parents=True)
+            manifest.parent.mkdir()
+            workflow.write_text(
+                "steps:\n  - run: python -m pip install pytest\n",
+                encoding="utf-8",
+            )
+            manifest.write_text(
+                json.dumps({"scripts": {"lint": "uvx ruff check ."}}),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            workflow.unlink()
+            manifest.unlink()
+
+            sources = policy.git_python_tool_sources(root)
+            manifests = policy.git_npm_manifests(root)
+            inventory = policy.build_python_tool_inventory(root, sources, manifests)
+
+            self.assertEqual(sources, [workflow])
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(
+                inventory,
+                {
+                    "pytest": [".github/workflows/ci.yml"],
+                    "ruff": ["app/package.json"],
+                },
+            )
+
+
+class PythonManifestTests(unittest.TestCase):
+    def test_collects_standard_groups_and_normalizes_distribution_names(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "pyproject.toml"
+            local = root / "local" / "pyproject.toml"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """
+[build-system]
+requires = ["Hatchling>=1"]
+
+[project]
+name = "app"
+dependencies = [
+  "local_pkg>=1",
+  "Requests[security] @ https://example.invalid/requests.whl",
+]
+
+[project.optional-dependencies]
+images = ["Pillow>=10"]
+
+[dependency-groups]
+test = ["pytest>=9", { include-group = "lint" }]
+lint = ["typing_extensions; python_version < '3.13'"]
+
+[tool.uv.sources]
+local-pkg = { path = "../local" }
+""",
+                encoding="utf-8",
+            )
+            local.write_text(
+                '[project]\nname = "local-pkg"\nversion = "1"\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_python_inventory(root, [app, local]),
+                {
+                    "hatchling": ["app/pyproject.toml"],
+                    "pillow": ["app/pyproject.toml"],
+                    "pytest": ["app/pyproject.toml"],
+                    "requests": ["app/pyproject.toml"],
+                    "typing-extensions": ["app/pyproject.toml"],
+                },
+            )
+
+    def test_workspace_sources_apply_only_to_verified_workspace_members(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workspace = root / "workspace" / "pyproject.toml"
+            app = root / "workspace" / "app" / "pyproject.toml"
+            local = root / "workspace" / "local" / "pyproject.toml"
+            outsider = root / "outsider" / "pyproject.toml"
+            app.parent.mkdir(parents=True)
+            local.parent.mkdir()
+            outsider.parent.mkdir()
+            workspace.write_text(
+                """
+[project]
+name = "workspace"
+version = "1"
+[tool.uv.workspace]
+members = ["app", "local"]
+[tool.uv.sources]
+local-pkg = { workspace = true }
+""",
+                encoding="utf-8",
+            )
+            app.write_text(
+                '[project]\nname = "app"\nversion = "1"\ndependencies = ["local-pkg"]\n',
+                encoding="utf-8",
+            )
+            local.write_text(
+                '[project]\nname = "local-pkg"\nversion = "1"\n',
+                encoding="utf-8",
+            )
+            outsider.write_text(
+                '[project]\nname = "outsider"\nversion = "1"\ndependencies = ["local-pkg"]\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_python_inventory(root, [workspace, app, local, outsider]),
+                {"local-pkg": ["outsider/pyproject.toml"]},
+            )
+
+    def test_untracked_or_outside_paths_are_not_trusted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "pyproject.toml"
+            app.parent.mkdir()
+            app.write_text(
+                """
+[project]
+name = "app"
+version = "1"
+dependencies = ["vendored", "outside"]
+[tool.uv.sources]
+vendored = { path = "../untracked" }
+outside = { path = "../../../outside" }
+""",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_python_inventory(root, [app]),
+                {
+                    "outside": ["app/pyproject.toml"],
+                    "vendored": ["app/pyproject.toml"],
+                },
+            )
+
+    def test_rejects_an_invalid_dependency_group_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "pyproject.toml"
+            manifest.write_text(
+                '[dependency-groups]\ntest = [{not-an-include = "lint"}]\n',
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "invalid include"):
+                policy.build_python_inventory(root, [manifest])
+
+    def test_rejects_requirement_text_after_the_distribution_name(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "invalid requirement"):
+            policy.python_requirement_name(
+                "requests definitely-not-a-specifier", "test"
+            )
+
+    def test_conflicting_path_source_fields_do_not_earn_a_local_exemption(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "pyproject.toml"
+            local = root / "local" / "pyproject.toml"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """
+[project]
+name = "app"
+version = "1"
+dependencies = ["local-pkg"]
+[tool.uv.sources]
+local-pkg = { path = "../local", git = "https://example.invalid/local" }
+""",
+                encoding="utf-8",
+            )
+            local.write_text(
+                '[project]\nname = "local-pkg"\nversion = "1"\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_python_inventory(root, [app, local]),
+                {"local-pkg": ["app/pyproject.toml"]},
+            )
+
+    def test_sparse_inventory_discovers_an_absent_python_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            path = root / "nested" / "pyproject.toml"
+            path.parent.mkdir()
+            path.write_text(
+                '[project]\nname = "nested"\nversion = "1"\ndependencies = ["Requests"]\n',
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            path.unlink()
+
+            manifests = policy.git_python_manifests(root)
+            inventory = policy.build_python_inventory(root, manifests)
+
+            self.assertEqual(manifests, [path])
+            self.assertEqual(inventory, {"requests": ["nested/pyproject.toml"]})
+
+
+class GoManifestTests(unittest.TestCase):
+    def test_collects_external_and_verified_local_modules(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "go.mod"
+            local = root / "local" / "go.mod"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """module example.com/app
+
+go 1.25
+
+require (
+    example.com/local v0.0.0
+    golang.org/x/sys v0.1.0
+    example.com/old v1.0.0
+)
+
+replace example.com/local => ../local
+replace example.com/old v1.0.0 => example.com/new v1.1.0
+""",
+                encoding="utf-8",
+            )
+            local.write_text("module example.com/local\n\ngo 1.25\n", encoding="utf-8")
+
+            self.assertEqual(
+                policy.build_go_inventory(root, [app, local]),
+                {
+                    "example.com/new": ["app/go.mod"],
+                    "golang.org/x/sys": ["app/go.mod"],
+                },
+            )
+
+    def test_untracked_outside_and_mismatched_replacements_are_not_trusted(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "go.mod"
+            local = root / "local" / "go.mod"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """module example.com/app
+require (
+    example.com/untracked v1.0.0
+    example.com/outside v1.0.0
+    example.com/wrong v1.0.0
+)
+replace example.com/untracked => ../untracked
+replace example.com/outside => ../../../outside
+replace example.com/wrong => ../local
+""",
+                encoding="utf-8",
+            )
+            local.write_text("module example.com/local\n", encoding="utf-8")
+
+            self.assertEqual(
+                policy.build_go_inventory(root, [app, local]),
+                {
+                    "example.com/outside": ["app/go.mod"],
+                    "example.com/untracked": ["app/go.mod"],
+                    "example.com/wrong": ["app/go.mod"],
+                },
+            )
+
+    def test_rejects_malformed_go_mod_dependency_syntax(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "go.mod"
+            manifest.write_text(
+                "module example.com/app\nrequire example.com/broken\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "invalid require"):
+                policy.build_go_inventory(root, [manifest])
+
+    def test_sparse_inventory_discovers_absent_go_mod(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            manifest = root / "nested" / "go.mod"
+            manifest.parent.mkdir()
+            manifest.write_text(
+                "module example.com/app\nrequire golang.org/x/text v0.1.0\n",
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            manifest.unlink()
+
+            manifests = policy.git_go_manifests(root)
+            inventory = policy.build_go_inventory(root, manifests)
+
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(inventory, {"golang.org/x/text": ["nested/go.mod"]})
+
+
+class GoToolTests(unittest.TestCase):
+    def test_collects_remote_go_acquisition_and_ignores_local_targets(self) -> None:
+        self.assertEqual(
+            policy.go_tool_names(
+                "go install golang.org/x/tools/cmd/stringer@v0.1.0 && "
+                "go get example.com/tool@latest; "
+                "go run github.com/example/generator@v2.0.0 --flag; "
+                "go run ./cmd/local; go run main.go"
+            ),
+            {
+                "example.com/tool",
+                "github.com/example/generator",
+                "golang.org/x/tools/cmd/stringer",
+            },
+        )
+
+    def test_rejects_dynamic_go_tool_targets(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "dynamic Go tool target"):
+            policy.go_tool_names("go install $TOOL")
+
+    def test_only_scans_go_generate_directives_in_go_sources(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "generate.go"
+            source.write_text(
+                'package demo\nconst example = "go install ignored.example/tool@v1"\n'
+                "//go:generate go run example.com/generator@v1\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_go_tool_inventory(root, [source], []),
+                {"example.com/generator": ["generate.go"]},
+            )
+
+
+class ElixirManifestTests(unittest.TestCase):
+    def test_collects_external_and_verified_local_mix_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "mix.exs"
+            local = root / "local" / "mix.exs"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """defmodule App.MixProject do
+  use Mix.Project
+  def project, do: [app: :app, deps: deps()]
+  defp deps do
+    [
+      {:local_app,
+       path: "../local"},
+      {:jason, "~> 1.4"}
+    ]
+  end
+end
+""",
+                encoding="utf-8",
+            )
+            local.write_text(
+                "defmodule Local.MixProject do\n"
+                "  use Mix.Project\n"
+                "  def project, do: [app: :local_app]\n"
+                "end\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_elixir_inventory(root, [app, local]),
+                {"jason": ["app/mix.exs"]},
+            )
+
+    def test_untracked_outside_and_mismatched_mix_paths_are_not_trusted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "mix.exs"
+            local = root / "local" / "mix.exs"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """defmodule App.MixProject do
+  use Mix.Project
+  def project, do: [app: :app]
+  defp deps, do: [
+    {:untracked, path: "../untracked"},
+    {:outside, path: "../../../outside"},
+    {:wrong_name, path: "../local"}
+  ]
+end
+""",
+                encoding="utf-8",
+            )
+            local.write_text(
+                "defmodule Local.MixProject do\n"
+                "  use Mix.Project\n"
+                "  def project, do: [app: :local_app]\n"
+                "end\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_elixir_inventory(root, [app, local]),
+                {
+                    "outside": ["app/mix.exs"],
+                    "untracked": ["app/mix.exs"],
+                    "wrong_name": ["app/mix.exs"],
+                },
+            )
+
+    def test_rejects_dynamic_mix_path_declarations(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "mix.exs"
+            manifest.write_text(
+                "def project, do: [app: :app]\n"
+                "defp deps, do: [{:local, path: local_path()}]\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "unsupported Mix path"):
+                policy.build_elixir_inventory(root, [manifest])
+
+    def test_sparse_inventory_discovers_absent_mix_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            manifest = root / "nested" / "mix.exs"
+            manifest.parent.mkdir()
+            manifest.write_text(
+                'def project, do: [app: :demo]\ndefp deps, do: [{:jason, "~> 1.4"}]\n',
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            manifest.unlink()
+
+            manifests = policy.git_elixir_manifests(root)
+            inventory = policy.build_elixir_inventory(root, manifests)
+
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(inventory, {"jason": ["nested/mix.exs"]})
+
+
+class ElixirToolTests(unittest.TestCase):
+    def test_collects_named_mix_installers(self) -> None:
+        self.assertEqual(
+            policy.mix_tool_names(
+                "mix archive.install hex phx_new --force && "
+                "mix escript.install dialyxir; "
+                "mix local.hex --force; mix local.rebar --force"
+            ),
+            {"dialyxir", "hex", "phx_new", "rebar3"},
+        )
+
+    def test_rejects_unnamed_remote_mix_installers(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "named Hex package"):
+            policy.mix_tool_names("mix archive.install github owner/project")
+
+
+class RubyManifestTests(unittest.TestCase):
+    def test_collects_gemfile_and_gemspec_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app"
+            local = root / "local"
+            app.mkdir()
+            local.mkdir()
+            gemfile = app / "Gemfile"
+            app_spec = app / "app.gemspec"
+            local_spec = local / "local.gemspec"
+            gemfile.write_text(
+                'gem "local-gem", path: "../local"\ngem "standard", require: false\n',
+                encoding="utf-8",
+            )
+            app_spec.write_text(
+                "Gem::Specification.new do |spec|\n"
+                '  spec.name = "app"\n'
+                '  spec.add_dependency "local-gem"\n'
+                '  spec.add_development_dependency "minitest", "~> 5"\n'
+                "end\n",
+                encoding="utf-8",
+            )
+            local_spec.write_text(
+                "Gem::Specification.new do |spec|\n"
+                '  spec.name = "local-gem"\n'
+                '  spec.add_runtime_dependency "json"\n'
+                "end\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_ruby_inventory(root, [gemfile, app_spec, local_spec]),
+                {
+                    "json": ["local/local.gemspec"],
+                    "minitest": ["app/app.gemspec"],
+                    "standard": ["app/Gemfile"],
+                },
+            )
+
+    def test_untracked_outside_and_name_mismatched_paths_are_not_trusted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app"
+            local = root / "local"
+            app.mkdir()
+            local.mkdir()
+            gemfile = app / "Gemfile"
+            local_spec = local / "local.gemspec"
+            gemfile.write_text(
+                'gem "untracked", path: "../untracked"\n'
+                'gem "outside", path: "../../../outside"\n'
+                'gem "wrong-name", path: "../local"\n',
+                encoding="utf-8",
+            )
+            local_spec.write_text('spec.name = "local-gem"\n', encoding="utf-8")
+
+            self.assertEqual(
+                policy.build_ruby_inventory(root, [gemfile, local_spec]),
+                {
+                    "outside": ["app/Gemfile"],
+                    "untracked": ["app/Gemfile"],
+                    "wrong-name": ["app/Gemfile"],
+                },
+            )
+
+    def test_rejects_dynamic_dependency_declarations(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            gemfile = root / "Gemfile"
+            gemfile.write_text("gem dependency_name\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                policy.PolicyError, "unsupported Ruby dependency declaration"
+            ):
+                policy.build_ruby_inventory(root, [gemfile])
+
+    def test_rejects_dynamic_path_options(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            gemfile = root / "Gemfile"
+            gemfile.write_text('gem "local", path: local_path\n', encoding="utf-8")
+
+            with self.assertRaisesRegex(policy.PolicyError, "unsupported gem path"):
+                policy.build_ruby_inventory(root, [gemfile])
+
+    def test_sparse_inventory_discovers_absent_ruby_manifests(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            gemfile = root / "nested" / "Gemfile"
+            gemspec = root / "nested" / "nested.gemspec"
+            gemfile.parent.mkdir()
+            gemfile.write_text('gem "rake"\n', encoding="utf-8")
+            gemspec.write_text(
+                'spec.name = "nested"\nspec.add_dependency "json"\n',
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            gemfile.unlink()
+            gemspec.unlink()
+
+            manifests = policy.git_ruby_manifests(root)
+            inventory = policy.build_ruby_inventory(root, manifests)
+
+            self.assertEqual(manifests, [gemfile, gemspec])
+            self.assertEqual(
+                inventory,
+                {
+                    "json": ["nested/nested.gemspec"],
+                    "rake": ["nested/Gemfile"],
+                },
+            )
+
+
 class DependencyPolicyTests(unittest.TestCase):
     def test_inventory_records_each_declaring_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

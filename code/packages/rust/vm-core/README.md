@@ -69,8 +69,33 @@ here unchanged — the matrix's six scalar languages all share this one interpre
 (LANG-MATRIX Phase V).
 
 The default dynamic builtin registry includes arithmetic (`+`, `-`, `*`),
-equality (`=`), and the lisp-family equality spelling (`equal?`). Symbol
-literals interned to stable integer IDs therefore compare directly on the VM.
+ordering (`<`, `<=`, `>`, `>=`), equality (`=`), the lisp-family equality
+spelling (`equal?`), and the pair test (`pair?`). Symbol literals interned to
+stable integer IDs therefore compare directly on the VM.
+
+These are what a dynamically-typed frontend leaves in the IIR when it cannot
+prove an operand's type. Twig's `(define (f x) (if (< x 0) 42 7))` has an
+untyped `x`, so it compiles to `call_builtin "<", x, 0`, and before #18463 the
+VM stopped there with `UnknownOpcode("builtin \"<\"")`. The rules follow
+`twig-vm`:
+
+| Builtin | Two `Int`s | Two `Float`s | Anything else |
+|---------|-----------|--------------|---------------|
+| `+` `-` `*` | wrapping `i64` result | `f64` result | `TypeError` |
+| `<` `<=` `>` `>=` | signed compare → `Bool` | IEEE compare → `Bool` (`NaN` is never ordered) | `TypeError` (a `Bool` is not a number here) |
+
+`pair?` answers `#t` for a live heap cell (a non-null `HeapRef`, which is what
+the structural lowering makes of `cons`) and `#f` for nil and every atom.
+
+```rust
+use vm_core::builtins::BuiltinRegistry;
+use vm_core::value::Value;
+
+let reg = BuiltinRegistry::new();
+assert_eq!(reg.call("<", &[Value::Int(-5), Value::Int(0)]).unwrap(), Value::Bool(true));
+assert!(reg.call("<", &[Value::Str("a".into()), Value::Int(1)]).is_err());
+assert_eq!(reg.call("pair?", &[Value::Int(42)]).unwrap(), Value::Bool(false));
+```
 
 Integer arithmetic, bitwise, and shift results are **masked to the width named by
 the instruction's `type_hint`** (`u4`→`& 0xF`, `u8`→`& 0xFF`, `u16`, `u32`), so a

@@ -1,0 +1,6 @@
+component RowChildInput {
+  slot field-label : text ;
+  slot field-value : text ;
+  slot field-names : list<text> ;
+  emit onFieldValueChange ( value : text ) ;
+}

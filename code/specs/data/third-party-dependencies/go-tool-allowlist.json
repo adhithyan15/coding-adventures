@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "ecosystem": "go-tools",
+  "allowed_dependency_names": []
+}
