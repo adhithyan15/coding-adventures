@@ -2700,10 +2700,12 @@
       "branch": "codex/build-tool-lua-diff-selection-parity",
       "pr_number": null,
       "selection_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
-      "selection_notes": "Selected as the highest-leverage package-path-independent implementation while Ruby dependency-hashing PR #18555 occupied the publication slot. It tied Ruby and Rust graph/diff at three direct and five total unfinished descendants; Lua had no package-path collision and could advance locally while shared Go routing and lifecycle surfaces remained deferred.",
-      "implementation_revision": "7d6faa409b5b7a6295765b025da7f7b6f3f5c382",
-      "validation_notes": "The pure Lua graph/diff core dynamically consumes all eight graph and twelve diff-selection fixtures, including shared-input multi-consumer reverse selection, with canonical all-or-error output, exact repository-boundary digest validation, Unicode-scalar matching, and the 50,000,000-unit ceiling. The full build-tool suite passes 144 tests; focused coverage is 99.29% at 701/706 lines, Luacheck and syntax checks pass, and the 298-file/179-case neutral corpus validates. Changes remain confined to four Lua build-tool files; shared routing and lifecycle work are deferred.",
-      "security_review_revision": "7d6faa409b5b7a6295765b025da7f7b6f3f5c382",
+      "selection_notes": "Selected as the highest-leverage package-path-independent implementation while Ruby dependency-hashing PR #18555 occupied the publication slot. It tied Ruby and Rust graph/diff at three direct and five total unfinished descendants; Lua had no package-path collision and could advance locally. After SHA-512 PR #18583 merged and freed the parity publication slot, a fresh priority pass kept this independently reviewed, implementation-complete item ahead of the prepared Rust graph/diff item because it is already current-main reconciled and includes its required Go fixture routing.",
+      "implementation_revision": "5bcc662b1f79b315837982a8828d36afada3a154",
+      "main_refresh_revision": "20db234ceca6c3ee1e91c79dace52851c4c3feb8",
+      "main_merge_revision": "f4e7d2e2cd38c20b69b1bfa5d68fcaceb70e8670",
+      "validation_notes": "The pure Lua graph/diff core dynamically consumes all eight graph and twelve diff-selection fixtures, including shared-input multi-consumer reverse selection, with canonical all-or-error output, exact repository-boundary digest validation, Unicode-scalar matching, and the 50,000,000-unit ceiling. The repaired implementation adds an exact 4 MiB unique-glob declaration ceiling, validates boundary schema and digest before request resource preflight, indexes package roots and relevant changed-path boundaries, and pins maximum-shape exclusion plus exact-root precedence. After the final current-main merge, the focused graph/diff suite passes 22/22, the full Lua build-tool suite passes 151/151 from its fixture-correct tests directory, Lua syntax passes, and the focused Go fixture-selection and internal graphdiff suites pass. Running the full Lua suite from the package root is an invalid invocation because legacy tests intentionally resolve governed fixtures relative to the tests directory; the canonical invocation is green.",
+      "security_review_revision": "5bcc662b1f79b315837982a8828d36afada3a154",
       "security_review_notes": "Split independent review rejected empty-root strict-glob behavior, quadratic bracket and root validation, masked stable diagnostics, missing source_globs acceptance, eager glob token retention, root-trie memory growth, unbounded record traversal, and repeated cross-package glob validation. The final head uses zero-component roots, linear parsing, sorted identities, bounded snapshots, lazy one-pattern compilation, and operation-local content memoization. Maximum 4,096-package shared-glob stress completes in about 2.1 seconds and 48 MiB; re-review issued SHIP with no findings.",
       "notes": "Implement and dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, in one process-free Lua core with stable errors, deterministic closures, and bounded memoized Unicode-scalar matching.",
       "postmerge_preparation_evidence": [
@@ -2821,6 +2823,16 @@
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/build-tool-rust-diff-selection-match-work-ceiling-adoption"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+    },
+    {
+      "id": "build-tool-rust-cargo-test-trigger-selection-parity",
+      "title": "Adopt bounded Cargo test-trigger selection in the Rust build tool",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-10-30T12:39:41Z",
+      "notes": "Discovered during exact-head review of the prepared Rust graph/diff adoption. Audit the established Go build-tool test-trigger resolver contract, define the smallest authority-free Cargo selection boundary, and port its repository-input, dev-dependency, orphan, exclusion, stable-diagnostic, and resource-ceiling behavior into the Rust build tool with neutral fixtures. Keep command execution, package graph/diff implementation, platform process authority, and unrelated Cargo BUILD validation outside this owner; prioritize it only after the independently prepared Lua and Rust graph/diff owners are published or reprioritized."
     },
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
@@ -14880,7 +14892,7 @@
     {
       "id": "sha512-existing-lane-hf04-conformance-audit",
       "title": "Reconcile existing SHA-512 lanes with HF04",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/sha512-hf04-conformance-audit",
       "pr_number": 18583,
@@ -14888,6 +14900,10 @@
       "pr_opened_at": "2026-10-29T14:38:24Z",
       "publication_head": "46eef47d8c74786e5ebee9c2c87a7b74c6e4f163",
       "publication_base": "e54161212491f94f0e141910dacf8f2913aa32b6",
+      "merged_head_revision": "e8f67be3feefa221a24e5a77b3d4f276b68bb0d7",
+      "merged_at": "2026-10-30T12:39:58Z",
+      "merge_revision": "20db234ceca6c3ee1e91c79dace52851c4c3feb8",
+      "merge_notes": "PR #18583 completed 44 exact-head terminal acceptable checks and merged through guarded squash auto-merge after GitHub reported the reviewed head clean and mergeable. One Windows retry recovered from an unrelated Forme timeout and one macOS retry recovered from hosted-runner communication loss; neither changed the reviewed head. The squash receipt is verified on origin/main and the completed managed worktree is archived.",
       "selected_at": "2026-10-29T10:07:04Z",
       "selection_revision": "16d1607e3a784a732e9a3580f7669e6180526460",
       "implementation_revision": "e7b9b097a7e66b2ea89548ef9eedbd0d821af8f0",

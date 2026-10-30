@@ -20001,3 +20001,29 @@ reviewed. Then mark the PR ready and require a completely fresh hosted matrix
 on the resulting exact lifecycle head; guarded squash auto-merge remains
 disabled until every exact-head check is terminal and acceptable and GitHub
 still reports the PR mergeable.
+
+### SHA-512 HF04 merge receipt and Lua graph/diff reprioritization
+
+GitHub records PR #18583 merged from exact reviewed head
+`e8f67be3feefa221a24e5a77b3d4f276b68bb0d7` at
+`2026-10-30T12:39:58Z`. All 44 exact-head checks were terminal and acceptable,
+and GitHub reported the head clean and mergeable before guarded squash
+auto-merge produced `20db234ceca6c3ee1e91c79dace52851c4c3feb8`. The
+Windows retry recovered from an unrelated Forme timeout and the macOS retry
+recovered from hosted-runner communication loss without changing the reviewed
+head. The merge receipt is verified on `origin/main`, and only the completed
+SHA-512 managed worktree has been archived.
+
+The newly free parity publication slot is assigned to
+`build-tool-lua-diff-selection-match-work-ceiling-adoption`. Its bounded,
+process-free implementation and Go fixture routing are complete and have no
+path overlap with the open repository PR set. A normal merge of exact main
+`20db234ceca6c3ee1e91c79dace52851c4c3feb8` produced local head
+`f4e7d2e2cd38c20b69b1bfa5d68fcaceb70e8670`. Its 22 focused and 151 full
+Lua tests, syntax checks, focused Go fixture-selection suite, and Go internal
+graph/diff suite all pass; independent publication review remains mandatory
+before push. The prepared Rust
+graph/diff adoption stays next in the local queue. Review of that work also
+identified a separate Rust Cargo test-trigger selection follow-up; it remains
+outside both graph/diff implementations and must be registered as a distinct
+bounded owner before selection.
