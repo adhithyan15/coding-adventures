@@ -929,6 +929,24 @@ external effect. It does not apply anchor constraints, validate target role,
 purpose, validity, or identity, construct or validate a multi-hop path, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection; concrete HTTPS remains unavailable.
+A bounded `x509-rsa-signature-routing` prerequisite now separates
+caller-owned certificate algorithm selection from fixed repository-owned RSA
+verification. It consumes exact child-certificate algorithm-profile evidence
+and exact issuer-certificate RSA key-policy evidence, selects one route by the
+child profile index, and invokes only the routed PKCS #1 v1.5 SHA-256,
+SHA-384, or SHA-512 verifier. Missing and duplicate routes fail before RSA
+work. A route naming a verifier inconsistent with the child certificate fails
+that fixed verifier's exact AlgorithmIdentifier checks. Success retains both
+non-copyable policy inputs and the exact fixed-verifier evidence, preventing a
+detached child certificate or issuer key from entering after policy.
+
+This is public-data signature composition only. It does not decide issuer
+Name linkage or role, recognize certificate extensions, construct or validate
+a path, establish reviewed trust, check target identity, time, purpose, path
+length, name constraints, or revocation, perform TLS or HTTP, access
+credentials, sign data, emit an external audit/provider effect, authorize
+OAuth transport, or grant network authority. Concrete HTTPS remains
+unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each
