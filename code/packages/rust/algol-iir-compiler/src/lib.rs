@@ -3703,21 +3703,34 @@ impl Compiler {
     }
 
     /// Preserve `entier(sqrt(n))` in the exact integer domain even when `n`
-    /// is not a perfect square. This is the mathematical floor root for a
-    /// nonnegative exact integer; shadowed built-ins and dynamic operands stay
-    /// outside the proof.
+    /// is not a perfect square. A unary minus produces the mathematical floor
+    /// of the negative root, so a non-square uses the negated ceiling root.
+    /// Shadowed built-ins and dynamic operands stay outside the proof.
     fn exact_static_integer_floor_root_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        self.exact_static_integer_signed_floor_root_value(node, false)
+    }
+
+    fn exact_static_integer_signed_floor_root_value(
+        &self,
+        node: &GrammarASTNode,
+        negative: bool,
+    ) -> Option<i64> {
         if let Some(child) = single_parenthesized_child(node) {
-            return self.exact_static_integer_floor_root_value(child);
+            return self.exact_static_integer_signed_floor_root_value(child, negative);
         }
         if let Some((sign, child)) = single_signed_child(node) {
-            return (sign == "+")
-                .then(|| self.exact_static_integer_floor_root_value(child))?;
+            return match sign {
+                "+" => self.exact_static_integer_signed_floor_root_value(child, negative),
+                "-" => self.exact_static_integer_signed_floor_root_value(child, !negative),
+                _ => None,
+            };
         }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             return (direct_tokens(node).is_empty() && children.len() == 1)
-                .then(|| self.exact_static_integer_floor_root_value(children[0]))?;
+                .then(|| {
+                    self.exact_static_integer_signed_floor_root_value(children[0], negative)
+                })?;
         }
         let name = direct_tokens(node)
             .into_iter()
@@ -3733,7 +3746,16 @@ impl Compiler {
             return None;
         }
         let value = self.exact_static_integer_normalizer_operand_value(actuals[0])?;
-        (value >= 0).then(|| (value as u64).isqrt() as i64)
+        if value < 0 {
+            return None;
+        }
+        let value = value as u64;
+        let root = value.isqrt();
+        if !negative {
+            return Some(root as i64);
+        }
+        let magnitude = root + u64::from(root * root != value);
+        i64::try_from(magnitude).ok()?.checked_neg()
     }
 
     /// Evaluate checked integer arithmetic around nested static normalizers.
@@ -17224,6 +17246,30 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "negative, overridden, procedure-calling, and shadowed floor roots must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_signed_floor_root_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-(-sqrt(entier(80))))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "signed exact floor roots may compose between wide static integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(entier(-1)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure sqrt(x); value x; real x; sqrt := 8; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 80; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "negative radicands, overridden roots, and procedure-calling signed roots must fail closed",
             );
         }
     }
