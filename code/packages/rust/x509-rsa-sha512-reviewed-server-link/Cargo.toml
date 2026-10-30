@@ -1,6 +1,6 @@
 [package]
 name = "x509-rsa-sha512-reviewed-server-link"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Exact RSA SHA-512 reviewed-root and target-server policy binding"
 
