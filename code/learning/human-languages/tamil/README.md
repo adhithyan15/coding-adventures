@@ -231,6 +231,25 @@ reading-reach floor begins at zero. Publication therefore makes the target
 measurable; it does not establish external certification, complete mocks,
 calibration, human validation, learner readiness, or learner attainment.
 
+## B2 content-inventory status
+
+[`exam-inventory-tamil-b2.json`](../core/exam-inventory-tamil-b2.json) turns the
+project-owned B2 task envelope into 36 reviewable content demands: nine each
+for communicative functions, grammar, orthography, and lexicon/register. Every
+dimension remains explicitly partial and every demand remains unmapped at
+0/36. The inventory therefore stays visible in the completion plan rather than
+being mistaken for a readiness claim.
+
+The source boundary is deliberately narrow. The CEFR Companion Volume supplies
+generic B2 descriptors; the Tamil Virtual Academy rules document a real but
+non-CEFR-mapped Tamil school-class and oral/online/written assessment boundary;
+Unicode supplies normative script behavior; official LDC-IL corpora document
+contemporary text domains, speech boundaries, and regional sampling; and the
+committed task shape supplies this project's performance envelope. None of
+those sources closes a finite Tamil B2 grammar or lexicon. Publication does not
+establish external certification, complete coverage, mock readiness,
+validation, learner readiness, or learner attainment.
+
 ## Chapter capabilities
 
 [`chapters.json`](./chapters.json) is the track's
