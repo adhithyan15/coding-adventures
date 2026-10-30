@@ -630,10 +630,14 @@ unknown-critical-extension rule over that complete decoded structure. It calls
 a caller-supplied, data-driven OID recognizer exactly once for each critical
 extension in wire order, accepts unrecognized non-critical extensions, and
 fails closed with a redacted sequence index at the first unsupported critical
-extension. Recognition does not decode or validate the extension value, grant
-a certificate role, or establish trust. A second bounded gate now composes the
-shipped Basic Constraints, Key Usage, and Extended Key Usage decoders under one
-explicit semantic budget. It requires critical `cA = TRUE` plus
+extension. A bounded policy-data layer validates at most 256 recognized OIDs
+before certificate processing, rejects structurally invalid or duplicate OID
+arc sequences, permits an empty fail-closed set, and retains the exact accepted
+set beside non-copyable certificate-bound role evidence. OID matching is exact;
+policy membership is still recognition only and does not decode or validate an
+extension value, grant a certificate role, or establish trust. A second bounded
+gate now composes the shipped Basic Constraints, Key Usage, and Extended Key
+Usage decoders under one explicit semantic budget. It requires critical `cA = TRUE` plus
 `keyCertSign` for an intended issuing CA, rejects CA or certificate-signing
 assertions for an intended end entity, and returns only borrowed decoded role
 evidence. It deliberately leaves key-usage selection, EKU purpose
