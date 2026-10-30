@@ -1352,6 +1352,7 @@ members = [
   "xtensa-lx6-simulator",
   "pa-risc11-simulator",
   "x509-rsa-public-key",
+  "x509-rsa-algorithm-policy",
   "rsa-pkcs1-v1-5-sha256",
   "rsa-pss-mgf1-sha256",
   "rsa-public-operation",
