@@ -5,9 +5,9 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/gc.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-lines=80 --test dist-test/tests/gc.test.js"
   },
   "keywords": [
     "garbage-collector",
@@ -21,8 +21,6 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "@vitest/coverage-v8": "^4.1.11",
-    "typescript": "^5.0.0",
-    "vitest": "^4.1.11"
+    "typescript": "^5.0.0"
   }
 }
