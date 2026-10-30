@@ -11,4 +11,5 @@ x509-certificate = { path = "../x509-certificate" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-name = { path = "../x509-name" }
 x509-rsa-pkcs1-v1-5-sha512-signature = { path = "../x509-rsa-pkcs1-v1-5-sha512-signature" }
+x509-rsa-algorithm-policy = { path = "../x509-rsa-algorithm-policy" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
