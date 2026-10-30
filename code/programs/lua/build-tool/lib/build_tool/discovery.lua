@@ -32,6 +32,39 @@ local lfs_ok, lfs = pcall(require, "lfs")
 
 local Discovery = {}
 
+--- Quote one filesystem path for the host shell.
+--
+-- The fallback exists specifically for installations without LuaFileSystem,
+-- so it cannot ask another Lua library to launch a process with an argv
+-- array. POSIX single quotes can represent every byte except NUL. Windows'
+-- cmd.exe has no equally general quoting rule: percent and exclamation marks
+-- can expand before or during execution, and an embedded quote can end the
+-- protected argument. Reject those spellings instead of turning a repository
+-- path into shell syntax.
+--
+-- @param path string The path that will occupy one shell argument.
+-- @param goos string The normalized host name from detect_os.
+-- @return string The safely quoted shell argument.
+local function quote_shell_path(path, goos)
+    if path:find("\0", 1, true) then
+        error("discovery path contains NUL byte", 0)
+    end
+
+    if goos == "windows" then
+        if path:find('"', 1, true)
+            or path:find("%", 1, true)
+            or path:find("!", 1, true)
+            or path:find("\r", 1, true)
+            or path:find("\n", 1, true)
+        then
+            error("cannot safely quote Windows discovery path", 0)
+        end
+        return '"' .. path .. '"'
+    end
+
+    return "'" .. path:gsub("'", "'\\''") .. "'"
+end
+
 -- KNOWN_LANGUAGES lists the language directory names we look for when
 -- inferring which ecosystem a package belongs to.
 local KNOWN_LANGUAGES = {
@@ -98,14 +131,28 @@ end
 --- Check if a directory exists.
 --
 -- @param path string The directory path.
+-- @param options table|nil Optional fallback dependencies for deterministic tests.
 -- @return boolean
-function Discovery.dir_exists(path)
-    if lfs_ok then
+function Discovery.dir_exists(path, options)
+    options = options or {}
+    if lfs_ok and not options.force_fallback then
         local attr = lfs.attributes(path)
         return attr ~= nil and attr.mode == "directory"
     else
-        -- Fallback: try to open the directory with os.execute
-        local ok = os.execute('cd "' .. path .. '" 2>/dev/null')
+        -- Fallback: ask the native shell to enter the directory. The null
+        -- device is platform syntax, too: cmd.exe would interpret
+        -- "2>/dev/null" as a repository-relative output path and can report
+        -- success after discarding the intended probe.
+        local goos = options.goos or Discovery.detect_os()
+        local quoted_path = quote_shell_path(path, goos)
+        local command
+        if goos == "windows" then
+            command = "cd /d " .. quoted_path .. " 2>nul"
+        else
+            command = "cd " .. quoted_path .. " 2>/dev/null"
+        end
+        local execute = options.execute or os.execute
+        local ok = execute(command)
         return ok == true or ok == 0
     end
 end
@@ -205,11 +252,13 @@ end
 --- List subdirectories of a directory.
 --
 -- @param directory string The parent directory.
+-- @param options table|nil Optional fallback dependencies for deterministic tests.
 -- @return table A sorted list of subdirectory paths.
-function Discovery.list_subdirs(directory)
+function Discovery.list_subdirs(directory, options)
+    options = options or {}
     local dirs = {}
 
-    if lfs_ok then
+    if lfs_ok and not options.force_fallback then
         for name in lfs.dir(directory) do
             if name ~= "." and name ~= ".." then
                 local full_path = directory .. "/" .. name
@@ -221,20 +270,26 @@ function Discovery.list_subdirs(directory)
         end
     else
         -- Fallback: use ls or dir command.
-        local sep = package.config:sub(1, 1)
+        local goos = options.goos or Discovery.detect_os()
+        local quoted_directory = quote_shell_path(directory, goos)
         local cmd
-        if sep == "\\" then
-            cmd = 'dir /b /ad "' .. directory .. '" 2>nul'
+        if goos == "windows" then
+            cmd = "dir /b /ad " .. quoted_directory .. " 2>nul"
         else
-            cmd = 'ls -1 "' .. directory .. '" 2>/dev/null'
+            cmd = "ls -1 " .. quoted_directory .. " 2>/dev/null"
         end
-        local handle = io.popen(cmd)
+        local popen = options.popen or io.popen
+        local handle = popen(cmd)
         if handle then
             for raw_name in handle:lines() do
                 local name = raw_name:match("^%s*(.-)%s*$")
                 if name ~= "" then
                     local full_path = directory .. "/" .. name
-                    if Discovery.dir_exists(full_path) then
+                    if Discovery.dir_exists(full_path, {
+                        force_fallback = true,
+                        goos = goos,
+                        execute = options.execute,
+                    }) then
                         dirs[#dirs + 1] = full_path
                     end
                 end
