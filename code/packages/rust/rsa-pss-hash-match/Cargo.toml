@@ -1,0 +1,7 @@
+[package]
+name = "rsa-pss-hash-match"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 8017 RSA-PSS hash-field matching"
+
+[dependencies]

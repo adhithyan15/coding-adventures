@@ -888,6 +888,19 @@ select an implementation, hash, run MGF1, validate PSS encoding, parse or
 operate on an RSA key, apply RSAVP1, or establish a signature verdict.
 Certificate processing, path and hostname validation, trust roots, revocation,
 TLS, HTTP, OAuth transport, and network effects remain unavailable.
+A bounded, data-driven `rsa-pss-hash-match` prerequisite now validates the
+public hash-field comparison consumed by a future RFC 8017 EMSA-PSS verifier.
+Caller policy supplies the selected digest length and comparison ceiling. The
+gate requires complete recomputed `H'` and encoded `H` values at that exact
+length, consumes every selected byte without reporting a mismatch position,
+and returns borrowed non-copyable evidence only when the values match.
+
+This hash-match evidence does not construct or hash `M'`, run MGF1, validate a
+PSS data block, parse or operate on an RSA key, apply RSAVP1, select an
+algorithm, or establish a signature verdict. Certificate processing, path and
+hostname validation, trust roots, revocation, TLS, HTTP, OAuth transport, and
+network effects remain unavailable. It makes no constant-time guarantee.
+
 
 A bounded `x509-rsassa-pss-parameters` prerequisite now decodes the public
 RFC 4055 / RFC 8017 parameter structure carried by an X.509 signature
