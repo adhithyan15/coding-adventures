@@ -36,6 +36,10 @@ DEFAULT_ALLOWLISTS = {
     "ruby": Path("code/specs/data/third-party-dependencies/ruby-allowlist.json"),
     "go": Path("code/specs/data/third-party-dependencies/go-allowlist.json"),
     "go-tools": Path("code/specs/data/third-party-dependencies/go-tool-allowlist.json"),
+    "elixir": Path("code/specs/data/third-party-dependencies/elixir-allowlist.json"),
+    "elixir-tools": Path(
+        "code/specs/data/third-party-dependencies/elixir-tool-allowlist.json"
+    ),
 }
 PYTHON_NAME = re.compile(
     r"([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
@@ -61,6 +65,20 @@ GO_TOOL_COMMAND_START = re.compile(
     r"(?:(?:if|then|do|sudo|command|exec|time|env)[ \t]+|![ \t]*)*"
     r"(?:[A-Za-z_][A-Za-z0-9_]*=[^ \t]+[ \t]+)*"
     r"(?:[A-Za-z0-9_.\\/-]+[\\/])?go[ \t]+(?P<action>install|get|run)\b"
+)
+MIX_APP_DECLARATION = re.compile(r"\bapp\s*:\s*:(?P<name>[A-Za-z_]\w*)")
+MIX_DEPENDENCY_DECLARATION = re.compile(
+    r"\{\s*:(?P<name>[A-Za-z_]\w*)\s*,(?P<body>.*?)\}", re.DOTALL
+)
+MIX_PATH_OPTION = re.compile(
+    r"\bpath\s*:\s*(?P<quote>['\"])(?P<path>[^'\"]+)(?P=quote)"
+)
+MIX_TOOL_COMMAND_START = re.compile(
+    r"(?:^|[;&|()]|[ \t-]run:[ \t]|=[ \t]*[\"'])[ \t]*(?:-[ \t]+)?"
+    r"(?:(?:if|then|do|sudo|command|exec|time|env)[ \t]+|![ \t]*)*"
+    r"(?:[A-Za-z_][A-Za-z0-9_]*=[^ \t]+[ \t]+)*"
+    r"(?:[A-Za-z0-9_.\\/-]+[\\/])?mix[ \t]+"
+    r"(?P<action>archive\.install|escript\.install|local\.hex|local\.rebar)\b"
 )
 AUTOMATION_TOOL_SOURCE_PATHS = (
     ":(glob).github/**/*.yml",
@@ -267,6 +285,22 @@ def git_go_manifests(root: Path) -> list[Path]:
     )
 
 
+def git_elixir_manifests(root: Path) -> list[Path]:
+    """Return every tracked Elixir Mix manifest."""
+
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", ":(glob)**/mix.exs"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return sorted(
+        root / raw_path.decode("utf-8", errors="surrogateescape")
+        for raw_path in result.stdout.split(b"\0")
+        if raw_path
+    )
+
+
 def git_npm_tool_sources(root: Path) -> list[Path]:
     """Return tracked automation files that can acquire npm tools."""
 
@@ -310,6 +344,12 @@ def git_go_tool_sources(root: Path) -> list[Path]:
         for raw_path in result.stdout.split(b"\0")
         if raw_path
     )
+
+
+def git_elixir_tool_sources(root: Path) -> list[Path]:
+    """Return tracked automation files that can acquire Mix tools."""
+
+    return git_npm_tool_sources(root)
 
 
 def tracked_text_document(path: Path, repository_root: Path) -> str:
@@ -1498,6 +1538,177 @@ def build_go_tool_inventory(
     return {name: sorted(paths) for name, paths in sorted(inventory.items())}
 
 
+def elixir_without_comments(text: str) -> str:
+    """Remove line comments while preserving quoted dependency values."""
+
+    output: list[str] = []
+    for line in text.splitlines():
+        quote: str | None = None
+        escaped = False
+        kept: list[str] = []
+        for character in line:
+            if escaped:
+                kept.append(character)
+                escaped = False
+                continue
+            if character == "\\" and quote is not None:
+                kept.append(character)
+                escaped = True
+                continue
+            if character in {"'", '"'}:
+                if quote == character:
+                    quote = None
+                elif quote is None:
+                    quote = character
+                kept.append(character)
+                continue
+            if character == "#" and quote is None:
+                break
+            kept.append(character)
+        output.append("".join(kept))
+    return "\n".join(output)
+
+
+def parse_mix_manifest(
+    text: str, manifest: Path
+) -> tuple[str, list[tuple[str, str | None]]]:
+    """Return the literal app identity and dependency declarations."""
+
+    source = elixir_without_comments(text)
+    app_names = [match.group("name") for match in MIX_APP_DECLARATION.finditer(source)]
+    if len(app_names) != 1:
+        raise PolicyError(f"{manifest} must contain exactly one literal app name")
+    dependencies: list[tuple[str, str | None]] = []
+    for match in MIX_DEPENDENCY_DECLARATION.finditer(source):
+        body = match.group("body")
+        path_matches = list(MIX_PATH_OPTION.finditer(body))
+        if re.search(r"\bpath\s*:", body) and len(path_matches) != 1:
+            raise PolicyError(f"{manifest} has an unsupported Mix path declaration")
+        dependencies.append(
+            (
+                match.group("name"),
+                path_matches[0].group("path") if path_matches else None,
+            )
+        )
+    return app_names[0], dependencies
+
+
+def build_elixir_inventory(
+    root: Path, manifests: Iterable[Path]
+) -> dict[str, list[str]]:
+    """Map third-party Hex package names to Mix manifests."""
+
+    manifest_list = list(manifests)
+    documents = tracked_text_documents(manifest_list, root)
+    parsed = {
+        manifest.resolve(): parse_mix_manifest(documents[manifest], manifest)
+        for manifest in manifest_list
+    }
+    tracked_apps = {manifest: document[0] for manifest, document in parsed.items()}
+    inventory: dict[str, list[str]] = {}
+    for manifest in manifest_list:
+        _, dependencies = parsed[manifest.resolve()]
+        display_path = manifest.relative_to(root).as_posix()
+        for name, dependency_path in dependencies:
+            if dependency_path is not None:
+                candidate = (manifest.parent / dependency_path / "mix.exs").resolve()
+                try:
+                    candidate.relative_to(root.resolve())
+                except ValueError:
+                    pass
+                else:
+                    if tracked_apps.get(candidate) == name:
+                        continue
+            inventory.setdefault(name, []).append(display_path)
+    return {name: sorted(set(paths)) for name, paths in sorted(inventory.items())}
+
+
+def mix_tool_package_name(arguments: list[str]) -> str | None:
+    """Return the named Hex package acquired by a Mix installer."""
+
+    operands = [argument for argument in arguments if not argument.startswith("-")]
+    if not operands:
+        raise PolicyError("Mix installer requires a package source")
+    source = operands[0]
+    if any(marker in source for marker in ("$", "`", "{", "}")):
+        raise PolicyError(f"dynamic Mix tool source {source!r} is not allowed")
+    if source in {"git", "github"} or source.startswith(("git:", "http:", "https:")):
+        raise PolicyError("Mix tool installs must use a named Hex package")
+    if source.startswith((".", "/", "\\")):
+        return None
+    if source == "hex":
+        if len(operands) < 2:
+            raise PolicyError("Mix hex installer requires a package name")
+        source = operands[1]
+    source = source.removeprefix(":")
+    if re.fullmatch(r"[a-z][A-Za-z0-9_-]*", source) is None:
+        raise PolicyError(f"invalid Mix tool package {source!r}")
+    return source
+
+
+def mix_tool_names(command: str) -> set[str]:
+    """Return packages acquired by executable Mix installer commands."""
+
+    names: set[str] = set()
+    normalized = command.replace("\\\n", " ")
+    for line in normalized.splitlines():
+        if line.lstrip().startswith("#"):
+            continue
+        for match in MIX_TOOL_COMMAND_START.finditer(line):
+            action = match.group("action")
+            if action == "local.hex":
+                names.add("hex")
+                continue
+            if action == "local.rebar":
+                names.add("rebar3")
+                continue
+            name = mix_tool_package_name(command_arguments(line, match.end()))
+            if name is not None:
+                names.add(name)
+    return names
+
+
+def build_elixir_tool_inventory(
+    root: Path,
+    sources: Iterable[Path],
+    manifests: Iterable[Path],
+) -> dict[str, list[str]]:
+    """Map Mix tools acquired by tracked automation to their source files."""
+
+    source_list = list(sources)
+    manifest_list = list(manifests)
+    documents = tracked_text_documents([*source_list, *manifest_list], root)
+    inventory: dict[str, set[str]] = {}
+    for source in source_list:
+        display_path = source.relative_to(root).as_posix()
+        try:
+            names = mix_tool_names(documents[source])
+        except PolicyError as error:
+            raise PolicyError(f"cannot parse {display_path}: {error}") from error
+        for name in names:
+            inventory.setdefault(name, set()).add(display_path)
+    for manifest in manifest_list:
+        document = parse_json_manifest_text(documents[manifest], manifest)
+        scripts = document.get("scripts")
+        if scripts is None:
+            continue
+        if not isinstance(scripts, Mapping):
+            raise PolicyError(f"{manifest} scripts must be a JSON object")
+        display_path = manifest.relative_to(root).as_posix()
+        for script_name, command in scripts.items():
+            if not isinstance(script_name, str) or not isinstance(command, str):
+                raise PolicyError(f"{manifest} scripts must map strings to strings")
+            try:
+                names = mix_tool_names(command)
+            except PolicyError as error:
+                raise PolicyError(
+                    f"cannot parse {display_path} script {script_name!r}: {error}"
+                ) from error
+            for name in names:
+                inventory.setdefault(name, set()).add(display_path)
+    return {name: sorted(paths) for name, paths in sorted(inventory.items())}
+
+
 def validate_allowlist(
     document: Any, label: str, ecosystem: str = "cargo"
 ) -> list[str]:
@@ -1615,6 +1826,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "ruby",
             "go",
             "go-tools",
+            "elixir",
+            "elixir-tools",
         ),
         default="cargo",
     )
@@ -1671,10 +1884,21 @@ def main(argv: list[str] | None = None) -> int:
             inventory = build_go_inventory(root, manifests)
             input_count = len(manifests)
             input_label = "manifests"
-        else:
+        elif args.ecosystem == "go-tools":
             sources = git_go_tool_sources(root)
             manifests = git_npm_manifests(root)
             inventory = build_go_tool_inventory(root, sources, manifests)
+            input_count = len(sources) + len(manifests)
+            input_label = "automation inputs"
+        elif args.ecosystem == "elixir":
+            manifests = git_elixir_manifests(root)
+            inventory = build_elixir_inventory(root, manifests)
+            input_count = len(manifests)
+            input_label = "manifests"
+        else:
+            sources = git_elixir_tool_sources(root)
+            manifests = git_npm_manifests(root)
+            inventory = build_elixir_tool_inventory(root, sources, manifests)
             input_count = len(sources) + len(manifests)
             input_label = "automation inputs"
     except (PolicyError, subprocess.CalledProcessError) as error:

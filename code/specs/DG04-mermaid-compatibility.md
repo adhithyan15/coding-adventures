@@ -170,6 +170,11 @@ is incomplete.
 C4 accessibility titles and single-line or block descriptions are grammar-first
 and survive semantic IR plus structural layout into backend-neutral PaintScene
 metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
+diagram titles may come from YAML front matter or an inline `title` statement,
+with inline titles taking precedence. Standard Mermaid init directives and comments
+are removed before C4 grammar parsing while preserving source line positions; the
+resolved title then survives semantic IR, structural layout, and backend-neutral
+text paint. C4
 bidirectional and backward relationships also preserve their authored endpoint
 arrows through structural layout and backend-neutral PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
@@ -184,9 +189,11 @@ receive pinned Mermaid sequence numbers during layout, and legacy `RelIndex`
 arguments lower to the same relationship semantics without treating the authored
 index as an endpoint. Database and queue element macros preserve typed node
 kinds through structural layout and lower to backend-neutral cylinder and queue
-paths, with pinned Metal-to-PNG coverage. Deployment node technology and
-description survive typed group metadata and structural layout, and deployment
-containers lower with Mermaid's solid border plus portable detail text. C4
+paths, with pinned Metal-to-PNG coverage. Deployment node macro identities,
+technology, and description survive typed group metadata and structural layout.
+Normal, left, and right node variants lower to PaintScene metadata, while
+deployment containers retain Mermaid's shared solid border geometry and portable
+detail text. C4
 boundary macros preserve their fixed or authored type labels through the same
 pipeline, while macro names remain implementation syntax rather than visible
 diagram text. C4 element macros likewise preserve Mermaid's normalized person,
@@ -198,8 +205,25 @@ Core `UpdateRelStyle` text and line
 colors plus keyed or positional label offsets likewise survive semantic IR,
 layout, and backend-neutral PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
 semantic IR; shape row limits control structural layout while both values lower
-to backend-neutral PaintScene metadata. C4 remains partial while its remaining
-macro semantics and visual corpus are incomplete.
+to backend-neutral PaintScene metadata. C4 directional relationship macros,
+including their short and long spellings, preserve typed direction hints through
+semantic and layout IR into PaintScene metadata while retaining the pinned
+renderer's ordinary portable relationship geometry. Keyed and positional custom
+tags on elements, boundaries, deployment nodes, and relationships likewise survive
+typed semantic metadata and structural layout into PaintScene metadata. They do
+not alter geometry or styling because pinned Mermaid 11.16.1 stores tags without
+rendering them. Keyed and positional links on those same C4 entities also survive
+the pipeline into backend-neutral PaintScene URL metadata; element and group links
+include layout bounds for portable hit testing, while link metadata does not alter
+geometry. Keyed and positional sprite identities on elements, deployment nodes,
+and relationships are also retained through PaintScene metadata without claiming
+sprite rendering, which pinned Mermaid documents as unfinished. The remaining
+`UpdateElementStyle` shadowing, shape, sprite, technology, and legend values are
+grammar-first semantic metadata, including the documented shape helper forms, and
+survive layout into PaintScene metadata. Only the already-supported colors and
+technology affect paint; pinned Mermaid stores the other values without rendering
+them, so this implementation does not claim visual behavior for them. C4 remains
+partial while its remaining macro semantics and visual corpus are incomplete.
 
 ## Required New Semantic Families
 

@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.37.0";
+pub const VERSION: &str = "0.39.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -494,6 +494,7 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
                 stereotype: structural_stereotype(node),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
+                metadata: node.metadata.clone(),
                 style: structural_style(node, architecture_config),
                 compartments: comps,
             },
@@ -583,6 +584,7 @@ fn layout_directional_nodes(
                 stereotype: structural_stereotype(node),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
+                metadata: node.metadata.clone(),
                 style: structural_style(node, architecture_config),
                 compartments,
             },
@@ -1492,6 +1494,7 @@ fn layout_relationships(
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
                 label,
+                metadata: rel.metadata.clone(),
                 style: structural_relationship_style(rel),
             })
         })
@@ -1613,7 +1616,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.37.0");
+        assert_eq!(crate::VERSION, "0.39.0");
     }
 
     #[test]

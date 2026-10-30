@@ -751,6 +751,128 @@ class GoToolTests(unittest.TestCase):
             )
 
 
+class ElixirManifestTests(unittest.TestCase):
+    def test_collects_external_and_verified_local_mix_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "mix.exs"
+            local = root / "local" / "mix.exs"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """defmodule App.MixProject do
+  use Mix.Project
+  def project, do: [app: :app, deps: deps()]
+  defp deps do
+    [
+      {:local_app,
+       path: "../local"},
+      {:jason, "~> 1.4"}
+    ]
+  end
+end
+""",
+                encoding="utf-8",
+            )
+            local.write_text(
+                "defmodule Local.MixProject do\n"
+                "  use Mix.Project\n"
+                "  def project, do: [app: :local_app]\n"
+                "end\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_elixir_inventory(root, [app, local]),
+                {"jason": ["app/mix.exs"]},
+            )
+
+    def test_untracked_outside_and_mismatched_mix_paths_are_not_trusted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "mix.exs"
+            local = root / "local" / "mix.exs"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """defmodule App.MixProject do
+  use Mix.Project
+  def project, do: [app: :app]
+  defp deps, do: [
+    {:untracked, path: "../untracked"},
+    {:outside, path: "../../../outside"},
+    {:wrong_name, path: "../local"}
+  ]
+end
+""",
+                encoding="utf-8",
+            )
+            local.write_text(
+                "defmodule Local.MixProject do\n"
+                "  use Mix.Project\n"
+                "  def project, do: [app: :local_app]\n"
+                "end\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_elixir_inventory(root, [app, local]),
+                {
+                    "outside": ["app/mix.exs"],
+                    "untracked": ["app/mix.exs"],
+                    "wrong_name": ["app/mix.exs"],
+                },
+            )
+
+    def test_rejects_dynamic_mix_path_declarations(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "mix.exs"
+            manifest.write_text(
+                "def project, do: [app: :app]\n"
+                "defp deps, do: [{:local, path: local_path()}]\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "unsupported Mix path"):
+                policy.build_elixir_inventory(root, [manifest])
+
+    def test_sparse_inventory_discovers_absent_mix_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            manifest = root / "nested" / "mix.exs"
+            manifest.parent.mkdir()
+            manifest.write_text(
+                'def project, do: [app: :demo]\ndefp deps, do: [{:jason, "~> 1.4"}]\n',
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            manifest.unlink()
+
+            manifests = policy.git_elixir_manifests(root)
+            inventory = policy.build_elixir_inventory(root, manifests)
+
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(inventory, {"jason": ["nested/mix.exs"]})
+
+
+class ElixirToolTests(unittest.TestCase):
+    def test_collects_named_mix_installers(self) -> None:
+        self.assertEqual(
+            policy.mix_tool_names(
+                "mix archive.install hex phx_new --force && "
+                "mix escript.install dialyxir; "
+                "mix local.hex --force; mix local.rebar --force"
+            ),
+            {"dialyxir", "hex", "phx_new", "rebar3"},
+        )
+
+    def test_rejects_unnamed_remote_mix_installers(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "named Hex package"):
+            policy.mix_tool_names("mix archive.install github owner/project")
+
+
 class RubyManifestTests(unittest.TestCase):
     def test_collects_gemfile_and_gemspec_dependencies(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

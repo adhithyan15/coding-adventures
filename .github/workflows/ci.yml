@@ -706,6 +706,11 @@ jobs:
           # automation and go:generate directives is frozen separately.
           python3 code/scripts/third_party_dependency_policy.py check --ecosystem go --base-ref origin/main
           python3 code/scripts/third_party_dependency_policy.py check --ecosystem go-tools --base-ref origin/main
+          # Mix dependencies are local only through tracked path targets with
+          # matching app identities. Ad-hoc Mix installers are frozen in their
+          # own currently-empty monotone inventory.
+          python3 code/scripts/third_party_dependency_policy.py check --ecosystem elixir --base-ref origin/main
+          python3 code/scripts/third_party_dependency_policy.py check --ecosystem elixir-tools --base-ref origin/main
           python3 -m unittest discover -s code/scripts/tests -p 'test_third_party_dependency_policy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_neural_framework_windows_ci.py'
@@ -761,6 +766,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_image_codec_png_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_typescript_tsconfig_portability.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_sha_haskell_build_front.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_capability_gate.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_tracked_artifact_unicode17.py'

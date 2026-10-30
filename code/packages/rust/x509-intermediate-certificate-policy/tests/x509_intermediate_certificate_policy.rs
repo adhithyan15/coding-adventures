@@ -1,13 +1,16 @@
 use der_asn1::{Asn1Decoder, Asn1Limits};
-use x509_certificate::decode_x509_certificate;
+use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_policy::{
     classify_certificate_self_issued, validate_certificate_algorithm_policy,
     validate_certificate_role_policy, X509AlgorithmParametersPolicy,
     X509CertificateAlgorithmProfile, X509CertificateRole, X509CertificateValidityErrorKind,
 };
 use x509_intermediate_certificate_policy::{
-    validate_x509_intermediate_certificate_policy, X509IntermediateCertificatePolicyErrorKind,
+    validate_x509_intermediate_certificate_policy,
+    validate_x509_intermediate_name_constraints_policy, ValidatedX509IntermediateCertificatePolicy,
+    X509IntermediateCertificatePolicyErrorKind, X509IntermediateNameConstraintsPolicyErrorKind,
 };
+use x509_name_constraints::NAME_CONSTRAINTS_OID;
 use x509_time::{decode_x509_time, X509Time};
 
 const SIGNATURE_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
@@ -16,6 +19,7 @@ const KEY_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0
 const KEY_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 1];
 const KEY_USAGE_OID_DER: &[u8] = &[0x55, 0x1d, 0x0f];
 const BASIC_CONSTRAINTS_OID_DER: &[u8] = &[0x55, 0x1d, 0x13];
+const NAME_CONSTRAINTS_OID_DER: &[u8] = &[0x55, 0x1d, 0x1e];
 const NULL_DER: &[u8] = &[0x05, 0x00];
 
 fn der(tag: u8, value: &[u8]) -> Vec<u8> {
@@ -55,6 +59,10 @@ fn extension(oid: &[u8], critical: bool, value: &[u8]) -> Vec<u8> {
 }
 
 fn certificate(issuing_ca: bool) -> Vec<u8> {
+    certificate_with_extra_extensions(issuing_ca, &[])
+}
+
+fn certificate_with_extra_extensions(issuing_ca: bool, extra_extensions: &[Vec<u8>]) -> Vec<u8> {
     let mut validity = der(0x17, b"260101000000Z");
     validity.extend(der(0x17, b"270101000000Z"));
 
@@ -68,15 +76,19 @@ fn certificate(issuing_ca: bool) -> Vec<u8> {
     tbs.extend(der(0x30, &validity));
     tbs.extend(name(b"intermediate.example"));
     tbs.extend(der(0x30, &subject_public_key_info));
+    let mut extensions = Vec::new();
     if issuing_ca {
-        let extensions = [
+        extensions.extend([
             extension(
                 BASIC_CONSTRAINTS_OID_DER,
                 true,
                 &der(0x30, &der(0x01, &[0xff])),
             ),
             extension(KEY_USAGE_OID_DER, true, &der(0x03, &[0x02, 0x04])),
-        ];
+        ]);
+    }
+    extensions.extend(extra_extensions.iter().cloned());
+    if !extensions.is_empty() {
         tbs.extend(der(0xa3, &der(0x30, &extensions.concat())));
     }
 
@@ -84,6 +96,26 @@ fn certificate(issuing_ca: bool) -> Vec<u8> {
     fields.extend(algorithm(SIGNATURE_OID_DER));
     fields.extend(der(0x03, &[0x00, 0xde, 0xad]));
     der(0x30, &fields)
+}
+
+fn name_constraints(permitted_dns_subtrees: &[&[u8]], critical: bool) -> Vec<u8> {
+    name_constraints_with_ip(permitted_dns_subtrees, &[], critical)
+}
+
+fn name_constraints_with_ip(
+    permitted_dns_subtrees: &[&[u8]],
+    permitted_ip_subtrees: &[&[u8]],
+    critical: bool,
+) -> Vec<u8> {
+    let mut subtrees = Vec::new();
+    for subtree in permitted_dns_subtrees {
+        subtrees.extend(der(0x30, &der(0x82, subtree)));
+    }
+    for subtree in permitted_ip_subtrees {
+        subtrees.extend(der(0x30, &der(0x87, subtree)));
+    }
+    let value = der(0x30, &der(0xa0, &subtrees));
+    extension(NAME_CONSTRAINTS_OID_DER, critical, &value)
 }
 
 fn algorithm_profiles() -> [X509CertificateAlgorithmProfile<'static>; 1] {
@@ -104,6 +136,28 @@ fn time(value: &[u8; 13]) -> X509Time {
     let encoded = der(0x17, value);
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     decode_x509_time(decoder.decode_exact(&encoded).unwrap()).unwrap()
+}
+
+fn intermediate_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+) -> ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded> {
+    let role_policy = validate_certificate_role_policy(
+        certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(certificate, &algorithm_profiles()).unwrap();
+    let classification = classify_certificate_self_issued(certificate, |_, _| false);
+    validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        classification,
+        &time(b"260701120000Z"),
+    )
+    .unwrap()
 }
 
 #[test]
@@ -312,4 +366,127 @@ fn inclusive_validity_endpoints_are_accepted() {
         )
         .unwrap();
     }
+}
+
+#[test]
+fn retains_absent_name_constraints_for_the_exact_intermediate() {
+    let encoded = certificate(true);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let intermediate = intermediate_policy(&certificate);
+
+    let evidence =
+        validate_x509_intermediate_name_constraints_policy(intermediate, Asn1Limits::default())
+            .unwrap();
+
+    assert!(std::ptr::eq(evidence.certificate(), &certificate));
+    assert!(evidence.name_constraints().is_none());
+    assert!(std::ptr::eq(
+        evidence.intermediate_policy().certificate(),
+        &certificate
+    ));
+    assert_eq!(
+        format!("{evidence:?}"),
+        "ValidatedX509IntermediateNameConstraintsPolicy { has_name_constraints: false, .. }"
+    );
+}
+
+#[test]
+fn retains_decoded_critical_name_constraints() {
+    let ipv4_subnet = [192, 0, 2, 0, 255, 255, 255, 0];
+    let extra = [name_constraints_with_ip(
+        &[b".example.test"],
+        &[&ipv4_subnet],
+        true,
+    )];
+    let encoded = certificate_with_extra_extensions(true, &extra);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+
+    let evidence = validate_x509_intermediate_name_constraints_policy(
+        intermediate_policy(&certificate),
+        Asn1Limits::default(),
+    )
+    .unwrap();
+    let constraints = evidence.name_constraints().unwrap();
+
+    assert_eq!(constraints.permitted_dns_subtrees(), &[".example.test"]);
+    assert!(constraints.excluded_dns_subtrees().is_empty());
+    assert_eq!(
+        constraints.permitted_ip_subtrees(),
+        &[ipv4_subnet.as_slice()]
+    );
+    assert!(constraints.excluded_ip_subtrees().is_empty());
+    assert!(certificate
+        .tbs_certificate()
+        .extensions()
+        .unwrap()
+        .iter()
+        .any(|extension| extension.extension_id().equals(NAME_CONSTRAINTS_OID)));
+}
+
+#[test]
+fn rejects_noncritical_name_constraints_before_decoding() {
+    let extra = [extension(
+        NAME_CONSTRAINTS_OID_DER,
+        false,
+        b"secret-invalid-constraints",
+    )];
+    let encoded = certificate_with_extra_extensions(true, &extra);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+
+    let error = validate_x509_intermediate_name_constraints_policy(
+        intermediate_policy(&certificate),
+        Asn1Limits::default(),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509IntermediateNameConstraintsPolicyErrorKind::NonCriticalNameConstraints
+    );
+    assert!(!error.to_string().contains("secret-invalid-constraints"));
+}
+
+#[test]
+fn maps_and_redacts_invalid_critical_name_constraints() {
+    let extra = [extension(
+        NAME_CONSTRAINTS_OID_DER,
+        true,
+        b"secret-invalid-constraints",
+    )];
+    let encoded = certificate_with_extra_extensions(true, &extra);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+
+    let error = validate_x509_intermediate_name_constraints_policy(
+        intermediate_policy(&certificate),
+        Asn1Limits::default(),
+    )
+    .unwrap_err();
+
+    assert!(matches!(
+        error.kind(),
+        X509IntermediateNameConstraintsPolicyErrorKind::InvalidNameConstraints(_)
+    ));
+    assert!(!error.to_string().contains("secret-invalid-constraints"));
+}
+
+#[test]
+fn enforces_the_separate_name_constraints_decoder_budget() {
+    let extra = [name_constraints(&[b".example.test"], true)];
+    let encoded = certificate_with_extra_extensions(true, &extra);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let limits = Asn1Limits {
+        max_total_elements: 1,
+        ..Asn1Limits::default()
+    };
+
+    let error = validate_x509_intermediate_name_constraints_policy(
+        intermediate_policy(&certificate),
+        limits,
+    )
+    .unwrap_err();
+
+    assert!(matches!(
+        error.kind(),
+        X509IntermediateNameConstraintsPolicyErrorKind::InvalidNameConstraints(_)
+    ));
 }
