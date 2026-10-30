@@ -1,4 +1,26 @@
-import { PI, sin, cos, tan, atan, atan2, sqrt, radians, degrees } from "../src/trig";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import { PI, sin, cos, tan, atan, atan2, sqrt, radians, degrees } from "../src/trig.js";
+
+function expect(actual: unknown) {
+  return {
+    toBe(expected: unknown): void {
+      assert.equal(actual, expected);
+    },
+    toBeCloseTo(expected: number, digits = 2): void {
+      assert.equal(typeof actual, "number");
+      const tolerance = 0.5 * 10 ** -digits;
+      assert.ok(
+        Math.abs((actual as number) - expected) < tolerance,
+        `${String(actual)} is not within ${String(tolerance)} of ${String(expected)}`,
+      );
+    },
+    toThrow(): void {
+      assert.equal(typeof actual, "function");
+      assert.throws(actual as () => unknown);
+    },
+  };
+}
 
 describe("Trigonometric Functions", () => {
   // --------------------------------------------------------------------------
