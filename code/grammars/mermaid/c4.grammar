@@ -11,5 +11,5 @@ metadata_stmt = ACC_TITLE | ACC_DESCR | ACC_DESCR_BLOCK ;
 boundary_stmt = BOUNDARY_MACRO arguments [ NEWLINE ] LBRACE { NEWLINE | statement } RBRACE ;
 
 arguments = LPAREN [ argument ] { COMMA [ argument ] } RPAREN ;
-argument = STRING | IDENTIFIER | NUMBER | key_value ;
-key_value = KV_KEY EQUALS ( STRING | IDENTIFIER | NUMBER ) ;
+argument = STRING | IDENTIFIER | NUMBER | STYLE_FUNCTION | key_value ;
+key_value = KV_KEY EQUALS ( STRING | IDENTIFIER | NUMBER | STYLE_FUNCTION ) ;

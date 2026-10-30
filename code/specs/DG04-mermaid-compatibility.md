@@ -212,8 +212,13 @@ the pipeline into backend-neutral PaintScene URL metadata; element and group lin
 include layout bounds for portable hit testing, while link metadata does not alter
 geometry. Keyed and positional sprite identities on elements, deployment nodes,
 and relationships are also retained through PaintScene metadata without claiming
-sprite rendering, which pinned Mermaid documents as unfinished. C4 remains partial
-while its remaining macro semantics and visual corpus are incomplete.
+sprite rendering, which pinned Mermaid documents as unfinished. The remaining
+`UpdateElementStyle` shadowing, shape, sprite, technology, and legend values are
+grammar-first semantic metadata, including the documented shape helper forms, and
+survive layout into PaintScene metadata. Only the already-supported colors and
+technology affect paint; pinned Mermaid stores the other values without rendering
+them, so this implementation does not claim visual behavior for them. C4 remains
+partial while its remaining macro semantics and visual corpus are incomplete.
 
 ## Required New Semantic Families
 
