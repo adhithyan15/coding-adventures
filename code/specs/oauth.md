@@ -1354,6 +1354,24 @@ extensions, decide freshness or revocation, fetch or cache data, read a clock,
 or grant path, trust, TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-rsa-algorithm-policy` prerequisite selects exactly one
+caller-supplied algorithm/key profile for one structurally decoded
+`BasicOCSPResponse` and one separately validated RSA public key. Each profile
+contains an exact signature-algorithm OID and parameter policy, inclusive RSA
+modulus and signature bit-length ranges, and a canonical strictly increasing
+list of permitted public exponents. Selection rejects unsupported and
+ambiguous identifier/parameter matches before checking the selected profile's
+key and signature bounds. Success returns non-copyable evidence retaining the
+exact response, validated key, and selected profile index, preventing a
+detached policy result from being attached to another response or key. The
+policy evaluates only caller policy and public response/key metadata, so it
+performs no credential access, edit, signing operation, provider action, audit
+or trace emission, I/O, or external effect. It does not select or invoke a
+verifier, authenticate a signature, authorize or match a responder, bind
+status to a certificate or constructed path, decide freshness or revocation,
+establish trust, fetch data, read a clock, or grant TLS, HTTP, OAuth transport,
+or network authority. Concrete HTTPS remains unavailable.
+
 A bounded `x509-ocsp-rsa-pkcs1-v1-5-sha256-signature` prerequisite verifies
 one structurally decoded `BasicOCSPResponse` with one separately
 policy-validated RSA public key. It accepts only the exact
