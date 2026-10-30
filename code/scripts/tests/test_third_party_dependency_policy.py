@@ -616,6 +616,141 @@ local-pkg = { path = "../local", git = "https://example.invalid/local" }
             self.assertEqual(inventory, {"requests": ["nested/pyproject.toml"]})
 
 
+class GoManifestTests(unittest.TestCase):
+    def test_collects_external_and_verified_local_modules(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "go.mod"
+            local = root / "local" / "go.mod"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """module example.com/app
+
+go 1.25
+
+require (
+    example.com/local v0.0.0
+    golang.org/x/sys v0.1.0
+    example.com/old v1.0.0
+)
+
+replace example.com/local => ../local
+replace example.com/old v1.0.0 => example.com/new v1.1.0
+""",
+                encoding="utf-8",
+            )
+            local.write_text("module example.com/local\n\ngo 1.25\n", encoding="utf-8")
+
+            self.assertEqual(
+                policy.build_go_inventory(root, [app, local]),
+                {
+                    "example.com/new": ["app/go.mod"],
+                    "golang.org/x/sys": ["app/go.mod"],
+                },
+            )
+
+    def test_untracked_outside_and_mismatched_replacements_are_not_trusted(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "go.mod"
+            local = root / "local" / "go.mod"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """module example.com/app
+require (
+    example.com/untracked v1.0.0
+    example.com/outside v1.0.0
+    example.com/wrong v1.0.0
+)
+replace example.com/untracked => ../untracked
+replace example.com/outside => ../../../outside
+replace example.com/wrong => ../local
+""",
+                encoding="utf-8",
+            )
+            local.write_text("module example.com/local\n", encoding="utf-8")
+
+            self.assertEqual(
+                policy.build_go_inventory(root, [app, local]),
+                {
+                    "example.com/outside": ["app/go.mod"],
+                    "example.com/untracked": ["app/go.mod"],
+                    "example.com/wrong": ["app/go.mod"],
+                },
+            )
+
+    def test_rejects_malformed_go_mod_dependency_syntax(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "go.mod"
+            manifest.write_text(
+                "module example.com/app\nrequire example.com/broken\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "invalid require"):
+                policy.build_go_inventory(root, [manifest])
+
+    def test_sparse_inventory_discovers_absent_go_mod(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            manifest = root / "nested" / "go.mod"
+            manifest.parent.mkdir()
+            manifest.write_text(
+                "module example.com/app\nrequire golang.org/x/text v0.1.0\n",
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            manifest.unlink()
+
+            manifests = policy.git_go_manifests(root)
+            inventory = policy.build_go_inventory(root, manifests)
+
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(inventory, {"golang.org/x/text": ["nested/go.mod"]})
+
+
+class GoToolTests(unittest.TestCase):
+    def test_collects_remote_go_acquisition_and_ignores_local_targets(self) -> None:
+        self.assertEqual(
+            policy.go_tool_names(
+                "go install golang.org/x/tools/cmd/stringer@v0.1.0 && "
+                "go get example.com/tool@latest; "
+                "go run github.com/example/generator@v2.0.0 --flag; "
+                "go run ./cmd/local; go run main.go"
+            ),
+            {
+                "example.com/tool",
+                "github.com/example/generator",
+                "golang.org/x/tools/cmd/stringer",
+            },
+        )
+
+    def test_rejects_dynamic_go_tool_targets(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "dynamic Go tool target"):
+            policy.go_tool_names("go install $TOOL")
+
+    def test_only_scans_go_generate_directives_in_go_sources(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "generate.go"
+            source.write_text(
+                'package demo\nconst example = "go install ignored.example/tool@v1"\n'
+                "//go:generate go run example.com/generator@v1\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_go_tool_inventory(root, [source], []),
+                {"example.com/generator": ["generate.go"]},
+            )
+
+
 class RubyManifestTests(unittest.TestCase):
     def test_collects_gemfile_and_gemspec_dependencies(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
