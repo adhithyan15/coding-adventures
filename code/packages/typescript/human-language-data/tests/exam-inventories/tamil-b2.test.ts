@@ -43,6 +43,15 @@ describe("the committed Tamil B2 inventory", () => {
     expect(inventory.scope.grammar.note).toContain("not a finite Tamil B2 grammar");
   });
 
+  it("keeps the Tamil Virtual Academy source at the assessment-structure boundary", () => {
+    for (const dimension of EXAM_CONTENT_DIMENSIONS) {
+      expect(inventory.scope[dimension].source, dimension).not.toContain("TVA-CERTIFICATE-RULES");
+    }
+    for (const point of inventory.points) {
+      expect(point.anchorIds, point.id).not.toContain("TVA-CERTIFICATE-RULES");
+    }
+  });
+
   it("preserves the Tamil variety boundary instead of borrowing a generic register claim", () => {
     expect(inventory.about).toContain("contemporary standard written Tamil");
     expect(inventory.about).toContain("standard spoken Tamil");

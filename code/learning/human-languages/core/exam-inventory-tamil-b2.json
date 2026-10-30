@@ -63,8 +63,8 @@
     },
     "grammar": {
       "status": "partial",
-      "source": "CEFR-CV-2020, TVA-CERTIFICATE-RULES, and CA-TAMIL-B2-TASK-SHAPE",
-      "note": "Tamil Virtual Academy demonstrates a real Tamil school-class grammar-assessment boundary and CEFR describes B2 range and control, but neither is a finite Tamil B2 grammar. The points below are a reviewable project selection, not a finite Tamil B2 grammar."
+      "source": "CEFR-CV-2020 and CA-TAMIL-B2-TASK-SHAPE",
+      "note": "CEFR describes generic B2 range and control and the project task shape names the performances to sample, but neither is a finite Tamil B2 grammar. The points below are a reviewable project selection, not a finite Tamil B2 grammar."
     },
     "phonology-orthography": {
       "status": "partial",
@@ -73,8 +73,8 @@
     },
     "lexicon": {
       "status": "partial",
-      "source": "LDCIL-TAMIL-TEXT, TVA-CERTIFICATE-RULES, and CA-TAMIL-B2-TASK-SHAPE",
-      "note": "LDC-IL establishes contemporary domains and the other anchors establish school-text and genre use, but a corpus domain list is not a B2 word list. No source here supplies a level-bounded lemma inventory, frequency threshold, productive collocation set, or regional-variant boundary."
+      "source": "LDCIL-TAMIL-TEXT and CA-TAMIL-B2-TASK-SHAPE",
+      "note": "LDC-IL establishes contemporary domains and the project task shape establishes genre use, but a corpus domain list is not a B2 word list. No source here supplies a level-bounded lemma inventory, frequency threshold, productive collocation set, or regional-variant boundary."
     }
   },
   "probeSemantics": "A point is covered only when every atom in its probe is introduced by a Tamil-track lesson. probe: null means the first source-bounded inventory has no exact lesson-atom mapping for that complete demand. A covered probe would be evidence of named lesson coverage only; it would never be evidence of task performance, mock readiness, B2 attainment, or external certification.",
@@ -92,7 +92,7 @@
       "category": "Communicative functions and discourse",
       "label": "follow and produce a reported feature that distinguishes source, fact, interpretation, and stance",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES", "CA-TAMIL-B2-TASK-SHAPE"],
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
       "note": "The task shape requires reporting, but the current lesson atoms do not jointly name source attribution, fact-opinion distinction, and report organisation."
     },
     {
@@ -108,7 +108,7 @@
       "category": "Communicative functions and discourse",
       "label": "interpret literary or cultural prose for voice, figurative effect, cultural inference, and textual support",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES", "LDCIL-TAMIL-TEXT", "CA-TAMIL-B2-TASK-SHAPE"],
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-TEXT", "CA-TAMIL-B2-TASK-SHAPE"],
       "note": "Aesthetics, prose, and poetry are documented domains, but domain presence neither enumerates interpretive language nor proves literary inference."
     },
     {
@@ -132,7 +132,7 @@
       "category": "Communicative functions and discourse",
       "label": "write a formal interaction text that requests, responds, complains, proposes, or explains for a named audience",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES", "CA-TAMIL-B2-TASK-SHAPE"],
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
       "note": "The project assessment requires audience and register control, but the inventory cannot yet map a complete formal interaction-text repertoire to lesson atoms."
     },
     {
@@ -156,7 +156,7 @@
       "category": "Tamil grammar and register",
       "label": "link claim, reason, result, and conclusion with a varied causal and consequential repertoire",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["CEFR-CV-2020"],
       "note": "The corpus teaches an initial causal repertoire, but no exact atom set demonstrates varied linking through claim, reason, result, and conclusion with discourse-length accuracy and pragmatic choice."
     },
     {
@@ -164,7 +164,7 @@
       "category": "Tamil grammar and register",
       "label": "express real, negative, and contingency-framed conditions across practical and argumentative contexts",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["CEFR-CV-2020"],
       "note": "Named conditional foundations do not demonstrate productive B2 range across practical and argumentative contexts or their register distribution."
     },
     {
@@ -172,7 +172,7 @@
       "category": "Tamil grammar and register",
       "label": "frame unreal situations, consequences, qualifications, and alternative outcomes",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["CEFR-CV-2020"],
       "note": "No exact atom set demonstrates situations, consequences, qualifications, alternatives, and the wider Tamil B2 counterfactual system."
     },
     {
@@ -180,7 +180,7 @@
       "category": "Tamil grammar and register",
       "label": "express obligation, prohibition, recommendation, permission, and degrees of necessity",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["CEFR-CV-2020"],
       "note": "Obligation and prohibition are taught foundations, but recommendation, permission, mitigation, degrees of necessity, and register-sensitive force lack an exact complete probe."
     },
     {
@@ -188,7 +188,7 @@
       "category": "Tamil grammar and register",
       "label": "organise extended time relations with sequence, anteriority, simultaneity, duration, and boundaries",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["CEFR-CV-2020"],
       "note": "Several time relations are taught foundations, but simultaneity and the full extended-text tense-aspect and discourse-time boundary lack an exact complete probe."
     },
     {
@@ -196,7 +196,7 @@
       "category": "Tamil grammar and register",
       "label": "choose past, ongoing-past, and habitual-past framing in connected narrative and report",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["CEFR-CV-2020"],
       "note": "Some forms are taught foundations, but no exact atom set establishes connected narrative and report control, aspectual nuance, or register distribution."
     },
     {
@@ -204,7 +204,7 @@
       "category": "Tamil grammar and register",
       "label": "compare entities, quantities, spans, and extremes while preserving the intended standard of comparison",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["CEFR-CV-2020"],
       "note": "Comparison foundations do not demonstrate entity, quantity, span, extreme, standard-of-comparison, nuanced evaluation, and idiomatic selection together."
     },
     {
@@ -212,7 +212,7 @@
       "category": "Tamil grammar and register",
       "label": "report speech, thought, evidence, and attributed claims with source and stance kept clear",
       "probe": null,
-      "anchorIds": ["CEFR-CV-2020", "TVA-CERTIFICATE-RULES", "CA-TAMIL-B2-TASK-SHAPE"],
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
       "note": "No exact lesson-atom set currently closes direct and indirect reporting, evidential distance, source attribution, and stance."
     },
     {
@@ -252,7 +252,7 @@
       "category": "Tamil script, sound, and orthography",
       "label": "spell inflected and derived forms while preserving conventional sandhi, morpheme boundaries, and word division",
       "probe": null,
-      "anchorIds": ["UNICODE-18-TAMIL", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["UNICODE-18-TAMIL"],
       "note": "Unicode explains character composition, not Tamil spelling conventions across inflection, derivation, compounding, sandhi, or word division."
     },
     {
@@ -300,7 +300,7 @@
       "category": "Lexicon and genre domains",
       "label": "public institutions, official documents, civic processes, rights, obligations, and public services",
       "probe": null,
-      "anchorIds": ["LDCIL-TAMIL-TEXT", "TVA-CERTIFICATE-RULES"],
+      "anchorIds": ["LDCIL-TAMIL-TEXT"],
       "note": "Official documents establish a contemporary domain, not a level-bounded lemma, collocation, or formula inventory."
     },
     {
@@ -332,7 +332,7 @@
       "category": "Lexicon and genre domains",
       "label": "social sciences, education, institutions, social change, policy, and competing interpretations",
       "probe": null,
-      "anchorIds": ["LDCIL-TAMIL-TEXT", "TVA-CERTIFICATE-RULES", "CEFR-CV-2020"],
+      "anchorIds": ["LDCIL-TAMIL-TEXT", "CEFR-CV-2020"],
       "note": "The sources establish social-science and education boundaries without supplying a finite B2 lexical repertoire."
     },
     {
@@ -340,7 +340,7 @@
       "category": "Lexicon and genre domains",
       "label": "literature, aesthetics, cultural practice, narrative voice, figurative meaning, and critical response",
       "probe": null,
-      "anchorIds": ["LDCIL-TAMIL-TEXT", "LDCIL-TAMIL-SENTENCE-SPEECH", "TVA-CERTIFICATE-RULES", "CA-TAMIL-B2-TASK-SHAPE"],
+      "anchorIds": ["LDCIL-TAMIL-TEXT", "LDCIL-TAMIL-SENTENCE-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
       "note": "Aesthetics, creative text, prose, and poetry are documented boundaries, but they do not enumerate the language needed for B2 interpretation."
     },
     {
