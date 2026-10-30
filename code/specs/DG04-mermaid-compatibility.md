@@ -184,9 +184,11 @@ receive pinned Mermaid sequence numbers during layout, and legacy `RelIndex`
 arguments lower to the same relationship semantics without treating the authored
 index as an endpoint. Database and queue element macros preserve typed node
 kinds through structural layout and lower to backend-neutral cylinder and queue
-paths, with pinned Metal-to-PNG coverage. Deployment node technology and
-description survive typed group metadata and structural layout, and deployment
-containers lower with Mermaid's solid border plus portable detail text. C4
+paths, with pinned Metal-to-PNG coverage. Deployment node macro identities,
+technology, and description survive typed group metadata and structural layout.
+Normal, left, and right node variants lower to PaintScene metadata, while
+deployment containers retain Mermaid's shared solid border geometry and portable
+detail text. C4
 boundary macros preserve their fixed or authored type labels through the same
 pipeline, while macro names remain implementation syntax rather than visible
 diagram text. C4 element macros likewise preserve Mermaid's normalized person,

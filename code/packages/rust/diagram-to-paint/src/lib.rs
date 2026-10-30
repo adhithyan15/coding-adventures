@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.82.0";
+pub const VERSION: &str = "0.83.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7324,6 +7324,19 @@ where
         if let Some(value) = diagram.render_config.c4_boundary_in_row {
             scene_metadata.insert("c4.boundaryInRow".into(), value.to_string());
         }
+        for (index, group) in diagram.groups.iter().enumerate() {
+            let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+                node_type,
+                ..
+            }) = group.metadata.as_ref()
+            else {
+                continue;
+            };
+            scene_metadata.insert(
+                format!("c4.group.{index}.deploymentNodeType"),
+                node_type.as_str().into(),
+            );
+        }
         for (index, relationship) in diagram.relationships.iter().enumerate() {
             let Some(diagram_ir::StructuralRelationshipMetadata::C4(metadata)) =
                 relationship.metadata.as_ref()
@@ -7425,7 +7438,11 @@ where
                 diagram_ir::StructuralGroupMetadata::C4Boundary { boundary_type } => {
                     boundary_type.clone()
                 }
-                diagram_ir::StructuralGroupMetadata::C4DeploymentNode { technology, description } => technology
+                diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+                    technology,
+                    description,
+                    ..
+                } => technology
                     .iter()
                     .map(|technology| format!("[{technology}]"))
                     .chain(description.iter().cloned())
@@ -10217,7 +10234,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.82.0");
+        assert_eq!(crate::VERSION, "0.83.0");
     }
 
     #[test]
