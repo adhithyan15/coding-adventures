@@ -2506,6 +2506,23 @@ request, perform TLS or I/O, emit provider or trace audit events, or grant HTTP,
 OAuth, or live-provider transport. A later reviewed composition must emit
 exactly one field from this evidence, prohibit transfer coding, audit any
 credential release and external effect, and write exactly the retained body.
+
+An allocation-free `http1-request-line` prerequisite now validates and encodes
+one deliberately narrow HTTP/1.0 or HTTP/1.1 request line into caller-owned
+storage. Caller limits bound the method, origin-form target, and complete line;
+methods must be non-empty HTTP tokens, targets must begin with `/`, contain only
+the RFC 3986 path/query character classes, contain only complete percent
+triplets, and exclude fragments. The encoder writes the exact validated method,
+one space, target, one space, version, and CRLF only after proving the complete
+output fits. Success retains borrowed method and target bytes plus the exact
+encoded length without allocation. Stable failures retain no method, target,
+length, or output bytes, and Debug redacts both borrowed inputs.
+
+This syntax boundary does not authorize a method or target, validate URI or
+percent-encoding semantics, encode headers or a body, select body framing,
+interpret or release a credential, perform TLS, read or write a socket, emit
+provider or trace audit events, or authorize HTTP or OAuth transport. A later
+reviewed composition must supply those policies and external-effect authority.
 Concrete HTTPS remains unavailable.
 
 An allocation-free `http1-response-head` prerequisite now decodes one strict
