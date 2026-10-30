@@ -5215,6 +5215,10 @@ line "Target" [35, 50, 68, 82]"##,
             title_font: font_spec("Helvetica", 16.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(
+            instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.rx == 7.0 && ellipse.ry == 7.0
+        )).count(), 2);
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_c4_element_types_0_e2e.png").unwrap();
         assert!(pixels.width > 0 && pixels.height > 0);

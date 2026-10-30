@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.80.0";
+pub const VERSION: &str = "0.81.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7245,6 +7245,44 @@ fn structural_queue_instruction(node: &LayoutedStructuralNode) -> PaintInstructi
     })
 }
 
+fn push_structural_person_icon(instructions: &mut Vec<PaintInstruction>, node: &LayoutedStructuralNode) {
+    let center_x = node.x + 30.0;
+    let stroke = node.style.text_color.clone();
+    instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+        base: PaintBase::default(),
+        cx: center_x,
+        cy: node.y + 20.0,
+        rx: 7.0,
+        ry: 7.0,
+        fill: None,
+        stroke: Some(stroke.clone()),
+        stroke_width: Some(2.0),
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    }));
+    instructions.push(PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: center_x, y: node.y + 27.0 },
+            PathCommand::LineTo { x: center_x, y: node.y + 43.0 },
+            PathCommand::MoveTo { x: center_x - 10.0, y: node.y + 33.0 },
+            PathCommand::LineTo { x: center_x + 10.0, y: node.y + 33.0 },
+            PathCommand::MoveTo { x: center_x, y: node.y + 43.0 },
+            PathCommand::LineTo { x: center_x - 9.0, y: node.y + 54.0 },
+            PathCommand::MoveTo { x: center_x, y: node.y + 43.0 },
+            PathCommand::LineTo { x: center_x + 9.0, y: node.y + 54.0 },
+        ],
+        fill: None,
+        fill_rule: None,
+        stroke: Some(stroke),
+        stroke_width: Some(2.0),
+        stroke_cap: Some(StrokeCap::Round),
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    }));
+}
+
 pub fn diagram_to_paint_structural<S, M, R>(
     diagram: &LayoutedStructuralDiagram,
     options: &DiagramToPaintOptions<'_, S, M, R>,
@@ -7563,11 +7601,15 @@ where
             "#d1d5db",
             1.0,
         )));
+        let is_c4_person = matches!(node.stereotype.as_deref(), Some("person" | "external_person"));
         let badge_text = node
             .icon_text
             .as_deref()
             .or(node.icon_name.as_deref());
-        let (header_x, header_width) = if let Some(icon_text) = badge_text {
+        let (header_x, header_width) = if is_c4_person {
+            push_structural_person_icon(&mut instructions, node);
+            (node.x + 56.0, node.width - 64.0)
+        } else if let Some(icon_text) = badge_text {
             let icon_size = (header_height - 16.0).min(48.0);
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
@@ -10162,7 +10204,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.80.0");
+        assert_eq!(crate::VERSION, "0.81.0");
     }
 
     #[test]
