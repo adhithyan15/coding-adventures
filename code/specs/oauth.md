@@ -754,6 +754,24 @@ validate an EMSA-PSS encoded message, choose a salt policy, verify a signature,
 process a certificate, or grant path, trust, revocation, TLS, HTTP, OAuth
 transport, or network authority. RSA-PSS support remains unavailable until
 those separate boundaries are implemented, composed, and tested.
+
+A bounded `rsa-pss-sha384` prerequisite now validates one complete recovered
+RFC 8017 EMSA-PSS encoded message for the fixed SHA-384, 48-byte-salt profile.
+It composes the public layout gate and bounded SHA-384 MGF1 primitive, unmasks
+`DB` into exact caller-owned scratch space, clears only the declared unused
+high bits, requires the complete zero padding and `0x01` delimiter, and
+recomputes `H = SHA-384(0x00^8 || mHash || salt)` before a full 48-byte
+comparison. Public size and scratch failures occur before scratch mutation;
+stable failures retain no message, digest, salt, padding, or offset bytes.
+
+This encoded-message verdict does not parse RSA-PSS AlgorithmIdentifier
+parameters or a key, perform RSAVP1, bind the recovered bytes to a signature or
+certificate, choose a TLS signature scheme, process a handshake, validate a
+certificate path or hostname, select trust, check revocation, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. RSA-PSS
+certificate and TLS verification remain unavailable until those separate
+boundaries are composed and tested; concrete HTTPS remains unavailable.
+
 A bounded `rsa-public-operation` prerequisite now consumes only a previously
 validated RSA public key, enforces a separate caller-owned modulus-byte ceiling
 before arbitrary-precision conversion, rejects non-modulus-width or
