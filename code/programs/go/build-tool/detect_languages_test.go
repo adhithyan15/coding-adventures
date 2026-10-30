@@ -266,6 +266,7 @@ func TestGoOnlyNeededForGoPackages(t *testing.T) {
 func TestToolchainForPackageLanguage(t *testing.T) {
 	tests := map[string]string{
 		"wasm":    "rust",
+		"mosaic":  "rust",
 		"csharp":  "dotnet",
 		"fsharp":  "dotnet",
 		"dotnet":  "dotnet",

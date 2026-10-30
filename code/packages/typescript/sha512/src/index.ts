@@ -210,8 +210,6 @@ function maj(x: bigint, y: bigint, z: bigint): bigint {
 
 function pad(data: Uint8Array): Uint8Array {
   const byteLen = data.length;
-  // Bit length as BigInt for the 128-bit length field
-  const bitLen = BigInt(byteLen) * 8n;
 
   // How many zero bytes after 0x80?
   // Solve: (byteLen + 1 + zeroes) mod 128 === 112
@@ -225,23 +223,25 @@ function pad(data: Uint8Array): Uint8Array {
   padded[byteLen] = 0x80;
   // Zero bytes are already 0 from Uint8Array initialization
 
-  // Append 128-bit big-endian length (16 bytes at the end)
-  // High 64 bits (bitLen >> 64) — zero for practical messages
-  const highBits = bitLen >> 64n;
-  const lowBits = bitLen & MASK64;
-  const view = new DataView(padded.buffer);
-  // Write high 64 bits as two 32-bit words
-  const highHi = Number((highBits >> 32n) & 0xFFFFFFFFn);
-  const highLo = Number(highBits & 0xFFFFFFFFn);
-  const lowHi = Number((lowBits >> 32n) & 0xFFFFFFFFn);
-  const lowLo = Number(lowBits & 0xFFFFFFFFn);
   const lenOffset = byteLen + 1 + zeroes;
-  view.setUint32(lenOffset, highHi, false);
-  view.setUint32(lenOffset + 4, highLo, false);
-  view.setUint32(lenOffset + 8, lowHi, false);
-  view.setUint32(lenOffset + 12, lowLo, false);
+  padded.set(encodeBitLength(BigInt(byteLen)), lenOffset);
 
   return padded;
+}
+
+/** Encode a checked byte count as SHA-512's 128-bit big-endian bit length. */
+export function encodeBitLength(byteCount: bigint): Uint8Array {
+  if (byteCount < 0n || byteCount >= (1n << 125n)) {
+    throw new RangeError("sha512: message length must be less than 2^128 bits");
+  }
+  const bitLen = byteCount * 8n;
+  const result = new Uint8Array(16);
+  const view = new DataView(result.buffer);
+  view.setUint32(0, Number((bitLen >> 96n) & 0xFFFFFFFFn), false);
+  view.setUint32(4, Number((bitLen >> 64n) & 0xFFFFFFFFn), false);
+  view.setUint32(8, Number((bitLen >> 32n) & 0xFFFFFFFFn), false);
+  view.setUint32(12, Number(bitLen & 0xFFFFFFFFn), false);
+  return result;
 }
 
 // ─── Message Schedule ───────────────────────────────────────────────────────
@@ -357,6 +357,9 @@ function stateToBytes(state: bigint[]): Uint8Array {
  * ```
  */
 export function sha512(data: Uint8Array): Uint8Array {
+  if (!(data instanceof Uint8Array)) {
+    throw new TypeError("sha512: expected Uint8Array");
+  }
   const padded = pad(data);
   let state = [...INIT];
   for (let i = 0; i < padded.length; i += 128) {
@@ -414,17 +417,22 @@ export function sha512Hex(data: Uint8Array): string {
 export class SHA512Hasher {
   private _state: bigint[];
   private _buffer: number[];   // partial block (< 128 bytes)
-  private _byteCount: number;  // total bytes fed in
+  private _byteCount: bigint;  // total bytes fed in
 
   constructor() {
     this._state = [...INIT];
     this._buffer = [];
-    this._byteCount = 0;
+    this._byteCount = 0n;
   }
 
   /** Feed more bytes into the hash. Returns `this` for method chaining. */
   update(data: Uint8Array): this {
-    this._byteCount += data.length;
+    if (!(data instanceof Uint8Array)) {
+      throw new TypeError("sha512.update: expected Uint8Array");
+    }
+    const nextByteCount = this._byteCount + BigInt(data.length);
+    encodeBitLength(nextByteCount);
+    this._byteCount = nextByteCount;
     for (const byte of data) {
       this._buffer.push(byte);
       if (this._buffer.length === 128) {
@@ -446,22 +454,14 @@ export class SHA512Hasher {
    */
   digest(): Uint8Array {
     // Build padding tail using the TOTAL byte count
-    const bitLen = BigInt(this._byteCount) * 8n;
     const buf = this._buffer;
     const zeroes = ((112 - (buf.length + 1)) % 128 + 128) % 128;
     const tail = new Uint8Array(buf.length + 1 + zeroes + 16);
     tail.set(buf, 0);
     tail[buf.length] = 0x80;
 
-    // Write 128-bit big-endian length
-    const highBits = bitLen >> 64n;
-    const lowBits = bitLen & MASK64;
-    const view = new DataView(tail.buffer);
     const lenOffset = buf.length + 1 + zeroes;
-    view.setUint32(lenOffset, Number((highBits >> 32n) & 0xFFFFFFFFn), false);
-    view.setUint32(lenOffset + 4, Number(highBits & 0xFFFFFFFFn), false);
-    view.setUint32(lenOffset + 8, Number((lowBits >> 32n) & 0xFFFFFFFFn), false);
-    view.setUint32(lenOffset + 12, Number(lowBits & 0xFFFFFFFFn), false);
+    tail.set(encodeBitLength(this._byteCount), lenOffset);
 
     // Compress the padding tail against a copy of the live state
     let state = [...this._state];

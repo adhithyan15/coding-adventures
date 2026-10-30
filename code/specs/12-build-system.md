@@ -245,6 +245,130 @@ plan if the consumer is missing from discovery.
 |---|---|
 | `rust/mosaic-package-resolver` | any `mosaic-package.toml`, `.mil`, `.mll`, or `.msl` under `code/` |
 
+#### Cargo dev-dependency test triggers
+
+A Cargo `[dev-dependencies]` entry links a crate into another crate's tests,
+never its library, so it is not a build-graph edge (the
+`resolution/rust-field-aware` conformance case pins that). It must still
+re-run the dependent's tests: every Mosaic package and app is tested by a
+Cargo smoke harness whose only in-repository dependencies are dev-dependencies
+on the Mosaic compilers and artifact builder, so without this a change to a
+`mosaic-emit-*` backend re-ran none of those suites.
+
+The Go tool therefore keeps a second relation, *test triggers*: for each
+package `D`, the packages whose `Cargo.toml` names `D` in a trigger table.
+For languages `rust` and `wasm` the trigger tables are `[dev-dependencies]`
+and every `[target.<cfg>.dev-dependencies]` (the union over all targets, since
+CI runs on several hosts). For a `mosaic` package's harness (the `Cargo.toml`
+beside `mosaic-package.toml`) they also include `[dependencies]` and
+`[build-dependencies]` and their target forms, because a Mosaic package has no
+Cargo graph edges at all. Every `[patch.<source>]` table is read for all three
+languages, because Cargo builds the tests against a patched path even for a
+registry dependency. The legacy `dev_dependencies`/`build_dependencies`
+spellings are the same tables. Self-references are dropped. Change detection
+applies the relation **one hop**:
+
+```
+closure  = AffectedNodes(changed)
+closure ∪= triggers[a]  for every a in closure
+affected = closure + prerequisites
+```
+
+A dev-dependent's own dependents are not added (its library is unchanged),
+triggers are never chased transitively, and prerequisites are added after the
+hop so they trigger nothing. Keeping the relation out of the graph is also
+what keeps the graph acyclic: Cargo allows A to dev-depend on B while B
+depends on A (the repository has such pairs), and as a graph edge that cycle
+would fail every package's build.
+
+Entries resolve **by path, not by name**: only entries with a `path` field
+count. `filepath.Join(manifest directory, path)` has every symlink resolved
+and is matched against the discovered packages' real directories, so neither
+a crate declaring the same Cargo `name` nor a symlinked, differently-cased or
+Unicode-normalization-aliased spelling of the path can move or drop the
+trigger. The target is:
+
+- a discovered package root: that package is a trigger. The chain does not
+  end there, because the build graph records only a Rust or WASM package's
+  top-level `[dependencies]`: its target-specific and build dependencies, and
+  any `Cargo.toml` at the root of another language's package (a native
+  extension), would otherwise be invisible;
+- any other crate: if it lies inside a discovered package (another package,
+  or the dependent itself), that package is a trigger, since prefix matching
+  attributes changes there to it. If no package covers it, it must be listed
+  exactly in `code/BUILD-EXEMPTIONS`. `engram-core-wasm` is such an orphan,
+  and it is how `engram-app`'s tests reach `engram-core`;
+- anything else (nothing there; an absolute or empty path; an uncovered crate
+  that the ledger does not list, such as one under `vendor/` or outside
+  `code/`) is an error.
+
+In both of the first two cases the target's `[dependencies]` and
+`[build-dependencies]` (target forms included, `[dev-dependencies]` not) are
+linked into the dependent's tests too, so they are followed transitively with
+the same strict reader. Each crate's closure is computed once per resolution
+and cached, so the walk is linear in the number of crates (about 0.8 s for the
+whole repository). A cycle among those tables is an error, as it is in Cargo,
+so a cached closure can never be one a cycle cut short; cycles through
+`[dev-dependencies]` (which the repository has) never arise, because
+dev-dependencies are read only at the dependent. Chains deeper than 16 crates
+are an error, not a truncation. Every repository manifest reached this way
+must pass the strict reader. When this was added, `paint-vm-direct2d` (which is
+reached) and `paint-vm-gdi` (which is not yet reached) were the only tracked
+manifests it refused. Both declared `windows` as a `[dependencies.windows]`
+sub-table, and both were rewritten as the equivalent inline table (the parsed
+TOML is identical). The reader was not loosened.
+
+Path entries resolve against every discovered package even when `-language`
+filters the run, so a path into a filtered-out package is not mistaken for an
+unlisted crate. A `.cargo/config` or `.cargo/config.toml` in the package
+directory or any ancestor up to the repository root that sets `paths`,
+`[patch]` or `[source]` (source replacement, which can serve a registry
+dependency from repository files) is an error. Refusing is preferred to treating the file as a
+rebuild-everything input, which would silently make every later change a
+full rebuild. The repository's four configs only pick a Windows linker.
+`[replace]` and `workspace = true` are refused, and so is a `git` source
+that is not an `https://` or `ssh://` URL (a `file://` URL or bare path can
+name a predictable checkout directory with no trigger).
+
+The cost is deliberate. Measured on the repository when this was added, a
+one-line change to `mosaic-emit-qt`, `mosaic-emit-flutter` or
+`mosaic-package-artifact-builder` went from 73 selected packages to 158
+(`moslayout-compiler`: 74 to 160): 27–28 Mosaic package and app suites,
+`rust/venture-browser-qt`, `rust/venture-browser-macos` and
+`rust/venture-browser-windows` (which dev-depend on the artifact builder, the
+last two through target tables), and their build prerequisites from the normal
+prerequisite expansion (about 51 for `venture-browser-qt` alone). Dev-dependents
+keep that expansion like every other selected package. The fan-out was
+reviewed and accepted at 151, before target tables were read; reading them
+added the remaining 7. Following crates transitively (non-package crates,
+then package roots too) leaves those numbers unchanged and makes a change to
+`engram-core` select 27 packages instead of 14 (`engram-app` and its Mosaic
+prerequisites).
+
+The reader fails closed, because a dropped trigger silently skips a
+dependent's tests. It reads a plain TOML subset and stops the plan on anything
+outside it:
+
+- a multi-line string (`"""` or `'''`) anywhere in the manifest, a one-line
+  string left open, mismatched brackets, or a value still open at the end of
+  the file;
+- a header or key it cannot decode (any backslash, an empty segment, a stray
+  bracket). Quoted segments are decoded, so `["dev-dependencies"]` *is* the
+  table;
+- a trigger table in any shape but `[name]` or `[target.<cfg>.name]`: a
+  sub-table (`[dev-dependencies.x]`), an array of tables, or a key elsewhere
+  that writes one (`dev-dependencies.x = ...`, `target = { ... }`);
+- inside a trigger table, an entry that is not `bare-key = "version"` or a
+  one-line inline table (only an array value may continue onto the next
+  line). Every inline-table field key must be bare, exactly lowercase and
+  unique (Cargo ignores `Package`, so it must not be read as a rename), with a
+  one-line string, boolean or array-of-strings value; nested inline tables,
+  trailing commas, escapes and `workspace = true` are refused;
+- a manifest that is not a regular file or exceeds 1 MiB, or one entry
+  continuing past 256 lines or 64 KiB.
+
+A leading UTF-8 byte-order mark is stripped, as TOML allows.
+
 ### Hash-Based Fallback
 
 When git diff is unavailable, the build system falls back to SHA256 hashing:
