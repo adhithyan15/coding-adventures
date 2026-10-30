@@ -3688,6 +3688,22 @@ impl Compiler {
         if !self.contains_procedure_call(node) {
             return self.static_integer_scalar_value(node);
         }
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            if self.contains_procedure_call(condition) {
+                return None;
+            }
+            return match self.static_boolean_value(condition) {
+                Some(true) => self.exact_static_integer_normalizer_operand_value(then_node),
+                Some(false) => self.exact_static_integer_normalizer_operand_value(else_node),
+                None => {
+                    let then_value =
+                        self.exact_static_integer_normalizer_operand_value(then_node)?;
+                    let else_value =
+                        self.exact_static_integer_normalizer_operand_value(else_node)?;
+                    (then_value == else_value).then_some(then_value)
+                }
+            };
+        }
         if node.rule_name == "proc_call" {
             return self.exact_static_integer_normalizer_value(node);
         }
@@ -17053,6 +17069,30 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "unreduced, zero-divisor, overflowing, and procedure-calling normalizer reductions must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_conditional_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; boolean flag; real procedure pick; pick := 3.5; real result; flag := choose(); result := entier((abs(if flag then entier(-9007199254740993) div entier(5) else entier(-9007199254740990) div entier(5)) * sign(pick())) mod 5); output(result) end",
+            "begin boolean procedure choose; choose := false; boolean flag; real procedure pick; pick := 3.5; real result; flag := choose(); result := entier((abs(if flag then entier(-9007199254740993) else entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "equal checked conditional branches may compose between exact integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin boolean procedure choose; choose := true; boolean flag; real procedure pick; pick := 3.5; real result; flag := choose(); result := entier((abs(if flag then entier(-9007199254740993) else entier(-9007199254740992)) * sign(pick())) mod 5); output(result) end",
+            "begin boolean procedure choose; choose := true; boolean flag; integer procedure dynamic; dynamic := -9007199254740993; real procedure pick; pick := 3.5; real result; flag := choose(); result := entier((abs(if flag then entier(-9007199254740993) else dynamic()) * sign(pick())) mod 5); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 3.5; real result; result := entier((abs(if choose() then entier(-9007199254740993) else entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unequal, procedure-calling, and effectful conditional normalizer forms must fail closed",
             );
         }
     }
