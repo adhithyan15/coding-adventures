@@ -17,9 +17,26 @@ The crate consumes:
 Binding succeeds only when both inputs retain the same decoded target object.
 Byte-equal independently decoded certificates are deliberately rejected.
 
-This composition performs no new parsing or signature work. It does not apply
-reviewed-anchor constraints, construct or validate a multi-hop path, check
-revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+`validate_x509_rsa_sha512_reviewed_server_anchor_policy` then consumes that
+complete proof and derives both inputs to its DNS-policy decision from it:
+
+- the selected reviewed snapshot entry's optional out-of-band
+  `NameConstraints` bytes; and
+- the exact retained target certificate's Subject Alternative Name extension.
+
+Separate caller-owned ASN.1 limits bound both decoders. An unconstrained anchor
+succeeds without manufacturing DNS evidence. When constraints are present,
+every target `dNSName` must satisfy the repository-owned supported permitted
+DNS subtree policy. Malformed or unsupported constraints, a missing or
+malformed target SAN, and a name outside the permitted subtrees fail with
+payload-free categories. The non-copyable success retains the complete input
+proof beside optional constrained-name evidence.
+
+This composition performs no new signature work or root lookup. Its bounded
+parsing is limited to the exact reviewed-anchor constraint bytes and exact
+target SAN retained by the consumed proof. It does not construct or validate a
+multi-hop path, apply intermediate or IP constraints, check revocation or
+hostnames, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection. It does not make concrete HTTPS or live-provider use ready.
 
 ## Validation
