@@ -333,6 +333,10 @@ Conditional expressions may connect nested normalizers when their selector is
 side-effect-free and static or every branch proves the same checked integer
 result. Effectful selectors, unequal branches, procedure-calling branches, and
 unreduced wide results remain conservative.
+Canonical standard-function identities may connect those normalizers too:
+`sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and `ln(1)`. Non-identity inputs,
+user overrides, other calls, and overflowing checked arithmetic remain
+conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
