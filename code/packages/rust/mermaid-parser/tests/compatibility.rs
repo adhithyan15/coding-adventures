@@ -117,6 +117,14 @@ const C4_BOUNDARY_TYPES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-boundary-types-11.16.1-visual-corpus.json"
 ));
+const C4_ELEMENT_TYPES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-types-11.16.1-corpus.json"
+));
+const C4_ELEMENT_TYPES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-types-11.16.1-visual-corpus.json"
+));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -2797,6 +2805,27 @@ fn pinned_c4_boundary_types_reach_semantic_ir() {
         _ => panic!("expected C4 boundary metadata"),
     }).collect::<Vec<_>>();
     assert_eq!(types, ["ENTERPRISE", "SYSTEM", "CONTAINER", "security"]);
+}
+
+#[test]
+fn pinned_c4_element_types_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ELEMENT_TYPES_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_ELEMENT_TYPES_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixture = &syntax["fixtures"][0];
+    assert_eq!(visual["fixtures"][0], fixture["name"]);
+    let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+    let types = diagram.nodes.iter().map(|node| match &node.metadata {
+        Some(diagram_ir::StructuralNodeMetadata::C4(metadata)) => metadata.element_type.as_str(),
+        _ => panic!("expected C4 element metadata"),
+    }).collect::<Vec<_>>();
+    assert_eq!(types, [
+        "person", "external_person", "system", "system_db", "system_queue",
+        "external_system", "external_system_db", "external_system_queue", "container",
+        "container_db", "container_queue", "external_container", "external_container_db",
+        "external_container_queue", "component", "component_db", "component_queue",
+        "external_component", "external_component_db", "external_component_queue",
+    ]);
 }
 
 #[test]
