@@ -2749,6 +2749,29 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-client-hello-message` prerequisite now decodes one
+exact RFC 8446 section 4.1.2 TLS 1.3 `ClientHello` handshake body. It enforces
+the `0x0303` legacy version, retains the exact 32-byte random and bounded
+zero-through-32-byte legacy session ID, requires a non-empty even-length
+cipher-suite vector under a caller-selected suite-count ceiling, requires the
+single null legacy compression method, and delegates the complete mandatory
+extension vector to `tls13-extension-block` under caller byte and entry
+limits. Success retains the exact borrowed body and all structural fields in a
+non-copyable value; unknown cipher-suite and extension identifiers remain data
+for later policy, and diagnostics omit random, session, suite, and extension
+bytes.
+
+This message-body layer does not classify a first or retry ClientHello,
+generate entropy, authorize a session ID or cipher suite, require or interpret
+`supported_versions` or any other extension, apply extension-context policy,
+bind later server selections to this offer, process a transcript, derive keys,
+invoke cryptography, validate certificates, establish trust, enforce
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. Separate offer and extension policy, retry/state sequencing,
+transcript and key-schedule composition, certificate validation, TLS record
+protection, and HTTP composition remain blockers. Concrete HTTPS remains
+unavailable.
+
 An allocation-free `tls13-no-psk-server-flight` policy now sequences the
 already decoded server authentication flight after `ServerHello` for the
 repository's no-PSK TLS 1.3 client path. It requires
