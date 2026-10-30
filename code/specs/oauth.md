@@ -2138,6 +2138,20 @@ validate an EMSA-PSS encoded message, choose a salt policy, verify a signature,
 process a certificate, or grant path, trust, revocation, TLS, HTTP, OAuth
 transport, or network authority. RSA-PSS support remains unavailable until
 those separate boundaries are implemented, composed, and tested.
+A bounded `rsa-pss-mgf1-sha512` prerequisite now owns the RFC 8017 MGF1 byte
+expansion needed by a future SHA-512 RSA-PSS verification path. It accepts an
+exact 64-byte public hash value, hashes `seed || I2OSP(counter, 4)` with the
+repository-owned SHA-512 implementation from counter zero, copies a partial
+final digest block when required, and checks both the RFC maximum and a
+caller-selected nonzero work ceiling before changing caller-owned output.
+Stable failures expose categories only. The fixed 68-byte hash input bounds
+the current SHA-512 implementation's internal allocation and length domain.
+
+This public-data primitive does not parse RSA-PSS parameters or keys, choose a
+salt policy, validate an encoded message, perform RSA arithmetic, verify a
+signature, process certificates, validate a path or hostname, select trust
+roots, check revocation, run TLS, or open a socket. It grants no cryptographic
+authority, and concrete HTTPS remains unavailable.
 
 The repository-owned `sha256` prerequisite is now hardened for that future
 fixed-output HMAC boundary. Its one-shot and streaming digest paths share
