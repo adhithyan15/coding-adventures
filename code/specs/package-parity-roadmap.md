@@ -20070,3 +20070,12 @@ The focused UTF-8 suite passes 6/6, the canonical complete Lua suite passes
 152/152, every Lua source parses, and the new lesson validates. Auto-merge stays
 disabled until the final lifecycle head receives independent review and a
 completely fresh hosted matrix is terminal acceptable and mergeable.
+
+Exact-head publication review then caught one more main advance before push:
+`81d94ddb907e00b4eecb76489af55783f818c6dc`, the Mermaid C4 link metadata
+compatibility merge. Its Mermaid corpora, Rust diagram/parser packages, and
+DG04 specification have zero overlap with this Lua/Go graph-diff tranche,
+launcher regression, lesson, or lifecycle paths. A second normal merge at
+`5da19916bda9801c21bb31f49cbd6cfc3fd3584f` preserves both histories. The
+resulting final retry head must repeat local validation and independent review
+before a normal non-force push.
