@@ -2180,6 +2180,24 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-no-psk-server-flight` policy now sequences the
+already decoded server authentication flight after `ServerHello` for the
+repository's no-PSK TLS 1.3 client path. It requires
+`EncryptedExtensions`, accepts one optional `CertificateRequest`, then requires
+`Certificate`, `CertificateVerify`, and `Finished` exactly once and in order.
+Unexpected messages fail without advancing state. Completion retains only
+whether client authentication was requested, so later client-flight policy
+cannot silently forget that request.
+
+This ordering layer does not accept PSK or early-data handshakes, sequence the
+initial hellos or the client flight, decode or semantically validate a body,
+update a transcript, authenticate `CertificateVerify` or `Finished`, validate
+a certificate or path, check identity or revocation, access a credential or
+signing key, produce a client certificate or signature, emit an alert, derive
+keys, protect records, perform I/O, authorize HTTP or OAuth transport, or open
+a network connection. Full handshake state and all of those compositions
+remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-key-update-message` prerequisite now owns the exact
 one-octet RFC 8446 section 4.6.3 `KeyUpdate` handshake body. Exact decoding
 accepts only `update_not_requested` and `update_requested`, rejects truncated,
