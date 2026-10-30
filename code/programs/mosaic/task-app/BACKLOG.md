@@ -69,13 +69,17 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18581 — prepare, publish, and audit v0.5.15.**
-The P0 lifecycle gates are complete. Prioritize this compatible release under
-#13543 after #18559 merged in #18562. Preserve substantive changelog details,
-including the reporting change below. Require all existing payload validations;
-dispatch only after preparation merges and audit immutable provenance, assets,
-checksums, and notes before closing #18581. Preparation is not publication.
-Artifact coverage is unchanged; signing remains blocked in #13977.
+**Next: #18563 — lower the Qt Board drop-target layout styles.**
+The selected bounded slice preserves the authored 9-pixel gap through the
+existing ColumnLayout and removes exactly three drops (80 to 77), retaining
+state and unsupported-value exclusions. #18481 owns broader root/flex growth.
+
+**Completed: #18581 — published and audited v0.5.15.**
+Immutable release source/tag/manifest `8819839dc63d78c4c5eeda21f833f51364746420`;
+publication run 40911228845 passed all six payloads. Verified 13 assets,
+12 checksum entries, and 11 manifest payloads; substantive notes retained.
+The P0 lifecycle gates are complete. This compatible release continues #13543;
+artifact coverage is unchanged and signing remains blocked in #13977.
 
 **Completed fidelity slice: #18559 — Qt empty Board drop-target floor.**
 Merged in #18562, with TaskApp payload run 40836764807 and all required checks
@@ -83,8 +87,8 @@ passing on `95a6a47aacd0fc5d3a033d218d525d49e4dd364b`. Both themes preserve
 the 60-pixel minimum with numeric safety and state-override exclusions.
 
 Release validation discovered three previously invisible Qt col-drop styles:
-display, flex-direction, and gap. Each is pinned to one occurrence (total
-76 to 79) and tracked for lowering in #18563; further increases fail.
+display, flex-direction, and gap (total 76 to 79). The selected #18563 slice
+lowers those three declarations; their reappearance now fails the contract.
 
 **Published and audited: #18550 — v0.5.14.**
 Run 40824813766 passed all six payloads and publication from
