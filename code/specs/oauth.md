@@ -2219,6 +2219,35 @@ policy and decoding, handshake state, repository-owned record protection,
 certificate-path validation, revocation, TLS transport, and HTTP composition
 remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-extension-context-policy` prerequisite now composes
+structurally decoded extension blocks with the TLS 1.3 client-side message
+contexts in RFC 8446 section 4.2. Its caller-selected rule slice maps exact
+extension types to non-empty context sets, rejects duplicate rules, and is
+bounded to 64 entries. A reviewed standard rule table records all 22 extension
+types and message placements in RFC 8446 Table 1 as data rather than control
+flow. Outbound ClientHello validation rejects unrecognized or misplaced
+extensions and requires `pre_shared_key`, when present, to be last. Inbound
+ServerHello, EncryptedExtensions, HelloRetryRequest, Certificate,
+CertificateRequest, and NewSessionTicket validation rejects unrecognized or
+misplaced extensions. Server response extensions in ServerHello,
+EncryptedExtensions, HelloRetryRequest, and the server Certificate must have
+been offered by the validated ClientHello, except that HelloRetryRequest may
+carry an unsolicited `cookie`; CertificateRequest remains a server request and
+NewSessionTicket remains unsolicited by definition. Stable failures retain no
+extension type, data, count, or message bytes.
+
+This slice consumes only already decoded `tls13-extension-block` values. It
+does not decode extension data, require mandatory extensions, validate the
+semantics or relationships of selected values, generalize to a server role or
+client-certificate response, emit alerts, sequence handshake messages,
+calculate a transcript, invoke cryptography, validate certificates or names,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. The standard table recognizes syntax
+and placement only; it does not enable every listed extension in a future
+client profile. Extension-content policy, ClientHello composition, handshake
+state, certificate-path validation, revocation, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-certificate-request-message` prerequisite now
 decodes one exact TLS 1.3 `CertificateRequest` body. A caller-owned limit
 bounds the one-byte-length-prefixed `certificate_request_context`, and the
