@@ -185,6 +185,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-tags-11.16.1-visual-corpus.json"
     ));
+    const C4_LINKS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-links-11.16.1-corpus.json"
+    ));
+    const C4_LINKS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-links-11.16.1-visual-corpus.json"
+    ));
     const C4_RELATIONSHIP_COLORS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-corpus.json"
@@ -5388,6 +5396,69 @@ line "Target" [35, 50, 68, 82]"##,
         }
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_c4_tags_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_links_to_png() {
+        let syntax: Value = serde_json::from_str(C4_LINKS_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_LINKS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixture = &syntax["fixtures"][0];
+        assert_eq!(visual["fixtures"][0], fixture["name"]);
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        for node in &layout.nodes {
+            let Some(diagram_ir::StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref()
+            else {
+                continue;
+            };
+            assert!(metadata.link.is_some());
+        }
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let metadata = scene.metadata.as_ref().expect("C4 link scene metadata");
+        for (index, node) in layout.nodes.iter().enumerate() {
+            let Some(diagram_ir::StructuralNodeMetadata::C4(node_metadata)) = node.metadata.as_ref()
+            else {
+                continue;
+            };
+            let link = node_metadata.link.as_ref().unwrap();
+            assert_eq!(metadata.get(&format!("c4.node.{index}.link.url")), Some(link));
+            assert!(metadata.contains_key(&format!("c4.node.{index}.link.bounds")));
+        }
+        for (index, group) in layout.groups.iter().enumerate() {
+            let link = match group.metadata.as_ref() {
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary { link, .. })
+                | Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { link, .. }) => link,
+                _ => continue,
+            };
+            let link = link.as_ref().unwrap();
+            assert_eq!(metadata.get(&format!("c4.group.{index}.link.url")), Some(link));
+            assert!(metadata.contains_key(&format!("c4.group.{index}.link.bounds")));
+        }
+        for (index, relationship) in layout.relationships.iter().enumerate() {
+            let Some(diagram_ir::StructuralRelationshipMetadata::C4(relationship_metadata)) =
+                relationship.metadata.as_ref()
+            else {
+                continue;
+            };
+            let link = relationship_metadata.link.as_ref().unwrap();
+            assert_eq!(
+                metadata.get(&format!("c4.relationship.{index}.link.url")),
+                Some(link)
+            );
+        }
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_links_0_e2e.png").unwrap();
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.84.0";
+pub const VERSION: &str = "0.85.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7332,6 +7332,14 @@ where
             if let Some(tags) = &metadata.tags {
                 scene_metadata.insert(format!("c4.node.{index}.tags"), tags.clone());
             }
+            if let Some(link) = &metadata.link {
+                let prefix = format!("c4.node.{index}.link");
+                scene_metadata.insert(format!("{prefix}.url"), link.clone());
+                scene_metadata.insert(
+                    format!("{prefix}.bounds"),
+                    format!("{},{},{},{}", node.x, node.y, node.width, node.height),
+                );
+            }
         }
         for (index, group) in diagram.groups.iter().enumerate() {
             match group.metadata.as_ref() {
@@ -7341,7 +7349,7 @@ where
                 }) => {
                     scene_metadata.insert(format!("c4.group.{index}.tags"), tags.clone());
                 }
-                Some(diagram_ir::StructuralGroupMetadata::C4Boundary { tags: None, .. }) => {}
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary { .. }) => {}
                 Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
                     node_type,
                     tags,
@@ -7356,6 +7364,19 @@ where
                     }
                 }
                 _ => {}
+            }
+            let link = match group.metadata.as_ref() {
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary { link, .. })
+                | Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { link, .. }) => link,
+                _ => continue,
+            };
+            if let Some(link) = link {
+                let prefix = format!("c4.group.{index}.link");
+                scene_metadata.insert(format!("{prefix}.url"), link.clone());
+                scene_metadata.insert(
+                    format!("{prefix}.bounds"),
+                    format!("{},{},{},{}", group.x, group.y, group.width, group.height),
+                );
             }
         }
         for (index, relationship) in diagram.relationships.iter().enumerate() {
@@ -7372,6 +7393,9 @@ where
             }
             if let Some(tags) = &metadata.tags {
                 scene_metadata.insert(format!("c4.relationship.{index}.tags"), tags.clone());
+            }
+            if let Some(link) = &metadata.link {
+                scene_metadata.insert(format!("c4.relationship.{index}.link.url"), link.clone());
             }
         }
     }
@@ -10258,7 +10282,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.84.0");
+        assert_eq!(crate::VERSION, "0.85.0");
     }
 
     #[test]

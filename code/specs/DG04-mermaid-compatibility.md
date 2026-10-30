@@ -207,8 +207,11 @@ renderer's ordinary portable relationship geometry. Keyed and positional custom
 tags on elements, boundaries, deployment nodes, and relationships likewise survive
 typed semantic metadata and structural layout into PaintScene metadata. They do
 not alter geometry or styling because pinned Mermaid 11.16.1 stores tags without
-rendering them. C4 remains partial while its remaining macro semantics and visual
-corpus are incomplete.
+rendering them. Keyed and positional links on those same C4 entities also survive
+the pipeline into backend-neutral PaintScene URL metadata; element and group links
+include layout bounds for portable hit testing, while link metadata does not alter
+geometry. C4 remains partial while its remaining macro semantics and visual corpus
+are incomplete.
 
 ## Required New Semantic Families
 
