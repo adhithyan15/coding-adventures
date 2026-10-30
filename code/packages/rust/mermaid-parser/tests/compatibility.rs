@@ -109,6 +109,14 @@ const C4_DEPLOYMENT_NODES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-deployment-nodes-11.16.1-visual-corpus.json"
 ));
+const C4_BOUNDARY_TYPES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-boundary-types-11.16.1-corpus.json"
+));
+const C4_BOUNDARY_TYPES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-boundary-types-11.16.1-visual-corpus.json"
+));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -2774,6 +2782,21 @@ fn pinned_c4_deployment_nodes_reach_semantic_ir() {
         Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { technology, description })
             if technology.as_deref() == Some("Linux") && description.as_deref() == Some("Gateway host")
     ));
+}
+
+#[test]
+fn pinned_c4_boundary_types_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_BOUNDARY_TYPES_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_BOUNDARY_TYPES_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixture = &syntax["fixtures"][0];
+    assert_eq!(visual["fixtures"][0], fixture["name"]);
+    let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+    let types = diagram.groups.iter().map(|group| match &group.metadata {
+        Some(diagram_ir::StructuralGroupMetadata::C4Boundary { boundary_type }) => boundary_type.as_str(),
+        _ => panic!("expected C4 boundary metadata"),
+    }).collect::<Vec<_>>();
+    assert_eq!(types, ["ENTERPRISE", "SYSTEM", "CONTAINER", "security"]);
 }
 
 #[test]

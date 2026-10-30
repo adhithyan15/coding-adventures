@@ -329,6 +329,10 @@ negative or oversized exponents and overflow remain conservative.
 Checked integer `div` and `mod` may connect nested normalizers too. Zero
 divisors, `i64::MIN div -1`, procedure-calling divisors, and unreduced wide
 results remain conservative.
+Conditional expressions may connect nested normalizers when their selector is
+side-effect-free and static or every branch proves the same checked integer
+result. Effectful selectors, unequal branches, procedure-calling branches, and
+unreduced wide results remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
