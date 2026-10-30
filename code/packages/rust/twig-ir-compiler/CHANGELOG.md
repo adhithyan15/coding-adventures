@@ -1,5 +1,153 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18453: `and` / `or` inside a lambda; `string<?` is a `bool`
+
+### Fixed
+
+- **`and` / `or` inside an anonymous lambda compile.** `free_vars` walked
+  the head of every application as a name reference. `(and …)` / `(or …)`
+  parse as applications, so their head looked like a free variable called
+  `and` / `or`, and
+
+  ```scheme
+  (let ((f (lambda () (or "a" 1)))) (f))
+  ; unbound name "or" captured by lambda
+  ```
+
+  failed to compile. The walk now skips the head of an `(and …)` /
+  `(or …)` and still walks the arguments. An `and` / `or` in value
+  position is still a name: `(let ((or 7)) ((lambda () (or #f or))))`
+  captures the local `or`, and `((lambda () or))` with nothing bound is
+  still an "unbound name" error. A new predicate,
+  `cst::is_short_circuit_form` (and `ApplyView::is_short_circuit_form`),
+  names the two heads. `compile_apply`, `free_vars` and the call-site
+  string-evidence walk all ask it, so they cannot disagree. Every other special form is a lexer keyword with
+  its own grammar rule, so it never parses as an application, and
+  `free_vars` already handled it as syntax. As a side effect,
+  `lambda_captured_globals` no longer counts a `(or …)` inside a lambda as
+  a capture of a top-level value named `or`. Such a value now stays in a
+  register when nothing captures it in value position.
+- **`string<?` / `string>?` write their result as a `bool`.** The E4 fast
+  path lowers them to a three-way `str_cmp [i64]` and then a `cmp_lt` /
+  `cmp_gt` against 0. That comparison was emitted `[i64]` but recorded as
+  `bool`, so a typed `mov` / `ret [bool]` read a register whose only
+  writer claimed `i64`. It is now emitted `[bool]`, the same hint that
+  `(< a b)` gets. `str_cmp` is a real three-way integer and stays `i64`.
+  On x86-64 and AArch64 this hint selects the comparison's signedness
+  (`cmp_lt_bool`). Those backends used to treat `bool` as unsigned, so they
+  needed the matching fix in this change: there, `-1 < 0` would otherwise
+  have been false (see their changelogs). The IR of the 826-program corpus
+  changes in only the two programs that use `string<?` / `string>?`, by that
+  hint. One of them is a
+  `lang_matrix` program. The strengthened soundness check now finds 0
+  problems across the corpus (it found 1 before).
+
+### Not changed
+
+- `str_eq` (`string=?`) is still typed `i64`. Its writer hint and its
+  recorded type agree, so the soundness check has nothing to report. The
+  wasm, JVM, CLR and BEAM validators all require an `i32` / `i64` result
+  hint on `str_eq`, so a `bool` hint would be rejected by every backend.
+
+### Tests
+
+- `and_or_inside_a_lambda_compile_and_capture_nothing`,
+  `and_or_arguments_inside_a_lambda_are_still_captured`,
+  `a_local_named_and_or_is_captured_in_value_position`,
+  `an_unbound_and_or_value_inside_a_lambda_is_still_an_error`,
+  `string_order_result_is_written_as_a_bool` and
+  `string_order_in_a_join_agrees_with_other_bools_only`. `free_vars` has
+  three new unit tests for `and` / `or` heads, `and` / `or` in value
+  position, and `lambda_captured_globals`.
+- `JOIN_PROGRAMS` gains 7 programs with joins inside lambdas (nested joins,
+  a lambda inside a lambda, and a lambda returned from a function) and 5
+  `string<?` / `string>?` joins. `assert_registers_sound` now covers them.
+  Before the fix, the lambda programs failed to compile and the `string<?`
+  programs failed the typed `mov` / `ret` check.
+
+## Unreleased — #18438: a top-level definition shadows a builtin
+
+### Fixed
+
+- **A user's top-level definition now beats a builtin of the same name
+  everywhere.** Before, the call and value positions disagreed, and the
+  typed fast paths trusted the builtin's name:
+
+  ```scheme
+  (define car 5) car (car p)              ; 5, but (car p) ran the builtin car
+  (define (string-append a b) 5)
+  (string-length (string-append "a" "b")) ; call string-append; str_len on 5
+  (define (+ a b) "zz")
+  (string-ref "abc" (+ 0 1))              ; str_index with a str index
+  (define (f x) (string-length x)) (define (string-append a b) 5)
+  (f (string-append "a" "b"))             ; evidence typed x : str
+  ```
+
+  `compile_apply` already called a user *function* before a builtin, but
+  `unshadowed_apply`, the `can_compile_e4_*` and `is_syntax_static_e4_*`
+  checks, and string-parameter evidence only excluded *locals*. So the
+  user's function was called, while the code around it was typed as if the
+  builtin had run. The VM's typed string ops check their operands and
+  raised a `TypeError`. The native backends trust the hint, so there this
+  was type confusion. A user *value* define named like a builtin lost in
+  call position altogether.
+
+  A new predicate, `Compiler::resolves_to_builtin(name, is_bound)`, is true
+  only for a builtin that is neither a local nor a top-level definition
+  (function or value define, record or union function, or extern). The
+  `call_builtin` arm of `compile_apply` and every name-recognising fast path
+  ask it. `unshadowed_apply` became the method `builtin_apply`, and
+  `is_syntax_static_e4_string_expr` / `_index_expr` became methods so they
+  can see the globals. A call to a value define named like a builtin now
+  takes the indirect path (`call_closure` on its value), like any other
+  value define. Redefining a builtin is not an error, as in Scheme.
+- **`(and …)` / `(or …)` are no evidence about a user `and` / `or`.**
+  Found in the security review. `collect_direct_string_call_evidence` counted
+  `(and "x" "y")` as a direct call to a user `(define (and a b) …)` and
+  typed its parameters `str`, although the special form never calls that
+  function. The evidence walk now skips `and` / `or` heads, as
+  `compile_apply` does. Test:
+  `and_or_calls_are_no_string_evidence_for_a_user_and_or`. It failed
+  before the fix.
+- **Special forms are unchanged and now documented.** Keywords (`if`,
+  `let`, `let*`, `lambda`, `define`, `quote`, `begin`, `match`, …) cannot
+  be defined: that is a positioned parse error. `and` / `or` can be: the
+  definition is what the name means as a value, but `(and …)` / `(or …)`
+  stay the short-circuit forms.
+
+### Changed
+
+- **IR changes only for programs that define a builtin-named global.** Over
+  an 826-program corpus (the 780 Twig program literals from the twig, twigc
+  and lang-aot test sources, plus this change's 46 new programs), 28
+  programs' IR changed relative to the base branch. Every one of them
+  defines a global named like a builtin. The other 798 are byte-identical,
+  including all 49 Twig programs in `lang-aot`'s `lang_matrix`. Of the 49
+  corpus programs that define such a global, the 21 unchanged ones only
+  call a user function by its name, which was already a `call`.
+
+### Tests
+
+- `BUILTIN_SHADOWING_PROGRAMS`: 31 programs, all run through
+  `assert_registers_sound`. They are the issue's and comment's programs, a
+  user function named like each name-recognised builtin (`string-append`,
+  `string-length`, `substring`, `string-ref`, `+`, `-`, `*`, `/`, `<`, `=`,
+  `car`, `cons`), user values named like builtins, string-parameter
+  evidence through a shadowing definition, and uses before the definition,
+  in a function body and in a lambda.
+- `user_function_named_like_a_builtin_wins_in_both_positions`,
+  `user_value_named_like_a_builtin_wins_in_both_positions`,
+  `typed_fast_paths_do_not_trust_a_shadowing_definition`,
+  `string_param_evidence_ignores_a_shadowing_definition` and
+  `extern_named_like_a_builtin_is_not_typed_as_the_builtin` pin the IR
+  shape. `unshadowed_builtins_keep_their_fast_paths` is the control: only
+  the shadowed name loses its fast path.
+- `and_or_stay_special_forms_when_defined` and
+  `keyword_special_forms_cannot_be_defined` pin the special-form behaviour.
+- Five of these tests failed before the fix. The other four (both-positions
+  for functions, the control and the two special-form tests) pin behaviour
+  that was already right.
+
 ## Unreleased — #18448: join temporaries take the consensus of every writer
 
 ### Fixed

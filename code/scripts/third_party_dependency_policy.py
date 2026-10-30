@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import shlex
 import subprocess
 import sys
 import tomllib
@@ -24,7 +26,106 @@ NPM_DEPENDENCY_TABLES = (
 DEFAULT_ALLOWLISTS = {
     "cargo": Path("code/specs/data/third-party-dependencies/rust-allowlist.json"),
     "npm": Path("code/specs/data/third-party-dependencies/npm-allowlist.json"),
+    "npm-tools": Path(
+        "code/specs/data/third-party-dependencies/npm-tool-allowlist.json"
+    ),
+    "python": Path("code/specs/data/third-party-dependencies/python-allowlist.json"),
+    "python-tools": Path(
+        "code/specs/data/third-party-dependencies/python-tool-allowlist.json"
+    ),
 }
+PYTHON_NAME = re.compile(
+    r"([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
+    r"(?=\s*(?:\[|@|[<>=!~;(]|$))"
+)
+AUTOMATION_TOOL_SOURCE_PATHS = (
+    ":(glob).github/**/*.yml",
+    ":(glob).github/**/*.yaml",
+    ":(glob)**/BUILD",
+    ":(glob)**/BUILD_*",
+    ":(glob)**/*.sh",
+    ":(glob)**/*.bash",
+    ":(glob)**/*.zsh",
+    ":(glob)**/*.ps1",
+    ":(glob)**/*.bat",
+    ":(glob)**/*.cmd",
+    ":(glob)**/Makefile",
+    ":(glob)**/*.mk",
+    ":(glob)**/Dockerfile",
+    ":(glob)**/Dockerfile.*",
+)
+NPM_COMMAND_START = re.compile(
+    r"(?:^|[;&|()]|[ \t-]run:[ \t]|=[ \t]*[\"'])[ \t]*(?:-[ \t]+)?"
+    r"(?:(?:if|then|do|sudo|command|exec|time|env)[ \t]+|![ \t]*)*"
+    r"(?:[A-Za-z_][A-Za-z0-9_]*=[^ \t]+[ \t]+)*"
+    r"(?P<command>npx|npm)\b"
+)
+PYTHON_TOOL_COMMAND_START = re.compile(
+    r"(?:^|[;&|()]|[ \t-]run:[ \t]|=[ \t]*[\"'])[ \t]*(?:-[ \t]+)?"
+    r"(?:(?:if|then|do|sudo|command|exec|time|env)[ \t]+|![ \t]*)*"
+    r"(?:[A-Za-z_][A-Za-z0-9_]*=[^ \t]+[ \t]+)*"
+    r"(?:"
+    r"(?:(?:[A-Za-z0-9_.\\/-]+[\\/])?(?:python3?|py))[ \t]+-m[ \t]+pip"
+    r"[ \t]+(?P<module_pip>install)"
+    r"|(?:(?:[A-Za-z0-9_.\\/-]+[\\/])?pip3?)[ \t]+(?P<pip>install)"
+    r"|uv[ \t]+pip[ \t]+(?P<uv_pip>install)"
+    r"|uv[ \t]+tool[ \t]+(?P<uv_tool>install|run)"
+    r"|(?P<uvx>uvx)"
+    r"|pipx[ \t]+(?P<pipx>install|run)"
+    r")\b"
+)
+SHELL_SEPARATOR = re.compile(r"[ \t]*(?:&&|\|\||[;|()]|\n)")
+SHELL_REDIRECTION = re.compile(r"^(?:\d*>>?|\d*<<?)")
+NPM_OPTIONS_WITH_VALUES = {
+    "--cache",
+    "--call",
+    "--include",
+    "--install-strategy",
+    "--loglevel",
+    "--omit",
+    "--prefix",
+    "--registry",
+    "--tag",
+    "--userconfig",
+    "--workspace",
+    "-c",
+    "-w",
+}
+NPX_PACKAGE_OPTIONS = {"--package", "-p"}
+PYTHON_INSTALL_OPTIONS_WITH_VALUES = {
+    "--abi",
+    "--cache-dir",
+    "--cert",
+    "--client-cert",
+    "--constraint",
+    "--extra-index-url",
+    "--find-links",
+    "--implementation",
+    "--index-url",
+    "--platform",
+    "--prefix",
+    "--proxy",
+    "--python",
+    "--python-version",
+    "--retries",
+    "--root",
+    "--src",
+    "--target",
+    "--timeout",
+    "--trusted-host",
+    "-c",
+    "-f",
+    "-t",
+}
+PYTHON_REQUIREMENT_FILE_OPTIONS = {"--requirement", "-r"}
+PYTHON_EDITABLE_OPTIONS = {"--editable", "-e"}
+PYTHON_RUNNER_OPTIONS_WITH_VALUES = {
+    "--index-url",
+    "--python",
+    "--python-platform",
+    "--python-version",
+}
+PYTHON_RUNNER_PACKAGE_OPTIONS = {"--from", "--spec", "--with"}
 
 
 class PolicyError(ValueError):
@@ -74,15 +175,114 @@ def git_npm_manifests(root: Path) -> list[Path]:
     )
 
 
+def git_python_manifests(root: Path) -> list[Path]:
+    """Return every tracked Python project manifest."""
+
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", ":(glob)**/pyproject.toml"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return sorted(
+        root / raw_path.decode("utf-8", errors="surrogateescape")
+        for raw_path in result.stdout.split(b"\0")
+        if raw_path
+    )
+
+
+def git_npm_tool_sources(root: Path) -> list[Path]:
+    """Return tracked automation files that can acquire npm tools."""
+
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", *AUTOMATION_TOOL_SOURCE_PATHS],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return sorted(
+        root / raw_path.decode("utf-8", errors="surrogateescape")
+        for raw_path in result.stdout.split(b"\0")
+        if raw_path
+    )
+
+
+def git_python_tool_sources(root: Path) -> list[Path]:
+    """Return tracked automation files that can acquire Python tools."""
+
+    return git_npm_tool_sources(root)
+
+
+def tracked_text_document(path: Path, repository_root: Path) -> str:
+    """Read tracked text from disk or, in a sparse checkout, Git's index."""
+
+    return tracked_text_documents([path], repository_root)[path]
+
+
+def tracked_text_documents(
+    paths: Iterable[Path], repository_root: Path
+) -> dict[Path, str]:
+    """Batch-read tracked text, including files absent from sparse checkouts."""
+
+    documents: dict[Path, str] = {}
+    missing: list[Path] = []
+    try:
+        for path in paths:
+            if path.is_file():
+                documents[path] = path.read_text(encoding="utf-8")
+            else:
+                missing.append(path)
+        if not missing:
+            return documents
+        queries = "".join(
+            f":{path.relative_to(repository_root).as_posix()}\n" for path in missing
+        ).encode()
+        result = subprocess.run(
+            ["git", "cat-file", "--batch"],
+            cwd=repository_root,
+            check=True,
+            input=queries,
+            capture_output=True,
+        )
+        output = result.stdout
+        offset = 0
+        for path in missing:
+            header_end = output.find(b"\n", offset)
+            if header_end == -1:
+                raise PolicyError(f"cannot read {path}: truncated Git object header")
+            header = output[offset:header_end].split()
+            if len(header) != 3 or header[1] != b"blob":
+                raise PolicyError(f"cannot read {path}: invalid Git object header")
+            size = int(header[2])
+            start = header_end + 1
+            end = start + size
+            if end >= len(output) or output[end : end + 1] != b"\n":
+                raise PolicyError(f"cannot read {path}: truncated Git object")
+            documents[path] = output[start:end].decode("utf-8")
+            offset = end + 1
+        return documents
+    except (OSError, UnicodeDecodeError, subprocess.CalledProcessError) as error:
+        raise PolicyError(f"cannot batch-read tracked text: {error}") from error
+
+
+def parse_json_manifest_text(text: str, path: Path) -> Mapping[str, Any]:
+    """Parse one package manifest while rejecting duplicate keys."""
+
+    try:
+        document = json.loads(text, object_pairs_hook=unique_json_object)
+    except json.JSONDecodeError as error:
+        raise PolicyError(f"cannot parse {path}: {error}") from error
+    if not isinstance(document, Mapping):
+        raise PolicyError(f"cannot parse {path}: top level must be a JSON object")
+    return document
+
+
 def json_manifest_document(path: Path, repository_root: Path) -> Mapping[str, Any]:
     """Read a JSON manifest from disk or, in a sparse checkout, Git's index."""
 
     try:
         if path.is_file():
-            document = json.loads(
-                path.read_text(encoding="utf-8"),
-                object_pairs_hook=unique_json_object,
-            )
+            text = path.read_text(encoding="utf-8")
         else:
             relative_path = path.relative_to(repository_root).as_posix()
             result = subprocess.run(
@@ -91,20 +291,14 @@ def json_manifest_document(path: Path, repository_root: Path) -> Mapping[str, An
                 check=True,
                 capture_output=True,
             )
-            document = json.loads(
-                result.stdout,
-                object_pairs_hook=unique_json_object,
-            )
+            text = result.stdout.decode("utf-8")
     except (
         OSError,
         UnicodeDecodeError,
         subprocess.CalledProcessError,
-        json.JSONDecodeError,
     ) as error:
         raise PolicyError(f"cannot parse {path}: {error}") from error
-    if not isinstance(document, Mapping):
-        raise PolicyError(f"cannot parse {path}: top level must be a JSON object")
-    return document
+    return parse_json_manifest_text(text, path)
 
 
 def npm_alias_target(specifier: str) -> str | None:
@@ -118,6 +312,142 @@ def npm_alias_target(specifier: str) -> str | None:
     if not package:
         raise PolicyError(f"invalid npm alias specifier {specifier!r}")
     return package
+
+
+def npm_package_name(specifier: str) -> str | None:
+    """Normalize an npm install specifier to its exact package name."""
+
+    alias_marker = specifier.find("@npm:", 1)
+    if alias_marker != -1:
+        specifier = specifier[alias_marker + 1 :]
+    if specifier.startswith("npm:"):
+        return npm_alias_target(specifier)
+    if (
+        not specifier
+        or specifier in {"(", ")", "{", "}"}
+        or ">" in specifier
+        or "<" in specifier
+        or specifier.startswith((".", "/", "file:"))
+    ):
+        return None
+    if specifier.startswith(
+        ("git+", "git:", "http:", "https:", "github:", "gitlab:", "bitbucket:")
+    ):
+        raise PolicyError(
+            f"remote npm tool specifier {specifier!r} must use a package name"
+        )
+    if specifier.startswith("@"):
+        separator = specifier.find("@", 1)
+        package = specifier if separator == -1 else specifier[:separator]
+    else:
+        package = specifier.split("@", 1)[0]
+    if not package or (package.startswith("@") and "/" not in package):
+        raise PolicyError(f"invalid npm package specifier {specifier!r}")
+    return package
+
+
+def command_arguments(command: str, end: int) -> list[str]:
+    """Tokenize one tool command up to the next shell command separator."""
+
+    remainder = command[end:]
+    separator = SHELL_SEPARATOR.search(remainder)
+    if separator is not None:
+        remainder = remainder[: separator.start()]
+    remainder = remainder.strip()
+    try:
+        return shlex.split(remainder, comments=True, posix=True)
+    except ValueError as error:
+        if remainder.endswith(("'", '"')):
+            try:
+                return shlex.split(remainder[:-1], comments=True, posix=True)
+            except ValueError:
+                pass
+        raise PolicyError(f"cannot parse tool command: {error}") from error
+
+
+def npx_package_names(arguments: list[str]) -> set[str]:
+    """Return packages acquired by npx or npm exec arguments."""
+
+    explicit: set[str] = set()
+    command_name: str | None = None
+    index = 0
+    while index < len(arguments):
+        argument = arguments[index]
+        if argument == "--":
+            index += 1
+            if index < len(arguments):
+                command_name = arguments[index]
+            break
+        if argument in NPX_PACKAGE_OPTIONS:
+            index += 1
+            if index >= len(arguments):
+                raise PolicyError(f"{argument} requires an npm package")
+            name = npm_package_name(arguments[index])
+            if name is not None:
+                explicit.add(name)
+        elif any(argument.startswith(f"{option}=") for option in NPX_PACKAGE_OPTIONS):
+            name = npm_package_name(argument.split("=", 1)[1])
+            if name is not None:
+                explicit.add(name)
+        elif argument in NPM_OPTIONS_WITH_VALUES:
+            index += 1
+            if index >= len(arguments):
+                raise PolicyError(f"{argument} requires a value")
+        elif argument.startswith("-"):
+            pass
+        else:
+            command_name = argument
+            break
+        index += 1
+    if explicit:
+        return explicit
+    name = npm_package_name(command_name or "")
+    return {name} if name is not None else set()
+
+
+def npm_install_package_names(arguments: list[str]) -> set[str]:
+    """Return explicit package names from npm install/i/add arguments."""
+
+    names: set[str] = set()
+    index = 0
+    while index < len(arguments):
+        argument = arguments[index]
+        if argument in NPM_OPTIONS_WITH_VALUES:
+            index += 1
+            if index >= len(arguments):
+                raise PolicyError(f"{argument} requires a value")
+        elif argument.startswith("-"):
+            pass
+        else:
+            name = npm_package_name(argument)
+            if name is not None:
+                names.add(name)
+        index += 1
+    return names
+
+
+def npm_tool_names(command: str) -> set[str]:
+    """Return npm package names acquired by executable command positions."""
+
+    names: set[str] = set()
+    normalized = command.replace("\\\n", " ")
+    for line in normalized.splitlines():
+        if line.lstrip().startswith("#"):
+            continue
+        for match in NPM_COMMAND_START.finditer(line):
+            executable = match.group("command")
+            arguments = command_arguments(line, match.end())
+            if executable == "npx":
+                names.update(npx_package_names(arguments))
+                continue
+            if not arguments:
+                continue
+            subcommand, remaining = arguments[0], arguments[1:]
+            if subcommand == "exec":
+                names.update(npx_package_names(remaining))
+            elif subcommand in {"install", "i", "add"}:
+                names.update(npm_install_package_names(remaining))
+    return names
 
 
 def npm_third_party_name(
@@ -343,15 +673,424 @@ def build_npm_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list
     return {name: sorted(paths) for name, paths in sorted(inventory.items())}
 
 
-def validate_allowlist(document: Any, label: str, ecosystem: str = "cargo") -> list[str]:
+def build_npm_tool_inventory(
+    root: Path,
+    sources: Iterable[Path],
+    manifests: Iterable[Path],
+) -> dict[str, list[str]]:
+    """Map npm tools acquired by tracked automation to their source files."""
+
+    source_list = list(sources)
+    manifest_list = list(manifests)
+    documents = tracked_text_documents([*source_list, *manifest_list], root)
+    inventory: dict[str, set[str]] = {}
+    for source in source_list:
+        display_path = source.relative_to(root).as_posix()
+        try:
+            names = npm_tool_names(documents[source])
+        except PolicyError as error:
+            raise PolicyError(f"cannot parse {display_path}: {error}") from error
+        for name in names:
+            inventory.setdefault(name, set()).add(display_path)
+    for manifest in manifest_list:
+        document = parse_json_manifest_text(documents[manifest], manifest)
+        scripts = document.get("scripts")
+        if scripts is None:
+            continue
+        if not isinstance(scripts, Mapping):
+            raise PolicyError(f"{manifest} scripts must be a JSON object")
+        display_path = manifest.relative_to(root).as_posix()
+        for script_name, command in scripts.items():
+            if not isinstance(script_name, str) or not isinstance(command, str):
+                raise PolicyError(f"{manifest} scripts must map strings to strings")
+            try:
+                names = npm_tool_names(command)
+            except PolicyError as error:
+                raise PolicyError(
+                    f"cannot parse {display_path} script {script_name!r}: {error}"
+                ) from error
+            for name in names:
+                inventory.setdefault(name, set()).add(display_path)
+    return {name: sorted(paths) for name, paths in sorted(inventory.items())}
+
+
+def python_tool_package_name(specifier: str) -> str | None:
+    """Normalize a Python tool specifier, excluding local path installs."""
+
+    specifier = specifier.strip()
+    if (
+        not specifier
+        or specifier.startswith((".", "/", "\\", "file:"))
+        or re.match(r"^[A-Za-z]:[\\/]", specifier)
+    ):
+        return None
+    if specifier.startswith(("git+", "git:", "http:", "https:")):
+        raise PolicyError(
+            f"remote Python tool specifier {specifier!r} must use a package name"
+        )
+    return python_requirement_name(specifier, "Python tool command")
+
+
+def python_install_package_names(arguments: list[str]) -> set[str]:
+    """Return package names acquired by pip or uv pip install."""
+
+    names: set[str] = set()
+    index = 0
+    while index < len(arguments):
+        argument = arguments[index]
+        if SHELL_REDIRECTION.match(argument):
+            break
+        if argument in PYTHON_REQUIREMENT_FILE_OPTIONS or any(
+            argument.startswith(f"{option}=")
+            for option in PYTHON_REQUIREMENT_FILE_OPTIONS
+        ):
+            raise PolicyError(
+                "Python tool installs must declare packages inline, not by file"
+            )
+        if argument in PYTHON_EDITABLE_OPTIONS:
+            index += 1
+            if index >= len(arguments):
+                raise PolicyError(f"{argument} requires a Python package or path")
+            name = python_tool_package_name(arguments[index])
+            if name is not None:
+                names.add(name)
+        elif any(
+            argument.startswith(f"{option}=") for option in PYTHON_EDITABLE_OPTIONS
+        ):
+            name = python_tool_package_name(argument.split("=", 1)[1])
+            if name is not None:
+                names.add(name)
+        elif argument in PYTHON_INSTALL_OPTIONS_WITH_VALUES:
+            index += 1
+            if index >= len(arguments):
+                raise PolicyError(f"{argument} requires a value")
+        elif any(
+            argument.startswith(f"{option}=")
+            for option in PYTHON_INSTALL_OPTIONS_WITH_VALUES
+        ):
+            pass
+        elif argument.startswith("-"):
+            pass
+        else:
+            name = python_tool_package_name(argument)
+            if name is not None:
+                names.add(name)
+        index += 1
+    return names
+
+
+def python_runner_package_names(arguments: list[str]) -> set[str]:
+    """Return packages acquired by pipx, uv tool, or uvx commands."""
+
+    names: set[str] = set()
+    command_name: str | None = None
+    primary_override = False
+    index = 0
+    while index < len(arguments):
+        argument = arguments[index]
+        matching_package_option = next(
+            (
+                option
+                for option in PYTHON_RUNNER_PACKAGE_OPTIONS
+                if argument == option or argument.startswith(f"{option}=")
+            ),
+            None,
+        )
+        if matching_package_option is not None:
+            if argument == matching_package_option:
+                index += 1
+                if index >= len(arguments):
+                    raise PolicyError(f"{argument} requires a Python package")
+                specifier = arguments[index]
+            else:
+                specifier = argument.split("=", 1)[1]
+            name = python_tool_package_name(specifier)
+            if name is not None:
+                names.add(name)
+            if matching_package_option in {"--from", "--spec"}:
+                primary_override = True
+        elif argument in {"--with-requirements"} or argument.startswith(
+            "--with-requirements="
+        ):
+            raise PolicyError(
+                "Python tool installs must declare packages inline, not by file"
+            )
+        elif argument in PYTHON_RUNNER_OPTIONS_WITH_VALUES:
+            index += 1
+            if index >= len(arguments):
+                raise PolicyError(f"{argument} requires a value")
+        elif any(
+            argument.startswith(f"{option}=")
+            for option in PYTHON_RUNNER_OPTIONS_WITH_VALUES
+        ):
+            pass
+        elif argument == "--":
+            index += 1
+            if index < len(arguments):
+                command_name = arguments[index]
+            break
+        elif argument.startswith("-"):
+            pass
+        else:
+            command_name = argument
+            break
+        index += 1
+    if command_name is not None and not primary_override:
+        name = python_tool_package_name(command_name)
+        if name is not None:
+            names.add(name)
+    return names
+
+
+def python_tool_names(command: str) -> set[str]:
+    """Return Python package names acquired by executable command positions."""
+
+    names: set[str] = set()
+    normalized = command.replace("\\\n", " ")
+    for line in normalized.splitlines():
+        if line.lstrip().startswith("#"):
+            continue
+        for match in PYTHON_TOOL_COMMAND_START.finditer(line):
+            arguments = command_arguments(line, match.end())
+            if any(match.group(group) for group in ("module_pip", "pip", "uv_pip")):
+                names.update(python_install_package_names(arguments))
+            else:
+                names.update(python_runner_package_names(arguments))
+    return names
+
+
+def build_python_tool_inventory(
+    root: Path,
+    sources: Iterable[Path],
+    manifests: Iterable[Path],
+) -> dict[str, list[str]]:
+    """Map Python tools acquired by tracked automation to source files."""
+
+    source_list = list(sources)
+    manifest_list = list(manifests)
+    documents = tracked_text_documents([*source_list, *manifest_list], root)
+    inventory: dict[str, set[str]] = {}
+    for source in source_list:
+        display_path = source.relative_to(root).as_posix()
+        try:
+            names = python_tool_names(documents[source])
+        except PolicyError as error:
+            raise PolicyError(f"cannot parse {display_path}: {error}") from error
+        for name in names:
+            inventory.setdefault(name, set()).add(display_path)
+    for manifest in manifest_list:
+        document = parse_json_manifest_text(documents[manifest], manifest)
+        scripts = document.get("scripts")
+        if scripts is None:
+            continue
+        if not isinstance(scripts, Mapping):
+            raise PolicyError(f"{manifest} scripts must be a JSON object")
+        display_path = manifest.relative_to(root).as_posix()
+        for script_name, command in scripts.items():
+            if not isinstance(script_name, str) or not isinstance(command, str):
+                raise PolicyError(f"{manifest} scripts must map strings to strings")
+            try:
+                names = python_tool_names(command)
+            except PolicyError as error:
+                raise PolicyError(
+                    f"cannot parse {display_path} script {script_name!r}: {error}"
+                ) from error
+            for name in names:
+                inventory.setdefault(name, set()).add(display_path)
+    return {name: sorted(paths) for name, paths in sorted(inventory.items())}
+
+
+def canonical_python_name(name: str) -> str:
+    """Return the PEP 503 normalized Python distribution name."""
+
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def python_requirement_name(requirement: Any, label: str) -> str:
+    """Extract and normalize the distribution name from a PEP 508 string."""
+
+    if not isinstance(requirement, str):
+        raise PolicyError(f"{label} must contain requirement strings")
+    match = PYTHON_NAME.match(requirement.strip())
+    if match is None:
+        raise PolicyError(f"{label} has an invalid requirement {requirement!r}")
+    return canonical_python_name(match.group())
+
+
+def python_requirement_groups(
+    document: Mapping[str, Any], path: Path
+) -> Iterable[tuple[str, list[Any]]]:
+    """Yield standard Python requirement arrays with descriptive labels."""
+
+    build_system = document.get("build-system")
+    if build_system is not None:
+        if not isinstance(build_system, Mapping):
+            raise PolicyError(f"{path} build-system must be a TOML table")
+        requires = build_system.get("requires", [])
+        if not isinstance(requires, list):
+            raise PolicyError(f"{path} build-system.requires must be an array")
+        yield "build-system.requires", requires
+
+    project = document.get("project")
+    if project is not None:
+        if not isinstance(project, Mapping):
+            raise PolicyError(f"{path} project must be a TOML table")
+        dependencies = project.get("dependencies", [])
+        if not isinstance(dependencies, list):
+            raise PolicyError(f"{path} project.dependencies must be an array")
+        yield "project.dependencies", dependencies
+        optional = project.get("optional-dependencies", {})
+        if not isinstance(optional, Mapping):
+            raise PolicyError(
+                f"{path} project.optional-dependencies must be a TOML table"
+            )
+        for group, requirements in optional.items():
+            if not isinstance(group, str) or not isinstance(requirements, list):
+                raise PolicyError(
+                    f"{path} project.optional-dependencies must map names to arrays"
+                )
+            yield f"project.optional-dependencies.{group}", requirements
+
+    dependency_groups = document.get("dependency-groups", {})
+    if not isinstance(dependency_groups, Mapping):
+        raise PolicyError(f"{path} dependency-groups must be a TOML table")
+    for group, requirements in dependency_groups.items():
+        if not isinstance(group, str) or not isinstance(requirements, list):
+            raise PolicyError(f"{path} dependency-groups must map names to arrays")
+        strings: list[Any] = []
+        for entry in requirements:
+            if isinstance(entry, Mapping):
+                if (
+                    set(entry) != {"include-group"}
+                    or not isinstance(entry["include-group"], str)
+                    or not entry["include-group"]
+                ):
+                    raise PolicyError(
+                        f"{path} dependency-groups.{group} has an invalid include"
+                    )
+                continue
+            strings.append(entry)
+        yield f"dependency-groups.{group}", strings
+
+
+def python_local_source_names(
+    root: Path,
+    documents: Mapping[Path, Mapping[str, Any]],
+) -> dict[Path, set[str]]:
+    """Map projects to names explicitly sourced from tracked local projects."""
+
+    tracked_manifests = {path.resolve() for path in documents}
+    local_names = {path.resolve(): set() for path in documents}
+    for manifest, document in documents.items():
+        tool = document.get("tool", {})
+        if not isinstance(tool, Mapping):
+            raise PolicyError(f"{manifest} tool must be a TOML table")
+        uv = tool.get("uv", {})
+        if not isinstance(uv, Mapping):
+            raise PolicyError(f"{manifest} tool.uv must be a TOML table")
+        workspace = uv.get("workspace", {})
+        if not isinstance(workspace, Mapping):
+            raise PolicyError(f"{manifest} tool.uv.workspace must be a TOML table")
+        members = workspace.get("members", [])
+        if not isinstance(members, list) or not all(
+            isinstance(member, str) and member for member in members
+        ):
+            raise PolicyError(f"{manifest} tool.uv.workspace.members must be strings")
+        workspace_names: dict[str, Path] = {}
+        for member in members:
+            candidate = (manifest.parent / member / "pyproject.toml").resolve()
+            if candidate not in tracked_manifests:
+                raise PolicyError(
+                    f"{manifest} workspace member {member!r} is not a tracked project"
+                )
+            member_project = documents[candidate].get("project", {})
+            member_name = (
+                member_project.get("name")
+                if isinstance(member_project, Mapping)
+                else None
+            )
+            if not isinstance(member_name, str) or not member_name:
+                raise PolicyError(f"{candidate} has no valid project.name")
+            workspace_names[canonical_python_name(member_name)] = candidate
+
+        sources = uv.get("sources", {})
+        if not isinstance(sources, Mapping):
+            raise PolicyError(f"{manifest} tool.uv.sources must be a TOML table")
+        for source_name, source in sources.items():
+            if not isinstance(source_name, str) or not isinstance(source, Mapping):
+                raise PolicyError(f"{manifest} tool.uv.sources has an invalid source")
+            if PYTHON_NAME.fullmatch(source_name) is None:
+                raise PolicyError(
+                    f"{manifest} tool.uv.sources has an invalid distribution name"
+                )
+            normalized_name = canonical_python_name(source_name)
+            dependency_path = source.get("path")
+            if dependency_path is not None:
+                if not isinstance(dependency_path, str) or not dependency_path:
+                    raise PolicyError(
+                        f"{manifest} source {source_name!r} has an invalid path"
+                    )
+                candidate = (
+                    manifest.parent / dependency_path / "pyproject.toml"
+                ).resolve()
+                try:
+                    candidate.relative_to(root.resolve())
+                except ValueError:
+                    continue
+                if set(source).issubset({"path", "editable"}) and (
+                    candidate in tracked_manifests
+                ):
+                    local_names[manifest.resolve()].add(normalized_name)
+            elif source == {"workspace": True}:
+                if normalized_name not in workspace_names:
+                    raise PolicyError(
+                        f"{manifest} source {source_name!r} is not a workspace member"
+                    )
+                local_names[manifest.resolve()].add(normalized_name)
+                for member_manifest in workspace_names.values():
+                    local_names[member_manifest].add(normalized_name)
+    return local_names
+
+
+def build_python_inventory(
+    root: Path, manifests: Iterable[Path]
+) -> dict[str, list[str]]:
+    """Map third-party Python names to the manifests declaring them."""
+
+    manifest_list = list(manifests)
+    texts = tracked_text_documents(manifest_list, root)
+    documents: dict[Path, Mapping[str, Any]] = {}
+    for manifest, text in texts.items():
+        try:
+            document = tomllib.loads(text)
+        except tomllib.TOMLDecodeError as error:
+            raise PolicyError(f"cannot parse {manifest}: {error}") from error
+        documents[manifest.resolve()] = document
+
+    local_names = python_local_source_names(root, documents)
+    inventory: dict[str, list[str]] = {}
+    for manifest in manifest_list:
+        resolved = manifest.resolve()
+        display_path = manifest.relative_to(root).as_posix()
+        for label, requirements in python_requirement_groups(
+            documents[resolved], manifest
+        ):
+            for requirement in requirements:
+                name = python_requirement_name(requirement, f"{manifest} {label}")
+                if name not in local_names[resolved]:
+                    inventory.setdefault(name, []).append(display_path)
+    return {name: sorted(set(paths)) for name, paths in sorted(inventory.items())}
+
+
+def validate_allowlist(
+    document: Any, label: str, ecosystem: str = "cargo"
+) -> list[str]:
     """Structurally validate an allowlist JSON document."""
 
     if not isinstance(document, Mapping):
         raise PolicyError(f"{label} must contain a JSON object")
     if document.get("schema_version") != 1 or document.get("ecosystem") != ecosystem:
-        raise PolicyError(
-            f"{label} must be a schema_version 1 {ecosystem} allowlist"
-        )
+        raise PolicyError(f"{label} must be a schema_version 1 {ecosystem} allowlist")
     names = document.get("allowed_dependency_names")
     if not isinstance(names, list) or not all(
         isinstance(name, str) and name for name in names
@@ -449,7 +1188,11 @@ def render_failure(
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("check", "inventory"))
-    parser.add_argument("--ecosystem", choices=("cargo", "npm"), default="cargo")
+    parser.add_argument(
+        "--ecosystem",
+        choices=("cargo", "npm", "npm-tools", "python", "python-tools"),
+        default="cargo",
+    )
     parser.add_argument(
         "--root", type=Path, default=Path(__file__).resolve().parents[2]
     )
@@ -469,9 +1212,30 @@ def main(argv: list[str] | None = None) -> int:
         if args.ecosystem == "cargo":
             manifests = git_cargo_manifests(root)
             inventory = build_inventory(root, manifests)
-        else:
+            input_count = len(manifests)
+            input_label = "manifests"
+        elif args.ecosystem == "npm":
             manifests = git_npm_manifests(root)
             inventory = build_npm_inventory(root, manifests)
+            input_count = len(manifests)
+            input_label = "manifests"
+        elif args.ecosystem == "npm-tools":
+            sources = git_npm_tool_sources(root)
+            manifests = git_npm_manifests(root)
+            inventory = build_npm_tool_inventory(root, sources, manifests)
+            input_count = len(sources) + len(manifests)
+            input_label = "automation inputs"
+        elif args.ecosystem == "python":
+            manifests = git_python_manifests(root)
+            inventory = build_python_inventory(root, manifests)
+            input_count = len(manifests)
+            input_label = "manifests"
+        else:
+            sources = git_python_tool_sources(root)
+            manifests = git_npm_manifests(root)
+            inventory = build_python_tool_inventory(root, sources, manifests)
+            input_count = len(sources) + len(manifests)
+            input_label = "automation inputs"
     except (PolicyError, subprocess.CalledProcessError) as error:
         print(error, file=sys.stderr)
         return 1
@@ -502,16 +1266,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     if unknown or stale or allowlist_growth:
         print(
-            render_failure(
-                inventory, unknown, stale, allowlist_growth, args.ecosystem
-            ),
+            render_failure(inventory, unknown, stale, allowlist_growth, args.ecosystem),
             file=sys.stderr,
         )
         return 1
     print(
         f"{args.ecosystem} dependency inventory matches "
         f"{len(allowed_names)} approved names "
-        f"across {len(manifests)} manifests."
+        f"across {input_count} {input_label}."
     )
     return 0
 

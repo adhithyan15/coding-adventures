@@ -16,6 +16,35 @@
 //! | `"putchar"` | Writes the low byte of one integer to stdout (LANG83 standard builtin) |
 //! | `"write_i64"` | Prints one integer in decimal, **no** newline (LANG83 PR1b standard builtin) |
 //!
+//! ## The dynamic builtins (what a lisp-family frontend emits)
+//!
+//! A dynamically-typed frontend (Twig is the one that matters today) cannot
+//! always prove its operands are integers. `(define (f x) (if (< x 0) 42 7))`
+//! has no type for `x`, so the compiler cannot emit the typed `cmp_lt` opcode;
+//! it emits `call_builtin "<", x, 0` and leaves the decision to run time. The
+//! code-gen backends rewrite those calls in `iir-builtin-lowering`; the generic
+//! VM runs them directly, because a [`Value`] already *is* the dynamic value.
+//! So every source-level builtin the frontend can leave in the IIR must be
+//! registered here, or the VM stops with `UnknownOpcode("builtin \"<\"")`.
+//!
+//! | Name | Accepts | Result |
+//! |------|---------|--------|
+//! | `"+"` `"-"` `"*"` | two `Int`s (wrapping) or two `Float`s | same kind |
+//! | `"<"` `"<="` `">"` `">="` | two `Int`s or two `Float`s | `Bool` |
+//! | `"="` `"equal?"` | any two values | `Bool` (`Value` equality) |
+//! | `"pair?"` | any one value | `Bool`: is it a non-null heap reference? |
+//!
+//! An operand outside the "Accepts" column is a [`VMError::TypeError`], never
+//! a panic and never a silent coercion: `(< "a" 1)` is an error, as it is on
+//! `twig-vm`, whose `dynval-runtime` rejects a non-integer operand of `<`
+//! ("`<` expects integers").
+//!
+//! **Known gap (#18470):** on this VM nil and interned symbols are themselves
+//! `Value::Int`s (nil is `Int(0)`, a symbol is `Int(SYMBOL_ID_BASE + id)`), so
+//! they reach the integer arm: `(< '() 1)` is `#t` here where `twig-vm` raises.
+//! Closing that needs a representation for nil and symbols that is not an
+//! integer, the same decision `number?` / `symbol?` are waiting on.
+//!
 //! There is no float writer. LANG83 PR6a's `write_f64_py` / `write_f64_js`
 //! (a float in Python's / JavaScript's layout) were removed in PR7e, because
 //! a VM builtin may not carry one language's rules: a compiler prints a float
@@ -93,6 +122,101 @@ fn dyn_arith(sym: &str, args: &[Value]) -> Result<Value, VMError> {
             actual: format!("{} and {}", a.iir_type_name(), b.iir_type_name()),
             context: format!("dynamic `{sym}`"),
         }),
+    }
+}
+
+/// The dynamic ordering primitive shared by `<` / `<=` / `>` / `>=` — the
+/// comparison sibling of [`dyn_arith`], with the same operand contract.
+///
+/// | operands            | result                                  |
+/// |---------------------|-----------------------------------------|
+/// | `Int a`, `Int b`    | `Bool(a OP b)`, a **signed** i64 compare |
+/// | `Float a`, `Float b`| `Bool(a OP b)`, IEEE (`NaN` → `false`)   |
+/// | anything else       | `VMError::TypeError`                     |
+///
+/// Three choices here are deliberate, and each one is "do what the other
+/// engines already do", not a new rule:
+///
+/// * **Signed.** `(< -5 0)` is true. `twig-vm` compares two `i64`s, and the
+///   code-gen backends lower the same call to `cmp_lt` on `i64` (signed on
+///   the native ones too once #18453's fix lands).
+/// * **No `Bool` as a number.** [`Value::as_i64`] reads `true` as `1`, which is
+///   right for a typed `bool` register but wrong here: Scheme's `(< #t 2)` is a
+///   type error, and `twig-vm`'s `as_int` rejects a boolean. So this matches on
+///   `Value::Int` itself rather than calling `as_i64`.
+/// * **Two numbers of one kind.** Twig has only integers, so for every Twig
+///   program this is `twig-vm`'s integer-only rule. The `Float` arm keeps the
+///   comparisons in step with `+`/`-`/`*` above, which already accept two
+///   floats; a mixed `Int`/`Float` pair is refused by both, for the same
+///   reason (no implicit numeric promotion in the dynamic contract).
+///
+/// Only the binary form exists. Scheme's chained `(< a b c)` would need its own
+/// rule (`a<b ∧ b<c`), and neither `dynval-runtime` nor the code-gen lowering
+/// implements it, so a third argument is an arity error everywhere.
+fn dyn_compare(sym: &str, args: &[Value]) -> Result<Value, VMError> {
+    if args.len() != 2 {
+        return Err(VMError::Custom(format!(
+            "`{sym}` requires exactly 2 arguments, got {}",
+            args.len()
+        )));
+    }
+    // One table, two numeric kinds: pick the operator once, apply it to
+    // whichever pair of numbers we were handed. `PartialOrd` gives IEEE
+    // semantics for `f64` (every comparison with a NaN is false).
+    fn apply<T: PartialOrd>(sym: &str, a: T, b: T) -> bool {
+        match sym {
+            "<" => a < b,
+            "<=" => a <= b,
+            ">" => a > b,
+            ">=" => a >= b,
+            _ => unreachable!("dyn_compare is only registered for < <= > >="),
+        }
+    }
+    match (&args[0], &args[1]) {
+        (Value::Int(a), Value::Int(b)) => Ok(Value::Bool(apply(sym, *a, *b))),
+        (Value::Float(a), Value::Float(b)) => Ok(Value::Bool(apply(sym, *a, *b))),
+        (a, b) => Err(VMError::TypeError {
+            expected: "two numbers of the same kind".into(),
+            actual: format!("{} and {}", a.iir_type_name(), b.iir_type_name()),
+            context: format!("dynamic `{sym}`"),
+        }),
+    }
+}
+
+/// `pair?` on the generic VM: is this value a non-null heap reference?
+///
+/// It looks only at the value's kind; it does not ask the heap whether the
+/// block is live (a dangling host-held `HeapRef` would also answer `#t`).
+///
+/// On this VM a cons cell is what `iir-builtin-lowering::lower_heap_builtins`
+/// turns `cons` into: an `alloc` + two `field_store`s, so a cell is a
+/// [`Value::HeapRef`]. Nil is the null reference (or the integer `0` a
+/// `const 0 : ref<LispyPair>` produces — the same two shapes `is_null` accepts),
+/// and every atom (`Int`, `Float`, `Bool`, `Str`) is not a cell at all.
+///
+/// | argument                     | `pair?` |
+/// |------------------------------|---------|
+/// | `(cons 1 2)` → non-null `HeapRef` | `#t` |
+/// | `'()` → null `HeapRef` / `Int(0)`  | `#f` |
+/// | `42`, `#t`, `"s"`, `1.5`         | `#f` |
+///
+/// This is the *structural* answer: anything the shared lowering builds out of
+/// cells answers `#t`. That includes a record, which is what Twig relies on —
+/// a record's own `<name>?` predicate is compiled to `(pair? v)`. It also
+/// includes a closure once `lower_closures_to_heap` has turned it into a cell
+/// chain, where `twig-vm` (which tags closures separately) says `#f`. A
+/// `HeapRef` carries no "this is a cons" tag, so the VM cannot draw that line;
+/// no Twig program in the matrix asks `pair?` of a closure. For the same
+/// reason a record predicate such as `point?` is `#t` for any cell — a cons,
+/// a closure, or another record type — and the accessor after it reads that
+/// cell's fields (bounds-checked, so a wrong answer, not an unsafe read).
+fn dyn_is_pair(args: &[Value]) -> Result<Value, VMError> {
+    match args {
+        [v] => Ok(Value::Bool(matches!(v, Value::HeapRef(r) if !r.is_null()))),
+        _ => Err(VMError::Custom(format!(
+            "`pair?` requires exactly 1 argument, got {}",
+            args.len()
+        ))),
     }
 }
 
@@ -236,6 +360,28 @@ impl BuiltinRegistry {
             reg.register(sym, move |args| dyn_arith(sym, args));
         }
 
+        // Dynamic ordering (#18463) — `<`/`<=`/`>`/`>=` over `any`. Twig emits
+        // these whenever an operand's type is not statically `i64`, which is
+        // every comparison on an un-annotated function parameter:
+        // `(define (f x) (if (< x 0) 42 7))` compiles to
+        // `call_builtin "<", x, 0`. Before this the VM and JIT matrix columns
+        // stopped there with `UnknownOpcode("builtin \"<\"")` while `twig-vm`
+        // ran the program. See [`dyn_compare`].
+        for sym in ["<", "<=", ">", ">="] {
+            reg.register(sym, move |args| dyn_compare(sym, args));
+        }
+
+        // `pair?` (#18463) — a dynamic *predicate* the structural lowering
+        // leaves as a `call_builtin`: `null?` becomes the `is_null` opcode and
+        // `car`/`cdr`/`cons` become field ops, but `pair?` survives, and a Twig
+        // record's `<name>?` predicate is compiled to it. See [`dyn_is_pair`].
+        // `number?`, `symbol?`, `not` and `list?` survive too but stay
+        // unregistered: on this VM a symbol and nil are both `Int`s, so each
+        // needs a value-representation decision, not just a handler.
+        // `boolean?`, which the shared lowering does not handle for any
+        // backend, waits with them.
+        reg.register("pair?", dyn_is_pair);
+
         reg
     }
 
@@ -362,6 +508,105 @@ mod tests {
             matches!(reg.call("*", &[Value::Int(1), Value::Null]), Err(VMError::TypeError { .. })),
             "non-numeric operand is a clean type error"
         );
+    }
+
+    // ── #18463: dynamic comparisons and `pair?` ─────────────────────────────
+    //
+    // Each of these failed before the fix with
+    // `UnknownOpcode("builtin \"<\"")` (or `"pair?"`): the names were simply
+    // not in the default registry.
+
+    /// The four ordering builtins exist by default — the exact gap #18463
+    /// reported, pinned by name so a refactor of `new()` cannot drop one.
+    #[test]
+    fn dyn_compare_builtins_are_registered_by_default() {
+        let reg = BuiltinRegistry::new();
+        for name in ["<", "<=", ">", ">=", "=", "pair?"] {
+            assert!(reg.has(name), "{name} must be a default builtin");
+        }
+    }
+
+    /// Full truth table on integers, including the cases a sign or
+    /// off-by-one bug would get wrong: equal operands (strict vs non-strict)
+    /// and a negative left operand (`-5 < 0` — #18463's own program).
+    #[test]
+    fn dyn_compare_integer_truth_table() {
+        let reg = BuiltinRegistry::new();
+        let cmp = |op: &str, a: i64, b: i64| reg.call(op, &[Value::Int(a), Value::Int(b)]).unwrap();
+        //             a    b     <      <=     >      >=
+        let table: &[(i64, i64, bool, bool, bool, bool)] = &[
+            (-5, 0, true, true, false, false),
+            (0, -5, false, false, true, true),
+            (3, 3, false, true, false, true),
+            (i64::MIN, i64::MAX, true, true, false, false),
+            (1 << 40, (1 << 40) + 1, true, true, false, false),
+        ];
+        for &(a, b, lt, le, gt, ge) in table {
+            assert_eq!(cmp("<", a, b), Value::Bool(lt), "{a} < {b}");
+            assert_eq!(cmp("<=", a, b), Value::Bool(le), "{a} <= {b}");
+            assert_eq!(cmp(">", a, b), Value::Bool(gt), "{a} > {b}");
+            assert_eq!(cmp(">=", a, b), Value::Bool(ge), "{a} >= {b}");
+        }
+    }
+
+    /// Two floats compare as IEEE doubles, like `+`/`-`/`*` accept two
+    /// floats; a NaN makes every ordering false.
+    #[test]
+    fn dyn_compare_floats() {
+        let reg = BuiltinRegistry::new();
+        let f = |op: &str, a: f64, b: f64| reg.call(op, &[Value::Float(a), Value::Float(b)]).unwrap();
+        assert_eq!(f("<", -1.5, 0.0), Value::Bool(true));
+        assert_eq!(f(">=", 2.0, 2.0), Value::Bool(true));
+        assert_eq!(f(">", 2.0, 2.0), Value::Bool(false));
+        for op in ["<", "<=", ">", ">="] {
+            assert_eq!(f(op, f64::NAN, 1.0), Value::Bool(false), "NaN {op} 1.0");
+        }
+    }
+
+    /// Non-numbers are a `TypeError`, as on `twig-vm` ("`<` expects
+    /// integers"). A boolean is not a number here even though
+    /// `Value::as_i64` would read it as 0/1, and a mixed int/float pair is
+    /// refused exactly as dynamic `+` refuses it.
+    #[test]
+    fn dyn_compare_rejects_non_numbers_and_bad_arity() {
+        let reg = BuiltinRegistry::new();
+        let bad: &[(Value, Value)] = &[
+            (Value::Bool(true), Value::Int(2)),
+            (Value::Int(1), Value::Str("a".into())),
+            (Value::Null, Value::Int(0)),
+            (Value::Int(1), Value::Float(2.0)),
+            (Value::HeapRef(gc_core::HeapRef::new(0x1000)), Value::Int(0)),
+        ];
+        for op in ["<", "<=", ">", ">="] {
+            for (a, b) in bad {
+                let err = reg.call(op, &[a.clone(), b.clone()]).unwrap_err();
+                match err {
+                    VMError::TypeError { context, .. } => assert!(context.contains(op), "{context}"),
+                    other => panic!("{op} {a:?} {b:?}: expected TypeError, got {other:?}"),
+                }
+            }
+            assert!(reg.call(op, &[Value::Int(1)]).is_err(), "{op} with one argument");
+            assert!(
+                reg.call(op, &[Value::Int(1), Value::Int(2), Value::Int(3)]).is_err(),
+                "{op} has no chained form"
+            );
+        }
+    }
+
+    /// `pair?`: a live heap cell is a pair; nil (both of its shapes on this
+    /// VM) and every atom are not.
+    #[test]
+    fn pair_p_distinguishes_cells_from_nil_and_atoms() {
+        let reg = BuiltinRegistry::new();
+        let pair = |v: Value| reg.call("pair?", &[v]).unwrap();
+        assert_eq!(pair(Value::HeapRef(gc_core::HeapRef::new(0x1000))), Value::Bool(true));
+        assert_eq!(pair(Value::HeapRef(gc_core::HeapRef::NULL)), Value::Bool(false), "null ref is nil");
+        assert_eq!(pair(Value::Int(0)), Value::Bool(false), "`const 0 : ref<LispyPair>` nil");
+        for atom in [Value::Int(42), Value::Bool(true), Value::Str("s".into()), Value::Float(1.5), Value::Null] {
+            assert_eq!(pair(atom.clone()), Value::Bool(false), "{atom:?}");
+        }
+        assert!(reg.call("pair?", &[]).is_err(), "pair? needs its argument");
+        assert!(reg.call("pair?", &[Value::Int(1), Value::Int(2)]).is_err());
     }
 
     #[test]

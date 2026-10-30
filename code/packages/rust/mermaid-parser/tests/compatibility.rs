@@ -69,6 +69,14 @@ const C4_RELATIONSHIP_DETAILS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-details-11.16.1-visual-corpus.json"
 ));
+const C4_DYNAMIC_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-dynamic-relationships-11.16.1-corpus.json"
+));
+const C4_DYNAMIC_RELATIONSHIPS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-dynamic-relationships-11.16.1-visual-corpus.json"
+));
 const C4_LAYOUT_CONFIG_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-layout-config-11.16.1-corpus.json"
@@ -84,6 +92,22 @@ const C4_ELEMENT_TECHNOLOGY_CORPUS: &str = include_str!(concat!(
 const C4_ELEMENT_TECHNOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-element-technology-11.16.1-visual-corpus.json"
+));
+const C4_ELEMENT_SHAPES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-shapes-11.16.1-corpus.json"
+));
+const C4_ELEMENT_SHAPES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-shapes-11.16.1-visual-corpus.json"
+));
+const C4_DEPLOYMENT_NODES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-deployment-nodes-11.16.1-corpus.json"
+));
+const C4_DEPLOYMENT_NODES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-deployment-nodes-11.16.1-visual-corpus.json"
 ));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -2662,6 +2686,28 @@ fn pinned_c4_relationship_details_reach_semantic_ir() {
 }
 
 #[test]
+fn pinned_c4_dynamic_relationships_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_DYNAMIC_RELATIONSHIPS_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_DYNAMIC_RELATIONSHIPS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let ordered = parse_c4_diagram(fixtures[0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(
+        ordered.render_config.c4_diagram_type,
+        Some(diagram_ir::C4DiagramType::Dynamic)
+    );
+    assert_eq!(ordered.relationships.len(), 2);
+    let indexed = parse_c4_diagram(fixtures[1]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(indexed.relationships[0].from, "customer");
+    assert_eq!(indexed.relationships[0].to, "api");
+    assert_eq!(indexed.relationships[0].label.as_deref(), Some("Submits request"));
+    let diagram_ir::StructuralRelationshipMetadata::C4(metadata) =
+        indexed.relationships[0].metadata.as_ref().unwrap();
+    assert_eq!(metadata.technology.as_deref(), Some("HTTPS"));
+    assert_eq!(metadata.description.as_deref(), Some("Calls the public API"));
+}
+
+#[test]
 fn pinned_c4_layout_config_reaches_semantic_ir() {
     let syntax: Value = serde_json::from_str(C4_LAYOUT_CONFIG_CORPUS).unwrap();
     let visual: Value = serde_json::from_str(C4_LAYOUT_CONFIG_VISUAL_CORPUS).unwrap();
@@ -2695,6 +2741,39 @@ fn pinned_c4_element_technology_reaches_semantic_ir() {
         assert_eq!(metadata.technology.as_deref(), Some(expected));
         assert_eq!(diagram.nodes[0].compartments[0].entries[0], format!("[{expected}]"));
     }
+}
+
+#[test]
+fn pinned_c4_element_shapes_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ELEMENT_SHAPES_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_ELEMENT_SHAPES_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixture = &syntax["fixtures"][0];
+    assert_eq!(visual["fixtures"][0], fixture["name"]);
+    let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.nodes[0].node_kind, diagram_ir::StructuralNodeKind::Database);
+    assert_eq!(diagram.nodes[1].node_kind, diagram_ir::StructuralNodeKind::Queue);
+    assert_eq!(diagram.nodes[2].node_kind, diagram_ir::StructuralNodeKind::Database);
+}
+
+#[test]
+fn pinned_c4_deployment_nodes_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_DEPLOYMENT_NODES_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_DEPLOYMENT_NODES_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixture = &syntax["fixtures"][0];
+    assert_eq!(visual["fixtures"][0], fixture["name"]);
+    let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+    assert!(matches!(
+        &diagram.groups[0].metadata,
+        Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { technology, description })
+            if technology.as_deref() == Some("AWS") && description.as_deref() == Some("Production region")
+    ));
+    assert!(matches!(
+        &diagram.groups[1].metadata,
+        Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { technology, description })
+            if technology.as_deref() == Some("Linux") && description.as_deref() == Some("Gateway host")
+    ));
 }
 
 #[test]

@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-210-A2-NE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use the agent marker in one named-person completed-action frame.",
+  "prerequisites": [
+    "PA-EXT-209-A2-NILI"
+  ]
+}

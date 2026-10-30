@@ -50,6 +50,9 @@ Bounded nonnegative right-associative integer powers may also connect those
 normalizers. Every exponent is capped by the existing 4,096 unroll bound and
 every powered intermediate uses checked `i64` arithmetic; negative or
 oversized exponents and overflow continue to fail closed.
+Checked integer `div` and `mod` may also connect nested normalizers. Zero
+divisors, the `i64::MIN div -1` overflow, procedure-calling divisors, and
+unreduced wide results continue to fail closed.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.

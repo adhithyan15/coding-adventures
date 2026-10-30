@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-pub const VERSION: &str = "0.88.0";
+pub const VERSION: &str = "0.91.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -2281,6 +2281,8 @@ pub enum StructuralNodeKind {
     Entity,
     Requirement,
     Element,
+    Database,
+    Queue,
     Junction,
 }
 
@@ -2403,6 +2405,7 @@ pub struct StructuralNode {
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralGroupMetadata {
     Architecture { icon_name: String },
+    C4DeploymentNode { technology: Option<String>, description: Option<String> },
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -2451,6 +2454,27 @@ pub enum StructuralRelationshipMetadata {
     C4(C4RelationshipMetadata),
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum C4DiagramType {
+    Context,
+    Container,
+    Component,
+    Dynamic,
+    Deployment,
+}
+
+impl C4DiagramType {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Context => "C4Context",
+            Self::Container => "C4Container",
+            Self::Component => "C4Component",
+            Self::Dynamic => "C4Dynamic",
+            Self::Deployment => "C4Deployment",
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralRelationship {
     pub from: String,
@@ -2488,6 +2512,7 @@ pub struct StructuralAlignment {
 pub struct StructuralRenderConfig {
     pub use_max_width: bool,
     pub html_labels: bool,
+    pub c4_diagram_type: Option<C4DiagramType>,
     pub c4_shape_in_row: Option<usize>,
     pub c4_boundary_in_row: Option<usize>,
 }
@@ -2497,6 +2522,7 @@ impl Default for StructuralRenderConfig {
         Self {
             use_max_width: true,
             html_labels: true,
+            c4_diagram_type: None,
             c4_shape_in_row: None,
             c4_boundary_in_row: None,
         }
@@ -2551,6 +2577,7 @@ pub struct LayoutedStructuralGroup {
     pub label: String,
     pub stereotype: Option<String>,
     pub icon_name: Option<String>,
+    pub metadata: Option<StructuralGroupMetadata>,
     pub style: ResolvedDiagramStyle,
     pub parent_group: Option<String>,
 }
@@ -3217,7 +3244,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.88.0");
+        assert_eq!(VERSION, "0.91.0");
     }
     #[test]
     fn default_direction_is_tb() {

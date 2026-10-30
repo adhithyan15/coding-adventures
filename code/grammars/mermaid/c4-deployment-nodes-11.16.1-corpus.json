@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 deployment node technology and description semantics",
+  "fixtures": [
+    {
+      "name": "deployment-node-details",
+      "source": "C4Deployment\nDeployment_Node(cloud, \"Cloud\", \"AWS\", \"Production region\") {\nContainer(api, \"API\", \"Rust\")\n}\nNode_L(edge, \"Edge\", $type=\"Linux\", $descr=\"Gateway host\") {\nSystem(worker, \"Worker\")\n}"
+    }
+  ]
+}

@@ -1331,6 +1331,31 @@ mod tests {
     }
 
     #[test]
+    fn imported_function_named_like_a_builtin_shadows_it() {
+        // #18438: lib's `string-append` returns 5.  main's call runs it (an
+        // extern `call`), so the `string-length` around it must be the
+        // dynamic builtin — it used to be a typed `str_len` on the integer.
+        let dir = make_tempdir("imported_builtin_shadow");
+        write_temp(&dir, "lib.tw", "
+            (module lib (export string-append))
+            (define (string-append a b) 5)
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib))
+            (+ (string-append \"a\" \"b\") (string-length (string-append \"a\" \"b\")))
+        ");
+        let m = compile_module_tree(&root, &[]).unwrap();
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        assert!(
+            !main.instructions.iter().any(|i| i.op == "str_len" || i.op == "str_concat"),
+            "{:#?}",
+            main.instructions
+        );
+        let e = twig_vm::run_module_tree(&root, &[dir.as_path()]).unwrap_err();
+        assert!(format!("{e:?}").contains("string-length"), "{e:?}");
+    }
+
+    #[test]
     fn private_library_function_gets_no_string_param_inference() {
         // `strlen` is private to lib, and lib only ever calls it with a
         // string.  But the driver makes every module's functions visible to

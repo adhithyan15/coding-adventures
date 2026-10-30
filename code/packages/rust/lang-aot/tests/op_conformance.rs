@@ -785,12 +785,13 @@ fn trap_instr(kind: &str) -> IIRInstr {
 /// never printed directly, so no backend's bool-to-integer convention matters).
 ///
 /// The comparison carries the `i64` type hint, the shape ALGOL emits. The `bool`
-/// hint Twig emits is NOT used here because the native pipeline miscompiles it
+/// hint Twig emits was not used here because the native pipeline miscompiled it
 /// for negative operands: `jit_core::specialise` names the CIR op after the
-/// *result* hint (`cmp_lt_bool`), so x86-64 compares the operands at `bool`
-/// width and `-1 < 2` is false (Twig `(if (< (- 0 1) 2) 7 3)` exits 3 natively).
-/// This suite found it; it is recorded as a separate follow-up rather than
-/// fixed in the LANG83 contract slice.
+/// *result* hint (`cmp_lt_bool`), and x86-64 / AArch64 took a `bool` suffix as
+/// unsigned, so `-1 < 2` was false (Twig `(if (< (- 0 1) 2) 7 3)` exited 3
+/// natively). This suite found it. #18453 fixed it: both backends now compare
+/// a `bool`-suffixed op as signed, and `lang_matrix.rs` has Twig rows with
+/// negative operands.
 fn compare(name: &str, a: i64, b: i64) -> IIRModule {
     program(vec![
         int("a", a),

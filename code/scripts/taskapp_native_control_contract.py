@@ -124,15 +124,22 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         # owns their lowering; keep each count bounded to that one part.
         "display": 1,
         "flex-direction": 1,
-        "gap": 1,
-        # The compact task identity uses flexible name sizing in Flutter. Qt
-        # keeps the portable row structure and records that task-name flex
-        # occurrence until the emitter grows an equivalent lowering (#16949).
-        "flex-grow": 6,
+        # One gap is col-drop's newly reached existing declaration; the other
+        # is calendar-cell-drop, reached after its flex-grow was consumed.
+        "gap": 2,
+        # UI21 §2.2: flex-grow on a direct Row/Column child now lowers to
+        # Layout.fillWidth / fillHeight, so task-name and content-scroll
+        # left the report. What remains grows from inside an If branch or
+        # under the navigation split's detail pane, where no Qt layout
+        # reads it.
+        "flex-grow": 5,
         "flex-shrink": 9,
         "flex-wrap": 1,
         "font": 1,
         "font-size": 2,
+        # calendar-cell-drop's flex-grow is now consumed, which marks the
+        # part reached; its width was always ignored by the Qt HostDropTarget
+        # and is now counted (UI21 §2.2). Its gap is counted above.
         "left": 6,
         "margin-bottom": 1,
         "margin-left": 1,
@@ -146,6 +153,8 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "top": 6,
         # Supported control and Text widths now lower to native geometry;
         # any new width drop must fail rather than spend a stale allowance.
+        # The one allowance is calendar-cell-drop's `100%` (see `gap`).
+        "width": 1,
     },
     "flutter": {
         "background": 2,

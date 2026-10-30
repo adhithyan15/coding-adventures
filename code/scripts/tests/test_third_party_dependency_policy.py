@@ -138,9 +138,7 @@ class NpmManifestTests(unittest.TestCase):
                             "renamed": "npm:actual-package@^1.0.0",
                         },
                         "devDependencies": {"typescript": "^5.0.0"},
-                        "peerDependencies": {
-                            "scoped-alias": "npm:@scope/actual@2"
-                        },
+                        "peerDependencies": {"scoped-alias": "npm:@scope/actual@2"},
                         "optionalDependencies": {"optional-tool": "3"},
                     }
                 ),
@@ -245,6 +243,377 @@ class NpmManifestTests(unittest.TestCase):
 
             self.assertEqual(manifests, [path])
             self.assertEqual(inventory, {"typescript": ["nested/package.json"]})
+
+
+class NpmToolTests(unittest.TestCase):
+    def test_collects_npx_exec_and_named_install_tools(self) -> None:
+        commands = """
+npx --prefix tools tsx scripts/build.ts && npx --yes @vscode/vsce package
+npm exec --package=typescript -- tsc -p .
+npm install --global npm@11.13.0 jest@29
+npm install --silent 2>/dev/null
+if sudo env CI=1 npm add alias@npm:actual-tool@3; then (npx wrapped-tool); fi
+echo "npm install imaginary-package"
+# Error: npm install imaginary-package
+# note; npx imaginary-package
+cmd = "npx vitest run"
+"""
+
+        self.assertEqual(
+            policy.npm_tool_names(commands),
+            {
+                "@vscode/vsce",
+                "actual-tool",
+                "jest",
+                "npm",
+                "tsx",
+                "typescript",
+                "vitest",
+                "wrapped-tool",
+            },
+        )
+
+    def test_normalizes_scoped_and_unscoped_versions(self) -> None:
+        self.assertEqual(policy.npm_package_name("npm@11.13.0"), "npm")
+        self.assertEqual(policy.npm_package_name("@scope/tool@2"), "@scope/tool")
+        self.assertEqual(
+            policy.npm_package_name("alias@npm:@scope/actual@2"),
+            "@scope/actual",
+        )
+        self.assertIsNone(policy.npm_package_name("file:../local-tool"))
+
+    def test_rejects_unnamed_remote_tool_acquisition(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "must use a package name"):
+            policy.npm_tool_names("npm install https://example.invalid/tool.tgz")
+
+    def test_rejects_missing_option_values(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "requires a value"):
+            policy.npm_tool_names("npx --prefix")
+        with self.assertRaisesRegex(policy.PolicyError, "requires an npm package"):
+            policy.npm_tool_names("npx --package")
+
+    def test_sparse_inventory_reads_sources_and_package_scripts_from_index(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            workflow = root / ".github" / "workflows" / "ci.yml"
+            manifest = root / "app" / "package.json"
+            workflow.parent.mkdir(parents=True)
+            manifest.parent.mkdir()
+            workflow.write_text(
+                "steps:\n  - run: npm install --global npm@11\n",
+                encoding="utf-8",
+            )
+            manifest.write_text(
+                json.dumps({"scripts": {"build": "npx esbuild src.ts"}}),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            workflow.unlink()
+            manifest.unlink()
+
+            sources = policy.git_npm_tool_sources(root)
+            manifests = policy.git_npm_manifests(root)
+            inventory = policy.build_npm_tool_inventory(root, sources, manifests)
+
+            self.assertEqual(sources, [workflow])
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(
+                inventory,
+                {
+                    "esbuild": ["app/package.json"],
+                    "npm": [".github/workflows/ci.yml"],
+                },
+            )
+
+    def test_rejects_non_string_package_scripts(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "package.json"
+            manifest.write_text(
+                json.dumps({"scripts": {"test": 42}}),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "map strings to strings"):
+                policy.build_npm_tool_inventory(root, [], [manifest])
+
+
+class PythonToolTests(unittest.TestCase):
+    def test_collects_pip_pipx_and_uv_tool_packages(self) -> None:
+        commands = """
+python3 -m pip install --quiet jsonschema==4.26.0 fonttools
+pip install --no-deps -e ../matrix -e . build
+pip install -e ".[dev]" > /dev/null 2>&1
+uv pip install --system pytest pytest-cov
+uv tool install --with ruff mypy
+uv tool run --from black black --check .
+uvx --with typing-extensions pyright .
+pipx run --spec hatch hatch build
+echo "pip install imaginary-package"
+# pip install imaginary-package
+cmd = "python -m pip install requests"
+"""
+
+        self.assertEqual(
+            policy.python_tool_names(commands),
+            {
+                "black",
+                "build",
+                "fonttools",
+                "hatch",
+                "jsonschema",
+                "mypy",
+                "pyright",
+                "pytest",
+                "pytest-cov",
+                "requests",
+                "ruff",
+                "typing-extensions",
+            },
+        )
+
+    def test_named_direct_urls_are_counted_and_unnamed_urls_are_rejected(
+        self,
+    ) -> None:
+        self.assertEqual(
+            policy.python_tool_names(
+                "pip install 'named-tool @ https://example.invalid/tool.whl'"
+            ),
+            {"named-tool"},
+        )
+        with self.assertRaisesRegex(policy.PolicyError, "must use a package name"):
+            policy.python_tool_names(
+                "python -m pip install https://example.invalid/tool.whl"
+            )
+
+    def test_rejects_requirements_file_indirection_and_missing_values(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "declare packages inline"):
+            policy.python_tool_names("pip install -r requirements.txt")
+        with self.assertRaisesRegex(policy.PolicyError, "requires a value"):
+            policy.python_tool_names("uv pip install --index-url")
+        with self.assertRaisesRegex(policy.PolicyError, "requires a Python package"):
+            policy.python_tool_names("uvx --from")
+
+    def test_sparse_inventory_reads_sources_and_package_scripts_from_index(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            workflow = root / ".github" / "workflows" / "ci.yml"
+            manifest = root / "app" / "package.json"
+            workflow.parent.mkdir(parents=True)
+            manifest.parent.mkdir()
+            workflow.write_text(
+                "steps:\n  - run: python -m pip install pytest\n",
+                encoding="utf-8",
+            )
+            manifest.write_text(
+                json.dumps({"scripts": {"lint": "uvx ruff check ."}}),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            workflow.unlink()
+            manifest.unlink()
+
+            sources = policy.git_python_tool_sources(root)
+            manifests = policy.git_npm_manifests(root)
+            inventory = policy.build_python_tool_inventory(root, sources, manifests)
+
+            self.assertEqual(sources, [workflow])
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(
+                inventory,
+                {
+                    "pytest": [".github/workflows/ci.yml"],
+                    "ruff": ["app/package.json"],
+                },
+            )
+
+
+class PythonManifestTests(unittest.TestCase):
+    def test_collects_standard_groups_and_normalizes_distribution_names(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "pyproject.toml"
+            local = root / "local" / "pyproject.toml"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """
+[build-system]
+requires = ["Hatchling>=1"]
+
+[project]
+name = "app"
+dependencies = [
+  "local_pkg>=1",
+  "Requests[security] @ https://example.invalid/requests.whl",
+]
+
+[project.optional-dependencies]
+images = ["Pillow>=10"]
+
+[dependency-groups]
+test = ["pytest>=9", { include-group = "lint" }]
+lint = ["typing_extensions; python_version < '3.13'"]
+
+[tool.uv.sources]
+local-pkg = { path = "../local" }
+""",
+                encoding="utf-8",
+            )
+            local.write_text(
+                '[project]\nname = "local-pkg"\nversion = "1"\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_python_inventory(root, [app, local]),
+                {
+                    "hatchling": ["app/pyproject.toml"],
+                    "pillow": ["app/pyproject.toml"],
+                    "pytest": ["app/pyproject.toml"],
+                    "requests": ["app/pyproject.toml"],
+                    "typing-extensions": ["app/pyproject.toml"],
+                },
+            )
+
+    def test_workspace_sources_apply_only_to_verified_workspace_members(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workspace = root / "workspace" / "pyproject.toml"
+            app = root / "workspace" / "app" / "pyproject.toml"
+            local = root / "workspace" / "local" / "pyproject.toml"
+            outsider = root / "outsider" / "pyproject.toml"
+            app.parent.mkdir(parents=True)
+            local.parent.mkdir()
+            outsider.parent.mkdir()
+            workspace.write_text(
+                """
+[project]
+name = "workspace"
+version = "1"
+[tool.uv.workspace]
+members = ["app", "local"]
+[tool.uv.sources]
+local-pkg = { workspace = true }
+""",
+                encoding="utf-8",
+            )
+            app.write_text(
+                '[project]\nname = "app"\nversion = "1"\ndependencies = ["local-pkg"]\n',
+                encoding="utf-8",
+            )
+            local.write_text(
+                '[project]\nname = "local-pkg"\nversion = "1"\n',
+                encoding="utf-8",
+            )
+            outsider.write_text(
+                '[project]\nname = "outsider"\nversion = "1"\ndependencies = ["local-pkg"]\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_python_inventory(root, [workspace, app, local, outsider]),
+                {"local-pkg": ["outsider/pyproject.toml"]},
+            )
+
+    def test_untracked_or_outside_paths_are_not_trusted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "pyproject.toml"
+            app.parent.mkdir()
+            app.write_text(
+                """
+[project]
+name = "app"
+version = "1"
+dependencies = ["vendored", "outside"]
+[tool.uv.sources]
+vendored = { path = "../untracked" }
+outside = { path = "../../../outside" }
+""",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_python_inventory(root, [app]),
+                {
+                    "outside": ["app/pyproject.toml"],
+                    "vendored": ["app/pyproject.toml"],
+                },
+            )
+
+    def test_rejects_an_invalid_dependency_group_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "pyproject.toml"
+            manifest.write_text(
+                '[dependency-groups]\ntest = [{not-an-include = "lint"}]\n',
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "invalid include"):
+                policy.build_python_inventory(root, [manifest])
+
+    def test_rejects_requirement_text_after_the_distribution_name(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "invalid requirement"):
+            policy.python_requirement_name(
+                "requests definitely-not-a-specifier", "test"
+            )
+
+    def test_conflicting_path_source_fields_do_not_earn_a_local_exemption(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "pyproject.toml"
+            local = root / "local" / "pyproject.toml"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                """
+[project]
+name = "app"
+version = "1"
+dependencies = ["local-pkg"]
+[tool.uv.sources]
+local-pkg = { path = "../local", git = "https://example.invalid/local" }
+""",
+                encoding="utf-8",
+            )
+            local.write_text(
+                '[project]\nname = "local-pkg"\nversion = "1"\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_python_inventory(root, [app, local]),
+                {"local-pkg": ["app/pyproject.toml"]},
+            )
+
+    def test_sparse_inventory_discovers_an_absent_python_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            path = root / "nested" / "pyproject.toml"
+            path.parent.mkdir()
+            path.write_text(
+                '[project]\nname = "nested"\nversion = "1"\ndependencies = ["Requests"]\n',
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            path.unlink()
+
+            manifests = policy.git_python_manifests(root)
+            inventory = policy.build_python_inventory(root, manifests)
+
+            self.assertEqual(manifests, [path])
+            self.assertEqual(inventory, {"requests": ["nested/pyproject.toml"]})
 
 
 class DependencyPolicyTests(unittest.TestCase):
