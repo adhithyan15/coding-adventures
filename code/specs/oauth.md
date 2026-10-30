@@ -2819,6 +2819,24 @@ open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `http1-request-header-field` prerequisite now validates and
+encodes one deliberately narrow HTTP/1 request field line into caller-owned
+storage. Caller limits bound the token-only field name, ASCII field value, and
+complete line. Values may be empty or contain internal space and horizontal
+tab, but leading or trailing optional whitespace, controls, DEL, and non-ASCII
+bytes fail closed. The encoder emits the exact validated name, colon, one
+space, value, and CRLF only after proving the complete output fits, so a small
+output remains unchanged. Success retains borrowed name and potentially
+sensitive value bytes plus the exact encoded length without allocation. Stable
+failures retain no field bytes or lengths, and Debug redacts both inputs.
+
+This syntax boundary does not authorize a field name or value, interpret or
+release a credential, detect duplicate or conflicting fields, enforce Host or
+body-framing policy, compose a request head, perform TLS, read or write a
+socket, emit provider or trace audit events, or authorize HTTP or OAuth
+transport. Those semantic and external-effect policies remain separate.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-key-share` prerequisite now binds exact TLS 1.3
 `KeyShareEntry` values to the existing caller-selected named-group policy.
 Client construction validates each public key-exchange value against the
