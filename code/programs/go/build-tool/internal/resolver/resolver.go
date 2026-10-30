@@ -552,15 +552,9 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 		if strings.Contains(trimmed, "=") {
 			// Extract the crate name (everything before the first '=')
 			parts := strings.SplitN(trimmed, "=", 2)
-			if len(parts) < 2 {
+			crateName, ok := cargoPathDependencyName(parts[0], parts[1])
+			if !ok {
 				continue
-			}
-			if cargoInlineStringValue(parts[1], "path") == "" {
-				continue
-			}
-			crateName := strings.TrimSpace(strings.ToLower(parts[0]))
-			if packageName := cargoInlineStringValue(parts[1], "package"); packageName != "" {
-				crateName = strings.ToLower(packageName)
 			}
 			if pkgName, ok := knownNames[crateName]; ok {
 				internalDeps = append(internalDeps, pkgName)
@@ -569,6 +563,29 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 	}
 
 	return internalDeps
+}
+
+// cargoPathDependencyName returns the crate a Cargo dependency entry names
+// when the entry is a path dependency — the only kind that can point at a
+// repository package. The key is the crate name unless the inline table
+// renames it with `package = "..."`:
+//
+//	logic-gates = { path = "../logic-gates" }                  → logic-gates
+//	gates = { package = "logic-gates", path = "../logic-gates" } → logic-gates
+//	serde = "1"                                                 → not a path dep
+//
+// Only parseRustDeps uses it: the build graph resolves Cargo dependencies by
+// name. Test triggers resolve path entries by directory instead (see
+// test_triggers.go), so no crate can capture another's triggers by name.
+func cargoPathDependencyName(key, value string) (string, bool) {
+	if cargoInlineStringValue(value, "path") == "" {
+		return "", false
+	}
+	crateName := strings.TrimSpace(strings.ToLower(key))
+	if packageName := cargoInlineStringValue(value, "package"); packageName != "" {
+		crateName = strings.ToLower(packageName)
+	}
+	return crateName, true
 }
 
 // cargoInlineStringValue returns a quoted string field from a Cargo inline
@@ -2282,8 +2299,29 @@ func readCabalPackageName(pkgPath string) string {
 // (because B depends on A). External dependencies — those not found
 // among the discovered packages — are silently skipped.
 //
-// This function is the main entry point for dependency resolution.
+// This function is the main entry point for dependency resolution. It also
+// reads every Cargo dev-dependency table (see test_triggers.go) and fails on a
+// malformed one, so no caller can resolve a graph while silently dropping a
+// test trigger; callers that need the triggers use ResolveWithTestTriggers.
 func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, error) {
+	graph, _, err := ResolveWithTestTriggers(packages)
+	return graph, err
+}
+
+// ResolveWithTestTriggers returns the build graph together with the Cargo
+// dev-dependency relation that change detection applies one hop past the
+// graph's closure. Graph edges resolve by name, as each ecosystem names its
+// dependencies; test triggers resolve Cargo path entries by directory (see
+// test_triggers.go), so no crate can capture another's triggers by name.
+func ResolveWithTestTriggers(packages []discovery.Package) (*directedgraph.Graph, TestTriggers, error) {
+	return ResolveWithTestTriggersAgainst(packages, packages)
+}
+
+// ResolveWithTestTriggersAgainst is ResolveWithTestTriggers for a filtered
+// package list (a -language run): the graph and the triggers cover packages,
+// but Cargo path entries resolve against known, every discovered package, so
+// a path into a filtered-out package is not mistaken for an unlisted crate.
+func ResolveWithTestTriggersAgainst(packages, known []discovery.Package) (*directedgraph.Graph, TestTriggers, error) {
 	graph := directedgraph.New()
 
 	// First, add all packages as nodes. Even packages with no dependencies
@@ -2295,7 +2333,7 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 	// A Mosaic name claimed twice would silently redirect edges; refuse it
 	// before any table is built (see checkMosaicNameCollisions).
 	if err := checkMosaicNameCollisions(packages); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// Build the ecosystem-specific name mapping table.
@@ -2303,11 +2341,15 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 	knownGradlePathsByLanguage := make(map[string]map[string]string)
 	knownDotnetProjectPaths := buildKnownDotnetProjectPaths(packages)
 	knownPackageNames := make(map[string]bool, len(packages))
+	nameTable := func(language string) map[string]string {
+		if _, ok := knownNamesByLanguage[language]; !ok {
+			knownNamesByLanguage[language] = buildKnownNamesForLanguage(packages, language)
+		}
+		return knownNamesByLanguage[language]
+	}
 	for _, pkg := range packages {
 		knownPackageNames[pkg.Name] = true
-		if _, ok := knownNamesByLanguage[pkg.Language]; !ok {
-			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, pkg.Language)
-		}
+		nameTable(pkg.Language)
 		if (pkg.Language == "java" || pkg.Language == "kotlin") && knownGradlePathsByLanguage[pkg.Language] == nil {
 			knownGradlePathsByLanguage[pkg.Language] = buildKnownGradlePathsForLanguage(packages, pkg.Language)
 		}
@@ -2338,7 +2380,7 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 			var err error
 			deps, err = parseLuaDeps(pkg, knownNames)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 		case "perl":
 			deps = parsePerlDeps(pkg, knownNames)
@@ -2356,7 +2398,7 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 			var err error
 			deps, err = parseMosaicDeps(pkg, knownNames)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 		}
 		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
@@ -2369,7 +2411,11 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 		}
 	}
 
-	return graph, nil
+	triggers, err := resolveTestTriggers(packages, known)
+	if err != nil {
+		return nil, nil, err
+	}
+	return graph, triggers, nil
 }
 
 // BuildKnownNames is exported for testing. It delegates to buildKnownNames.

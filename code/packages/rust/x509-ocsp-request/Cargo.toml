@@ -1,0 +1,9 @@
+[package]
+name = "x509-ocsp-request"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free minimal RFC 6960 OCSP request framing"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-ocsp-cert-id = { path = "../x509-ocsp-cert-id" }
