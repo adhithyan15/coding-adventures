@@ -4013,7 +4013,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m pip install --disable-pip-version-check --quiet fonttools
+          python3 -m pip install --disable-pip-version-check --quiet fonttools==4.68.0
           python3 -c "import fontTools; print('fontTools', fontTools.version)"
           # Pin the exact interpreter fontTools was just installed into.
           # tests/fonttools_oracle.rs defaults to bare `python3` (see
