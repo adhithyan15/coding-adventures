@@ -2252,6 +2252,24 @@ open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `http1-fixed-request-body` prerequisite now binds one
+caller-borrowed, potentially sensitive request body to its exact byte length
+under an explicit caller ceiling. It encodes that length in canonical shortest
+decimal form into caller-owned storage, including `0` for an empty body, only
+after proving the complete output fits. The non-copyable evidence prevents a
+different body from being substituted without revalidation, and a small output
+remains unchanged. Stable failures retain no body, length, limit, or output
+bytes, and Debug redacts the body.
+
+This boundary does not create a `Content-Length` field line, authorize multiple
+or conflicting length fields, admit `Transfer-Encoding`, encode form data,
+interpret or release credentials, authorize a method or destination, compose a
+request, perform TLS or I/O, emit provider or trace audit events, or grant HTTP,
+OAuth, or live-provider transport. A later reviewed composition must emit
+exactly one field from this evidence, prohibit transfer coding, audit any
+credential release and external effect, and write exactly the retained body.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `http1-response-head` prerequisite now decodes one strict
 HTTP/1.0 or HTTP/1.1 response head from a caller-borrowed byte stream. Explicit
 caller limits bound the complete head, every line, and the retained header
