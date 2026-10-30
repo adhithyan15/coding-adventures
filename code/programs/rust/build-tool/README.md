@@ -41,19 +41,21 @@ canonicalizes graph edges and prerequisite-first levels, performs exact
 package and shared-repository-input selection, and returns either one complete
 result or one stable error code. Strict-glob work is preflighted across the
 whole operation with the neutral 50,000,000 Unicode-scalar ceiling before the
-first match. Repository-boundary inputs are depth, node, container, and string
-bounded; their versioned canonical SHA-256 is verified before an exact reverse
-consumer selection is used. The core never reads a checkout or acquires process,
-environment, clock, randomness, or network authority.
+first match, while first-seen glob declarations are charged by exact UTF-8
+bytes against a separate 4 MiB ceiling before normalization. Repository-boundary
+inputs are depth, node, container, and string bounded; their versioned canonical
+SHA-256 and schema are verified before request-dependent path-classification
+preflights. The core never reads a checkout or acquires process, environment,
+clock, randomness, or network authority.
 
 Diff validation retains only compact per-package glob work factors. After the
 whole-operation preflight succeeds, one validated pattern is compiled at a
 time and reused across that package's indexed candidate paths. Package roots
 use segment-ordered collision validation, changed paths use an allocation-free
-bounded ancestor index instead of a package-by-path cross product, and shared
-boundary rules expand only for changed input paths. This keeps zero-path and
-max-shape inert snapshots from materializing unused token trees or
-input-consumer products.
+ancestor index with an explicit 50,000,000-unit prefix-work ceiling instead of
+a package-by-path cross product, and shared boundary rules expand only for
+changed input paths. This keeps zero-path and max-shape inert snapshots from
+materializing unused token trees or input-consumer products.
 
 ## Building
 

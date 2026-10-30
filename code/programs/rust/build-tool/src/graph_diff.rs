@@ -16,6 +16,8 @@ pub const MAX_GRAPH_PACKAGES: usize = 4_096;
 pub const MAX_GRAPH_EDGES: usize = 16_384;
 pub const MAX_SOURCE_GLOBS: usize = 256;
 pub const MAX_DIFF_SELECTION_MATCH_WORK: u64 = 50_000_000;
+pub const MAX_UNIQUE_GLOB_DECLARATION_BYTES: usize = 4_194_304;
+pub const MAX_ROOT_CLASSIFICATION_WORK: u64 = 50_000_000;
 
 const MAX_PATH_SCALARS: usize = 512;
 const MAX_PACKAGE_NAME_SCALARS: usize = 240;
@@ -189,8 +191,11 @@ fn try_evaluate_diff_selection(
         return Err("DIFF_EDGE_CYCLE");
     }
     let packages = validate_diff_input(input, &graph)?;
-    let indexed_paths = index_changed_paths(&packages, &input.changed_paths);
+    // Digest and schema diagnostics precede request-dependent resource
+    // preflights, matching the neutral contract's stable error ordering.
     let boundary = select_boundary_changes(input, &packages)?;
+    preflight_root_classification(&input.changed_paths)?;
+    let indexed_paths = index_changed_paths(&packages, &input.changed_paths);
     preflight_match_work(&packages, &indexed_paths)?;
 
     let mut changed = input
@@ -377,6 +382,7 @@ fn validate_diff_input<'a>(
     let mut names = BTreeSet::new();
     let mut root_identities = Vec::with_capacity(input.packages.len());
     let mut glob_factors = BTreeMap::<&'a str, u64>::new();
+    let mut remaining_glob_declaration_bytes = MAX_UNIQUE_GLOB_DECLARATION_BYTES;
     for package in &input.packages {
         if !valid_portable_path(&package.rel_path) {
             return Err("DIFF_PATH_INVALID");
@@ -397,6 +403,14 @@ fn validate_diff_input<'a>(
             let factor = if let Some(factor) = glob_factors.get(pattern.as_str()) {
                 *factor
             } else {
+                // Per-package cardinality still permits more than a million
+                // distinct maximum-length patterns. Charge first-seen UTF-8
+                // declaration bytes before normalization or syntax work so a
+                // zero-path request cannot bypass the operation ceiling.
+                if pattern.len() > remaining_glob_declaration_bytes {
+                    return Err("DIFF_MATCH_LIMIT_EXCEEDED");
+                }
+                remaining_glob_declaration_bytes -= pattern.len();
                 if !valid_portable_glob(pattern) || validate_pattern(pattern).is_err() {
                     return Err("DIFF_GLOB_INVALID");
                 }
@@ -454,6 +468,30 @@ fn validate_diff_input<'a>(
         return Err("DIFF_FORCED_PACKAGE_UNKNOWN");
     }
     Ok(packages)
+}
+
+// Ancestor lookup below examines one prefix for every slash. Charge the byte
+// scan and each possible prefix before any classification work, so even a
+// maximum-cardinality slash-heavy request has one explicit operation ceiling.
+fn preflight_root_classification(paths: &[String]) -> Result<(), &'static str> {
+    let mut remaining = MAX_ROOT_CLASSIFICATION_WORK;
+    for path in paths {
+        let path_work = path.len() as u64;
+        if path_work > remaining {
+            return Err("DIFF_MATCH_LIMIT_EXCEEDED");
+        }
+        remaining -= path_work;
+        for (slash, _) in path.match_indices('/') {
+            // Include the separator in the conservative accounting, matching
+            // the one-based prefix work used by the neutral implementations.
+            let prefix_work = (slash + 1) as u64;
+            if prefix_work > remaining {
+                return Err("DIFF_MATCH_LIMIT_EXCEEDED");
+            }
+            remaining -= prefix_work;
+        }
+    }
+    Ok(())
 }
 
 fn index_changed_paths<'a>(
@@ -1161,6 +1199,51 @@ mod tests {
     }
 
     #[test]
+    fn unique_glob_declarations_charge_exact_utf8_bytes() {
+        let repeated = '\u{10000}'.to_string();
+        let mut serial = 0u32;
+        let mut total_bytes = 0usize;
+        let packages = (0..8)
+            .map(|package_index| {
+                let source_globs = (0..MAX_SOURCE_GLOBS)
+                    .map(|_| {
+                        serial += 1;
+                        let leading = char::from_u32(0x10000 + serial)
+                            .expect("test serial stays within Unicode scalar range");
+                        let pattern = format!("{leading}{}", repeated.repeat(511));
+                        total_bytes += pattern.len();
+                        pattern
+                    })
+                    .collect();
+                PackageSpec {
+                    name: format!("fixture/unique-{package_index}"),
+                    rel_path: format!("code/unique-{package_index}"),
+                    source_mode: "strict_globs".to_owned(),
+                    source_globs,
+                }
+            })
+            .collect();
+        assert_eq!(total_bytes, MAX_UNIQUE_GLOB_DECLARATION_BYTES);
+
+        let mut input = base_diff_input(packages);
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("the exact unique-glob declaration byte ceiling must pass");
+        };
+        assert!(result.changed_packages.is_empty());
+
+        input.packages.push(package(
+            "fixture/over-limit",
+            "code/over-limit",
+            "strict_globs",
+            &["x"],
+        ));
+        assert_eq!(
+            evaluate_diff_selection(&input),
+            Evaluation::Failure("DIFF_MATCH_LIMIT_EXCEEDED")
+        );
+    }
+
+    #[test]
     fn diff_package_diagnostics_do_not_leak_graph_codes() {
         let invalid = base_diff_input(vec![package("INVALID", "p", "package_prefix", &[])]);
         assert_eq!(
@@ -1279,7 +1362,13 @@ mod tests {
         let boundaries = (0..56)
             .map(|rule| {
                 let excluded_roots = (0..1_024)
-                    .map(|excluded| format!("excluded/rule-{rule}/root-{excluded}"))
+                    .map(|excluded| {
+                        if excluded == 0 {
+                            "roots/p-0".to_owned()
+                        } else {
+                            format!("excluded/rule-{rule}/root-{excluded}")
+                        }
+                    })
                     .collect::<Vec<_>>();
                 json!({
                     "id": format!("rule-{rule}"),
@@ -1320,17 +1409,105 @@ mod tests {
         let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
             panic!("relevant max-shape boundary must remain bounded");
         };
-        assert_eq!(result.changed_packages.len(), MAX_GRAPH_PACKAGES);
+        assert_eq!(result.changed_packages.len(), MAX_GRAPH_PACKAGES - 1);
+        assert!(!result.changed_packages.contains(&"fixture/p-0".to_owned()));
+    }
+
+    #[test]
+    fn exact_boundary_root_takes_precedence_over_exclusion() {
+        let boundary = json!({
+            "schema_version": 1,
+            "language_source_input_registry_sha256": "0".repeat(64),
+            "boundaries": [{
+                "id": "exact-precedence",
+                "input_origin": "repository",
+                "applies_to": {
+                    "exact_roots": ["roots/exact"],
+                    "descendant_roots": ["roots"],
+                    "excluded_roots": ["roots/exact"]
+                },
+                "inputs": [{
+                    "path": "shared/relevant-input",
+                    "role": "cross_package_exact"
+                }],
+                "reason": "exact roots take precedence",
+                "owner": "test-owner"
+            }]
+        });
+        let mut input = base_diff_input(vec![package(
+            "fixture/exact",
+            "roots/exact",
+            "package_prefix",
+            &[],
+        )]);
+        input.changed_paths = vec!["shared/relevant-input".to_owned()];
+        input.boundary_sha256 = digest_for_test(&boundary);
+        input.boundary = Some(boundary);
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("an exact root must take precedence over descendant exclusion");
+        };
+        assert_eq!(result.changed_packages, ["fixture/exact"]);
+    }
+
+    fn slash_heavy_diff_input() -> DiffSelectionInput {
+        let path_prefix = "a/".repeat(250);
+        let packages = (0..1_024)
+            .map(|index| {
+                package(
+                    &format!("fixture/p-{index}"),
+                    &format!("code/p-{index}"),
+                    "package_prefix",
+                    &[],
+                )
+            })
+            .collect();
+        let mut input = base_diff_input(packages);
+        input.changed_paths = (0..1_024)
+            .map(|index| format!("{path_prefix}{index:04}"))
+            .collect();
+        input
+    }
+
+    #[test]
+    fn slash_heavy_package_root_classification_is_bounded() {
+        assert_eq!(
+            evaluate_diff_selection(&slash_heavy_diff_input()),
+            Evaluation::Failure("DIFF_MATCH_LIMIT_EXCEEDED")
+        );
+    }
+
+    #[test]
+    fn boundary_digest_and_schema_precede_root_classification_work() {
+        let mut bad_digest = slash_heavy_diff_input();
+        bad_digest.boundary_sha256 = "0".repeat(64);
+        bad_digest.boundary = Some(json!({}));
+        assert_eq!(
+            evaluate_diff_selection(&bad_digest),
+            Evaluation::Failure("DIFF_BOUNDARY_DIGEST_MISMATCH")
+        );
+
+        let invalid_boundary = json!({
+            "schema_version": 2,
+            "language_source_input_registry_sha256": "0".repeat(64),
+            "boundaries": []
+        });
+        let mut bad_schema = slash_heavy_diff_input();
+        bad_schema.boundary_sha256 = digest_for_test(&invalid_boundary);
+        bad_schema.boundary = Some(invalid_boundary);
+        assert_eq!(
+            evaluate_diff_selection(&bad_schema),
+            Evaluation::Failure("DIFF_BOUNDARY_INVALID")
+        );
     }
 
     #[test]
     fn max_shape_package_path_index_avoids_cross_product_scans() {
-        let suffix = format!("{}leaf", "segment/".repeat(60));
+        let prefix = "a".repeat(500);
         let packages = (0..MAX_GRAPH_PACKAGES)
             .map(|index| {
                 package(
                     &format!("fixture/p-{index}"),
-                    &format!("roots/p-{index}/{suffix}"),
+                    &format!("{prefix}a{index:04}"),
                     "strict_globs",
                     &[],
                 )
@@ -1339,7 +1516,7 @@ mod tests {
         let mut input = base_diff_input(packages);
         input.unknown_path_policy = "all".to_owned();
         input.changed_paths = (0..MAX_GRAPH_PACKAGES)
-            .map(|index| format!("unknown/p-{index}/{suffix}"))
+            .map(|index| format!("{prefix}b{index:04}"))
             .collect();
         let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
             panic!("max-shape disjoint paths must remain bounded");
