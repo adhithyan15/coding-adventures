@@ -1115,6 +1115,19 @@ parsed bytes back to
 selected-anchor evidence, construct or validate a path, grant trust, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection.
+A bounded structural follow-up now also retains exact RFC 5280 iPAddress
+GeneralSubtree values from complete certificate-extension NameConstraints:
+8-octet IPv4 address-plus-mask values and 32-octet IPv6 address-plus-mask
+values. DNS and IP forms share one fixed 256-entry ceiling in each permitted
+or excluded field and are retained in wire order within their form. The
+reviewed-root snapshot-contents entry point remains restricted to its reviewed
+permitted-DNS-only format, and its DNS-only evaluator fails closed if either IP
+set is non-empty so existing consumers cannot silently ignore the new form.
+This structural decoder does not validate CIDR mask
+contiguity, evaluate a presented IP address, bind constraints to a certificate
+or path, grant trust, check revocation, verify a signature, perform TLS or
+HTTP, authorize OAuth transport, or cause an external effect; concrete HTTPS
+remains unavailable.
 A separate bounded evaluator initially validated every decoded permitted DNS
 subtree before matching caller-supplied DNS names. It enforces strict ASCII labels,
 case-insensitive label-boundary matching, the reviewed leading-dot semantics,

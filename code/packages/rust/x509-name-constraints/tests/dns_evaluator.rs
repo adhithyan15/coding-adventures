@@ -68,6 +68,26 @@ fn evaluate_full(
 }
 
 #[test]
+fn dns_only_evaluation_fails_closed_when_ip_subtrees_are_retained() {
+    let ipv4 = [192, 0, 2, 0, 255, 255, 255, 0];
+    for field_tag in [0xa0, 0xa1] {
+        // One field may contain both GeneralName forms.
+        let mixed_contents = [
+            element(0x30, &element(0x82, b"example.test")),
+            element(0x30, &element(0x87, &ipv4)),
+        ]
+        .concat();
+        let encoded = element(0x30, &element(field_tag, &mixed_contents));
+        let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+        let constraints = decode_name_constraints(&mut decoder, &encoded).unwrap();
+
+        let error = evaluate_dns_names(&constraints, &["example.test"]).unwrap_err();
+        assert_eq!(error.kind(), DnsConstraintErrorKind::UnevaluatedIpSubtrees);
+        assert_eq!(error.item_index(), 0);
+    }
+}
+
+#[test]
 fn exact_and_subdomain_matches_are_case_insensitive_and_label_based() {
     let evaluated = evaluate(
         &[b"Example.COM"],
