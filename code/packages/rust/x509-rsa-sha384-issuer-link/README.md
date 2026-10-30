@@ -27,6 +27,16 @@ certificate object before invoking Name policy or RSA verification, then
 retains the exact evidence in its result. The entry point fixes SHA-384 in its
 type and never treats algorithm-policy data as verifier routing authority.
 
+The complete-intermediate-policy binder requires the authenticated candidate
+issuer and the complete intermediate policy to retain the exact same decoded
+certificate object. Its non-copyable result retains the authenticated link and
+the complete certificate-wide critical-extension, issuing-CA role,
+data-driven algorithm/key, self-issued-classification, and explicit-time
+validity evidence. It does not evaluate path length or NameConstraints,
+authenticate another link, construct a path, select trust, check revocation,
+perform TLS or HTTP, make an OAuth request, emit audit or trace events, or
+grant provider or network authority.
+
 ## Validation
 
 ```bash

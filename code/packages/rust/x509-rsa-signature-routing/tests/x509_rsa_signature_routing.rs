@@ -127,6 +127,14 @@ fn routes_sha256_by_the_selected_child_profile_and_retains_exact_evidence() {
         format!("{verified:?}"),
         "VerifiedX509RsaPolicySignature::Sha256"
     );
+    assert!(std::ptr::eq(
+        verified.child_algorithm_policy().certificate(),
+        &child
+    ));
+    assert!(std::ptr::eq(
+        verified.issuer_rsa_algorithm_policy().certificate(),
+        &issuer
+    ));
     let VerifiedX509RsaPolicySignature::Sha256(verified) = verified else {
         panic!("selected the wrong verifier")
     };
@@ -175,6 +183,14 @@ fn routes_sha384_and_sha512_through_their_fixed_verifiers() {
         .unwrap();
 
         assert_eq!(verified.verifier(), verifier);
+        assert!(std::ptr::eq(
+            verified.child_algorithm_policy().certificate(),
+            &child
+        ));
+        assert!(std::ptr::eq(
+            verified.issuer_rsa_algorithm_policy().certificate(),
+            &issuer
+        ));
         match verified {
             VerifiedX509RsaPolicySignature::Sha384(verified) => {
                 assert_eq!(profile_index, 2);
