@@ -888,6 +888,20 @@ select an implementation, hash, run MGF1, validate PSS encoding, parse or
 operate on an RSA key, apply RSAVP1, or establish a signature verdict.
 Certificate processing, path and hostname validation, trust roots, revocation,
 TLS, HTTP, OAuth transport, and network effects remain unavailable.
+A bounded, data-driven `rsa-pss-data-block-unmask` prerequisite now performs
+the public byte transformation consumed by a future RFC 8017 EMSA-PSS
+verifier. Only after complete `maskedDB`, MGF1-mask, output-length,
+unused-high-bit, and caller-owned byte-ceiling checks pass does it write the
+complete XOR into caller-owned memory and clear the high bits required by
+`emBits`. It returns borrowed non-copyable evidence for that exact output.
+
+This unmask evidence does not run MGF1, validate `PS || 0x01 || salt`, hash a
+message or `M'`, compare `H`, parse or operate on an RSA key, apply RSAVP1,
+select an algorithm, or establish a signature verdict. Certificate processing,
+path and hostname validation, trust roots, revocation, TLS, HTTP, OAuth
+transport, and network effects remain unavailable. It makes no constant-time
+guarantee.
+
 
 A bounded `x509-rsassa-pss-parameters` prerequisite now decodes the public
 RFC 4055 / RFC 8017 parameter structure carried by an X.509 signature
