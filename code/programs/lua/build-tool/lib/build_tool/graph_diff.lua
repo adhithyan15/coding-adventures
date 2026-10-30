@@ -595,7 +595,7 @@ local function validate_diff_input(input, graph)
                 -- more than a million distinct maximum-length patterns; a
                 -- zero-path request would otherwise validate all of them
                 -- without ever reaching match-work preflight.
-                local validation_work = #glob + 1
+                local validation_work = #glob
                 require_contract(validation_work
                     <= MAX_UNIQUE_GLOB_VALIDATION_WORK - unique_glob_validation_work,
                     "DIFF_MATCH_LIMIT_EXCEEDED")
@@ -855,27 +855,30 @@ local function validate_boundary(value)
     return result
 end
 
-local function list_contains(values, target)
-    for _, value in ipairs(values) do if value == target then return true end end
-    return false
-end
-
-local function boundary_applies(value, root)
-    if list_contains(value.exact_roots, root) then return true end
-    if list_contains(value.excluded_roots, root) then return false end
-    for _, parent in ipairs(value.descendant_roots) do
-        if root:sub(1, #parent + 1) == parent .. "/" then return true end
+local function prefix_materialization_work(path, total)
+    local path_work = #path
+    require_contract(path_work <= MAX_ROOT_CLASSIFICATION_WORK - total,
+        "DIFF_MATCH_LIMIT_EXCEEDED")
+    total = total + path_work
+    for position = 1, #path do
+        if path:byte(position) == 47 then
+            require_contract(position <= MAX_ROOT_CLASSIFICATION_WORK - total,
+                "DIFF_MATCH_LIMIT_EXCEEDED")
+            total = total + position
+        end
     end
-    return false
+    return total
 end
 
-local function boundary_reverse_index(input, packages)
+local function boundary_selection(input, packages, changed_paths, changed_count)
     local digest = rawget(input, "boundary_sha256") or ""
     local supplied = rawget(input, "boundary")
+    local selection = {changed_packages = {}, known_paths = {}}
+    for index = 1, changed_count do selection.known_paths[index] = false end
     require_contract(type(digest) == "string", "DIFF_BOUNDARY_DIGEST_MISMATCH")
     if digest == "" then
         require_contract(supplied == nil, "DIFF_BOUNDARY_DIGEST_MISMATCH")
-        return {}
+        return selection
     end
     require_contract(#digest == 64 and digest:match("^[0-9a-f]+$")
         and type(supplied) == "table", "DIFF_BOUNDARY_DIGEST_MISMATCH")
@@ -884,18 +887,84 @@ local function boundary_reverse_index(input, packages)
     local frame = BOUNDARY_DOMAIN .. string.pack(">I8", #encoded) .. encoded
     require_contract(sha256.sha256_hex(frame) == digest, "DIFF_BOUNDARY_DIGEST_MISMATCH")
     local boundaries = validate_boundary(snapshot)
-    local consumers = {}
+    if changed_count == 0 then return selection end
+
+    local changed_path_indexes = {}
+    for index = 1, changed_count do
+        changed_path_indexes[rawget(changed_paths, index)] = index
+    end
+    local exact_roots, descendant_roots, matching_rules = {}, {}, {}
+    local has_descendant_roots = false
+    for _, rule in ipairs(boundaries) do
+        local path_indexes, seen_indexes = {}, {}
+        for _, source in ipairs(rule.inputs) do
+            local path_index = changed_path_indexes[source.path]
+            if path_index ~= nil and not seen_indexes[path_index] then
+                seen_indexes[path_index] = true
+                path_indexes[#path_indexes + 1] = path_index
+            end
+        end
+        if #path_indexes > 0 then
+            local rule_index = #matching_rules + 1
+            for _, root in ipairs(rule.applies_to.exact_roots) do
+                local rules = exact_roots[root]
+                if rules == nil then rules = {}; exact_roots[root] = rules end
+                rules[#rules + 1] = rule_index
+            end
+            for _, root in ipairs(rule.applies_to.descendant_roots) do
+                local rules = descendant_roots[root]
+                if rules == nil then rules = {}; descendant_roots[root] = rules end
+                rules[#rules + 1] = rule_index
+                has_descendant_roots = true
+            end
+            local excluded_roots = {}
+            for _, root in ipairs(rule.applies_to.excluded_roots) do
+                excluded_roots[root] = true
+            end
+            matching_rules[rule_index] = {path_indexes = path_indexes,
+                excluded_roots = excluded_roots}
+        end
+    end
+
+    -- A relevant descendant rule needs only each package root's slash
+    -- ancestors. Charge every prefix before materializing any of them.
+    if has_descendant_roots then
+        local total = 0
+        for _, package in ipairs(packages) do
+            total = prefix_materialization_work(package.rel_path, total)
+        end
+    end
+
     for _, package in ipairs(packages) do
-        for _, rule in ipairs(boundaries) do
-            if boundary_applies(rule.applies_to, package.rel_path) then
-                for _, source in ipairs(rule.inputs) do
-                    consumers[source.path] = consumers[source.path] or {}
-                    consumers[source.path][package.name] = true
+        local root, applicable_rules = package.rel_path, {}
+        local exact = exact_roots[root]
+        if exact ~= nil then
+            for _, rule_index in ipairs(exact) do applicable_rules[rule_index] = true end
+        end
+        if has_descendant_roots then
+            for position = 1, #root do
+                if root:byte(position) == 47 then
+                    local descendants = descendant_roots[root:sub(1, position - 1)]
+                    if descendants ~= nil then
+                        for _, rule_index in ipairs(descendants) do
+                            if not matching_rules[rule_index].excluded_roots[root] then
+                                applicable_rules[rule_index] = true
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        if next(applicable_rules) ~= nil then
+            selection.changed_packages[package.name] = true
+            for rule_index in pairs(applicable_rules) do
+                for _, path_index in ipairs(matching_rules[rule_index].path_indexes) do
+                    selection.known_paths[path_index] = true
                 end
             end
         end
     end
-    return consumers
+    return selection
 end
 
 local function basename(path)
@@ -908,18 +977,7 @@ end
 local function preflight_root_classification(changed_paths, changed_count)
     local total = 0
     for path_index = 1, changed_count do
-        local path = rawget(changed_paths, path_index)
-        local path_work = #path
-        require_contract(path_work <= MAX_ROOT_CLASSIFICATION_WORK - total,
-            "DIFF_MATCH_LIMIT_EXCEEDED")
-        total = total + path_work
-        for position = 1, #path do
-            if path:byte(position) == 47 then
-                require_contract(position <= MAX_ROOT_CLASSIFICATION_WORK - total,
-                    "DIFF_MATCH_LIMIT_EXCEEDED")
-                total = total + position
-            end
-        end
+        total = prefix_materialization_work(rawget(changed_paths, path_index), total)
     end
 end
 
@@ -994,15 +1052,14 @@ local function sorted_set(values)
 end
 
 local function select_diff(packages, graph, forced, forced_count, changed_paths,
-        changed_count, policy, boundary_consumers, indexed_paths)
+        changed_count, policy, boundary, indexed_paths)
     local changed, strict_candidates = {}, {}
+    for name in pairs(boundary.changed_packages) do changed[name] = true end
     for index = 1, forced_count do changed[rawget(forced, index)] = true end
     local unknown = false
     for index = 1, changed_count do
         local path = rawget(changed_paths, index)
-        local consumers = boundary_consumers[path]
-        local known = consumers ~= nil and next(consumers) ~= nil
-        if consumers then for name in pairs(consumers) do changed[name] = true end end
+        local known = boundary.known_paths[index] == true
         local package_index = indexed_paths.package_indexes[index]
         if package_index ~= 0 then
             local package = packages[package_index]
@@ -1085,12 +1142,14 @@ function GraphDiff.evaluate_diff_selection(input)
         require_contract(graph_levels(graph) ~= nil, "DIFF_EDGE_CYCLE")
         local packages, forced, forced_count, changed_paths, changed_count, policy =
             validate_diff_input(input, graph)
+        -- Digest and schema diagnostics precede request-dependent resource
+        -- preflights, matching the fixture contract's stable error ordering.
+        local boundary = boundary_selection(input, packages, changed_paths, changed_count)
         preflight_root_classification(changed_paths, changed_count)
         local indexed_paths = index_changed_paths(packages, changed_paths, changed_count)
-        local boundary_consumers = boundary_reverse_index(input, packages)
         preflight_match_work(packages, indexed_paths, changed_count)
         return success(select_diff(packages, graph, forced, forced_count, changed_paths,
-            changed_count, policy, boundary_consumers, indexed_paths))
+            changed_count, policy, boundary, indexed_paths))
     end)
 end
 

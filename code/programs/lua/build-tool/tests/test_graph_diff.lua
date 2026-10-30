@@ -7,6 +7,7 @@ package.path = here .. "../lib/?.lua;" .. here .. "../lib/?/init.lua;"
 
 local json = require("dkjson")
 local lfs = require("lfs")
+local sha256 = require("coding_adventures.sha256")
 local GraphDiff = require("build_tool.graph_diff")
 
 local fixture_root = here .. "../../../../specs/fixtures/build-tool-v1/"
@@ -110,6 +111,47 @@ end
 local function simple_diff(packages)
     return {packages = packages, edges = {}, forced_packages = {},
         unknown_path_policy = "error", changed_paths = {}, boundary_sha256 = ""}
+end
+
+local function json_array(values)
+    return setmetatable(values or {}, {__jsontype = "array"})
+end
+
+local function canonical_json(value)
+    local kind = type(value)
+    if kind == "string" then return json.encode(value) end
+    if kind == "boolean" then return value and "true" or "false" end
+    if kind == "number" then return tostring(value) end
+    if kind == "nil" then return "null" end
+    local mt = getmetatable(value)
+    if type(mt) == "table" and rawget(mt, "__jsontype") == "array" then
+        local elements = {}
+        for index = 1, #value do elements[index] = canonical_json(value[index]) end
+        return "[" .. table.concat(elements, ",") .. "]"
+    end
+    local keys = {}
+    for key in pairs(value) do keys[#keys + 1] = key end
+    table.sort(keys)
+    local fields = {}
+    for _, key in ipairs(keys) do
+        fields[#fields + 1] = json.encode(key) .. ":" .. canonical_json(value[key])
+    end
+    return "{" .. table.concat(fields, ",") .. "}"
+end
+
+local function boundary_digest(value)
+    local encoded = canonical_json(value)
+    local frame = "coding-adventures/build-tool-repository-source-input-boundary/v1\0"
+        .. string.pack(">I8", #encoded) .. encoded
+    return sha256.sha256_hex(frame)
+end
+
+local function boundary_document(boundaries)
+    return {
+        schema_version = 1,
+        language_source_input_registry_sha256 = string.rep("0", 64),
+        boundaries = json_array(boundaries),
+    }
 end
 
 local function retained_kibibytes(operation)
@@ -356,15 +398,17 @@ describe("process-free Lua graph and diff selection", function()
             GraphDiff.evaluate_diff_selection(simple_diff(packages)))
     end)
 
-    it("bounds aggregate unique maximum glob validation with zero changed paths", function()
-        local packages = {}
+    it("charges exact unique glob bytes at and above the aggregate limit", function()
+        local packages, total_bytes = {}, 0
         local serial = 0
-        for package_index = 1, 9 do
+        local repeated = utf8.char(0x10000)
+        for package_index = 1, 8 do
             local globs = {}
             for glob_index = 1, 256 do
                 serial = serial + 1
-                globs[glob_index] = string.format("%08d", serial)
-                    .. string.rep("😀", 504)
+                globs[glob_index] = utf8.char(0x10000 + serial)
+                    .. string.rep(repeated, 511)
+                total_bytes = total_bytes + #globs[glob_index]
             end
             packages[package_index] = {
                 name = string.format("fixture/unique%d", package_index),
@@ -373,13 +417,15 @@ describe("process-free Lua graph and diff selection", function()
                 source_globs = globs,
             }
         end
+        assert.equals(4194304, total_bytes)
+        assert.same({ok = true, value = {changed_packages = {}, affected_packages = {},
+            prerequisite_packages = {}}},
+            GraphDiff.evaluate_diff_selection(simple_diff(packages)))
 
-        local started = os.clock()
-        local actual = GraphDiff.evaluate_diff_selection(simple_diff(packages))
-        local elapsed = os.clock() - started
-        assert.same({ok = false, code = "DIFF_MATCH_LIMIT_EXCEEDED"}, actual)
-        assert.is_true(elapsed < 5,
-            string.format("unique glob validation took %.2f seconds", elapsed))
+        packages[9] = {name = "fixture/over-limit", rel_path = "code/over-limit",
+            source_mode = "strict_globs", source_globs = {"x"}}
+        assert.same({ok = false, code = "DIFF_MATCH_LIMIT_EXCEEDED"},
+            GraphDiff.evaluate_diff_selection(simple_diff(packages)))
     end)
 
     it("indexes full-scale disjoint package roots and changed paths", function()
@@ -429,6 +475,92 @@ describe("process-free Lua graph and diff selection", function()
         assert.same({ok = false, code = "DIFF_MATCH_LIMIT_EXCEEDED"}, actual)
         assert.is_true(elapsed < 5,
             string.format("root classification preflight took %.2f seconds", elapsed))
+    end)
+
+    it("reports a bad boundary digest before slash-heavy root work", function()
+        local packages, changed_paths = {}, {}
+        local path_prefix = string.rep("a/", 250)
+        for index = 1, 1024 do
+            packages[index] = package_prefix(
+                string.format("fixture/p%04d", index),
+                string.format("code/p%04d", index))
+            changed_paths[index] = path_prefix .. string.format("%04d", index)
+        end
+        local input = simple_diff(packages)
+        input.changed_paths = changed_paths
+        input.boundary_sha256 = string.rep("0", 64)
+        input.boundary = {}
+        assert.same({ok = false, code = "DIFF_BOUNDARY_DIGEST_MISMATCH"},
+            GraphDiff.evaluate_diff_selection(input))
+    end)
+
+    it("does not expand max-shape boundary consumers when no paths changed", function()
+        local rules = {}
+        for rule_index = 1, 58 do
+            local inputs = {}
+            for input_index = 1, 64 do
+                inputs[input_index] = {path = string.format("shared/rule-%d/input-%d",
+                    rule_index, input_index), role = "cross_package_exact"}
+            end
+            rules[rule_index] = {
+                id = string.format("rule-%d", rule_index),
+                input_origin = "repository",
+                applies_to = {exact_roots = json_array(),
+                    descendant_roots = json_array({"roots"}),
+                    excluded_roots = json_array()},
+                inputs = json_array(inputs),
+                reason = "max-shape zero-path regression",
+                owner = "test-owner",
+            }
+        end
+        local boundary = boundary_document(rules)
+        local packages = {}
+        for index = 1, 4096 do
+            packages[index] = package_prefix(string.format("fixture/p%04d", index),
+                string.format("roots/p%04d", index))
+        end
+        local input = simple_diff(packages)
+        input.boundary_sha256 = boundary_digest(boundary)
+        input.boundary = boundary
+        assert.same({ok = true, value = {changed_packages = {}, affected_packages = {},
+            prerequisite_packages = {}}}, GraphDiff.evaluate_diff_selection(input))
+    end)
+
+    it("indexes relevant max-shape boundary exclusions", function()
+        local rules = {}
+        for rule_index = 1, 56 do
+            local excluded = {}
+            for excluded_index = 1, 1024 do
+                excluded[excluded_index] = string.format("excluded/rule-%d/root-%d",
+                    rule_index, excluded_index)
+            end
+            rules[rule_index] = {
+                id = string.format("rule-%d", rule_index),
+                input_origin = "repository",
+                applies_to = {exact_roots = json_array(),
+                    descendant_roots = json_array({"roots"}),
+                    excluded_roots = json_array(excluded)},
+                inputs = json_array({{path = "shared/relevant-input",
+                    role = "cross_package_exact"}}),
+                reason = "large exclusion index regression",
+                owner = "test-owner",
+            }
+        end
+        local boundary = boundary_document(rules)
+        local packages = {}
+        for index = 1, 4096 do
+            packages[index] = package_prefix(string.format("fixture/p%04d", index),
+                string.format("roots/p%04d", index))
+        end
+        local input = simple_diff(packages)
+        input.changed_paths = {"shared/relevant-input"}
+        input.boundary_sha256 = boundary_digest(boundary)
+        input.boundary = boundary
+        local actual = GraphDiff.evaluate_diff_selection(input)
+        assert.is_true(actual.ok, actual.code)
+        assert.equals(4096, #actual.value.changed_packages)
+        assert.equals("fixture/p0001", actual.value.changed_packages[1])
+        assert.equals("fixture/p4096", actual.value.changed_packages[4096])
     end)
 
     it("ignores hostile extra fields without weakening metatable rejection", function()

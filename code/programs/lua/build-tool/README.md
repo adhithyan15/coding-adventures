@@ -94,10 +94,14 @@ The build tool follows a pipeline:
    full pattern/path cross product are each charged before use against an
    explicit 50,000,000-unit operation ceiling.
    Optional repository source-boundary data is bounded as an inert decoded
-   object graph, verified with its domain-separated SHA-256 digest, and
-   reversed so one shared input can select every registered consumer. The
-   native suite dynamically consumes and pins all eight graph and twelve
-   diff-selection fixtures; CLI activation remains a separate tranche.
+   object graph and verified with its domain-separated SHA-256 digest before
+   request-dependent resource preflights. Only rules naming a changed input
+   are indexed; exact and descendant scopes use root maps, exclusions use
+   sets, and selection retains only package/path bits rather than expanding
+   every possible input-consumer pair. One shared input can still select every
+   registered consumer. The native suite dynamically consumes and pins all
+   eight graph and twelve diff-selection fixtures; CLI activation remains a
+   separate tranche.
 
 ## OCaml and Dune Discovery
 
