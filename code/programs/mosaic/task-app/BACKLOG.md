@@ -69,10 +69,19 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18563 — lower the Qt Board drop-target layout styles.**
-The selected bounded slice preserves the authored 9-pixel gap through the
-existing ColumnLayout and removes exactly three drops (80 to 77), retaining
-state and unsupported-value exclusions. #18481 owns broader root/flex growth.
+**Next: #18746 — prepare, publish, and audit v0.5.16.**
+The P0 lifecycle gates are complete. Prioritize this compatible patch under
+#13543 before further fidelity work. Preparation must merge before a single
+main publication dispatch; every existing payload and the immutable release
+identity, inventory, checksums, and substantive notes must pass before closing.
+Artifact coverage is unchanged; signing remains blocked in #13977 and feature
+composition remains paused behind #14011.
+
+**Completed: #18563 — Qt Board drop-target layout styles.**
+Merged in #18612, validated on exact head
+`0e31fde53a0e51adef0bbca9c9917e2d5ec1c578` by TaskApp run 40954058583.
+Both themes preserve the authored 9-pixel card gap and remove exactly three
+layout drops (80 to 77), retaining state and unsupported-value exclusions.
 
 **Completed: #18581 — published and audited v0.5.15.**
 Immutable release source/tag/manifest `8819839dc63d78c4c5eeda21f833f51364746420`;

@@ -1,5 +1,18 @@
 # TaskApp platform completion v1
 
+## Selected release checkpoint: v0.5.16 (#18746)
+
+The Qt Board card-spacing fix merged in #18612, validated on exact head
+0e31fde53a0e51adef0bbca9c9917e2d5ec1c578 by TaskApp run 40954058583.
+Prepare its compatible patch dated 2026-10-30, retaining the authored 9-pixel
+gap, three removed layout drops (80 to 77), and unsupported/state exclusions.
+Prioritize this checkpoint under #13543 before further fidelity work. Require
+release-helper tests, changelog validation, and independent security review.
+After preparation merges, dispatch publication once from main, require every
+existing payload validation, and audit immutable source/tag/manifest identity,
+assets, checksums, and substantive notes before closing #18746. Preparation
+is not publication; artifact coverage and unsigned limitations stay unchanged.
+
 ## Selected release checkpoint: v0.5.15 (#18581)
 
 The Qt empty Board drop-zone floor merged in #18562 with all checks passing.
