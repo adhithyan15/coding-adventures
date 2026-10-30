@@ -2922,6 +2922,26 @@ open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `form-urlencoded` prerequisite now validates an ordered,
+caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
+component, and encoded-output ceilings. It serializes the exact
+`application/x-www-form-urlencoded` byte profile into caller-owned storage:
+ASCII alphanumerics plus `*`, `-`, `.`, and `_` pass through, space becomes
+`+`, and every other UTF-8 byte becomes uppercase percent encoding. Empty names
+and values, duplicate names, and caller order are preserved because their
+meaning belongs to the consuming protocol. The complete encoded length is
+proven before any write, so a small output remains unchanged. Stable failures
+retain no field bytes, counts, lengths, limits, or output bytes, and Debug
+redacts every name and value.
+
+This serializer does not validate OAuth parameter names, uniqueness, grant
+semantics, or provider policy; interpret or release credentials; allocate or
+wipe its caller-owned output; emit provider or trace audit events; create HTTP
+headers or fixed-body evidence; perform TLS or I/O; or authorize HTTP, OAuth,
+or live-provider transport. Secret-bearing callers must obtain inputs through
+the audited custody path and wipe the output after its separately audited use.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `http1-request-header-field` prerequisite now validates and
 encodes one deliberately narrow HTTP/1 request field line into caller-owned
 storage. Caller limits bound the token-only field name, ASCII field value, and
