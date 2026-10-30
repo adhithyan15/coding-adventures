@@ -1,11 +1,15 @@
-use der_asn1::Asn1Limits;
+use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use std::cell::Cell;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_policy::{
-    validate_certificate_algorithm_policy, validate_certificate_role_policy,
-    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
-    X509CertificateIssuerLinkErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
+    classify_certificate_self_issued, validate_certificate_algorithm_policy,
+    validate_certificate_role_policy, X509AlgorithmParametersPolicy,
+    X509CertificateAlgorithmProfile, X509CertificateIssuerLinkErrorKind, X509CertificateRole,
+    X509CertificateRoleErrorKind,
+};
+use x509_intermediate_certificate_policy::{
+    validate_x509_intermediate_certificate_policy, ValidatedX509IntermediateCertificatePolicy,
 };
 use x509_rsa_algorithm_policy::{
     validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
@@ -13,10 +17,12 @@ use x509_rsa_algorithm_policy::{
 use x509_rsa_pkcs1_v1_5_sha384_signature::X509RsaSha384SignatureErrorKind;
 use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha384_issuer_link::{
-    verify_x509_rsa_sha384_issuer_link, verify_x509_rsa_sha384_issuer_link_with_policies,
-    X509RsaSha384IssuerLinkErrorKind, X509RsaSha384IssuerLinkPolicy,
-    X509RsaSha384IssuerPolicyLinkErrorKind,
+    bind_x509_rsa_sha384_intermediate_issuer_policy_link, verify_x509_rsa_sha384_issuer_link,
+    verify_x509_rsa_sha384_issuer_link_with_policies,
+    X509RsaSha384IntermediateIssuerPolicyLinkErrorKind, X509RsaSha384IssuerLinkErrorKind,
+    X509RsaSha384IssuerLinkPolicy, X509RsaSha384IssuerPolicyLinkErrorKind,
 };
+use x509_time::{decode_x509_time, X509Time};
 
 const RSA_ENCRYPTION_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
 const SHA384_WITH_RSA_ENCRYPTION_OID_DER: &[u8] =
@@ -172,6 +178,39 @@ fn rsa_algorithm_policy<'certificate, 'encoded>(
     .unwrap()
 }
 
+fn observed_time() -> X509Time {
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    decode_x509_time(decoder.decode_exact(b"\x17\x0d261101000000Z").unwrap()).unwrap()
+}
+
+fn intermediate_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+) -> ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded> {
+    let profiles = [X509CertificateAlgorithmProfile::new(
+        SHA384_WITH_RSA_ENCRYPTION_OID,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        RSA_ENCRYPTION_OID,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        2_048,
+        8_192,
+        2_048,
+        4_096,
+    )
+    .unwrap()];
+    let algorithm_policy = validate_certificate_algorithm_policy(certificate, &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(certificate, |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+
+    validate_x509_intermediate_certificate_policy(
+        role_policy(certificate),
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap()
+}
+
 fn mutate_first(encoded: &mut [u8], needle: &[u8]) {
     let offset = encoded
         .windows(needle.len())
@@ -250,6 +289,73 @@ fn policy_link_retains_exact_role_algorithm_key_and_signature_evidence() {
         format!("{verified:?}"),
         "VerifiedX509RsaSha384IssuerPolicyLink"
     );
+}
+
+#[test]
+fn binds_authenticated_link_to_complete_policy_for_the_exact_intermediate() {
+    let child_encoded = fixture();
+    let child = decode(&child_encoded);
+    let issuer_encoded = issuer_candidate(&child);
+    let candidate_issuer = decode(&issuer_encoded);
+
+    let issuer_policy_link = verify_x509_rsa_sha384_issuer_link_with_policies(
+        &child,
+        &candidate_issuer,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+        role_policy(&candidate_issuer),
+        rsa_algorithm_policy(&candidate_issuer),
+        RsaPublicOperationLimits::new(256).unwrap(),
+    )
+    .unwrap();
+    let verified = bind_x509_rsa_sha384_intermediate_issuer_policy_link(
+        issuer_policy_link,
+        intermediate_policy(&candidate_issuer),
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(verified.issuer_policy_link().child(), &child));
+    assert!(std::ptr::eq(
+        verified.issuer_policy_link().candidate_issuer(),
+        verified.intermediate_policy().certificate()
+    ));
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509RsaSha384IntermediateIssuerPolicyLink"
+    );
+}
+
+#[test]
+fn rejects_complete_policy_for_a_byte_equal_distinct_intermediate() {
+    let child_encoded = fixture();
+    let child = decode(&child_encoded);
+    let issuer_encoded = issuer_candidate(&child);
+    let candidate_issuer = decode(&issuer_encoded);
+    let detached_issuer = decode(&issuer_encoded);
+
+    let issuer_policy_link = verify_x509_rsa_sha384_issuer_link_with_policies(
+        &child,
+        &candidate_issuer,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+        role_policy(&candidate_issuer),
+        rsa_algorithm_policy(&candidate_issuer),
+        RsaPublicOperationLimits::new(256).unwrap(),
+    )
+    .unwrap();
+    let error = bind_x509_rsa_sha384_intermediate_issuer_policy_link(
+        issuer_policy_link,
+        intermediate_policy(&detached_issuer),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha384IntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA SHA-384 intermediate issuer policy-link error EvidenceMismatch"
+    );
+    assert!(!error.to_string().contains("sha384.fixture.example"));
 }
 
 #[test]

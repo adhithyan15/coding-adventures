@@ -1,0 +1,8 @@
+[package]
+name = "rsa-pss-mgf1-sha512"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 8017 MGF1 expansion for SHA-512 RSA-PSS verification"
+
+[dependencies]
+coding_adventures_sha512 = { path = "../sha512" }
