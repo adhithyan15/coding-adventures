@@ -891,6 +891,7 @@ members = [
     "websocket-core",
     "websocket-runtime",
     "http1-client",
+    "http1-chunked-body-budget",
     "storage-core",
     "storage-local-folder",
     "vault-sealed-store",
