@@ -553,7 +553,11 @@ export function buildSpanishA1MockAudit(
   root = defaultCurriculumRoot(),
   level: MockAuditLevel = "A1",
 ) {
-  const { taught, lessonCount } = spanishTaughtForms(root, level);
+  // This report asks only what the Spanish book has taught. The bounded path
+  // uses the same conversion and credits as the whole-corpus reference above,
+  // while retaining its real-track check and avoiding every unrelated book's
+  // lesson and membership I/O on each level and --check invocation.
+  const { taught, lessonCount } = spanishTaughtFormsBounded(root, level);
 
   const answerKeys = [1, 2].map((mock) => ({
     mock,

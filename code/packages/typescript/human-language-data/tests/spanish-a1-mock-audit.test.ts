@@ -1,4 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { resolve } from "node:path";
+import { describe, expect, it, vi } from "vitest";
+import * as loader from "../src/loader.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import {
   assertAnswerKeyParse,
@@ -20,6 +24,31 @@ const AUDITS = {
 } as const;
 
 describe("Spanish A1 book-bounded mock audit", () => {
+  it("audits Spanish without loading every unrelated track", () => {
+    // A Spanish-only report must not pay for every other language's lessons
+    // and membership ledgers. Fail if the wide loader sneaks back in.
+    const wideLoad = vi.spyOn(loader, "loadEverything").mockImplementation(() => {
+      throw new Error("unexpected whole-corpus load");
+    });
+    try {
+      expect(() => buildSpanishA1MockAudit(ROOT, "A1")).not.toThrow();
+    } finally {
+      wideLoad.mockRestore();
+    }
+  });
+
+  it("rejects a linked Spanish track before reading audit inputs", () => {
+    const root = mkdtempSync(resolve(tmpdir(), "spanish-mock-audit-link-"));
+    try {
+      const target = resolve(root, "target");
+      mkdirSync(target);
+      symlinkSync(target, resolve(root, "spanish"), process.platform === "win32" ? "junction" : "dir");
+      expect(() => buildSpanishA1MockAudit(root, "A1")).toThrow(/real directory/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("pins the current whole-item residual and its reproducible credit policy", () => {
     const audit = AUDITS.A1;
     expect(audit.objectiveFailed).toBe(0);
