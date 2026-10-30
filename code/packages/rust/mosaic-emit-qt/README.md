@@ -1,5 +1,9 @@
 # mosaic-emit-qt
 
+Minimum-height HostDropTargets also preserve static `display: flex`,
+`flex-direction: column`, and finite nonnegative pixel `gap` through their
+inner ColumnLayout. State overrides and other flex shapes remain unsupported.
+
 HostDropTarget retains a finite nonnegative static `min-height` on its outer
 Item, which owns the DropArea bounds. State-dependent minima remain excluded.
 
