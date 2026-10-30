@@ -740,6 +740,7 @@ members = [
     "sha256",
     "sha384",
     "rsa-pss-mgf1-sha384",
+    "rsa-pss-sha384",
     "sha512",
     "vigenere-cipher",
     "erl-nif-bridge",
