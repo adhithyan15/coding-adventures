@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18725,
+  "active_prs": [
+    18725
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-30T12:39:58Z",
-    "pr_number": 18583,
-    "head_revision": "e8f67be3feefa221a24e5a77b3d4f276b68bb0d7",
-    "action": "PR #18583 completed 44 exact-head terminal acceptable checks and merged through guarded squash auto-merge after GitHub reported the reviewed head clean and mergeable. The squash merge receipt 20db234ceca6c3ee1e91c79dace52851c4c3feb8 is verified on origin/main; the parity publication slot is clear and the completed managed worktree is archived.",
+    "observed_at": "2026-10-30T12:49:46Z",
+    "pr_number": 18725,
+    "head_revision": "2e8515c0d104b580bb198076e3f4d90d0bbb8c4f",
+    "action": "Published independently reviewed Lua graph/diff head 2e8515c0d104b580bb198076e3f4d90d0bbb8c4f as draft PR #18725 over exact base 20db234ceca6c3ee1e91c79dace52851c4c3feb8. GitHub reports it mergeable. Keep the PR draft while this durable PR-number receipt is committed, pushed, and independently reviewed; require a fresh exact-head hosted matrix after the final lifecycle head is marked ready.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2686,7 +2688,7 @@
     {
       "id": "build-tool-lua-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Lua build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",
@@ -2696,7 +2698,12 @@
         "build-tool-shared-input-multiconsumer-diff-selection-fixture"
       ],
       "branch": "codex/build-tool-lua-diff-selection-parity",
-      "pr_number": null,
+      "pr_number": 18725,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18725",
+      "pr_opened_at": "2026-10-30T12:49:46Z",
+      "publication_head": "2e8515c0d104b580bb198076e3f4d90d0bbb8c4f",
+      "publication_base": "20db234ceca6c3ee1e91c79dace52851c4c3feb8",
+      "publication_notes": "Independently reviewed current-main head 2e8515c0d104b580bb198076e3f4d90d0bbb8c4f opened as draft PR #18725 over exact base 20db234ceca6c3ee1e91c79dace52851c4c3feb8 at 2026-10-30T12:49:46Z. GitHub reports the draft mergeable. Keep it draft until this durable number receipt is pushed and independently reviewed; guarded squash auto-merge remains disabled until every check on the later exact ready head is terminal acceptable and GitHub still reports it mergeable.",
       "selection_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
       "selection_notes": "Selected as the highest-leverage package-path-independent implementation while Ruby dependency-hashing PR #18555 occupied the publication slot. It tied Ruby and Rust graph/diff at three direct and five total unfinished descendants; Lua had no package-path collision and could advance locally. After SHA-512 PR #18583 merged and freed the parity publication slot, a fresh priority pass kept this independently reviewed, implementation-complete item ahead of the prepared Rust graph/diff item because it is already current-main reconciled and includes its required Go fixture routing.",
       "implementation_revision": "5bcc662b1f79b315837982a8828d36afada3a154",

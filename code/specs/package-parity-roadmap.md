@@ -20027,3 +20027,15 @@ graph/diff adoption stays next in the local queue. Review of that work also
 identified a separate Rust Cargo test-trigger selection follow-up; it remains
 outside both graph/diff implementations and must be registered as a distinct
 bounded owner before selection.
+
+#### Draft PR #18725 publication receipt
+
+Publish independently reviewed exact current-main head
+`2e8515c0d104b580bb198076e3f4d90d0bbb8c4f` as draft PR #18725 over exact
+base `20db234ceca6c3ee1e91c79dace52851c4c3feb8` at
+`2026-10-30T12:49:46Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.
