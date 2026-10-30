@@ -1,0 +1,9 @@
+[package]
+name = "x509-authority-key-identifier"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 5280 Authority Key Identifier key-ID profile decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-extension = { path = "../x509-extension" }

@@ -1,0 +1,10 @@
+[package]
+name = "x509-rsassa-pss-parameters"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded X.509 RSASSA-PSS parameter decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+der-tlv = { path = "../der-tlv" }
+x509-algorithm-identifier = { path = "../x509-algorithm-identifier" }

@@ -20180,3 +20180,45 @@ work. Normal merge `9e40dd42efb8a1bd7f1ba40d677c3443b9f31ccd`
 preserves both histories and changes no Lua/Go graph-diff, launcher repair,
 lesson, or lifecycle path. Revalidation and exact-head review remain required
 before the normal non-force publication retry.
+
+#### PR #18725 guarded merge receipt and Rust reprioritization
+
+All 42 checks on exact independently reviewed head
+`adebf93dff223531c81c0c936545139ec7b7bc73` completed terminal acceptable,
+including all three hosted build platforms, the Forme verdict, CI gate,
+metadata contracts, expected skips, and neutral aggregate CodeQL. GitHub
+reported the PR `MERGEABLE` and `CLEAN`, so guarded squash auto-merge completed
+at `2026-10-30T17:10:28Z` as
+`a5da10a39ba4b0e2ba7cf54627a696de9cfdee5b`. The receipt is exact
+`origin/main`; the completed Lua worktree is archived and its remote branch is
+gone. The separate Windows discovery fallback owner remains pending without
+merge credit.
+
+A fresh dependency/leverage pass retains the already implemented, validated,
+and independently reviewed Rust graph/diff owner next. It advances four direct
+and six total unfinished descendants: cross-runtime indexing hardening,
+remaining engines, Rust neutral-adapter closure, and Rust repository-boundary
+adoption directly, plus all-language adapter CI closure and portable
+source-hashing remaining engines transitively. The newly registered Lua
+Windows fallback and Rust Cargo-trigger owners remain bounded follow-ups with
+no comparable downstream unlock. The Rust branch is normally reconciled with
+the Lua merge and all intervening path-disjoint current-main work before its
+exact-head validation and publication review.
+
+During final publication review, main advanced once more to
+`dc88db345fc175be7ad55f3da777eadec979112c` through path-disjoint ALGOL signed
+floor-root normalization work. Normal merge
+`c95a797bad07a174a2d6fadde035b7f9591e2bae` preserves both histories and leaves
+the Rust build-tool package and graph/diff fixtures byte-identical to reviewed
+implementation head `977e9b4b3ee7d5ce6bb12c0a171cf850065e9079`.
+
+#### Rust graph/diff PR #18744 publication receipt
+
+Publish independently reviewed current-main head
+`1a0e5cd4e3f9890055aea223d899e9ddfa538a7f` as ready PR #18744 over exact
+base `dc88db345fc175be7ad55f3da777eadec979112c` at
+`2026-10-30T17:21:30Z`. GitHub reports the PR mergeable. Fresh CI, CodeQL,
+human-language, Miri, and cargo-geiger checks are queued. Keep guarded squash
+auto-merge disabled until this durable PR-number receipt is committed, pushed,
+and independently reviewed, then require every check on that resulting exact
+head to be terminal acceptable while GitHub still reports it mergeable.

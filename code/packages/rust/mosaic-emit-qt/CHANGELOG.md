@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Lower the static column-flex/gap trio on minimum-height HostDropTargets to
+  their existing ColumnLayout spacing (#18563). Unsupported values and state
+  overrides remain reported; targets without min-height remain unchanged.
+
 - **A vertical `HostScroll` scrolls under a plain `Column` shell (UI21 §2.2,
   the EN-6 follow-up to #18477).** Engram's screens scrolled on SwiftUI,
   Compose, Flutter and XAML but not on Qt. Measured with the real Qt runtime
