@@ -2961,6 +2961,30 @@ revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
 connection. Extension-block and handshake composition remain prerequisites,
 and concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-key-share-entry` prerequisite owns only the RFC 8446
+`KeyShareEntry` structure shared by ClientHello and ServerHello key-share
+extension data. A caller supplies one exact two-byte named-group identifier,
+one non-empty borrowed key-exchange byte string, and an explicit reviewed
+maximum key-exchange length from 1 through 65,535 bytes. Construction and
+decoding reject empty or over-policy key material. Unknown and reserved group
+identifiers remain exact data for a later data-driven group policy. Encoding
+writes the two-byte group, two-byte key-exchange length, and exact caller bytes
+only after validating complete output capacity. Prefix decoding returns one
+complete borrowed entry plus the unconsumed input, while rejecting truncated
+headers or bodies and over-policy declared lengths before borrowing payload
+bytes. Stable failures and diagnostics retain no group identifiers or key
+bytes.
+
+This structural slice does not construct the ClientHello key-share vector,
+interpret HelloRetryRequest, authorize a named group, enforce a group-specific
+public-key length or encoding, generate ephemeral secrets, invoke X25519 or
+another key-agreement primitive, validate a peer public key, derive or retain a
+shared secret, advance a handshake, establish trust, enforce revocation,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Named-group policy, reviewed repository-owned key agreement, handshake-state
+composition, TLS transport, and HTTP composition remain blockers. Concrete
+HTTPS remains unavailable.
+
 An allocation-free `tls13-server-name` prerequisite now owns the exact RFC
 6066 ClientHello `server_name` extension data used by a future repository-owned
 TLS 1.3 client. It validates one borrowed ASCII DNS hostname under explicit

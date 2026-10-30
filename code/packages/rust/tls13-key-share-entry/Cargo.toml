@@ -1,0 +1,8 @@
+[package]
+name = "tls13-key-share-entry"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 key-share entry framing"
+license = "MIT"
+
+[dependencies]
