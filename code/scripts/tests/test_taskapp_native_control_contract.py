@@ -88,18 +88,23 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 29,
         "swiftui": 57,
         "compose": 40,
-        # Notes 0.3.0 (E3): two Qt text-align drops gone (78 -> 76).
-        # #18559 exposes three existing Board drop-target styles (+3).
-        # UI21 §2.2 then removes task-name flex-grow (-1) and exposes
-        # calendar-cell-drop gap and width (+2), for a combined total of 80.
-        "qt": 80,
+        # Upstream UI21 totals 80; #18563 lowers three Board declarations.
+        "qt": 77,
         "flutter": 69,
     }
 
 
+@pytest.mark.parametrize("primitive", ["display", "flex-direction"])
+def test_qt_board_layout_styles_reject_regression(primitive: str) -> None:
+    report = _report("qt")
+    report["styleDegradations"].append(_style_entry("qt", primitive))
+    errors = validate_style_degradations("qt", report, "report.json")
+    assert any(f"unbaselined style drop '{primitive}'" in error for error in errors)
+
+
 @pytest.mark.parametrize(
     ("primitive", "baseline"),
-    [("display", 1), ("flex-direction", 1), ("gap", 2)],
+    [("gap", 1)],
 )
 def test_qt_newly_reached_board_styles_reject_further_increases(
     primitive: str, baseline: int
