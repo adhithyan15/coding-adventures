@@ -21,10 +21,10 @@
     18725
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-30T14:40:11Z",
+    "observed_at": "2026-10-30T15:40:11Z",
     "pr_number": 18725,
-    "head_revision": "2dc4e6a5ca1e0171717b415fea8a044a7b439d3c",
-    "action": "The independently reviewed second Windows repair reached the remote branch at 2dc4e6a5ca1e0171717b415fea8a044a7b439d3c, but GitHub's PR object remained stale at failed head 6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0 and attached no fresh checks. Old-head results are not reusable and auto-merge remains disabled. Main then advanced path-disjointly to ac8d401b1341b6b84097b23bb8c27401f3422b4d and was normally merged; require exact-head review and a new non-force push before a completely fresh hosted matrix.",
+    "head_revision": "6272463c7af6afc3a4dca27fa38cf32b3a23d50f",
+    "action": "Fresh hosted run 41073982951 exposed a third Windows-only launcher regression at exact head 6272463c7af6afc3a4dca27fa38cf32b3a23d50f: the host probe passed, but the real CLI returned 0 because the child replay omitted LuaRocks' -e loader prefix, lost lfs, entered a defective Windows discovery fallback, and found no packages. Local repair 6b6e6e1ebd723b8eca0bbee16c878974ad05cf98 replays and quotes the complete launcher prefix and makes the probe require lfs. The concurrent Forme macOS 0.94 landing-performance failure is path-unrelated. Main advanced path-disjointly to fe19aa25a0856f5b5cdaab80fc50610cd3ac4998 and was normally merged; exact-head validation and independent review remain required before a non-force retry push. Auto-merge remains disabled.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2728,12 +2728,19 @@
       "third_retry_main_revision": "ac8d401b1341b6b84097b23bb8c27401f3422b4d",
       "third_retry_main_merge_revision": "b1d2c6213cb68ea6a827fe84a5b46080d26e6708",
       "third_retry_main_notes": "While the PR head event remained stale, main advanced through the path-disjoint TypeScript irc-net-stdlib node:test migration and Mermaid C4 sprite metadata compatibility. A normal merge preserves both histories and changes no Lua/Go graph-diff implementation, launcher repair, lesson, or lifecycle path. Revalidate and independently review the resulting exact head before the next normal push.",
+      "third_ci_failure_head": "6272463c7af6afc3a4dca27fa38cf32b3a23d50f",
+      "third_ci_failure_notes": "Fresh hosted run 41073982951 failed Windows job 124133234570 after 152 successes because the real malformed-UTF-8 CLI regression expected exit 2 and received exit 0. The host-executed exit-7 probe passed, proving the cmd.exe wrapper and status propagation. The child instead omitted LuaRocks' negative-index -e loader prefix, could not load lfs, entered the Windows shell fallback, rejected subdirectories through its separate POSIX-null-device defect, discovered zero packages, and intentionally exited 0. Forme macOS job 124133234549 independently missed its landing-performance gate at 0.94 versus 0.95; PR #18725 changes no Forme path.",
+      "third_ci_fix_revision": "6b6e6e1ebd723b8eca0bbee16c878974ad05cf98",
+      "third_ci_fix_notes": "The regression now recovers the complete contiguous negative-index Lua launcher prefix, preserves bare-Windows lua-to-lua.exe hardening, and shell-quotes each prefix argument with LuaRocks-compatible Windows treatment before appending the child script and arguments. The host probe requires lfs, retains redirected output, and must preserve exit 7; the real CLI regression retains exact exit-2 and stderr checks. Focused validation passes 7/7, the complete canonical Lua suite passes 153/153, every Lua source parses, and all 1,730 lesson shards validate.",
+      "fourth_retry_main_revision": "fe19aa25a0856f5b5cdaab80fc50610cd3ac4998",
+      "fourth_retry_main_merge_revision": "e7773fdffbd8cfc45933310641d82c38d1c8ccf8",
+      "fourth_retry_main_notes": "Before the third repair could publish, main advanced through path-disjoint Malayalam assessment fixtures, TypeScript wasm-types node:test migration, Rust X.509 SHA-512 reviewed-anchor work, and Mermaid C4 element-style metadata compatibility. A normal merge preserves both histories and changes neither launcher repair path. Exact-head validation and independent review remain required before the next normal push.",
       "selection_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
       "selection_notes": "Selected as the highest-leverage package-path-independent implementation while Ruby dependency-hashing PR #18555 occupied the publication slot. It tied Ruby and Rust graph/diff at three direct and five total unfinished descendants; Lua had no package-path collision and could advance locally. After SHA-512 PR #18583 merged and freed the parity publication slot, a fresh priority pass kept this independently reviewed, implementation-complete item ahead of the prepared Rust graph/diff item because it is already current-main reconciled and includes its required Go fixture routing.",
       "implementation_revision": "5bcc662b1f79b315837982a8828d36afada3a154",
       "main_refresh_revision": "20db234ceca6c3ee1e91c79dace52851c4c3feb8",
       "main_merge_revision": "f4e7d2e2cd38c20b69b1bfa5d68fcaceb70e8670",
-      "validation_notes": "The pure Lua graph/diff core dynamically consumes all eight graph and twelve diff-selection fixtures, including shared-input multi-consumer reverse selection, with canonical all-or-error output, exact repository-boundary digest validation, Unicode-scalar matching, and the 50,000,000-unit ceiling. The repaired implementation adds an exact 4 MiB unique-glob declaration ceiling, validates boundary schema and digest before request resource preflight, indexes package roots and relevant changed-path boundaries, and pins maximum-shape exclusion plus exact-root precedence. After the latest current-main merge and second Windows launcher repair, the focused graph/diff suite passes 22/22, the focused UTF-8 and child-process suite passes 7/7, the full Lua build-tool suite passes 153/153 from its fixture-correct tests directory, Lua syntax passes, and the focused Go fixture-selection and internal graphdiff suites pass. Running the full Lua suite from the package root is an invalid invocation because legacy tests intentionally resolve governed fixtures relative to the tests directory; the canonical invocation is green.",
+      "validation_notes": "The pure Lua graph/diff core dynamically consumes all eight graph and twelve diff-selection fixtures, including shared-input multi-consumer reverse selection, with canonical all-or-error output, exact repository-boundary digest validation, Unicode-scalar matching, and the 50,000,000-unit ceiling. The repaired implementation adds an exact 4 MiB unique-glob declaration ceiling, validates boundary schema and digest before request resource preflight, indexes package roots and relevant changed-path boundaries, and pins maximum-shape exclusion plus exact-root precedence. After the latest current-main merge and complete LuaRocks launcher-prefix repair, the focused graph/diff suite passes 22/22, the focused UTF-8 and child-process suite passes 7/7, the full Lua build-tool suite passes 153/153 from its fixture-correct tests directory, Lua syntax passes, and the focused Go fixture-selection and internal graphdiff suites pass. Running the full Lua suite from the package root is an invalid invocation because legacy tests intentionally resolve governed fixtures relative to the tests directory; the canonical invocation is green.",
       "security_review_revision": "5bcc662b1f79b315837982a8828d36afada3a154",
       "security_review_notes": "Split independent review rejected empty-root strict-glob behavior, quadratic bracket and root validation, masked stable diagnostics, missing source_globs acceptance, eager glob token retention, root-trie memory growth, unbounded record traversal, and repeated cross-package glob validation. The final head uses zero-component roots, linear parsing, sorted identities, bounded snapshots, lazy one-pattern compilation, and operation-local content memoization. Maximum 4,096-package shared-glob stress completes in about 2.1 seconds and 48 MiB; re-review issued SHIP with no findings.",
       "notes": "Implement and dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, in one process-free Lua core with stable errors, deterministic closures, and bounded memoized Unicode-scalar matching.",
@@ -2741,6 +2748,15 @@
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/build-tool-lua-diff-selection-match-work-ceiling-adoption"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+    },
+    {
+      "id": "build-tool-lua-windows-discovery-fallback-null-device-hardening",
+      "title": "Correct the Lua build tool Windows discovery fallback null device",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while diagnosing PR #18725 Windows job 124133234570. When lfs is unavailable, Discovery.dir_exists uses POSIX 2>/dev/null even on Windows, so directory probes fail and discovery can silently return zero packages. Repair the bounded fallback to use the Windows null device, add direct fallback regressions, and separately evaluate fail-closed handling for missing or unknown CLI option values. Keep this production hardening outside the test-launch repair and reprioritize it against the full backlog before selection."
     },
     {
       "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",

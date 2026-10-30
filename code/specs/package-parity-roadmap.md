@@ -20123,3 +20123,40 @@ repair, lesson, or lifecycle surfaces. Normal merge
 `b1d2c6213cb68ea6a827fe84a5b46080d26e6708` preserves both histories; the
 resulting exact head must be revalidated and independently reviewed before the
 next normal push.
+
+#### PR #18725 complete LuaRocks launcher-prefix repair
+
+Fresh hosted run `41073982951` reached exact head
+`6272463c7af6afc3a4dca27fa38cf32b3a23d50f`. Windows job `124133234570`
+passed the host-executed exit-7 probe and 152 other tests, but the real
+malformed-UTF-8 CLI regression returned exit 0 instead of 2. The passing probe
+proved that `cmd.exe` quoting and exit propagation were intact. The remaining
+defect was narrower: the child replayed only the Lua executable and discarded
+LuaRocks' negative-index `-e` loader prefix. It therefore could not load `lfs`,
+entered the shell discovery fallback, and found zero packages; the CLI
+intentionally treats that result as success.
+
+Repair `6b6e6e1ebd723b8eca0bbee16c878974ad05cf98` recovers the full contiguous
+launcher prefix, retains bare-Windows `lua` to `lua.exe` hardening, and quotes
+every prefix argument before the script and its arguments. The host probe now
+requires `lfs`, preserves redirected output, and must still return exit 7. The
+real regression retains its exact exit-2 and stderr checks. Focused validation
+passes 7/7, the canonical full Lua suite passes 153/153, every Lua source
+parses, and all 1,730 lesson shards validate.
+
+The same investigation registered separate pending owner
+`build-tool-lua-windows-discovery-fallback-null-device-hardening`: the
+production fallback uses POSIX `2>/dev/null` for Windows directory probes and
+can silently discard packages when `lfs` is unavailable. That bounded
+production hardening is not folded into this test-launch repair and must pass a
+fresh priority run before selection. The concurrent Forme macOS job
+`124133234549` was unrelated: its landing-performance median was 0.94 against a
+0.95 gate, and this PR changes no Forme path.
+
+Before the retry could publish, main advanced to
+`fe19aa25a0856f5b5cdaab80fc50610cd3ac4998` through path-disjoint Malayalam,
+TypeScript wasm-types, Rust X.509, and Mermaid C4 work. Normal merge
+`e7773fdffbd8cfc45933310641d82c38d1c8ccf8` preserves both histories and
+changes neither launcher repair path. Auto-merge remains disabled; exact-head
+validation, independent review, a normal non-force push, and a completely
+fresh terminal hosted matrix are still mandatory.
