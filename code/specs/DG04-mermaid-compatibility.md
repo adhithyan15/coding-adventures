@@ -192,6 +192,8 @@ pipeline, while macro names remain implementation syntax rather than visible
 diagram text. C4 element macros likewise preserve Mermaid's normalized person,
 system, container, and component type identities, including external, database,
 and queue variants, through typed metadata, layout, and portable type labels.
+Person and external-person elements also reserve dedicated header geometry and
+lower to backend-neutral head-and-body instructions rather than a backend icon.
 Core `UpdateRelStyle` text and line
 colors plus keyed or positional label offsets likewise survive semantic IR,
 layout, and backend-neutral PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
