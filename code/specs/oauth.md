@@ -713,10 +713,9 @@ prevent separator searching or padded/truncated acceptance. Stable failures
 retain no encoded-message bytes, digest bytes, mismatch position, or padding
 length. The allocation-free gate performs no hashing, RSA arithmetic, key or
 certificate parsing, algorithm routing, signature verdict, path validation,
-trust, revocation, TLS, HTTP, OAuth transport, or external effect. A later
-repository-owned X.509 composition must still bind it to an exact signed
-certificate, validated issuer key, RSA public operation, SHA-512 digest, and
-data-driven algorithm policy; concrete HTTPS remains unavailable.
+trust, revocation, TLS, HTTP, OAuth transport, or external effect. Any
+signature-verdict composition must bind it to authenticated certificate inputs
+instead of treating this formatting result as standalone proof.
 A bounded `rsa-pss-mgf1-sha256` prerequisite now implements only the RFC 8017
 MGF1 expansion required by the future SHA-256 EMSA-PSS verification path. It
 accepts the exact 32-byte PSS hash value as its seed, validates both the
@@ -761,6 +760,20 @@ issuer key and proves only that the key verified those exact signed bytes.
 Issuer selection and linkage, algorithm routing, certificate
 roles, path construction and validation, trust roots, time, names, revocation,
 TLS, HTTP, and network effects remain separate blockers.
+A bounded sibling `x509-rsa-pkcs1-v1-5-sha512-signature` composition now binds
+the SHA-512 encoded-message prerequisite to one exact decoded certificate, an
+already policy-validated issuer RSA key, the bounded repository-owned RSA
+public operation, and the repository-owned SHA-512 implementation. It requires
+the canonical `sha512WithRSAEncryption` identifier with present NULL
+parameters and a byte-aligned signature, hashes the preserved
+`TBSCertificate` DER, and returns non-copyable evidence retaining the exact
+certificate and issuer key only after the complete canonical encoded message
+passes. The pure public-data verifier performs no credential access, signing,
+storage, clock acquisition, or external effect, so it emits no runtime audit
+event. Issuer selection and linkage, data-driven algorithm routing,
+certificate roles, path construction and validation, trust roots, time,
+names, revocation, TLS, HTTP, and network effects remain separate blockers;
+concrete HTTPS remains unavailable.
 A bounded `x509-rsa-sha256-issuer-link` composition now authenticates one
 directed child-to-candidate-issuer link for that exact algorithm. Caller-owned
 Name policy is invoked once in the fixed child-issuer to candidate-subject
