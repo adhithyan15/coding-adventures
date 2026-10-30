@@ -20039,3 +20039,10 @@ reviewed. Then mark the PR ready and require a completely fresh hosted matrix
 on the resulting exact lifecycle head; guarded squash auto-merge remains
 disabled until every exact-head check is terminal and acceptable and GitHub
 still reports the PR mergeable.
+
+Before marking PR #18725 ready, main advanced to
+`64eb54037b81b44b34e5376b9f6a25645c01209c` through routed X.509 RSA evidence
+projection. Its four `x509-rsa-signature-routing` paths and OAuth specification
+note have no overlap with the Lua/Go graph-diff tranche or lifecycle surfaces.
+Normal merge `5969ce059fd4ab31f500bb033d8fed95a86395c5` preserves both histories;
+the resulting exact lifecycle head requires fresh review and hosted CI.
