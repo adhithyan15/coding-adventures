@@ -20256,3 +20256,21 @@ The same review registered separate pending owner
 a missing `--root` value falls through to root detection, and a missing
 `--language` value can succeed with zero packages. Strict stable parser failures
 belong in that owner, not in the discovery fallback repair.
+
+#### Lua Windows discovery fallback PR #18756 publication receipt
+
+Publish independently reviewed head
+`01d2f14a6a621b7ccdd38361d8024fefce583cc6` as ready PR #18756 over exact
+base `5b57bc21b6190c2216e38c847f4943fb1a766a59` at
+`2026-10-30T20:46:24Z`. GitHub reports the PR mergeable and fresh CI, CodeQL,
+and human-language detection checks are queued.
+
+Main advanced during publication through the Rust TLS record-protection state
+package and an OAuth specification note. Those nine paths do not overlap this
+Lua implementation, tests, documentation, or lifecycle surfaces. Normal merge
+`02aa0b7a9dcd1d8403caede08a22082e5d979ee2` preserves both histories. The
+exact merged tree still passes 29/29 focused discovery tests, 158/158 complete
+Lua build-tool tests, every Lua syntax check, and 1,740 lesson shards with zero
+problems. Commit this durable PR receipt, push normally, and obtain exact-head
+publication review before allowing guarded squash auto-merge; results attached
+to any earlier head cannot authorize the merge.

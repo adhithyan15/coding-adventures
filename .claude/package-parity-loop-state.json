@@ -16,14 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18756,
+  "active_prs": [
+    18756
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-30T20:27:19Z",
-    "pr_number": 18744,
-    "head_revision": "d1db246ba3228b02ee22a8a5e4661b4ef8004adb",
-    "action": "All 39 checks on exact reviewed Rust graph/diff head d1db246ba3228b02ee22a8a5e4661b4ef8004adb completed terminal acceptable: 9 succeeded and 30 were expected skips. GitHub reported the PR mergeable, and the user manually squash-merged PR #18744 at 2026-10-30T20:27:19Z as 5e99c835e71fc772d19e502cdb3824a10276ed8e. The merge receipt is an ancestor of current origin/main, the completed Rust worktree is archived, and a fresh priority pass selects the already implemented and reviewed Lua Windows discovery fallback repair next.",
-    "manual_merge": true
+    "observed_at": "2026-10-30T20:46:24Z",
+    "pr_number": 18756,
+    "head_revision": "01d2f14a6a621b7ccdd38361d8024fefce583cc6",
+    "action": "Independently reviewed Lua Windows discovery fallback head 01d2f14a6a621b7ccdd38361d8024fefce583cc6 opened as ready PR #18756 over exact base 5b57bc21b6190c2216e38c847f4943fb1a766a59. GitHub reports the PR mergeable and fresh exact-head CI is queued. Main advanced through path-disjoint Rust TLS record-protection state work at publication, so normal merge 02aa0b7a9dcd1d8403caede08a22082e5d979ee2 incorporates it; the exact lifecycle head requires fresh review and CI, and auto-merge remains disabled.",
+    "manual_merge": false
   },
   "last_inventory": {
     "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
@@ -2762,15 +2764,21 @@
     {
       "id": "build-tool-lua-windows-discovery-fallback-null-device-hardening",
       "title": "Correct the Lua build tool Windows discovery fallback null device",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/build-tool-lua-windows-fallback-hardening",
-      "pr_number": null,
+      "pr_number": 18756,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18756",
+      "pr_opened_at": "2026-10-30T20:46:24Z",
+      "publication_head": "01d2f14a6a621b7ccdd38361d8024fefce583cc6",
+      "publication_base": "5b57bc21b6190c2216e38c847f4943fb1a766a59",
+      "publication_notes": "The independently reviewed head opened as ready PR #18756 and GitHub reported it mergeable. Fresh CI, CodeQL, and human-language detection checks queued. Main had advanced through a path-disjoint Rust TLS record-protection state package, so the branch immediately received a normal merge and exact-head revalidation; guarded squash auto-merge remains disabled until every check on the final reviewed lifecycle head is terminal acceptable and GitHub still reports it mergeable.",
       "selection_revision": "6800cef66006572a8a064eed7eaad337978ce68a",
       "selection_notes": "Selected after Rust graph/diff PR #18744 completed all 39 exact-head checks acceptably and the user manually squash-merged it. The publication slot is free, this concrete Windows production defect is already implemented and independently reviewed, and it has higher immediate reliability leverage than the newly separated Lua CLI argument-validation and Rust Cargo-trigger follow-ups. Its implementation paths are disjoint from the completed Rust work.",
       "implementation_revision": "ce030817f27ff6447ff95806a5637445fb87149e",
-      "main_refresh_revision": "6800cef66006572a8a064eed7eaad337978ce68a",
-      "main_merge_revision": "503e1c4cfe5a0965416241add8664e46965bffb6",
+      "main_refresh_revision": "5b57bc21b6190c2216e38c847f4943fb1a766a59",
+      "main_merge_revision": "02aa0b7a9dcd1d8403caede08a22082e5d979ee2",
+      "main_merge_notes": "Main advanced once after local publication review through Rust TLS record-protection state and an OAuth specification note. Those nine paths do not overlap the Lua build-tool implementation, tests, changelog, README, parity state, or parity roadmap. A normal merge preserves both histories, and exact merged-head validation remains 29/29 focused, 158/158 full, all Lua syntax clean, and 1,740 lesson shards with zero problems.",
       "validation_notes": "The fallback now uses cmd.exe-compatible `cd /d` and `2>nul` on Windows while retaining POSIX `/dev/null`, quotes POSIX paths safely, rejects Windows expansion, quote, NUL, and record-framing inputs before execution, preserves legitimate POSIX leading and trailing whitespace, and strips only terminal carriage returns from Windows dir.exe records. Focused discovery tests pass 29/29, the canonical Lua build-tool suite passes 158/158, every Lua source parses, all 1,740 lesson shards validate, and diff plus ignored-inclusive hygiene checks are clean.",
       "security_review_revision": "ce030817f27ff6447ff95806a5637445fb87149e",
       "security_review_notes": "Independent review initially rejected trimming legitimate leading and trailing whitespace from fallback directory records. The final implementation preserves POSIX names exactly, removes only Windows record framing, fails closed on dangerous cmd.exe input, and keeps the injected fallback seams test-only and authority-neutral. Exact implementation-head re-review issued SHIP with no remaining findings.",
