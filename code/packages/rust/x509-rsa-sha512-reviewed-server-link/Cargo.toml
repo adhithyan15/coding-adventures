@@ -1,0 +1,9 @@
+[package]
+name = "x509-rsa-sha512-reviewed-server-link"
+version = "0.1.0"
+edition = "2021"
+description = "Exact RSA SHA-512 reviewed-root and target-server policy binding"
+
+[dependencies]
+x509-rsa-sha512-reviewed-anchor-link = { path = "../x509-rsa-sha512-reviewed-anchor-link" }
+x509-server-certificate-policy = { path = "../x509-server-certificate-policy" }
