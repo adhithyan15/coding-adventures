@@ -906,6 +906,7 @@ members = [
     "websocket-runtime",
     "http1-client",
     "http1-chunked-body-budget",
+    "http1-chunk-data-frame",
     "http1-response-body-framing",
     "http1-chunk-size-line",
     "storage-core",
