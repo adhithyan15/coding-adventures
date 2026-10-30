@@ -1281,6 +1281,20 @@ and caller-limit exhaustion continue to fail closed with redacted categories.
 This remains fixed-path DNS policy only: it does not implement other name
 forms, generalized path construction or validation, revocation, TLS, HTTP,
 OAuth transport, or network authority.
+A bounded `x509-ip-name-constraint-policy` prerequisite now owns the RFC 5280
+IPv4 and IPv6 subnet-matching rule independently of DER parsing. Caller policy
+supplies ordered permitted and excluded `iPAddress` constraint values in the
+standard address-plus-CIDR-mask form and presented Subject Alternative Name IP
+address octets. The allocation-free evaluator requires exact 8- or 32-octet
+constraints, exact 4- or 16-octet presented addresses, contiguous CIDR masks,
+fixed collection ceilings, matching address families, exclusion precedence,
+and membership in a permitted subnet whenever a permitted set exists. Stable
+failures retain only a category and collection index. This policy does not
+decode NameConstraints or Subject Alternative Name, extract certificate names,
+bind evidence to a certificate or path, process DNS or other GeneralName forms,
+construct or validate a path, verify signatures, grant trust, check revocation,
+perform TLS or HTTP, authorize OAuth transport, or cause an external effect;
+concrete HTTPS remains unavailable.
 A bounded `x509-revocation-policy` prerequisite now evaluates one explicit
 caller-supplied certificate-status observation at one explicit validated time.
 The status must be `good`; `revoked` and `unknown` fail closed. A successful
