@@ -762,7 +762,88 @@ def _parameter_controls(
                 step_cards.append(_parse_step_card(fields))
         except NetlistParseError as exc:
             raise NetlistParseError(f"line {line_number}: {exc}") from exc
+    step_cards.extend(_control_parameter_step_cards(text, parameters))
     return parameters, step_cards, table_parameters
+
+
+def _control_parameter_step_cards(text: str, parameters: dict[str, float]) -> list[StepCard]:
+    """Normalize the bounded ngspice ``foreach`` parameter-run form."""
+
+    cards: list[StepCard] = []
+    block: list[str] = []
+    in_control = False
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        head = line.lower()
+        if not in_control:
+            if head == ".control":
+                in_control = True
+                block = []
+            continue
+        if head == ".endc":
+            cards.extend(_control_parameter_step_cards_in_block(block, parameters))
+            in_control = False
+        else:
+            block.append(line)
+    return cards
+
+
+def _control_parameter_step_cards_in_block(
+    block: list[str], parameters: dict[str, float]
+) -> list[StepCard]:
+    cards: list[StepCard] = []
+    for index, line in enumerate(block):
+        fields = _split_fields(line)
+        if len(fields) < 3 or fields[0].lower().removeprefix(".") != "foreach":
+            continue
+        variable = fields[1]
+        values = tuple(parse_value(value) for value in fields[2:])
+        if not values:
+            raise NetlistParseError(".control foreach requires at least one numeric value")
+        tail = block[index + 1 :]
+        assignment_index = next(
+            (
+                candidate_index
+                for candidate_index, candidate in enumerate(tail)
+                if candidate.lower().startswith(("alterparam ", ".alterparam "))
+            ),
+            None,
+        )
+        if assignment_index is None:
+            raise NetlistParseError(
+                ".control foreach parameter runs require alterparam followed by reset and run"
+            )
+        reset_index = next(
+            (
+                candidate_index
+                for candidate_index, candidate in enumerate(tail[assignment_index + 1 :], assignment_index + 1)
+                if candidate.lower().removeprefix(".") == "reset"
+            ),
+            None,
+        )
+        if reset_index is None or not any(
+            candidate.lower().removeprefix(".") == "run" for candidate in tail[reset_index + 1 :]
+        ):
+            raise NetlistParseError(
+                ".control foreach parameter runs require alterparam followed by reset and run"
+            )
+        assignment = tail[assignment_index]
+        command, expression = assignment.split(maxsplit=1)
+        del command
+        if "=" not in expression:
+            raise NetlistParseError(".control alterparam requires NAME=$foreach_variable")
+        parameter, value = (part.strip() for part in expression.split("=", 1))
+        if value.removeprefix("$") != variable:
+            raise NetlistParseError(
+                ".control alterparam must use its enclosing foreach variable"
+            )
+        parameter = _parameter_name(parameter)
+        if parameter not in parameters:
+            raise NetlistParseError(
+                f".control alterparam target {parameter!r} is not a top-level .param"
+            )
+        cards.append(StepCard(parameter=parameter, values=values))
+    return cards
 
 
 def _parse_parameter_card(
