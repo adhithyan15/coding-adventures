@@ -21,6 +21,14 @@ const C4_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
 ));
+const C4_TITLE_PREAMBLE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-title-preamble-11.16.1-corpus.json"
+));
+const C4_TITLE_PREAMBLE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-title-preamble-11.16.1-visual-corpus.json"
+));
 const C4_RELATIONSHIP_ARROWS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-corpus.json"
@@ -156,6 +164,14 @@ const C4_SPRITES_CORPUS: &str = include_str!(concat!(
 const C4_SPRITES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-sprites-11.16.1-visual-corpus.json"
+));
+const C4_ELEMENT_STYLE_METADATA_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-style-metadata-11.16.1-corpus.json"
+));
+const C4_ELEMENT_STYLE_METADATA_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-style-metadata-11.16.1-visual-corpus.json"
 ));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -3029,6 +3045,78 @@ fn pinned_c4_sprites_reach_semantic_ir() {
             panic!("expected relationship metadata")
         };
         assert_eq!(metadata.sprite.as_deref(), Some(expected));
+    }
+}
+
+#[test]
+fn pinned_c4_element_style_metadata_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ELEMENT_STYLE_METADATA_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_ELEMENT_STYLE_METADATA_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let diagram =
+        parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+
+    let Some(diagram_ir::StructuralNodeMetadata::C4(user)) = diagram.nodes[0].metadata.as_ref()
+    else {
+        panic!("expected C4 user metadata")
+    };
+    assert_eq!(user.technology.as_deref(), Some("Desktop"));
+    assert_eq!(user.sprite.as_deref(), Some("user-style.png"));
+    assert_eq!(user.style_overrides.shadowing.as_deref(), Some("true"));
+    assert_eq!(user.style_overrides.shape.as_deref(), Some("RoundedBoxShape()"));
+    assert_eq!(user.style_overrides.legend_text.as_deref(), Some("User legend"));
+    assert_eq!(user.style_overrides.legend_sprite.as_deref(), Some("user-legend.png"));
+    assert!(diagram.nodes[0].compartments[0].entries.contains(&"[Desktop]".to_string()));
+
+    let Some(diagram_ir::StructuralGroupMetadata::C4Boundary {
+        technology,
+        sprite,
+        style_overrides,
+        ..
+    }) = diagram.groups[0].metadata.as_ref()
+    else {
+        panic!("expected C4 boundary metadata")
+    };
+    assert_eq!(technology.as_deref(), Some("Policy"));
+    assert_eq!(sprite.as_deref(), Some("zone-style.png"));
+    assert_eq!(style_overrides.shape.as_deref(), Some("EightSidedShape()"));
+
+    let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+        technology,
+        sprite,
+        style_overrides,
+        ..
+    }) = diagram.groups[1].metadata.as_ref()
+    else {
+        panic!("expected C4 deployment metadata")
+    };
+    assert_eq!(technology.as_deref(), Some("Container runtime"));
+    assert_eq!(sprite.as_deref(), Some("host-style.png"));
+    assert_eq!(style_overrides.legend_text.as_deref(), Some("Host legend"));
+}
+
+#[test]
+fn pinned_c4_title_preamble_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_TITLE_PREAMBLE_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_TITLE_PREAMBLE_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+
+    let expected_titles = ["Banking landscape", "Production container view"];
+    for ((fixture, visual_name), expected_title) in
+        fixtures.iter().zip(visual_names).zip(expected_titles)
+    {
+        assert_eq!(visual_name, &fixture["name"]);
+        let source = fixture["source"].as_str().unwrap();
+        assert_eq!(
+            detect_mermaid_type(source).unwrap(),
+            mermaid_parser::MermaidDiagramType::C4
+        );
+        let diagram = parse_c4_diagram(source).unwrap();
+        assert_eq!(diagram.title.as_deref(), Some(expected_title));
+        assert_eq!(diagram.nodes.len(), 2);
+        assert_eq!(diagram.relationships.len(), 1);
     }
 }
 

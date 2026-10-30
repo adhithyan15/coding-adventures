@@ -170,6 +170,11 @@ is incomplete.
 C4 accessibility titles and single-line or block descriptions are grammar-first
 and survive semantic IR plus structural layout into backend-neutral PaintScene
 metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
+diagram titles may come from YAML front matter or an inline `title` statement,
+with inline titles taking precedence. Standard Mermaid init directives and comments
+are removed before C4 grammar parsing while preserving source line positions; the
+resolved title then survives semantic IR, structural layout, and backend-neutral
+text paint. C4
 bidirectional and backward relationships also preserve their authored endpoint
 arrows through structural layout and backend-neutral PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
@@ -212,8 +217,13 @@ the pipeline into backend-neutral PaintScene URL metadata; element and group lin
 include layout bounds for portable hit testing, while link metadata does not alter
 geometry. Keyed and positional sprite identities on elements, deployment nodes,
 and relationships are also retained through PaintScene metadata without claiming
-sprite rendering, which pinned Mermaid documents as unfinished. C4 remains partial
-while its remaining macro semantics and visual corpus are incomplete.
+sprite rendering, which pinned Mermaid documents as unfinished. The remaining
+`UpdateElementStyle` shadowing, shape, sprite, technology, and legend values are
+grammar-first semantic metadata, including the documented shape helper forms, and
+survive layout into PaintScene metadata. Only the already-supported colors and
+technology affect paint; pinned Mermaid stores the other values without rendering
+them, so this implementation does not claim visual behavior for them. C4 remains
+partial while its remaining macro semantics and visual corpus are incomplete.
 
 ## Required New Semantic Families
 

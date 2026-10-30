@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.0 - 2026-10-30
+
+### Added
+
+- Added bounded evaluation of the exact selected reviewed anchor's optional
+  DNS NameConstraints against every dNSName in the exact retained target SAN.
+- Added separate caller-owned ASN.1 budgets, payload-free failures, and
+  non-copyable success retaining the complete reviewed server-link proof.
+
+### Security
+
+- Constraint and SAN inputs are derived only from the consumed proof, so a
+  caller cannot substitute another target certificate or reviewed snapshot
+  entry after authentication.
+- This supported DNS-policy subset grants no multi-hop path, intermediate or
+  IP-constraint, hostname, revocation, TLS, HTTP, OAuth, or network authority.
+
 ## 0.1.0 - 2026-10-30
 
 ### Added

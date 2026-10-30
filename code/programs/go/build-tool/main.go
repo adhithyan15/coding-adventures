@@ -285,6 +285,7 @@ var graphDiffNativeFixtureConsumers = []struct{ name, language string }{
 	{"ocaml/programs/build-tool", "ocaml"},
 	{"go/programs/build-tool", "go"},
 	{"haskell/programs/build-tool", "haskell"},
+	{"lua/programs/build-tool", "lua"},
 	{"perl/programs/build-tool", "perl"},
 	{"python/programs/build-tool", "python"},
 	{"swift/programs/build-tool", "swift"},

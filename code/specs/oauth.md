@@ -1048,6 +1048,19 @@ intermediate's issuer, construct or validate a complete path, grant trust,
 check revocation, perform TLS or HTTP, authorize OAuth transport, or cause an
 external effect. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A bounded path-length follow-up now consumes that exact authenticated complete-
+intermediate-policy proof together with one caller-owned path-length state. It
+derives issuing-CA role, self-issued classification, and any decoded
+`pathLenConstraint` only from the retained intermediate policy, then returns
+distinct non-copyable evidence retaining the authenticated link, complete
+intermediate policy, and advanced state together. Exhausted non-self-issued
+capacity fails with the existing payload-free repository-owned category. This
+is one caller-supplied state transition only: it does not prove prior traversal
+depth or path order, authenticate the intermediate's issuer, evaluate
+NameConstraints, construct or validate a complete path, grant trust, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or cause an
+external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-rsa-sha512-reviewed-anchor-link` follow-up now consumes that
 strongest RSA SHA-512 issuer-policy link together with reviewed-root selection
 evidence. It fails closed unless both non-copyable inputs retain the same exact
@@ -1060,6 +1073,20 @@ external effect. It does not apply anchor constraints, validate target role,
 purpose, validity, or identity, construct or validate a multi-hop path, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection; concrete HTTPS remains unavailable.
+A bounded two-link follow-up now consumes one complete-intermediate-policy-
+bound RSA SHA-512 target-to-intermediate link together with one policy-bound
+SHA-512 intermediate-to-reviewed-root link. It fails closed unless the
+candidate issuer retained by the first proof and the child retained by the
+reviewed parent proof are the same exact decoded intermediate certificate
+object; byte-equal independent decodes are deliberately insufficient. Success
+returns distinct non-copyable evidence retaining complete intermediate policy,
+both authenticated links, and the exact reviewed-root selection. This is one
+caller-ordered fixed-algorithm evidence join only. It does not derive or
+advance path-length state, construct or search a path, apply anchor or
+intermediate name constraints, validate the target's role, purpose, or
+hostname, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+cause an external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-rsa-sha512-reviewed-server-link` composition now consumes one
 exact target-server policy result together with one authenticated RSA SHA-512
 issuer link terminating at a reviewed root. It fails closed unless both
@@ -1073,6 +1100,21 @@ signature work, applies no reviewed-anchor constraints, constructs no
 multi-hop path, and does not check revocation, perform TLS or HTTP, authorize
 OAuth transport, or open a network connection; concrete HTTPS remains
 unavailable.
+A bounded follow-up now applies the exact selected reviewed anchor's optional
+DNS NameConstraints bytes to every dNSName in that retained SHA-512 target's
+Subject Alternative Name. Separate caller-owned ASN.1 budgets bound the
+reviewed-root constraint decoder and target SAN decoder. An unconstrained
+selected anchor succeeds without manufacturing DNS evidence; malformed
+constraints, a missing or malformed target SAN, unsupported constraint forms,
+and names outside the permitted subtrees fail with payload-free categories.
+The non-copyable result retains the complete SHA-512 reviewed server-link proof
+and optional constrained-name evidence together, preventing another target or
+snapshot entry from being substituted after evaluation. This remains one
+direct fixed-algorithm link and one supported DNS-policy subset: it does not
+construct or validate a multi-hop path, apply intermediate or IP constraints,
+check revocation or hostnames, perform TLS or HTTP, authorize OAuth transport,
+or open a network connection; concrete HTTPS and live-provider readiness
+remain unavailable.
 A bounded `x509-rsa-signature-routing` prerequisite now separates
 caller-owned certificate algorithm selection from fixed repository-owned RSA
 verification. It consumes exact child-certificate algorithm-profile evidence

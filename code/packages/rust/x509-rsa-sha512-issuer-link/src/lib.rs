@@ -16,6 +16,9 @@ use core::fmt;
 use der_asn1::Asn1Limits;
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate::X509Certificate;
+use x509_certificate_path_length_policy::{
+    X509CertificatePathLengthError, X509CertificatePathLengthState,
+};
 use x509_certificate_policy::{
     validate_certificate_issuer_link, validate_certificate_role_extensions,
     ValidatedCertificateRolePolicy, X509CertificateIssuerLinkErrorKind, X509CertificateRole,
@@ -362,6 +365,62 @@ impl fmt::Debug for VerifiedX509RsaSha512IntermediateIssuerPolicyLink<'_, '_, '_
     }
 }
 
+/// Non-copyable evidence for one authenticated intermediate path-length step.
+///
+/// The retained authenticated-intermediate proof binds one exact child link to
+/// complete policy for the exact issuing intermediate. The retained state is
+/// the result of applying the existing path-length transition from that same
+/// intermediate policy. This proves neither the intermediate's parent link nor
+/// path ordering, adjacency to another step, complete validation, or trust.
+pub struct ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    authenticated_intermediate: VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    /// Return the consumed authenticated intermediate proof.
+    #[must_use]
+    pub const fn authenticated_intermediate(
+        &self,
+    ) -> &VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.authenticated_intermediate
+    }
+
+    /// Return the advanced path-length state.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug for ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<'_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509RsaSha512AuthenticatedIntermediatePathLength")
+    }
+}
+
 /// Verify one directed RSA PKCS #1 v1.5 SHA-512 issuer link.
 ///
 /// `same_name` is called exactly once with the child issuer Name followed by
@@ -539,5 +598,44 @@ pub fn bind_x509_rsa_sha512_intermediate_issuer_policy_link<
     Ok(VerifiedX509RsaSha512IntermediateIssuerPolicyLink {
         issuer_policy_link,
         intermediate_policy,
+    })
+}
+
+/// Advance path-length state from one authenticated intermediate proof.
+///
+/// The transition derives role, self-issued classification, and any decoded
+/// `pathLenConstraint` only from the complete intermediate policy retained by
+/// `authenticated_intermediate`. Success consumes and retains that proof with
+/// the advanced state so this composition boundary cannot silently discard the
+/// authenticated adjacent link. It does not authenticate the intermediate's
+/// own issuer, establish ordering, or validate a complete path.
+pub fn advance_x509_rsa_sha512_authenticated_intermediate_path_length<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    path_length_state: X509CertificatePathLengthState,
+    authenticated_intermediate: VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+) -> Result<
+    ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509CertificatePathLengthError,
+> {
+    let path_length_state = path_length_state
+        .advance_validated_intermediate_ca(authenticated_intermediate.intermediate_policy())?;
+
+    Ok(ValidatedX509RsaSha512AuthenticatedIntermediatePathLength {
+        authenticated_intermediate,
+        path_length_state,
     })
 }
