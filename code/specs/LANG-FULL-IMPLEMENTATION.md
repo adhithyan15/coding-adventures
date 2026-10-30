@@ -71,6 +71,10 @@ Unary signs may wrap that `sqrt` without widening. In particular,
 `entier(-sqrt(n))` uses the negated ceiling root for non-square `n`, preserving
 ALGOL floor semantics; negative radicands, overrides, and dynamic roots remain
 outside the proof.
+Checked integer additions and subtractions may also translate one exact square
+root before `entier`, including subtraction's negated ceiling-root case.
+Overflow, multiple roots, multiplication, real division, overrides, and
+dynamic roots remain outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.

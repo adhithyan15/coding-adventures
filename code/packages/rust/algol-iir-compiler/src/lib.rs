@@ -3726,6 +3726,65 @@ impl Compiler {
             };
         }
         if node.rule_name != "proc_call" {
+            let sequence = pieces(node);
+            let has_leading_sign = matches!(
+                sequence.first(),
+                Some(Piece::Op(operator)) if matches!(operator.as_str(), "+" | "-")
+            );
+            let is_additive_sequence = if has_leading_sign {
+                sequence.len() >= 4 && sequence.len().is_multiple_of(2)
+            } else {
+                sequence.len() >= 3 && !sequence.len().is_multiple_of(2)
+            };
+            if is_additive_sequence {
+                let mut floor_root = None;
+                let mut integer_offset = 0_i64;
+                let mut index = 0;
+                let mut subtract = negative;
+                if let Some(Piece::Op(operator)) = sequence.first() {
+                    subtract ^= match operator.as_str() {
+                        "+" => false,
+                        "-" => true,
+                        _ => return None,
+                    };
+                    index += 1;
+                }
+                while index < sequence.len() {
+                    let Piece::Node(operand) = sequence.get(index)? else {
+                        return None;
+                    };
+                    if let Some(value) =
+                        self.exact_static_integer_signed_floor_root_value(operand, subtract)
+                    {
+                        if floor_root.replace(value).is_some() {
+                            return None;
+                        }
+                    } else {
+                        let value = self
+                            .exact_static_integer_normalizer_operand_value(operand)?;
+                        integer_offset = if subtract {
+                            integer_offset.checked_sub(value)?
+                        } else {
+                            integer_offset.checked_add(value)?
+                        };
+                    }
+                    index += 1;
+                    if index == sequence.len() {
+                        break;
+                    }
+                    let Piece::Op(operator) = sequence.get(index)? else {
+                        return None;
+                    };
+                    subtract = negative
+                        ^ match operator.as_str() {
+                            "+" => false,
+                            "-" => true,
+                            _ => return None,
+                        };
+                    index += 1;
+                }
+                return floor_root?.checked_add(integer_offset);
+            }
             let children = direct_nodes(node);
             return (direct_tokens(node).is_empty() && children.len() == 1)
                 .then(|| {
@@ -17270,6 +17329,32 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "negative radicands, overridden roots, and procedure-calling signed roots must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_translated_floor_root_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(7 - sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(5 - (sqrt(entier(80)) + entier(2)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-sqrt(entier(80)) + entier(5))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "integer-translated exact floor roots may compose between wide static integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(7 - sqrt(entier(-1)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure sqrt(x); value x; real x; sqrt := 8; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(7 - sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 80; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(7 - sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) + sqrt(entier(3)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "negative radicands, overridden or dynamic roots, and multiple roots must fail closed",
             );
         }
     }
