@@ -555,6 +555,14 @@ lengths, and the rule that a path length cannot appear unless CA is true while
 preserving arbitrarily large canonical integers as borrowed bytes. It does not
 grant CA authority, enforce certificate-wide criticality or Key Usage policy,
 build paths, verify signatures, or select trust roots.
+A bounded `x509-subject-key-identifier` semantic layer now recognizes only the
+RFC 5280 Subject Key Identifier OID and decodes its exact encapsulated OCTET
+STRING without allocation. A caller-selected nonzero byte ceiling is checked
+after canonical DER framing, empty identifiers fail closed, and stable errors
+retain no identifier bytes. This primitive does not derive an identifier,
+parse Authority Key Identifier, select or authenticate an issuer, construct or
+validate a path, select trust, verify signatures, process revocation, grant TLS
+or HTTP authority, or perform any external effect.
 A bounded `x509-key-usage` semantic layer now recognizes only the RFC 5280 Key
 Usage OID and decodes its exact encapsulated BIT STRING. It requires at least
 one asserted usage, exposes only the nine defined flags, and rejects undefined
