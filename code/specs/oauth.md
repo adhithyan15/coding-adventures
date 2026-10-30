@@ -809,6 +809,19 @@ message or `M'`, compare `H`, parse or operate on an RSA key, apply RSAVP1,
 select an algorithm, or establish a signature verdict. Certificate processing,
 path and hostname validation, trust roots, revocation, TLS, HTTP, OAuth
 transport, and network effects remain unavailable.
+A bounded, data-driven `rsa-pss-algorithm-policy` prerequisite now validates
+already-decoded public RSA-PSS parameters. Caller policy supplies an exact
+allowlist of message-hash, MGF1-hash, and salt-length profiles plus a salt-work
+ceiling. The gate requires RFC 8017 trailer field 1, applies the ceiling, and
+returns non-copyable evidence only for an exact allowlist match. SHA-256,
+SHA-384, and SHA-512 routing remains explicit; the policy does not silently
+couple the message and MGF1 hash choices.
+
+This profile evidence does not parse DER or X.509 AlgorithmIdentifier values,
+select an implementation, hash, run MGF1, validate PSS encoding, parse or
+operate on an RSA key, apply RSAVP1, or establish a signature verdict.
+Certificate processing, path and hostname validation, trust roots, revocation,
+TLS, HTTP, OAuth transport, and network effects remain unavailable.
 A bounded `x509-rsa-pkcs1-v1-5-sha256-signature` composition now verifies one
 exact certificate signature with repository-owned primitives. It requires the
 canonical `sha256WithRSAEncryption` identifier with present NULL parameters,
