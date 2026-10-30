@@ -1,0 +1,7 @@
+[package]
+name = "http1-response-head"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded allocation-free strict HTTP/1 response-head decoding"
+
+[dependencies]

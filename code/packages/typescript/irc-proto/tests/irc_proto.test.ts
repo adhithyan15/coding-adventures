@@ -2,135 +2,136 @@
  * Tests for irc-proto — parse() and serialize() round-trips.
  */
 
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { parse, serialize, ParseError, Message } from "../src/index.js";
 
 describe("parse()", () => {
   it("parses a simple command with no prefix and one param", () => {
     const msg = parse("NICK alice");
-    expect(msg.prefix).toBeNull();
-    expect(msg.command).toBe("NICK");
-    expect(msg.params).toEqual(["alice"]);
+    assert.equal(msg.prefix, null);
+    assert.equal(msg.command, "NICK");
+    assert.deepEqual(msg.params, ["alice"]);
   });
 
   it("parses a command with no prefix and no params", () => {
     const msg = parse("QUIT");
-    expect(msg.prefix).toBeNull();
-    expect(msg.command).toBe("QUIT");
-    expect(msg.params).toEqual([]);
+    assert.equal(msg.prefix, null);
+    assert.equal(msg.command, "QUIT");
+    assert.deepEqual(msg.params, []);
   });
 
   it("parses a command with a server prefix", () => {
     const msg = parse(":irc.local 001 alice :Welcome to the server");
-    expect(msg.prefix).toBe("irc.local");
-    expect(msg.command).toBe("001");
-    expect(msg.params).toEqual(["alice", "Welcome to the server"]);
+    assert.equal(msg.prefix, "irc.local");
+    assert.equal(msg.command, "001");
+    assert.deepEqual(msg.params, ["alice", "Welcome to the server"]);
   });
 
   it("parses a command with a nick!user@host prefix", () => {
     const msg = parse(":alice!alice@127.0.0.1 PRIVMSG #general :hello world");
-    expect(msg.prefix).toBe("alice!alice@127.0.0.1");
-    expect(msg.command).toBe("PRIVMSG");
-    expect(msg.params).toEqual(["#general", "hello world"]);
+    assert.equal(msg.prefix, "alice!alice@127.0.0.1");
+    assert.equal(msg.command, "PRIVMSG");
+    assert.deepEqual(msg.params, ["#general", "hello world"]);
   });
 
   it("normalises command to uppercase", () => {
     const msg = parse("join #foo");
-    expect(msg.command).toBe("JOIN");
-    expect(msg.params).toEqual(["#foo"]);
+    assert.equal(msg.command, "JOIN");
+    assert.deepEqual(msg.params, ["#foo"]);
   });
 
   it("handles trailing param that contains multiple spaces", () => {
     const msg = parse("PRIVMSG #chan :hello   world   spaces");
-    expect(msg.params).toEqual(["#chan", "hello   world   spaces"]);
+    assert.deepEqual(msg.params, ["#chan", "hello   world   spaces"]);
   });
 
   it("parses USER command with 4 params", () => {
     const msg = parse("USER alice 0 * :Alice Smith");
-    expect(msg.command).toBe("USER");
-    expect(msg.params).toEqual(["alice", "0", "*", "Alice Smith"]);
+    assert.equal(msg.command, "USER");
+    assert.deepEqual(msg.params, ["alice", "0", "*", "Alice Smith"]);
   });
 
   it("parses PING command", () => {
     const msg = parse("PING :irc.local");
-    expect(msg.command).toBe("PING");
-    expect(msg.params).toEqual(["irc.local"]);
+    assert.equal(msg.command, "PING");
+    assert.deepEqual(msg.params, ["irc.local"]);
   });
 
   it("parses numeric commands", () => {
     const msg = parse(":server 433 * alice :Nickname is already in use");
-    expect(msg.command).toBe("433");
-    expect(msg.params).toEqual(["*", "alice", "Nickname is already in use"]);
+    assert.equal(msg.command, "433");
+    assert.deepEqual(msg.params, ["*", "alice", "Nickname is already in use"]);
   });
 
   it("strips the leading colon from trailing param", () => {
     const msg = parse(":s 001 nick :Welcome!");
-    expect(msg.params[1]).toBe("Welcome!");
-    expect(msg.params[1].startsWith(":")).toBe(false);
+    assert.equal(msg.params[1], "Welcome!");
+    assert.equal(msg.params[1].startsWith(":"), false);
   });
 
   it("handles param that is a colon-only trailing (empty string)", () => {
     const msg = parse("PART #chan :");
-    expect(msg.params).toEqual(["#chan", ""]);
+    assert.deepEqual(msg.params, ["#chan", ""]);
   });
 
   it("handles multiple params with no trailing", () => {
     const msg = parse("MODE #chan +o alice");
-    expect(msg.params).toEqual(["#chan", "+o", "alice"]);
+    assert.deepEqual(msg.params, ["#chan", "+o", "alice"]);
   });
 
   it("enforces max 15 params — extra tokens are silently dropped", () => {
     const manyParams = Array.from({ length: 20 }, (_, i) => `p${i}`).join(" ");
     const msg = parse(`CMD ${manyParams}`);
-    expect(msg.params.length).toBe(15);
-    expect(msg.params[14]).toBe("p14");
+    assert.equal(msg.params.length, 15);
+    assert.equal(msg.params[14], "p14");
   });
 
   it("parses QUIT with prefix", () => {
     const msg = parse(":alice!alice@host QUIT :Goodbye");
-    expect(msg.prefix).toBe("alice!alice@host");
-    expect(msg.command).toBe("QUIT");
-    expect(msg.params).toEqual(["Goodbye"]);
+    assert.equal(msg.prefix, "alice!alice@host");
+    assert.equal(msg.command, "QUIT");
+    assert.deepEqual(msg.params, ["Goodbye"]);
   });
 
   it("parses JOIN with no trailing", () => {
     const msg = parse("JOIN #general");
-    expect(msg.command).toBe("JOIN");
-    expect(msg.params).toEqual(["#general"]);
+    assert.equal(msg.command, "JOIN");
+    assert.deepEqual(msg.params, ["#general"]);
   });
 
   it("parses NAMES reply numeric 353", () => {
     const msg = parse(":irc.local 353 alice = #general :@alice bob");
-    expect(msg.command).toBe("353");
-    expect(msg.params).toEqual(["alice", "=", "#general", "@alice bob"]);
+    assert.equal(msg.command, "353");
+    assert.deepEqual(msg.params, ["alice", "=", "#general", "@alice bob"]);
   });
 
   it("handles command-only (CAP LS)", () => {
     const msg = parse("CAP LS");
-    expect(msg.prefix).toBeNull();
-    expect(msg.command).toBe("CAP");
-    expect(msg.params).toEqual(["LS"]);
+    assert.equal(msg.prefix, null);
+    assert.equal(msg.command, "CAP");
+    assert.deepEqual(msg.params, ["LS"]);
   });
 });
 
 describe("parse() — error cases", () => {
   it("throws ParseError for empty string", () => {
-    expect(() => parse("")).toThrow(ParseError);
+    assert.throws(() => parse(""), ParseError);
   });
 
   it("throws ParseError for whitespace-only string", () => {
-    expect(() => parse("   ")).toThrow(ParseError);
+    assert.throws(() => parse("   "), ParseError);
   });
 
   it("throws ParseError for prefix-only line (no command)", () => {
-    expect(() => parse(":irc.local")).toThrow(ParseError);
+    assert.throws(() => parse(":irc.local"), ParseError);
   });
 });
 
 describe("serialize()", () => {
   it("serializes a simple command with no prefix", () => {
     const buf = serialize({ prefix: null, command: "NICK", params: ["alice"] });
-    expect(buf.toString("utf-8")).toBe("NICK alice\r\n");
+    assert.equal(buf.toString("utf-8"), "NICK alice\r\n");
   });
 
   it("serializes a command with a server prefix", () => {
@@ -139,7 +140,7 @@ describe("serialize()", () => {
       command: "001",
       params: ["alice", "Welcome to the server"],
     });
-    expect(buf.toString("utf-8")).toBe(":irc.local 001 alice :Welcome to the server\r\n");
+    assert.equal(buf.toString("utf-8"), ":irc.local 001 alice :Welcome to the server\r\n");
   });
 
   it("adds trailing colon for last param containing a space", () => {
@@ -148,28 +149,28 @@ describe("serialize()", () => {
       command: "PRIVMSG",
       params: ["#chan", "hello world"],
     });
-    expect(buf.toString("utf-8")).toBe("PRIVMSG #chan :hello world\r\n");
+    assert.equal(buf.toString("utf-8"), "PRIVMSG #chan :hello world\r\n");
   });
 
   it("does not add trailing colon for last param without a space", () => {
     const buf = serialize({ prefix: null, command: "JOIN", params: ["#general"] });
-    expect(buf.toString("utf-8")).toBe("JOIN #general\r\n");
+    assert.equal(buf.toString("utf-8"), "JOIN #general\r\n");
   });
 
   it("serializes with no params", () => {
     const buf = serialize({ prefix: null, command: "QUIT", params: [] });
-    expect(buf.toString("utf-8")).toBe("QUIT\r\n");
+    assert.equal(buf.toString("utf-8"), "QUIT\r\n");
   });
 
   it("returns a Buffer, not a string", () => {
     const buf = serialize({ prefix: null, command: "PING", params: [] });
-    expect(Buffer.isBuffer(buf)).toBe(true);
+    assert.equal(Buffer.isBuffer(buf), true);
   });
 
   it("always terminates with CRLF", () => {
     const buf = serialize({ prefix: null, command: "PONG", params: ["server"] });
     const s = buf.toString("utf-8");
-    expect(s.endsWith("\r\n")).toBe(true);
+    assert.equal(s.endsWith("\r\n"), true);
   });
 });
 
@@ -180,12 +181,13 @@ describe("parse() -> serialize() round-trips", () => {
   };
 
   it("round-trips NICK", () => {
-    expect(roundTrip("NICK alice")).toBe("NICK alice\r\n");
+    assert.equal(roundTrip("NICK alice"), "NICK alice\r\n");
   });
 
   it("round-trips PRIVMSG with trailing", () => {
-    expect(roundTrip(":alice!a@h PRIVMSG #c :hello world")).toBe(
-      ":alice!a@h PRIVMSG #c :hello world\r\n"
+    assert.equal(
+      roundTrip(":alice!a@h PRIVMSG #c :hello world"),
+      ":alice!a@h PRIVMSG #c :hello world\r\n",
     );
   });
 
@@ -194,44 +196,45 @@ describe("parse() -> serialize() round-trips", () => {
     // The colon is only needed for params with spaces (the "trailing" param signal).
     // This is correct per RFC 1459: the colon is a wire-format framing hint, not
     // preserved for non-space params.
-    expect(roundTrip(":irc.local 001 alice :Welcome!")).toBe(
-      ":irc.local 001 alice Welcome!\r\n"
+    assert.equal(
+      roundTrip(":irc.local 001 alice :Welcome!"),
+      ":irc.local 001 alice Welcome!\r\n",
     );
   });
 
   it("round-trips QUIT with no params", () => {
-    expect(roundTrip("QUIT")).toBe("QUIT\r\n");
+    assert.equal(roundTrip("QUIT"), "QUIT\r\n");
   });
 
   it("round-trips JOIN", () => {
-    expect(roundTrip("JOIN #general")).toBe("JOIN #general\r\n");
+    assert.equal(roundTrip("JOIN #general"), "JOIN #general\r\n");
   });
 
   it("round-trips USER with realname", () => {
     const msg = parse("USER alice 0 * :Alice Smith");
     const out = serialize(msg).toString("utf-8");
-    expect(out).toBe("USER alice 0 * :Alice Smith\r\n");
+    assert.equal(out, "USER alice 0 * :Alice Smith\r\n");
   });
 
   it("round-trips PING with server token (no colon for single word)", () => {
     // "irc.local" has no spaces, so no trailing colon is added.
-    expect(roundTrip("PING :irc.local")).toBe("PING irc.local\r\n");
+    assert.equal(roundTrip("PING :irc.local"), "PING irc.local\r\n");
   });
 });
 
 describe("Message interface", () => {
   it("accepts null prefix", () => {
     const msg: Message = { prefix: null, command: "NICK", params: ["bob"] };
-    expect(msg.prefix).toBeNull();
+    assert.equal(msg.prefix, null);
   });
 
   it("accepts string prefix", () => {
     const msg: Message = { prefix: "irc.local", command: "001", params: [] };
-    expect(msg.prefix).toBe("irc.local");
+    assert.equal(msg.prefix, "irc.local");
   });
 
   it("params can be empty array", () => {
     const msg: Message = { prefix: null, command: "QUIT", params: [] };
-    expect(msg.params).toHaveLength(0);
+    assert.equal(msg.params.length, 0);
   });
 });
