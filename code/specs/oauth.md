@@ -2773,6 +2773,26 @@ revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
 connection. Extension-block and handshake composition remain prerequisites,
 and concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-supported-groups` prerequisite now decodes the exact
+RFC 8446 section 4.2.7 `NamedGroupList` extension data shared by client and
+server `supported_groups`. The decoder requires a non-empty, even-length,
+two-byte-length-prefixed vector, requires the declared length to consume the
+complete input, applies a caller-selected group-count ceiling before exposing
+entries, retains the exact borrowed extension data, and yields every two-byte
+group identifier in preference order. Unknown and private-use identifiers
+remain data for a later allowlist instead of becoming implicitly supported,
+and diagnostics omit all identifiers and input bytes.
+
+This framing layer does not locate the extension in a handshake message,
+decide where it is legal or required, reject duplicate preferences, select or
+authorize a group, bind a key share to an offer, parse or generate key-share
+bytes, invoke ECDHE or finite-field arithmetic, process a handshake or
+transcript, validate certificates, establish trust, enforce revocation,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Separate extension-context policy, data-driven named-group policy, key-share
+composition, handshake state, certificate validation, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-server-name` prerequisite now owns the exact RFC
 6066 ClientHello `server_name` extension data used by a future repository-owned
 TLS 1.3 client. It validates one borrowed ASCII DNS hostname under explicit
