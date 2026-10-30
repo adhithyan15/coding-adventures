@@ -57,6 +57,10 @@ Conditional expressions may also connect nested normalizers when their
 selector is side-effect-free and static or every branch proves the same
 checked integer result. Effectful selectors, unequal branches,
 procedure-calling branches, and unreduced wide results continue to fail closed.
+Canonical standard-function identities may also connect nested normalizers:
+`sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and `ln(1)`. Non-identity inputs,
+user overrides, other procedure calls, and overflowing checked arithmetic
+continue to fail closed.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
