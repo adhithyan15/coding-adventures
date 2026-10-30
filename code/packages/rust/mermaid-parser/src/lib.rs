@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.162.0";
+pub const VERSION: &str = "0.163.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14097,6 +14097,16 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     .split_once(':')
                     .map(|(_, value)| value.trim().to_string());
             }
+            "ACC_DESCRIPTION" => {
+                accessibility_description = Some(
+                    cursor
+                        .advance()
+                        .value
+                        .trim_start_matches("accDescription")
+                        .trim()
+                        .to_string(),
+                );
+            }
             "ACC_DESCR_BLOCK" => {
                 let value = cursor.advance().value.clone();
                 let open = value.find('{').expect("C4 accessibility block requires '{'");
@@ -20104,7 +20114,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.162.0");
+        assert_eq!(crate::VERSION, "0.163.0");
     }
 
     #[test]

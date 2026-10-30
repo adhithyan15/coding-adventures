@@ -21,6 +21,14 @@ const C4_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
 ));
+const C4_LEGACY_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-legacy-accessibility-11.16.1-corpus.json"
+));
+const C4_LEGACY_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-legacy-accessibility-11.16.1-visual-corpus.json"
+));
 const C4_TITLE_PREAMBLE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-title-preamble-11.16.1-corpus.json"
@@ -2602,6 +2610,24 @@ fn pinned_c4_accessibility_metadata_reaches_semantic_ir() {
         multiline.accessibility_description.as_deref(),
         Some("Native C4 structure\nthrough shared paint metadata")
     );
+}
+
+#[test]
+fn pinned_c4_legacy_accessibility_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_LEGACY_ACCESSIBILITY_CORPUS).unwrap();
+    let visual: Value =
+        serde_json::from_str(C4_LEGACY_ACCESSIBILITY_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram =
+        parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(
+        diagram.accessibility_description.as_deref(),
+        Some("Customer banking landscape")
+    );
+    assert_eq!(diagram.nodes.len(), 2);
+    assert_eq!(diagram.relationships.len(), 1);
 }
 
 #[test]
