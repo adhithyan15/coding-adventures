@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.83.0";
+pub const VERSION: &str = "0.84.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7324,18 +7324,39 @@ where
         if let Some(value) = diagram.render_config.c4_boundary_in_row {
             scene_metadata.insert("c4.boundaryInRow".into(), value.to_string());
         }
-        for (index, group) in diagram.groups.iter().enumerate() {
-            let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
-                node_type,
-                ..
-            }) = group.metadata.as_ref()
+        for (index, node) in diagram.nodes.iter().enumerate() {
+            let Some(diagram_ir::StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref()
             else {
                 continue;
             };
-            scene_metadata.insert(
-                format!("c4.group.{index}.deploymentNodeType"),
-                node_type.as_str().into(),
-            );
+            if let Some(tags) = &metadata.tags {
+                scene_metadata.insert(format!("c4.node.{index}.tags"), tags.clone());
+            }
+        }
+        for (index, group) in diagram.groups.iter().enumerate() {
+            match group.metadata.as_ref() {
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary {
+                    tags: Some(tags),
+                    ..
+                }) => {
+                    scene_metadata.insert(format!("c4.group.{index}.tags"), tags.clone());
+                }
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary { tags: None, .. }) => {}
+                Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+                    node_type,
+                    tags,
+                    ..
+                }) => {
+                    scene_metadata.insert(
+                        format!("c4.group.{index}.deploymentNodeType"),
+                        node_type.as_str().into(),
+                    );
+                    if let Some(tags) = tags {
+                        scene_metadata.insert(format!("c4.group.{index}.tags"), tags.clone());
+                    }
+                }
+                _ => {}
+            }
         }
         for (index, relationship) in diagram.relationships.iter().enumerate() {
             let Some(diagram_ir::StructuralRelationshipMetadata::C4(metadata)) =
@@ -7348,6 +7369,9 @@ where
                     format!("c4.relationship.{index}.direction"),
                     direction.as_str().into(),
                 );
+            }
+            if let Some(tags) = &metadata.tags {
+                scene_metadata.insert(format!("c4.relationship.{index}.tags"), tags.clone());
             }
         }
     }
@@ -7435,7 +7459,7 @@ where
         ));
         if let Some(metadata) = &group.metadata {
             let details = match metadata {
-                diagram_ir::StructuralGroupMetadata::C4Boundary { boundary_type } => {
+                diagram_ir::StructuralGroupMetadata::C4Boundary { boundary_type, .. } => {
                     boundary_type.clone()
                 }
                 diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
@@ -10234,7 +10258,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.83.0");
+        assert_eq!(crate::VERSION, "0.84.0");
     }
 
     #[test]
@@ -10340,6 +10364,7 @@ mod tests {
                 stereotype: None,
                 icon_name: None,
                 icon_text: Some("API".into()),
+                metadata: None,
                 style: default_style(),
                 compartments: vec![],
             }],
@@ -10370,7 +10395,7 @@ mod tests {
         let node = |id: &str, node_kind, x| diagram_ir::LayoutedStructuralNode {
             id: id.into(), node_kind, x, y: 12.0, width: 160.0, height: 72.0,
             header: id.into(), stereotype: None, icon_name: None, icon_text: None,
-            style: default_style(), compartments: vec![],
+            metadata: None, style: default_style(), compartments: vec![],
         };
         let layout = LayoutedStructuralDiagram {
             kind: diagram_ir::StructuralKind::C4,

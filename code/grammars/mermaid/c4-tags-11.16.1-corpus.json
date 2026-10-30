@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 custom tag metadata for elements, boundaries, deployment nodes, and relationships",
+  "fixtures": [
+    {
+      "name": "c4-custom-tags",
+      "source": "C4Deployment\nPerson(user, \"User\", \"Uses platform\", \"\", \"actor\")\nSystem(api, \"API\", \"Service\", $tags=\"backend\")\nBoundary(edge, \"Edge\", \"zone\", \"trusted\") {\nContainer(web, \"Web\", \"TypeScript\", \"Frontend\", \"\", \"ui\")\n}\nNode(host, \"Host\", \"Linux\", \"Gateway\", \"\", $tags=\"runtime\") {\nComponent(worker, \"Worker\", \"Rust\", \"Jobs\", \"\", $tags=\"async\")\n}\nRel(user, api, \"Calls\", \"HTTPS\", \"Request\", \"\", \"critical\")\nRel(api, worker, \"Queues\", $tags=\"async-link\")"
+    }
+  ]
+}
