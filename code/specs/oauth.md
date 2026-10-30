@@ -1711,6 +1711,22 @@ revocation, validate a path, establish trust, perform TLS or HTTP, authorize
 OAuth transport, open a socket, or access a credential. Concrete HTTPS remains
 unavailable.
 
+A bounded certificate-binding entry point in the same package now consumes
+certificate-wide critical-extension and role-policy evidence, derives the
+Authority Information Access extension only from that evidence's exact decoded
+certificate, decodes it under caller-owned ASN.1 limits, and applies the same
+data-driven unique OCSP-locator policy. Success retains the complete role
+policy together with URI, host, port, path, and query slices borrowed from that
+exact certificate's encoded bytes; callers cannot attach a locator decoded
+from another certificate, including a byte-equal re-decode. Stable failures
+distinguish an absent extension collection, absent AIA, structural AIA failure,
+and locator-policy failure without exposing certificate or URI payloads. This
+composition remains discovery evidence only: it does not authorize a
+destination, resolve DNS, fetch or cache OCSP data, authenticate a response,
+read a clock, decide revocation, validate a path, establish trust, perform TLS
+or HTTP, authorize OAuth transport, open a socket, or access a credential.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-record` prerequisite now owns only the outer RFC
 8446 record framing needed by a future repository-owned TLS client. It decodes
 and encodes strict five-byte TLS record headers plus borrowed fragments,
