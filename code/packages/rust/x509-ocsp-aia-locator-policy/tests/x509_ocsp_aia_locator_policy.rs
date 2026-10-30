@@ -2,12 +2,20 @@ use der_asn1::{Asn1Decoder, Asn1Limits};
 use x509_authority_information_access::{
     decode_authority_information_access, AuthorityInformationAccess, ID_AD_OCSP_OID,
 };
+use x509_certificate::{decode_x509_certificate, X509Certificate};
+use x509_certificate_policy::{
+    validate_certificate_role_policy, X509CertificateRole,
+};
 use x509_extension::decode_x509_extension;
 use x509_ocsp_aia_locator_policy::{
-    select_unique_x509_ocsp_aia_locator, X509OcspAiaLocatorErrorKind, X509OcspAiaLocatorPolicy,
-    X509OcspAiaLocatorPolicyErrorKind, X509OcspAiaSchemePolicy, MAX_ALLOWED_SCHEMES,
+    select_unique_x509_certificate_ocsp_aia_locator, select_unique_x509_ocsp_aia_locator,
+    X509OcspAiaLocatorErrorKind, X509OcspAiaLocatorPolicy,
+    X509OcspAiaLocatorPolicyErrorKind, X509OcspAiaSchemePolicy,
+    X509OcspCertificateAiaLocatorErrorKind, MAX_ALLOWED_SCHEMES,
     MAX_EXPLICIT_PORTS_PER_SCHEME,
 };
+
+const APPLE_LEAF_HEX: &str = include_str!("fixtures/apple-www-leaf.der.hex");
 
 const AIA_OID_DER: &[u8] = &[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x01, 0x01];
 const ID_AD_OCSP_OID_DER: &[u8] = &[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x30, 0x01];
@@ -42,6 +50,131 @@ fn decode_aia(descriptions: &[Vec<u8>]) -> AuthorityInformationAccess<'static> {
 
 fn https_policy<'a>(schemes: &'a [X509OcspAiaSchemePolicy<'a>]) -> X509OcspAiaLocatorPolicy<'a> {
     X509OcspAiaLocatorPolicy::new(schemes, 512, 253, 256)
+}
+
+fn fixture(hexadecimal: &str) -> Vec<u8> {
+    let digits = hexadecimal
+        .bytes()
+        .filter(|byte| !byte.is_ascii_whitespace())
+        .collect::<Vec<_>>();
+    assert!(digits.len().is_multiple_of(2));
+    digits
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|pair| {
+            let text = std::str::from_utf8(pair).unwrap();
+            u8::from_str_radix(text, 16).unwrap()
+        })
+        .collect()
+}
+
+fn decode_certificate(input: &[u8]) -> X509Certificate<'_> {
+    decode_x509_certificate(input, Asn1Limits::default()).unwrap()
+}
+
+fn end_entity_role_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+) -> x509_certificate_policy::ValidatedCertificateRolePolicy<'certificate, 'encoded> {
+    validate_certificate_role_policy(
+        certificate,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap()
+}
+
+#[test]
+fn certificate_binding_derives_and_retains_the_exact_leaf_locator() {
+    let encoded = fixture(APPLE_LEAF_HEX);
+    let certificate = decode_certificate(&encoded);
+    let role_policy = end_entity_role_policy(&certificate);
+    let schemes = [X509OcspAiaSchemePolicy::new("http", 80, &[])];
+    let policy = https_policy(&schemes);
+
+    let selected = select_unique_x509_certificate_ocsp_aia_locator(
+        role_policy,
+        Asn1Limits::default(),
+        &policy,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        selected.role_policy().certificate(),
+        &certificate
+    ));
+    assert_eq!(
+        selected.role_policy().role_extensions().role(),
+        X509CertificateRole::EndEntity
+    );
+    assert_eq!(selected.description_index(), 1);
+    assert_eq!(selected.scheme_policy().scheme(), "http");
+    assert_eq!(selected.uri(), "http://ocsp.apple.com/ocsp03-apevsrsa1g101");
+    assert_eq!(selected.host(), "ocsp.apple.com");
+    assert_eq!(selected.explicit_port(), None);
+    assert_eq!(selected.effective_port(), 80);
+    assert_eq!(selected.path(), "/ocsp03-apevsrsa1g101");
+    assert_eq!(selected.query(), None);
+    assert_eq!(selected.path_and_query(), "/ocsp03-apevsrsa1g101");
+    assert_eq!(
+        format!("{selected:?}"),
+        "SelectedX509CertificateOcspAiaLocator"
+    );
+}
+
+#[test]
+fn certificate_binding_fails_when_that_exact_certificate_has_no_aia() {
+    let mut encoded = fixture(APPLE_LEAF_HEX);
+    let aia_oid_tlv = [0x06, 0x08, 0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x01, 0x01];
+    let offset = encoded
+        .windows(aia_oid_tlv.len())
+        .position(|window| window == aia_oid_tlv)
+        .unwrap();
+    encoded[offset + aia_oid_tlv.len() - 1] = 0x02;
+    let certificate = decode_certificate(&encoded);
+    let role_policy = end_entity_role_policy(&certificate);
+    let schemes = [X509OcspAiaSchemePolicy::new("http", 80, &[])];
+    let policy = https_policy(&schemes);
+
+    let error = select_unique_x509_certificate_ocsp_aia_locator(
+        role_policy,
+        Asn1Limits::default(),
+        &policy,
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspCertificateAiaLocatorErrorKind::MissingAuthorityInformationAccess
+    );
+    assert_eq!(
+        format!("{error:?} {error}"),
+        "X509OcspCertificateAiaLocatorError { kind: MissingAuthorityInformationAccess } X.509 OCSP certificate AIA locator error MissingAuthorityInformationAccess"
+    );
+}
+
+#[test]
+fn certificate_binding_preserves_locator_policy_failures_without_payload() {
+    let encoded = fixture(APPLE_LEAF_HEX);
+    let certificate = decode_certificate(&encoded);
+    let role_policy = end_entity_role_policy(&certificate);
+    let schemes = [X509OcspAiaSchemePolicy::new("https", 443, &[])];
+    let policy = https_policy(&schemes);
+
+    let error = select_unique_x509_certificate_ocsp_aia_locator(
+        role_policy,
+        Asn1Limits::default(),
+        &policy,
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspCertificateAiaLocatorErrorKind::Locator(
+            X509OcspAiaLocatorErrorKind::DisallowedScheme
+        )
+    );
 }
 
 #[test]
