@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-pub const VERSION: &str = "0.98.0";
+pub const VERSION: &str = "0.99.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -2384,6 +2384,15 @@ pub struct C4NodeMetadata {
     pub sprite: Option<String>,
     pub tags: Option<String>,
     pub link: Option<String>,
+    pub style_overrides: C4ElementStyleOverrides,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct C4ElementStyleOverrides {
+    pub shadowing: Option<String>,
+    pub shape: Option<String>,
+    pub legend_text: Option<String>,
+    pub legend_sprite: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -2428,8 +2437,11 @@ pub enum StructuralGroupMetadata {
     Architecture { icon_name: String },
     C4Boundary {
         boundary_type: String,
+        technology: Option<String>,
+        sprite: Option<String>,
         tags: Option<String>,
         link: Option<String>,
+        style_overrides: C4ElementStyleOverrides,
     },
     C4DeploymentNode {
         node_type: C4DeploymentNodeType,
@@ -2438,6 +2450,7 @@ pub enum StructuralGroupMetadata {
         sprite: Option<String>,
         tags: Option<String>,
         link: Option<String>,
+        style_overrides: C4ElementStyleOverrides,
     },
 }
 
@@ -3302,7 +3315,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.98.0");
+        assert_eq!(VERSION, "0.99.0");
     }
     #[test]
     fn default_direction_is_tb() {
