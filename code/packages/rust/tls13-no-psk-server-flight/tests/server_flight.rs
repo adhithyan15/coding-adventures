@@ -1,7 +1,26 @@
 use tls13_handshake::Tls13HandshakeType;
-use tls13_no_psk_server_flight::{
-    NoPskServerFlight, ServerFlightErrorKind, ServerFlightState,
-};
+use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightErrorKind, ServerFlightState};
+
+const ALL_HANDSHAKE_TYPES: [Tls13HandshakeType; 10] = [
+    Tls13HandshakeType::ClientHello,
+    Tls13HandshakeType::ServerHello,
+    Tls13HandshakeType::NewSessionTicket,
+    Tls13HandshakeType::EndOfEarlyData,
+    Tls13HandshakeType::EncryptedExtensions,
+    Tls13HandshakeType::Certificate,
+    Tls13HandshakeType::CertificateRequest,
+    Tls13HandshakeType::CertificateVerify,
+    Tls13HandshakeType::Finished,
+    Tls13HandshakeType::KeyUpdate,
+];
+
+fn after(prefix: &[Tls13HandshakeType]) -> NoPskServerFlight {
+    let mut flight = NoPskServerFlight::new();
+    for &handshake_type in prefix {
+        flight.accept(handshake_type).expect("valid test prefix");
+    }
+    flight
+}
 
 #[test]
 fn accepts_server_flight_without_client_authentication_request() {
@@ -109,6 +128,64 @@ fn complete_flight_rejects_further_messages_without_mutation() {
         .expect_err("post-handshake messages belong to another state owner");
     assert_eq!(error.kind(), ServerFlightErrorKind::AlreadyComplete);
     assert_eq!(flight.state(), ServerFlightState::Complete);
+}
+
+#[test]
+fn every_incomplete_state_rejects_all_other_recognized_types_without_mutation() {
+    let cases: &[(&[Tls13HandshakeType], &[Tls13HandshakeType])] = &[
+        (&[], &[Tls13HandshakeType::EncryptedExtensions]),
+        (
+            &[Tls13HandshakeType::EncryptedExtensions],
+            &[
+                Tls13HandshakeType::CertificateRequest,
+                Tls13HandshakeType::Certificate,
+            ],
+        ),
+        (
+            &[
+                Tls13HandshakeType::EncryptedExtensions,
+                Tls13HandshakeType::CertificateRequest,
+            ],
+            &[Tls13HandshakeType::Certificate],
+        ),
+        (
+            &[
+                Tls13HandshakeType::EncryptedExtensions,
+                Tls13HandshakeType::Certificate,
+            ],
+            &[Tls13HandshakeType::CertificateVerify],
+        ),
+        (
+            &[
+                Tls13HandshakeType::EncryptedExtensions,
+                Tls13HandshakeType::Certificate,
+                Tls13HandshakeType::CertificateVerify,
+            ],
+            &[Tls13HandshakeType::Finished],
+        ),
+    ];
+
+    for &(prefix, allowed) in cases {
+        for received in ALL_HANDSHAKE_TYPES {
+            if allowed.contains(&received) {
+                continue;
+            }
+
+            let mut flight = after(prefix);
+            let state_before = flight.state();
+            let client_authentication_before = flight.client_authentication_requested();
+            let error = flight
+                .accept(received)
+                .expect_err("unlisted message must fail");
+
+            assert_eq!(error.kind(), ServerFlightErrorKind::UnexpectedMessage);
+            assert_eq!(flight.state(), state_before);
+            assert_eq!(
+                flight.client_authentication_requested(),
+                client_authentication_before
+            );
+        }
+    }
 }
 
 #[test]

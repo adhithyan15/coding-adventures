@@ -2185,9 +2185,10 @@ already decoded server authentication flight after `ServerHello` for the
 repository's no-PSK TLS 1.3 client path. It requires
 `EncryptedExtensions`, accepts one optional `CertificateRequest`, then requires
 `Certificate`, `CertificateVerify`, and `Finished` exactly once and in order.
-Unexpected messages fail without advancing state. Completion retains only
-whether client authentication was requested, so later client-flight policy
-cannot silently forget that request.
+Unexpected messages fail without advancing state. Completion retains whether
+client authentication was requested and makes that requirement available to
+later client-flight policy. A future composition must require that policy to
+consume the retained value rather than allowing callers to ignore it.
 
 This ordering layer does not accept PSK or early-data handshakes, sequence the
 initial hellos or the client flight, decode or semantically validate a body,
