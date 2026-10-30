@@ -1,6 +1,8 @@
 package starlark
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -105,10 +107,10 @@ func TestExtractTargets(t *testing.T) {
 		vars := map[string]interface{}{
 			"_targets": []interface{}{
 				map[string]interface{}{
-					"rule": "py_library",
-					"name": "logic-gates",
-					"srcs": []interface{}{"src/**/*.py"},
-					"deps": []interface{}{"python/transistors"},
+					"rule":        "py_library",
+					"name":        "logic-gates",
+					"srcs":        []interface{}{"src/**/*.py"},
+					"deps":        []interface{}{"python/transistors"},
 					"test_runner": "pytest",
 				},
 			},
@@ -174,13 +176,43 @@ func TestExtractTargets(t *testing.T) {
 	})
 }
 
+func TestEvaluateTypeScriptLibraryNodeRunner(t *testing.T) {
+	repoRoot, err := filepath.Abs(filepath.Join("..", "..", "..", "..", "..", ".."))
+	if err != nil {
+		t.Fatal(err)
+	}
+	buildFile := filepath.Join(t.TempDir(), "BUILD")
+	content := `load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+_targets = [ts_library(name = "example", test_runner = "node")]
+`
+	if err := os.WriteFile(buildFile, []byte(content), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := EvaluateBuildFile(buildFile, filepath.Dir(buildFile), repoRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Targets) != 1 {
+		t.Fatalf("got %d targets, want 1", len(result.Targets))
+	}
+	target := result.Targets[0]
+	if target.Name != "example" || target.TestRunner != "node" {
+		t.Fatalf("unexpected target: %+v", target)
+	}
+	commands := GenerateCommands(target)
+	if len(commands) != 3 || commands[1] != "npm run build --silent" {
+		t.Fatalf("unexpected commands: %v", commands)
+	}
+}
+
 // TestGenerateCommands verifies command generation for each rule type.
 func TestGenerateCommands(t *testing.T) {
 	tests := []struct {
-		name     string
-		target   Target
-		wantLen  int
-		wantHas  string
+		name    string
+		target  Target
+		wantLen int
+		wantHas string
 	}{
 		{
 			name:    "py_library with pytest",
@@ -210,7 +242,13 @@ func TestGenerateCommands(t *testing.T) {
 			name:    "ts_library",
 			target:  Target{Rule: "ts_library"},
 			wantLen: 2,
-			wantHas: "vitest",
+			wantHas: "--offline",
+		},
+		{
+			name:    "ts_library with node runner",
+			target:  Target{Rule: "ts_library", TestRunner: "node"},
+			wantLen: 3,
+			wantHas: "npm run build",
 		},
 		{
 			name:    "rust_library",
@@ -274,7 +312,7 @@ func findSubstring(s, sub string) bool {
 // TestGetString verifies safe string extraction from dicts.
 func TestGetString(t *testing.T) {
 	dict := map[string]interface{}{
-		"name": "foo",
+		"name":  "foo",
 		"count": 42,
 	}
 
@@ -292,8 +330,8 @@ func TestGetString(t *testing.T) {
 // TestGetStringList verifies safe string list extraction from dicts.
 func TestGetStringList(t *testing.T) {
 	dict := map[string]interface{}{
-		"srcs": []interface{}{"a.py", "b.py"},
-		"bad":  "not a list",
+		"srcs":  []interface{}{"a.py", "b.py"},
+		"bad":   "not a list",
 		"mixed": []interface{}{"a", 42, "b"},
 	}
 

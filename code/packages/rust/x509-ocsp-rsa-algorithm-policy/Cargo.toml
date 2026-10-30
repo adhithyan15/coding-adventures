@@ -1,0 +1,13 @@
+[package]
+name = "x509-ocsp-rsa-algorithm-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Response-bound data-driven OCSP RSA algorithm and key policy"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-ocsp-basic-response = { path = "../x509-ocsp-basic-response" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+
+[dev-dependencies]
+x509-subject-public-key-info = { path = "../x509-subject-public-key-info" }
