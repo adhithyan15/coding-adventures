@@ -8,7 +8,10 @@ SEQUENCE carried by a certificate extension. The public
 
 The complete certificate-extension subset accepts non-empty
 `permittedSubtrees [0]`, `excludedSubtrees [1]`, or both in schema order. Each
-field contains dNSName GeneralSubtree sequences with absent distance fields.
+field contains dNSName or iPAddress GeneralSubtree sequences with absent
+distance fields. IP subtrees retain exact borrowed RFC 5280 address-plus-mask
+values: 8 octets for IPv4 and 32 octets for IPv6. DNS and IP forms share one
+256-entry ceiling per top-level field and remain ordered within their own form.
 The reviewed-root snapshot contents decoder remains deliberately restricted to
 one exact permitted field. The crate retains arbitrary non-empty ASCII subtree
 strings in wire order, including leading-dot forms such as `.tr`, without
@@ -25,9 +28,10 @@ The package uses repository-owned `der-asn1` and `der-tlv` only. It shares the
 caller's depth and total-element limits, stores borrowed names in a fixed-size
 array, validates exact tags and canonical DER framing, and keeps input bytes
 out of diagnostics. Unknown, duplicate, reversed, or empty top-level fields,
-unsupported GeneralName choices, minimum/maximum distances, and trailing
-fields fail closed. Each constraint class and the presented-name collection
-are capped at 256. Evaluation is allocation-free, validates all constraints
+unsupported GeneralName choices, invalid IP widths, minimum/maximum distances,
+and trailing fields fail closed. Each top-level constraint field and the
+presented-name collection are capped at 256. DNS evaluation is allocation-free,
+fails closed if any IP subtree remains unevaluated, validates all constraints
 before matching, gives exclusion precedence, distinguishes wildcard overlap
 from wildcard containment, and uses strict ASCII label, leading-dot, and
 complete-leftmost-label wildcard rules with case-insensitive label-boundary
@@ -36,7 +40,8 @@ comparison.
 Successful decoding or evaluation proves only that supplied strings satisfy
 the decoded supported DNS subtree sets. It does not extract names from a
 certificate, bind the result to exact certificate or selected-anchor evidence,
-evaluate non-DNS subtrees, construct or validate a path, grant trust, check
+evaluate IP or other non-DNS subtrees, construct or validate a path, grant
+trust, check
 revocation, verify a signature, perform TLS or HTTP, authorize OAuth transport,
 or open a network connection.
 

@@ -704,6 +704,31 @@ DigestInfo` form, at least eight `ff` padding bytes, the canonical SHA-256 DER
 trailer with present NULL parameters, and the complete caller-supplied digest.
 It performs no RSA arithmetic or hashing, and arbitrary caller-supplied bytes
 do not become an authenticated signature by passing this formatting gate.
+A sibling bounded `rsa-pkcs1-v1-5-sha384` prerequisite applies that same exact
+RFC 8017 encoded-message boundary to SHA-384. It accepts only the complete
+modulus-width `00 01 || PS || 00 || DigestInfo` value, at least eight `ff`
+padding bytes, the canonical `id-sha384` DER trailer with present NULL
+parameters, and all 48 expected digest octets. Trailer-derived boundaries
+prevent separator searching or padded/truncated acceptance. Stable failures
+retain no encoded-message bytes, digest bytes, mismatch position, or padding
+length. The allocation-free gate performs no hashing, RSA arithmetic, key or
+certificate parsing, algorithm routing, signature verdict, path validation,
+trust, revocation, TLS, HTTP, OAuth transport, or external effect. A later
+repository-owned X.509 composition must still bind it to an exact signed
+certificate, validated issuer key, RSA public operation, SHA-384 digest, and
+data-driven algorithm policy; concrete HTTPS remains unavailable.
+A sibling bounded `rsa-pkcs1-v1-5-sha512` prerequisite applies that same exact
+RFC 8017 encoded-message boundary to SHA-512. It accepts only the complete
+modulus-width `00 01 || PS || 00 || DigestInfo` value, at least eight `ff`
+padding bytes, the canonical `id-sha512` DER trailer with present NULL
+parameters, and all 64 expected digest octets. Trailer-derived boundaries
+prevent separator searching or padded/truncated acceptance. Stable failures
+retain no encoded-message bytes, digest bytes, mismatch position, or padding
+length. The allocation-free gate performs no hashing, RSA arithmetic, key or
+certificate parsing, algorithm routing, signature verdict, path validation,
+trust, revocation, TLS, HTTP, OAuth transport, or external effect. Any
+signature-verdict composition must bind it to authenticated certificate inputs
+instead of treating this formatting result as standalone proof.
 A bounded `rsa-pss-mgf1-sha256` prerequisite now implements only the RFC 8017
 MGF1 expansion required by the future SHA-256 EMSA-PSS verification path. It
 accepts the exact 32-byte PSS hash value as its seed, validates both the
@@ -748,6 +773,34 @@ issuer key and proves only that the key verified those exact signed bytes.
 Issuer selection and linkage, algorithm routing, certificate
 roles, path construction and validation, trust roots, time, names, revocation,
 TLS, HTTP, and network effects remain separate blockers.
+A bounded sibling `x509-rsa-pkcs1-v1-5-sha384-signature` composition now binds
+the SHA-384 encoded-message prerequisite to one exact decoded certificate, an
+already policy-validated issuer RSA key, the bounded repository-owned RSA
+public operation, and the repository-owned SHA-384 implementation. It requires
+the canonical `sha384WithRSAEncryption` identifier with present NULL
+parameters and a byte-aligned signature, hashes the preserved
+`TBSCertificate` DER, and returns non-copyable evidence retaining the exact
+certificate and issuer key only after the complete canonical encoded message
+passes. The pure public-data verifier performs no credential access, signing,
+storage, clock acquisition, or external effect, so it emits no runtime audit
+event. Issuer selection and linkage, data-driven algorithm routing,
+certificate roles, path construction and validation, trust roots, time,
+names, revocation, TLS, HTTP, and network effects remain separate blockers;
+concrete HTTPS remains unavailable.
+A bounded sibling `x509-rsa-pkcs1-v1-5-sha512-signature` composition now binds
+the SHA-512 encoded-message prerequisite to one exact decoded certificate, an
+already policy-validated issuer RSA key, the bounded repository-owned RSA
+public operation, and the repository-owned SHA-512 implementation. It requires
+the canonical `sha512WithRSAEncryption` identifier with present NULL
+parameters and a byte-aligned signature, hashes the preserved
+`TBSCertificate` DER, and returns non-copyable evidence retaining the exact
+certificate and issuer key only after the complete canonical encoded message
+passes. The pure public-data verifier performs no credential access, signing,
+storage, clock acquisition, or external effect, so it emits no runtime audit
+event. Issuer selection and linkage, data-driven algorithm routing,
+certificate roles, path construction and validation, trust roots, time,
+names, revocation, TLS, HTTP, and network effects remain separate blockers;
+concrete HTTPS remains unavailable.
 A bounded `x509-rsa-sha256-issuer-link` composition now authenticates one
 directed child-to-candidate-issuer link for that exact algorithm. Caller-owned
 Name policy is invoked once in the fixed child-issuer to candidate-subject
@@ -1102,6 +1155,19 @@ parsed bytes back to
 selected-anchor evidence, construct or validate a path, grant trust, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection.
+A bounded structural follow-up now also retains exact RFC 5280 iPAddress
+GeneralSubtree values from complete certificate-extension NameConstraints:
+8-octet IPv4 address-plus-mask values and 32-octet IPv6 address-plus-mask
+values. DNS and IP forms share one fixed 256-entry ceiling in each permitted
+or excluded field and are retained in wire order within their form. The
+reviewed-root snapshot-contents entry point remains restricted to its reviewed
+permitted-DNS-only format, and its DNS-only evaluator fails closed if either IP
+set is non-empty so existing consumers cannot silently ignore the new form.
+This structural decoder does not validate CIDR mask
+contiguity, evaluate a presented IP address, bind constraints to a certificate
+or path, grant trust, check revocation, verify a signature, perform TLS or
+HTTP, authorize OAuth transport, or cause an external effect; concrete HTTPS
+remains unavailable.
 A separate bounded evaluator initially validated every decoded permitted DNS
 subtree before matching caller-supplied DNS names. It enforces strict ASCII labels,
 case-insensitive label-boundary matching, the reviewed leading-dot semantics,
@@ -1302,6 +1368,24 @@ extensions, decide freshness or revocation, fetch or cache data, read a clock,
 or grant path, trust, TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-rsa-algorithm-policy` prerequisite selects exactly one
+caller-supplied algorithm/key profile for one structurally decoded
+`BasicOCSPResponse` and one separately validated RSA public key. Each profile
+contains an exact signature-algorithm OID and parameter policy, inclusive RSA
+modulus and signature bit-length ranges, and a canonical strictly increasing
+list of permitted public exponents. Selection rejects unsupported and
+ambiguous identifier/parameter matches before checking the selected profile's
+key and signature bounds. Success returns non-copyable evidence retaining the
+exact response, validated key, and selected profile index, preventing a
+detached policy result from being attached to another response or key. The
+policy evaluates only caller policy and public response/key metadata, so it
+performs no credential access, edit, signing operation, provider action, audit
+or trace emission, I/O, or external effect. It does not select or invoke a
+verifier, authenticate a signature, authorize or match a responder, bind
+status to a certificate or constructed path, decide freshness or revocation,
+establish trust, fetch data, read a clock, or grant TLS, HTTP, OAuth transport,
+or network authority. Concrete HTTPS remains unavailable.
+
 A bounded `x509-ocsp-rsa-pkcs1-v1-5-sha256-signature` prerequisite verifies
 one structurally decoded `BasicOCSPResponse` with one separately
 policy-validated RSA public key. It accepts only the exact
@@ -1317,6 +1401,38 @@ to a certificate or constructed path, apply certificate role or extension
 policy, decide freshness or revocation, fetch or cache data, read a clock, or
 grant path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete
 HTTPS remains unavailable.
+
+A parallel bounded `x509-ocsp-rsa-pkcs1-v1-5-sha384-signature` prerequisite
+verifies one structurally decoded `BasicOCSPResponse` with one separately
+policy-validated RSA public key. It accepts only the exact
+`sha384WithRSAEncryption` algorithm identifier with canonical present NULL
+parameters, requires a byte-aligned signature BIT STRING, hashes the preserved
+canonical `ResponseData` DER with the repository-owned SHA-384 implementation,
+applies the bounded repository-owned RSA public operation, and validates the
+complete PKCS #1 v1.5 SHA-384 encoded message. Success returns non-copyable
+evidence retaining the exact response and validated public key. The pure
+public-data verifier performs no credential access, signing, storage, clock
+acquisition, or external effect, so it emits no runtime audit event. It does
+not route algorithms, select or authorize the responder key, bind response
+status to a certificate or path, decide freshness or revocation, establish
+trust, perform TLS or HTTP, or authorize OAuth transport. Concrete HTTPS
+remains unavailable.
+
+A parallel bounded `x509-ocsp-rsa-pkcs1-v1-5-sha512-signature` prerequisite
+verifies one structurally decoded `BasicOCSPResponse` with one separately
+policy-validated RSA public key. It accepts only the exact
+`sha512WithRSAEncryption` algorithm identifier with canonical present NULL
+parameters, requires a byte-aligned signature BIT STRING, hashes the preserved
+canonical `ResponseData` DER with the repository-owned SHA-512 implementation,
+applies the bounded repository-owned RSA public operation, and validates the
+complete PKCS #1 v1.5 SHA-512 encoded message. Success returns non-copyable
+evidence retaining the exact response and validated public key so neither can
+be substituted after verification. This fixed-algorithm verifier does not
+route algorithms, select the supplied key, authorize or match a responder,
+bind a response or `CertID` to a certificate or constructed path, apply
+certificate role or extension policy, decide freshness or revocation, fetch or
+cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS remains unavailable.
 
 A bounded `x509-ocsp-responder-id-binding` prerequisite now matches one exact
 structurally decoded `BasicOCSPResponse` to one exact decoded candidate
@@ -2005,6 +2121,24 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-key-update-message` prerequisite now owns the exact
+one-octet RFC 8446 section 4.6.3 `KeyUpdate` handshake body. Exact decoding
+accepts only `update_not_requested` and `update_requested`, rejects truncated,
+padded, and out-of-range bodies with payload-free categories, and returns one
+typed request whose response requirement cannot be reinterpreted by a caller.
+Encoding writes the typed request into caller-owned output only after complete
+capacity validation and leaves extra capacity untouched.
+
+This body layer does not authorize `KeyUpdate` before peer `Finished`, sequence
+post-handshake messages, retain a pending response, coalesce repeated requests,
+derive or rotate read or write traffic secrets, enforce old-key protection or
+record-boundary alignment, send an alert, protect a record, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. Complete
+handshake and post-handshake state, key-update secret derivation,
+repository-owned record protection, certificate-path validation, revocation
+policy, TLS transport, and HTTP composition remain blockers. Concrete HTTPS
+remains unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire
@@ -2039,6 +2173,39 @@ allocation-returning legacy ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain
 compatibility and educational surfaces rather than production TLS composition.
 Combined fixed-memory AEAD review remains a prerequisite, and concrete HTTPS
 remains unavailable.
+
+The repository-owned ChaCha20-Poly1305 implementation now also exposes a
+bounded fixed-memory RFC 8439 section 2.8 AEAD composition. Encryption accepts
+caller-owned plaintext, exact-length ciphertext output, a 256-bit key, a
+96-bit nonce, associated data, and caller-owned 16-byte tag output. It derives
+the one-time Poly1305 key from ChaCha20 block counter zero, encrypts only with
+counter one and above, and authenticates the exact
+`AAD || pad16(AAD) || ciphertext || pad16(ciphertext) || le64(AAD length) ||
+le64(ciphertext length)` layout without constructing an allocation-backed MAC
+buffer. Decryption recomputes and compares all 16 tag bytes before decrypting,
+so authentication failure leaves caller-owned plaintext output unchanged.
+Exact output length, 64-bit encoded lengths, and the complete ChaCha20 counter
+range are validated before encryption changes either ciphertext or tag.
+Stable failures retain no key, nonce, plaintext, ciphertext, tag, associated
+data, or observed lengths.
+
+The ChaCha20 block used to derive the one-time key, that copied Poly1305 key,
+the Poly1305 limb state, its reusable block, and the recomputed tag all have
+wipe-on-drop ownership. The fixed boundary allocates no heap memory and its tag
+comparison has a fixed 16-byte schedule with no secret-dependent early exit.
+The original key, nonce, inputs, and successful outputs remain caller-owned.
+The existing allocation-returning AEAD and XChaCha20 APIs remain compatibility
+and educational surfaces rather than production TLS entry points.
+
+This composition performs only pure in-process cryptography and has no
+credential access, edit, signing, provider action, audit or trace emission,
+I/O, or external effect. It does not select a TLS cipher suite, derive or own a
+traffic key, construct or reserve a record nonce, enforce a per-key record
+ceiling, frame or protect a TLS record, reset record sequence state after a key
+change, process a handshake, validate certificates, establish trust, enforce
+revocation, perform HTTP, authorize OAuth transport, or open a network
+connection. Repository-owned TLS record-protection composition and state
+remain prerequisites, and concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future
@@ -2084,6 +2251,30 @@ trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
 open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
+
+An allocation-free `http1-response-head` prerequisite now decodes one strict
+HTTP/1.0 or HTTP/1.1 response head from a caller-borrowed byte stream. Explicit
+caller limits bound the complete head, every line, and the retained header
+count before values are exposed. The parser requires CRLF line endings, an
+exact three-digit status code from 100 through 599 and status-line separator,
+token-only field names, no whitespace before a colon, no obsolete line
+folding, and field values containing only the HTTP field-value octet profile.
+Success retains the
+exact encoded head, a borrowed reason phrase, ordered borrowed header fields,
+and the unconsumed body bytes without allocation or normalization. Stable
+errors retain no response bytes, header names or values, reason text, status,
+lengths, or offsets; Debug output redacts header values and reason text.
+
+This syntax boundary does not classify response-body framing, reconcile
+duplicate fields, decode transfer codings, parse a body, authorize redirects,
+bind a request method, perform TLS, read or write a socket, interpret or release
+a credential, emit provider or trace audit events, or authorize OAuth transport.
+Callers must apply those separate policies before any external effect or
+credential release.
+It does not retrofit or authorize the existing general-purpose `http1` or
+`http1-client` packages; a later reviewed composition must select this strict
+syntax boundary and add the remaining response and transport policies.
+Concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

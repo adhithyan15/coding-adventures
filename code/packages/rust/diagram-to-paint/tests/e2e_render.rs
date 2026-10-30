@@ -145,6 +145,22 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-element-shapes-11.16.1-visual-corpus.json"
     ));
+    const C4_DEPLOYMENT_NODES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-deployment-nodes-11.16.1-corpus.json"
+    ));
+    const C4_DEPLOYMENT_NODES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-deployment-nodes-11.16.1-visual-corpus.json"
+    ));
+    const C4_BOUNDARY_TYPES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-boundary-types-11.16.1-corpus.json"
+    ));
+    const C4_BOUNDARY_TYPES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-boundary-types-11.16.1-visual-corpus.json"
+    ));
     const C4_RELATIONSHIP_COLORS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-corpus.json"
@@ -5116,6 +5132,56 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::Close)))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_c4_element_shapes_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_deployment_nodes_to_png() {
+        let syntax: Value = serde_json::from_str(C4_DEPLOYMENT_NODES_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_DEPLOYMENT_NODES_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixture = &syntax["fixtures"][0];
+        assert_eq!(visual["fixtures"][0], fixture["name"]);
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.groups.iter().all(|group| group.style.stroke_dash.is_none()));
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_deployment_nodes_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_boundary_types_to_png() {
+        let syntax: Value = serde_json::from_str(C4_BOUNDARY_TYPES_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_BOUNDARY_TYPES_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixture = &syntax["fixtures"][0];
+        assert_eq!(visual["fixtures"][0], fixture["name"]);
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.groups.iter().all(|group| group.style.stroke_dash.is_some()));
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_boundary_types_0_e2e.png").unwrap();
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

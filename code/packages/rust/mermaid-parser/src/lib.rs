@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.152.0";
+pub const VERSION: &str = "0.154.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14145,8 +14145,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 groups.push(StructuralGroup {
                     id: id.clone(),
                     label,
-                    stereotype: Some(macro_token.value),
-                    metadata: None,
+                    stereotype: Some(macro_token.value.clone()),
+                    metadata: c4_group_metadata(&macro_token.value, &args),
                     style: None,
                     parent_group: group_stack.last().cloned(),
                 });
@@ -14348,6 +14348,35 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
         technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
         description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
     })
+}
+
+fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGroupMetadata> {
+    let argument = |key: &str, position: usize| {
+        args.iter()
+            .find_map(|value| value.split_once('=').filter(|(name, value)| *name == key && !value.is_empty()).map(|(_, value)| value.to_string()))
+            .or_else(|| args.get(position).filter(|value| !value.is_empty() && !value.starts_with('$')).cloned())
+    };
+    match macro_name {
+        "Deployment_Node" | "Node" | "Node_L" | "Node_R" => {
+            Some(StructuralGroupMetadata::C4DeploymentNode {
+                technology: argument("$type", 2),
+                description: argument("$descr", 3),
+            })
+        }
+        "Enterprise_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "ENTERPRISE".into(),
+        }),
+        "System_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "SYSTEM".into(),
+        }),
+        "Container_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "CONTAINER".into(),
+        }),
+        "Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: argument("$type", 2).unwrap_or_else(|| "system".into()),
+        }),
+        _ => None,
+    }
 }
 
 fn c4_node_kind(macro_name: &str) -> StructuralNodeKind {
@@ -19928,7 +19957,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.152.0");
+        assert_eq!(crate::VERSION, "0.154.0");
     }
 
     #[test]

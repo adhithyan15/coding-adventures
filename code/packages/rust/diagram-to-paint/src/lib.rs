@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.77.0";
+pub const VERSION: &str = "0.79.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7326,9 +7326,13 @@ where
             stroke_dash: group.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }));
-        let label = match &group.stereotype {
-            Some(stereotype) => format!("«{stereotype}» {}", group.label),
-            None => group.label.clone(),
+        let label = match (&group.metadata, &group.stereotype) {
+            (Some(diagram_ir::StructuralGroupMetadata::C4Boundary { .. }), _)
+            | (Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { .. }), _) => {
+                group.label.clone()
+            }
+            (_, Some(stereotype)) => format!("«{stereotype}» {}", group.label),
+            (_, None) => group.label.clone(),
         };
         let (label_x, label_width) = if let Some(icon_name) = &group.icon_name {
             instructions.push(PaintInstruction::Rect(PaintRect {
@@ -7365,6 +7369,31 @@ where
             },
             css_to_color(&group.style.text_color),
         ));
+        if let Some(metadata) = &group.metadata {
+            let details = match metadata {
+                diagram_ir::StructuralGroupMetadata::C4Boundary { boundary_type } => {
+                    boundary_type.clone()
+                }
+                diagram_ir::StructuralGroupMetadata::C4DeploymentNode { technology, description } => technology
+                    .iter()
+                    .map(|technology| format!("[{technology}]"))
+                    .chain(description.iter().cloned())
+                    .collect::<Vec<_>>()
+                    .join(" - "),
+                diagram_ir::StructuralGroupMetadata::Architecture { .. } => String::new(),
+            };
+            if !details.is_empty() {
+                text_children.push(text_node(
+                    &details,
+                    group.x + 10.0,
+                    group.y + 20.0,
+                    group.width - 20.0,
+                    ls,
+                    lf.clone(),
+                    css_to_color(&group.style.text_color),
+                ));
+            }
+        }
     }
 
     // ── Relationships (drawn behind nodes) ───────────────────────────────────
@@ -10133,7 +10162,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.77.0");
+        assert_eq!(crate::VERSION, "0.79.0");
     }
 
     #[test]

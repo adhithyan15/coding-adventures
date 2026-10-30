@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 — 2026-10-29
+
+- Added bounded complete-DER retention for exact 8-octet IPv4 and 32-octet
+  IPv6 address-plus-mask GeneralSubtree values.
+- Enforced one shared 256-entry ceiling per permitted or excluded field across
+  DNS and IP forms, while retaining each form in wire order within its class.
+- Kept the reviewed-root snapshot contents decoder restricted to its reviewed
+  permitted-DNS-only input and made DNS-only evaluation fail closed while any
+  retained IP subtree still requires separate policy.
+
 ## 0.3.0 — 2026-10-23
 
 - Added bounded full-DER decoding for excluded dNSName subtrees, independently

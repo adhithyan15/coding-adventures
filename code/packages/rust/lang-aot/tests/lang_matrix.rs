@@ -7001,6 +7001,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // Equal checked conditional branches may connect nested static
+    // normalizers without widening their wide integer result early.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; boolean flag; real procedure pick; pick := 3.5; real result; flag := choose(); result := entier((abs(if flag then entier(-9007199254740993) div entier(5) else entier(-9007199254740990) div entier(5)) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -17880,6 +17891,34 @@ fn algol_reduced_nested_wide_static_integer_normalizers_run_on_every_available_s
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but reduced nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "if flag then entier(-9007199254740993) div entier(5) else entier(-9007199254740990) div entier(5)",
+                )
+        })
+        .expect(
+            "the conditional nested wide-static-normalizer ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional nested wide static integer normalizers did not complete"
             );
             continue;
         };
