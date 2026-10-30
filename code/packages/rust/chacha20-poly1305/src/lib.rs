@@ -800,6 +800,207 @@ pub fn poly1305_mac(message: &[u8], key: &[u8; 32]) -> [u8; 16] {
 //
 // ============================================================================
 
+/// Stable failures for the fixed-memory ChaCha20-Poly1305 AEAD boundary.
+///
+/// These categories retain no key, nonce, plaintext, ciphertext, tag,
+/// associated-data, output, or observed-length values.
+#[derive(Debug, PartialEq, Eq)]
+pub enum FixedAeadError {
+    /// Caller-owned output must have exactly the input length.
+    OutputLengthMismatch,
+    /// An input length cannot be represented by RFC 8439's 64-bit encoding.
+    LengthOverflow,
+    /// The plaintext or ciphertext would exceed ChaCha20 counter space.
+    CounterExhausted,
+    /// The supplied authentication tag did not match.
+    AuthenticationFailed,
+}
+
+impl fmt::Display for FixedAeadError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::OutputLengthMismatch => {
+                formatter.write_str("AEAD output length must equal input length")
+            }
+            Self::LengthOverflow => {
+                formatter.write_str("AEAD input length exceeds the RFC 8439 encoding")
+            }
+            Self::CounterExhausted => {
+                formatter.write_str("AEAD request exceeds the ChaCha20 block counter")
+            }
+            Self::AuthenticationFailed => formatter.write_str("AEAD authentication failed"),
+        }
+    }
+}
+
+impl std::error::Error for FixedAeadError {}
+
+fn validate_aead_request_lengths(
+    input_length: usize,
+    output_length: usize,
+    aad_length: usize,
+) -> Result<(u64, u64), FixedAeadError> {
+    if output_length != input_length {
+        return Err(FixedAeadError::OutputLengthMismatch);
+    }
+
+    let aad_length = u64::try_from(aad_length).map_err(|_| FixedAeadError::LengthOverflow)?;
+    let input_length_u64 =
+        u64::try_from(input_length).map_err(|_| FixedAeadError::LengthOverflow)?;
+
+    let block_count = (input_length as u128).div_ceil(64);
+    if block_count > u128::from(u32::MAX) {
+        return Err(FixedAeadError::CounterExhausted);
+    }
+
+    Ok((aad_length, input_length_u64))
+}
+
+fn map_fixed_chacha20_error(error: FixedChaCha20Error) -> FixedAeadError {
+    match error {
+        FixedChaCha20Error::OutputLengthMismatch => FixedAeadError::OutputLengthMismatch,
+        FixedChaCha20Error::CounterExhausted => FixedAeadError::CounterExhausted,
+    }
+}
+
+fn derive_poly1305_key_into(key: &[u8; 32], nonce: &[u8; 12], output: &mut [u8; 32]) {
+    let mut block = Zeroizing::new([0u8; 64]);
+    chacha20_block_into(key, nonce, 0, &mut block);
+    output.copy_from_slice(&block[..32]);
+}
+
+fn absorb_padded_aead_segment(state: &mut SecretPoly1305State, block: &mut [u8; 16], data: &[u8]) {
+    let mut offset = 0;
+    while data.len() - offset >= 16 {
+        block.copy_from_slice(&data[offset..offset + 16]);
+        process_poly1305_block(state, block, POLY1305_HIBIT);
+        offset += 16;
+    }
+
+    let remaining = data.len() - offset;
+    if remaining != 0 {
+        block.fill(0);
+        block[..remaining].copy_from_slice(&data[offset..]);
+        process_poly1305_block(state, block, POLY1305_HIBIT);
+    }
+}
+
+fn poly1305_aead_tag_fixed(
+    aad: &[u8],
+    ciphertext: &[u8],
+    aad_length: u64,
+    ciphertext_length: u64,
+    poly1305_key: &[u8; 32],
+    output: &mut [u8; 16],
+) {
+    let mut state = SecretPoly1305State([0; 24]);
+    initialize_poly1305_state(&mut state, poly1305_key);
+
+    let mut block = Zeroizing::new([0u8; 16]);
+    absorb_padded_aead_segment(&mut state, &mut block, aad);
+    absorb_padded_aead_segment(&mut state, &mut block, ciphertext);
+
+    block[..8].copy_from_slice(&aad_length.to_le_bytes());
+    block[8..].copy_from_slice(&ciphertext_length.to_le_bytes());
+    process_poly1305_block(&mut state, &block, POLY1305_HIBIT);
+    finalize_poly1305(&mut state, output);
+}
+
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_chacha20_poly1305_tag_equal_ir_audit")]
+#[inline(never)]
+fn tags_equal_constant_time(computed: &[u8; 16], supplied: &[u8; 16]) -> bool {
+    let mut difference = 0u8;
+    for index in 0..16 {
+        difference |= computed[index] ^ supplied[index];
+    }
+    difference == 0
+}
+
+/// Encrypt and authenticate into exact caller-owned fixed memory.
+///
+/// This is the allocation-free RFC 8439 section 2.8 composition. It derives
+/// the one-time Poly1305 key from ChaCha20 counter zero, encrypts with counter
+/// one and above, and authenticates the exact padded AAD/ciphertext layout and
+/// 64-bit little-endian lengths. The one-time key, its source block, Poly1305
+/// state, and reusable MAC block are wiped on return. The original key, nonce,
+/// plaintext, associated data, ciphertext, and tag remain caller-owned.
+///
+/// All public length and counter-range failures are checked before either
+/// output changes. Callers must still guarantee unique key/nonce pairs.
+/// This function does not reserve nonces, own traffic keys, enforce a TLS
+/// record limit, frame records, or provide a TLS transport.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_chacha20_poly1305_encrypt_fixed_ir_audit")]
+pub fn aead_encrypt_fixed(
+    plaintext: &[u8],
+    key: &[u8; 32],
+    nonce: &[u8; 12],
+    aad: &[u8],
+    ciphertext: &mut [u8],
+    tag: &mut [u8; 16],
+) -> Result<(), FixedAeadError> {
+    let (aad_length, plaintext_length) =
+        validate_aead_request_lengths(plaintext.len(), ciphertext.len(), aad.len())?;
+
+    let mut poly1305_key = Zeroizing::new([0u8; 32]);
+    derive_poly1305_key_into(key, nonce, &mut poly1305_key);
+
+    chacha20_xor_fixed(plaintext, key, nonce, 1, ciphertext).map_err(map_fixed_chacha20_error)?;
+    poly1305_aead_tag_fixed(
+        aad,
+        ciphertext,
+        aad_length,
+        plaintext_length,
+        &poly1305_key,
+        tag,
+    );
+    Ok(())
+}
+
+/// Authenticate and decrypt into exact caller-owned fixed memory.
+///
+/// The complete RFC 8439 tag is recomputed and all 16 bytes are compared with
+/// a fixed schedule before any plaintext is released. Authentication failure,
+/// output-length mismatch, encoded-length overflow, and counter exhaustion
+/// leave `plaintext` unchanged. The recomputed tag and every key-derived
+/// temporary have wipe-on-drop ownership.
+///
+/// Callers must still guarantee unique key/nonce pairs and must not treat this
+/// primitive as TLS record framing, nonce reservation, record-limit policy, or
+/// transport composition.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_chacha20_poly1305_decrypt_fixed_ir_audit")]
+pub fn aead_decrypt_fixed(
+    ciphertext: &[u8],
+    key: &[u8; 32],
+    nonce: &[u8; 12],
+    aad: &[u8],
+    tag: &[u8; 16],
+    plaintext: &mut [u8],
+) -> Result<(), FixedAeadError> {
+    let (aad_length, ciphertext_length) =
+        validate_aead_request_lengths(ciphertext.len(), plaintext.len(), aad.len())?;
+
+    let mut poly1305_key = Zeroizing::new([0u8; 32]);
+    derive_poly1305_key_into(key, nonce, &mut poly1305_key);
+
+    let mut computed_tag = Zeroizing::new([0u8; 16]);
+    poly1305_aead_tag_fixed(
+        aad,
+        ciphertext,
+        aad_length,
+        ciphertext_length,
+        &poly1305_key,
+        &mut computed_tag,
+    );
+    if !tags_equal_constant_time(&computed_tag, tag) {
+        return Err(FixedAeadError::AuthenticationFailed);
+    }
+
+    chacha20_xor_fixed(ciphertext, key, nonce, 1, plaintext).map_err(map_fixed_chacha20_error)
+}
+
 /// Pad data length to a 16-byte boundary.
 fn pad16(length: usize) -> Vec<u8> {
     let remainder = length % 16;
@@ -1671,5 +1872,31 @@ mod tests {
         assert_ne!(ct, plaintext.to_vec());
         let pt = xchacha20_encrypt(&ct, &key, &nonce, 1);
         assert_eq!(pt, plaintext);
+    }
+
+    #[test]
+    #[cfg(target_pointer_width = "64")]
+    fn fixed_aead_length_preflight_enforces_counter_space_without_allocating() {
+        let maximum_length = (u32::MAX as usize) * 64;
+        assert_eq!(
+            validate_aead_request_lengths(maximum_length, maximum_length, usize::MAX),
+            Ok((u64::MAX, maximum_length as u64)),
+        );
+        assert_eq!(
+            validate_aead_request_lengths(maximum_length + 1, maximum_length + 1, 0),
+            Err(FixedAeadError::CounterExhausted),
+        );
+        assert_eq!(
+            validate_aead_request_lengths(maximum_length + 1, maximum_length, 0),
+            Err(FixedAeadError::OutputLengthMismatch),
+        );
+        assert_eq!(
+            map_fixed_chacha20_error(FixedChaCha20Error::OutputLengthMismatch),
+            FixedAeadError::OutputLengthMismatch,
+        );
+        assert_eq!(
+            map_fixed_chacha20_error(FixedChaCha20Error::CounterExhausted),
+            FixedAeadError::CounterExhausted,
+        );
     }
 }

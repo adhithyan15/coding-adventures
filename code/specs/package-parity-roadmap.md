@@ -19802,3 +19802,381 @@ reviewed. Then mark the PR ready and require a completely fresh hosted matrix
 on the resulting exact lifecycle head; guarded squash auto-merge remains
 disabled until every exact-head check is terminal and acceptable and GitHub
 still reports the PR mergeable.
+
+### PR #18566 merge and exact post-inventory reconciliation
+
+GitHub records Swift RESP PR #18566 merged at exact reviewed head
+`8bfb4d692d74f305d47398c6cc51ea6e60d5f916`. The live rollup contains 40
+terminal acceptable checks: 10 successes, 29 expected path-gated skips, and one
+neutral CodeQL aggregate. The squash merge landed at
+`2026-10-29T09:06:45Z` as
+`9d0843dc86975a0442bcc86c9ccd765eed3c20a8`. No check or review was bypassed,
+and the active parity publication slot is now clear.
+
+The mandatory schema-3 refresh on that exact merged main records 1,605
+established implementation identities, 4,904 established package slots, and
+1,647 all-reported identities. Its completion bands are 1,122 singletons with
+15,708 missing slots, 181 two-to-four-lane identities with 2,282 gaps, 123
+five-to-nine-lane identities with 937 gaps, and 179 ten-to-fifteen-lane
+identities with 244 gaps. OCaml remains emerging at five packages; canonical
+collisions and unknown language buckets remain zero.
+
+Relative to the stored `83f1871e` inventory, exact merged main adds 93 BUILD
+roots across 84 identity names and removes none. The earlier pre-merge count of
+92/83 was correct before Swift RESP became the final root. Fifteen touched
+names map to existing owners: Dart/Swift binary-tree; Swift bloom-filter,
+hash-functions, hash-map, hash-set, hyperloglog, data-store protocol, RESP, and
+skip-list; emerging C/C++ bounded-json; C#/F# document HTML; Python gradient
+descent; Ruby matrix; Kotlin Micro QR; and Haskell Starlark compiler.
+
+The 69 genuinely new established identities are now fully mapped before
+reprioritization. Fifty-one Rust-only functional or gate-level CPU identities,
+including ZPU and IBM System/370, extend the existing historical-architecture
+family classifier with exact package paths rather than creating duplicate
+singleton owners. Five established neural-framework roots plus emerging C/C++
+roots gain a shared-corpus conformance owner. Rust SHA-384 gains a neutral
+primitive owner. Five fixed-memory TLS 1.3 record prerequisites gain a blocked
+decomposition owner, and eleven OCSP/AIA authentication and revocation-binding
+packages gain a supplied-input/authority boundary owner excluded from
+autonomous delivery. The durable evidence is
+`package-parity-audits/20261029-swift-resp-postmerge-inventory.json`; root
+presence grants no behavioral, native, coverage, security, or authority credit.
+
+After this classification, `sha512-existing-lane-hf04-conformance-audit` is
+the highest-leverage dependency-ready bounded portable owner: it has no
+unfinished prerequisite, two direct unfinished children, and eighteen total
+unfinished descendants. Its HF04, shared-fixture, and twelve established
+SHA-512 package paths do not overlap open PR #18495 or the prepared Lua/Rust
+graph-diff work. It is recommended but not selected here; create its dedicated
+worktree only after this reconciliation is independently reviewed. The active
+PR list remains empty, and this reconciliation does not publish or push.
+
+### SHA-512 HF04 conformance selection
+
+Independent review issued SHIP for exact reconciliation head
+`16d1607e3a784a732e9a3580f7669e6180526460`: the 93-root mapping, 69 new
+identities, owner registrations, inventory counts, 1,562-owner DAG, Swift RESP
+merge receipt, and priority graph all reproduce. Select
+`sha512-existing-lane-hf04-conformance-audit` from that reviewed head on branch
+`codex/sha512-hf04-conformance-audit`. It has no unfinished prerequisite, two
+direct unfinished children, and eighteen total unfinished descendants. Scope
+stays bounded to HF04, one neutral fixture corpus, and the twelve established
+SHA-512 lanes; emerging C/C++/OCaml lanes, Java/Kotlin/Dart ports, HMAC
+composition, host-crypto substitution, secret custody, and authority remain
+separately owned or out of scope. No live PR or prepared graph/diff branch
+overlaps the selected implementation paths.
+
+### SHA-512 HF04 local implementation
+
+The selected owner is locally repaired and complete at exact implementation
+head `f2efcaebbbd8c403ee4af3544420f72385ca46cd`, following bounded-contract and
+fixture commit `8b3c1073806ba431a47a4bb6daf15de66ca0e83b`, initial twelve-lane
+implementation `ead3c5829b6d7463c7c2f16d88b3efc53c823ed0`, and whole-corpus repair
+`43ae6d23523632c459f001f70316b6a1f5de5894`, with Rust pre-decode byte bounding
+at `b8695d393ea405b3498231653608b03df4c26d99`. The revised HF04 contract and
+3,220-byte neutral corpus carry nine byte-exact digest vectors with portable
+chunk plans plus six allocation-free 128-bit length-field vectors. All twelve
+established lanes consume the digest witnesses dynamically; each lane also
+checks the full length-field transformation without allocating an enormous
+message. Streaming lanes exercise incremental updates, non-destructive
+finalization, continuation, ownership, and copy independence where exposed.
+
+The audit repaired truncated high length words in C#, F#, Go, Lua, Perl,
+Python, Ruby, Swift, and streaming Rust; unsafe Number-based streaming counts
+in TypeScript; and update-sized retained buffers in C#, F#, Go, Python, Ruby,
+Rust, and Swift. Follow-up review drove strict bounded whole-corpus readers in
+all twelve lanes, each enforcing exact tags/fields, lowercase even hex, digest
+and length syntax, chunk bounds and exact sums before decoding while retaining
+exactly nine digest and six length witnesses. Python now snapshots contiguous
+byte views before preflight/state mutation and handles multi-byte memoryviews;
+non-contiguous views fail atomically. Perl rejects UTF-8-flagged text with the
+stable byte-string error. Go and Rust now pin continuation after snapshot, and
+Go's `Write` contract documents overflow.
+
+Native results at the repaired head are C# 15 tests at 100% line, Elixir 25 at
+100%, F# 15 at 100% line, Go 31 at 89.2%, Haskell 6, Lua 25, Perl 64
+assertions, Python 46 at 95.69%, Ruby 42 runs/148 assertions, Rust 33 plus four
+doc tests, Swift 31, and TypeScript 44 at 100%. Python Ruff and mypy,
+TypeScript build, and Rust Clippy with warnings denied pass. Package-native
+cleans plus exact artifact deletion leave no SHA-512 build/test residue, without cleaning the
+shared Rust target. Existing capability profiles remain empty, no new
+dependency or authority is introduced, and Java/Kotlin/Dart ports, emerging
+C/C++/OCaml lanes, HMAC, secret custody, and host-crypto substitution remain
+outside this owner. No additional backlog identity was discovered: every
+repair belongs to this selected owner, so no new work needs registration
+before exact-head review. This branch remains local and unpublished pending
+that review.
+
+### SHA-512 bounded-reader repair and current-main inventory refresh
+
+The final corpus-reader review found a resource-bound gap shared by all twelve
+test lanes: each parser capped decoded bytes, but its file front could first
+materialize an unbounded file. Exact repair head
+`e7b9b097a7e66b2ea89548ef9eedbd0d821af8f0` now reads at most 4,097 bytes
+through every real file loader and rejects the extra byte before unbounded
+allocation. Rust no longer embeds the fixture at compile time and exercises the
+on-disk runtime reader; Haskell uses one strict bounded read and therefore has
+no file-size/read mutation window. Every lane adds a real oversized-file
+regression while retaining strict whole-corpus validation and the nine V/six L
+witnesses.
+
+Native results are now C# 16 tests at 100% line, Elixir 26 at 100%, F# 16 at
+100% line, Go 32 at 89.2%, Haskell 7, Lua 26, Perl 65 assertions, Python 47 at
+95.69%, Ruby 43 runs/149 assertions, Rust 34 plus four doc tests, Swift 32, and
+TypeScript 45 at 100%. The Haskell test suite gains only strict bytestring and
+temporary-file support; production capabilities and authority remain empty.
+Package-native cleans plus explicit bounded artifact deletion leave all twelve
+SHA-512 package paths clean while preserving the shared Rust target.
+
+Current `origin/main` first advanced from the stored exact
+`9d0843dc86975a0442bcc86c9ccd765eed3c20a8` inventory to
+`f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0`, merged normally as
+`865d3ec36d6cf1c16ac44bda5c52b8c369bc383c`. A final fetch found main at
+`4f7cc78855a816ee944b22b0b73fd425bab596c2`; the second normal merge
+`1686ebbb6650537850629512fa8bf11ef5a59e05` preserves both histories and adds
+no further BUILD root. The complete intervening BUILD delta is therefore one
+added root and one new established identity:
+`code/packages/rust/tls13-traffic-key-material`. It is a Rust-only fixed-memory
+suite-bound traffic-key/static-IV derivation boundary and is registered under
+the existing blocked `tls13-fixed-memory-record-prerequisite-stack-classification`
+owner. It requires neutral decomposition and exact SHA-384, HMAC, HKDF,
+suite-policy, zeroization, and AEAD prerequisites before any portable delivery;
+it grants no TLS, HTTPS, handshake, custody, trust, constant-time, network, or
+deployment qualification.
+
+The exact schema-3 refresh records 1,606 established identities, 4,905
+established slots, and 1,648 all-reported identities. Completion bands are
+1,123 singletons with 15,722 missing slots, 181 two-to-four-lane identities
+with 2,282 gaps, 123 five-to-nine-lane identities with 937 gaps, and 179
+ten-to-fifteen-lane identities with 244 gaps. OCaml remains emerging at five
+packages; collisions and unknown buckets remain zero. The durable receipt is
+`package-parity-audits/20261029-sha512-main-merge-inventory.json`. No other
+intervening BUILD identity exists, and the new blocked TLS owner does not alter
+the in-progress SHA-512 selection or its two direct/eighteen total unfinished
+descendants.
+
+Final publication review also records one inherited ledger repair before the
+next prioritization: current main contains duplicate merge-receipt keys in
+`python-gradient-descent-build-front-coverage`. The duplicate values agree
+apart from equivalent note wording, so no current graph or inventory result
+changes, but strict JSON readers reject the object. New pending owner
+`package-parity-state-duplicate-merge-receipt-cleanup` must remove only the
+redundant keys, preserve the exact receipt, and add strict duplicate-key state
+validation. The verified Swift RESP postmerge refresh now truthfully marks its
+local SHA-512 successor as selected while retaining no external successor.
+
+A final pre-publication fetch advanced main once more to
+`3657ab050dbc879c5c8f4b6a68f5c24ebc9bd02f` through the Mermaid C4
+relationship-details merge. Normal merge
+`fc0aba1a337b6d4ab883188123f29c612dbe9459` preserves both histories. The
+intervening paths are confined to existing Mermaid grammar, Rust diagram and
+Mermaid packages, tests, and DG04; no BUILD root, package identity, SHA-512
+path, state path, roadmap path, or changelog rank changed. The refreshed
+inventory and priority receipts therefore remain exact.
+
+Immediately before publication, main advanced again to
+`c807d952a36a9c3ff7aefad2c8cfe91e2dd4044e` through the powered ALGOL
+normalizer merge. Normal merge
+`8089de7dffeebb3f5faaec4651a77416eba0d51a` changes only existing Rust ALGOL
+compiler, lang-aot, package changelog, and language-matrix paths. It adds no
+BUILD root or identity and overlaps no SHA-512, state, roadmap, or root
+changelog-rank path, so the reviewed inventory and selection remain exact.
+
+Live main then advanced to `e54161212491f94f0e141910dacf8f2913aa32b6`
+through the TaskApp Qt empty-board drop-zone repair. Normal merge
+`57e804ef4cbc22f798cabf9130170e24cf13374a` changes only existing
+`mosaic-emit-qt`, TaskApp, native-control contract, task-app specification, and
+lesson paths. It adds no BUILD root or identity and overlaps no SHA-512,
+state, roadmap, or root changelog-rank path; inventory and selection receipts
+remain exact.
+
+#### Draft PR #18583 publication receipt
+
+Publish independently reviewed exact current-main head
+`46eef47d8c74786e5ebee9c2c87a7b74c6e4f163` as draft PR #18583 over exact
+base `e54161212491f94f0e141910dacf8f2913aa32b6` at
+`2026-10-29T14:38:24Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.
+
+### SHA-512 HF04 merge receipt and Lua graph/diff reprioritization
+
+GitHub records PR #18583 merged from exact reviewed head
+`e8f67be3feefa221a24e5a77b3d4f276b68bb0d7` at
+`2026-10-30T12:39:58Z`. All 44 exact-head checks were terminal and acceptable,
+and GitHub reported the head clean and mergeable before guarded squash
+auto-merge produced `20db234ceca6c3ee1e91c79dace52851c4c3feb8`. The
+Windows retry recovered from an unrelated Forme timeout and the macOS retry
+recovered from hosted-runner communication loss without changing the reviewed
+head. The merge receipt is verified on `origin/main`, and only the completed
+SHA-512 managed worktree has been archived.
+
+The newly free parity publication slot is assigned to
+`build-tool-lua-diff-selection-match-work-ceiling-adoption`. Its bounded,
+process-free implementation and Go fixture routing are complete and have no
+path overlap with the open repository PR set. A normal merge of exact main
+`20db234ceca6c3ee1e91c79dace52851c4c3feb8` produced local head
+`f4e7d2e2cd38c20b69b1bfa5d68fcaceb70e8670`. Its 22 focused and 151 full
+Lua tests, syntax checks, focused Go fixture-selection suite, and Go internal
+graph/diff suite all pass; independent publication review remains mandatory
+before push. The prepared Rust
+graph/diff adoption stays next in the local queue. Review of that work also
+identified a separate Rust Cargo test-trigger selection follow-up; it remains
+outside both graph/diff implementations and must be registered as a distinct
+bounded owner before selection.
+
+#### Draft PR #18725 publication receipt
+
+Publish independently reviewed exact current-main head
+`2e8515c0d104b580bb198076e3f4d90d0bbb8c4f` as draft PR #18725 over exact
+base `20db234ceca6c3ee1e91c79dace52851c4c3feb8` at
+`2026-10-30T12:49:46Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.
+
+Before marking PR #18725 ready, main advanced to
+`64eb54037b81b44b34e5376b9f6a25645c01209c` through routed X.509 RSA evidence
+projection. Its four `x509-rsa-signature-routing` paths and OAuth specification
+note have no overlap with the Lua/Go graph-diff tranche or lifecycle surfaces.
+Normal merge `5969ce059fd4ab31f500bb033d8fed95a86395c5` preserves both histories;
+the resulting exact lifecycle head requires fresh review and hosted CI.
+
+#### PR #18725 Windows launcher repair and current-main refresh
+
+The first ready-head hosted matrix failed only in Windows job `124084701753`
+from run `41058702707` at exact head
+`c2cd37d6170e6b461307d1d6e31fa81a22c77e19`. The other 150 Lua tests passed.
+The existing UTF-8 CLI regression expected malformed input to return exit 2,
+but it spawned the name `lua`; `cmd.exe` resolved that name to a Unix-oriented
+PATH wrapper, whose `mkdir -p` bootstrap failed before the intended interpreter
+ran, and the wrapper returned exit 0. The graph/diff implementation itself was
+not implicated.
+
+Main independently advanced to
+`bd5bb1174c095310e2508e66181ba67b0ea8f9b4` through unrelated Rust X.509,
+ALGOL, and OAuth work. Normal merge
+`2930e41685c0ae06023c17ac0c20be79520f1b58` preserves both histories and has
+no exact Lua/Go graph-diff implementation overlap. Repair commit
+`b5fd64ee75f2ee8da84a2e88d2e7f8f7d5c7338e` makes the regression re-exec the
+active Lua interpreter found at the lowest contiguous negative `arg` index,
+including LuaRocks/Busted `-e` launcher layouts, with host-correct shell quoting.
+The focused UTF-8 suite passes 6/6, the canonical complete Lua suite passes
+152/152, every Lua source parses, and the new lesson validates. Auto-merge stays
+disabled until the final lifecycle head receives independent review and a
+completely fresh hosted matrix is terminal acceptable and mergeable.
+
+Exact-head publication review then caught one more main advance before push:
+`81d94ddb907e00b4eecb76489af55783f818c6dc`, the Mermaid C4 link metadata
+compatibility merge. Its Mermaid corpora, Rust diagram/parser packages, and
+DG04 specification have zero overlap with this Lua/Go graph-diff tranche,
+launcher regression, lesson, or lifecycle paths. A second normal merge at
+`5da19916bda9801c21bb31f49cbd6cfc3fd3584f` preserves both histories. The
+resulting final retry head must repeat local validation and independent review
+before a normal non-force push.
+
+#### PR #18725 second Windows quoting repair
+
+Fresh hosted run `41066604833` reached exact retry head
+`6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0`, but Windows job
+`124101800050` again failed only the real UTF-8 CLI regression after 151 other
+Lua tests passed. This time the child returned exit 1 with
+`The filename, directory name, or volume label syntax is incorrect.` The active
+interpreter was selected correctly; the remaining defect was `cmd /C`'s special
+leading-quote stripping when a command begins with a quoted executable and also
+contains quoted arguments and redirections. The concurrent `mkdir -p` messages
+came from unrelated existing resolver tests.
+
+Repair `82f0e58dc56fb8613abe8faf0854ad52d6cbf46e` keeps the absolute interpreter,
+selects `lua.exe` when LuaRocks exposes the bare Windows token `lua`, and passes
+the fully quoted child through `cmd.exe /d /s /c` with the required outer quote
+pair. A host-executed probe uses the same helper, redirects to a filename with a
+space, writes an exact marker, and must preserve exit 7; a pure regression pins
+the Windows command shape. Focused validation passes 7/7 and the canonical full
+Lua suite passes 153/153.
+
+Main concurrently advanced to
+`fac92baec6b9e76860516e825e26f845b394c28e` through the path-disjoint TypeScript
+irc-proto node:test migration and Rust X.509 SHA-512 intermediate-policy link.
+Normal merge `7e6327e370d50ed29d282071f71aff5909f9fe69` preserves both histories and
+changes no Lua/Go graph-diff or lifecycle path. Auto-merge remains disabled;
+independent exact-head review and a completely fresh hosted matrix are required
+before a guarded merge.
+
+The independently reviewed second repair then advanced the remote branch to
+`2dc4e6a5ca1e0171717b415fea8a044a7b439d3c`, but GitHub's PR object remained
+stale at failed head `6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0` and attached
+no checks to the new commit. Old-head results are not reusable, so auto-merge
+remains disabled until the PR object exposes the exact reviewed head and a
+completely fresh matrix.
+
+During that publication-state delay, main advanced to
+`ac8d401b1341b6b84097b23bb8c27401f3422b4d` through the TypeScript
+irc-net-stdlib node:test migration and Mermaid C4 sprite metadata compatibility.
+Those paths do not overlap the Lua/Go graph-diff implementation, launcher
+repair, lesson, or lifecycle surfaces. Normal merge
+`b1d2c6213cb68ea6a827fe84a5b46080d26e6708` preserves both histories; the
+resulting exact head must be revalidated and independently reviewed before the
+next normal push.
+
+#### PR #18725 complete LuaRocks launcher-prefix repair
+
+Fresh hosted run `41073982951` reached exact head
+`6272463c7af6afc3a4dca27fa38cf32b3a23d50f`. Windows job `124133234570`
+passed the host-executed exit-7 probe and 152 other tests, but the real
+malformed-UTF-8 CLI regression returned exit 0 instead of 2. The passing probe
+proved that `cmd.exe` quoting and exit propagation were intact. The remaining
+defect was narrower: the child replayed only the Lua executable and discarded
+LuaRocks' negative-index `-e` loader prefix. It therefore could not load `lfs`,
+entered the shell discovery fallback, and found zero packages; the CLI
+intentionally treats that result as success.
+
+Repair `6b6e6e1ebd723b8eca0bbee16c878974ad05cf98` recovers the full contiguous
+launcher prefix, retains bare-Windows `lua` to `lua.exe` hardening, and quotes
+every prefix argument before the script and its arguments. The host probe now
+requires `lfs`, preserves redirected output, and must still return exit 7. The
+real regression retains its exact exit-2 and stderr checks. Focused validation
+passes 7/7, the canonical full Lua suite passes 153/153, every Lua source
+parses, and all 1,730 lesson shards validate.
+
+The same investigation registered separate pending owner
+`build-tool-lua-windows-discovery-fallback-null-device-hardening`: the
+production fallback uses POSIX `2>/dev/null` for Windows directory probes and
+can silently discard packages when `lfs` is unavailable. That bounded
+production hardening is not folded into this test-launch repair and must pass a
+fresh priority run before selection. The concurrent Forme macOS job
+`124133234549` was unrelated: its landing-performance median was 0.94 against a
+0.95 gate, and this PR changes no Forme path.
+
+Before the retry could publish, main advanced to
+`fe19aa25a0856f5b5cdaab80fc50610cd3ac4998` through path-disjoint Malayalam,
+TypeScript wasm-types, Rust X.509, and Mermaid C4 work. Normal merge
+`e7773fdffbd8cfc45933310641d82c38d1c8ccf8` preserves both histories and
+changes neither launcher repair path. Auto-merge remains disabled; exact-head
+validation, independent review, a normal non-force push, and a completely
+fresh terminal hosted matrix are still mandatory.
+
+Fresh run `41084365806` then proved the repaired launcher on exact reviewed
+head `ae085ee95c1d8f0a6d24f6075bc4e13fa5902b7b`: Windows build job
+`124163082997` completed successfully. The remaining matrix was still running
+when main advanced to `8ade9e7e201ac3f2c37230ec9afd493d167755bc`
+through the TypeScript wasm-leb128 node:test migration. Its wasm-leb128 package
+and shared wasm-types lockfile changes do not overlap the Lua/Go graph-diff
+implementation, launcher regression, lesson, or lifecycle paths. Normal merge
+`8b19b41b452d7cbc5c9ad80ca01a045f37f58b01` preserves both histories. The
+previous exact-head results cannot authorize merge after another lifecycle
+push, so validation, independent review, and a completely fresh terminal
+matrix remain mandatory; auto-merge stays disabled.
+
+While that current-main refresh was under independent review, main advanced
+again to `379a4e495c1f193fefbcbd99c8dfb477fd23157c` through the path-disjoint
+TypeScript wasm-opcodes node:test migration and Rust X.509 SHA-512 path-length
+work. Normal merge `9e40dd42efb8a1bd7f1ba40d677c3443b9f31ccd`
+preserves both histories and changes no Lua/Go graph-diff, launcher repair,
+lesson, or lifecycle path. Revalidation and exact-head review remain required
+before the normal non-force publication retry.

@@ -140,8 +140,64 @@ local function graph_edges(graph)
     return edges
 end
 
-local function shell_quote(value)
-    return '"' .. value:gsub('"', '\\"') .. '"'
+local is_windows = package.config:sub(1, 1) == "\\"
+
+local function shell_quote(value, windows)
+    if windows then
+        -- Match LuaRocks' Windows batch-argument quoting. The active launch
+        -- prefix can contain an -e chunk with quotes and percent signs, so
+        -- path-only quoting is insufficient here.
+        value = value:gsub('\\(\\*)"', '\\%1%1"')
+        value = value:gsub('\\+$', '%0%0')
+        value = value:gsub('"', '\\"')
+        value = value:gsub('%%', '%%%%')
+        return '"' .. value .. '"'
+    end
+    return "'" .. value:gsub("'", "'\"'\"'") .. "'"
+end
+
+local function active_lua_prefix(arguments, windows)
+    -- Lua exposes arguments that preceded the script at negative indexes.
+    -- arg[-1] is the interpreter for a direct script, but launchers such as
+    -- LuaRocks' Busted wrapper insert -e chunks between it and the script.
+    local index = -1
+    assert.is_not_nil(arguments[index])
+    while arguments[index - 1] ~= nil do
+        index = index - 1
+    end
+    local prefix = {}
+    for argument_index = index, -1 do
+        prefix[#prefix + 1] = arguments[argument_index]
+    end
+
+    local executable = prefix[1]
+    if windows and not executable:find("[\\/]") and
+        not executable:lower():match("%.exe$") then
+        -- LuaRocks' Windows wrapper can retain the bare configured token
+        -- `lua`. Ask cmd.exe for the executable specifically so a lua.cmd or
+        -- other same-named wrapper cannot be selected on the second launch.
+        prefix[1] = executable .. ".exe"
+    end
+    return prefix
+end
+
+local function active_lua_command_parts(arguments, windows)
+    local parts = {}
+    for _, argument in ipairs(active_lua_prefix(arguments, windows)) do
+        parts[#parts + 1] = shell_quote(argument, windows)
+    end
+    return parts
+end
+
+local function shell_command(parts, windows)
+    local command = table.concat(parts, " ")
+    if windows then
+        -- cmd /C strips a leading quote using special first/last-quote rules.
+        -- Give /S an explicit outer pair so the inner executable and argument
+        -- quotes survive exactly, including the output redirections.
+        return 'cmd.exe /d /s /c "' .. command .. '"'
+    end
+    return command
 end
 
 describe("Lua rockspec UTF-8 resolution contract", function()
@@ -193,6 +249,54 @@ describe("Lua rockspec UTF-8 resolution contract", function()
         assert.are.same({{"lua/other", "lua/pkg"}}, graph_edges(graph))
     end)
 
+    it("finds the active interpreter behind launcher options", function()
+        assert.are.same({"lua"}, active_lua_prefix({[-1] = "lua"}, false))
+        assert.are.same({"lua.exe"}, active_lua_prefix({[-1] = "lua"}, true))
+        assert.are.same(
+            {"C:\\Lua\\lua.exe", "-e", "require('luarocks.loader')"},
+            active_lua_prefix({
+                [-3] = "C:\\Lua\\lua.exe",
+                [-2] = "-e",
+                [-1] = "require('luarocks.loader')",
+            }, true)
+        )
+        assert.are.equal(
+            '"package.path=\\"C:\\Lua\\?.lua;\\"..package.path"',
+            shell_quote('package.path="C:\\Lua\\?.lua;"..package.path', true)
+        )
+        assert.are.equal('"value=%%PATH%%"', shell_quote("value=%PATH%", true))
+        assert.are.equal(
+            'cmd.exe /d /s /c ""C:\\Lua\\lua.exe" "-e" ' ..
+                '"require(\'luarocks.loader\')" "../build.lua" 2>"stderr.txt""',
+            shell_command({
+                '"C:\\Lua\\lua.exe"',
+                '"-e"',
+                '"require(\'luarocks.loader\')"',
+                '"../build.lua"',
+                '2>"stderr.txt"',
+            }, true)
+        )
+    end)
+
+    it("preserves child exit and spaced redirection through the shell helper", function()
+        local root = new_temporary_root()
+        local output_path = root .. "/probe output.txt"
+        local parts = active_lua_command_parts(arg, is_windows)
+        parts[#parts + 1] = "-e"
+        parts[#parts + 1] = shell_quote(
+            "assert(require('lfs')); io.write('probe'); os.exit(7)",
+            is_windows
+        )
+        parts[#parts + 1] = "1>" .. shell_quote(output_path, is_windows)
+        local command = shell_command(parts, is_windows)
+
+        local success, _, exit_code = os.execute(command)
+        if success then exit_code = 0 end
+
+        assert.are.equal(7, exit_code)
+        assert.are.equal("probe", read_file(output_path))
+    end)
+
     it("rejects malformed, overlong, surrogate, and out-of-range sequences", function()
         local invalid_sequences = {
             {"overlong two-byte form", string.char(0xc0, 0xaf)},
@@ -228,18 +332,17 @@ describe("Lua rockspec UTF-8 resolution contract", function()
         local _, root = materialize_fixture("resolution-lua-invalid-utf8.json")
         local stdout_path = root .. "/stdout.txt"
         local stderr_path = root .. "/stderr.txt"
-        local command = table.concat({
-            "lua",
-            shell_quote("../build.lua"),
-            "--root",
-            shell_quote(root),
-            "--force",
-            "--dry-run",
-            "--language",
-            "lua",
-            "1>" .. shell_quote(stdout_path),
-            "2>" .. shell_quote(stderr_path),
-        }, " ")
+        local parts = active_lua_command_parts(arg, is_windows)
+        parts[#parts + 1] = shell_quote("../build.lua", is_windows)
+        parts[#parts + 1] = "--root"
+        parts[#parts + 1] = shell_quote(root, is_windows)
+        parts[#parts + 1] = "--force"
+        parts[#parts + 1] = "--dry-run"
+        parts[#parts + 1] = "--language"
+        parts[#parts + 1] = "lua"
+        parts[#parts + 1] = "1>" .. shell_quote(stdout_path, is_windows)
+        parts[#parts + 1] = "2>" .. shell_quote(stderr_path, is_windows)
+        local command = shell_command(parts, is_windows)
 
         local success, _, exit_code = os.execute(command)
         if success then exit_code = 0 end
