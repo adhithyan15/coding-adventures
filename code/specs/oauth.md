@@ -1596,6 +1596,23 @@ contiguity, evaluate a presented IP address, bind constraints to a certificate
 or path, grant trust, check revocation, verify a signature, perform TLS or
 HTTP, authorize OAuth transport, or cause an external effect; concrete HTTPS
 remains unavailable.
+A bounded IP constraint evaluator now composes the shared repository-owned IP
+name-constraint policy for every retained IPv4 or IPv6 address-and-mask subtree
+before examining any presented address. Masks must contain one contiguous
+most-significant-bit prefix, masked-out address bits do not affect subnet
+matching, and matching never crosses address families. Excluded subtrees take precedence; when a
+permitted IP set is present, every presented address must fall within at least
+one permitted prefix. The IP-only entry point fails closed while DNS subtrees
+remain unevaluated, matching the existing DNS-only refusal of retained IP
+subtrees. A combined bounded entry point evaluates both supported name forms
+and releases only payload-free DNS and IP counts after both policies pass, so
+mixed critical constraints cannot silently lose one form. Inputs are typed,
+caller-supplied SAN values; errors retain only a stable category and collection
+index. This does not bind either result to a certificate, intermediate,
+selected anchor, or constructed path, process any other GeneralName form,
+generalize path validation, check revocation, perform TLS or HTTP, authorize
+OAuth transport, access a credential, or cause an external effect. Concrete
+HTTPS remains unavailable.
 A separate bounded evaluator initially validated every decoded permitted DNS
 subtree before matching caller-supplied DNS names. It enforces strict ASCII labels,
 case-insensitive label-boundary matching, the reviewed leading-dot semantics,
