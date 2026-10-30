@@ -811,6 +811,20 @@ issuer, and validated key. The composition does not process other critical
 extensions, validity, path length, name constraints, trust anchors, path
 construction, revocation, TLS, HTTP, or network effects, so concrete HTTPS
 remains unavailable.
+A bounded sibling `x509-rsa-sha512-issuer-link` composition now authenticates
+one directed child-to-candidate-issuer link for the exact RSA PKCS #1 v1.5
+SHA-512 certificate algorithm. Caller-owned Name policy is invoked exactly once
+in the fixed child-issuer to candidate-subject direction; that same candidate
+must pass the algorithm-independent issuing-CA role gate and caller-supplied
+RSA key-strength policy before its key verifies the child's preserved signed
+bytes with the repository-owned SHA-512 verifier. Non-copyable evidence binds
+the exact child, candidate issuer, and validated issuer key. This pure
+public-data composition performs no credential access, signing, storage,
+clock acquisition, or external effect, so it emits no runtime audit event. It
+does not route algorithms, recognize every critical extension, check validity,
+path length or name constraints, construct or validate a complete path, select
+trust, check revocation, perform TLS or HTTP, or authorize OAuth transport;
+concrete HTTPS remains unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each
