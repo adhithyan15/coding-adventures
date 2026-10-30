@@ -20211,3 +20211,14 @@ floor-root normalization work. Normal merge
 `c95a797bad07a174a2d6fadde035b7f9591e2bae` preserves both histories and leaves
 the Rust build-tool package and graph/diff fixtures byte-identical to reviewed
 implementation head `977e9b4b3ee7d5ce6bb12c0a171cf850065e9079`.
+
+#### Rust graph/diff PR #18744 publication receipt
+
+Publish independently reviewed current-main head
+`1a0e5cd4e3f9890055aea223d899e9ddfa538a7f` as ready PR #18744 over exact
+base `dc88db345fc175be7ad55f3da777eadec979112c` at
+`2026-10-30T17:21:30Z`. GitHub reports the PR mergeable. Fresh CI, CodeQL,
+human-language, Miri, and cargo-geiger checks are queued. Keep guarded squash
+auto-merge disabled until this durable PR-number receipt is committed, pushed,
+and independently reviewed, then require every check on that resulting exact
+head to be terminal acceptable while GitHub still reports it mergeable.

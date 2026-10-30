@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18744,
+  "active_prs": [
+    18744
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-30T17:10:28Z",
-    "pr_number": 18725,
-    "head_revision": "adebf93dff223531c81c0c936545139ec7b7bc73",
-    "action": "All 42 exact-head checks on PR #18725 completed terminal acceptable at independently reviewed head adebf93dff223531c81c0c936545139ec7b7bc73, including successful Ubuntu, macOS, and Windows builds, Forme verdict, CI gate, metadata contracts, CodeQL neutral, and expected skips. GitHub reported MERGEABLE/CLEAN, so guarded squash auto-merge completed at 2026-10-30T17:10:28Z as a5da10a39ba4b0e2ba7cf54627a696de9cfdee5b. The receipt is exact origin/main and the completed Lua worktree is archived; reprioritization retains the already implemented and reviewed Rust graph/diff owner next.",
+    "observed_at": "2026-10-30T17:21:30Z",
+    "pr_number": 18744,
+    "head_revision": "1a0e5cd4e3f9890055aea223d899e9ddfa538a7f",
+    "action": "After verified guarded merge of Lua PR #18725, cleanup, and a fresh dependency pass, independently reviewed current-main Rust graph/diff head 1a0e5cd4e3f9890055aea223d899e9ddfa538a7f opened as ready PR #18744 over exact base dc88db345fc175be7ad55f3da777eadec979112c at 2026-10-30T17:21:30Z. GitHub reports it mergeable and fresh exact-head CI is queued. Auto-merge remains disabled until every exact-head check is terminal acceptable and GitHub still reports the PR mergeable.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2855,7 +2857,7 @@
     {
       "id": "build-tool-rust-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Rust build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",
@@ -2866,7 +2868,12 @@
         "build-tool-shared-input-multiconsumer-diff-selection-fixture"
       ],
       "branch": "codex/build-tool-rust-diff-selection-parity",
-      "pr_number": null,
+      "pr_number": 18744,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18744",
+      "pr_opened_at": "2026-10-30T17:21:30Z",
+      "publication_head": "1a0e5cd4e3f9890055aea223d899e9ddfa538a7f",
+      "publication_base": "dc88db345fc175be7ad55f3da777eadec979112c",
+      "publication_notes": "Independently reviewed current-main head opened as ready PR #18744. GitHub reports the PR mergeable; fresh CI, CodeQL, human-language, Miri, and cargo-geiger checks are queued. Guarded squash auto-merge remains disabled until every check on the later exact lifecycle head is terminal acceptable and GitHub still reports it mergeable.",
       "selection_revision": "760775910601fc8523d9a4b5b3cbfbf9acae9e05",
       "selection_notes": "Selected after local Lua completion as the next dependency-ready package-only implementation. After Lua PR #18725 completed all 42 exact-head checks and merged through guarded squash auto-merge, a fresh dependency pass places this owner at four direct and six total unfinished descendants, ahead of the newly logged Lua Windows fallback and Rust Cargo-trigger follow-ups. Its direct descendants are cross-runtime indexing hardening, remaining engines, Rust neutral-adapter closure, and Rust repository-boundary adoption; the two additional transitive descendants are all-language adapter CI closure and portable source-hashing remaining engines. No live PR touches Rust build-tool package paths; current-main reconciliation includes the completed Lua/Go fixture routing and lifecycle receipts.",
       "implementation_revision": "dfacf49115d56c73cfb69d29ddb0c26be274af17",
