@@ -20079,3 +20079,31 @@ launcher regression, lesson, or lifecycle paths. A second normal merge at
 `5da19916bda9801c21bb31f49cbd6cfc3fd3584f` preserves both histories. The
 resulting final retry head must repeat local validation and independent review
 before a normal non-force push.
+
+#### PR #18725 second Windows quoting repair
+
+Fresh hosted run `41066604833` reached exact retry head
+`6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0`, but Windows job
+`124101800050` again failed only the real UTF-8 CLI regression after 151 other
+Lua tests passed. This time the child returned exit 1 with
+`The filename, directory name, or volume label syntax is incorrect.` The active
+interpreter was selected correctly; the remaining defect was `cmd /C`'s special
+leading-quote stripping when a command begins with a quoted executable and also
+contains quoted arguments and redirections. The concurrent `mkdir -p` messages
+came from unrelated existing resolver tests.
+
+Repair `82f0e58dc56fb8613abe8faf0854ad52d6cbf46e` keeps the absolute interpreter,
+selects `lua.exe` when LuaRocks exposes the bare Windows token `lua`, and passes
+the fully quoted child through `cmd.exe /d /s /c` with the required outer quote
+pair. A host-executed probe uses the same helper, redirects to a filename with a
+space, writes an exact marker, and must preserve exit 7; a pure regression pins
+the Windows command shape. Focused validation passes 7/7 and the canonical full
+Lua suite passes 153/153.
+
+Main concurrently advanced to
+`fac92baec6b9e76860516e825e26f845b394c28e` through the path-disjoint TypeScript
+irc-proto node:test migration and Rust X.509 SHA-512 intermediate-policy link.
+Normal merge `7e6327e370d50ed29d282071f71aff5909f9fe69` preserves both histories and
+changes no Lua/Go graph-diff or lifecycle path. Auto-merge remains disabled;
+independent exact-head review and a completely fresh hosted matrix are required
+before a guarded merge.
