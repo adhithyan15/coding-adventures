@@ -938,6 +938,21 @@ credential access, signing, storage, clock acquisition, audit event, trace
 emission, or external effect. It does not validate issuer time, path length,
 name constraints, a complete path, trust, revocation, TLS, HTTP, OAuth
 transport, or network authority; concrete HTTPS remains unavailable.
+A bounded complete-intermediate-policy follow-up now consumes that exact
+policy-bound RSA SHA-384 issuer link together with complete validated
+intermediate policy. It fails closed unless the candidate issuer that verified
+the child signature and the certificate retained by the complete intermediate
+policy are the same exact decoded object; byte-equal independent decodes are
+deliberately insufficient. Success returns distinct non-copyable evidence
+retaining both complete inputs, including the intermediate's certificate-wide
+critical-extension and issuing-CA role policy, data-driven algorithm policy,
+self-issued classification, and explicit-time validity result. This pure
+public-data binding performs no new parsing or cryptography, does not advance
+path-length state or evaluate decoded NameConstraints, authenticate the
+intermediate's issuer, construct or validate a complete path, grant trust,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or cause an
+external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-rsa-sha384-reviewed-anchor-link` composition now consumes one
 exact policy-bound RSA SHA-384 issuer-link proof and one exact reviewed
 Mozilla-root selection. It accepts them only when both non-copyable values
@@ -949,6 +964,19 @@ This is an exact evidence join only. It does not apply anchor name constraints,
 construct or validate a path, check target identity, validity, purpose, path
 length, or revocation, perform TLS or HTTP, emit audit or trace events, access
 credentials, or authorize OAuth transport or network effects. Concrete HTTPS
+and live-provider readiness remain unavailable.
+A bounded two-link follow-up now consumes one policy-bound RSA SHA-384
+target-to-intermediate link together with one policy-bound SHA-384
+intermediate-to-reviewed-root link. It fails closed unless the candidate
+issuer retained by the first proof and the child retained by the reviewed
+parent proof are the same exact decoded intermediate certificate object;
+byte-equal independent decodes are deliberately insufficient. Success returns
+distinct non-copyable evidence retaining both complete authenticated links and
+the exact reviewed-root selection. This is one caller-ordered fixed-algorithm
+evidence join only. It does not derive or advance path-length state, construct
+or search a path, apply anchor or intermediate name constraints, validate the
+target's role, purpose, time, or hostname, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or cause an external effect. Concrete HTTPS
 and live-provider readiness remain unavailable.
 A bounded `x509-rsa-sha384-reviewed-server-link` composition now consumes one
 exact target-server policy result together with one authenticated RSA SHA-384
@@ -1017,6 +1045,19 @@ external effect. It does not apply anchor constraints, validate target role,
 purpose, validity, or identity, construct or validate a multi-hop path, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection; concrete HTTPS remains unavailable.
+A bounded `x509-rsa-sha512-reviewed-server-link` composition now consumes one
+exact target-server policy result together with one authenticated RSA SHA-512
+issuer link terminating at a reviewed root. It fails closed unless both
+non-copyable inputs retain the same exact decoded target certificate object,
+then retains the complete target policy and reviewed-link evidence together.
+Encoded-byte equality is deliberately insufficient, preventing independently
+decoded certificates from contributing mixed evidence. This pure public-data
+binding performs no credential access, signing, storage, clock acquisition,
+audit event, trace emission, or external effect. It performs no new parsing or
+signature work, applies no reviewed-anchor constraints, constructs no
+multi-hop path, and does not check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection; concrete HTTPS remains
+unavailable.
 A bounded `x509-rsa-signature-routing` prerequisite now separates
 caller-owned certificate algorithm selection from fixed repository-owned RSA
 verification. It consumes exact child-certificate algorithm-profile evidence
@@ -1378,6 +1419,17 @@ time authority, and requested purpose. This target-only policy composition does
 not authenticate an issuer link, recognize or constrain a trust anchor,
 construct or validate a certification path, check revocation, perform TLS or
 HTTP, authorize OAuth transport, or open a network connection.
+A bounded target-SAN follow-up now consumes that complete non-copyable server
+policy and reopens only the exact Subject Alternative Name extension index
+already retained by its successful identity result. Under a new explicit
+caller-owned ASN.1 budget it retains the decoded DNS/IP collection beside the
+complete server policy, so later NameConstraints composition cannot substitute
+another certificate or SAN extension. Missing indexed evidence and structural
+decode failures fail closed with payload-free categories. This is retained
+public name evidence only: it does not evaluate name constraints, authenticate
+an issuer, construct or validate a path, establish trust, check revocation,
+perform TLS or HTTP, authorize OAuth transport, or cause an external effect;
+concrete HTTPS remains unavailable.
 A bounded `x509-rsa-sha256-reviewed-server-link` composition now consumes that
 target server-policy evidence together with one-link reviewed-anchor evidence.
 It fails closed unless both non-copyable inputs retain the same exact decoded
@@ -1449,6 +1501,17 @@ The direct reviewed-server anchor-policy composition is the sole consumer in
 this slice that binds that evaluator to certificate and anchor evidence. It
 does not make the standalone decoder or evaluator authoritative, and complete
 path validation, revocation, TLS, HTTP, and OAuth transport remain unavailable.
+A bounded component follow-up now accepts explicit borrowed permitted-DNS and
+excluded-DNS subtree slices separately from presented DNS names. It retains the
+same allocation-free syntax validation, exclusion precedence, wildcard rules,
+and 256-entry ceilings while allowing later path policy to compose DNS and IP
+evaluation over one decoded mixed-form NameConstraints value. The existing
+whole-value DNS entry point still fails closed whenever any retained IP
+subtree remains unevaluated. The component entry point does not itself prove
+that IP constraints were evaluated, bind names or constraints to exact
+certificate/path evidence, establish trust, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or cause an external effect; concrete HTTPS
+remains unavailable.
 A bounded two-link evidence-binding follow-up now consumes one authenticated
 child-to-intermediate path-length transition together with one authenticated
 intermediate-to-reviewed-root link. It fails closed unless the complete

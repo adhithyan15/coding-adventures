@@ -13,7 +13,9 @@ use x509_rsa_sha384_issuer_link::{
     verify_x509_rsa_sha384_issuer_link_with_policies, VerifiedX509RsaSha384IssuerPolicyLink,
 };
 use x509_rsa_sha384_reviewed_anchor_link::{
+    bind_x509_rsa_sha384_intermediate_path_to_reviewed_anchor,
     bind_x509_rsa_sha384_issuer_link_to_reviewed_anchor, X509RsaSha384ReviewedAnchorLinkErrorKind,
+    X509RsaSha384ReviewedIntermediatePathErrorKind,
 };
 use x509_webpki_root_anchor_selection::select_reviewed_webpki_root_anchor;
 
@@ -137,6 +139,88 @@ fn rejects_reviewed_anchor_evidence_from_a_distinct_byte_equal_object() {
     assert_eq!(
         error.to_string(),
         "X.509 RSA SHA-384 reviewed-anchor link error EvidenceMismatch"
+    );
+    assert!(!error.to_string().contains("Microsoft"));
+}
+
+#[test]
+fn binds_two_authenticated_sha384_links_through_the_exact_intermediate() {
+    let encoded = root_fixture();
+    let child = decode(&encoded);
+    let intermediate = decode(&encoded);
+    let root = decode(&encoded);
+    let authenticated_child_link = strongest_link(&child, &intermediate);
+    let authenticated_parent_link = strongest_link(&intermediate, &root);
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&root).unwrap();
+    let reviewed_parent_link = bind_x509_rsa_sha384_issuer_link_to_reviewed_anchor(
+        authenticated_parent_link,
+        reviewed_anchor,
+    )
+    .unwrap();
+
+    let reviewed_path = bind_x509_rsa_sha384_intermediate_path_to_reviewed_anchor(
+        authenticated_child_link,
+        reviewed_parent_link,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        reviewed_path.authenticated_child_link().child(),
+        &child
+    ));
+    assert!(std::ptr::eq(
+        reviewed_path.authenticated_child_link().candidate_issuer(),
+        &intermediate
+    ));
+    assert!(std::ptr::eq(
+        reviewed_path
+            .reviewed_parent_link()
+            .verified_issuer_link()
+            .child(),
+        &intermediate
+    ));
+    assert!(std::ptr::eq(
+        reviewed_path
+            .reviewed_parent_link()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        &root
+    ));
+    assert_eq!(
+        format!("{reviewed_path:?}"),
+        "BoundX509RsaSha384ReviewedIntermediatePath"
+    );
+}
+
+#[test]
+fn rejects_two_links_with_byte_equal_distinct_intermediates() {
+    let encoded = root_fixture();
+    let child = decode(&encoded);
+    let first_intermediate = decode(&encoded);
+    let second_intermediate = decode(&encoded);
+    let root = decode(&encoded);
+    let authenticated_child_link = strongest_link(&child, &first_intermediate);
+    let authenticated_parent_link = strongest_link(&second_intermediate, &root);
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&root).unwrap();
+    let reviewed_parent_link = bind_x509_rsa_sha384_issuer_link_to_reviewed_anchor(
+        authenticated_parent_link,
+        reviewed_anchor,
+    )
+    .unwrap();
+
+    let error = bind_x509_rsa_sha384_intermediate_path_to_reviewed_anchor(
+        authenticated_child_link,
+        reviewed_parent_link,
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha384ReviewedIntermediatePathErrorKind::EvidenceMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA SHA-384 reviewed intermediate-path error EvidenceMismatch"
     );
     assert!(!error.to_string().contains("Microsoft"));
 }

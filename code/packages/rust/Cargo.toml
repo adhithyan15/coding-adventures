@@ -1378,6 +1378,7 @@ members = [
   "x509-rsa-sha384-issuer-link",
   "x509-rsa-sha512-issuer-link",
   "x509-rsa-sha512-reviewed-anchor-link",
+  "x509-rsa-sha512-reviewed-server-link",
   "x509-rsa-sha256-reviewed-anchor-link",
   "x509-rsa-sha384-reviewed-anchor-link",
   "x509-rsa-sha384-reviewed-server-link",
