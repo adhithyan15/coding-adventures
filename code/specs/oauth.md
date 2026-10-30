@@ -1370,6 +1370,17 @@ time authority, and requested purpose. This target-only policy composition does
 not authenticate an issuer link, recognize or constrain a trust anchor,
 construct or validate a certification path, check revocation, perform TLS or
 HTTP, authorize OAuth transport, or open a network connection.
+A bounded target-SAN follow-up now consumes that complete non-copyable server
+policy and reopens only the exact Subject Alternative Name extension index
+already retained by its successful identity result. Under a new explicit
+caller-owned ASN.1 budget it retains the decoded DNS/IP collection beside the
+complete server policy, so later NameConstraints composition cannot substitute
+another certificate or SAN extension. Missing indexed evidence and structural
+decode failures fail closed with payload-free categories. This is retained
+public name evidence only: it does not evaluate name constraints, authenticate
+an issuer, construct or validate a path, establish trust, check revocation,
+perform TLS or HTTP, authorize OAuth transport, or cause an external effect;
+concrete HTTPS remains unavailable.
 A bounded `x509-rsa-sha256-reviewed-server-link` composition now consumes that
 target server-policy evidence together with one-link reviewed-anchor evidence.
 It fails closed unless both non-copyable inputs retain the same exact decoded
