@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.81.0";
+pub const VERSION: &str = "0.82.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7324,6 +7324,19 @@ where
         if let Some(value) = diagram.render_config.c4_boundary_in_row {
             scene_metadata.insert("c4.boundaryInRow".into(), value.to_string());
         }
+        for (index, relationship) in diagram.relationships.iter().enumerate() {
+            let Some(diagram_ir::StructuralRelationshipMetadata::C4(metadata)) =
+                relationship.metadata.as_ref()
+            else {
+                continue;
+            };
+            if let Some(direction) = metadata.direction {
+                scene_metadata.insert(
+                    format!("c4.relationship.{index}.direction"),
+                    direction.as_str().into(),
+                );
+            }
+        }
     }
     let lf = options.label_font.clone();
     let ls = lf.size;
@@ -10204,7 +10217,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.81.0");
+        assert_eq!(crate::VERSION, "0.82.0");
     }
 
     #[test]
@@ -10433,6 +10446,7 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: None,
+                metadata: None,
                 style: ResolvedDiagramStyle {
                     fill: "#6b7280".into(),
                     stroke: "#6b7280".into(),
@@ -10491,6 +10505,7 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: Some((Point { x: 100.0, y: 40.0 }, String::new())),
+                metadata: None,
                 style: ResolvedDiagramStyle {
                     fill: "#6b7280".into(),
                     stroke: "#6b7280".into(),

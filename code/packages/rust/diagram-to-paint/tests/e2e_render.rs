@@ -105,6 +105,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
     ));
+    const C4_DIRECTED_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-corpus.json"
+    ));
+    const C4_DIRECTED_RELATIONSHIPS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-visual-corpus.json"
+    ));
     const C4_ELEMENT_COLORS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-element-colors-11.16.1-corpus.json"
@@ -4944,6 +4952,69 @@ line "Target" [35, 50, 68, 82]"##,
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_c4_relationship_arrows_{index}_e2e.png");
             write_png(&pixels, &path).expect("C4 relationship arrow PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_directed_relationships_to_png() {
+        let syntax: Value = serde_json::from_str(C4_DIRECTED_RELATIONSHIPS_CORPUS)
+            .expect("C4 directed relationship corpus JSON");
+        let visual: Value = serde_json::from_str(C4_DIRECTED_RELATIONSHIPS_VISUAL_CORPUS)
+            .expect("C4 directed relationship visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"]
+            .as_array()
+            .expect("C4 directed relationship fixtures");
+        let visual_names = visual["fixtures"]
+            .as_array()
+            .expect("C4 directed relationship visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+        let directions = ["up", "down", "left", "right"];
+
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual_names[index], fixture["name"]);
+            let diagram = parse_c4_diagram(
+                fixture["source"].as_str().expect("C4 directed relationship source"),
+            )
+            .expect("C4 directed relationship fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            let diagram_ir::StructuralRelationshipMetadata::C4(metadata) = layout.relationships[0]
+                .metadata
+                .as_ref()
+                .expect("directed relationship layout metadata");
+            assert_eq!(
+                metadata.direction.map(diagram_ir::C4RelationshipDirection::as_str),
+                Some(directions[index % directions.len()])
+            );
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert_eq!(
+                scene.metadata.as_ref().and_then(|metadata| {
+                    metadata.get("c4.relationship.0.direction")
+                }),
+                Some(&directions[index % directions.len()].to_string())
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#6b7280")
+            )));
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_directed_relationships_{index}_e2e.png");
+            write_png(&pixels, &path).expect("C4 directed relationship PNG write failed");
             assert!(pixels.width > 0 && pixels.height > 0);
         }
     }

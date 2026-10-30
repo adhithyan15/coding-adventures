@@ -29,6 +29,14 @@ const C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
 ));
+const C4_DIRECTED_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-corpus.json"
+));
+const C4_DIRECTED_RELATIONSHIPS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-visual-corpus.json"
+));
 const C4_ELEMENT_COLORS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-element-colors-11.16.1-corpus.json"
@@ -2578,6 +2586,39 @@ fn pinned_c4_relationship_arrows_reach_semantic_ir() {
     .expect("C4 Rel_Back fixture must parse");
     assert!(backward.relationships[0].start_arrow);
     assert!(!backward.relationships[0].end_arrow);
+}
+
+#[test]
+fn pinned_c4_directed_relationships_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_DIRECTED_RELATIONSHIPS_CORPUS)
+        .expect("C4 directed relationship corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_DIRECTED_RELATIONSHIPS_VISUAL_CORPUS)
+        .expect("C4 directed relationship visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"]
+        .as_array()
+        .expect("C4 directed relationship fixtures");
+    let expected_directions = [
+        diagram_ir::C4RelationshipDirection::Up,
+        diagram_ir::C4RelationshipDirection::Down,
+        diagram_ir::C4RelationshipDirection::Left,
+        diagram_ir::C4RelationshipDirection::Right,
+    ];
+
+    assert_eq!(fixtures.len(), 8);
+    for (index, fixture) in fixtures.iter().enumerate() {
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap())
+            .expect("C4 directed relationship fixture must parse");
+        assert_eq!(diagram.relationships.len(), 1);
+        let relationship = &diagram.relationships[0];
+        let diagram_ir::StructuralRelationshipMetadata::C4(metadata) =
+            relationship.metadata.as_ref().unwrap();
+        assert_eq!(
+            metadata.direction,
+            Some(expected_directions[index % expected_directions.len()])
+        );
+        assert_eq!(relationship.routing, diagram_ir::StructuralRouting::Direct);
+    }
 }
 
 #[test]

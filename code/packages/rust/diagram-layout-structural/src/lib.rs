@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.37.0";
+pub const VERSION: &str = "0.38.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -1492,6 +1492,7 @@ fn layout_relationships(
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
                 label,
+                metadata: rel.metadata.clone(),
                 style: structural_relationship_style(rel),
             })
         })
@@ -1613,7 +1614,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.37.0");
+        assert_eq!(crate::VERSION, "0.38.0");
     }
 
     #[test]
