@@ -1115,6 +1115,19 @@ construct or validate a multi-hop path, apply intermediate or IP constraints,
 check revocation or hostnames, perform TLS or HTTP, authorize OAuth transport,
 or open a network connection; concrete HTTPS and live-provider readiness
 remain unavailable.
+A bounded two-link `x509-rsa-sha512-reviewed-server-link` follow-up now
+consumes one exact target-server policy result together with one authenticated
+RSA SHA-512 target-to-intermediate-to-reviewed-root proof. It fails closed
+unless the server-policy certificate and the target authenticated by the
+proof's first link are the same exact decoded object; independently decoded
+byte-equal certificates are deliberately insufficient. Success returns
+distinct non-copyable evidence retaining complete target policy, complete
+intermediate policy, both authenticated links, and exact reviewed-root
+selection. This is evidence composition only. It does not advance path-length
+state, construct or search a path, apply anchor or intermediate constraints,
+check hostnames or revocation, perform TLS or HTTP, authorize OAuth transport,
+or cause an external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-rsa-signature-routing` prerequisite now separates
 caller-owned certificate algorithm selection from fixed repository-owned RSA
 verification. It consumes exact child-certificate algorithm-profile evidence
