@@ -14,8 +14,8 @@ fn limits(context: usize, payload: usize, count: usize) -> CertificateRequestLim
 #[test]
 fn decodes_empty_main_handshake_context_and_borrowed_extensions() {
     let encoded = [0, 0, 8, 0, 13, 0, 4, 0, 2, 4, 3];
-    let request = decode_certificate_request(&encoded, limits(0, 16, 2))
-        .expect("request body decodes");
+    let request =
+        decode_certificate_request(&encoded, limits(0, 16, 2)).expect("request body decodes");
 
     assert_eq!(request.encoded_body(), &encoded);
     assert!(request.context().is_empty());
@@ -86,6 +86,17 @@ fn delegates_exact_remaining_bytes_to_extension_block_decoder() {
     assert_eq!(
         trailing.kind(),
         CertificateRequestErrorKind::Extensions(ExtensionBlockError::BlockLengthMismatch)
+    );
+}
+
+#[test]
+fn rejects_structurally_empty_extension_vector() {
+    let error = decode_certificate_request(&[0, 0, 0], limits(0, 8, 1))
+        .expect_err("CertificateRequest requires at least one extension");
+    assert_eq!(error.kind(), CertificateRequestErrorKind::EmptyExtensions);
+    assert_eq!(
+        error.to_string(),
+        "TLS 1.3 CertificateRequest error EmptyExtensions"
     );
 }
 

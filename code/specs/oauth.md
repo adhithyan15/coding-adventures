@@ -1775,10 +1775,12 @@ An allocation-free `tls13-certificate-request-message` prerequisite now
 decodes one exact TLS 1.3 `CertificateRequest` body. A caller-owned limit
 bounds the one-byte-length-prefixed `certificate_request_context`, and the
 existing generic extension-block limits bound the complete extension payload
-and retained entry count. Success borrows the exact body, request context, and
-ordered duplicate-free opaque extensions without allocation. Empty and
-non-empty contexts remain structural data, unknown extensions remain
-unclassified, and stable failures retain no context or extension bytes.
+and retained entry count. The message-specific decoder rejects an empty
+extension vector while leaving individual extension requirements to later
+policy. Success borrows the exact body, request context, and ordered
+duplicate-free opaque extensions without allocation. Empty and non-empty
+contexts remain structural data, unknown extensions remain unclassified, and
+stable failures retain no context or extension bytes.
 
 This syntax layer does not authorize `CertificateRequest` in a main or
 post-handshake state, enforce an empty main-handshake context, establish
