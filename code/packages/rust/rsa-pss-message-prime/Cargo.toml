@@ -1,0 +1,7 @@
+[package]
+name = "rsa-pss-message-prime"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 8017 RSA-PSS M-prime construction"
+
+[dependencies]
