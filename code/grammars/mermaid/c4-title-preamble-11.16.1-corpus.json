@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 title and standard preamble vertical slice",
+  "fixtures": [
+    {
+      "name": "front-matter-title-with-init-directive",
+      "source": "---\ntitle: Banking landscape\n---\n%%{init: {\"theme\": \"neutral\"}}%%\nC4Context\n%% Preamble content must not enter the C4 grammar\nPerson(customer, \"Customer\")\nSystem(bank, \"Bank\")\nRel(customer, bank, \"Uses\")"
+    },
+    {
+      "name": "inline-title-overrides-front-matter",
+      "source": "---\ntitle: Draft container view\n---\nC4Container\ntitle Production container view\nPerson(customer, \"Customer\")\nContainer(app, \"Application\", \"Rust\")\nRel(customer, app, \"Uses\")"
+    }
+  ]
+}
