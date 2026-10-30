@@ -33,10 +33,26 @@ DEFAULT_ALLOWLISTS = {
     "python-tools": Path(
         "code/specs/data/third-party-dependencies/python-tool-allowlist.json"
     ),
+    "ruby": Path("code/specs/data/third-party-dependencies/ruby-allowlist.json"),
 }
 PYTHON_NAME = re.compile(
     r"([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
     r"(?=\s*(?:\[|@|[<>=!~;(]|$))"
+)
+RUBY_GEM_NAME = r"[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?"
+RUBY_GEM_DECLARATION = re.compile(
+    rf"^\s*gem\s+(?P<quote>['\"])(?P<name>{RUBY_GEM_NAME})(?P=quote)(?P<tail>.*)$"
+)
+RUBY_DEPENDENCY_DECLARATION = re.compile(
+    rf"^\s*(?:[A-Za-z_]\w*\.)?add_(?:runtime_|development_)?dependency\s+"
+    rf"(?P<quote>['\"])(?P<name>{RUBY_GEM_NAME})(?P=quote)(?P<tail>.*)$"
+)
+RUBY_GEMSPEC_NAME = re.compile(
+    rf"^\s*(?:[A-Za-z_]\w*\.)?name\s*=\s*"
+    rf"(?P<quote>['\"])(?P<name>{RUBY_GEM_NAME})(?P=quote)\s*(?:#.*)?$"
+)
+RUBY_PATH_OPTION = re.compile(
+    r"\bpath\s*:\s*(?P<quote>['\"])(?P<path>[^'\"]+)(?P=quote)"
 )
 AUTOMATION_TOOL_SOURCE_PATHS = (
     ":(glob).github/**/*.yml",
@@ -188,6 +204,30 @@ def git_python_manifests(root: Path) -> list[Path]:
         root / raw_path.decode("utf-8", errors="surrogateescape")
         for raw_path in result.stdout.split(b"\0")
         if raw_path
+    )
+
+
+def git_ruby_manifests(root: Path) -> list[Path]:
+    """Return every tracked Ruby Gemfile and gemspec."""
+
+    result = subprocess.run(
+        [
+            "git",
+            "ls-files",
+            "-z",
+            "--",
+            ":(glob)**/Gemfile",
+            ":(glob)**/Gemfile.*",
+            ":(glob)**/*.gemspec",
+        ],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return sorted(
+        root / raw_path.decode("utf-8", errors="surrogateescape")
+        for raw_path in result.stdout.split(b"\0")
+        if raw_path and not raw_path.endswith(b".lock")
     )
 
 
@@ -1082,6 +1122,98 @@ def build_python_inventory(
     return {name: sorted(set(paths)) for name, paths in sorted(inventory.items())}
 
 
+def ruby_gemspec_names(documents: Mapping[Path, str]) -> dict[Path, str]:
+    """Return the literal package identity of every tracked gemspec."""
+
+    names: dict[Path, str] = {}
+    for manifest, text in documents.items():
+        if manifest.suffix != ".gemspec":
+            continue
+        declarations = [
+            match.group("name")
+            for line in text.splitlines()
+            if (match := RUBY_GEMSPEC_NAME.fullmatch(line)) is not None
+        ]
+        if len(declarations) != 1:
+            raise PolicyError(
+                f"{manifest} must contain exactly one literal gemspec name"
+            )
+        names[manifest.resolve()] = declarations[0]
+    return names
+
+
+def ruby_manifest_declarations(
+    manifest: Path, text: str
+) -> list[tuple[str, str | None]]:
+    """Parse dependency names and literal path options without executing Ruby."""
+
+    declarations: list[tuple[str, str | None]] = []
+    for line_number, line in enumerate(text.splitlines(), 1):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        gem_match = RUBY_GEM_DECLARATION.fullmatch(line)
+        dependency_match = RUBY_DEPENDENCY_DECLARATION.fullmatch(line)
+        if gem_match is not None:
+            tail = gem_match.group("tail")
+            path_matches = list(RUBY_PATH_OPTION.finditer(tail))
+            if re.search(r"\bpath\s*:", tail) and len(path_matches) != 1:
+                raise PolicyError(
+                    f"{manifest}:{line_number} has an unsupported gem path declaration"
+                )
+            declarations.append(
+                (
+                    gem_match.group("name"),
+                    path_matches[0].group("path") if path_matches else None,
+                )
+            )
+            continue
+        if dependency_match is not None:
+            declarations.append((dependency_match.group("name"), None))
+            continue
+        if re.match(r"^\s*gem\b", line) or re.match(
+            r"^\s*(?:[A-Za-z_]\w*\.)?"
+            r"add_(?:runtime_|development_)?dependency\b",
+            line,
+        ):
+            raise PolicyError(
+                f"{manifest}:{line_number} has an unsupported Ruby dependency declaration"
+            )
+    return declarations
+
+
+def build_ruby_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list[str]]:
+    """Map third-party Ruby gem names to the manifests declaring them."""
+
+    manifest_list = list(manifests)
+    documents = tracked_text_documents(manifest_list, root)
+    gemspec_names = ruby_gemspec_names(documents)
+    local_names = set(gemspec_names.values())
+    gemspecs_by_directory: dict[Path, dict[str, Path]] = {}
+    for path, name in gemspec_names.items():
+        gemspecs_by_directory.setdefault(path.parent, {})[name] = path
+
+    inventory: dict[str, list[str]] = {}
+    for manifest in manifest_list:
+        display_path = manifest.relative_to(root).as_posix()
+        for name, dependency_path in ruby_manifest_declarations(
+            manifest, documents[manifest]
+        ):
+            if manifest.suffix == ".gemspec" and name in local_names:
+                continue
+            if dependency_path is not None:
+                candidate_directory = (manifest.parent / dependency_path).resolve()
+                try:
+                    candidate_directory.relative_to(root.resolve())
+                except ValueError:
+                    pass
+                else:
+                    if name in gemspecs_by_directory.get(candidate_directory, {}):
+                        continue
+            inventory.setdefault(name, []).append(display_path)
+    return {name: sorted(set(paths)) for name, paths in sorted(inventory.items())}
+
+
 def validate_allowlist(
     document: Any, label: str, ecosystem: str = "cargo"
 ) -> list[str]:
@@ -1190,7 +1322,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("command", choices=("check", "inventory"))
     parser.add_argument(
         "--ecosystem",
-        choices=("cargo", "npm", "npm-tools", "python", "python-tools"),
+        choices=("cargo", "npm", "npm-tools", "python", "python-tools", "ruby"),
         default="cargo",
     )
     parser.add_argument(
@@ -1230,12 +1362,17 @@ def main(argv: list[str] | None = None) -> int:
             inventory = build_python_inventory(root, manifests)
             input_count = len(manifests)
             input_label = "manifests"
-        else:
+        elif args.ecosystem == "python-tools":
             sources = git_python_tool_sources(root)
             manifests = git_npm_manifests(root)
             inventory = build_python_tool_inventory(root, sources, manifests)
             input_count = len(sources) + len(manifests)
             input_label = "automation inputs"
+        else:
+            manifests = git_ruby_manifests(root)
+            inventory = build_ruby_inventory(root, manifests)
+            input_count = len(manifests)
+            input_label = "manifests"
     except (PolicyError, subprocess.CalledProcessError) as error:
         print(error, file=sys.stderr)
         return 1
