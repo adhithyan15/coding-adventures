@@ -113,6 +113,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
     ));
+    const C4_RELATIONSHIP_REDECLARATIONS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-relationship-redeclarations-11.16.1-corpus.json"
+    ));
+    const C4_RELATIONSHIP_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-relationship-redeclarations-11.16.1-visual-corpus.json"
+    ));
     const C4_DIRECTED_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-corpus.json"
@@ -5049,6 +5057,57 @@ line "Target" [35, 50, 68, 82]"##,
             write_png(&pixels, &path).expect("C4 relationship arrow PNG write failed");
             assert!(pixels.width > 0 && pixels.height > 0);
         }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_relationship_redeclarations_to_png() {
+        let syntax: Value =
+            serde_json::from_str(C4_RELATIONSHIP_REDECLARATIONS_CORPUS).unwrap();
+        let visual: Value =
+            serde_json::from_str(C4_RELATIONSHIP_REDECLARATIONS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+        let diagram =
+            parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.relationships.len(), 1);
+        assert_eq!(
+            layout.relationships[0]
+                .label
+                .as_ref()
+                .map(|(_, text)| text.as_str()),
+            Some("Synchronizes\n[gRPC]")
+        );
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert_eq!(
+            scene.instructions.iter().filter(|instruction| matches!(
+                instruction,
+                PaintInstruction::Path(path) if path.fill.as_deref() == Some("#b91c1c")
+            )).count(),
+            2
+        );
+        let pixels = render(&scene);
+        write_png(
+            &pixels,
+            "/tmp/mermaid_c4_relationship_redeclarations_0_e2e.png",
+        )
+        .unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]
