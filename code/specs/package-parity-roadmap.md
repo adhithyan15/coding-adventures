@@ -20001,3 +20001,182 @@ reviewed. Then mark the PR ready and require a completely fresh hosted matrix
 on the resulting exact lifecycle head; guarded squash auto-merge remains
 disabled until every exact-head check is terminal and acceptable and GitHub
 still reports the PR mergeable.
+
+### SHA-512 HF04 merge receipt and Lua graph/diff reprioritization
+
+GitHub records PR #18583 merged from exact reviewed head
+`e8f67be3feefa221a24e5a77b3d4f276b68bb0d7` at
+`2026-10-30T12:39:58Z`. All 44 exact-head checks were terminal and acceptable,
+and GitHub reported the head clean and mergeable before guarded squash
+auto-merge produced `20db234ceca6c3ee1e91c79dace52851c4c3feb8`. The
+Windows retry recovered from an unrelated Forme timeout and the macOS retry
+recovered from hosted-runner communication loss without changing the reviewed
+head. The merge receipt is verified on `origin/main`, and only the completed
+SHA-512 managed worktree has been archived.
+
+The newly free parity publication slot is assigned to
+`build-tool-lua-diff-selection-match-work-ceiling-adoption`. Its bounded,
+process-free implementation and Go fixture routing are complete and have no
+path overlap with the open repository PR set. A normal merge of exact main
+`20db234ceca6c3ee1e91c79dace52851c4c3feb8` produced local head
+`f4e7d2e2cd38c20b69b1bfa5d68fcaceb70e8670`. Its 22 focused and 151 full
+Lua tests, syntax checks, focused Go fixture-selection suite, and Go internal
+graph/diff suite all pass; independent publication review remains mandatory
+before push. The prepared Rust
+graph/diff adoption stays next in the local queue. Review of that work also
+identified a separate Rust Cargo test-trigger selection follow-up; it remains
+outside both graph/diff implementations and must be registered as a distinct
+bounded owner before selection.
+
+#### Draft PR #18725 publication receipt
+
+Publish independently reviewed exact current-main head
+`2e8515c0d104b580bb198076e3f4d90d0bbb8c4f` as draft PR #18725 over exact
+base `20db234ceca6c3ee1e91c79dace52851c4c3feb8` at
+`2026-10-30T12:49:46Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.
+
+Before marking PR #18725 ready, main advanced to
+`64eb54037b81b44b34e5376b9f6a25645c01209c` through routed X.509 RSA evidence
+projection. Its four `x509-rsa-signature-routing` paths and OAuth specification
+note have no overlap with the Lua/Go graph-diff tranche or lifecycle surfaces.
+Normal merge `5969ce059fd4ab31f500bb033d8fed95a86395c5` preserves both histories;
+the resulting exact lifecycle head requires fresh review and hosted CI.
+
+#### PR #18725 Windows launcher repair and current-main refresh
+
+The first ready-head hosted matrix failed only in Windows job `124084701753`
+from run `41058702707` at exact head
+`c2cd37d6170e6b461307d1d6e31fa81a22c77e19`. The other 150 Lua tests passed.
+The existing UTF-8 CLI regression expected malformed input to return exit 2,
+but it spawned the name `lua`; `cmd.exe` resolved that name to a Unix-oriented
+PATH wrapper, whose `mkdir -p` bootstrap failed before the intended interpreter
+ran, and the wrapper returned exit 0. The graph/diff implementation itself was
+not implicated.
+
+Main independently advanced to
+`bd5bb1174c095310e2508e66181ba67b0ea8f9b4` through unrelated Rust X.509,
+ALGOL, and OAuth work. Normal merge
+`2930e41685c0ae06023c17ac0c20be79520f1b58` preserves both histories and has
+no exact Lua/Go graph-diff implementation overlap. Repair commit
+`b5fd64ee75f2ee8da84a2e88d2e7f8f7d5c7338e` makes the regression re-exec the
+active Lua interpreter found at the lowest contiguous negative `arg` index,
+including LuaRocks/Busted `-e` launcher layouts, with host-correct shell quoting.
+The focused UTF-8 suite passes 6/6, the canonical complete Lua suite passes
+152/152, every Lua source parses, and the new lesson validates. Auto-merge stays
+disabled until the final lifecycle head receives independent review and a
+completely fresh hosted matrix is terminal acceptable and mergeable.
+
+Exact-head publication review then caught one more main advance before push:
+`81d94ddb907e00b4eecb76489af55783f818c6dc`, the Mermaid C4 link metadata
+compatibility merge. Its Mermaid corpora, Rust diagram/parser packages, and
+DG04 specification have zero overlap with this Lua/Go graph-diff tranche,
+launcher regression, lesson, or lifecycle paths. A second normal merge at
+`5da19916bda9801c21bb31f49cbd6cfc3fd3584f` preserves both histories. The
+resulting final retry head must repeat local validation and independent review
+before a normal non-force push.
+
+#### PR #18725 second Windows quoting repair
+
+Fresh hosted run `41066604833` reached exact retry head
+`6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0`, but Windows job
+`124101800050` again failed only the real UTF-8 CLI regression after 151 other
+Lua tests passed. This time the child returned exit 1 with
+`The filename, directory name, or volume label syntax is incorrect.` The active
+interpreter was selected correctly; the remaining defect was `cmd /C`'s special
+leading-quote stripping when a command begins with a quoted executable and also
+contains quoted arguments and redirections. The concurrent `mkdir -p` messages
+came from unrelated existing resolver tests.
+
+Repair `82f0e58dc56fb8613abe8faf0854ad52d6cbf46e` keeps the absolute interpreter,
+selects `lua.exe` when LuaRocks exposes the bare Windows token `lua`, and passes
+the fully quoted child through `cmd.exe /d /s /c` with the required outer quote
+pair. A host-executed probe uses the same helper, redirects to a filename with a
+space, writes an exact marker, and must preserve exit 7; a pure regression pins
+the Windows command shape. Focused validation passes 7/7 and the canonical full
+Lua suite passes 153/153.
+
+Main concurrently advanced to
+`fac92baec6b9e76860516e825e26f845b394c28e` through the path-disjoint TypeScript
+irc-proto node:test migration and Rust X.509 SHA-512 intermediate-policy link.
+Normal merge `7e6327e370d50ed29d282071f71aff5909f9fe69` preserves both histories and
+changes no Lua/Go graph-diff or lifecycle path. Auto-merge remains disabled;
+independent exact-head review and a completely fresh hosted matrix are required
+before a guarded merge.
+
+The independently reviewed second repair then advanced the remote branch to
+`2dc4e6a5ca1e0171717b415fea8a044a7b439d3c`, but GitHub's PR object remained
+stale at failed head `6ab96431c8ca3c4863e5a5f55dc46d07e4c90ae0` and attached
+no checks to the new commit. Old-head results are not reusable, so auto-merge
+remains disabled until the PR object exposes the exact reviewed head and a
+completely fresh matrix.
+
+During that publication-state delay, main advanced to
+`ac8d401b1341b6b84097b23bb8c27401f3422b4d` through the TypeScript
+irc-net-stdlib node:test migration and Mermaid C4 sprite metadata compatibility.
+Those paths do not overlap the Lua/Go graph-diff implementation, launcher
+repair, lesson, or lifecycle surfaces. Normal merge
+`b1d2c6213cb68ea6a827fe84a5b46080d26e6708` preserves both histories; the
+resulting exact head must be revalidated and independently reviewed before the
+next normal push.
+
+#### PR #18725 complete LuaRocks launcher-prefix repair
+
+Fresh hosted run `41073982951` reached exact head
+`6272463c7af6afc3a4dca27fa38cf32b3a23d50f`. Windows job `124133234570`
+passed the host-executed exit-7 probe and 152 other tests, but the real
+malformed-UTF-8 CLI regression returned exit 0 instead of 2. The passing probe
+proved that `cmd.exe` quoting and exit propagation were intact. The remaining
+defect was narrower: the child replayed only the Lua executable and discarded
+LuaRocks' negative-index `-e` loader prefix. It therefore could not load `lfs`,
+entered the shell discovery fallback, and found zero packages; the CLI
+intentionally treats that result as success.
+
+Repair `6b6e6e1ebd723b8eca0bbee16c878974ad05cf98` recovers the full contiguous
+launcher prefix, retains bare-Windows `lua` to `lua.exe` hardening, and quotes
+every prefix argument before the script and its arguments. The host probe now
+requires `lfs`, preserves redirected output, and must still return exit 7. The
+real regression retains its exact exit-2 and stderr checks. Focused validation
+passes 7/7, the canonical full Lua suite passes 153/153, every Lua source
+parses, and all 1,730 lesson shards validate.
+
+The same investigation registered separate pending owner
+`build-tool-lua-windows-discovery-fallback-null-device-hardening`: the
+production fallback uses POSIX `2>/dev/null` for Windows directory probes and
+can silently discard packages when `lfs` is unavailable. That bounded
+production hardening is not folded into this test-launch repair and must pass a
+fresh priority run before selection. The concurrent Forme macOS job
+`124133234549` was unrelated: its landing-performance median was 0.94 against a
+0.95 gate, and this PR changes no Forme path.
+
+Before the retry could publish, main advanced to
+`fe19aa25a0856f5b5cdaab80fc50610cd3ac4998` through path-disjoint Malayalam,
+TypeScript wasm-types, Rust X.509, and Mermaid C4 work. Normal merge
+`e7773fdffbd8cfc45933310641d82c38d1c8ccf8` preserves both histories and
+changes neither launcher repair path. Auto-merge remains disabled; exact-head
+validation, independent review, a normal non-force push, and a completely
+fresh terminal hosted matrix are still mandatory.
+
+Fresh run `41084365806` then proved the repaired launcher on exact reviewed
+head `ae085ee95c1d8f0a6d24f6075bc4e13fa5902b7b`: Windows build job
+`124163082997` completed successfully. The remaining matrix was still running
+when main advanced to `8ade9e7e201ac3f2c37230ec9afd493d167755bc`
+through the TypeScript wasm-leb128 node:test migration. Its wasm-leb128 package
+and shared wasm-types lockfile changes do not overlap the Lua/Go graph-diff
+implementation, launcher regression, lesson, or lifecycle paths. Normal merge
+`8b19b41b452d7cbc5c9ad80ca01a045f37f58b01` preserves both histories. The
+previous exact-head results cannot authorize merge after another lifecycle
+push, so validation, independent review, and a completely fresh terminal
+matrix remain mandatory; auto-merge stays disabled.
+
+While that current-main refresh was under independent review, main advanced
+again to `379a4e495c1f193fefbcbd99c8dfb477fd23157c` through the path-disjoint
+TypeScript wasm-opcodes node:test migration and Rust X.509 SHA-512 path-length
+work. Normal merge `9e40dd42efb8a1bd7f1ba40d677c3443b9f31ccd`
+preserves both histories and changes no Lua/Go graph-diff, launcher repair,
+lesson, or lifecycle path. Revalidation and exact-head review remain required
+before the normal non-force publication retry.
