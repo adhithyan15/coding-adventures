@@ -316,7 +316,7 @@ describe("Discovery", function()
                 goos = "windows",
                 popen = fake_popen(
                     'dir /b /ad "C:\\repo root\\code" 2>nul',
-                    {"zeta", "alpha", "missing"}
+                    {"zeta\r", "alpha", "missing"}
                 ),
                 execute = function(command)
                     probes[#probes + 1] = command
@@ -332,6 +332,33 @@ describe("Discovery", function()
                 'cd /d "C:\\repo root\\code/zeta" 2>nul',
                 'cd /d "C:\\repo root\\code/alpha" 2>nul',
                 'cd /d "C:\\repo root\\code/missing" 2>nul',
+            }, probes)
+        end)
+
+        it("preserves whitespace-bearing POSIX directory names without aliasing", function()
+            local probes = {}
+            local options = {
+                force_fallback = true,
+                goos = "linux",
+                popen = fake_popen(
+                    "ls -1 '/repo root/code' 2>/dev/null",
+                    {"name ", " name", "name"}
+                ),
+                execute = function(command)
+                    probes[#probes + 1] = command
+                    return true
+                end,
+            }
+
+            assert.are.same({
+                "/repo root/code/ name",
+                "/repo root/code/name",
+                "/repo root/code/name ",
+            }, Discovery.list_subdirs("/repo root/code", options))
+            assert.are.same({
+                "cd '/repo root/code/name ' 2>/dev/null",
+                "cd '/repo root/code/ name' 2>/dev/null",
+                "cd '/repo root/code/name' 2>/dev/null",
             }, probes)
         end)
 

@@ -282,7 +282,16 @@ function Discovery.list_subdirs(directory, options)
         local handle = popen(cmd)
         if handle then
             for raw_name in handle:lines() do
-                local name = raw_name:match("^%s*(.-)%s*$")
+                -- File names are data, not display text. Leading and trailing
+                -- spaces are legal names and must survive the shell fallback
+                -- byte-for-byte. A Windows directory name cannot contain a
+                -- carriage return, so remove only the CR that may remain from
+                -- dir.exe's CRLF record terminator when the pipe does not
+                -- translate text mode for us.
+                local name = raw_name
+                if goos == "windows" then
+                    name = name:gsub("\r$", "")
+                end
                 if name ~= "" then
                     local full_path = directory .. "/" .. name
                     if Discovery.dir_exists(full_path, {
