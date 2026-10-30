@@ -7,15 +7,15 @@ use x509_certificate_policy::{
     X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
     X509CertificateIssuerLinkErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
 };
+use x509_rsa_algorithm_policy::{
+    validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
+};
 use x509_rsa_pkcs1_v1_5_sha512_signature::X509RsaSha512SignatureErrorKind;
 use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha512_issuer_link::{
     verify_x509_rsa_sha512_issuer_link, verify_x509_rsa_sha512_issuer_link_with_policies,
     X509RsaSha512IssuerLinkErrorKind, X509RsaSha512IssuerLinkPolicy,
     X509RsaSha512IssuerPolicyLinkErrorKind,
-};
-use x509_rsa_algorithm_policy::{
-    validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
 };
 
 const RSA_ENCRYPTION_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
@@ -163,10 +163,7 @@ fn policy_link_retains_exact_role_algorithm_key_and_signature_evidence() {
 
     assert_eq!(calls.get(), 1);
     assert!(std::ptr::eq(verified.child(), &child));
-    assert!(std::ptr::eq(
-        verified.candidate_issuer(),
-        &candidate_issuer
-    ));
+    assert!(std::ptr::eq(verified.candidate_issuer(), &candidate_issuer));
     assert!(std::ptr::eq(
         verified.issuer_role_policy().certificate(),
         &candidate_issuer
