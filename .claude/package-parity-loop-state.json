@@ -16,15 +16,13 @@
       "external-approval"
     ]
   },
-  "active_pr": 18583,
-  "active_prs": [
-    18583
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-10-29T14:38:24Z",
+    "observed_at": "2026-10-30T12:39:58Z",
     "pr_number": 18583,
-    "head_revision": "46eef47d8c74786e5ebee9c2c87a7b74c6e4f163",
-    "action": "Published independently reviewed SHA-512 HF04 head 46eef47d8c74786e5ebee9c2c87a7b74c6e4f163 as draft PR #18583 over exact base e54161212491f94f0e141910dacf8f2913aa32b6. GitHub reports it mergeable. Keep the PR draft while this durable PR-number receipt is committed, pushed, and independently reviewed; require a fresh exact-head hosted matrix after the final lifecycle head is marked ready.",
+    "head_revision": "e8f67be3feefa221a24e5a77b3d4f276b68bb0d7",
+    "action": "PR #18583 completed 44 exact-head terminal acceptable checks and merged through guarded squash auto-merge after GitHub reported the reviewed head clean and mergeable. The squash merge receipt 20db234ceca6c3ee1e91c79dace52851c4c3feb8 is verified on origin/main; the parity publication slot is clear and the completed managed worktree is archived.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -27268,10 +27266,10 @@
     }
   ],
   "postmerge_refresh": {
-    "pr_number": 18566,
-    "revision": "9d0843dc86975a0442bcc86c9ccd765eed3c20a8",
+    "pr_number": 18583,
+    "revision": "20db234ceca6c3ee1e91c79dace52851c4c3feb8",
     "receipt_count": 1,
-    "evidence": "code/specs/package-parity-audits/20261029-swift-resp-postmerge-inventory.json",
+    "evidence": "code/specs/package-parity-roadmap.md#sha-512-hf04-merge-receipt-and-lua-graphdiff-reprioritization",
     "native_qualification": false,
     "successor_selected": true,
     "external_successor_observed": null
