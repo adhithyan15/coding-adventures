@@ -35,8 +35,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   repository-boundary consumers only for changed shared inputs rather than
   eagerly materializing the full input-by-package reverse product.
 - Charge exact first-seen glob declaration bytes against a 4 MiB ceiling even
-  with zero changed paths, and bound slash-prefix changed-path classification
-  to 50,000,000 work units after boundary digest and schema validation.
+  with zero changed paths, and bound slash-prefix changed-path and relevant
+  descendant-boundary package-root classification to 50,000,000 work units
+  after boundary digest and schema validation.
 - Preserve exact-root precedence over descendant exclusions while indexing
   large relevant boundary exclusion sets.
 

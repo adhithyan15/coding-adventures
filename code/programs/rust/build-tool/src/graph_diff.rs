@@ -194,7 +194,7 @@ fn try_evaluate_diff_selection(
     // Digest and schema diagnostics precede request-dependent resource
     // preflights, matching the neutral contract's stable error ordering.
     let boundary = select_boundary_changes(input, &packages)?;
-    preflight_root_classification(&input.changed_paths)?;
+    preflight_root_classification(input.changed_paths.iter().map(String::as_str))?;
     let indexed_paths = index_changed_paths(&packages, &input.changed_paths);
     preflight_match_work(&packages, &indexed_paths)?;
 
@@ -473,7 +473,9 @@ fn validate_diff_input<'a>(
 // Ancestor lookup below examines one prefix for every slash. Charge the byte
 // scan and each possible prefix before any classification work, so even a
 // maximum-cardinality slash-heavy request has one explicit operation ceiling.
-fn preflight_root_classification(paths: &[String]) -> Result<(), &'static str> {
+fn preflight_root_classification<'a>(
+    paths: impl IntoIterator<Item = &'a str>,
+) -> Result<(), &'static str> {
     let mut remaining = MAX_ROOT_CLASSIFICATION_WORK;
     for path in paths {
         let path_work = path.len() as u64;
@@ -639,6 +641,17 @@ fn select_boundary_changes(
                 .map(String::as_str)
                 .collect(),
         });
+    }
+
+    // Only relevant descendant rules inspect package-root ancestors. Charge
+    // every possible prefix after digest/schema validation and relevant-rule
+    // filtering, but before the first classification lookup.
+    if !descendant_roots.is_empty() {
+        preflight_root_classification(
+            packages
+                .iter()
+                .map(|package| package.spec.rel_path.as_str()),
+        )?;
     }
 
     for package in packages {
@@ -1447,6 +1460,88 @@ mod tests {
             panic!("an exact root must take precedence over descendant exclusion");
         };
         assert_eq!(result.changed_packages, ["fixture/exact"]);
+    }
+
+    fn root_classification_work(path: &str) -> u64 {
+        path.len() as u64
+            + path
+                .match_indices('/')
+                .map(|(slash, _)| (slash + 1) as u64)
+                .sum::<u64>()
+    }
+
+    #[test]
+    fn relevant_descendant_package_roots_enforce_exact_classification_cap() {
+        // 760 roots contribute 65,785 units each. The final root contributes
+        // 3,400, placing the complete relevant package-root set at exactly
+        // 50,000,000 without relying on a wall-clock assertion.
+        let mut packages = Vec::new();
+        let mut descendant_roots = Vec::new();
+        let mut total_work = 0u64;
+        for index in 0..761 {
+            let prefix = format!("p{index:04}");
+            let root = if index < 760 {
+                format!("{prefix}{}", "/a".repeat(253))
+            } else {
+                format!("{prefix}{}{}", "/a".repeat(54), "z".repeat(101))
+            };
+            total_work += root_classification_work(&root);
+            descendant_roots.push(prefix);
+            packages.push(package(
+                &format!("fixture/p-{index}"),
+                &root,
+                "package_prefix",
+                &[],
+            ));
+        }
+        assert_eq!(total_work, MAX_ROOT_CLASSIFICATION_WORK);
+
+        let boundaries = descendant_roots
+            .chunks(64)
+            .enumerate()
+            .map(|(rule, roots)| {
+                json!({
+                    "id": format!("rule-{rule}"),
+                    "input_origin": "repository",
+                    "applies_to": {
+                        "exact_roots": [],
+                        "descendant_roots": roots,
+                        "excluded_roots": []
+                    },
+                    "inputs": [{
+                        "path": "shared/relevant-input",
+                        "role": "cross_package_exact"
+                    }],
+                    "reason": "package root classification ceiling",
+                    "owner": "test-owner"
+                })
+            })
+            .collect::<Vec<_>>();
+        let boundary = json!({
+            "schema_version": 1,
+            "language_source_input_registry_sha256": "0".repeat(64),
+            "boundaries": boundaries
+        });
+        let mut input = base_diff_input(packages);
+        input.changed_paths = vec!["shared/relevant-input".to_owned()];
+        input.boundary_sha256 = digest_for_test(&boundary);
+        input.boundary = Some(boundary);
+
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("the exact relevant package-root classification ceiling must pass");
+        };
+        assert_eq!(result.changed_packages.len(), 761);
+
+        input
+            .packages
+            .last_mut()
+            .expect("test has a final tuning package")
+            .rel_path
+            .push('z');
+        assert_eq!(
+            evaluate_diff_selection(&input),
+            Evaluation::Failure("DIFF_MATCH_LIMIT_EXCEEDED")
+        );
     }
 
     fn slash_heavy_diff_input() -> DiffSelectionInput {

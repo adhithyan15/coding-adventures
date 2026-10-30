@@ -54,8 +54,10 @@ time and reused across that package's indexed candidate paths. Package roots
 use segment-ordered collision validation, changed paths use an allocation-free
 ancestor index with an explicit 50,000,000-unit prefix-work ceiling instead of
 a package-by-path cross product, and shared boundary rules expand only for
-changed input paths. This keeps zero-path and max-shape inert snapshots from
-materializing unused token trees or input-consumer products.
+changed input paths. Relevant descendant-boundary rules apply the same explicit
+ceiling to package-root prefix classification. This keeps zero-path and
+max-shape inert snapshots from materializing unused token trees or
+input-consumer products.
 
 ## Building
 
