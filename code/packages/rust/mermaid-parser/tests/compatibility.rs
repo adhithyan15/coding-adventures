@@ -2821,16 +2821,28 @@ fn pinned_c4_deployment_nodes_reach_semantic_ir() {
     let fixture = &syntax["fixtures"][0];
     assert_eq!(visual["fixtures"][0], fixture["name"]);
     let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
-    assert!(matches!(
-        &diagram.groups[0].metadata,
-        Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { technology, description })
-            if technology.as_deref() == Some("AWS") && description.as_deref() == Some("Production region")
-    ));
-    assert!(matches!(
-        &diagram.groups[1].metadata,
-        Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { technology, description })
-            if technology.as_deref() == Some("Linux") && description.as_deref() == Some("Gateway host")
-    ));
+    let expected = [
+        (diagram_ir::C4DeploymentNodeType::Node, "AWS", "Production region"),
+        (diagram_ir::C4DeploymentNodeType::Node, "macOS", "Developer host"),
+        (diagram_ir::C4DeploymentNodeType::Left, "Linux", "Gateway host"),
+        (diagram_ir::C4DeploymentNodeType::Right, "Windows", "Office host"),
+    ];
+    assert_eq!(diagram.groups.len(), expected.len());
+    for (group, (expected_type, expected_technology, expected_description)) in
+        diagram.groups.iter().zip(expected)
+    {
+        let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+            node_type,
+            technology,
+            description,
+        }) = &group.metadata
+        else {
+            panic!("expected C4 deployment node metadata");
+        };
+        assert_eq!(*node_type, expected_type);
+        assert_eq!(technology.as_deref(), Some(expected_technology));
+        assert_eq!(description.as_deref(), Some(expected_description));
+    }
 }
 
 #[test]

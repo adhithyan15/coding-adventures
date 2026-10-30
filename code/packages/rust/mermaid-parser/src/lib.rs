@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.156.0";
+pub const VERSION: &str = "0.157.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14389,6 +14389,11 @@ fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGrou
     match macro_name {
         "Deployment_Node" | "Node" | "Node_L" | "Node_R" => {
             Some(StructuralGroupMetadata::C4DeploymentNode {
+                node_type: match macro_name {
+                    "Node_L" => diagram_ir::C4DeploymentNodeType::Left,
+                    "Node_R" => diagram_ir::C4DeploymentNodeType::Right,
+                    _ => diagram_ir::C4DeploymentNodeType::Node,
+                },
                 technology: argument("$type", 2),
                 description: argument("$descr", 3),
             })
@@ -19997,7 +20002,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.156.0");
+        assert_eq!(crate::VERSION, "0.157.0");
     }
 
     #[test]

@@ -5224,6 +5224,17 @@ line "Target" [35, 50, 68, 82]"##,
         let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
         let layout = layout_structural_diagram(&diagram);
         assert!(layout.groups.iter().all(|group| group.style.stroke_dash.is_none()));
+        let expected_types = ["node", "node", "nodeL", "nodeR"];
+        for (group, expected_type) in layout.groups.iter().zip(expected_types) {
+            let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+                node_type,
+                ..
+            }) = &group.metadata
+            else {
+                panic!("expected C4 deployment node layout metadata");
+            };
+            assert_eq!(node_type.as_str(), expected_type);
+        }
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
@@ -5234,6 +5245,13 @@ line "Target" [35, 50, 68, 82]"##,
             title_font: font_spec("Helvetica", 16.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
+        let metadata = scene.metadata.as_ref().expect("C4 deployment scene metadata");
+        for (index, expected_type) in expected_types.iter().enumerate() {
+            assert_eq!(
+                metadata.get(&format!("c4.group.{index}.deploymentNodeType")),
+                Some(&expected_type.to_string())
+            );
+        }
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_c4_deployment_nodes_0_e2e.png").unwrap();
         assert!(pixels.width > 0 && pixels.height > 0);
