@@ -1,0 +1,9 @@
+style RowChildInput {
+  part focused-field {
+    padding : 2 ;
+  }
+
+  part focused-input {
+    padding : 8 ;
+  }
+}
