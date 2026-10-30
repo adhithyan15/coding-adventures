@@ -24,7 +24,7 @@
     "observed_at": "2026-10-30T16:10:11Z",
     "pr_number": 18725,
     "head_revision": "ae085ee95c1d8f0a6d24f6075bc4e13fa5902b7b",
-    "action": "Fresh hosted run 41084365806 reached independently reviewed head ae085ee95c1d8f0a6d24f6075bc4e13fa5902b7b and the repaired Windows build passed, closing the exact launcher-prefix failure. Other exact-head jobs were still running when main advanced path-disjointly to 8ade9e7e201ac3f2c37230ec9afd493d167755bc through the TypeScript wasm-leb128 node:test migration. Normal merge 8b19b41b452d7cbc5c9ad80ca01a045f37f58b01 preserves both histories. Revalidate and independently review the resulting exact lifecycle head before a normal non-force push; previous-head results are not reusable and auto-merge remains disabled.",
+    "action": "Fresh hosted run 41084365806 reached independently reviewed head ae085ee95c1d8f0a6d24f6075bc4e13fa5902b7b and the repaired Windows build passed, closing the exact launcher-prefix failure. While the first current-main refresh was under review, main advanced again path-disjointly to 379a4e495c1 through TypeScript wasm-opcodes node:test and Rust X.509 SHA-512 path-length work. Normal merge 9e40dd42efb preserves both histories. Revalidate and independently review the resulting exact lifecycle head before a normal non-force push; previous-head results are not reusable and auto-merge remains disabled.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2740,6 +2740,9 @@
       "fifth_retry_main_revision": "8ade9e7e201ac3f2c37230ec9afd493d167755bc",
       "fifth_retry_main_merge_revision": "8b19b41b452d7cbc5c9ad80ca01a045f37f58b01",
       "fifth_retry_main_notes": "Main advanced through the TypeScript wasm-leb128 node:test migration after the repaired Windows job passed. Its wasm-leb128 package and shared wasm-types lockfile changes do not overlap Lua/Go graph-diff, the Windows launcher regression, lesson, or lifecycle paths. A normal merge preserves both histories; exact-head validation and independent review remain required before the next non-force push.",
+      "sixth_retry_main_revision": "379a4e495c1f193fefbcbd99c8dfb477fd23157c",
+      "sixth_retry_main_merge_revision": "9e40dd42efb8a1bd7f1ba40d677c3443b9f31ccd",
+      "sixth_retry_main_notes": "While the fifth current-main refresh was under independent review, main advanced through the path-disjoint TypeScript wasm-opcodes node:test migration and Rust X.509 SHA-512 path-length work. A normal merge preserves both histories and changes no Lua/Go graph-diff, launcher repair, lesson, or lifecycle path. Exact-head validation and review remain mandatory before publication.",
       "selection_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
       "selection_notes": "Selected as the highest-leverage package-path-independent implementation while Ruby dependency-hashing PR #18555 occupied the publication slot. It tied Ruby and Rust graph/diff at three direct and five total unfinished descendants; Lua had no package-path collision and could advance locally. After SHA-512 PR #18583 merged and freed the parity publication slot, a fresh priority pass kept this independently reviewed, implementation-complete item ahead of the prepared Rust graph/diff item because it is already current-main reconciled and includes its required Go fixture routing.",
       "implementation_revision": "5bcc662b1f79b315837982a8828d36afada3a154",

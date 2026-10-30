@@ -20172,3 +20172,11 @@ implementation, launcher regression, lesson, or lifecycle paths. Normal merge
 previous exact-head results cannot authorize merge after another lifecycle
 push, so validation, independent review, and a completely fresh terminal
 matrix remain mandatory; auto-merge stays disabled.
+
+While that current-main refresh was under independent review, main advanced
+again to `379a4e495c1f193fefbcbd99c8dfb477fd23157c` through the path-disjoint
+TypeScript wasm-opcodes node:test migration and Rust X.509 SHA-512 path-length
+work. Normal merge `9e40dd42efb8a1bd7f1ba40d677c3443b9f31ccd`
+preserves both histories and changes no Lua/Go graph-diff, launcher repair,
+lesson, or lifecycle path. Revalidation and exact-head review remain required
+before the normal non-force publication retry.
