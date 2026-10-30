@@ -146,8 +146,12 @@ model-card parameter, or a UI artifact is not a completion signal.
      shared corpus covers both a four-run two-card sweep and a selector-driven
      two-parameter table. Interpolation, file/string tables, logarithmic
      stepping, and general expression evaluation remain explicitly partial.
-     Reprioritized next: ngspice `.control` parameter loops; then
-     temperature/corner/Monte Carlo sweep semantics; then the remaining
+     ngspice `.control` numeric `foreach` loops now normalize one top-level
+     `.param` `alterparam` target into source-ordered runs after `reset` and
+     `run`, with the shared corpus preserving each `stepValues` map. `while`,
+     direct element `alter`, nested loops, and expressions remain explicit
+     gaps. Reprioritized next: temperature/corner/Monte Carlo sweep semantics;
+     then the remaining
      LTspice expression/table forms. These remain separate compatibility rows
      because ngspice's manual treats repeated parameter runs as
      control-language work, while LTspice gives `.step` a deck-level contract.

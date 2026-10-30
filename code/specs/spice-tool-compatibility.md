@@ -60,9 +60,14 @@ separate product decision before it can be described as supported.
    compatibility work, as do temperature/corner sweeps and ngspice `.control`
    loops. A passing parameter-table deck must not be mistaken for full LTspice
    expression compatibility.
-3. Complete ngspice control-loop semantics, then temperature, corner, and
-   Monte Carlo contracts, before broadening the LTspice table/expression row.
-4. Add execution and numerical parity cases across all three ports for each
+3. The bounded ngspice `.control` parameter-run form accepts numeric `foreach`
+   lists that feed one top-level `.param` through `alterparam`, `reset`, and the
+   existing `run` command. It emits the same source-ordered `stepValues` maps as
+   deck-owned parameter stepping. `while`, element `alter`, nested loops,
+   expressions, scripting, and interactive commands remain unsupported.
+4. Complete temperature, corner, and Monte Carlo contracts before broadening the
+   LTspice table/expression row.
+5. Add execution and numerical parity cases across all three ports for each
    feature moved to `supported`.
 5. Add CLI, interactive, model-library, and UI workflow parity after the
    underlying parser and engine contracts are green.

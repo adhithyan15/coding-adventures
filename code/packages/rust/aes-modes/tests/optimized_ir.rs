@@ -97,12 +97,16 @@ fn optimized_ghash_is_fixed_memory_masked_and_scrubbed() {
             .any(|line| line.trim_start().starts_with("switch ")),
         "multiplication must not introduce secret-derived switch control flow:\n{multiply}"
     );
-    assert_eq!(alloca_names(multiply, 16, 16), ["%v", "%z"]);
-    assert_eq!(zeroize_calls(multiply, "%v", 16), 1);
-    assert_eq!(zeroize_calls(multiply, "%z", 16), 2);
-    assert_output_precedes_wipes(multiply, &["%v", "%z"]);
+    assert_eq!(alloca_names(multiply, 16), ["%v", "%z"]);
+    // Unwind lowering can duplicate cleanup calls. Require the established
+    // wipes without rejecting an additional cleanup wipe on another target.
+    assert!(zeroize_calls(multiply, "%v", 16) >= 1);
+    assert!(zeroize_calls(multiply, "%z", 16) >= 2);
+    assert_eq!(alloca_names(multiply, 1), ["%bit_mask"]);
+    assert!(zeroize_calls(multiply, "%bit_mask", 1) >= 1);
+    assert_output_precedes_wipes(multiply, &["%v", "%z", "%bit_mask"]);
 
-    assert_eq!(alloca_names(ghash, 16, 16), ["%block", "%accumulator"]);
+    assert_eq!(alloca_names(ghash, 16), ["%accumulator", "%block"]);
     assert!(
         ghash.contains(MULTIPLY_SYMBOL),
         "complete GHASH must use the audited multiplication boundary:\n{ghash}"
@@ -185,12 +189,19 @@ fn assert_output_precedes_wipes(function: &str, owners: &[&str]) {
     }
 }
 
-fn alloca_names(function: &str, size: usize, alignment: usize) -> Vec<&str> {
-    let suffix = format!(" = alloca [{size} x i8], align {alignment}");
-    function
+fn alloca_names(function: &str, size: usize) -> Vec<&str> {
+    // Alignment and declaration order vary by target. The bounded byte size
+    // and identities of the copied-secret owners are the security invariant.
+    let prefix = format!("[{size} x i8], align ");
+    let mut names: Vec<_> = function
         .lines()
-        .filter_map(|line| line.trim().strip_suffix(&suffix))
-        .collect()
+        .filter_map(|line| {
+            let (name, allocation) = line.trim().split_once(" = alloca ")?;
+            allocation.starts_with(&prefix).then_some(name)
+        })
+        .collect();
+    names.sort_unstable();
+    names
 }
 
 fn zeroize_calls(function: &str, owner: &str, size: usize) -> usize {

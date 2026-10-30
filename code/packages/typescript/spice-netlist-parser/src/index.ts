@@ -722,7 +722,72 @@ function parameterControls(text: string): {
       throw lineError(card.lineNumber, error);
     }
   }
+  stepCards.push(...controlParameterStepCards(text, parameters));
   return { parameters, stepCards, tableParameters };
+}
+
+function controlParameterStepCards(
+  text: string,
+  parameters: ReadonlyMap<string, number>,
+): StepCard[] {
+  const cards: StepCard[] = [];
+  let block: string[] = [];
+  let inControl = false;
+  for (const rawLine of text.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!inControl) {
+      if (line.toLowerCase() === ".control") {
+        inControl = true;
+        block = [];
+      }
+      continue;
+    }
+    if (line.toLowerCase() === ".endc") {
+      cards.push(...controlParameterStepCardsInBlock(block, parameters));
+      inControl = false;
+    } else {
+      block.push(line);
+    }
+  }
+  return cards;
+}
+
+function controlParameterStepCardsInBlock(
+  block: readonly string[],
+  parameters: ReadonlyMap<string, number>,
+): StepCard[] {
+  const cards: StepCard[] = [];
+  for (let index = 0; index < block.length; index++) {
+    const fields = splitFields(block[index]!);
+    if (fields.length < 3 || fields[0]!.replace(/^\./, "").toLowerCase() !== "foreach") {
+      continue;
+    }
+    const tail = block.slice(index + 1);
+    const assignmentIndex = tail.findIndex((line) => /^\.?alterparam\s/i.test(line));
+    if (assignmentIndex === -1) {
+      throw new NetlistParseError(".control foreach parameter runs require alterparam followed by reset and run");
+    }
+    const resetOffset = tail.slice(assignmentIndex + 1).findIndex((line) => line.replace(/^\./, "").toLowerCase() === "reset");
+    const resetIndex = resetOffset === -1 ? -1 : assignmentIndex + resetOffset + 1;
+    if (resetIndex === -1 || !tail.slice(resetIndex + 1).some((line) => line.replace(/^\./, "").toLowerCase() === "run")) {
+      throw new NetlistParseError(".control foreach parameter runs require alterparam followed by reset and run");
+    }
+    const assignment = tail[assignmentIndex]!;
+    const expression = assignment.replace(/^\.?alterparam\s+/i, "");
+    const [name, value] = expression.split("=", 2).map((part) => part.trim());
+    if (name === undefined || value === undefined) {
+      throw new NetlistParseError(".control alterparam requires NAME=$foreach_variable");
+    }
+    if (value.replace(/^\$/, "") !== fields[1]!) {
+      throw new NetlistParseError(".control alterparam must use its enclosing foreach variable");
+    }
+    const parameter = parameterName(name);
+    if (!parameters.has(parameter)) {
+      throw new NetlistParseError(`.control alterparam target ${JSON.stringify(parameter)} is not a top-level .param`);
+    }
+    cards.push({ parameter, values: fields.slice(2).map(parseValue) });
+  }
+  return cards;
 }
 
 function parseParameterCard(

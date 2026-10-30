@@ -53,6 +53,12 @@ fixed 128-round schedule and mask secret-derived decisions, and wipe the
 working multiplier, product, accumulator, and padded block on return. GHASH
 input lengths are validated before output changes.
 
+The input-bit mask also has wipe-on-drop ownership. A best-effort compiler
+barrier hides its zero/all-ones range so the tested optimizer does not skip
+the XOR work based on a secret bit. Rust's `black_box` offers no cryptographic
+guarantee: the strict optimized-IR gate remains required for each compiler and
+target, and passing it is evidence only for the generated code inspected.
+
 This is deliberately not a production AES-GCM or TLS implementation. The
 legacy GCM API remains an educational compatibility surface, and the current
 AES implementation has not been hardened or composed with this primitive into

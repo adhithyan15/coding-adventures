@@ -300,14 +300,22 @@ impl std::error::Error for GhashError {}
 pub fn ghash_multiply_fixed(x: &[u8; 16], h: &[u8; 16], output: &mut [u8; 16]) {
     let mut z = Zeroizing::new([0u8; 16]);
     let mut v = Zeroizing::new(*h);
+    let mut bit_mask = Zeroizing::new([0u8; 1]);
 
     for i in 0..128 {
         let byte_idx = i / 8;
         let bit_idx = 7 - (i % 8);
         let bit = (x[byte_idx] >> bit_idx) & 1;
-        let bit_mask = 0u8.wrapping_sub(bit);
+        bit_mask[0] = 0u8.wrapping_sub(bit);
+        // LLVM can turn a known 0/255 mask into a branch that skips every XOR
+        // when the input bit is zero. Hide that range through the owned byte's
+        // address, retaining wipe-on-drop ownership of the opaque storage.
+        // This is a best-effort optimizer barrier, not a constant-time promise:
+        // the optimized-IR gate must still reject secret-dependent branches on
+        // every compiler/target used for validation.
+        core::hint::black_box(&mut bit_mask[0]);
         for j in 0..16 {
-            z[j] ^= v[j] & bit_mask;
+            z[j] ^= v[j] & bit_mask[0];
         }
 
         let carry = v[15] & 1;

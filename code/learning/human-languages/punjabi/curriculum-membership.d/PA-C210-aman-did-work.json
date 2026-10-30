@@ -1,0 +1,11 @@
+{
+  "id": "PA-C210-aman-did-work",
+  "pathSegment": "PA-PATH-210-A2-NE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-210-A2-NE",
+      "order": 3
+    }
+  ]
+}
