@@ -4214,10 +4214,13 @@ jobs:
 
       # GHC 9.4's bundled linker cannot parse the arm64e.x1 targets added to
       # the moving Command Line Tools macOS 27 SDK. Select an installed,
-      # reviewed Xcode SDK before Haskell setup so cabal never inherits the
-      # incompatible CLT path from the runner image. The macOS 26 arm64 image
-      # publishes Xcode 26.0.1 with exactly the macOS 26.0 SDK.
+      # reviewed Xcode SDK for the build-tool steps that compile Haskell so
+      # cabal never inherits the incompatible CLT path from the runner image.
+      # Keep the selection step-local: later Xcode jobs must retain the runner's
+      # default developer directory and its installed iOS platform. The macOS
+      # 26 arm64 image publishes Xcode 26.0.1 with exactly the macOS 26.0 SDK.
       - name: Select reviewed macOS SDK for Haskell
+        id: haskell_macos_sdk
         if: needs.detect.outputs.needs_haskell == 'true' && runner.os == 'macOS'
         shell: bash
         run: |
@@ -4227,9 +4230,9 @@ jobs:
           sdk_root="$(DEVELOPER_DIR="$developer_dir" xcrun --sdk macosx --show-sdk-path)"
           test "$(basename "$sdk_root")" = MacOSX26.0.sdk
           {
-            echo "DEVELOPER_DIR=$developer_dir"
-            echo "SDKROOT=$sdk_root"
-          } >> "$GITHUB_ENV"
+            echo "developer_dir=$developer_dir"
+            echo "sdk_root=$sdk_root"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Set up Haskell
         if: needs.detect.outputs.needs_haskell == 'true'
@@ -5587,6 +5590,10 @@ jobs:
         timeout-minutes: 300
         shell: bash
         run: |
+          if [ "$RUNNER_OS" = "macOS" ] && [ "${{ needs.detect.outputs.needs_haskell }}" = "true" ]; then
+            export DEVELOPER_DIR="${{ steps.haskell_macos_sdk.outputs.developer_dir }}"
+            export SDKROOT="${{ steps.haskell_macos_sdk.outputs.sdk_root }}"
+          fi
           if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
@@ -5625,6 +5632,10 @@ jobs:
         timeout-minutes: 150
         shell: bash
         run: |
+          if [ "$RUNNER_OS" = "macOS" ] && [ "${{ needs.detect.outputs.needs_haskell }}" = "true" ]; then
+            export DEVELOPER_DIR="${{ steps.haskell_macos_sdk.outputs.developer_dir }}"
+            export SDKROOT="${{ steps.haskell_macos_sdk.outputs.sdk_root }}"
+          fi
           if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
