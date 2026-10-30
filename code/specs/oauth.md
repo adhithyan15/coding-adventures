@@ -938,6 +938,21 @@ credential access, signing, storage, clock acquisition, audit event, trace
 emission, or external effect. It does not validate issuer time, path length,
 name constraints, a complete path, trust, revocation, TLS, HTTP, OAuth
 transport, or network authority; concrete HTTPS remains unavailable.
+A bounded complete-intermediate-policy follow-up now consumes that exact
+policy-bound RSA SHA-384 issuer link together with complete validated
+intermediate policy. It fails closed unless the candidate issuer that verified
+the child signature and the certificate retained by the complete intermediate
+policy are the same exact decoded object; byte-equal independent decodes are
+deliberately insufficient. Success returns distinct non-copyable evidence
+retaining both complete inputs, including the intermediate's certificate-wide
+critical-extension and issuing-CA role policy, data-driven algorithm policy,
+self-issued classification, and explicit-time validity result. This pure
+public-data binding performs no new parsing or cryptography, does not advance
+path-length state or evaluate decoded NameConstraints, authenticate the
+intermediate's issuer, construct or validate a complete path, grant trust,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or cause an
+external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-rsa-sha384-reviewed-anchor-link` composition now consumes one
 exact policy-bound RSA SHA-384 issuer-link proof and one exact reviewed
 Mozilla-root selection. It accepts them only when both non-copyable values
