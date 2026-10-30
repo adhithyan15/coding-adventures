@@ -616,6 +616,121 @@ local-pkg = { path = "../local", git = "https://example.invalid/local" }
             self.assertEqual(inventory, {"requests": ["nested/pyproject.toml"]})
 
 
+class RubyManifestTests(unittest.TestCase):
+    def test_collects_gemfile_and_gemspec_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app"
+            local = root / "local"
+            app.mkdir()
+            local.mkdir()
+            gemfile = app / "Gemfile"
+            app_spec = app / "app.gemspec"
+            local_spec = local / "local.gemspec"
+            gemfile.write_text(
+                'gem "local-gem", path: "../local"\ngem "standard", require: false\n',
+                encoding="utf-8",
+            )
+            app_spec.write_text(
+                "Gem::Specification.new do |spec|\n"
+                '  spec.name = "app"\n'
+                '  spec.add_dependency "local-gem"\n'
+                '  spec.add_development_dependency "minitest", "~> 5"\n'
+                "end\n",
+                encoding="utf-8",
+            )
+            local_spec.write_text(
+                "Gem::Specification.new do |spec|\n"
+                '  spec.name = "local-gem"\n'
+                '  spec.add_runtime_dependency "json"\n'
+                "end\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                policy.build_ruby_inventory(root, [gemfile, app_spec, local_spec]),
+                {
+                    "json": ["local/local.gemspec"],
+                    "minitest": ["app/app.gemspec"],
+                    "standard": ["app/Gemfile"],
+                },
+            )
+
+    def test_untracked_outside_and_name_mismatched_paths_are_not_trusted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app"
+            local = root / "local"
+            app.mkdir()
+            local.mkdir()
+            gemfile = app / "Gemfile"
+            local_spec = local / "local.gemspec"
+            gemfile.write_text(
+                'gem "untracked", path: "../untracked"\n'
+                'gem "outside", path: "../../../outside"\n'
+                'gem "wrong-name", path: "../local"\n',
+                encoding="utf-8",
+            )
+            local_spec.write_text('spec.name = "local-gem"\n', encoding="utf-8")
+
+            self.assertEqual(
+                policy.build_ruby_inventory(root, [gemfile, local_spec]),
+                {
+                    "outside": ["app/Gemfile"],
+                    "untracked": ["app/Gemfile"],
+                    "wrong-name": ["app/Gemfile"],
+                },
+            )
+
+    def test_rejects_dynamic_dependency_declarations(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            gemfile = root / "Gemfile"
+            gemfile.write_text("gem dependency_name\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                policy.PolicyError, "unsupported Ruby dependency declaration"
+            ):
+                policy.build_ruby_inventory(root, [gemfile])
+
+    def test_rejects_dynamic_path_options(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            gemfile = root / "Gemfile"
+            gemfile.write_text('gem "local", path: local_path\n', encoding="utf-8")
+
+            with self.assertRaisesRegex(policy.PolicyError, "unsupported gem path"):
+                policy.build_ruby_inventory(root, [gemfile])
+
+    def test_sparse_inventory_discovers_absent_ruby_manifests(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            gemfile = root / "nested" / "Gemfile"
+            gemspec = root / "nested" / "nested.gemspec"
+            gemfile.parent.mkdir()
+            gemfile.write_text('gem "rake"\n', encoding="utf-8")
+            gemspec.write_text(
+                'spec.name = "nested"\nspec.add_dependency "json"\n',
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            gemfile.unlink()
+            gemspec.unlink()
+
+            manifests = policy.git_ruby_manifests(root)
+            inventory = policy.build_ruby_inventory(root, manifests)
+
+            self.assertEqual(manifests, [gemfile, gemspec])
+            self.assertEqual(
+                inventory,
+                {
+                    "json": ["nested/nested.gemspec"],
+                    "rake": ["nested/Gemfile"],
+                },
+            )
+
+
 class DependencyPolicyTests(unittest.TestCase):
     def test_inventory_records_each_declaring_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -494,7 +494,10 @@ reviewable:
 - [x] Python tool installs in workflows, build definitions and package scripts
   are checked against an exact current package-name set; unnamed remote and
   requirements-file acquisition is rejected.
-- [ ] Ruby Gemfiles and gemspecs.
+- [x] Ruby Gemfiles and gemspecs: declarations are parsed without executing
+  Ruby; only literal paths to tracked gemspecs with the same declared name are
+  local, and all remaining gem names are checked against the exact current
+  eight-name set.
 - [ ] Go modules and tool installs.
 - [ ] Elixir Mix manifests and tool installs.
 

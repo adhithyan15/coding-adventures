@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "ecosystem": "ruby",
+  "allowed_dependency_names": [
+    "base64",
+    "irb",
+    "json",
+    "minitest",
+    "rake",
+    "rspec",
+    "simplecov",
+    "standard"
+  ]
+}

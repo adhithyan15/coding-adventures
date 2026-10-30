@@ -697,6 +697,10 @@ jobs:
           # Ad-hoc pip, pipx and uv tool acquisition in automation and package
           # scripts has a separate exact monotone package-name set.
           python3 code/scripts/third_party_dependency_policy.py check --ecosystem python-tools --base-ref origin/main
+          # Ruby Gemfiles and gemspecs are parsed as data, never executed. Only
+          # literal path edges whose target gemspec declares the same name are
+          # local; every remaining gem name belongs to the monotone inventory.
+          python3 code/scripts/third_party_dependency_policy.py check --ecosystem ruby --base-ref origin/main
           python3 -m unittest discover -s code/scripts/tests -p 'test_third_party_dependency_policy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_neural_framework_windows_ci.py'
