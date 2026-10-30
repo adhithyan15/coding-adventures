@@ -2437,6 +2437,25 @@ revocation, I/O, HTTP, OAuth transport, or network effect. Unsupported RFC 8446
 CCM suites fail closed until separately reviewed repository-owned primitives
 and limits are added. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-signature-scheme-policy` prerequisite now binds the
+three RFC 8446 RSASSA-PSS RSAE wire identifiers to their exact message hash,
+MGF1 hash, digest-sized salt length, and required `rsaEncryption` public-key
+form. A caller supplies an ordered non-empty, duplicate-free allowlist;
+selection accepts only an exact known wire identifier already authorized by
+that policy. EdDSA is deliberately absent while the repository implementation
+retains secret-dependent scalar branches and key-derived temporaries. ECDSA
+and RSASSA-PSS-key-OID schemes remain absent until their separate
+repository-owned key and verification boundaries exist.
+
+This registry is routing metadata only. Possessing a selected value does not
+prove that its hash, MGF1, RSA-PSS encoded-message validation, RSA operation,
+key parser, or certificate/handshake composition exists or is production-ready.
+The package does not encode or parse a `signature_algorithms` extension,
+advertise a scheme, validate a public key, verify a signature, process a
+certificate or transcript, establish trust, enforce revocation, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. Concrete
+HTTPS remains unavailable.
+
 An allocation-free `tls13-certificate-verify-input` prerequisite now owns only
 the exact RFC 8446 section 4.4.3 content hashed and signed for a TLS 1.3
 `CertificateVerify` message. A caller selects the server or client role and

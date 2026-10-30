@@ -1413,6 +1413,7 @@ members = [
   "tls13-record-nonce",
   "tls13-record-protection-state",
   "tls13-cipher-suite-policy",
+  "tls13-signature-scheme-policy",
   "tls13-certificate-verify-input",
   "tls13-hkdf-label",
   "tls13-supported-versions",
