@@ -50,6 +50,8 @@ pub enum DnsNameSyntaxError {
 /// Stable payload-free DNS constraint evaluation failures.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DnsConstraintErrorKind {
+    TooManyPermittedSubtrees,
+    TooManyExcludedSubtrees,
     TooManyPresentedDnsNames,
     UnevaluatedIpSubtrees,
     InvalidPermittedSubtree(DnsNameSyntaxError),
@@ -289,8 +291,45 @@ pub fn evaluate_dns_names(
         ));
     }
 
+    evaluate_dns_name_subtrees(
+        constraints.permitted_dns_subtrees(),
+        constraints.excluded_dns_subtrees(),
+        presented_dns_names,
+    )
+}
+
+/// Evaluate one explicit DNS component of NameConstraints policy.
+///
+/// This entry point enables a caller to compose DNS evaluation with a separate
+/// IP-subtree evaluator. It proves only the supplied DNS component. Callers
+/// must not treat success as evidence that any IP or other name form was
+/// evaluated.
+pub fn evaluate_dns_name_subtrees(
+    permitted_dns_subtrees: &[&str],
+    excluded_dns_subtrees: &[&str],
+    presented_dns_names: &[&str],
+) -> Result<ConstrainedDnsNames, DnsConstraintError> {
+    if permitted_dns_subtrees.len() > MAX_DNS_SUBTREES {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::TooManyPermittedSubtrees,
+            MAX_DNS_SUBTREES,
+        ));
+    }
+    if excluded_dns_subtrees.len() > MAX_DNS_SUBTREES {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::TooManyExcludedSubtrees,
+            MAX_DNS_SUBTREES,
+        ));
+    }
+    if presented_dns_names.len() > MAX_PRESENTED_DNS_NAMES {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::TooManyPresentedDnsNames,
+            MAX_PRESENTED_DNS_NAMES,
+        ));
+    }
+
     let mut validated_permitted = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
-    for (index, subtree) in constraints.permitted_dns_subtrees().iter().enumerate() {
+    for (index, subtree) in permitted_dns_subtrees.iter().enumerate() {
         validated_permitted[index] = validate_constraint(subtree).map_err(|reason| {
             DnsConstraintError::new(
                 DnsConstraintErrorKind::InvalidPermittedSubtree(reason),
@@ -299,7 +338,7 @@ pub fn evaluate_dns_names(
         })?;
     }
     let mut validated_excluded = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
-    for (index, subtree) in constraints.excluded_dns_subtrees().iter().enumerate() {
+    for (index, subtree) in excluded_dns_subtrees.iter().enumerate() {
         validated_excluded[index] = validate_constraint(subtree).map_err(|reason| {
             DnsConstraintError::new(
                 DnsConstraintErrorKind::InvalidExcludedSubtree(reason),
@@ -316,7 +355,7 @@ pub fn evaluate_dns_names(
             )
         })?;
 
-        let excluded = validated_excluded[..constraints.excluded_len()]
+        let excluded = validated_excluded[..excluded_dns_subtrees.len()]
             .iter()
             .any(|constraint| overlaps_excluded_subtree(name, *constraint));
         if excluded {
@@ -326,8 +365,8 @@ pub fn evaluate_dns_names(
             ));
         }
 
-        let permitted = constraints.permitted_len() == 0
-            || validated_permitted[..constraints.permitted_len()]
+        let permitted = permitted_dns_subtrees.is_empty()
+            || validated_permitted[..permitted_dns_subtrees.len()]
                 .iter()
                 .any(|constraint| within_subtree(name, *constraint));
         if !permitted {

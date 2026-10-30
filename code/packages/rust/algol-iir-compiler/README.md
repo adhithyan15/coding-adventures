@@ -337,6 +337,16 @@ Canonical standard-function identities may connect those normalizers too:
 `sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and `ln(1)`. Non-identity inputs,
 user overrides, other calls, and overflowing checked arithmetic remain
 conservative.
+Exact nonnegative perfect squares may pass through `sqrt` in the same chain,
+including radicands beyond binary64's exact integer range. Negative and
+non-square radicands, user overrides, and dynamic operands remain conservative.
+An enclosing built-in `entier` may also reduce a non-square nonnegative exact
+integer `sqrt` to its mathematical floor root before widening. Negative
+radicands, shadowed built-ins, and dynamic operands remain conservative.
+A unary minus around that `sqrt` preserves the exact mathematical floor too,
+using the negated ceiling root for non-squares. Repeated unary signs are
+checked without widening; negative radicands and dynamic roots still fail
+closed.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
