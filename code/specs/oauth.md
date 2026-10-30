@@ -2749,6 +2749,26 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-encrypted-extensions-message` prerequisite now owns
+the exact RFC 8446 section 4.3.1 `EncryptedExtensions` handshake body. It
+delegates the complete two-byte-length-prefixed extension vector to the
+repository-owned `tls13-extension-block` decoder under the caller's explicit
+payload-byte and extension-count limits, permits the protocol-defined empty
+vector, and retains both the exact borrowed body and its structurally decoded
+extension block in one non-copyable value. Malformed lengths, truncated data,
+duplicate types, and resource-limit failures remain the existing payload-free
+extension-block categories.
+
+This message-body layer embeds no extension registry and does not decide which
+extensions are legal in `EncryptedExtensions`, bind responses to a
+`ClientHello` offer, decode extension data, sequence handshake messages, emit
+alerts, update a transcript, invoke cryptography, validate certificates,
+establish trust, check revocation, protect records, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. The reviewed extension-
+context policy, handshake state, certificate validation, TLS-record, and HTTP
+composition remain separate prerequisites, and concrete HTTPS remains
+unavailable.
+
 An allocation-free `tls13-no-psk-server-flight` policy now sequences the
 already decoded server authentication flight after `ServerHello` for the
 repository's no-PSK TLS 1.3 client path. It requires
