@@ -869,6 +869,18 @@ credential access, signing, storage, clock acquisition, audit event, trace
 emission, or external effect. It does not validate issuer time, path length,
 name constraints, a complete path, trust, revocation, TLS, HTTP, OAuth
 transport, or network authority; concrete HTTPS remains unavailable.
+A bounded `x509-rsa-sha384-reviewed-anchor-link` composition now consumes one
+exact policy-bound RSA SHA-384 issuer-link proof and one exact reviewed
+Mozilla-root selection. It accepts them only when both non-copyable values
+retain the identical decoded issuer certificate object; byte-equal independent
+decodes fail closed. Success retains the complete certificate-wide critical-
+extension/issuing-CA role evidence, data-driven RSA algorithm/key evidence,
+fixed SHA-384 signature proof, and reviewed subject-plus-SPKI membership.
+This is an exact evidence join only. It does not apply anchor name constraints,
+construct or validate a path, check target identity, validity, purpose, path
+length, or revocation, perform TLS or HTTP, emit audit or trace events, access
+credentials, or authorize OAuth transport or network effects. Concrete HTTPS
+and live-provider readiness remain unavailable.
 A bounded sibling `x509-rsa-sha512-issuer-link` composition now authenticates
 one directed child-to-candidate-issuer link for the exact RSA PKCS #1 v1.5
 SHA-512 certificate algorithm. Caller-owned Name policy is invoked exactly once
