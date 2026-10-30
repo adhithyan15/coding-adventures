@@ -3663,7 +3663,15 @@ impl Compiler {
         if self.proc_sigs.contains_key(&target_name)
             || !matches!(
                 target_name.as_str(),
-                "abs" | "sign" | "entier" | "sin" | "cos" | "arctan" | "ln" | "exp"
+                "abs"
+                    | "sign"
+                    | "entier"
+                    | "sqrt"
+                    | "sin"
+                    | "cos"
+                    | "arctan"
+                    | "ln"
+                    | "exp"
             )
         {
             return None;
@@ -3677,6 +3685,11 @@ impl Compiler {
             "abs" => value.checked_abs(),
             "sign" => Some(value.signum()),
             "entier" => Some(value),
+            "sqrt" if value >= 0 => {
+                let value = value as u64;
+                let root = value.isqrt();
+                (root * root == value).then_some(root as i64)
+            }
             "sin" | "arctan" if value == 0 => Some(0),
             "cos" | "exp" if value == 0 => Some(1),
             "ln" if value == 1 => Some(0),
@@ -17123,6 +17136,31 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "nonidentity, overridden, and procedure-calling identity normalizers must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_perfect_square_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372030926249001)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(81)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "exact perfect-square roots may compose between wide static integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure sqrt(x); value x; real x; sqrt := 3; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(81)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 81; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(-1)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "non-square, overridden, procedure-calling, and negative roots must fail closed",
             );
         }
     }
