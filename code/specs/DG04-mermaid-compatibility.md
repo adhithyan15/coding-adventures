@@ -184,12 +184,31 @@ receive pinned Mermaid sequence numbers during layout, and legacy `RelIndex`
 arguments lower to the same relationship semantics without treating the authored
 index as an endpoint. Database and queue element macros preserve typed node
 kinds through structural layout and lower to backend-neutral cylinder and queue
-paths, with pinned Metal-to-PNG coverage. Core `UpdateRelStyle` text and line
+paths, with pinned Metal-to-PNG coverage. Deployment node macro identities,
+technology, and description survive typed group metadata and structural layout.
+Normal, left, and right node variants lower to PaintScene metadata, while
+deployment containers retain Mermaid's shared solid border geometry and portable
+detail text. C4
+boundary macros preserve their fixed or authored type labels through the same
+pipeline, while macro names remain implementation syntax rather than visible
+diagram text. C4 element macros likewise preserve Mermaid's normalized person,
+system, container, and component type identities, including external, database,
+and queue variants, through typed metadata, layout, and portable type labels.
+Person and external-person elements also reserve dedicated header geometry and
+lower to backend-neutral head-and-body instructions rather than a backend icon.
+Core `UpdateRelStyle` text and line
 colors plus keyed or positional label offsets likewise survive semantic IR,
 layout, and backend-neutral PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
 semantic IR; shape row limits control structural layout while both values lower
-to backend-neutral PaintScene metadata. C4 remains partial while its remaining
-macro semantics and visual corpus are incomplete.
+to backend-neutral PaintScene metadata. C4 directional relationship macros,
+including their short and long spellings, preserve typed direction hints through
+semantic and layout IR into PaintScene metadata while retaining the pinned
+renderer's ordinary portable relationship geometry. Keyed and positional custom
+tags on elements, boundaries, deployment nodes, and relationships likewise survive
+typed semantic metadata and structural layout into PaintScene metadata. They do
+not alter geometry or styling because pinned Mermaid 11.16.1 stores tags without
+rendering them. C4 remains partial while its remaining macro semantics and visual
+corpus are incomplete.
 
 ## Required New Semantic Families
 

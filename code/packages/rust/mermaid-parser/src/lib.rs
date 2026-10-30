@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.152.0";
+pub const VERSION: &str = "0.158.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14145,8 +14145,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 groups.push(StructuralGroup {
                     id: id.clone(),
                     label,
-                    stereotype: Some(macro_token.value),
-                    metadata: None,
+                    stereotype: Some(macro_token.value.clone()),
+                    metadata: c4_group_metadata(&macro_token.value, &args),
                     style: None,
                     parent_group: group_stack.last().cloned(),
                 });
@@ -14220,7 +14220,10 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     label: Some(relationship_args[2].clone()),
                     label_offset_x: 0.0,
                     label_offset_y: 0.0,
-                    metadata: Some(c4_relationship_metadata(relationship_args)),
+                    metadata: Some(c4_relationship_metadata(
+                        &macro_token.value,
+                        relationship_args,
+                    )),
                     style: None,
                 });
             }
@@ -14345,9 +14348,76 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
         })
     };
     StructuralNodeMetadata::C4(C4NodeMetadata {
+        element_type: c4_element_type(macro_name).into(),
         technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
         description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
+        tags: keyed("$tags").or_else(|| positional(if uses_technology { 5 } else { 4 })),
     })
+}
+
+fn c4_element_type(macro_name: &str) -> &'static str {
+    match macro_name {
+        "Person" => "person",
+        "Person_Ext" => "external_person",
+        "System" => "system",
+        "SystemDb" => "system_db",
+        "SystemQueue" => "system_queue",
+        "System_Ext" => "external_system",
+        "SystemDb_Ext" => "external_system_db",
+        "SystemQueue_Ext" => "external_system_queue",
+        "Container" => "container",
+        "ContainerDb" => "container_db",
+        "ContainerQueue" => "container_queue",
+        "Container_Ext" => "external_container",
+        "ContainerDb_Ext" => "external_container_db",
+        "ContainerQueue_Ext" => "external_container_queue",
+        "Component" => "component",
+        "ComponentDb" => "component_db",
+        "ComponentQueue" => "component_queue",
+        "Component_Ext" => "external_component",
+        "ComponentDb_Ext" => "external_component_db",
+        "ComponentQueue_Ext" => "external_component_queue",
+        _ => "element",
+    }
+}
+
+fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGroupMetadata> {
+    let argument = |key: &str, position: usize| {
+        args.iter()
+            .find_map(|value| value.split_once('=').filter(|(name, value)| *name == key && !value.is_empty()).map(|(_, value)| value.to_string()))
+            .or_else(|| args.get(position).filter(|value| !value.is_empty() && !value.starts_with('$')).cloned())
+    };
+    match macro_name {
+        "Deployment_Node" | "Node" | "Node_L" | "Node_R" => {
+            Some(StructuralGroupMetadata::C4DeploymentNode {
+                node_type: match macro_name {
+                    "Node_L" => diagram_ir::C4DeploymentNodeType::Left,
+                    "Node_R" => diagram_ir::C4DeploymentNodeType::Right,
+                    _ => diagram_ir::C4DeploymentNodeType::Node,
+                },
+                technology: argument("$type", 2),
+                description: argument("$descr", 3),
+                tags: argument("$tags", 5),
+            })
+        }
+        "Enterprise_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "ENTERPRISE".into(),
+            tags: argument("$tags", 2),
+        }),
+        "System_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "SYSTEM".into(),
+            tags: argument("$tags", 2),
+        }),
+        "Container_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "CONTAINER".into(),
+            tags: argument("$tags", 2),
+        }),
+        "Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: argument("$type", 2).unwrap_or_else(|| "system".into()),
+            tags: argument("$tags", 3),
+        }),
+        _ => None,
+    }
 }
 
 fn c4_node_kind(macro_name: &str) -> StructuralNodeKind {
@@ -14360,7 +14430,10 @@ fn c4_node_kind(macro_name: &str) -> StructuralNodeKind {
     }
 }
 
-fn c4_relationship_metadata(args: &[String]) -> StructuralRelationshipMetadata {
+fn c4_relationship_metadata(
+    macro_name: &str,
+    args: &[String],
+) -> StructuralRelationshipMetadata {
     let positional = |position: usize| {
         args.get(position)
             .filter(|value| !value.is_empty() && !value.starts_with('$'))
@@ -14375,8 +14448,16 @@ fn c4_relationship_metadata(args: &[String]) -> StructuralRelationshipMetadata {
         })
     };
     StructuralRelationshipMetadata::C4(C4RelationshipMetadata {
+        direction: match macro_name {
+            "Rel_U" | "Rel_Up" => Some(diagram_ir::C4RelationshipDirection::Up),
+            "Rel_D" | "Rel_Down" => Some(diagram_ir::C4RelationshipDirection::Down),
+            "Rel_L" | "Rel_Left" => Some(diagram_ir::C4RelationshipDirection::Left),
+            "Rel_R" | "Rel_Right" => Some(diagram_ir::C4RelationshipDirection::Right),
+            _ => None,
+        },
         technology: keyed("$techn").or_else(|| positional(3)),
         description: keyed("$descr").or_else(|| positional(4)),
+        tags: keyed("$tags").or_else(|| positional(6)),
     })
 }
 
@@ -19928,7 +20009,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.152.0");
+        assert_eq!(crate::VERSION, "0.158.0");
     }
 
     #[test]

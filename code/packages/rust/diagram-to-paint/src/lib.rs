@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.77.0";
+pub const VERSION: &str = "0.84.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7245,6 +7245,44 @@ fn structural_queue_instruction(node: &LayoutedStructuralNode) -> PaintInstructi
     })
 }
 
+fn push_structural_person_icon(instructions: &mut Vec<PaintInstruction>, node: &LayoutedStructuralNode) {
+    let center_x = node.x + 30.0;
+    let stroke = node.style.text_color.clone();
+    instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+        base: PaintBase::default(),
+        cx: center_x,
+        cy: node.y + 20.0,
+        rx: 7.0,
+        ry: 7.0,
+        fill: None,
+        stroke: Some(stroke.clone()),
+        stroke_width: Some(2.0),
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    }));
+    instructions.push(PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: center_x, y: node.y + 27.0 },
+            PathCommand::LineTo { x: center_x, y: node.y + 43.0 },
+            PathCommand::MoveTo { x: center_x - 10.0, y: node.y + 33.0 },
+            PathCommand::LineTo { x: center_x + 10.0, y: node.y + 33.0 },
+            PathCommand::MoveTo { x: center_x, y: node.y + 43.0 },
+            PathCommand::LineTo { x: center_x - 9.0, y: node.y + 54.0 },
+            PathCommand::MoveTo { x: center_x, y: node.y + 43.0 },
+            PathCommand::LineTo { x: center_x + 9.0, y: node.y + 54.0 },
+        ],
+        fill: None,
+        fill_rule: None,
+        stroke: Some(stroke),
+        stroke_width: Some(2.0),
+        stroke_cap: Some(StrokeCap::Round),
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    }));
+}
+
 pub fn diagram_to_paint_structural<S, M, R>(
     diagram: &LayoutedStructuralDiagram,
     options: &DiagramToPaintOptions<'_, S, M, R>,
@@ -7286,6 +7324,56 @@ where
         if let Some(value) = diagram.render_config.c4_boundary_in_row {
             scene_metadata.insert("c4.boundaryInRow".into(), value.to_string());
         }
+        for (index, node) in diagram.nodes.iter().enumerate() {
+            let Some(diagram_ir::StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref()
+            else {
+                continue;
+            };
+            if let Some(tags) = &metadata.tags {
+                scene_metadata.insert(format!("c4.node.{index}.tags"), tags.clone());
+            }
+        }
+        for (index, group) in diagram.groups.iter().enumerate() {
+            match group.metadata.as_ref() {
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary {
+                    tags: Some(tags),
+                    ..
+                }) => {
+                    scene_metadata.insert(format!("c4.group.{index}.tags"), tags.clone());
+                }
+                Some(diagram_ir::StructuralGroupMetadata::C4Boundary { tags: None, .. }) => {}
+                Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+                    node_type,
+                    tags,
+                    ..
+                }) => {
+                    scene_metadata.insert(
+                        format!("c4.group.{index}.deploymentNodeType"),
+                        node_type.as_str().into(),
+                    );
+                    if let Some(tags) = tags {
+                        scene_metadata.insert(format!("c4.group.{index}.tags"), tags.clone());
+                    }
+                }
+                _ => {}
+            }
+        }
+        for (index, relationship) in diagram.relationships.iter().enumerate() {
+            let Some(diagram_ir::StructuralRelationshipMetadata::C4(metadata)) =
+                relationship.metadata.as_ref()
+            else {
+                continue;
+            };
+            if let Some(direction) = metadata.direction {
+                scene_metadata.insert(
+                    format!("c4.relationship.{index}.direction"),
+                    direction.as_str().into(),
+                );
+            }
+            if let Some(tags) = &metadata.tags {
+                scene_metadata.insert(format!("c4.relationship.{index}.tags"), tags.clone());
+            }
+        }
     }
     let lf = options.label_font.clone();
     let ls = lf.size;
@@ -7326,9 +7414,13 @@ where
             stroke_dash: group.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }));
-        let label = match &group.stereotype {
-            Some(stereotype) => format!("«{stereotype}» {}", group.label),
-            None => group.label.clone(),
+        let label = match (&group.metadata, &group.stereotype) {
+            (Some(diagram_ir::StructuralGroupMetadata::C4Boundary { .. }), _)
+            | (Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode { .. }), _) => {
+                group.label.clone()
+            }
+            (_, Some(stereotype)) => format!("«{stereotype}» {}", group.label),
+            (_, None) => group.label.clone(),
         };
         let (label_x, label_width) = if let Some(icon_name) = &group.icon_name {
             instructions.push(PaintInstruction::Rect(PaintRect {
@@ -7365,6 +7457,35 @@ where
             },
             css_to_color(&group.style.text_color),
         ));
+        if let Some(metadata) = &group.metadata {
+            let details = match metadata {
+                diagram_ir::StructuralGroupMetadata::C4Boundary { boundary_type, .. } => {
+                    boundary_type.clone()
+                }
+                diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+                    technology,
+                    description,
+                    ..
+                } => technology
+                    .iter()
+                    .map(|technology| format!("[{technology}]"))
+                    .chain(description.iter().cloned())
+                    .collect::<Vec<_>>()
+                    .join(" - "),
+                diagram_ir::StructuralGroupMetadata::Architecture { .. } => String::new(),
+            };
+            if !details.is_empty() {
+                text_children.push(text_node(
+                    &details,
+                    group.x + 10.0,
+                    group.y + 20.0,
+                    group.width - 20.0,
+                    ls,
+                    lf.clone(),
+                    css_to_color(&group.style.text_color),
+                ));
+            }
+        }
     }
 
     // ── Relationships (drawn behind nodes) ───────────────────────────────────
@@ -7534,11 +7655,15 @@ where
             "#d1d5db",
             1.0,
         )));
+        let is_c4_person = matches!(node.stereotype.as_deref(), Some("person" | "external_person"));
         let badge_text = node
             .icon_text
             .as_deref()
             .or(node.icon_name.as_deref());
-        let (header_x, header_width) = if let Some(icon_text) = badge_text {
+        let (header_x, header_width) = if is_c4_person {
+            push_structural_person_icon(&mut instructions, node);
+            (node.x + 56.0, node.width - 64.0)
+        } else if let Some(icon_text) = badge_text {
             let icon_size = (header_height - 16.0).min(48.0);
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
@@ -10133,7 +10258,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.77.0");
+        assert_eq!(crate::VERSION, "0.84.0");
     }
 
     #[test]
@@ -10239,6 +10364,7 @@ mod tests {
                 stereotype: None,
                 icon_name: None,
                 icon_text: Some("API".into()),
+                metadata: None,
                 style: default_style(),
                 compartments: vec![],
             }],
@@ -10269,7 +10395,7 @@ mod tests {
         let node = |id: &str, node_kind, x| diagram_ir::LayoutedStructuralNode {
             id: id.into(), node_kind, x, y: 12.0, width: 160.0, height: 72.0,
             header: id.into(), stereotype: None, icon_name: None, icon_text: None,
-            style: default_style(), compartments: vec![],
+            metadata: None, style: default_style(), compartments: vec![],
         };
         let layout = LayoutedStructuralDiagram {
             kind: diagram_ir::StructuralKind::C4,
@@ -10362,6 +10488,7 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: None,
+                metadata: None,
                 style: ResolvedDiagramStyle {
                     fill: "#6b7280".into(),
                     stroke: "#6b7280".into(),
@@ -10420,6 +10547,7 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: Some((Point { x: 100.0, y: 40.0 }, String::new())),
+                metadata: None,
                 style: ResolvedDiagramStyle {
                     fill: "#6b7280".into(),
                     stroke: "#6b7280".into(),
