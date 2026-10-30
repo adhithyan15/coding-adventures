@@ -826,6 +826,7 @@ members = [
     "x509-authority-information-access",
     "x509-ocsp-aia-locator-policy",
     "x509-basic-constraints",
+    "x509-subject-key-identifier",
     "x509-key-usage",
     "x509-extended-key-usage",
     "x509-subject-alt-name",
