@@ -20195,9 +20195,19 @@ gone. The separate Windows discovery fallback owner remains pending without
 merge credit.
 
 A fresh dependency/leverage pass retains the already implemented, validated,
-and independently reviewed Rust graph/diff owner next. It still advances three
-direct and five total unfinished descendants, while the newly registered Lua
+and independently reviewed Rust graph/diff owner next. It advances four direct
+and six total unfinished descendants: cross-runtime indexing hardening,
+remaining engines, Rust neutral-adapter closure, and Rust repository-boundary
+adoption directly, plus all-language adapter CI closure and portable
+source-hashing remaining engines transitively. The newly registered Lua
 Windows fallback and Rust Cargo-trigger owners remain bounded follow-ups with
 no comparable downstream unlock. The Rust branch is normally reconciled with
 the Lua merge and all intervening path-disjoint current-main work before its
 exact-head validation and publication review.
+
+During final publication review, main advanced once more to
+`dc88db345fc175be7ad55f3da777eadec979112c` through path-disjoint ALGOL signed
+floor-root normalization work. Normal merge
+`c95a797bad07a174a2d6fadde035b7f9591e2bae` preserves both histories and leaves
+the Rust build-tool package and graph/diff fixtures byte-identical to reviewed
+implementation head `977e9b40a91fbd831983f5f467d965f6272f993d`.
