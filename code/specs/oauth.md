@@ -1370,6 +1370,22 @@ policy, decide freshness or revocation, fetch or cache data, read a clock, or
 grant path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete
 HTTPS remains unavailable.
 
+A parallel bounded `x509-ocsp-rsa-pkcs1-v1-5-sha512-signature` prerequisite
+verifies one structurally decoded `BasicOCSPResponse` with one separately
+policy-validated RSA public key. It accepts only the exact
+`sha512WithRSAEncryption` algorithm identifier with canonical present NULL
+parameters, requires a byte-aligned signature BIT STRING, hashes the preserved
+canonical `ResponseData` DER with the repository-owned SHA-512 implementation,
+applies the bounded repository-owned RSA public operation, and validates the
+complete PKCS #1 v1.5 SHA-512 encoded message. Success returns non-copyable
+evidence retaining the exact response and validated public key so neither can
+be substituted after verification. This fixed-algorithm verifier does not
+route algorithms, select the supplied key, authorize or match a responder,
+bind a response or `CertID` to a certificate or constructed path, apply
+certificate role or extension policy, decide freshness or revocation, fetch or
+cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS remains unavailable.
+
 A bounded `x509-ocsp-responder-id-binding` prerequisite now matches one exact
 structurally decoded `BasicOCSPResponse` to one exact decoded candidate
 responder certificate. For `byName`, it invokes caller-owned Name policy
