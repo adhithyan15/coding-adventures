@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.35.0";
+pub const VERSION: &str = "0.36.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -388,6 +388,13 @@ fn architecture_icon_text(node: &StructuralNode) -> Option<&str> {
     }
 }
 
+fn structural_stereotype(node: &StructuralNode) -> Option<String> {
+    match node.metadata.as_ref() {
+        Some(StructuralNodeMetadata::C4(metadata)) => Some(metadata.element_type.clone()),
+        _ => node.stereotype.clone(),
+    }
+}
+
 fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
     let nodes = &diagram.nodes;
     let groups = &diagram.groups;
@@ -467,7 +474,7 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
                 width: nw,
                 height: nh,
                 header: node.label.clone(),
-                stereotype: node.stereotype.clone(),
+                stereotype: structural_stereotype(node),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
                 style: structural_style(node, architecture_config),
@@ -556,7 +563,7 @@ fn layout_directional_nodes(
                 width,
                 height,
                 header: node.label.clone(),
-                stereotype: node.stereotype.clone(),
+                stereotype: structural_stereotype(node),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
                 style: structural_style(node, architecture_config),
@@ -1589,7 +1596,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.35.0");
+        assert_eq!(crate::VERSION, "0.36.0");
     }
 
     #[test]

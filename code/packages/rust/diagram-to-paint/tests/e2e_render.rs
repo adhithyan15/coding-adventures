@@ -161,6 +161,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-boundary-types-11.16.1-visual-corpus.json"
     ));
+    const C4_ELEMENT_TYPES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-element-types-11.16.1-corpus.json"
+    ));
+    const C4_ELEMENT_TYPES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-element-types-11.16.1-visual-corpus.json"
+    ));
     const C4_RELATIONSHIP_COLORS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-corpus.json"
@@ -5182,6 +5190,33 @@ line "Target" [35, 50, 68, 82]"##,
         });
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_c4_boundary_types_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_element_types_to_png() {
+        let syntax: Value = serde_json::from_str(C4_ELEMENT_TYPES_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_ELEMENT_TYPES_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixture = &syntax["fixtures"][0];
+        assert_eq!(visual["fixtures"][0], fixture["name"]);
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes[0].stereotype.as_deref(), Some("person"));
+        assert_eq!(layout.nodes[1].stereotype.as_deref(), Some("external_person"));
+        assert_eq!(layout.nodes[19].stereotype.as_deref(), Some("external_component_queue"));
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_element_types_0_e2e.png").unwrap();
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
