@@ -2808,6 +2808,29 @@ repository-owned record protection, certificate-path validation, revocation
 policy, TLS transport, and HTTP composition remain blockers. Concrete HTTPS
 remains unavailable.
 
+A bounded `tls13-record-protection-state` composition now consumes one
+success-only traffic-key-material view and creates the matching one-direction
+record nonce sequence directly from the same selected cipher suite. Static IV,
+nonce length, AEAD routing, authentication-tag length, and caller-authorized
+record ceiling cannot be supplied or reinterpreted independently. Fresh state
+starts at sequence zero, has no reset operation, and consumes each sequence
+before returning one non-cloneable borrowed reservation containing the exact
+matching key, state-owned nonce, public routing metadata, and sequence number.
+The reservation borrows the complete state, so another nonce cannot be reserved
+while that key/nonce pair is in use; exhaustion fails closed without advancing
+state. Secret key and static-IV bytes remain in the caller-owned wipe-on-drop
+storage retained by the consumed material view.
+
+This composition does not derive a traffic secret; establish its key-schedule
+position; select or negotiate a suite; invoke or review an AEAD; frame, encrypt,
+decrypt, or authenticate records; perform key updates; process a handshake;
+validate certificates; establish trust; enforce revocation; perform I/O;
+authorize HTTP or OAuth transport; or open a network connection. Repository-
+owned AEAD review and composition, complete key-schedule and transcript state,
+handshake processing, certificate-path validation, revocation policy, TLS
+transport, and HTTP composition remain blockers. Concrete HTTPS remains
+unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire
