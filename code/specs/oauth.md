@@ -1060,6 +1060,20 @@ external effect. It does not apply anchor constraints, validate target role,
 purpose, validity, or identity, construct or validate a multi-hop path, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection; concrete HTTPS remains unavailable.
+A bounded two-link follow-up now consumes one complete-intermediate-policy-
+bound RSA SHA-512 target-to-intermediate link together with one policy-bound
+SHA-512 intermediate-to-reviewed-root link. It fails closed unless the
+candidate issuer retained by the first proof and the child retained by the
+reviewed parent proof are the same exact decoded intermediate certificate
+object; byte-equal independent decodes are deliberately insufficient. Success
+returns distinct non-copyable evidence retaining complete intermediate policy,
+both authenticated links, and the exact reviewed-root selection. This is one
+caller-ordered fixed-algorithm evidence join only. It does not derive or
+advance path-length state, construct or search a path, apply anchor or
+intermediate name constraints, validate the target's role, purpose, or
+hostname, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+cause an external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-rsa-sha512-reviewed-server-link` composition now consumes one
 exact target-server policy result together with one authenticated RSA SHA-512
 issuer link terminating at a reviewed root. It fails closed unless both

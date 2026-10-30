@@ -34,10 +34,11 @@ describe("Malayalam assessment contract", () => {
         expect(binding.taskInventory).toEqual([`task-shapes/${level.level.toLowerCase()}.json#${skill}`]);
       }
       expect(level.fullMocks.every((mock) => mock.timed)).toBe(true);
-      if (level.level === "pre-A1") {
+      if (level.level === "pre-A1" || level.level === "A1") {
+        const directory = level.level === "pre-A1" ? "pre-a1" : "a1";
         expect(level.fullMocks.map((mock) => mock.manifest)).toEqual([
-          "mocks/pre-a1/mock-1-manifest.json",
-          "mocks/pre-a1/mock-2-manifest.json",
+          `mocks/${directory}/mock-1-manifest.json`,
+          `mocks/${directory}/mock-2-manifest.json`,
         ]);
       } else {
         expect(level.fullMocks.every((mock) => mock.manifest === undefined)).toBe(true);

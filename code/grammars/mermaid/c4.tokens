@@ -25,4 +25,5 @@ EQUALS             = "="
 STRING             = /"([^"\\]|\\.)*"/
 KV_KEY             = /\$[A-Za-z_][A-Za-z0-9_]*/
 NUMBER             = /-?[0-9]+(?:\.[0-9]+)?/
+STYLE_FUNCTION     = /RoundedBoxShape\(\)|EightSidedShape\(\)|DashedLine\(\)|DottedLine\(\)|BoldLine\(\)/
 IDENTIFIER         = /[A-Za-z_][A-Za-z0-9_.-]*/
