@@ -7,6 +7,138 @@ import Foundation
 
 final class SHA512Tests: XCTestCase {
 
+    private enum FixtureError: Error { case invalid }
+
+    private func isLowerHex(_ value: String, count: Int? = nil) -> Bool {
+        (count == nil || value.utf8.count == count!) && value.utf8.allSatisfy { (48...57).contains($0) || (97...102).contains($0) }
+    }
+
+    private func isID(_ value: String) -> Bool {
+        !value.isEmpty && value.split(separator: "-", omittingEmptySubsequences: false).allSatisfy { part in
+            !part.isEmpty && part.utf8.allSatisfy { (48...57).contains($0) || (97...122).contains($0) }
+        }
+    }
+
+    private func parseFixture(_ data: Data) throws -> [String] {
+        guard (1...4096).contains(data.count), let text = String(data: data, encoding: .utf8) else { throw FixtureError.invalid }
+        let lines = text.split(separator: "\n", omittingEmptySubsequences: true).map {
+            let line = String($0)
+            return line.hasSuffix("\r") ? String(line.dropLast()) : line
+        }
+            .filter { !$0.hasPrefix("#") }
+        guard (1...64).contains(lines.count) else { throw FixtureError.invalid }
+        for line in lines {
+            let fields = line.split(separator: "|", omittingEmptySubsequences: false).map(String.init)
+            guard fields.count == 5, isID(fields[1]) else { throw FixtureError.invalid }
+            switch fields[0] {
+            case "V":
+                guard fields[2].utf8.count <= 8192, fields[2].utf8.count % 2 == 0, isLowerHex(fields[2]), isLowerHex(fields[4], count: 128) else { throw FixtureError.invalid }
+                let byteCount = fields[2].utf8.count / 2
+                guard byteCount <= 4096, (byteCount == 0) == fields[3].isEmpty else { throw FixtureError.invalid }
+                let chunks: [Int]
+                if fields[3].isEmpty { chunks = [] }
+                else {
+                    guard fields[3].utf8.allSatisfy({ (48...57).contains($0) || $0 == 44 }) else { throw FixtureError.invalid }
+                    chunks = try fields[3].split(separator: ",", omittingEmptySubsequences: false).map {
+                        guard !$0.isEmpty, $0.first != "0", let size = Int($0), (1...4096).contains(size) else { throw FixtureError.invalid }
+                        return size
+                    }
+                }
+                guard chunks.count <= 64, chunks.reduce(0, +) == byteCount else { throw FixtureError.invalid }
+            case "L":
+                guard isLowerHex(fields[2], count: 16), isLowerHex(fields[3], count: 16),
+                    fields[4] == "ERROR" || isLowerHex(fields[4], count: 32) else { throw FixtureError.invalid }
+            default: throw FixtureError.invalid
+            }
+        }
+        return lines
+    }
+
+    private func fixtureLines(at suppliedURL: URL? = nil) throws -> [String] {
+        let url = suppliedURL ?? URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .appendingPathComponent("../../../../../specs/fixtures/sha512-v1/cases.txt")
+            .standardizedFileURL
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        let data = try handle.read(upToCount: 4097) ?? Data()
+        let lines = try parseFixture(data)
+        XCTAssertEqual(lines.filter { $0.hasPrefix("V|") }.count, 9)
+        XCTAssertEqual(lines.filter { $0.hasPrefix("L|") }.count, 6)
+        return lines
+    }
+
+    func testFixtureReaderRejectsMalformedRows() {
+        let digest = String(repeating: "0", count: 128)
+        for row in ["X|id|||", "V|UPPER|00|1|\(digest)", "V|bad|0|1|\(digest)", "V|bad|00|2|\(digest)",
+                    "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC"] {
+            XCTAssertThrowsError(try parseFixture(Data(row.utf8)))
+        }
+    }
+
+    func testFixtureReaderRejectsOversizedFile() throws {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("sha512-fixture-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: url) }
+        try Data(repeating: 0, count: 4097).write(to: url)
+        XCTAssertThrowsError(try fixtureLines(at: url))
+    }
+
+    private func decodeHex(_ value: String) -> Data {
+        precondition(value.count % 2 == 0)
+        var result = Data()
+        var index = value.startIndex
+        while index < value.endIndex {
+            let end = value.index(index, offsetBy: 2)
+            result.append(UInt8(value[index..<end], radix: 16)!)
+            index = end
+        }
+        return result
+    }
+
+    func testPortableCorpus() throws {
+        for line in try fixtureLines().filter({ $0.hasPrefix("V|") }) {
+            let fields = line.split(separator: "|", omittingEmptySubsequences: false).map(String.init)
+            let data = decodeHex(fields[2])
+            XCTAssertEqual(sha512Hex(data), fields[4], fields[1])
+            var hasher = SHA512Hasher()
+            var offset = 0
+            let chunks = fields[3].isEmpty ? [] : fields[3].split(separator: ",").map { Int($0)! }
+            XCTAssertLessThanOrEqual(chunks.count, 64)
+            for size in chunks {
+                XCTAssertGreaterThan(size, 0)
+                XCTAssertLessThanOrEqual(offset + size, data.count)
+                hasher.update(data[offset..<offset + size])
+                offset += size
+            }
+            XCTAssertEqual(offset, data.count)
+            XCTAssertEqual(hasher.hexDigest(), fields[4], fields[1])
+        }
+    }
+
+    func testPortableLengthCorpus() throws {
+        for line in try fixtureLines().filter({ $0.hasPrefix("L|") }) {
+            let fields = line.split(separator: "|", omittingEmptySubsequences: false).map(String.init)
+            let high = UInt64(fields[2], radix: 16)!
+            let low = UInt64(fields[3], radix: 16)!
+            if fields[4] == "ERROR" {
+                XCTAssertThrowsError(try encodeBitLength(byteCountHigh: high, byteCountLow: low))
+            } else {
+                let encoded = try encodeBitLength(byteCountHigh: high, byteCountLow: low)
+                    .map { String(format: "%02x", $0) }.joined()
+                XCTAssertEqual(encoded, fields[4])
+            }
+        }
+    }
+
+    func testUpdateConsumesInputWithoutAliasing() {
+        var input = Data("abc".utf8)
+        var hasher = SHA512Hasher()
+        hasher.update(input)
+        input[0] = 0x7a
+        XCTAssertEqual(hasher.digest(), sha512(Data("abc".utf8)))
+    }
+
     // ========================================================================
     // One-Shot sha512() -- FIPS 180-4 Test Vectors
     // ========================================================================

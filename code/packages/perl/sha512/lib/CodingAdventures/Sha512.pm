@@ -43,6 +43,7 @@ package CodingAdventures::Sha512;
 
 use strict;
 use warnings;
+use Math::BigInt;
 no warnings 'portable';   # SHA-512 requires 64-bit hex literals (>0xFFFFFFFF)
 
 our $VERSION = '0.01';
@@ -164,6 +165,18 @@ sub _pack_u64_be {
     return pack("NN", $hi, $lo);
 }
 
+sub _encode_bit_length {
+    my ($byte_count) = @_;
+    my $count = Math::BigInt->new("$byte_count");
+    my $limit = Math::BigInt->new(2)->bpow(125);
+    die "sha512: message length must be less than 2^128 bits"
+        if $count->is_nan() || $count->is_neg() || $count->bcmp($limit) >= 0;
+    my $hex = $count->copy()->blsft(3)->as_hex();
+    $hex =~ s/^0x//;
+    $hex = ("0" x (32 - length($hex))) . $hex;
+    return pack("H*", $hex);
+}
+
 # ---------------------------------------------------------------------------
 # _sha512_block(\@state, $chunk_bytes)
 #
@@ -225,7 +238,8 @@ sub digest {
     else {
         $msg = $_[0];   # function call: (message)
     }
-    $msg //= '';
+    die "sha512.digest: expected byte string"
+        if !defined($msg) || ref($msg) || utf8::is_utf8($msg);
 
     # ------------------------------------------------------------------
     # Step 1: Padding (FIPS 180-4 Section 5.1.2)
@@ -234,17 +248,13 @@ sub digest {
     # original 128-bit bit-length in big-endian order.
     # ------------------------------------------------------------------
     my $original_len  = length($msg);
-    my $original_bits = $original_len * 8;
 
     $msg .= "\x80";
 
     my $pad = (112 - length($msg) % 128) % 128;
     $msg .= "\x00" x $pad;
 
-    # Append 128-bit big-endian length.
-    # For messages < 2^64 bits, the high 64 bits are zero.
-    $msg .= "\x00" x 8;  # high 64 bits
-    $msg .= _pack_u64_be($original_bits);  # low 64 bits
+    $msg .= _encode_bit_length($original_len);
 
     # ------------------------------------------------------------------
     # Step 2: Initialize state (FIPS 180-4 Section 5.3.5)

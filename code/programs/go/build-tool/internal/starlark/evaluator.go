@@ -47,12 +47,12 @@ import (
 // Target represents a single build target declared in a Starlark BUILD file.
 // Each call to py_library(), go_library(), etc. produces one Target.
 type Target struct {
-	Rule        string   // Rule type: "py_library", "go_binary", etc.
-	Name        string   // Target name: "starlark-vm", "build-tool", etc.
-	Srcs        []string // Declared source file patterns for change detection
-	Deps        []string // Dependencies as "language/package-name" strings
-	TestRunner  string   // Test framework: "pytest", "vitest", "minitest", etc.
-	EntryPoint  string   // Binary entry point: "main.py", "src/index.ts", etc.
+	Rule       string   // Rule type: "py_library", "go_binary", etc.
+	Name       string   // Target name: "starlark-vm", "build-tool", etc.
+	Srcs       []string // Declared source file patterns for change detection
+	Deps       []string // Dependencies as "language/package-name" strings
+	TestRunner string   // Test framework: "pytest", "vitest", "minitest", etc.
+	EntryPoint string   // Binary entry point: "main.py", "src/index.ts", etc.
 }
 
 // BuildResult holds the targets extracted from evaluating a Starlark BUILD file.
@@ -239,7 +239,7 @@ func getStringList(dict map[string]interface{}, key string) []string {
 //   - py_library  → uv pip install + pytest
 //   - go_library  → go build + go test + go vet
 //   - ruby_library → bundle install + rake test
-//   - ts_library  → npm install + vitest
+//   - ts_library  → npm ci + package-owned test script
 //   - rust_library → cargo build + cargo test/tarpaulin
 //   - elixir_library → mix deps.get + mix test
 func GenerateCommands(t Target) []string {
@@ -280,10 +280,14 @@ func GenerateCommands(t Target) []string {
 		}
 
 	case "ts_library", "ts_binary":
-		return []string{
-			"npm install --silent",
-			"npx vitest run --coverage",
+		commands := []string{"npm ci --quiet"}
+		if t.TestRunner == "node" {
+			return append(commands,
+				"npm run build --silent",
+				"npm run test:coverage --silent",
+			)
 		}
+		return append(commands, "npm exec --offline -- vitest run --coverage")
 
 	case "rust_library", "rust_binary":
 		return []string{

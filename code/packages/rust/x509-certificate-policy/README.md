@@ -7,6 +7,12 @@ policy. Its certificate-role gate composes the repository-owned Basic
 Constraints, Key Usage, and Extended Key Usage decoders under one explicit
 semantic budget.
 
+Callers may replace an open recognition callback with a validated policy-data
+set of at most 256 exact OIDs. Construction rejects structurally invalid and
+duplicate OID arc sequences before certificate traversal; an empty set
+recognizes no critical extensions. The corresponding non-copyable role result
+retains that exact policy beside the exact certificate it checked.
+
 Its evidence-bound role-policy composition first rejects any critical
 extension not recognized by caller-owned policy and only then applies those
 role semantics to the same exact decoded certificate. The resulting
@@ -63,6 +69,9 @@ The recognizer is invoked only for critical extensions, in certificate wire
 order. An absent extension sequence and unrecognized non-critical extensions
 are accepted. A rejected critical extension fails closed with only its
 zero-based sequence index; the error retains no OID or certificate bytes.
+The validated policy-data path bounds the recognized set and makes exact policy
+membership inspectable, but does not change recognition into semantic
+validation.
 
 Recognition is not semantic validation. The caller must separately decode and
 enforce every recognized extension according to the certificate's role. This
@@ -129,9 +138,10 @@ use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
     classify_certificate_self_issued, validate_certificate_algorithm_policy,
     validate_certificate_extended_key_purpose, validate_certificate_issuer_link,
-    validate_certificate_role_policy, validate_certificate_server_identity,
+    validate_certificate_role_with_critical_extension_policy,
+    validate_certificate_server_identity,
     X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
-    X509CertificatePurposePolicy, X509CertificateRole,
+    X509CertificatePurposePolicy, X509CertificateRole, X509CriticalExtensionPolicy,
 };
 
 # fn check(encoded: &[u8], candidate_issuer_encoded: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
@@ -141,16 +151,19 @@ let candidate_issuer =
 // This deliberately closed example recognizes the three role extensions and
 // Subject Alternative Name, which is validated below. A broader profile must
 // validate every additional OID it recognizes before assigning trust.
-let role_policy = validate_certificate_role_policy(
+let recognized_critical_extensions = [
+    &[2, 5, 29, 19][..],
+    &[2, 5, 29, 15][..],
+    &[2, 5, 29, 37][..],
+    &[2, 5, 29, 17][..],
+];
+let critical_extension_policy =
+    X509CriticalExtensionPolicy::new(&recognized_critical_extensions)?;
+let role_policy = validate_certificate_role_with_critical_extension_policy(
     &certificate,
     X509CertificateRole::EndEntity,
     Asn1Limits::default(),
-    |oid| {
-        oid.equals(&[2, 5, 29, 19])
-            || oid.equals(&[2, 5, 29, 15])
-            || oid.equals(&[2, 5, 29, 37])
-            || oid.equals(&[2, 5, 29, 17])
-    },
+    critical_extension_policy,
 )?;
 assert_eq!(
     role_policy.role_extensions().role(),
