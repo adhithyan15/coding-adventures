@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "level": "A1",
+  "mockId": "a1-mock-1",
+  "sections": [
+    { "skill": "reading", "minutes": 17, "partIds": ["a1-reading-signs-and-form-fields", "a1-reading-short-messages"] },
+    { "skill": "listening", "minutes": 15, "partIds": ["a1-listening-familiar-cues", "a1-listening-short-exchanges"] },
+    { "skill": "writing", "minutes": 15, "partIds": ["a1-writing-practical-form", "a1-writing-short-message"] },
+    { "skill": "speaking", "minutes": 8, "partIds": ["a1-speaking-personal-exchange", "a1-speaking-rehearsed-role-play"] }
+  ]
+}
