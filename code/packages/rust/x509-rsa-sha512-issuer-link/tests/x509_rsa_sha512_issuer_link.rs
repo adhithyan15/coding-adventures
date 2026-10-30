@@ -2,6 +2,9 @@ use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use std::cell::Cell;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
+use x509_certificate_path_length_policy::{
+    X509CertificatePathLengthErrorKind, X509CertificatePathLengthState,
+};
 use x509_certificate_policy::{
     classify_certificate_self_issued, validate_certificate_algorithm_policy,
     validate_certificate_role_policy, X509AlgorithmParametersPolicy,
@@ -17,8 +20,10 @@ use x509_rsa_algorithm_policy::{
 use x509_rsa_pkcs1_v1_5_sha512_signature::X509RsaSha512SignatureErrorKind;
 use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha512_issuer_link::{
+    advance_x509_rsa_sha512_authenticated_intermediate_path_length,
     bind_x509_rsa_sha512_intermediate_issuer_policy_link, verify_x509_rsa_sha512_issuer_link,
     verify_x509_rsa_sha512_issuer_link_with_policies,
+    VerifiedX509RsaSha512IntermediateIssuerPolicyLink,
     X509RsaSha512IntermediateIssuerPolicyLinkErrorKind, X509RsaSha512IssuerLinkErrorKind,
     X509RsaSha512IssuerLinkPolicy, X509RsaSha512IssuerPolicyLinkErrorKind,
 };
@@ -119,6 +124,13 @@ fn observed_time() -> X509Time {
 fn intermediate_policy<'certificate, 'encoded>(
     certificate: &'certificate X509Certificate<'encoded>,
 ) -> ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded> {
+    intermediate_policy_with_self_issued(certificate, true)
+}
+
+fn intermediate_policy_with_self_issued<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    is_self_issued: bool,
+) -> ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded> {
     let profiles = [X509CertificateAlgorithmProfile::new(
         SHA512_WITH_RSA_ENCRYPTION_OID,
         X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
@@ -131,15 +143,45 @@ fn intermediate_policy<'certificate, 'encoded>(
     )
     .unwrap()];
     let algorithm_policy = validate_certificate_algorithm_policy(certificate, &profiles).unwrap();
-    let self_issued = classify_certificate_self_issued(certificate, |issuer, subject| {
-        issuer.encoded() == subject.encoded()
-    });
+    let self_issued =
+        classify_certificate_self_issued(certificate, |_issuer, _subject| is_self_issued);
 
     validate_x509_intermediate_certificate_policy(
         role_policy(certificate),
         algorithm_policy,
         self_issued,
         &observed_time(),
+    )
+    .unwrap()
+}
+
+fn authenticated_intermediate<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    child: &'child_certificate X509Certificate<'child_encoded>,
+    candidate_issuer: &'issuer_certificate X509Certificate<'issuer_encoded>,
+    is_self_issued: bool,
+) -> VerifiedX509RsaSha512IntermediateIssuerPolicyLink<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    let issuer_policy_link = verify_x509_rsa_sha512_issuer_link_with_policies(
+        child,
+        candidate_issuer,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+        role_policy(candidate_issuer),
+        rsa_algorithm_policy(candidate_issuer),
+        RsaPublicOperationLimits::new(256).unwrap(),
+    )
+    .unwrap();
+    bind_x509_rsa_sha512_intermediate_issuer_policy_link(
+        issuer_policy_link,
+        intermediate_policy_with_self_issued(candidate_issuer, is_self_issued),
     )
     .unwrap()
 }
@@ -285,6 +327,62 @@ fn rejects_complete_policy_for_a_byte_equal_distinct_intermediate() {
     assert_eq!(
         error.to_string(),
         "X.509 RSA SHA-512 intermediate issuer policy-link error EvidenceMismatch"
+    );
+    assert!(!error.to_string().contains("sha512.issuer.fixture.example"));
+}
+
+#[test]
+fn authenticated_intermediate_advances_path_length_and_retains_both_proofs() {
+    let encoded = fixture();
+    let child = decode(&encoded);
+    let candidate_issuer = decode(&encoded);
+    let authenticated = authenticated_intermediate(&child, &candidate_issuer, true);
+
+    let advanced = advance_x509_rsa_sha512_authenticated_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        authenticated,
+    )
+    .unwrap();
+
+    assert_eq!(
+        advanced
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        1
+    );
+    assert!(std::ptr::eq(
+        advanced
+            .authenticated_intermediate()
+            .intermediate_policy()
+            .certificate(),
+        &candidate_issuer
+    ));
+    assert_eq!(
+        format!("{advanced:?}"),
+        "ValidatedX509RsaSha512AuthenticatedIntermediatePathLength"
+    );
+}
+
+#[test]
+fn authenticated_non_self_issued_intermediate_fails_on_exhausted_path_length() {
+    let encoded = fixture();
+    let child = decode(&encoded);
+    let candidate_issuer = decode(&encoded);
+    let authenticated = authenticated_intermediate(&child, &candidate_issuer, false);
+
+    let error = advance_x509_rsa_sha512_authenticated_intermediate_path_length(
+        X509CertificatePathLengthState::new(0),
+        authenticated,
+    )
+    .expect_err("a non-self-issued intermediate must consume available capacity");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathLengthErrorKind::MaximumExceeded
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 certificate path length policy error MaximumExceeded"
     );
     assert!(!error.to_string().contains("sha512.issuer.fixture.example"));
 }

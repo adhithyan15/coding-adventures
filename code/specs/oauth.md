@@ -1048,6 +1048,19 @@ intermediate's issuer, construct or validate a complete path, grant trust,
 check revocation, perform TLS or HTTP, authorize OAuth transport, or cause an
 external effect. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A bounded path-length follow-up now consumes that exact authenticated complete-
+intermediate-policy proof together with one caller-owned path-length state. It
+derives issuing-CA role, self-issued classification, and any decoded
+`pathLenConstraint` only from the retained intermediate policy, then returns
+distinct non-copyable evidence retaining the authenticated link, complete
+intermediate policy, and advanced state together. Exhausted non-self-issued
+capacity fails with the existing payload-free repository-owned category. This
+is one caller-supplied state transition only: it does not prove prior traversal
+depth or path order, authenticate the intermediate's issuer, evaluate
+NameConstraints, construct or validate a complete path, grant trust, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or cause an
+external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-rsa-sha512-reviewed-anchor-link` follow-up now consumes that
 strongest RSA SHA-512 issuer-policy link together with reviewed-root selection
 evidence. It fails closed unless both non-copyable inputs retain the same exact
