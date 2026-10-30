@@ -16,15 +16,13 @@
       "external-approval"
     ]
   },
-  "active_pr": 18725,
-  "active_prs": [
-    18725
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-10-30T16:10:11Z",
+    "observed_at": "2026-10-30T17:10:28Z",
     "pr_number": 18725,
-    "head_revision": "ae085ee95c1d8f0a6d24f6075bc4e13fa5902b7b",
-    "action": "Fresh hosted run 41084365806 reached independently reviewed head ae085ee95c1d8f0a6d24f6075bc4e13fa5902b7b and the repaired Windows build passed, closing the exact launcher-prefix failure. While the first current-main refresh was under review, main advanced again path-disjointly to 379a4e495c1 through TypeScript wasm-opcodes node:test and Rust X.509 SHA-512 path-length work. Normal merge 9e40dd42efb preserves both histories. Revalidate and independently review the resulting exact lifecycle head before a normal non-force push; previous-head results are not reusable and auto-merge remains disabled.",
+    "head_revision": "adebf93dff223531c81c0c936545139ec7b7bc73",
+    "action": "All 42 exact-head checks on PR #18725 completed terminal acceptable at independently reviewed head adebf93dff223531c81c0c936545139ec7b7bc73, including successful Ubuntu, macOS, and Windows builds, Forme verdict, CI gate, metadata contracts, CodeQL neutral, and expected skips. GitHub reported MERGEABLE/CLEAN, so guarded squash auto-merge completed at 2026-10-30T17:10:28Z as a5da10a39ba4b0e2ba7cf54627a696de9cfdee5b. The receipt is exact origin/main and the completed Lua worktree is archived; reprioritization retains the already implemented and reviewed Rust graph/diff owner next.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2688,7 +2686,7 @@
     {
       "id": "build-tool-lua-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Lua build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",
@@ -2743,6 +2741,10 @@
       "sixth_retry_main_revision": "379a4e495c1f193fefbcbd99c8dfb477fd23157c",
       "sixth_retry_main_merge_revision": "9e40dd42efb8a1bd7f1ba40d677c3443b9f31ccd",
       "sixth_retry_main_notes": "While the fifth current-main refresh was under independent review, main advanced through the path-disjoint TypeScript wasm-opcodes node:test migration and Rust X.509 SHA-512 path-length work. A normal merge preserves both histories and changes no Lua/Go graph-diff, launcher repair, lesson, or lifecycle path. Exact-head validation and review remain mandatory before publication.",
+      "final_head": "adebf93dff223531c81c0c936545139ec7b7bc73",
+      "merged_at": "2026-10-30T17:10:28Z",
+      "merge_commit": "a5da10a39ba4b0e2ba7cf54627a696de9cfdee5b",
+      "merge_notes": "All 42 checks on the exact independently reviewed head were terminal acceptable. GitHub reported MERGEABLE/CLEAN and guarded squash auto-merge completed immediately. The merge receipt is exact origin/main; the worktree was archived and the remote branch was removed. The separate Windows discovery fallback null-device hardening remains pending and received no merge credit.",
       "selection_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
       "selection_notes": "Selected as the highest-leverage package-path-independent implementation while Ruby dependency-hashing PR #18555 occupied the publication slot. It tied Ruby and Rust graph/diff at three direct and five total unfinished descendants; Lua had no package-path collision and could advance locally. After SHA-512 PR #18583 merged and freed the parity publication slot, a fresh priority pass kept this independently reviewed, implementation-complete item ahead of the prepared Rust graph/diff item because it is already current-main reconciled and includes its required Go fixture routing.",
       "implementation_revision": "5bcc662b1f79b315837982a8828d36afada3a154",
@@ -2866,9 +2868,12 @@
       "branch": "codex/build-tool-rust-diff-selection-parity",
       "pr_number": null,
       "selection_revision": "760775910601fc8523d9a4b5b3cbfbf9acae9e05",
-      "selection_notes": "Selected after local Lua completion as the next dependency-ready package-only implementation at three direct and five total unfinished descendants. No live PR touched Rust build-tool package paths; shared Go routing, state, and roadmap surfaces remained deferred because PR #18495 overlaps Go routing.",
+      "selection_notes": "Selected after local Lua completion as the next dependency-ready package-only implementation at three direct and five total unfinished descendants. After Lua PR #18725 completed all 42 exact-head checks and merged through guarded squash auto-merge, a fresh priority pass retains this already implemented, validated, and independently reviewed Rust graph/diff owner ahead of the newly logged Lua Windows fallback and Rust Cargo-trigger follow-ups. No live PR touches Rust build-tool package paths; current-main reconciliation includes the completed Lua/Go fixture routing and lifecycle receipts.",
       "implementation_revision": "dfacf49115d56c73cfb69d29ddb0c26be274af17",
-      "validation_notes": "The bounded Rust core consumes all eight graph and twelve diff-selection fixtures with canonical closures, shared-input reverse selection, exact boundary digest validation, Unicode-scalar matching, stable all-or-error diagnostics, and no new authority. The final branch passes 245 tests and doc tests, locked release build, Clippy with warnings denied, formatting, dependency-duplicate and diff checks. graph_diff.rs measures 95.29% line, 95.17% region, and 100% function coverage.",
+      "publication_main_revision": "a5da10a39ba4b0e2ba7cf54627a696de9cfdee5b",
+      "publication_main_merge_revision": "dec2a75ef9a85848d02f8616521478780d08d54a",
+      "publication_main_notes": "Normal merge of exact origin/main incorporates Lua PR #18725, its Go fixture routing, and every intervening path-disjoint main change. The Rust implementation paths are unchanged; exact-head validation and independent publication review remain mandatory before push.",
+      "validation_notes": "The bounded Rust core consumes all eight graph and twelve diff-selection fixtures with canonical closures, shared-input reverse selection, exact boundary digest validation, Unicode-scalar matching, stable all-or-error diagnostics, and no new authority. The current-main branch passes 249 tests plus one doc test, locked release build, Clippy with warnings denied, touched-file formatting, dependency-duplicate and diff checks. graph_diff.rs measures 95.29% line, 95.17% region, and 100% function coverage.",
       "security_review_revision": "dfacf49115d56c73cfb69d29ddb0c26be274af17",
       "security_review_notes": "Split independent review rejected question-mark portability, quadratic and allocating root checks, eager glob retention, explicit-null schema widening, leaked GRAPH diagnostics, eager boundary expansion, package-by-path scans, repeated glob parsing, and linear exclusion applicability. The final head uses content-memoized validation, lazy one-pattern matching, bounded path and boundary indexes, changed-only expansion, exact DIFF diagnostics, and indexed exclusions. Full 4,096-package shared-glob and maximum relevant-boundary stresses pass; exact-head re-review issued SHIP with no findings.",
       "notes": "Complete canonical graph projection and the total diff result contract, consume all 20 cases including shared-input multi-consumer selection through production modules, reuse the separately hardened matcher, and preserve stable empty failures without new authority.",
