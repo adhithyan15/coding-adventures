@@ -1461,6 +1461,24 @@ certificate role or extension policy, decide freshness or revocation, fetch or
 cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-rsa-signature-routing` prerequisite now consumes the
+non-copyable response/key evidence from `x509-ocsp-rsa-algorithm-policy` and
+routes its selected profile index through an explicit caller-owned table to
+one reviewed fixed repository-owned verifier. The initial table vocabulary is
+limited to the RSA PKCS #1 v1.5 SHA-256 and SHA-512 OCSP verifiers. Missing and
+duplicate routes fail before cryptography, while a route that names a verifier
+inconsistent with the selected profile fails that verifier's exact algorithm
+identifier and parameter checks. Success retains both the consumed algorithm
+policy evidence and the fixed-verifier result, binding the same exact response
+and validated key across policy selection, routing, and cryptographic
+verification. Routes and inputs are public policy and response/key data, so
+this layer performs no credential access, edit, signing operation, provider
+action, audit or trace emission, I/O, or external effect. It does not authorize
+or match a responder, bind `CertID` or status to a certificate or constructed
+path, apply certificate role or extension policy, decide freshness or
+revocation, establish trust, fetch data, read a clock, or grant TLS, HTTP,
+OAuth transport, or network authority. Concrete HTTPS remains unavailable.
+
 A bounded `x509-ocsp-responder-id-binding` prerequisite now matches one exact
 structurally decoded `BasicOCSPResponse` to one exact decoded candidate
 responder certificate. For `byName`, it invokes caller-owned Name policy
