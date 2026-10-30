@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.153.0";
+pub const VERSION: &str = "0.154.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14351,18 +14351,32 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
 }
 
 fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGroupMetadata> {
-    if !matches!(macro_name, "Deployment_Node" | "Node" | "Node_L" | "Node_R") {
-        return None;
-    }
     let argument = |key: &str, position: usize| {
         args.iter()
             .find_map(|value| value.split_once('=').filter(|(name, value)| *name == key && !value.is_empty()).map(|(_, value)| value.to_string()))
             .or_else(|| args.get(position).filter(|value| !value.is_empty() && !value.starts_with('$')).cloned())
     };
-    Some(StructuralGroupMetadata::C4DeploymentNode {
-        technology: argument("$type", 2),
-        description: argument("$descr", 3),
-    })
+    match macro_name {
+        "Deployment_Node" | "Node" | "Node_L" | "Node_R" => {
+            Some(StructuralGroupMetadata::C4DeploymentNode {
+                technology: argument("$type", 2),
+                description: argument("$descr", 3),
+            })
+        }
+        "Enterprise_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "ENTERPRISE".into(),
+        }),
+        "System_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "SYSTEM".into(),
+        }),
+        "Container_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "CONTAINER".into(),
+        }),
+        "Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: argument("$type", 2).unwrap_or_else(|| "system".into()),
+        }),
+        _ => None,
+    }
 }
 
 fn c4_node_kind(macro_name: &str) -> StructuralNodeKind {
@@ -19943,7 +19957,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.153.0");
+        assert_eq!(crate::VERSION, "0.154.0");
     }
 
     #[test]

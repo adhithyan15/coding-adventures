@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.34.0";
+pub const VERSION: &str = "0.35.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -637,6 +637,7 @@ fn layout_groups(
                 stereotype: group.stereotype.clone(),
                 icon_name: group.metadata.as_ref().and_then(|metadata| match metadata {
                     StructuralGroupMetadata::Architecture { icon_name } => Some(icon_name.clone()),
+                    StructuralGroupMetadata::C4Boundary { .. } => None,
                     StructuralGroupMetadata::C4DeploymentNode { .. } => None,
                 }),
                 metadata: group.metadata.clone(),
@@ -1588,7 +1589,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.34.0");
+        assert_eq!(crate::VERSION, "0.35.0");
     }
 
     #[test]
