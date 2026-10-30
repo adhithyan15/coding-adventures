@@ -4276,6 +4276,28 @@ fn emit_paired_children(
         if percent_width {
             record_child_style_read(child, "width");
         }
+        // A Row measures a non-flex child with an UNBOUNDED max width, and a
+        // Flutter `TextField` cannot be laid out that way: its
+        // `InputDecorator` asserts "cannot have an unbounded width". A direct
+        // Row `HostInput` already lowers through its own fallback `Expanded`
+        // (see `emit_host_input`), but a field one container deeper -- the
+        // shape `Row [ editor-body ] { Column { ... } Box { Text, HostInput } }`
+        // that NoteEditor authors -- inherited the unbounded width through the
+        // `Box` and threw on every layout pass.
+        //
+        // The same rule therefore applies one level up: a Row child whose
+        // subtree holds a field that nothing re-bounds takes its share of the
+        // row through `Expanded`, exactly as the field would have on its own.
+        // That is also the shape every other backend draws -- a SwiftUI
+        // `TextField` is greedy in an `HStack`, so its `VStack` is too.
+        // Gated on `direct_row_accepts_flex` like every other wrapper here: an
+        // `Expanded` under an unbounded Row is a different runtime error.
+        let bounds_input = flex.is_none()
+            && !percent_width
+            && ctx.direct_row_child
+            && ctx.direct_row_accepts_flex
+            && !matches!(child.tag.as_str(), "HostInput" | "Input")
+            && subtree_needs_bounded_width(child, part_styles);
         // This children list owns the explicit flex wrapper. Do not also let
         // HostInput synthesize its default Expanded around the same TextField.
         let child_ctx = TableCtx {
@@ -4283,7 +4305,13 @@ fn emit_paired_children(
             // leaf wrapper does not also add SizedBox(double.infinity).
             // HostInput recognizes that same declaration and suppresses its
             // own fallback Expanded below.
-            direct_row_child: ctx.direct_row_child && (flex.is_none() || percent_width),
+            //
+            // A child wrapped for `bounds_input` is NOT a direct Row child
+            // any more: the `Expanded` hands it a finite width, so its own
+            // container computes `width_bounded` and its nested Rows accept
+            // flex again.
+            direct_row_child: ctx.direct_row_child
+                && ((flex.is_none() && !bounds_input) || percent_width),
             fill_width_owned_by_parent: percent_width,
             direct_wrap_child: false,
             direct_column_child: ctx.direct_column_child && flex.is_none(),
@@ -4329,6 +4357,10 @@ fn emit_paired_children(
                 } else {
                     format!("Expanded(flex: {}, child: {sub})", fraction_flex(fraction))
                 };
+                &expanded
+            }
+            None if bounds_input => {
+                expanded = format!("Expanded(child: {sub})");
                 &expanded
             }
             None if ctx.direct_row_child && ctx.direct_row_accepts_flex && child.tag == "Text" => {
@@ -5409,6 +5441,52 @@ fn part_flex_grow(node: &LayoutNode, part_styles: &HashMap<String, String>) -> O
         .parse::<f64>()
         .ok()?;
     Some(value.round().max(0.0) as u32)
+}
+
+/// Would `node`'s subtree put a text field under an unbounded max width if
+/// `node` itself were measured with one?
+///
+/// A Flutter `TextField` sizes itself to its incoming max width; with none it
+/// throws ("An InputDecorator ... cannot have an unbounded width"). The walk
+/// answers that question for a non-flex Row child, which is exactly the
+/// position a Row measures unbounded:
+///
+/// | node in the subtree                          | answer                    |
+/// |----------------------------------------------|---------------------------|
+/// | `HostInput` / `Input` with no fixed `width`  | yes                       |
+/// | `HostNumberInput` (no width lowering at all) | yes                       |
+/// | fixed `width` or `max-width` container       | no -- it re-bounds below  |
+/// | horizontally scrolling `HostScroll`          | no -- unbounded by design |
+/// | any other node                               | yes if any child says yes |
+///
+/// The horizontal-scroll row is a "no" because no wrapper above the scroll
+/// view can bound what is inside it, so an `Expanded` there would change the
+/// layout and fix nothing. `flex-grow` deeper down is NOT a re-bound: it only
+/// becomes `Expanded` under a Row that is itself bounded, which is what the
+/// caller is about to establish.
+///
+/// Pure: it reads styles without recording them, because deciding on a
+/// wrapper is not a lowering of any of these properties.
+fn subtree_needs_bounded_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
+    let props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|style| parse_style_props(style))
+        .unwrap_or_default();
+    let fixed_width = style_prop(&props, "width")
+        .and_then(|value| fixed_pixel_length(value))
+        .is_some();
+    match node.tag.as_str() {
+        "HostInput" | "Input" => !fixed_width,
+        "HostNumberInput" => true,
+        _ if fixed_width || part_max_width(node, part_styles).is_some() => false,
+        "HostScroll" if ScrollAxis::of(node).scrolls_horizontally() => false,
+        _ => node
+            .children
+            .iter()
+            .any(|child| subtree_needs_bounded_width(child, part_styles)),
+    }
 }
 
 /// True when the node carries any `state-when-*` predicate prop — the
@@ -21080,5 +21158,141 @@ mod layout_variant_tests {
                 .replacen("Builder(builder: _mosaicLayoutRoot)", default_root, 1);
             assert_eq!(stripped, plain, "require_runtime = {require_runtime}");
         }
+    }
+}
+
+/// A text field one container below a Row is still a text field in a Row.
+///
+/// Flutter measures a non-flex Row child with an unbounded max width, and a
+/// `TextField` asserts on one ("An InputDecorator, which is typically created
+/// by a TextField, cannot have an unbounded width"). NoteEditor's
+/// `Row [ editor-body ] { Column { ... } Box { Text, HostInput, ... } }` threw
+/// 27 layout assertions when first pumped, and took Engram's Add, Browse and
+/// Options screens with it, because only a DIRECT Row `HostInput` was given
+/// its `Expanded`.
+/// These tests pin the shape of the wrapper `emit_paired_children` now adds;
+/// the `row-child-input` fixture's widget test proves it lays out.
+#[cfg(test)]
+mod row_child_input_bound_tests {
+    use super::*;
+
+    fn emit(mll: &str, msl: &str) -> String {
+        let model = mosmodel_compiler::compile(
+            "component Editor { slot body : text ; slot label : text ; emit onEdit (value : text) ; }",
+        )
+        .expect("mil");
+        let layout = moslayout_compiler::compile(mll, Some(&model.descriptor_json)).expect("mll");
+        let style = mosstyle_compiler::compile(msl, Some(&layout.part_map_json))
+            .expect("msl")
+            .def;
+        from_pipeline(&model.component, &layout.def, &style)
+            .expect("emit")
+            .output
+    }
+
+    /// The NoteEditor shape: the field's `Box` takes the Row's remaining width
+    /// through one `Expanded`, and the input-free sibling is left intrinsic.
+    #[test]
+    fn a_row_child_holding_an_input_is_expanded() {
+        let out = emit(
+            "layout Editor { Row [ body ] { \
+               Column [ list ] { Text [ list-label ] ( content : slot: label ) } \
+               Box [ focused ] { \
+                 Text [ field-label ] ( content : slot: label ) \
+                 HostInput [ field ] ( value : slot: body , onChange : emit: onEdit ) \
+               } } }",
+            "style Editor { part focused { padding : 2 ; } }",
+        );
+        assert_eq!(out.matches("Expanded(").count(), 1, "{out}");
+        let expanded = out.find("Expanded(child:").expect("an Expanded wrapper");
+        let list = out.find("Text(label").expect("the list label");
+        let field = out.find("TextField(").expect("the field");
+        assert!(
+            list < expanded && expanded < field,
+            "the Expanded must wrap the field's Box, not its sibling:\n{out}"
+        );
+    }
+
+    /// `HostNumberInput` is a `TextField` too, with the same assertion. This is
+    /// DeckOptionsPanel's `Row [ deck-option-limits ]`, mounted by Engram.
+    #[test]
+    fn a_row_child_holding_a_number_input_is_expanded() {
+        let out = emit(
+            "layout Editor { Row [ limits ] { \
+               Column [ new-cards ] { \
+                 Text [ new-cards-label ] ( content : slot: label ) \
+                 HostNumberInput [ new-cards-input ] ( placeholder : \"20\" ) } \
+               Column [ reviews ] { \
+                 Text [ reviews-label ] ( content : slot: label ) \
+                 HostNumberInput [ reviews-input ] ( placeholder : \"200\" ) } } }",
+            "style Editor { }",
+        );
+        assert_eq!(out.matches("Expanded(child:").count(), 2, "{out}");
+    }
+
+    /// A direct Row field keeps its own fallback `Expanded`; the new rule must
+    /// not add a second one around it.
+    #[test]
+    fn a_direct_row_input_is_wrapped_once() {
+        let out = emit(
+            "layout Editor { Row [ body ] { \
+               Text [ field-label ] ( content : slot: label ) \
+               HostInput [ field ] ( value : slot: body ) } }",
+            "style Editor { }",
+        );
+        assert_eq!(out.matches("Expanded(").count(), 1, "{out}");
+    }
+
+    /// A fixed width is a bound of its own, so the column stays the width it
+    /// asked for instead of stretching across the row.
+    #[test]
+    fn a_fixed_width_child_is_not_expanded() {
+        let out = emit(
+            "layout Editor { Row [ body ] { \
+               Box [ cell ] { HostInput [ field ] ( value : slot: body ) } } }",
+            "style Editor { part cell { width : 160 ; } }",
+        );
+        assert!(!out.contains("Expanded("), "{out}");
+    }
+
+    /// A field inside a horizontal scroll view is unbounded whatever wraps the
+    /// scroll view, so an `Expanded` there would only change the layout.
+    #[test]
+    fn a_horizontal_scroll_child_is_not_expanded() {
+        let out = emit(
+            "layout Editor { Row [ body ] { \
+               HostScroll [ strip ] ( axis : horizontal ) { \
+                 Box [ cell ] { HostInput [ field ] ( value : slot: body ) } } } }",
+            "style Editor { part cell { width : 160 ; } }",
+        );
+        assert!(!out.contains("Expanded("), "{out}");
+    }
+
+    /// Bounding the outer child also re-bounds the Row inside it, so that
+    /// Row's own child takes its `Expanded` too. Before, the inner Row was
+    /// measured unbounded and could host no flex child at all.
+    #[test]
+    fn a_nested_row_is_rebounded_by_the_outer_expanded() {
+        let out = emit(
+            "layout Editor { Row [ body ] { \
+               Box [ outer ] { Row [ inner ] { \
+                 Box [ cell ] { HostInput [ field ] ( value : slot: body ) } } } } }",
+            "style Editor { }",
+        );
+        assert_eq!(out.matches("Expanded(child:").count(), 2, "{out}");
+    }
+
+    /// A Row inside a horizontal scroll view is measured unbounded, so it
+    /// cannot host `Expanded` at all: one there throws "RenderFlex children
+    /// have non-zero flex but incoming width constraints are unbounded".
+    /// The gate on `direct_row_accepts_flex` keeps the wrapper out.
+    #[test]
+    fn an_unbounded_row_gets_no_wrapper() {
+        let out = emit(
+            "layout Editor { HostScroll [ strip ] ( axis : horizontal ) { Row [ body ] { \
+               Box [ cell ] { HostInput [ field ] ( value : slot: body ) } } } }",
+            "style Editor { }",
+        );
+        assert!(!out.contains("Expanded("), "{out}");
     }
 }

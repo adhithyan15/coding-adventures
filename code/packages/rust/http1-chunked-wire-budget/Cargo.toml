@@ -1,0 +1,7 @@
+[package]
+name = "http1-chunked-wire-budget"
+version = "0.1.0"
+edition = "2021"
+description = "Cumulative encoded-input policy for HTTP/1 chunked transfer coding"
+
+[dependencies]
