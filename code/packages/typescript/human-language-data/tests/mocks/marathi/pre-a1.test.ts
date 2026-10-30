@@ -84,6 +84,18 @@ describe("Marathi pre-A1 timed mock pair", () => {
     }
     expect(read("mock-1.md")).not.toBe(read("mock-2.md"));
     expect(read("mock-1-examiner-script.md")).not.toBe(read("mock-2-examiner-script.md"));
+
+    for (const name of ["mock-1-examiner-script.md", "mock-2-examiner-script.md"]) {
+      const script = read(name);
+      expect(script).toContain("items 1–6, put");
+      expect(script).toContain("inside one 2–5 second window");
+      expect(script).toContain("items 7–14");
+      expect(script).toContain("inside one 2–8 second window");
+      expect(script).toContain("dictation\nitems W3–W6, use one 2–5 second window");
+      expect(script).toContain("deliver each prompt in 2–8 seconds");
+      expect(script).toContain("allow a 2–15 second response\nwindow");
+      expect(script).toContain("single replay\ndeclared by the task shape");
+    }
   });
 
   it("keeps the four papers independent and pins Marathi-specific evidence", () => {
