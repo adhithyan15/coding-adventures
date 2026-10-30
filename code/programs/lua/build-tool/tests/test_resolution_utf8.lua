@@ -140,8 +140,29 @@ local function graph_edges(graph)
     return edges
 end
 
+local is_windows = package.config:sub(1, 1) == "\\"
+
 local function shell_quote(value)
-    return '"' .. value:gsub('"', '\\"') .. '"'
+    if is_windows then
+        -- Windows paths cannot contain a double quote. Keep cmd.exe from
+        -- interpreting spaces or metacharacters, and use its native separator
+        -- for the executable path as well as redirected files.
+        assert.is_nil(value:find('"', 1, true))
+        return '"' .. value:gsub("/", "\\") .. '"'
+    end
+    return "'" .. value:gsub("'", "'\"'\"'") .. "'"
+end
+
+local function active_lua_executable(arguments)
+    -- Lua exposes arguments that preceded the script at negative indexes.
+    -- arg[-1] is the interpreter for a direct script, but launchers such as
+    -- LuaRocks' Busted wrapper insert -e chunks between it and the script.
+    local index = -1
+    assert.is_not_nil(arguments[index])
+    while arguments[index - 1] ~= nil do
+        index = index - 1
+    end
+    return arguments[index]
 end
 
 describe("Lua rockspec UTF-8 resolution contract", function()
@@ -193,6 +214,18 @@ describe("Lua rockspec UTF-8 resolution contract", function()
         assert.are.same({{"lua/other", "lua/pkg"}}, graph_edges(graph))
     end)
 
+    it("finds the active interpreter behind launcher options", function()
+        assert.are.equal("lua", active_lua_executable({[-1] = "lua"}))
+        assert.are.equal(
+            "C:\\Lua\\lua.exe",
+            active_lua_executable({
+                [-3] = "C:\\Lua\\lua.exe",
+                [-2] = "-e",
+                [-1] = "require('luarocks.loader')",
+            })
+        )
+    end)
+
     it("rejects malformed, overlong, surrogate, and out-of-range sequences", function()
         local invalid_sequences = {
             {"overlong two-byte form", string.char(0xc0, 0xaf)},
@@ -229,7 +262,7 @@ describe("Lua rockspec UTF-8 resolution contract", function()
         local stdout_path = root .. "/stdout.txt"
         local stderr_path = root .. "/stderr.txt"
         local command = table.concat({
-            "lua",
+            shell_quote(active_lua_executable(arg)),
             shell_quote("../build.lua"),
             "--root",
             shell_quote(root),
