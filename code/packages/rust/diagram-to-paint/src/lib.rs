@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.77.0";
+pub const VERSION: &str = "0.78.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7365,6 +7365,29 @@ where
             },
             css_to_color(&group.style.text_color),
         ));
+        if let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+            technology,
+            description,
+        }) = &group.metadata
+        {
+            let details = technology
+                .iter()
+                .map(|technology| format!("[{technology}]"))
+                .chain(description.iter().cloned())
+                .collect::<Vec<_>>()
+                .join(" - ");
+            if !details.is_empty() {
+                text_children.push(text_node(
+                    &details,
+                    group.x + 10.0,
+                    group.y + 20.0,
+                    group.width - 20.0,
+                    ls,
+                    lf.clone(),
+                    css_to_color(&group.style.text_color),
+                ));
+            }
+        }
     }
 
     // ── Relationships (drawn behind nodes) ───────────────────────────────────
@@ -10133,7 +10156,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.77.0");
+        assert_eq!(crate::VERSION, "0.78.0");
     }
 
     #[test]

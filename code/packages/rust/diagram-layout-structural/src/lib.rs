@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.33.0";
+pub const VERSION: &str = "0.34.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -179,13 +179,17 @@ fn structural_relationship_style(
 fn structural_group_style(
     group: &diagram_ir::StructuralGroup,
 ) -> diagram_ir::ResolvedDiagramStyle {
+    let deployment_node = matches!(
+        group.metadata,
+        Some(StructuralGroupMetadata::C4DeploymentNode { .. })
+    );
     resolve_style_with_base(
         group.style.as_ref(),
         diagram_ir::ResolvedDiagramStyle {
             fill: "#f8fafc".into(),
             stroke: "#94a3b8".into(),
             stroke_width: 1.5,
-            stroke_dash: Some(vec![6.0, 4.0]),
+            stroke_dash: (!deployment_node).then(|| vec![6.0, 4.0]),
             text_color: "#475569".into(),
             font_size: 14.0,
             font_weight: 400,
@@ -631,9 +635,11 @@ fn layout_groups(
                 height: max_y - y,
                 label: group.label.clone(),
                 stereotype: group.stereotype.clone(),
-                icon_name: group.metadata.as_ref().map(
-                    |StructuralGroupMetadata::Architecture { icon_name }| icon_name.clone(),
-                ),
+                icon_name: group.metadata.as_ref().and_then(|metadata| match metadata {
+                    StructuralGroupMetadata::Architecture { icon_name } => Some(icon_name.clone()),
+                    StructuralGroupMetadata::C4DeploymentNode { .. } => None,
+                }),
+                metadata: group.metadata.clone(),
                 style: structural_group_style(group),
                 parent_group: group.parent_group.clone(),
             })
@@ -1582,7 +1588,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.33.0");
+        assert_eq!(crate::VERSION, "0.34.0");
     }
 
     #[test]
