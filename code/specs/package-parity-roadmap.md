@@ -20210,4 +20210,4 @@ During final publication review, main advanced once more to
 floor-root normalization work. Normal merge
 `c95a797bad07a174a2d6fadde035b7f9591e2bae` preserves both histories and leaves
 the Rust build-tool package and graph/diff fixtures byte-identical to reviewed
-implementation head `977e9b40a91fbd831983f5f467d965f6272f993d`.
+implementation head `977e9b4b3ee7d5ce6bb12c0a171cf850065e9079`.
