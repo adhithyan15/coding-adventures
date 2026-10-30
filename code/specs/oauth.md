@@ -2757,6 +2757,29 @@ revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
 connection. Extension-block and handshake composition remain prerequisites,
 and concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-server-name` prerequisite now owns the exact RFC
+6066 ClientHello `server_name` extension data used by a future repository-owned
+TLS 1.3 client. It validates one borrowed ASCII DNS hostname under explicit
+253-byte name and 63-byte label ceilings, rejects trailing root dots,
+wildcards, malformed labels, and IPv4 or IPv6 literals (including legacy or
+ambiguous numeric IPv4 resolver spellings), and encodes the exact
+two-byte-length-prefixed `ServerNameList` containing one `host_name`. Exact
+decoding admits only that current single-name-type profile; unknown name types,
+length mismatches, extra entries, and malformed names fail closed. The
+corresponding TLS 1.3 EncryptedExtensions acknowledgement is accepted only with
+empty extension data. Encoding checks complete caller-owned output capacity
+before mutation, and stable failures retain no hostname, input bytes, or
+lengths.
+
+This slice receives already-delimited extension data. It does not locate or
+authorize the extension in a handshake message, require the server response,
+bind SNI to certificate identity, construct a ClientHello, process a handshake,
+parse or validate certificates, establish trust, check revocation, perform DNS
+or network I/O, authorize HTTP or OAuth transport, or replace `tls-platform`.
+Extension-context policy, ClientHello composition, handshake state,
+certificate-path validation, revocation policy, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-named-group-policy` prerequisite now binds each
 recognized TLS named-group wire identifier to immutable key-agreement routing
 metadata and exact wire/shared-secret lengths. The initial registry recognizes
