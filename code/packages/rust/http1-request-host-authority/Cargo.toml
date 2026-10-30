@@ -1,0 +1,7 @@
+[package]
+name = "http1-request-host-authority"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded allocation-free HTTP/1 request Host authority encoding"
+
+[dependencies]
