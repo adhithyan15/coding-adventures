@@ -118,6 +118,22 @@ local function detect_os_from_uname(uname)
     return result
 end
 
+local function fake_popen(expected_command, output_lines)
+    return function(command)
+        assert.are.equal(expected_command, command)
+        local index = 0
+        return {
+            lines = function()
+                return function()
+                    index = index + 1
+                    return output_lines[index]
+                end
+            end,
+            close = function() return true end,
+        }
+    end
+end
+
 describe("Discovery", function()
 
     after_each(function()
@@ -272,6 +288,108 @@ describe("Discovery", function()
             assert.are.equal("darwin", detect_os_from_uname("Darwin"))
             assert.are.equal("linux", detect_os_from_uname("Linux"))
             assert.are.equal("unknown", detect_os_from_uname("Plan9"))
+        end)
+    end)
+
+    describe("shell discovery fallback", function()
+        it("uses the Windows null device when probing directories", function()
+            local commands = {}
+            local options = {
+                force_fallback = true,
+                goos = "windows",
+                execute = function(command)
+                    commands[#commands + 1] = command
+                    return 0
+                end,
+            }
+
+            assert.is_true(Discovery.dir_exists("C:\\repo root\\code", options))
+            assert.are.same({
+                'cd /d "C:\\repo root\\code" 2>nul',
+            }, commands)
+        end)
+
+        it("discovers and sorts Windows subdirectories without LuaFileSystem", function()
+            local probes = {}
+            local options = {
+                force_fallback = true,
+                goos = "windows",
+                popen = fake_popen(
+                    'dir /b /ad "C:\\repo root\\code" 2>nul',
+                    {"zeta\r", "alpha", "missing"}
+                ),
+                execute = function(command)
+                    probes[#probes + 1] = command
+                    return not command:find("missing", 1, true)
+                end,
+            }
+
+            assert.are.same({
+                "C:\\repo root\\code/alpha",
+                "C:\\repo root\\code/zeta",
+            }, Discovery.list_subdirs("C:\\repo root\\code", options))
+            assert.are.same({
+                'cd /d "C:\\repo root\\code/zeta" 2>nul',
+                'cd /d "C:\\repo root\\code/alpha" 2>nul',
+                'cd /d "C:\\repo root\\code/missing" 2>nul',
+            }, probes)
+        end)
+
+        it("preserves whitespace-bearing POSIX directory names without aliasing", function()
+            local probes = {}
+            local options = {
+                force_fallback = true,
+                goos = "linux",
+                popen = fake_popen(
+                    "ls -1 '/repo root/code' 2>/dev/null",
+                    {"name ", " name", "name"}
+                ),
+                execute = function(command)
+                    probes[#probes + 1] = command
+                    return true
+                end,
+            }
+
+            assert.are.same({
+                "/repo root/code/ name",
+                "/repo root/code/name",
+                "/repo root/code/name ",
+            }, Discovery.list_subdirs("/repo root/code", options))
+            assert.are.same({
+                "cd '/repo root/code/name ' 2>/dev/null",
+                "cd '/repo root/code/ name' 2>/dev/null",
+                "cd '/repo root/code/name' 2>/dev/null",
+            }, probes)
+        end)
+
+        it("quotes apostrophes in POSIX fallback probes", function()
+            local command
+            local exists = Discovery.dir_exists("/tmp/repo's code", {
+                force_fallback = true,
+                goos = "linux",
+                execute = function(actual)
+                    command = actual
+                    return true
+                end,
+            })
+
+            assert.is_true(exists)
+            assert.are.equal("cd '/tmp/repo'\\''s code' 2>/dev/null", command)
+        end)
+
+        it("fails closed before invoking cmd for unsafe Windows paths", function()
+            local invoked = false
+            assert.has_error(function()
+                Discovery.dir_exists('C:\\repo\\bad"name', {
+                    force_fallback = true,
+                    goos = "windows",
+                    execute = function()
+                        invoked = true
+                        return true
+                    end,
+                })
+            end, "cannot safely quote Windows discovery path")
+            assert.is_false(invoked)
         end)
     end)
 

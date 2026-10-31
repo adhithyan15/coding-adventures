@@ -16,15 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18744,
+  "active_pr": 18756,
   "active_prs": [
-    18744
+    18756
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-30T17:21:30Z",
-    "pr_number": 18744,
-    "head_revision": "1a0e5cd4e3f9890055aea223d899e9ddfa538a7f",
-    "action": "After verified guarded merge of Lua PR #18725, cleanup, and a fresh dependency pass, independently reviewed current-main Rust graph/diff head 1a0e5cd4e3f9890055aea223d899e9ddfa538a7f opened as ready PR #18744 over exact base dc88db345fc175be7ad55f3da777eadec979112c at 2026-10-30T17:21:30Z. GitHub reports it mergeable and fresh exact-head CI is queued. Auto-merge remains disabled until every exact-head check is terminal acceptable and GitHub still reports the PR mergeable.",
+    "observed_at": "2026-10-30T20:46:24Z",
+    "pr_number": 18756,
+    "head_revision": "01d2f14a6a621b7ccdd38361d8024fefce583cc6",
+    "action": "Independently reviewed Lua Windows discovery fallback head 01d2f14a6a621b7ccdd38361d8024fefce583cc6 opened as ready PR #18756 over exact base 5b57bc21b6190c2216e38c847f4943fb1a766a59. GitHub reports the PR mergeable and fresh exact-head CI is queued. Main advanced through path-disjoint Rust TLS record-protection state work at publication, so normal merge 02aa0b7a9dcd1d8403caede08a22082e5d979ee2 incorporates it; the exact lifecycle head requires fresh review and CI, and auto-merge remains disabled.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2764,11 +2764,35 @@
     {
       "id": "build-tool-lua-windows-discovery-fallback-null-device-hardening",
       "title": "Correct the Lua build tool Windows discovery fallback null device",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/build-tool-lua-windows-fallback-hardening",
+      "pr_number": 18756,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18756",
+      "pr_opened_at": "2026-10-30T20:46:24Z",
+      "publication_head": "01d2f14a6a621b7ccdd38361d8024fefce583cc6",
+      "publication_base": "5b57bc21b6190c2216e38c847f4943fb1a766a59",
+      "publication_notes": "The independently reviewed head opened as ready PR #18756 and GitHub reported it mergeable. Fresh CI, CodeQL, and human-language detection checks queued. Main had advanced through a path-disjoint Rust TLS record-protection state package, so the branch immediately received a normal merge and exact-head revalidation; guarded squash auto-merge remains disabled until every check on the final reviewed lifecycle head is terminal acceptable and GitHub still reports it mergeable.",
+      "selection_revision": "6800cef66006572a8a064eed7eaad337978ce68a",
+      "selection_notes": "Selected after Rust graph/diff PR #18744 completed all 39 exact-head checks acceptably and the user manually squash-merged it. The publication slot is free, this concrete Windows production defect is already implemented and independently reviewed, and it has higher immediate reliability leverage than the newly separated Lua CLI argument-validation and Rust Cargo-trigger follow-ups. Its implementation paths are disjoint from the completed Rust work.",
+      "implementation_revision": "ce030817f27ff6447ff95806a5637445fb87149e",
+      "main_refresh_revision": "5b57bc21b6190c2216e38c847f4943fb1a766a59",
+      "main_merge_revision": "02aa0b7a9dcd1d8403caede08a22082e5d979ee2",
+      "main_merge_notes": "Main advanced once after local publication review through Rust TLS record-protection state and an OAuth specification note. Those nine paths do not overlap the Lua build-tool implementation, tests, changelog, README, parity state, or parity roadmap. A normal merge preserves both histories, and exact merged-head validation remains 29/29 focused, 158/158 full, all Lua syntax clean, and 1,740 lesson shards with zero problems.",
+      "validation_notes": "The fallback now uses cmd.exe-compatible `cd /d` and `2>nul` on Windows while retaining POSIX `/dev/null`, quotes POSIX paths safely, rejects Windows expansion, quote, NUL, and record-framing inputs before execution, preserves legitimate POSIX leading and trailing whitespace, and strips only terminal carriage returns from Windows dir.exe records. Focused discovery tests pass 29/29, the canonical Lua build-tool suite passes 158/158, every Lua source parses, all 1,740 lesson shards validate, and diff plus ignored-inclusive hygiene checks are clean.",
+      "security_review_revision": "ce030817f27ff6447ff95806a5637445fb87149e",
+      "security_review_notes": "Independent review initially rejected trimming legitimate leading and trailing whitespace from fallback directory records. The final implementation preserves POSIX names exactly, removes only Windows record framing, fails closed on dangerous cmd.exe input, and keeps the injected fallback seams test-only and authority-neutral. Exact implementation-head re-review issued SHIP with no remaining findings.",
+      "notes": "Discovered while diagnosing PR #18725 Windows job 124133234570. When lfs is unavailable, Discovery.dir_exists used POSIX 2>/dev/null even on Windows, so valid child probes failed and discovery could silently return zero packages. Repair the bounded fallback with platform-correct null devices, safe shell construction, deterministic forced-fallback regressions, and exact filename preservation. Keep strict CLI argument validation in its separately registered owner."
+    },
+    {
+      "id": "build-tool-lua-cli-argument-validation-hardening",
+      "title": "Reject unknown and value-less Lua build-tool CLI options",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered while diagnosing PR #18725 Windows job 124133234570. When lfs is unavailable, Discovery.dir_exists uses POSIX 2>/dev/null even on Windows, so directory probes fail and discovery can silently return zero packages. Repair the bounded fallback to use the Windows null device, add direct fallback regressions, and separately evaluate fail-closed handling for missing or unknown CLI option values. Keep this production hardening outside the test-launch repair and reprioritize it against the full backlog before selection."
+      "registered_at": "2026-10-30T20:40:43Z",
+      "notes": "Discovered during independent review of the Lua Windows discovery fallback repair. The CLI currently ignores unknown options, treats a missing --root value as permission to auto-detect a root, and can accept a missing --language value before succeeding with zero packages. Define strict, path-redacted stable diagnostics for unknown options and every value-less option without widening filesystem or process authority. Keep this parser hardening separate from the Windows discovery fallback repair and reprioritize it before selection."
     },
     {
       "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",
@@ -2857,7 +2881,7 @@
     {
       "id": "build-tool-rust-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Rust build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",
@@ -2883,6 +2907,10 @@
       "validation_notes": "The bounded Rust core consumes all eight graph and twelve diff-selection fixtures with canonical closures, shared-input reverse selection, exact boundary digest validation, Unicode-scalar matching, stable all-or-error diagnostics, and no new authority. The current-main branch passes 249 tests plus one doc test, locked release build, Clippy with warnings denied, touched-file formatting, dependency-duplicate and diff checks. graph_diff.rs measures 95.93% line, 96.11% region, and 100% function coverage.",
       "security_review_revision": "977e9b4b3ee7d5ce6bb12c0a171cf850065e9079",
       "security_review_notes": "Split independent review rejected question-mark portability, quadratic and allocating root checks, eager glob retention, explicit-null schema widening, leaked GRAPH diagnostics, eager boundary expansion, package-by-path scans, repeated glob parsing, and linear exclusion applicability. The final head uses content-memoized validation, lazy one-pattern matching, bounded path and boundary indexes, changed-only expansion, exact DIFF diagnostics, and indexed exclusions. Full 4,096-package shared-glob and maximum relevant-boundary stresses pass; exact-head re-review issued SHIP with no findings.",
+      "final_head": "d1db246ba3228b02ee22a8a5e4661b4ef8004adb",
+      "merged_at": "2026-10-30T20:27:19Z",
+      "merge_commit": "5e99c835e71fc772d19e502cdb3824a10276ed8e",
+      "merge_notes": "All 39 checks on the exact reviewed lifecycle head were terminal acceptable: 9 succeeded and 30 were expected skips. GitHub reported the PR mergeable, and the user manually squash-merged it after exact-head review. The merge receipt is an ancestor of current origin/main and the completed Rust worktree is archived; no auto-merge claim is made.",
       "notes": "Complete canonical graph projection and the total diff result contract, consume all 20 cases including shared-input multi-consumer selection through production modules, reuse the separately hardened matcher, and preserve stable empty failures without new authority.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/build-tool-rust-diff-selection-match-work-ceiling-adoption"
