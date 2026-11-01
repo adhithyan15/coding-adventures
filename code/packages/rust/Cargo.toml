@@ -1420,6 +1420,7 @@ members = [
   "tls13-hkdf-label",
   "tls13-supported-versions",
   "tls13-traffic-key-material",
+  "tls13-encrypted-extensions-message",
   "tls13-alpn",
   "tls13-extension-context-policy",
   "tls13-cipher-suite-offer",
