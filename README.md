@@ -419,6 +419,7 @@ See [Engram](./code/specs/engram-app.md) and the
 .
 |-- code/
 |   |-- benchmarks/   reproducible performance experiments
+|   |-- components/   reusable UI component specifications and assets
 |   |-- datasets/     shared data used by packages and programs
 |   |-- fixtures/     shared binary/text fixtures and sample inputs
 |   |-- grammars/     canonical .tokens and .grammar sources
@@ -427,7 +428,9 @@ See [Engram](./code/specs/engram-app.md) and the
 |   |-- programs/     executables, demos, apps, and visualizers
 |   |-- scripts/      repository-wide generation, reporting, and safety tools
 |   |-- sites/        website source/content
-|   \-- specs/        architecture, package, and roadmap specifications
+|   |-- specs/        architecture, package, and roadmap specifications
+|   \-- twig/         Twig language compiler and runtime toolchain
+|-- demo/             multi-framework cross-platform UI showcase apps (e.g. VisiCalc)
 |-- .github/workflows CI, CodeQL, safety, publishing, releases, and deployment
 |-- CHANGELOG.d/      monorepo-level notable changes, one entry per file
 |                     (see its `_meta.md`)
@@ -441,6 +444,8 @@ Go, Haskell, Java, Kotlin, Lua, OCaml, Perl, Python, Ruby, Rust, Swift,
 TypeScript, and WebAssembly. C, C++, and OCaml are emerging rather than
 established parity lanes. Mosaic and Twig are domain-language buckets; Starlark
 is used for build configuration rather than as an implementation ecosystem.
+Showcase and prototype UI applications across SwiftUI, Qt, Compose, Flutter,
+HTML, Web Components, and WinUI 3 live in `demo/`.
 
 ## Build System
 
