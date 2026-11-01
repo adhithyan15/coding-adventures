@@ -1437,4 +1437,5 @@ members = [
   "x509-rsassa-pss-parameters",
   "rsa-pss-message-prime",
   "tls13-finished",
+  "tls13-key-schedule",
 ]
