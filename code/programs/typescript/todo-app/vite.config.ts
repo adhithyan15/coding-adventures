@@ -11,6 +11,8 @@ export default defineConfig({
   base: "./",
 
   resolve: {
+    preserveSymlinks: true,
+    dedupe: ["react", "react-dom"],
     alias: {
       // Map @coding-adventures/* bare specifiers to their actual source paths.
       // This is needed because the Vite plugin uses ssrLoadModule to load
