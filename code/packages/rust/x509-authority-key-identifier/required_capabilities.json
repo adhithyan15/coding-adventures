@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/x509-authority-key-identifier",
+  "capabilities": [],
+  "justification": "Pure allocation-free recognition and bounded decoding of one already generic RFC 5280 Authority Key Identifier extension. It performs no filesystem, network, process, environment, clock, credential, key derivation, signing, verification, trust-root, certificate-path, revocation, TLS, or transport access."
+}

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.162.0";
+pub const VERSION: &str = "0.164.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14097,6 +14097,16 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     .split_once(':')
                     .map(|(_, value)| value.trim().to_string());
             }
+            "ACC_DESCRIPTION" => {
+                accessibility_description = Some(
+                    cursor
+                        .advance()
+                        .value
+                        .trim_start_matches("accDescription")
+                        .trim()
+                        .to_string(),
+                );
+            }
             "ACC_DESCR_BLOCK" => {
                 let value = cursor.advance().value.clone();
                 let open = value.find('{').expect("C4 accessibility block requires '{'");
@@ -14206,7 +14216,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     "Rel_Back" => (true, false),
                     _ => (false, true),
                 };
-                relationships.push(StructuralRelationship {
+                upsert_c4_relationship(&mut relationships, StructuralRelationship {
                     from: relationship_args[0].clone(),
                     to: relationship_args[1].clone(),
                     kind: RelKind::Association,
@@ -14299,6 +14309,24 @@ fn parse_c4_argument_value(cursor: &mut TokenCursor) -> Result<String, ParseErro
         return Err(token_error(&token, "expected C4 argument value"));
     }
     Ok(cursor.advance().value.clone())
+}
+
+fn upsert_c4_relationship(
+    relationships: &mut Vec<StructuralRelationship>,
+    mut relationship: StructuralRelationship,
+) {
+    let Some(existing) = relationships.iter_mut().find(|existing| {
+        existing.from == relationship.from && existing.to == relationship.to
+    }) else {
+        relationships.push(relationship);
+        return;
+    };
+
+    // Mermaid mutates an existing endpoint pair, so authored style updates survive redeclaration.
+    relationship.label_offset_x = existing.label_offset_x;
+    relationship.label_offset_y = existing.label_offset_y;
+    relationship.style = existing.style.take();
+    *existing = relationship;
 }
 
 fn apply_c4_element_style(
@@ -20104,7 +20132,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.162.0");
+        assert_eq!(crate::VERSION, "0.164.0");
     }
 
     #[test]

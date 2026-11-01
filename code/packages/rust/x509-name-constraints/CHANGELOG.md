@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 — 2026-10-30
+
+- Preserved the public DNS-component evaluator while composing mixed-name policy.
+- Added bounded IPv4 and IPv6 permitted/excluded subtree evaluation with
+  exact-family matching and exclusion precedence.
+- Composed the repository-owned `x509-ip-name-constraint-policy` primitive so
+  non-contiguous masks fail before any presented address is inspected and
+  masked-out address bits do not affect subnet matching.
+- Added a mixed DNS/IP entry point while keeping both single-form evaluators
+  fail-closed when the other retained form remains unevaluated.
+
 ## 0.5.0 — 2026-10-30
 
 - Added an explicit borrowed DNS-component evaluator for later composition

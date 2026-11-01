@@ -42,6 +42,10 @@
 
 ### Fixed
 
+- Package discovery without LuaFileSystem now uses `nul` for Windows directory
+  probes as well as listings, so `dir /ad` results are not silently discarded
+  by a Unix-only `/dev/null` redirection. Deterministic fallback tests cover
+  Windows commands, sorting, missing entries, and fail-closed path quoting.
 - Diff selection now charges the exact UTF-8 bytes of first-seen unique glob
   declarations against a 4 MiB ceiling before normalization, even when no
   paths changed. Package-root classification uses one reusable changed-path
