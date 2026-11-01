@@ -419,7 +419,20 @@ The delivery order is:
    injected or caller-owned authorities.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
-   before any socket is opened.
+   before any socket is opened. A strict allocation-free response body-framing
+   policy now rejects transfer coding until a reviewed decoder exists, rejects
+   duplicate or noncanonical `Content-Length`, binds explicit body limits to
+   fixed-length and optionally close-delimited consumption, and handles
+   bodyless, HEAD, and CONNECT framing precedence without reading a body. It
+   requires request semantics from the exact emitted request and permits
+   close-delimited framing only through trusted caller policy, never response
+   data. It does not retrofit or authorize the existing permissive `http1` or
+   `http1-client` packages; later composition must use a separately reviewed
+   strict CRLF response-head decoder and preserve exact request binding before
+   applying this policy. It performs no I/O, credential interpretation or
+   release, provider action, audit, trace, or external effect. Response syntax
+   decoding, transfer decoding, body reads, TLS, sockets, and live-provider
+   transport remain unavailable.
 9. **Provider data fixtures:** a language-neutral, zero-dependency conformance
    contract now drives synthetic public RFC 9207, distinct-redirect, device,
    confidential, user-defined, and fail-closed metadata profiles through the
@@ -555,6 +568,16 @@ lengths, and the rule that a path length cannot appear unless CA is true while
 preserving arbitrarily large canonical integers as borrowed bytes. It does not
 grant CA authority, enforce certificate-wide criticality or Key Usage policy,
 build paths, verify signatures, or select trust roots.
+A bounded `x509-authority-key-identifier` semantic layer now recognizes the
+RFC 5280 Authority Key Identifier OID and decodes the exact non-critical,
+keyIdentifier-only profile under the generic extension's retained ASN.1 depth
+and work budgets. It rejects empty or over-policy identifiers and fails closed
+on the currently unsupported authorityCertIssuer and
+authorityCertSerialNumber forms. It does not compare identifiers, select or
+authenticate an issuer, construct or validate a path, select trust, verify a
+signature, process revocation, grant TLS or HTTP authority, or perform an
+external effect.
+
 A bounded `x509-subject-key-identifier` semantic layer now recognizes only the
 RFC 5280 Subject Key Identifier OID and decodes its exact encapsulated OCTET
 STRING without allocation. A caller-selected nonzero byte ceiling is checked
@@ -784,6 +807,22 @@ recomputes `H = SHA-384(0x00^8 || mHash || salt)` before a full 48-byte
 comparison. Public size and scratch failures occur before scratch mutation;
 stable failures retain no message, digest, salt, padding, or offset bytes.
 
+A bounded `rsa-pss-sha384-signature` composition now verifies one exact public
+RSASSA-PSS signature for the fixed SHA-384, MGF1-SHA-384, 48-byte-salt
+profile. It accepts only a previously validated RSA public key, an exact
+modulus-width signature, an already-computed 48-byte message digest, exact
+caller-owned DB scratch, and caller-owned RSA and encoded-message ceilings. It
+derives `emBits = modBits - 1`, applies the repository-owned RSA public
+operation, and requires the complete fixed-profile EMSA-PSS verdict. Its
+borrowed non-copyable evidence binds the exact key, signature bytes, and
+message digest used.
+
+This signature evidence does not hash a message, parse RSA-PSS parameters or a
+certificate, choose an algorithm or issuer, establish certificate roles or a
+path, select trust roots, check time, names, or revocation, process TLS or HTTP,
+authorize OAuth transport, or perform any external effect. It is not evidence
+of certificate, HTTPS, or live-provider readiness.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
@@ -836,6 +875,19 @@ message or `M'`, compare `H`, parse or operate on an RSA key, apply RSAVP1,
 select an algorithm, or establish a signature verdict. Certificate processing,
 path and hostname validation, trust roots, revocation, TLS, HTTP, OAuth
 transport, and network effects remain unavailable.
+A bounded, data-driven `rsa-pss-data-block` prerequisite now validates the
+public unmasked data block consumed by a future RFC 8017 EMSA-PSS verifier.
+Caller policy supplies the selected salt length and a data-block byte ceiling.
+The gate requires the exact canonical `DB = PS || 0x01 || salt` structure,
+proves every `PS` octet is zero under that ceiling, and returns borrowed
+non-copyable evidence retaining the complete block and exact selected salt.
+
+This data-block evidence does not run MGF1, clear unused high bits, hash the
+message or `M'`, compare `H`, parse or operate on an RSA key, apply RSAVP1,
+select an algorithm, or establish a signature verdict. Certificate processing,
+path and hostname validation, trust roots, revocation, TLS, HTTP, OAuth
+transport, and network effects remain unavailable.
+
 A bounded, data-driven `rsa-pss-algorithm-policy` prerequisite now validates
 already-decoded public RSA-PSS parameters. Caller policy supplies an exact
 allowlist of message-hash, MGF1-hash, and salt-length profiles plus a salt-work
@@ -849,6 +901,49 @@ select an implementation, hash, run MGF1, validate PSS encoding, parse or
 operate on an RSA key, apply RSAVP1, or establish a signature verdict.
 Certificate processing, path and hostname validation, trust roots, revocation,
 TLS, HTTP, OAuth transport, and network effects remain unavailable.
+A bounded, data-driven `rsa-pss-hash-match` prerequisite now validates the
+public hash-field comparison consumed by a future RFC 8017 EMSA-PSS verifier.
+Caller policy supplies the selected digest length and comparison ceiling. The
+gate requires complete recomputed `H'` and encoded `H` values at that exact
+length, consumes every selected byte without reporting a mismatch position,
+and returns borrowed non-copyable evidence only when the values match.
+
+This hash-match evidence does not construct or hash `M'`, run MGF1, validate a
+PSS data block, parse or operate on an RSA key, apply RSAVP1, select an
+algorithm, or establish a signature verdict. Certificate processing, path and
+hostname validation, trust roots, revocation, TLS, HTTP, OAuth transport, and
+network effects remain unavailable. It makes no constant-time guarantee.
+
+
+A bounded, data-driven `rsa-pss-data-block-unmask` prerequisite now performs
+the public byte transformation consumed by a future RFC 8017 EMSA-PSS
+verifier. Only after complete `maskedDB`, MGF1-mask, output-length,
+unused-high-bit, and caller-owned byte-ceiling checks pass does it write the
+complete XOR into caller-owned memory and clear the high bits required by
+`emBits`. It returns borrowed non-copyable evidence for that exact output.
+
+This unmask evidence does not run MGF1, validate `PS || 0x01 || salt`, hash a
+message or `M'`, compare `H`, parse or operate on an RSA key, apply RSAVP1,
+select an algorithm, or establish a signature verdict. Certificate processing,
+path and hostname validation, trust roots, revocation, TLS, HTTP, OAuth
+transport, and network effects remain unavailable. It makes no constant-time
+guarantee.
+
+A bounded `x509-rsassa-pss-parameters` prerequisite now decodes the public
+RFC 4055 / RFC 8017 parameter structure carried by an X.509 signature
+AlgorithmIdentifier. It requires `id-RSASSA-PSS` with present parameters,
+handles the four explicitly tagged fields in canonical order, applies omitted
+defaults, accepts the specified SHA identifier parameter forms, and recognizes
+the explicit SHA-1, MGF1-SHA-1, and trailer-field-1 defaults required for RFC
+4055 signature-validation compatibility. It rejects an explicit default salt
+length under DER omission rules and preserves independent message hash, MGF1
+hash, salt length, and trailer field values for later policy.
+
+This decoded structure grants no algorithm approval, implementation routing,
+key authority, signature verdict, certificate role, path or hostname
+validation, trust root, revocation, TLS, HTTP, OAuth transport, or network
+effect. Concrete HTTPS remains unavailable.
+
 
 A bounded, data-driven `rsa-pss-message-prime` prerequisite now constructs the
 public hash input consumed by a future RFC 8017 EMSA-PSS verifier. Caller policy
@@ -1087,6 +1182,21 @@ intermediate name constraints, validate the target's role, purpose, or
 hostname, check revocation, perform TLS or HTTP, authorize OAuth transport, or
 cause an external effect. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A stronger additive two-link follow-up now consumes the existing authenticated
+SHA-512 intermediate path-length proof together with the same policy-bound
+intermediate-to-reviewed-root link. It fails closed unless the complete
+intermediate policy retained by the advanced proof and the child authenticated
+by the reviewed parent proof refer to the same exact decoded certificate
+object. Success retains the authenticated child link, complete intermediate
+policy, advanced path-length state, reviewed parent link, and exact root
+selection in one distinct non-copyable result. The initial state remains
+caller-owned and is not derived from anchor policy. This pure public-data
+composition performs no credential access, signing, storage, clock
+acquisition, audit event, trace emission, or external effect. It does not
+construct or search a path, apply anchor or intermediate constraints, validate
+target role, purpose, identity, or hostname, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
+and live-provider readiness remain unavailable.
 A bounded `x509-rsa-sha512-reviewed-server-link` composition now consumes one
 exact target-server policy result together with one authenticated RSA SHA-512
 issuer link terminating at a reviewed root. It fails closed unless both
@@ -1557,6 +1667,23 @@ contiguity, evaluate a presented IP address, bind constraints to a certificate
 or path, grant trust, check revocation, verify a signature, perform TLS or
 HTTP, authorize OAuth transport, or cause an external effect; concrete HTTPS
 remains unavailable.
+A bounded IP constraint evaluator now composes the shared repository-owned IP
+name-constraint policy for every retained IPv4 or IPv6 address-and-mask subtree
+before examining any presented address. Masks must contain one contiguous
+most-significant-bit prefix, masked-out address bits do not affect subnet
+matching, and matching never crosses address families. Excluded subtrees take precedence; when a
+permitted IP set is present, every presented address must fall within at least
+one permitted prefix. The IP-only entry point fails closed while DNS subtrees
+remain unevaluated, matching the existing DNS-only refusal of retained IP
+subtrees. A combined bounded entry point evaluates both supported name forms
+and releases only payload-free DNS and IP counts after both policies pass, so
+mixed critical constraints cannot silently lose one form. Inputs are typed,
+caller-supplied SAN values; errors retain only a stable category and collection
+index. This does not bind either result to a certificate, intermediate,
+selected anchor, or constructed path, process any other GeneralName form,
+generalize path validation, check revocation, perform TLS or HTTP, authorize
+OAuth transport, access a credential, or cause an external effect. Concrete
+HTTPS remains unavailable.
 A separate bounded evaluator initially validated every decoded permitted DNS
 subtree before matching caller-supplied DNS names. It enforces strict ASCII labels,
 case-insensitive label-boundary matching, the reviewed leading-dot semantics,
@@ -1740,6 +1867,28 @@ authorize a responder, bind any response to a certificate or constructed path,
 decide freshness or revocation, fetch or cache data, read a clock, or grant
 path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
 remains unavailable.
+A bounded `x509-ocsp-response-nonce-policy` prerequisite now applies the strict
+RFC 8954 response-echo branch to one already decoded `ResponseData` value. The
+caller supplies the exact nonce sent in its corresponding request; this policy
+requires the modern 32-octet client nonce, requires one non-critical
+`id-pkix-ocsp-nonce` response extension and no other outer response extension,
+decodes the extension's embedded `Nonce` OCTET STRING without resetting the
+caller's DER depth or element budget, and compares all 32 response octets with
+the repository-owned full-scan equality primitive. Missing, malformed,
+critical, unexpected, or mismatched response extensions fail closed with
+stable payload-free categories. Non-copyable success evidence retains the
+exact `ResponseData` object and requested nonce, preventing a detached echo
+verdict from being attached to another response or request. The required-echo
+branch deliberately rejects RFC 8954's permitted responder
+nonce omission; a deployment choosing a nonce-less freshness strategy needs a
+separate policy and cannot reinterpret this rejection as a revocation verdict.
+This effect-free policy does not generate randomness, construct or send an
+OCSP request, authenticate the response signature, authorize a responder, bind
+status to a certificate or path, decide freshness or revocation, fetch or cache
+data, read a clock, establish trust, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority. It is not yet consumed by the
+authenticated target-revocation composition, so concrete HTTPS remains
+unavailable.
 A bounded `x509-ocsp-basic-response` prerequisite now composes exactly one RFC
 6960 `BasicOCSPResponse` SEQUENCE under a shared caller-owned DER depth,
 element, length, OID-arc, extension-count, response-count, and fixed
@@ -2180,6 +2329,24 @@ trust roots, check revocation, perform I/O, open a socket, authorize HTTP or
 OAuth transport, or replace `tls-platform`. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-certificate-verify-message` prerequisite now owns
+only the RFC 8446 section 4.4.3 `CertificateVerify` message body. Its exact
+decoder borrows one uninterpreted two-byte signature-scheme identifier and the
+following two-byte-length-prefixed signature, rejecting a truncated header,
+short or long payload, and trailing bytes. Its encoder validates the complete
+body and caller-owned capacity before changing output and leaves extra capacity
+untouched. The structural RFC vector range of zero through 65,535 signature
+bytes is preserved; an empty vector is syntax only and must fail later
+cryptographic verification. Stable diagnostics retain no algorithm, signature,
+or caller-length data.
+
+This body codec does not frame the outer handshake header, authorize a
+signature scheme, construct the signed input, hash, sign, verify a signature,
+parse a key or certificate, validate a path or name, select trust roots, check
+revocation, perform I/O, or provide TLS, HTTP, or OAuth transport. Those policy,
+cryptographic, certificate, and composition boundaries remain separate.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-compatibility-change-cipher-spec` prerequisite now
 owns only the exact RFC 8446 middlebox-compatibility ChangeCipherSpec body.
 Exact decoding accepts the single canonical octet `0x01` and rejects empty,
@@ -2218,6 +2385,35 @@ or OAuth transport, or open a network connection. Context-specific extension
 policy and decoding, handshake state, repository-owned record protection,
 certificate-path validation, revocation, TLS transport, and HTTP composition
 remain blockers. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-extension-context-policy` prerequisite now composes
+structurally decoded extension blocks with the TLS 1.3 client-side message
+contexts in RFC 8446 section 4.2. Its caller-selected rule slice maps exact
+extension types to non-empty context sets, rejects duplicate rules, and is
+bounded to 64 entries. A reviewed standard rule table records all 22 extension
+types and message placements in RFC 8446 Table 1 as data rather than control
+flow. Outbound ClientHello validation rejects unrecognized or misplaced
+extensions and requires `pre_shared_key`, when present, to be last. Inbound
+ServerHello, EncryptedExtensions, HelloRetryRequest, Certificate,
+CertificateRequest, and NewSessionTicket validation rejects unrecognized or
+misplaced extensions. Server response extensions in ServerHello,
+EncryptedExtensions, HelloRetryRequest, and the server Certificate must have
+been offered by the validated ClientHello, except that HelloRetryRequest may
+carry an unsolicited `cookie`; CertificateRequest remains a server request and
+NewSessionTicket remains unsolicited by definition. Stable failures retain no
+extension type, data, count, or message bytes.
+
+This slice consumes only already decoded `tls13-extension-block` values. It
+does not decode extension data, require mandatory extensions, validate the
+semantics or relationships of selected values, generalize to a server role or
+client-certificate response, emit alerts, sequence handshake messages,
+calculate a transcript, invoke cryptography, validate certificates or names,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. The standard table recognizes syntax
+and placement only; it does not enable every listed extension in a future
+client profile. Extension-content policy, ClientHello composition, handshake
+state, certificate-path validation, revocation, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-certificate-request-message` prerequisite now
 decodes one exact TLS 1.3 `CertificateRequest` body. A caller-owned limit
@@ -2309,6 +2505,48 @@ derivation, record protection, key update, certificate processing, trust,
 revocation, I/O, HTTP, OAuth transport, or network effect. Unsupported RFC 8446
 CCM suites fail closed until separately reviewed repository-owned primitives
 and limits are added. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-signature-scheme-policy` prerequisite now binds the
+three RFC 8446 RSASSA-PSS RSAE wire identifiers to their exact message hash,
+MGF1 hash, digest-sized salt length, and required `rsaEncryption` public-key
+form. A caller supplies an ordered non-empty, duplicate-free allowlist;
+selection accepts only an exact known wire identifier already authorized by
+that policy. EdDSA is deliberately absent while the repository implementation
+retains secret-dependent scalar branches and key-derived temporaries. ECDSA
+and RSASSA-PSS-key-OID schemes remain absent until their separate
+repository-owned key and verification boundaries exist.
+
+This registry is routing metadata only. Possessing a selected value does not
+prove that its hash, MGF1, RSA-PSS encoded-message validation, RSA operation,
+key parser, or certificate/handshake composition exists or is production-ready.
+The package does not encode or parse a `signature_algorithms` extension,
+advertise a scheme, validate a public key, verify a signature, process a
+certificate or transcript, establish trust, enforce revocation, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. Concrete
+HTTPS remains unavailable.
+
+An allocation-free `tls13-cipher-suite-offer` prerequisite now binds a
+caller's preference-ordered ClientHello cipher-suite identifiers to that same
+repository-owned policy. Offers contain one through 64 exact two-byte values,
+reject duplicates, and must include at least one suite authorized by the
+supplied policy. Explicitly configured unknown identifiers remain ordered data
+for a separate reserved-value or GREASE policy. Failure-atomic encoding emits
+the exact two-byte-length-prefixed ClientHello vector into caller-owned
+storage. Server selection first must match an identifier in the original
+offer and then must pass the retained policy; success returns the policy's
+existing descriptor with the suite's algorithms, lengths, and per-key record
+limit still bound together. Stable failures and diagnostics retain no offered
+or selected identifiers.
+
+This slice does not decide which suites or unknown identifiers to configure,
+construct a ClientHello, generate entropy, parse a ServerHello, select a suite
+for the peer, invoke an AEAD or hash, derive or store keys, protect records,
+advance a handshake, validate certificates, establish trust, enforce
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. ClientHello construction, ServerHello and handshake-state
+composition, reviewed cryptographic execution, certificate validation, TLS
+transport, and HTTP composition remain blockers. Concrete HTTPS remains
+unavailable.
 
 An allocation-free `tls13-certificate-verify-input` prerequisite now owns only
 the exact RFC 8446 section 4.4.3 content hashed and signed for a TLS 1.3
@@ -2623,6 +2861,114 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+The repository-owned AES implementation now also exposes an AES-128-only
+fixed-memory block-encryption prerequisite for the
+`TLS_AES_128_GCM_SHA256` path. It accepts exact caller-owned 16-byte key,
+plaintext, and output buffers, expands exactly eleven round keys into fixed
+wipe-on-drop storage, and writes the ciphertext only after all ten rounds
+complete. SubBytes computes the FIPS 197 multiplicative inverse and affine
+transform with fixed-work GF(2^8) arithmetic rather than indexing a
+secret-dependent S-box table. The round count, key-schedule branches, and
+memory addresses depend only on AES-128's public fixed dimensions. The copied
+state, expanded key, key-schedule scratch, row scratch, and column scratch are
+wiped on return, while the borrowed inputs remain caller-owned. The boundary
+does not allocate and does not move ciphertext through an ABI return slot.
+It performs no credential access, edit, signing, provider action, audit or
+trace emission, I/O, or external effect.
+
+This is one block-cipher primitive, not AES-GCM or TLS record protection. It
+does not support fixed-memory AES-192 or AES-256, authenticate ciphertext,
+compose GHASH, construct or reserve record nonces, enforce a selected suite's
+per-key record ceiling, own traffic keys, frame or protect records, process a
+handshake, validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. The
+allocation-returning and table-indexing legacy AES APIs remain compatibility
+and educational surfaces rather than production TLS composition. Reviewed
+AES-GCM composition remains a prerequisite, and concrete HTTPS remains
+unavailable.
+
+A bounded `tls13-finished` prerequisite now composes the repository-owned
+fixed-memory HKDF and HMAC paths for RFC 8446 Finished verify-data. It derives
+the fixed "finished" label with empty context from one already-derived
+BaseKey, rejecting a SHA-256/SHA-384 mismatch against the exact
+policy-authorized cipher suite before derivation. The resulting key occupies
+caller-owned non-cloneable fixed wipe-on-drop storage and is exposed only by a
+success-only borrowed view, so secret bytes do not cross the ABI return slot
+by value. It has no byte accessor and retains only public suite metadata in
+Debug output. An explicit client/server sender role remains bound to that key
+storage and to successful verification evidence. Generation accepts an exact
+Hash.length transcript hash and writes verify-data into exact caller-owned
+storage only after all public checks and HMAC computation succeed.
+
+Peer verification separately checks the public transcript-hash and
+verify-data lengths, computes the expected value in wipe-on-drop storage, and
+uses the repository-owned compiler-preserved full scan. Success returns
+non-cloneable evidence retaining the selected suite, sender role, and exact
+public transcript hash; mismatch is a stable redacted category. RFC 8448 SHA-256 key
+evidence plus independently generated SHA-256 and SHA-384 verify-data vectors
+cover the admitted algorithms.
+
+The caller remains responsible for constructing the transcript hash, choosing
+the correct client/server BaseKey, sequencing the Finished transition, and
+consuming verification evidence in a complete handshake state machine. This
+slice does not compose the early/handshake/master key schedule, parse or
+sequence handshake messages, authenticate certificates, establish trust,
+enforce revocation, invoke an AEAD, protect records, perform I/O, authorize
+HTTP or OAuth transport, or open a network connection. Concrete HTTPS remains
+unavailable.
+
+The repository-owned `tls13-key-schedule` boundary now composes the no-PSK
+RFC 8446 section 7.1 base-secret transitions for a full ephemeral key exchange.
+One caller-policy-selected cipher suite remains the sole source of SHA-256 or
+SHA-384 policy. The composition derives the Early Secret from the required
+Hash-length zero input, derives the Handshake Secret from a non-empty bounded
+caller-owned shared secret, and derives the Master Secret from the required
+Hash-length zero input. Both "derived" transitions use the canonical empty
+transcript hash for the suite-selected algorithm. All intermediate derived
+secrets occupy fixed wipe-on-drop storage, and the three resulting secrets are
+copied into non-cloneable caller-owned wipe-on-drop storage only after the full
+schedule succeeds. A success-only borrowed view binds the secrets to the
+selected suite; stable failures retain no secret bytes or caller lengths.
+
+This bounded slice deliberately excludes PSKs, 0-RTT, binders, traffic-secret
+labels, exporter and resumption secrets, transcript sequencing, Finished,
+record protection, handshake processing, certificate validation, trust-root
+selection, revocation, I/O, HTTP, and OAuth. The caller remains responsible for
+supplying a group-valid shared secret from a separately reviewed key-exchange
+boundary, binding the peer through the later authenticated handshake, and
+wiping that borrowed input. It performs no credential access,
+edit, signing, provider action, audit or trace emission, or external effect.
+Complete key-schedule, AEAD, handshake, certificate, transport, and HTTP
+composition remain blockers; concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-transcript` prerequisite now owns the data-driven
+SHA-256/SHA-384 transcript-hash state needed around TLS 1.3 cipher-suite
+selection. Before selection it hashes each exact byte segment from a
+caller-accepted handshake message encoding through both repository-owned hash
+implementations. A
+caller-selected nonzero cumulative wire-byte ceiling, itself no larger than
+SHA-256's FIPS 180-4 message bound, limits work before either state changes.
+Selection consumes one policy-authorized cipher suite and retains only the
+suite-bound hash state; later snapshots carry that exact hash identifier and
+length together with the public digest bytes. Snapshots are non-destructive,
+and a failed cumulative-limit check leaves the transcript unchanged.
+
+The selected transcript also supports RFC 8446's one-shot HelloRetryRequest
+rewrite. It snapshots the first ClientHello transcript, builds the synthetic
+`message_hash(254) || uint24(Hash.length) || Hash(ClientHello1)` input in fixed
+storage, replaces the selected hash state only after the rewrite succeeds, and
+rejects a repeated rewrite. The caller remains responsible for invoking that
+operation at the correct state transition and then hashing the exact
+caller-accepted HelloRetryRequest encoding. This slice does not parse or
+authenticate handshake framing, prove segment boundaries, sequence handshake
+messages, select a suite,
+derive or retain TLS secrets, invoke an AEAD, process certificates, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Complete handshake and key-schedule state,
+repository-owned AEAD composition, certificate-path validation, revocation
+policy, TLS transport, and HTTP composition remain blockers. Concrete HTTPS
+remains unavailable.
+
 An allocation-free `tls13-handshake` prerequisite now owns only the RFC 8446
 four-byte handshake-message envelope needed by a future repository-owned TLS
 state machine. It recognizes the ten core TLS 1.3 wire message types, while a
@@ -2649,6 +2995,25 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-no-psk-server-flight` policy now sequences the
+already decoded server authentication flight after `ServerHello` for the
+repository's no-PSK TLS 1.3 client path. It requires
+`EncryptedExtensions`, accepts one optional `CertificateRequest`, then requires
+`Certificate`, `CertificateVerify`, and `Finished` exactly once and in order.
+Unexpected messages fail without advancing state. Completion retains whether
+client authentication was requested and makes that requirement available to
+later client-flight policy. A future composition must require that policy to
+consume the retained value rather than allowing callers to ignore it.
+
+This ordering layer does not accept PSK or early-data handshakes, sequence the
+initial hellos or the client flight, decode or semantically validate a body,
+update a transcript, authenticate `CertificateVerify` or `Finished`, validate
+a certificate or path, check identity or revocation, access a credential or
+signing key, produce a client certificate or signature, emit an alert, derive
+keys, protect records, perform I/O, authorize HTTP or OAuth transport, or open
+a network connection. Full handshake state and all of those compositions
+remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-key-update-message` prerequisite now owns the exact
 one-octet RFC 8446 section 4.6.3 `KeyUpdate` handshake body. Exact decoding
 accepts only `update_not_requested` and `update_requested`, rejects truncated,
@@ -2666,6 +3031,29 @@ handshake and post-handshake state, key-update secret derivation,
 repository-owned record protection, certificate-path validation, revocation
 policy, TLS transport, and HTTP composition remain blockers. Concrete HTTPS
 remains unavailable.
+
+A bounded `tls13-record-protection-state` composition now consumes one
+success-only traffic-key-material view and creates the matching one-direction
+record nonce sequence directly from the same selected cipher suite. Static IV,
+nonce length, AEAD routing, authentication-tag length, and caller-authorized
+record ceiling cannot be supplied or reinterpreted independently. Fresh state
+starts at sequence zero, has no reset operation, and consumes each sequence
+before returning one non-cloneable borrowed reservation containing the exact
+matching key, state-owned nonce, public routing metadata, and sequence number.
+The reservation borrows the complete state, so another nonce cannot be reserved
+while that key/nonce pair is in use; exhaustion fails closed without advancing
+state. Secret key and static-IV bytes remain in the caller-owned wipe-on-drop
+storage retained by the consumed material view.
+
+This composition does not derive a traffic secret; establish its key-schedule
+position; select or negotiate a suite; invoke or review an AEAD; frame, encrypt,
+decrypt, or authenticate records; perform key updates; process a handshake;
+validate certificates; establish trust; enforce revocation; perform I/O;
+authorize HTTP or OAuth transport; or open a network connection. Repository-
+owned AEAD review and composition, complete key-schedule and transcript state,
+handshake processing, certificate-path validation, revocation policy, TLS
+transport, and HTTP composition remain blockers. Concrete HTTPS remains
+unavailable.
 
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
@@ -2701,6 +3089,28 @@ allocation-returning legacy ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain
 compatibility and educational surfaces rather than production TLS composition.
 Combined fixed-memory AEAD review remains a prerequisite, and concrete HTTPS
 remains unavailable.
+
+The repository-owned AES modes package now exposes fixed-memory
+`ghash_multiply_fixed` and `ghash_fixed` prerequisites for the
+`TLS_AES_128_GCM_SHA256` and `TLS_AES_256_GCM_SHA384` paths. The multiplication
+boundary always performs 128 rounds, replaces secret-derived choices with
+masks, writes its result into caller-owned fixed storage, and allocates no
+memory. The multiplication product and working multiplier are wipe-on-drop;
+the complete GHASH boundary also reuses and wipes one padded block and its
+accumulator. AAD and ciphertext bit lengths are validated before caller output
+changes. NIST SP 800-38D and block-edge equivalence evidence cover the admitted
+surface.
+
+This is only the universal-hash component of GCM. The repository's legacy AES
+and GCM APIs remain educational compatibility surfaces and are not approved as
+production TLS composition. This slice does not harden AES, derive or own an
+AES key, construct or reserve a nonce, combine counter-mode encryption with
+GHASH into a reviewed fixed-memory AEAD, compare a tag, enforce the selected
+suite's per-key record ceiling, frame or protect records, process a handshake,
+validate certificates, establish trust, enforce revocation, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. A hardened
+repository-owned AES primitive and reviewed combined AES-GCM boundary remain
+prerequisites, and concrete HTTPS remains unavailable.
 
 The repository-owned ChaCha20-Poly1305 implementation now also exposes a
 bounded fixed-memory RFC 8439 section 2.8 AEAD composition. Encryption accepts
@@ -2756,6 +3166,70 @@ derive keys, protect records, process certificates, establish trust, check
 revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
 connection. Extension-block and handshake composition remain prerequisites,
 and concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-key-share-entry` prerequisite owns only the RFC 8446
+`KeyShareEntry` structure shared by ClientHello and ServerHello key-share
+extension data. A caller supplies one exact two-byte named-group identifier,
+one non-empty borrowed key-exchange byte string, and an explicit reviewed
+maximum key-exchange length from 1 through 65,535 bytes. Construction and
+decoding reject empty or over-policy key material. Unknown and reserved group
+identifiers remain exact data for a later data-driven group policy. Encoding
+writes the two-byte group, two-byte key-exchange length, and exact caller bytes
+only after validating complete output capacity. Prefix decoding returns one
+complete borrowed entry plus the unconsumed input, while rejecting truncated
+headers or bodies and over-policy declared lengths before borrowing payload
+bytes. Stable failures and diagnostics retain no group identifiers or key
+bytes.
+
+This structural slice does not construct the ClientHello key-share vector,
+interpret HelloRetryRequest, authorize a named group, enforce a group-specific
+public-key length or encoding, generate ephemeral secrets, invoke X25519 or
+another key-agreement primitive, validate a peer public key, derive or retain a
+shared secret, advance a handshake, establish trust, enforce revocation,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Named-group policy, reviewed repository-owned key agreement, handshake-state
+composition, TLS transport, and HTTP composition remain blockers. Concrete
+HTTPS remains unavailable.
+
+An allocation-free `tls13-certificate-message` prerequisite now decodes one
+already-delimited RFC 8446 Certificate handshake body under caller-owned total,
+request-context, certificate-list, entry-count, certificate, and per-entry
+extension ceilings. It preserves borrowed request-context bytes, complete
+certificate bytes, and opaque extension blocks, and exposes the validated
+entries without allocation. Structurally valid empty client certificate lists
+and non-empty post-handshake request contexts remain available for later exact
+handshake-state policy rather than being assigned one role by the framing
+layer. Stable failures retain no handshake bytes or length values.
+
+This slice does not interpret entry extensions, parse X.509, decide handshake
+role or state, authenticate a certificate, construct or validate a path,
+establish trust, check names or revocation, send alerts, derive keys, protect
+records, perform I/O, provide TLS or HTTP, authorize OAuth transport, or open a
+network connection. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-server-hello-message` prerequisite now decodes one
+already-delimited RFC 8446 `ServerHello` body. Caller-owned limits bound the
+complete body, extension-vector payload, and retained extension count. The
+decoder enforces the fixed TLS 1.3 legacy version `0x0303`, the zero legacy
+compression method, the zero-to-32-byte session-id echo, exact body
+consumption, and the structure's minimum extension-vector payload. It retains
+the exact random and unclassified cipher-suite identifier, then composes the
+repository-owned generic extension-block decoder so malformed lengths,
+trailing bytes, duplicate extension types, and resource exhaustion fail
+closed. Stable failures contain only a category and body-local offset, and
+diagnostics omit random, session-id, and extension bytes.
+
+This structural boundary does not classify the `HelloRetryRequest` random,
+interpret or authorize extension contents, require or validate
+`supported_versions`, bind the session-id echo or cipher-suite selection to an
+original `ClientHello`, enforce the downgrade sentinel, send alerts, advance a
+handshake, derive keys, protect records, parse or validate certificates,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. ClientHello construction,
+context-specific extension and selection policy, handshake state,
+repository-owned signature verification, certificate name/path validation,
+trust-root and revocation integration, TLS transport, and HTTP composition
+remain blockers. Concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
 `application_layer_protocol_negotiation` extension data needed to bind a
@@ -2824,6 +3298,45 @@ trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
 open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
+
+An allocation-free `http1-request-host-authority` prerequisite now validates
+one caller-borrowed ASCII DNS name and optional non-zero port under explicit
+caller limits, then encodes the exact HTTP/1 `Host` field value into
+caller-owned storage. DNS labels use the LDH profile, cannot be empty or exceed
+63 bytes, and cannot begin or end with a hyphen. A terminal root dot, URI
+delimiters, whitespace, controls, IPv4/IPv6 literals including legacy numeric
+spellings, Unicode, and other non-DNS authority forms fail closed. Encoding
+lowercases the DNS name and appends the
+caller-supplied port in shortest decimal form only after proving the complete
+output fits, so an undersized output remains unchanged. Stable failures retain
+no hostname, port, length, or output bytes, and Debug redacts the borrowed
+hostname.
+
+This syntax boundary does not parse a URL, decide whether a configured port is
+the scheme default, create the surrounding `Host` field line, compare the
+authority with a request target, TLS SNI, certificate identity, or provider
+configuration, authorize a destination, perform DNS or I/O, release a
+credential, emit provider or trace audit events, or provide HTTP, OAuth, or
+live-provider transport. Those semantic bindings and external effects remain
+separate. Concrete HTTPS remains unavailable.
+
+An allocation-free `http1-request-header-field` prerequisite now validates and
+encodes one deliberately narrow HTTP/1 request field line into caller-owned
+storage. Caller limits bound the token-only field name, ASCII field value, and
+complete line. Values may be empty or contain internal space and horizontal
+tab, but leading or trailing optional whitespace, controls, DEL, and non-ASCII
+bytes fail closed. The encoder emits the exact validated name, colon, one
+space, value, and CRLF only after proving the complete output fits, so a small
+output remains unchanged. Success retains borrowed name and potentially
+sensitive value bytes plus the exact encoded length without allocation. Stable
+failures retain no field bytes or lengths, and Debug redacts both inputs.
+
+This syntax boundary does not authorize a field name or value, interpret or
+release a credential, detect duplicate or conflicting fields, enforce Host or
+body-framing policy, compose a request head, perform TLS, read or write a
+socket, emit provider or trace audit events, or authorize HTTP or OAuth
+transport. Those semantic and external-effect policies remain separate.
+Concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-key-share` prerequisite now binds exact TLS 1.3
 `KeyShareEntry` values to the existing caller-selected named-group policy.

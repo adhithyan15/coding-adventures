@@ -1,10 +1,11 @@
 //! # DNS and IP NameConstraints structure
 //!
 //! This crate decodes a narrow, bounded RFC 5280 structure and evaluates its
-//! permitted and excluded DNS or IP subtrees. A separate policy evaluates DNS
-//! constraints against caller-supplied names; IP matching remains a separate
-//! boundary. The crate deliberately grants no certificate-evidence, path,
-//! trust-root, or TLS authority.
+//! permitted and excluded DNS or IP subtrees. Separate DNS-only and IP-only
+//! entry points fail closed on the other retained name form, while a combined
+//! policy evaluates both against caller-supplied typed names. The crate
+//! deliberately grants no certificate-evidence, path, trust-root, or TLS
+//! authority.
 
 #![deny(unsafe_code)]
 
@@ -15,6 +16,15 @@ use der_asn1::{
 use der_tlv::{DerTag, TagClass};
 use std::error::Error;
 use std::fmt;
+use std::net::IpAddr;
+use x509_ip_name_constraint_policy::{
+    evaluate_ip_name_constraints, IpNameConstraintError, IpNameConstraintErrorKind,
+};
+
+pub use x509_ip_name_constraint_policy::{
+    ConstrainedIpAddresses, IpConstraintSyntaxError, PresentedIpAddressSyntaxError,
+    MAX_PRESENTED_IP_ADDRESSES,
+};
 
 const SEQUENCE_TAG: u32 = 16;
 const PERMITTED_SUBTREES_TAG: u32 = 0;
@@ -31,7 +41,6 @@ pub const MAX_DNS_SUBTREES: usize = 256;
 pub const MAX_GENERAL_SUBTREES: usize = MAX_DNS_SUBTREES;
 /// Maximum presented DNS names evaluated against one constraints value.
 pub const MAX_PRESENTED_DNS_NAMES: usize = 256;
-
 /// Stable syntax failures for DNS constraints and presented DNS names.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DnsNameSyntaxError {
@@ -107,6 +116,128 @@ impl ConstrainedDnsNames {
 
     pub const fn is_empty(self) -> bool {
         self.count == 0
+    }
+}
+
+/// Stable payload-free IP constraint evaluation failures.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum IpConstraintErrorKind {
+    TooManyPermittedSubtrees,
+    TooManyExcludedSubtrees,
+    TooManyPresentedIpAddresses,
+    UnevaluatedDnsSubtrees,
+    InvalidPermittedSubtree(IpConstraintSyntaxError),
+    InvalidExcludedSubtree(IpConstraintSyntaxError),
+    InvalidPresentedIpAddress(PresentedIpAddressSyntaxError),
+    PresentedIpAddressExcluded,
+    PresentedIpAddressNotPermitted,
+}
+
+/// One redacted IP evaluation failure and its relevant collection index.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct IpConstraintError {
+    kind: IpConstraintErrorKind,
+    item_index: usize,
+}
+
+impl IpConstraintError {
+    const fn new(kind: IpConstraintErrorKind, item_index: usize) -> Self {
+        Self { kind, item_index }
+    }
+
+    pub const fn kind(self) -> IpConstraintErrorKind {
+        self.kind
+    }
+
+    pub const fn item_index(self) -> usize {
+        self.item_index
+    }
+}
+
+impl fmt::Display for IpConstraintError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 IP constraint error {:?} at item {}",
+            self.kind, self.item_index
+        )
+    }
+}
+
+impl Error for IpConstraintError {}
+
+/// Stable payload-free failures from combined DNS and IP evaluation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum NameConstraintEvaluationErrorKind {
+    Dns(DnsConstraintErrorKind),
+    Ip(IpConstraintErrorKind),
+}
+
+/// One redacted combined evaluation failure and its relevant collection index.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct NameConstraintEvaluationError {
+    kind: NameConstraintEvaluationErrorKind,
+    item_index: usize,
+}
+
+impl NameConstraintEvaluationError {
+    const fn dns(error: DnsConstraintError) -> Self {
+        Self {
+            kind: NameConstraintEvaluationErrorKind::Dns(error.kind()),
+            item_index: error.item_index(),
+        }
+    }
+
+    const fn ip(error: IpConstraintError) -> Self {
+        Self {
+            kind: NameConstraintEvaluationErrorKind::Ip(error.kind()),
+            item_index: error.item_index(),
+        }
+    }
+
+    pub const fn kind(self) -> NameConstraintEvaluationErrorKind {
+        self.kind
+    }
+
+    pub const fn item_index(self) -> usize {
+        self.item_index
+    }
+}
+
+impl fmt::Display for NameConstraintEvaluationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 combined name constraint error {:?} at item {}",
+            self.kind, self.item_index
+        )
+    }
+}
+
+impl Error for NameConstraintEvaluationError {}
+
+/// Payload-free evidence that both supported name forms satisfied the constraints.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ConstrainedDnsAndIpNames {
+    dns_count: usize,
+    ip_count: usize,
+}
+
+impl ConstrainedDnsAndIpNames {
+    pub const fn dns_count(self) -> usize {
+        self.dns_count
+    }
+
+    pub const fn ip_count(self) -> usize {
+        self.ip_count
+    }
+
+    pub const fn total_count(self) -> usize {
+        self.dns_count + self.ip_count
+    }
+
+    pub const fn is_empty(self) -> bool {
+        self.dns_count == 0 && self.ip_count == 0
     }
 }
 
@@ -380,6 +511,145 @@ pub fn evaluate_dns_name_subtrees(
     Ok(ConstrainedDnsNames {
         count: presented_dns_names.len(),
     })
+}
+
+/// Evaluate presented IP subjectAltName values against IP-only constraints.
+///
+/// This entry point refuses retained DNS subtrees so a caller cannot silently
+/// skip that name form. Use [`evaluate_dns_and_ip_names`] for mixed values.
+pub fn evaluate_ip_addresses(
+    constraints: &NameConstraints<'_>,
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedIpAddresses, IpConstraintError> {
+    if presented_ip_addresses.len() > MAX_PRESENTED_IP_ADDRESSES {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::TooManyPresentedIpAddresses,
+            MAX_PRESENTED_IP_ADDRESSES,
+        ));
+    }
+    if constraints.permitted_len() != 0 || constraints.excluded_len() != 0 {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::UnevaluatedDnsSubtrees,
+            0,
+        ));
+    }
+
+    evaluate_ip_addresses_inner(constraints, presented_ip_addresses)
+}
+
+/// Evaluate both supported GeneralName forms without silently dropping either.
+pub fn evaluate_dns_and_ip_names(
+    constraints: &NameConstraints<'_>,
+    presented_dns_names: &[&str],
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedDnsAndIpNames, NameConstraintEvaluationError> {
+    // Validate every retained constraint before examining either presented
+    // collection. The second calls below repeat that bounded validation while
+    // applying the names, keeping the internal evidence local and unforgeable.
+    evaluate_dns_names_inner(constraints, &[]).map_err(NameConstraintEvaluationError::dns)?;
+    evaluate_ip_addresses_inner(constraints, &[]).map_err(NameConstraintEvaluationError::ip)?;
+
+    let dns = evaluate_dns_names_inner(constraints, presented_dns_names)
+        .map_err(NameConstraintEvaluationError::dns)?;
+    let ip = evaluate_ip_addresses_inner(constraints, presented_ip_addresses)
+        .map_err(NameConstraintEvaluationError::ip)?;
+    Ok(ConstrainedDnsAndIpNames {
+        dns_count: dns.count(),
+        ip_count: ip.count(),
+    })
+}
+
+// Reuse the bounded public component evaluator introduced on main so the
+// combined policy and existing component consumers share one DNS rule set.
+fn evaluate_dns_names_inner(
+    constraints: &NameConstraints<'_>,
+    presented_dns_names: &[&str],
+) -> Result<ConstrainedDnsNames, DnsConstraintError> {
+    evaluate_dns_name_subtrees(
+        constraints.permitted_dns_subtrees(),
+        constraints.excluded_dns_subtrees(),
+        presented_dns_names,
+    )
+}
+
+fn evaluate_ip_addresses_inner(
+    constraints: &NameConstraints<'_>,
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedIpAddresses, IpConstraintError> {
+    if presented_ip_addresses.len() > MAX_PRESENTED_IP_ADDRESSES {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::TooManyPresentedIpAddresses,
+            MAX_PRESENTED_IP_ADDRESSES,
+        ));
+    }
+
+    // Preserve the shared primitive's constraint-first contract across the
+    // typed adapter: validate every retained subtree before reading even one
+    // caller-supplied address. The second call below repeats that bounded
+    // validation while applying the adapted addresses.
+    evaluate_ip_name_constraints(
+        constraints.permitted_ip_subtrees(),
+        constraints.excluded_ip_subtrees(),
+        &[],
+    )
+    .map_err(map_ip_constraint_error)?;
+
+    let mut address_octets = [[0u8; 16]; MAX_PRESENTED_IP_ADDRESSES];
+    let mut address_lengths = [0usize; MAX_PRESENTED_IP_ADDRESSES];
+    for (index, address) in presented_ip_addresses.iter().enumerate() {
+        match address {
+            IpAddr::V4(address) => {
+                address_octets[index][..4].copy_from_slice(&address.octets());
+                address_lengths[index] = 4;
+            }
+            IpAddr::V6(address) => {
+                address_octets[index].copy_from_slice(&address.octets());
+                address_lengths[index] = 16;
+            }
+        }
+    }
+    let mut encoded_addresses: [&[u8]; MAX_PRESENTED_IP_ADDRESSES] =
+        [&[]; MAX_PRESENTED_IP_ADDRESSES];
+    for index in 0..presented_ip_addresses.len() {
+        encoded_addresses[index] = &address_octets[index][..address_lengths[index]];
+    }
+
+    evaluate_ip_name_constraints(
+        constraints.permitted_ip_subtrees(),
+        constraints.excluded_ip_subtrees(),
+        &encoded_addresses[..presented_ip_addresses.len()],
+    )
+    .map_err(map_ip_constraint_error)
+}
+
+fn map_ip_constraint_error(error: IpNameConstraintError) -> IpConstraintError {
+    let kind = match error.kind() {
+        IpNameConstraintErrorKind::TooManyPermittedConstraints => {
+            IpConstraintErrorKind::TooManyPermittedSubtrees
+        }
+        IpNameConstraintErrorKind::TooManyExcludedConstraints => {
+            IpConstraintErrorKind::TooManyExcludedSubtrees
+        }
+        IpNameConstraintErrorKind::TooManyPresentedAddresses => {
+            IpConstraintErrorKind::TooManyPresentedIpAddresses
+        }
+        IpNameConstraintErrorKind::InvalidPermittedConstraint(reason) => {
+            IpConstraintErrorKind::InvalidPermittedSubtree(reason)
+        }
+        IpNameConstraintErrorKind::InvalidExcludedConstraint(reason) => {
+            IpConstraintErrorKind::InvalidExcludedSubtree(reason)
+        }
+        IpNameConstraintErrorKind::InvalidPresentedAddress(reason) => {
+            IpConstraintErrorKind::InvalidPresentedIpAddress(reason)
+        }
+        IpNameConstraintErrorKind::PresentedAddressExcluded => {
+            IpConstraintErrorKind::PresentedIpAddressExcluded
+        }
+        IpNameConstraintErrorKind::PresentedAddressNotPermitted => {
+            IpConstraintErrorKind::PresentedIpAddressNotPermitted
+        }
+    };
+    IpConstraintError::new(kind, error.item_index())
 }
 
 #[derive(Clone, Copy)]
