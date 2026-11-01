@@ -8,6 +8,7 @@
 
 use core::fmt;
 use x509_rsa_sha512_issuer_link::{
+    ValidatedX509RsaSha512AuthenticatedIntermediatePathLength,
     VerifiedX509RsaSha512IntermediateIssuerPolicyLink, VerifiedX509RsaSha512IssuerPolicyLink,
 };
 use x509_webpki_root_anchor_selection::SelectedReviewedWebPkiRootAnchor;
@@ -330,6 +331,154 @@ pub fn bind_x509_rsa_sha512_intermediate_path_to_reviewed_anchor<
 
     Ok(BoundX509RsaSha512ReviewedIntermediatePath {
         authenticated_child_link,
+        reviewed_parent_link,
+    })
+}
+
+/// Non-copyable evidence joining one path-length-advanced authenticated
+/// target-to-intermediate SHA-512 step to one authenticated
+/// intermediate-to-reviewed-root SHA-512 step.
+///
+/// The first input retains complete policy for its exact intermediate and the
+/// resulting path-length state. The second retains that same intermediate as
+/// its authenticated child and terminates at a uniquely selected reviewed
+/// root. This wrapper keeps both complete inputs intact so later composition
+/// cannot silently discard either adjacent-link proof or the advanced state.
+/// It performs no path search, target policy, constraint, revocation, TLS, or
+/// network processing.
+pub struct BoundX509RsaSha512ReviewedIntermediatePathLength<
+    'child_certificate,
+    'child_encoded,
+    'intermediate_certificate,
+    'intermediate_encoded,
+    'parent_child_certificate,
+    'parent_child_encoded,
+    'root_certificate,
+    'root_encoded,
+> {
+    authenticated_path: ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+    >,
+    reviewed_parent_link: BoundX509RsaSha512ReviewedAnchorLink<
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+}
+
+impl<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >
+    BoundX509RsaSha512ReviewedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >
+{
+    /// Return the consumed authenticated path-length proof.
+    #[must_use]
+    pub const fn authenticated_path(
+        &self,
+    ) -> &ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+    > {
+        &self.authenticated_path
+    }
+
+    /// Return the consumed intermediate-to-reviewed-root binding.
+    #[must_use]
+    pub const fn reviewed_parent_link(
+        &self,
+    ) -> &BoundX509RsaSha512ReviewedAnchorLink<
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    > {
+        &self.reviewed_parent_link
+    }
+}
+
+impl fmt::Debug
+    for BoundX509RsaSha512ReviewedIntermediatePathLength<'_, '_, '_, '_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509RsaSha512ReviewedIntermediatePathLength")
+    }
+}
+
+/// Join two authenticated SHA-512 links only when the complete intermediate
+/// policy and advanced path-length state belong to the exact intermediate
+/// authenticated by the reviewed parent link.
+///
+/// Encoded-byte equality is deliberately insufficient. Pointer identity
+/// prevents callers from combining the path-length transition for one decoded
+/// object with a parent link authenticated for another object.
+pub fn bind_x509_rsa_sha512_authenticated_intermediate_path_to_reviewed_anchor<
+    'child_certificate,
+    'child_encoded,
+    'intermediate_certificate,
+    'intermediate_encoded,
+    'parent_child_certificate,
+    'parent_child_encoded,
+    'root_certificate,
+    'root_encoded,
+>(
+    authenticated_path: ValidatedX509RsaSha512AuthenticatedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+    >,
+    reviewed_parent_link: BoundX509RsaSha512ReviewedAnchorLink<
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+) -> Result<
+    BoundX509RsaSha512ReviewedIntermediatePathLength<
+        'child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+    X509RsaSha512ReviewedIntermediatePathError,
+> {
+    let policy_intermediate = authenticated_path
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    let parent_link_child = reviewed_parent_link.verified_issuer_link().child();
+    if !std::ptr::eq(policy_intermediate, parent_link_child) {
+        return Err(X509RsaSha512ReviewedIntermediatePathError::evidence_mismatch());
+    }
+
+    Ok(BoundX509RsaSha512ReviewedIntermediatePathLength {
+        authenticated_path,
         reviewed_parent_link,
     })
 }

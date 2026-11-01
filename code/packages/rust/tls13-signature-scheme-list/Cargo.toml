@@ -1,0 +1,7 @@
+[package]
+name = "tls13-signature-scheme-list"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 signature-scheme list decoding"
+
+[dependencies]

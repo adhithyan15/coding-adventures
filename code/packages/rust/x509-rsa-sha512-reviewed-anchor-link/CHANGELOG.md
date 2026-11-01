@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.0 - 2026-10-30
+
+### Added
+
+- Added an additive two-link composition that carries the existing
+  authenticated SHA-512 intermediate path-length transition into the exact
+  intermediate-to-reviewed-root binding.
+- Added complete-input accessors, redacted debug output, retained-state
+  coverage, and rejection of byte-equal separately decoded intermediates.
+
+### Security
+
+- The stronger result retains the authenticated adjacent link, complete
+  intermediate policy, advanced path-length state, reviewed parent link, and
+  exact root selection. It grants no path search, constraint, revocation, TLS,
+  HTTP, OAuth, credential, provider, audit, trace, or network authority.
+
 ## 0.2.0 - 2026-10-30
 
 ### Added
