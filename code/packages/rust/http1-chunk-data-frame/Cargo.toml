@@ -1,0 +1,7 @@
+[package]
+name = "http1-chunk-data-frame"
+version = "0.1.0"
+edition = "2021"
+description = "Strict borrowed decoding of one non-terminal HTTP/1 chunk-data frame"
+
+[dependencies]
