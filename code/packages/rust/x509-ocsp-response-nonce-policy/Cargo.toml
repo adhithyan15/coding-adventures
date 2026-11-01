@@ -1,0 +1,10 @@
+[package]
+name = "x509-ocsp-response-nonce-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 8954 OCSP response nonce policy"
+
+[dependencies]
+ct-compare = { package = "coding_adventures_ct_compare", path = "../ct-compare" }
+der-asn1 = { path = "../der-asn1" }
+x509-ocsp-response-data = { path = "../x509-ocsp-response-data" }

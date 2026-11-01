@@ -345,7 +345,9 @@ a pass/fail gate. Unknown levels are rejected before corpus reads. Valid
 reports read Spanish lessons, curriculum membership, and the shared spine,
 not every other language track. The taught-form conversion remains shared
 with the Spanish mock audit, so narrowing the read does not narrow what the
-report credits or hides.
+report credits or hides. The Spanish mock audit itself now uses that same
+bounded read for each pre-A1, A1, and A2 report and end-to-end `--check`;
+it still rejects a linked Spanish track and checks the canonical source bytes.
 
 ## Scope note
 
