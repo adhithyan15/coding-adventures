@@ -413,8 +413,9 @@ above, and dispatch the workflow with a new matching version and tag.
 - `scripts/build-web.{sh,ps1}` — build wasm + emit the component into `host/web`.
 # Qt Board spacing checkpoint
 
-The next fidelity slice (#18563) preserves the Board drop target's authored
+The merged fix (#18563, #18612) preserves the Board drop target's authored
 9-pixel card gap and removes its three layout-style drops (Qt total 80 to 77).
-This is source work pending CI and publication. v0.5.15 is published and audited
+The compatible v0.5.16 checkpoint (#18746) is prepared for release validation
+and publication after its preparation PR merges; it is not yet published. v0.5.15 is published and audited
 under #18581: source `8819839dc63d78c4c5eeda21f833f51364746420`, 13 assets,
 12 checksums, and 11 manifest payloads. Artifact and signing limits are unchanged.
