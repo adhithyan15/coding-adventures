@@ -1434,6 +1434,7 @@ members = [
   "x509-ip-name-constraint-policy",
   "rsa-pss-algorithm-policy",
   "rsa-pss-data-block",
+  "rsa-pss-data-block-unmask",
   "rsa-pss-hash-match",
   "x509-rsassa-pss-parameters",
   "rsa-pss-message-prime",
