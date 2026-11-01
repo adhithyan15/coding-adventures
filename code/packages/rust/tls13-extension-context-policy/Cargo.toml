@@ -1,0 +1,9 @@
+[package]
+name = "tls13-extension-context-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 extension-context policy"
+license = "MIT"
+
+[dependencies]
+tls13-extension-block = { path = "../tls13-extension-block" }
