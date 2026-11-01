@@ -1,0 +1,8 @@
+[package]
+name = "tls13-no-psk-server-flight"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 no-PSK server-flight sequencing"
+
+[dependencies]
+tls13-handshake = { path = "../tls13-handshake" }
