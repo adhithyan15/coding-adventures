@@ -1436,4 +1436,5 @@ members = [
   "rsa-pss-hash-match",
   "x509-rsassa-pss-parameters",
   "rsa-pss-message-prime",
+  "tls13-finished",
 ]
