@@ -20180,3 +20180,97 @@ work. Normal merge `9e40dd42efb8a1bd7f1ba40d677c3443b9f31ccd`
 preserves both histories and changes no Lua/Go graph-diff, launcher repair,
 lesson, or lifecycle path. Revalidation and exact-head review remain required
 before the normal non-force publication retry.
+
+#### PR #18725 guarded merge receipt and Rust reprioritization
+
+All 42 checks on exact independently reviewed head
+`adebf93dff223531c81c0c936545139ec7b7bc73` completed terminal acceptable,
+including all three hosted build platforms, the Forme verdict, CI gate,
+metadata contracts, expected skips, and neutral aggregate CodeQL. GitHub
+reported the PR `MERGEABLE` and `CLEAN`, so guarded squash auto-merge completed
+at `2026-10-30T17:10:28Z` as
+`a5da10a39ba4b0e2ba7cf54627a696de9cfdee5b`. The receipt is exact
+`origin/main`; the completed Lua worktree is archived and its remote branch is
+gone. The separate Windows discovery fallback owner remains pending without
+merge credit.
+
+A fresh dependency/leverage pass retains the already implemented, validated,
+and independently reviewed Rust graph/diff owner next. It advances four direct
+and six total unfinished descendants: cross-runtime indexing hardening,
+remaining engines, Rust neutral-adapter closure, and Rust repository-boundary
+adoption directly, plus all-language adapter CI closure and portable
+source-hashing remaining engines transitively. The newly registered Lua
+Windows fallback and Rust Cargo-trigger owners remain bounded follow-ups with
+no comparable downstream unlock. The Rust branch is normally reconciled with
+the Lua merge and all intervening path-disjoint current-main work before its
+exact-head validation and publication review.
+
+During final publication review, main advanced once more to
+`dc88db345fc175be7ad55f3da777eadec979112c` through path-disjoint ALGOL signed
+floor-root normalization work. Normal merge
+`c95a797bad07a174a2d6fadde035b7f9591e2bae` preserves both histories and leaves
+the Rust build-tool package and graph/diff fixtures byte-identical to reviewed
+implementation head `977e9b4b3ee7d5ce6bb12c0a171cf850065e9079`.
+
+#### Rust graph/diff PR #18744 publication receipt
+
+Publish independently reviewed current-main head
+`1a0e5cd4e3f9890055aea223d899e9ddfa538a7f` as ready PR #18744 over exact
+base `dc88db345fc175be7ad55f3da777eadec979112c` at
+`2026-10-30T17:21:30Z`. GitHub reports the PR mergeable. Fresh CI, CodeQL,
+human-language, Miri, and cargo-geiger checks are queued. Keep guarded squash
+auto-merge disabled until this durable PR-number receipt is committed, pushed,
+and independently reviewed, then require every check on that resulting exact
+head to be terminal acceptable while GitHub still reports it mergeable.
+
+#### Rust graph/diff PR #18744 merge and Lua fallback reprioritization
+
+All 39 checks on exact reviewed lifecycle head
+`d1db246ba3228b02ee22a8a5e4661b4ef8004adb` completed terminal acceptable:
+9 succeeded and 30 were expected skips. GitHub reported the PR mergeable. The
+user manually squash-merged PR #18744 at `2026-10-30T20:27:19Z` as
+`5e99c835e71fc772d19e502cdb3824a10276ed8e`; that receipt is an ancestor of
+current `origin/main`. The completed Rust worktree is archived. This was
+not an auto-merge.
+
+A fresh priority pass selects the already implemented and independently
+reviewed Lua Windows discovery fallback repair. Without `lfs`, the production
+fallback listed children with Windows `dir` but reprobed them using POSIX
+`2>/dev/null`, so valid packages could be silently discarded. Implementation
+head `ce030817f27ff6447ff95806a5637445fb87149e` uses `cd /d` and `2>nul` on
+Windows, retains `/dev/null` on POSIX, quotes POSIX paths safely, rejects unsafe
+Windows shell and record-framing input before execution, preserves legitimate
+POSIX leading and trailing whitespace, and removes only terminal carriage
+returns from Windows records. Normal merge
+`503e1c4cfe5a0965416241add8664e46965bffb6` incorporates current main
+`6800cef66006572a8a064eed7eaad337978ce68a` without conflicts.
+
+Focused discovery tests pass 29/29, the canonical Lua build-tool suite passes
+158/158, every Lua source parses, all 1,740 lesson shards validate, and the
+implementation-head security re-review issued SHIP after the whitespace
+preservation repair. Exact merged-head validation and publication review remain
+mandatory before a normal non-force push.
+
+The same review registered separate pending owner
+`build-tool-lua-cli-argument-validation-hardening`: unknown options are ignored,
+a missing `--root` value falls through to root detection, and a missing
+`--language` value can succeed with zero packages. Strict stable parser failures
+belong in that owner, not in the discovery fallback repair.
+
+#### Lua Windows discovery fallback PR #18756 publication receipt
+
+Publish independently reviewed head
+`01d2f14a6a621b7ccdd38361d8024fefce583cc6` as ready PR #18756 over exact
+base `5b57bc21b6190c2216e38c847f4943fb1a766a59` at
+`2026-10-30T20:46:24Z`. GitHub reports the PR mergeable and fresh CI, CodeQL,
+and human-language detection checks are queued.
+
+Main advanced during publication through the Rust TLS record-protection state
+package and an OAuth specification note. Those nine paths do not overlap this
+Lua implementation, tests, documentation, or lifecycle surfaces. Normal merge
+`02aa0b7a9dcd1d8403caede08a22082e5d979ee2` preserves both histories. The
+exact merged tree still passes 29/29 focused discovery tests, 158/158 complete
+Lua build-tool tests, every Lua syntax check, and 1,740 lesson shards with zero
+problems. Commit this durable PR receipt, push normally, and obtain exact-head
+publication review before allowing guarded squash auto-merge; results attached
+to any earlier head cannot authorize the merge.

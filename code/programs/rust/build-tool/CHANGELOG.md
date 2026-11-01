@@ -6,11 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Add a process-free graph and diff-selection core that dynamically consumes
+  all eight graph and twelve diff-selection neutral fixtures. It provides
+  canonical all-or-error graph results, deterministic dependent and
+  prerequisite closures, exact repository-boundary digest and reverse-index
+  selection (including shared multi-consumers), Unicode-scalar strict-glob
+  matching, and the operation-wide 50,000,000 work ceiling.
+
 ### Changed
 
 - Source hashing now follows the 27-component neutral generated-directory
   registry, pruning exact lowercase `blib` while retaining `Blib` and
   `blib-example` in both extension and declared-source modes.
+
+### Fixed
+
+- Accept portable strict-glob `?` as exactly one Unicode scalar and preserve
+  DIFF-specific invalid and duplicate package diagnostics.
+- Replace quadratic package-root collision and package-by-path scans with
+  segment-ordered validation and an allocation-free bounded changed-path
+  index.
+- Validate glob declarations one at a time, cache only scalar work factors,
+  and lazily compile one pattern across its candidate paths after exact
+  50,000,000-unit preflight instead of retaining every compiled token tree.
+- Validate `generated_component` presence and string type exactly, and expand
+  repository-boundary consumers only for changed shared inputs rather than
+  eagerly materializing the full input-by-package reverse product.
+- Charge exact first-seen glob declaration bytes against a 4 MiB ceiling even
+  with zero changed paths, and bound slash-prefix changed-path and relevant
+  descendant-boundary package-root classification to 50,000,000 work units
+  after boundary digest and schema validation.
+- Preserve exact-root precedence over descendant exclusions while indexing
+  large relevant boundary exclusion sets.
 
 ## [0.2.11] - 2026-09-27
 
