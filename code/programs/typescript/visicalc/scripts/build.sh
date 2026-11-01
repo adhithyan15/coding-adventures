@@ -9,8 +9,12 @@ mkdir -p "$OUT" "$DEMO_DIR/public"
 cargo build --manifest-path "$RUST/Cargo.toml" -p mosaic-compile
 rustup target add wasm32-unknown-unknown
 cargo build --manifest-path "$RUST/Cargo.toml" -p visicalc-mosaic-app --target wasm32-unknown-unknown
+MOSAIC_COMPILE="$RUST/target/debug/mosaic-compile"
+if [ -f "${MOSAIC_COMPILE}.exe" ]; then
+  MOSAIC_COMPILE="${MOSAIC_COMPILE}.exe"
+fi
 for THEME in light dark; do
-  "$RUST/target/debug/mosaic-compile" pkg "$REPO_ROOT/code/programs/mosaic/visicalc" \
+  "$MOSAIC_COMPILE" pkg "$REPO_ROOT/code/programs/mosaic/visicalc" \
     --backend react --theme "$THEME" --output "$OUT/$THEME"
 done
 cp "$RUST/target/wasm32-unknown-unknown/debug/visicalc_mosaic_app.wasm" "$DEMO_DIR/public/visicalc_mosaic_app.wasm"

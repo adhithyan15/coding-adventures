@@ -953,10 +953,11 @@ fn run_pipeline(
                     }
                 };
                 // Flat side-files: package.json / vite.config.ts /
-                // index.html / README.md sit next to the .tsx.
-                let flat: [(String, &str); 4] = [
+                // tsconfig.json / index.html / README.md sit next to the .tsx.
+                let flat: [(String, &str); 5] = [
                     (side_file_path("package.json"), &proj.package_json),
                     (side_file_path("vite.config.ts"), &proj.vite_config),
+                    (side_file_path("tsconfig.json"), &proj.tsconfig_json),
                     (side_file_path("index.html"), &proj.index_html),
                     (side_file_path("README.md"), &proj.readme),
                 ];
