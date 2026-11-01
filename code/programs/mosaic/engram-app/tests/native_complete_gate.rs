@@ -152,8 +152,10 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     //
     // Qt expresses this through the container chosen (RowLayout /
     // ColumnLayout / Flow), not through a property on a built element.
+    // (`flex-grow` left this list with UI21 §2.2: on a Row/Column child it
+    // lowers to `Layout.fillWidth` / `fillHeight`, and Engram's one
+    // occurrence, `deck-option-button`, is such a child.)
     (Backend::Qt, "align-items"),
-    (Backend::Qt, "flex-grow"),
     (Backend::Qt, "flex-wrap"),
     (Backend::Qt, "justify-content"),
     //

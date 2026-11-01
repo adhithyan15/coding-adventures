@@ -486,11 +486,25 @@ reviewable:
 - [x] npm manifests: runtime, development, peer and optional dependency tables
   are checked against the exact current name set; only tracked in-repository
   path edges are treated as local.
-- [ ] npm tool installs in scripts and workflows.
-- [ ] Python project files and tool installs.
-- [ ] Ruby Gemfiles and gemspecs.
-- [ ] Go modules and tool installs.
-- [ ] Elixir Mix manifests and tool installs.
+- [x] npm tool installs in workflows, build definitions, shell entrypoints and
+  package scripts are checked against an exact current command-name set.
+- [x] Python project dependency declarations: build, runtime, optional and
+  dependency-group requirements are checked by normalized distribution name;
+  only explicit tracked `uv` path/workspace sources are local.
+- [x] Python tool installs in workflows, build definitions and package scripts
+  are checked against an exact current package-name set; unnamed remote and
+  requirements-file acquisition is rejected.
+- [x] Ruby Gemfiles and gemspecs: declarations are parsed without executing
+  Ruby; only literal paths to tracked gemspecs with the same declared name are
+  local, and all remaining gem names are checked against the exact current
+  seven-name set. The development-only `irb` declaration was removed because
+  it is a non-removable default gem on the supported Ruby runtime.
+- [x] Go modules and tool installs: requirements are local only through a
+  tracked replacement whose target declares the same module path; remote tool
+  acquisition in automation and `go:generate` directives is frozen at zero.
+- [x] Elixir Mix manifests and tool installs: path dependencies are local only
+  when a tracked target declares the same app identity; executable Mix
+  installer commands are frozen at zero.
 
 Each slice rejects both additions and stale allowlist entries. The second rule
 turns "may only shrink" into an executable guarantee: when the final use of a

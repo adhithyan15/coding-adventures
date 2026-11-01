@@ -43,6 +43,12 @@ attempt and do not count as either full mock or human validation.
 
 ## Progress
 
+- **Chapter 210 — Aman Did the Work**
+  ([`lessons/PA-C210-*`](./lessons/)): a voice-first return to familiar
+  **ਅਮਨ**, **ਕੰਮ**, and **ਕੀਤਾ**, followed by exact standalone agent marker
+  **ਨੇ**, delayed retrieval, and the one bounded third-person completed-action
+  frame **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**. This is one A2 mock-draft prerequisite, not
+  mock readiness or a general rule for every past sentence. In the book.
 - **Chapter 209 — This Is a Blue Shoe**
   ([`lessons/PA-C209-*`](./lessons/)): a voice-first return to familiar
   **ਨੀਲਾ** and **ਜੁੱਤੀ**, followed by exact feminine singular direct **ਨੀਲੀ**,

@@ -198,6 +198,26 @@ therefore makes the target measurable; it does not establish external
 certification, complete mocks, calibration, human validation, learner
 readiness, or learner attainment.
 
+## B2 content-inventory status
+
+[`../core/exam-inventory-telugu-b2.json`](../core/exam-inventory-telugu-b2.json)
+turns the B2 task genres into 36 reviewable content demands: nine each for
+communicative functions, Telugu grammar and register, script/sound/orthography,
+and lexicon and genre domains. Its sources are deliberately narrower than its
+claims. CEFR supplies generic B2 descriptors; CIIL supplies an intermediate
+Telugu L2 practice-and-testing boundary; Unicode supplies script encoding; and
+official LDC-IL corpora supply contemporary domains and documented regional
+speech collection. None supplies a finite Telugu B2 grammar or word list.
+
+All four dimensions therefore remain **partial**, and the strict first
+measurement is **0 of 36** complete demands covered, with all 36 deliberately
+unmapped. The book teaches useful foundations, but a foundation atom is not a
+complete B2 argument, register system, listening boundary, or lexical domain.
+Keeping those points visible is the intended result: publication does not
+establish external certification, complete mocks, calibration, human
+validation, learner readiness, learner attainment, or complete content
+coverage.
+
 ## Chapter capabilities
 
 [`chapters.json`](./chapters.json) is the track's

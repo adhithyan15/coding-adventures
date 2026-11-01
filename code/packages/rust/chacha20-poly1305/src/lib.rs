@@ -483,6 +483,242 @@ fn add_130(a_lo: u128, a_hi: u8, b_lo: u128, b_hi: u8) -> (u128, u8) {
     (lo, hi)
 }
 
+const POLY1305_MASK_26: u64 = (1 << 26) - 1;
+const POLY1305_HIBIT: u64 = 1 << 24;
+
+const POLY_R0: usize = 0;
+const POLY_R1: usize = 1;
+const POLY_R2: usize = 2;
+const POLY_R3: usize = 3;
+const POLY_R4: usize = 4;
+const POLY_S1: usize = 5;
+const POLY_S2: usize = 6;
+const POLY_S3: usize = 7;
+const POLY_S4: usize = 8;
+const POLY_H0: usize = 9;
+const POLY_H1: usize = 10;
+const POLY_H2: usize = 11;
+const POLY_H3: usize = 12;
+const POLY_H4: usize = 13;
+const POLY_PAD0: usize = 14;
+const POLY_PAD1: usize = 15;
+const POLY_PAD2: usize = 16;
+const POLY_PAD3: usize = 17;
+const POLY_D0: usize = 18;
+const POLY_D1: usize = 19;
+const POLY_D2: usize = 20;
+const POLY_D3: usize = 21;
+const POLY_D4: usize = 22;
+const POLY_CARRY: usize = 23;
+
+/// Wipe-on-drop ownership for Poly1305's clamped key limbs, accumulator,
+/// addition pad, multiplication products, and carry workspace.
+struct SecretPoly1305State([u64; 24]);
+
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_poly1305_state_wipe_ir_audit")]
+#[inline(never)]
+fn wipe_poly1305_state(words: &mut [u64; 24]) {
+    for word in words {
+        word.zeroize();
+    }
+}
+
+impl Drop for SecretPoly1305State {
+    fn drop(&mut self) {
+        wipe_poly1305_state(&mut self.0);
+    }
+}
+
+fn read_u32_le_from_block(block: &[u8; 16], offset: usize) -> u64 {
+    u64::from(u32::from_le_bytes([
+        block[offset],
+        block[offset + 1],
+        block[offset + 2],
+        block[offset + 3],
+    ]))
+}
+
+fn initialize_poly1305_state(state: &mut SecretPoly1305State, key: &[u8; 32]) {
+    state.0[POLY_R0] = u64::from(read_u32_le(key, 0)) & 0x3ff_ffff;
+    state.0[POLY_R1] = (u64::from(read_u32_le(key, 3)) >> 2) & 0x3ff_ff03;
+    state.0[POLY_R2] = (u64::from(read_u32_le(key, 6)) >> 4) & 0x3ff_c0ff;
+    state.0[POLY_R3] = (u64::from(read_u32_le(key, 9)) >> 6) & 0x3f0_3fff;
+    state.0[POLY_R4] = (u64::from(read_u32_le(key, 12)) >> 8) & 0x00f_ffff;
+
+    state.0[POLY_S1] = state.0[POLY_R1] * 5;
+    state.0[POLY_S2] = state.0[POLY_R2] * 5;
+    state.0[POLY_S3] = state.0[POLY_R3] * 5;
+    state.0[POLY_S4] = state.0[POLY_R4] * 5;
+
+    state.0[POLY_PAD0] = u64::from(read_u32_le(key, 16));
+    state.0[POLY_PAD1] = u64::from(read_u32_le(key, 20));
+    state.0[POLY_PAD2] = u64::from(read_u32_le(key, 24));
+    state.0[POLY_PAD3] = u64::from(read_u32_le(key, 28));
+}
+
+/// Absorb one already-padded Poly1305 block with a caller-selected high bit.
+///
+/// `hibit` is `1 << 24` for a complete 16-byte message block and zero for the
+/// final partial block, whose explicit `0x01` byte is already present in
+/// `block`. The arithmetic schedule and instruction count do not depend on
+/// key, message-byte, or accumulator values.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_poly1305_process_block_ir_audit")]
+#[inline(never)]
+fn process_poly1305_block(state: &mut SecretPoly1305State, block: &[u8; 16], hibit: u64) {
+    state.0[POLY_H0] += read_u32_le_from_block(block, 0) & POLY1305_MASK_26;
+    state.0[POLY_H1] += (read_u32_le_from_block(block, 3) >> 2) & POLY1305_MASK_26;
+    state.0[POLY_H2] += (read_u32_le_from_block(block, 6) >> 4) & POLY1305_MASK_26;
+    state.0[POLY_H3] += (read_u32_le_from_block(block, 9) >> 6) & POLY1305_MASK_26;
+    state.0[POLY_H4] += (read_u32_le_from_block(block, 12) >> 8) | hibit;
+
+    state.0[POLY_D0] = state.0[POLY_H0] * state.0[POLY_R0]
+        + state.0[POLY_H1] * state.0[POLY_S4]
+        + state.0[POLY_H2] * state.0[POLY_S3]
+        + state.0[POLY_H3] * state.0[POLY_S2]
+        + state.0[POLY_H4] * state.0[POLY_S1];
+    state.0[POLY_D1] = state.0[POLY_H0] * state.0[POLY_R1]
+        + state.0[POLY_H1] * state.0[POLY_R0]
+        + state.0[POLY_H2] * state.0[POLY_S4]
+        + state.0[POLY_H3] * state.0[POLY_S3]
+        + state.0[POLY_H4] * state.0[POLY_S2];
+    state.0[POLY_D2] = state.0[POLY_H0] * state.0[POLY_R2]
+        + state.0[POLY_H1] * state.0[POLY_R1]
+        + state.0[POLY_H2] * state.0[POLY_R0]
+        + state.0[POLY_H3] * state.0[POLY_S4]
+        + state.0[POLY_H4] * state.0[POLY_S3];
+    state.0[POLY_D3] = state.0[POLY_H0] * state.0[POLY_R3]
+        + state.0[POLY_H1] * state.0[POLY_R2]
+        + state.0[POLY_H2] * state.0[POLY_R1]
+        + state.0[POLY_H3] * state.0[POLY_R0]
+        + state.0[POLY_H4] * state.0[POLY_S4];
+    state.0[POLY_D4] = state.0[POLY_H0] * state.0[POLY_R4]
+        + state.0[POLY_H1] * state.0[POLY_R3]
+        + state.0[POLY_H2] * state.0[POLY_R2]
+        + state.0[POLY_H3] * state.0[POLY_R1]
+        + state.0[POLY_H4] * state.0[POLY_R0];
+
+    state.0[POLY_CARRY] = state.0[POLY_D0] >> 26;
+    state.0[POLY_H0] = state.0[POLY_D0] & POLY1305_MASK_26;
+    state.0[POLY_D1] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D1] >> 26;
+    state.0[POLY_H1] = state.0[POLY_D1] & POLY1305_MASK_26;
+    state.0[POLY_D2] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D2] >> 26;
+    state.0[POLY_H2] = state.0[POLY_D2] & POLY1305_MASK_26;
+    state.0[POLY_D3] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D3] >> 26;
+    state.0[POLY_H3] = state.0[POLY_D3] & POLY1305_MASK_26;
+    state.0[POLY_D4] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D4] >> 26;
+    state.0[POLY_H4] = state.0[POLY_D4] & POLY1305_MASK_26;
+    state.0[POLY_H0] += state.0[POLY_CARRY] * 5;
+    state.0[POLY_CARRY] = state.0[POLY_H0] >> 26;
+    state.0[POLY_H0] &= POLY1305_MASK_26;
+    state.0[POLY_H1] += state.0[POLY_CARRY];
+}
+
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_poly1305_finalize_ir_audit")]
+#[inline(never)]
+fn finalize_poly1305(state: &mut SecretPoly1305State, output: &mut [u8; 16]) {
+    state.0[POLY_CARRY] = state.0[POLY_H1] >> 26;
+    state.0[POLY_H1] &= POLY1305_MASK_26;
+    state.0[POLY_H2] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_H2] >> 26;
+    state.0[POLY_H2] &= POLY1305_MASK_26;
+    state.0[POLY_H3] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_H3] >> 26;
+    state.0[POLY_H3] &= POLY1305_MASK_26;
+    state.0[POLY_H4] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_H4] >> 26;
+    state.0[POLY_H4] &= POLY1305_MASK_26;
+    state.0[POLY_H0] += state.0[POLY_CARRY] * 5;
+    state.0[POLY_CARRY] = state.0[POLY_H0] >> 26;
+    state.0[POLY_H0] &= POLY1305_MASK_26;
+    state.0[POLY_H1] += state.0[POLY_CARRY];
+
+    state.0[POLY_D0] = state.0[POLY_H0] + 5;
+    state.0[POLY_CARRY] = state.0[POLY_D0] >> 26;
+    state.0[POLY_D0] &= POLY1305_MASK_26;
+    state.0[POLY_D1] = state.0[POLY_H1] + state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D1] >> 26;
+    state.0[POLY_D1] &= POLY1305_MASK_26;
+    state.0[POLY_D2] = state.0[POLY_H2] + state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D2] >> 26;
+    state.0[POLY_D2] &= POLY1305_MASK_26;
+    state.0[POLY_D3] = state.0[POLY_H3] + state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D3] >> 26;
+    state.0[POLY_D3] &= POLY1305_MASK_26;
+    state.0[POLY_D4] = state.0[POLY_H4]
+        .wrapping_add(state.0[POLY_CARRY])
+        .wrapping_sub(1 << 26);
+
+    let select_reduced = (state.0[POLY_D4] >> 63).wrapping_sub(1);
+    let select_original = !select_reduced;
+    state.0[POLY_H0] = (state.0[POLY_H0] & select_original) | (state.0[POLY_D0] & select_reduced);
+    state.0[POLY_H1] = (state.0[POLY_H1] & select_original) | (state.0[POLY_D1] & select_reduced);
+    state.0[POLY_H2] = (state.0[POLY_H2] & select_original) | (state.0[POLY_D2] & select_reduced);
+    state.0[POLY_H3] = (state.0[POLY_H3] & select_original) | (state.0[POLY_D3] & select_reduced);
+    state.0[POLY_H4] = (state.0[POLY_H4] & select_original) | (state.0[POLY_D4] & select_reduced);
+
+    state.0[POLY_D0] = ((state.0[POLY_H0] | (state.0[POLY_H1] << 26)) & 0xffff_ffff)
+        .wrapping_add(state.0[POLY_PAD0]);
+    state.0[POLY_D1] = (((state.0[POLY_H1] >> 6) | (state.0[POLY_H2] << 20)) & 0xffff_ffff)
+        .wrapping_add(state.0[POLY_PAD1])
+        .wrapping_add(state.0[POLY_D0] >> 32);
+    state.0[POLY_D2] = (((state.0[POLY_H2] >> 12) | (state.0[POLY_H3] << 14)) & 0xffff_ffff)
+        .wrapping_add(state.0[POLY_PAD2])
+        .wrapping_add(state.0[POLY_D1] >> 32);
+    state.0[POLY_D3] = (((state.0[POLY_H3] >> 18) | (state.0[POLY_H4] << 8)) & 0xffff_ffff)
+        .wrapping_add(state.0[POLY_PAD3])
+        .wrapping_add(state.0[POLY_D2] >> 32);
+
+    output[0..4].copy_from_slice(&(state.0[POLY_D0] as u32).to_le_bytes());
+    output[4..8].copy_from_slice(&(state.0[POLY_D1] as u32).to_le_bytes());
+    output[8..12].copy_from_slice(&(state.0[POLY_D2] as u32).to_le_bytes());
+    output[12..16].copy_from_slice(&(state.0[POLY_D3] as u32).to_le_bytes());
+}
+
+/// Compute a Poly1305 tag into caller-owned fixed memory.
+///
+/// This boundary performs no allocation. It uses the standard five 26-bit
+/// limb construction, one reusable 16-byte block, and a fixed arithmetic
+/// schedule for every admitted block. The conditional reduction is expressed
+/// as mask selection rather than a branch on key-derived accumulator values.
+/// All clamped key limbs, accumulator limbs, addition-pad words, multiplication
+/// products, and carry workspace are retained in one wipe-on-drop owner. The
+/// original one-time key and message remain caller-owned.
+///
+/// Poly1305 is a one-time authenticator: callers must never reuse `key` for a
+/// different message. This primitive does not reserve keys, compare tags,
+/// encrypt data, compose ChaCha20-Poly1305 AEAD, or authorize TLS record use.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_poly1305_mac_fixed_ir_audit")]
+pub fn poly1305_mac_fixed(message: &[u8], key: &[u8; 32], output: &mut [u8; 16]) {
+    let mut state = SecretPoly1305State([0; 24]);
+    initialize_poly1305_state(&mut state, key);
+
+    let mut block = Zeroizing::new([0u8; 16]);
+    let mut offset = 0;
+    while message.len() - offset >= 16 {
+        block.copy_from_slice(&message[offset..offset + 16]);
+        process_poly1305_block(&mut state, &block, POLY1305_HIBIT);
+        offset += 16;
+    }
+
+    let remaining = message.len() - offset;
+    if remaining != 0 {
+        block.fill(0);
+        block[..remaining].copy_from_slice(&message[offset..]);
+        block[remaining] = 1;
+        process_poly1305_block(&mut state, &block, 0);
+    }
+
+    finalize_poly1305(&mut state, output);
+}
+
 /// Compute a Poly1305 MAC tag for a message.
 ///
 /// The key is split into two halves:
@@ -563,6 +799,207 @@ pub fn poly1305_mac(message: &[u8], key: &[u8; 32]) -> [u8; 16] {
 //   4. Compute tag = Poly1305(poly_key, mac_input)
 //
 // ============================================================================
+
+/// Stable failures for the fixed-memory ChaCha20-Poly1305 AEAD boundary.
+///
+/// These categories retain no key, nonce, plaintext, ciphertext, tag,
+/// associated-data, output, or observed-length values.
+#[derive(Debug, PartialEq, Eq)]
+pub enum FixedAeadError {
+    /// Caller-owned output must have exactly the input length.
+    OutputLengthMismatch,
+    /// An input length cannot be represented by RFC 8439's 64-bit encoding.
+    LengthOverflow,
+    /// The plaintext or ciphertext would exceed ChaCha20 counter space.
+    CounterExhausted,
+    /// The supplied authentication tag did not match.
+    AuthenticationFailed,
+}
+
+impl fmt::Display for FixedAeadError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::OutputLengthMismatch => {
+                formatter.write_str("AEAD output length must equal input length")
+            }
+            Self::LengthOverflow => {
+                formatter.write_str("AEAD input length exceeds the RFC 8439 encoding")
+            }
+            Self::CounterExhausted => {
+                formatter.write_str("AEAD request exceeds the ChaCha20 block counter")
+            }
+            Self::AuthenticationFailed => formatter.write_str("AEAD authentication failed"),
+        }
+    }
+}
+
+impl std::error::Error for FixedAeadError {}
+
+fn validate_aead_request_lengths(
+    input_length: usize,
+    output_length: usize,
+    aad_length: usize,
+) -> Result<(u64, u64), FixedAeadError> {
+    if output_length != input_length {
+        return Err(FixedAeadError::OutputLengthMismatch);
+    }
+
+    let aad_length = u64::try_from(aad_length).map_err(|_| FixedAeadError::LengthOverflow)?;
+    let input_length_u64 =
+        u64::try_from(input_length).map_err(|_| FixedAeadError::LengthOverflow)?;
+
+    let block_count = (input_length as u128).div_ceil(64);
+    if block_count > u128::from(u32::MAX) {
+        return Err(FixedAeadError::CounterExhausted);
+    }
+
+    Ok((aad_length, input_length_u64))
+}
+
+fn map_fixed_chacha20_error(error: FixedChaCha20Error) -> FixedAeadError {
+    match error {
+        FixedChaCha20Error::OutputLengthMismatch => FixedAeadError::OutputLengthMismatch,
+        FixedChaCha20Error::CounterExhausted => FixedAeadError::CounterExhausted,
+    }
+}
+
+fn derive_poly1305_key_into(key: &[u8; 32], nonce: &[u8; 12], output: &mut [u8; 32]) {
+    let mut block = Zeroizing::new([0u8; 64]);
+    chacha20_block_into(key, nonce, 0, &mut block);
+    output.copy_from_slice(&block[..32]);
+}
+
+fn absorb_padded_aead_segment(state: &mut SecretPoly1305State, block: &mut [u8; 16], data: &[u8]) {
+    let mut offset = 0;
+    while data.len() - offset >= 16 {
+        block.copy_from_slice(&data[offset..offset + 16]);
+        process_poly1305_block(state, block, POLY1305_HIBIT);
+        offset += 16;
+    }
+
+    let remaining = data.len() - offset;
+    if remaining != 0 {
+        block.fill(0);
+        block[..remaining].copy_from_slice(&data[offset..]);
+        process_poly1305_block(state, block, POLY1305_HIBIT);
+    }
+}
+
+fn poly1305_aead_tag_fixed(
+    aad: &[u8],
+    ciphertext: &[u8],
+    aad_length: u64,
+    ciphertext_length: u64,
+    poly1305_key: &[u8; 32],
+    output: &mut [u8; 16],
+) {
+    let mut state = SecretPoly1305State([0; 24]);
+    initialize_poly1305_state(&mut state, poly1305_key);
+
+    let mut block = Zeroizing::new([0u8; 16]);
+    absorb_padded_aead_segment(&mut state, &mut block, aad);
+    absorb_padded_aead_segment(&mut state, &mut block, ciphertext);
+
+    block[..8].copy_from_slice(&aad_length.to_le_bytes());
+    block[8..].copy_from_slice(&ciphertext_length.to_le_bytes());
+    process_poly1305_block(&mut state, &block, POLY1305_HIBIT);
+    finalize_poly1305(&mut state, output);
+}
+
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_chacha20_poly1305_tag_equal_ir_audit")]
+#[inline(never)]
+fn tags_equal_constant_time(computed: &[u8; 16], supplied: &[u8; 16]) -> bool {
+    let mut difference = 0u8;
+    for index in 0..16 {
+        difference |= computed[index] ^ supplied[index];
+    }
+    difference == 0
+}
+
+/// Encrypt and authenticate into exact caller-owned fixed memory.
+///
+/// This is the allocation-free RFC 8439 section 2.8 composition. It derives
+/// the one-time Poly1305 key from ChaCha20 counter zero, encrypts with counter
+/// one and above, and authenticates the exact padded AAD/ciphertext layout and
+/// 64-bit little-endian lengths. The one-time key, its source block, Poly1305
+/// state, and reusable MAC block are wiped on return. The original key, nonce,
+/// plaintext, associated data, ciphertext, and tag remain caller-owned.
+///
+/// All public length and counter-range failures are checked before either
+/// output changes. Callers must still guarantee unique key/nonce pairs.
+/// This function does not reserve nonces, own traffic keys, enforce a TLS
+/// record limit, frame records, or provide a TLS transport.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_chacha20_poly1305_encrypt_fixed_ir_audit")]
+pub fn aead_encrypt_fixed(
+    plaintext: &[u8],
+    key: &[u8; 32],
+    nonce: &[u8; 12],
+    aad: &[u8],
+    ciphertext: &mut [u8],
+    tag: &mut [u8; 16],
+) -> Result<(), FixedAeadError> {
+    let (aad_length, plaintext_length) =
+        validate_aead_request_lengths(plaintext.len(), ciphertext.len(), aad.len())?;
+
+    let mut poly1305_key = Zeroizing::new([0u8; 32]);
+    derive_poly1305_key_into(key, nonce, &mut poly1305_key);
+
+    chacha20_xor_fixed(plaintext, key, nonce, 1, ciphertext).map_err(map_fixed_chacha20_error)?;
+    poly1305_aead_tag_fixed(
+        aad,
+        ciphertext,
+        aad_length,
+        plaintext_length,
+        &poly1305_key,
+        tag,
+    );
+    Ok(())
+}
+
+/// Authenticate and decrypt into exact caller-owned fixed memory.
+///
+/// The complete RFC 8439 tag is recomputed and all 16 bytes are compared with
+/// a fixed schedule before any plaintext is released. Authentication failure,
+/// output-length mismatch, encoded-length overflow, and counter exhaustion
+/// leave `plaintext` unchanged. The recomputed tag and every key-derived
+/// temporary have wipe-on-drop ownership.
+///
+/// Callers must still guarantee unique key/nonce pairs and must not treat this
+/// primitive as TLS record framing, nonce reservation, record-limit policy, or
+/// transport composition.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_chacha20_poly1305_decrypt_fixed_ir_audit")]
+pub fn aead_decrypt_fixed(
+    ciphertext: &[u8],
+    key: &[u8; 32],
+    nonce: &[u8; 12],
+    aad: &[u8],
+    tag: &[u8; 16],
+    plaintext: &mut [u8],
+) -> Result<(), FixedAeadError> {
+    let (aad_length, ciphertext_length) =
+        validate_aead_request_lengths(ciphertext.len(), plaintext.len(), aad.len())?;
+
+    let mut poly1305_key = Zeroizing::new([0u8; 32]);
+    derive_poly1305_key_into(key, nonce, &mut poly1305_key);
+
+    let mut computed_tag = Zeroizing::new([0u8; 16]);
+    poly1305_aead_tag_fixed(
+        aad,
+        ciphertext,
+        aad_length,
+        ciphertext_length,
+        &poly1305_key,
+        &mut computed_tag,
+    );
+    if !tags_equal_constant_time(&computed_tag, tag) {
+        return Err(FixedAeadError::AuthenticationFailed);
+    }
+
+    chacha20_xor_fixed(ciphertext, key, nonce, 1, plaintext).map_err(map_fixed_chacha20_error)
+}
 
 /// Pad data length to a 16-byte boundary.
 fn pad16(length: usize) -> Vec<u8> {
@@ -972,6 +1409,80 @@ mod tests {
     }
 
     #[test]
+    fn fixed_poly1305_matches_rfc8439_section_2_5_2() {
+        let key: [u8; 32] =
+            hex::decode("85d6be7857556d337f4452fe42d506a80103808afb0db2fd4abff6af4149f51b")
+                .unwrap()
+                .try_into()
+                .unwrap();
+        let expected_tag: [u8; 16] = hex::decode("a8061dc1305136c6c22b8baf0c0127a9")
+            .unwrap()
+            .try_into()
+            .unwrap();
+        let mut tag = [0xa5; 16];
+
+        poly1305_mac_fixed(b"Cryptographic Forum Research Group", &key, &mut tag);
+
+        assert_eq!(tag, expected_tag);
+    }
+
+    #[test]
+    fn fixed_poly1305_matches_legacy_across_block_edges() {
+        let mut key = [0u8; 32];
+        for (index, byte) in key.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(29).wrapping_add(7);
+        }
+        let mut message = [0u8; 257];
+        for (index, byte) in message.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(113).wrapping_add(19);
+        }
+
+        for length in [0, 1, 15, 16, 17, 31, 32, 33, 63, 64, 65, 255, 256, 257] {
+            let expected = poly1305_mac(&message[..length], &key);
+            let mut actual = [0x5a; 16];
+            poly1305_mac_fixed(&message[..length], &key, &mut actual);
+            assert_eq!(actual, expected, "fixed tag differs at length {length}");
+        }
+    }
+
+    #[test]
+    fn fixed_poly1305_matches_independent_long_vector() {
+        let mut key = [0u8; 32];
+        for (index, byte) in key.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(29).wrapping_add(7);
+        }
+        let mut message = [0u8; 257];
+        for (index, byte) in message.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(113).wrapping_add(19);
+        }
+        // Independently cross-checked with OpenSSL's POLY1305 EVP_MAC.
+        let expected: [u8; 16] = hex::decode("4860feab5f510294db900e656daee7b3")
+            .unwrap()
+            .try_into()
+            .unwrap();
+        let mut actual = [0; 16];
+
+        poly1305_mac_fixed(&message, &key, &mut actual);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn fixed_poly1305_changes_with_the_one_time_key() {
+        let message = b"one admitted message";
+        let first_key = [0x3c; 32];
+        let mut second_key = first_key;
+        second_key[31] ^= 0x80;
+        let mut first_tag = [0; 16];
+        let mut second_tag = [0; 16];
+
+        poly1305_mac_fixed(message, &first_key, &mut first_tag);
+        poly1305_mac_fixed(message, &second_key, &mut second_tag);
+
+        assert_ne!(first_tag, second_tag);
+    }
+
+    #[test]
     fn test_poly1305_empty() {
         let mut key = [0u8; 32];
         for i in 0..32 {
@@ -1361,5 +1872,31 @@ mod tests {
         assert_ne!(ct, plaintext.to_vec());
         let pt = xchacha20_encrypt(&ct, &key, &nonce, 1);
         assert_eq!(pt, plaintext);
+    }
+
+    #[test]
+    #[cfg(target_pointer_width = "64")]
+    fn fixed_aead_length_preflight_enforces_counter_space_without_allocating() {
+        let maximum_length = (u32::MAX as usize) * 64;
+        assert_eq!(
+            validate_aead_request_lengths(maximum_length, maximum_length, usize::MAX),
+            Ok((u64::MAX, maximum_length as u64)),
+        );
+        assert_eq!(
+            validate_aead_request_lengths(maximum_length + 1, maximum_length + 1, 0),
+            Err(FixedAeadError::CounterExhausted),
+        );
+        assert_eq!(
+            validate_aead_request_lengths(maximum_length + 1, maximum_length, 0),
+            Err(FixedAeadError::OutputLengthMismatch),
+        );
+        assert_eq!(
+            map_fixed_chacha20_error(FixedChaCha20Error::OutputLengthMismatch),
+            FixedAeadError::OutputLengthMismatch,
+        );
+        assert_eq!(
+            map_fixed_chacha20_error(FixedChaCha20Error::CounterExhausted),
+            FixedAeadError::CounterExhausted,
+        );
     }
 }

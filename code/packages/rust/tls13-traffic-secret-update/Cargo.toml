@@ -1,0 +1,13 @@
+[package]
+name = "tls13-traffic-secret-update"
+version = "0.1.0"
+edition = "2021"
+description = "Fixed-memory TLS 1.3 traffic-secret update derivation"
+license = "MIT"
+
+[dependencies]
+coding_adventures_hkdf = { path = "../hkdf" }
+tls13-hkdf-label = { path = "../tls13-hkdf-label" }
+
+[dev-dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }

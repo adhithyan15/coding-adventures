@@ -1,4 +1,5 @@
-cd ../wasm-leb128 && npm ci --quiet
-cd ../wasm-types && npm ci --quiet
+npm --prefix ../wasm-leb128 ci --quiet
+npm --prefix ../wasm-types ci --quiet
 npm ci --quiet
-npx vitest run --coverage
+npm run build --silent
+npm run test:coverage --silent

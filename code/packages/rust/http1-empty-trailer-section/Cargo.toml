@@ -1,0 +1,7 @@
+[package]
+name = "http1-empty-trailer-section"
+version = "0.1.0"
+edition = "2021"
+description = "Strict borrowed decoding of an empty HTTP/1 trailer section"
+
+[dependencies]

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/x509-rsa-sha384-reviewed-anchor-link",
+  "capabilities": [],
+  "justification": "Pure evidence binding over public certificate, signature, RSA public-key, and reviewed trust-root snapshot data. No filesystem, network, process, environment, clock, FFI, credential, secret-key, signing, provider, audit, trace, or external effect is required."
+}

@@ -2,6 +2,10 @@
 
 All notable changes to the SHA-512 Perl package will be documented in this file.
 
+## [0.02] - Unreleased
+
+- Consume the bounded HF04 corpus and encode the full 128-bit length field with checked arbitrary-precision accounting.
+
 ## [0.01] - 2026-04-05
 
 ### Added

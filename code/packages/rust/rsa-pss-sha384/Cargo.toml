@@ -1,0 +1,10 @@
+[package]
+name = "rsa-pss-sha384"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 8017 EMSA-PSS SHA-384 encoded-message validation"
+
+[dependencies]
+coding_adventures_sha384 = { path = "../sha384" }
+rsa-pss-encoded-message-layout = { path = "../rsa-pss-encoded-message-layout" }
+rsa-pss-mgf1-sha384 = { path = "../rsa-pss-mgf1-sha384" }

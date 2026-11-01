@@ -1,5 +1,29 @@
 # TaskApp platform completion v1
 
+## Selected release checkpoint: v0.5.16 (#18746)
+
+The Qt Board card-spacing fix merged in #18612, validated on exact head
+0e31fde53a0e51adef0bbca9c9917e2d5ec1c578 by TaskApp run 40954058583.
+Prepare its compatible patch dated 2026-10-30, retaining the authored 9-pixel
+gap, three removed layout drops (80 to 77), and unsupported/state exclusions.
+Prioritize this checkpoint under #13543 before further fidelity work. Require
+release-helper tests, changelog validation, and independent security review.
+After preparation merges, dispatch publication once from main, require every
+existing payload validation, and audit immutable source/tag/manifest identity,
+assets, checksums, and substantive notes before closing #18746. Preparation
+is not publication; artifact coverage and unsigned limitations stay unchanged.
+
+## Selected release checkpoint: v0.5.15 (#18581)
+
+The Qt empty Board drop-zone floor merged in #18562 with all checks passing.
+Prepare its compatible patch dated 2026-10-29. Retain the changelog's explicit
+three newly visible style drops and follow-up #18563; do not describe the
+diagnostic total as unchanged. Prioritize publication under #13543, require
+all existing payload validations after preparation merges, dispatch once from
+main, and audit immutable source/tag/manifest identity, inventory, checksums,
+and substantive notes before closing #18581. Preparation is not publication;
+artifact coverage and unsigned-platform limitations stay unchanged.
+
 ## Selected fidelity slice: Qt empty Board drop-target floor (#18559)
 
 Preserve both themes' existing col-drop min-height 60 on Qt's outer
@@ -526,3 +550,18 @@ notes path and reject heading-only output for a detailed changelog. Existing
 artifact coverage and unsigned-platform limitations remain unchanged. Never
 rewrite the immutable v0.5.10 release to repair this presentation defect.
 
+## Selected fidelity slice: Qt Board drop layout (#18563)
+
+After the audited v0.5.15 checkpoint, lower the Board drop target's static
+`display: flex`, `flex-direction: column`, and finite nonnegative pixel gap
+to its existing inner ColumnLayout and spacing. Limit this bridge to targets
+already authoring min-height, so unrelated Calendar targets stay unchanged.
+State overrides or unsupported display/direction/gap values remain reported;
+do not claim general CSS flex support. Test both themes and reduce the exact
+Qt diagnostic budget only by the three verified Board declarations.
+
+
+Upstream reconciliation: #18481 merged during this slice. Its net reporting
+change makes main total 80; removing the same three Board declarations yields
+77. Preserve Calendar gap 1, width 1, and flex-grow 5. Both-theme analysis
+verifies these combined counts; the earlier 79-to-76 expectation is superseded.

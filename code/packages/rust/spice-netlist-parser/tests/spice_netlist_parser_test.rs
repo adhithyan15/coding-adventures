@@ -298,23 +298,20 @@ fn runs_shared_ltspice_step_v1_corpus() {
     for case in corpus["cases"].as_array().unwrap() {
         let expected = &case["expected"];
         let parsed = parse_netlist(case["deck"].as_str().unwrap()).unwrap();
-        let card = parsed.step_cards.first().unwrap();
-        assert_eq!(card.parameter, expected["parameter"].as_str().unwrap());
         assert_eq!(
-            card.values,
-            expected["values"]
-                .as_array()
-                .unwrap()
+            parsed
+                .step_cards
                 .iter()
-                .map(|value| value.as_f64().unwrap())
-                .collect::<Vec<_>>()
+                .map(|card| serde_json::json!({"parameter": card.parameter, "values": card.values}))
+                .collect::<Vec<_>>(),
+            expected["stepCards"].as_array().unwrap().to_vec()
         );
         let results = parsed.run_analysis_plan().unwrap();
-        assert_eq!(results.len(), expected["values"].as_array().unwrap().len());
+        assert_eq!(results.len(), expected["stepValues"].as_array().unwrap().len());
         for (index, result) in results.iter().enumerate() {
             assert_eq!(
-                result.step_values.get(&card.parameter),
-                Some(&card.values[index])
+                serde_json::json!(result.step_values),
+                expected["stepValues"][index]
             );
             let AnalysisResult::Op(op) = &result.result else {
                 panic!("expected .op result");
@@ -332,15 +329,54 @@ fn runs_shared_ltspice_step_v1_corpus() {
                 .as_array()
                 .unwrap()
                 .iter()
-                .map(
-                    |analysis| analysis["stepValues"][expected["parameter"].as_str().unwrap()]
-                        .as_f64()
-                        .unwrap()
-                )
+                .map(|analysis| analysis["stepValues"].clone())
                 .collect::<Vec<_>>(),
-            card.values,
+            expected["stepValues"].as_array().unwrap().to_vec(),
         );
     }
+}
+
+#[test]
+fn runs_shared_ngspice_control_parameter_corpus() {
+    let corpus: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../grammars/spice/ngspice-control-parameter-v1-corpus.json"
+    ))
+    .unwrap();
+    assert_eq!(corpus["suite"], "ngspice-control-parameter-v1");
+    for case in corpus["cases"].as_array().unwrap() {
+        let expected = &case["expected"];
+        let parsed = parse_netlist(case["deck"].as_str().unwrap()).unwrap();
+        assert_eq!(
+            parsed.step_cards.iter().map(|card| serde_json::json!({
+                "parameter": card.parameter,
+                "values": card.values,
+            })).collect::<Vec<_>>(),
+            expected["stepCards"].as_array().unwrap().to_vec(),
+        );
+        let results = parsed.run_analysis_plan().unwrap();
+        assert_eq!(results.len(), expected["stepValues"].as_array().unwrap().len());
+        for (index, result) in results.iter().enumerate() {
+            assert_eq!(serde_json::json!(result.step_values), expected["stepValues"][index]);
+            let AnalysisResult::Op(op) = &result.result else { panic!("expected .op result") };
+            assert_close(op.voltage("out").unwrap(), expected["out"][index].as_f64().unwrap());
+        }
+        let payload: serde_json::Value = serde_json::from_str(
+            &run_netlist_json(case["deck"].as_str().unwrap()).unwrap(),
+        ).unwrap();
+        assert_eq!(
+            payload["analyses"].as_array().unwrap().iter()
+                .map(|analysis| analysis["stepValues"].clone()).collect::<Vec<_>>(),
+            expected["stepValues"].as_array().unwrap().to_vec(),
+        );
+    }
+}
+
+#[test]
+fn ngspice_control_parameter_runs_require_alter_reset_run_order() {
+    assert!(parse_netlist(
+        ".param RLOAD=1k\n.control\nforeach load 1k 3k\n  reset\n  alterparam RLOAD=$load\n  run\nend\n.endc\n.end\n"
+    )
+    .is_err());
 }
 
 #[test]

@@ -1,5 +1,34 @@
 # Changelog — vm-core
 
+## Unreleased — #18463 — the dynamic comparison builtins and `pair?`
+
+- **New default builtins `<`, `<=`, `>`, `>=`** (`dyn_compare`). Twig emits
+  `call_builtin "<", x, 0` whenever an operand is not statically `i64`, which
+  is every comparison on an un-annotated function parameter, so
+  `(define (f x) (if (< x 0) 42 7)) (f -5)` stopped on the VM and JIT matrix
+  columns with `UnknownOpcode("builtin \"<\"")` while `twig-vm` ran it. Two
+  `Int`s compare as signed `i64` (`twig-vm`'s rule); two `Float`s compare as
+  IEEE doubles, the same two-same-kind contract the existing `+`/`-`/`*` use;
+  anything else, including a `Bool`, is a `VMError::TypeError`, as
+  `dynval-runtime` rejects a non-integer. Exactly two arguments; Scheme's
+  chained `(< a b c)` is an arity error, as everywhere else.
+- **New default builtin `pair?`** (`dyn_is_pair`): `#t` for a non-null
+  `HeapRef` (what `lower_heap_builtins` makes of `cons`), `#f` for nil (a null
+  ref or `Int(0)`, the shapes `is_null` accepts) and for every atom. The
+  structural lowering leaves `pair?` a `call_builtin`, and a Twig record's
+  `<name>?` predicate is compiled to it. A closure lowered to cells also
+  answers `#t`, where `twig-vm` says `#f`; a `HeapRef` carries no cons tag.
+- `=` is unchanged: it stays `Value` equality on any two values, which union
+  `match` and the symbol rows rely on, where `twig-vm`'s `=` is integer-only.
+- Tests: five unit tests in `builtins.rs` (registration, an integer truth
+  table with the boundary and sign cases, floats and NaN, the type and arity
+  errors, `pair?` on a cell, nil and atoms) and the new `tests/dyn_compare.rs`,
+  which runs the IIR shape Twig emits through `VMCore::execute`: the #18463
+  program, both branches of each ordering at the zero boundary, a string
+  operand trapping, and `pair?` on a real `alloc` cell. All nine failed before
+  the change.
+- README and the builtin table at the top of `builtins.rs` list the dynamic
+  builtins.
 ## Unreleased — field ops require a block base address, not an interior pointer (#18471)
 
 - **Security fix (latent).** `gc_field_load` / `gc_field_store` bounds-checked

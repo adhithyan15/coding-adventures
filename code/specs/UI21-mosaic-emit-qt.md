@@ -145,6 +145,148 @@ percentage, an intrinsic keyword, a state that switches to a scalar width, or
 a `Text` width remains an explicit style degradation until that distinct
 geometry contract is implemented.
 
+#### Component root binding and main-axis growth
+
+A vertical `HostScroll` scrolls only inside a viewport shorter than its
+content, so every ancestor between the window and the `ScrollView` must
+receive a bounded height. Qt gives an item a size in only two ways: anchors
+bind it to its parent, or a `RowLayout` / `ColumnLayout` sizes it through
+the `Layout.*` attached properties. An item that has neither keeps its
+implicit size, which for a `ScrollView` is the height of its content.
+
+The generated shell hosts the component in a `QQuickView` with
+`SizeRootObjectToView`. That sizes the root `Item` to the window, and
+nothing below the root follows unless the emitter says so.
+`HostNavigationSplit` binds itself to the root (`anchors.fill: parent` at
+the root, #15833). Before this section, a `Column` root did not bind at all.
+Its shell was as tall as its content, and a `HostScroll` inside it never
+scrolled (EN-6, #18477).
+
+The rules:
+
+1. **A `Column` or `Row` root binds to the component root.** The
+   `ColumnLayout` / `RowLayout` that the layout root lowers to gets
+   `id: mosaicLayoutRoot`. If the part needs a painted `Rectangle` wrapper
+   (padding, background, border), the id goes on the wrapper. Each axis
+   binds as follows:
+
+   | Root     | Cross axis                     | Main axis                                          |
+   |----------|--------------------------------|----------------------------------------------------|
+   | `Column` | width: always                  | height: only when a direct child fills the height  |
+   | `Row`    | height: never                  | width: only when a direct child fills the width    |
+
+   A width binding is `anchors.left` plus `anchors.right`. A height binding
+   is `anchors.top` plus `anchors.bottom`. When both axes bind, they collapse
+   to `anchors.fill: parent`.
+
+   *Why the main axis is conditional.* A Qt layout with spare room and no
+   child willing to grow spreads the spare room *between* its children.
+   Measured at 400px, three short children of an anchored `ColumnLayout`
+   landed at y = 50, 174 and 314. CSS packs them at the start. So the
+   emitter binds the main axis only when some direct child absorbs the
+   surplus with `Layout.fillHeight` / `Layout.fillWidth`. That child might
+   be a lowered `flex-grow` (rule 3), a `Spacer`, or a `HostSurface`.
+   Otherwise the root keeps its content extent, as before.
+
+   *Why a `Row` never binds its height.* `RowLayout` centres its children
+   vertically within the row. Stretching a `Row` root to the window would
+   move every child to the window's vertical middle.
+
+   *Exceptions.* An axis the author sized (`width` / `max-width`, or
+   `height` / `max-height`) is not bound on that axis. A root with an
+   `elevation` tier is not bound at all: its `MultiEffect` wrapper owns the
+   root slot. Any other root tag (`Box`, `Stack`, `HostScroll`, …) is
+   unchanged.
+
+2. **The root `Item` takes its implicit size from `mosaicLayoutRoot`.** It
+   publishes `implicitWidth: mosaicLayoutRoot.implicitWidth` (and the same
+   for height), not `childrenRect`. When a consumer places the component in
+   a layout, the root is sized *from* its implicit size. With a
+   `childrenRect` binding, the chain root → `childrenRect` → bound child →
+   root would be a binding loop. A layout's implicit size comes from its
+   children's implicit sizes and never from its own geometry, so this chain
+   has no cycle. When the root is bound, the wrapper's content layout also
+   binds to the wrapper. Its padding becomes `anchors.*Margin`, and the
+   wrapper's implicit size becomes the content layout's implicit size plus
+   that padding, for the same reason.
+
+3. **`flex-grow` lowers to main-axis fill.** This applies to a node that is
+   a direct child of a `Row` or `Column`:
+
+   | `flex-grow` value | Lowering |
+   |---|---|
+   | positive, finite | `Layout.fillWidth: true` in a `Row`, `Layout.fillHeight: true` in a `Column`; consumed |
+   | `0` | nothing (Qt's default is not to grow); consumed |
+   | negative / non-numeric | nothing; reported as dropped |
+
+   Qt fills are all-or-nothing. Growing siblings share the surplus equally,
+   whatever ratio CSS would give them. When the growing children of one
+   layout author *different* positive values, every one of them still fills,
+   but the property stays in the drop report because the ratio is lost. An
+   `If` / `Else` / `For` child lowers to a `Loader` / `Repeater`, so it is
+   not the layout child. A `flex-grow` inside one is not lowered and stays
+   reported. The emitter never writes a fill line twice: a child that
+   already fills that axis is left alone, and its `flex-grow` counts as
+   consumed.
+
+4. **An axis-pinned `HostScroll` fills its parent's cross axis.** A vertical
+   `HostScroll` pins `contentWidth: availableWidth` (UI61), so its implicit
+   width is derived from its own width and comes out as 0. As a direct child
+   of a `Column`, it gets `Layout.fillWidth: true`. Without that, it is laid
+   out zero pixels wide. In the same way, a horizontal `HostScroll` in a
+   `Row` gets `Layout.fillHeight: true`. If the pinned axis is the parent's
+   *main* axis (a horizontal `HostScroll` in a `Column`), filling it would
+   take the column's whole height (#16949), so that case is out of scope
+   here.
+
+5. **A rendered part counts as reached.** The style-drop reporter
+   (`dropped_style_properties`) skips parts the emit never reached. Until
+   this rule, "reached" meant "the emitter asked about at least one of its
+   properties". So `content-scroll { flex-grow: 1 }` on a `HostScroll`, a
+   part nothing ever asked about, vanished from the report entirely. Now
+   every node that carries a part marks that part as reached when it is
+   emitted. For a part whose own lowering asked about nothing, only the
+   parent-owned `flex-grow` is reported. Its other properties keep the old
+   "never asked" treatment for now. Reporting all of them is correct, but
+   it surfaces about seventy uncounted drops across seven packages (the
+   toolkit's `HostLink` parts alone are 45). That needs its own
+   re-measurement of every pinned gate.
+
+The emitted shape for a bound, padded `Column` shell whose `HostScroll`
+grows is shown below. The content layout gets the fixed id
+`mosaicLayoutRootContent`, not a numbered `mosaicContent<N>`, so that the
+numbered ids other wrappers allocate do not shift.
+
+```qml
+Item {
+    id: mosaicRoot
+    implicitWidth: mosaicLayoutRoot.implicitWidth
+    implicitHeight: mosaicLayoutRoot.implicitHeight
+    Rectangle {
+        id: mosaicLayoutRoot
+        anchors.fill: parent
+        implicitWidth: mosaicLayoutRootContent.implicitWidth + 24 + 24
+        implicitHeight: mosaicLayoutRootContent.implicitHeight + 24 + 24
+        color: "#f8fafc"
+        ColumnLayout {
+            id: mosaicLayoutRootContent
+            anchors.fill: parent
+            anchors.leftMargin: 24
+            anchors.topMargin: 24
+            anchors.rightMargin: 24
+            anchors.bottomMargin: 24
+            RowLayout { … }                      // header: keeps its height
+            ScrollView {
+                Layout.fillWidth: true           // pinned axis (rule 4)
+                Layout.fillHeight: true          // flex-grow: 1
+                contentWidth: availableWidth
+                ColumnLayout { … }               // taller than the window
+            }
+        }
+    }
+}
+```
+
 ### 2.3 Slot → QML Property Type Mapping
 
 | Mosaic slot type | QML `property` type | Initial value |
@@ -471,6 +613,16 @@ server** backend. From the server's perspective:
 | `test_each_repeater` | `each @items as item` → `Repeater { model: root.items … }` |
 | `test_reserved_name_renamed` | `visible` slot → `visible_` property with comment |
 | `test_image_source` | `Image` node → `Image { source: root.avatarUrl }` |
+| `a_column_root_binds_to_the_component_root` | §2.2 root binding: width always, height only with a filling child, implicit size from `mosaicLayoutRoot` |
+| `flex_grow_lowers_to_main_axis_fill` | §2.2 rule 3, including `0`, invalid and unequal values and the no-duplicate rule |
+| `a_vertical_host_scroll_fills_its_column_width` | §2.2 rule 4 |
+| `a_part_with_only_flex_grow_is_reported_when_dropped` | §2.2 rule 5 |
+
+The `host-scroll-column-shell` fixture (`Column` shell → header →
+`HostScroll` with `flex-grow: 1` → tall `Column`) is emitted in CI and then
+measured with the real `qml` runtime by
+`code/scripts/qt-column-shell-scroll-render-check.qml`. The check asserts
+that the `ScrollView` is bounded by the window and shorter than its content.
 
 ### 6.2 Phase B — daemon protocol
 

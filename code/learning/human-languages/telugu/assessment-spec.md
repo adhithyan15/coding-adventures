@@ -87,6 +87,27 @@ letting a precise project value look externally measured. Publishing the shape
 does not establish an external qualification, a complete mock, calibration,
 human validation, learner readiness, or learner attainment.
 
+### B2 content-inventory source boundary
+
+The B2 content inventory is also a project-defined synthesis, not a published
+Telugu examination syllabus. The CEFR Companion Volume supplies the generic B2
+communicative and competence boundary. CIIL's *Telugu Intermediate Course
+Language Laboratory Materials* (handle `20.500.14705/11810`) establishes a real
+intermediate Telugu L2 practice-and-testing boundary, while Unicode documents
+the Telugu encoding model and official LDC-IL text and speech corpora document
+contemporary domains and regional data collection. None of those sources
+publishes a finite Telugu B2 grammar, word list, spelling syllabus,
+pronunciation standard, or level-bounded exponent inventory.
+
+The machine-readable inventory must therefore keep all four content dimensions
+`partial` unless a future primary source genuinely closes one. A complete B2
+demand counts as covered only when the lessons introduce every atom in its
+probe; a foundation atom is not enough. Where no exact complete mapping exists,
+the point remains `probe: null` and visible as uncovered work. Publishing the
+inventory does not establish external certification, complete mocks,
+calibration, human validation, learner readiness, learner attainment, or even
+complete content coverage.
+
 ## Pass rule
 
 Reading, listening, writing, and speaking are separate 100-point papers. A

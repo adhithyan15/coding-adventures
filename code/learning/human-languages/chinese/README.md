@@ -33,7 +33,10 @@ reading, listening, independent writing, and individual speaking tasks. It is a
 four-skill companion assessment, not an official HSK 3.0 Level 1 paper or a CEFR
 equivalence. The [assessment specification](./assessment-spec.md) separates the
 currently displayed CTI listening/reading structure from the project's added
-productive skills. Both A1 mock forms are still to be authored and reviewed.
+productive skills. Two original, timed [A1 mock forms](./mocks/a1/) now have
+separate learner papers, examiner scripts and keys, manifests, and rubrics.
+They are project-defined practice, not official HSK papers or a readiness
+claim; qualified independent Chinese-language review is still required.
 
 ## Why this track exists
 

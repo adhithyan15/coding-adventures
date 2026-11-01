@@ -1,0 +1,7 @@
+[package]
+name = "tls13-supported-groups"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 supported-groups decoding"
+
+[dependencies]

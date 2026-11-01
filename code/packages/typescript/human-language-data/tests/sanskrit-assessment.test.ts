@@ -45,6 +45,9 @@ describe("Sanskrit assessment contract", () => {
         id: `${slug}-mock-${form}`,
         timed: true,
         paper: `mocks/${slug}/mock-${form}.md`,
+        ...(slug === "pre-a1"
+          ? { manifest: `mocks/${slug}/mock-${form}-manifest.json` }
+          : {}),
         rubric: `mocks/${slug}/rubric.md`,
         answerKey: `mocks/${slug}/mock-${form}-answer-key.md`,
       })));

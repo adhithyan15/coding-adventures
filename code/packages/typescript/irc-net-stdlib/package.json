@@ -5,9 +5,9 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/irc_net_stdlib.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-lines=80 --test dist-test/tests/irc_net_stdlib.test.js"
   },
   "keywords": [
     "irc",
@@ -22,9 +22,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "vitest": "^4.1.11",
-    "@vitest/coverage-v8": "^4.1.11",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
   }
 }

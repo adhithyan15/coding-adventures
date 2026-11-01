@@ -1,5 +1,8 @@
 using System.Buffers.Binary;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("CodingAdventures.Sha512.Tests")]
 
 namespace CodingAdventures.Sha512;
 
@@ -11,7 +14,7 @@ public static class Sha512
     /// <summary>SHA-512 digest length in bytes.</summary>
     public const int DigestLength = 64;
 
-    private static readonly ulong[] InitialState =
+    internal static readonly ulong[] InitialState =
     [
         0x6a09e667f3bcc908UL, 0xbb67ae8584caa73bUL, 0x3c6ef372fe94f82bUL, 0xa54ff53a5f1d36f1UL,
         0x510e527fade682d1UL, 0x9b05688c2b3e6c1fUL, 0x1f83d9abfb41bd6bUL, 0x5be0cd19137e2179UL,
@@ -62,18 +65,33 @@ public static class Sha512
 
     private static byte[] Pad(ReadOnlySpan<byte> data)
     {
-        var bitLength = (ulong)data.Length * 8UL;
         var afterBit = (data.Length + 1) % 128;
         var zeroCount = afterBit <= 112 ? 112 - afterBit : 128 + 112 - afterBit;
         var result = new byte[data.Length + 1 + zeroCount + 16];
 
         data.CopyTo(result);
         result[data.Length] = 0x80;
-        BinaryPrimitives.WriteUInt64BigEndian(result.AsSpan(result.Length - 8), bitLength);
+        EncodeBitLength(0, (ulong)data.Length).CopyTo(result, result.Length - 16);
         return result;
     }
 
-    private static void Compress(ulong[] state, ReadOnlySpan<byte> block)
+    /// <summary>Encode a 128-bit byte count as SHA-512's checked bit length.</summary>
+    internal static byte[] EncodeBitLength(ulong byteCountHigh, ulong byteCountLow)
+    {
+        if ((byteCountHigh & 0xe000000000000000UL) != 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(byteCountHigh), "SHA-512 message length must be less than 2^128 bits");
+        }
+
+        var result = new byte[16];
+        var bitCountHigh = (byteCountHigh << 3) | (byteCountLow >> 61);
+        var bitCountLow = byteCountLow << 3;
+        BinaryPrimitives.WriteUInt64BigEndian(result.AsSpan(0, 8), bitCountHigh);
+        BinaryPrimitives.WriteUInt64BigEndian(result.AsSpan(8, 8), bitCountLow);
+        return result;
+    }
+
+    internal static void Compress(ulong[] state, ReadOnlySpan<byte> block)
     {
         Span<ulong> w = stackalloc ulong[80];
         for (var index = 0; index < 16; index++)
@@ -148,18 +166,61 @@ public static class Sha512
 /// </summary>
 public sealed class Sha512Hasher
 {
-    private readonly List<byte> _data = [];
+    private ulong[] _state = Sha512.InitialState.ToArray();
+    private readonly byte[] _buffer = new byte[128];
+    private int _bufferLength;
+    private ulong _byteCountHigh;
+    private ulong _byteCountLow;
 
     /// <summary>Append bytes and return this hasher for chaining.</summary>
     public Sha512Hasher Update(byte[] data)
     {
         ArgumentNullException.ThrowIfNull(data);
-        _data.AddRange(data);
+        var added = (ulong)data.Length;
+        var nextLow = unchecked(_byteCountLow + added);
+        var nextHigh = _byteCountHigh + (nextLow < _byteCountLow ? 1UL : 0UL);
+        _ = Sha512.EncodeBitLength(nextHigh, nextLow);
+
+        _byteCountHigh = nextHigh;
+        _byteCountLow = nextLow;
+        var offset = 0;
+        while (offset < data.Length)
+        {
+            var copied = Math.Min(128 - _bufferLength, data.Length - offset);
+            data.AsSpan(offset, copied).CopyTo(_buffer.AsSpan(_bufferLength));
+            offset += copied;
+            _bufferLength += copied;
+            if (_bufferLength == 128)
+            {
+                Sha512.Compress(_state, _buffer);
+                _bufferLength = 0;
+            }
+        }
         return this;
     }
 
     /// <summary>Return the current 64-byte digest without modifying this hasher.</summary>
-    public byte[] Digest() => Sha512.Hash(_data.ToArray());
+    public byte[] Digest()
+    {
+        var zeroCount = _bufferLength + 1 <= 112 ? 112 - (_bufferLength + 1) : 240 - (_bufferLength + 1);
+        var tail = new byte[_bufferLength + 1 + zeroCount + 16];
+        _buffer.AsSpan(0, _bufferLength).CopyTo(tail);
+        tail[_bufferLength] = 0x80;
+        Sha512.EncodeBitLength(_byteCountHigh, _byteCountLow).CopyTo(tail, tail.Length - 16);
+
+        var state = _state.ToArray();
+        for (var offset = 0; offset < tail.Length; offset += 128)
+        {
+            Sha512.Compress(state, tail.AsSpan(offset, 128));
+        }
+
+        var digest = new byte[Sha512.DigestLength];
+        for (var index = 0; index < state.Length; index++)
+        {
+            BinaryPrimitives.WriteUInt64BigEndian(digest.AsSpan(index * 8, 8), state[index]);
+        }
+        return digest;
+    }
 
     /// <summary>Return the current digest as a lowercase hexadecimal string.</summary>
     public string HexDigest() => Convert.ToHexString(Digest()).ToLowerInvariant();
@@ -168,7 +229,11 @@ public sealed class Sha512Hasher
     public Sha512Hasher Copy()
     {
         var copy = new Sha512Hasher();
-        copy._data.AddRange(_data);
+        copy._state = _state.ToArray();
+        _buffer.CopyTo(copy._buffer, 0);
+        copy._bufferLength = _bufferLength;
+        copy._byteCountHigh = _byteCountHigh;
+        copy._byteCountLow = _byteCountLow;
         return copy;
     }
 }
