@@ -347,6 +347,10 @@ A unary minus around that `sqrt` preserves the exact mathematical floor too,
 using the negated ceiling root for non-squares. Repeated unary signs are
 checked without widening; negative radicands and dynamic roots still fail
 closed.
+Checked integer additions and subtractions may translate one such square root
+before `entier`. Subtraction reverses the root sign and therefore uses the
+same ceiling-root adjustment; overflow, multiple roots, multiplication, real
+division, overrides, and dynamic roots remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.

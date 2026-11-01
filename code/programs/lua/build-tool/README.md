@@ -131,7 +131,10 @@ lua build.lua --force                  # Rebuild everything
   sequentially. LuaJIT or Lua lanes could add parallelism, but the
   educational value is in the algorithm, not the concurrency.
 - **Optional LuaFileSystem**: Uses `lfs` if available for directory listing,
-  falls back to `ls`/`dir` shell commands otherwise.
+  falls back to `ls`/`dir` shell commands otherwise. The fallback selects the
+  native null device (`/dev/null` or `nul`) for both listing and directory
+  probes, quotes POSIX paths, and rejects Windows path spellings that `cmd.exe`
+  could expand rather than silently treating a repository as empty.
 - **Metatables for OOP**: DirectedGraph uses the standard `__index`
   metatable pattern for method dispatch.
 
