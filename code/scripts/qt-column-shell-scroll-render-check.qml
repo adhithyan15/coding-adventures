@@ -7,9 +7,16 @@
 // therefore exactly as tall as its content: a viewport with nothing to
 // scroll. No text search sees that. A measurement does.
 //
-// Run from the generated Qt output of
-// code/packages/rust/mosaic-emit-qt/fixtures/host-scroll-column-shell, the
-// directory where `Shell.qml` and its `qmldir` live:
+// The same check runs on a second fixture,
+// code/packages/rust/mosaic-emit-qt/fixtures/content-sized-regions (UI21
+// §2.2, rules 6 and 7). Its scrolled content is a padded styled Box with no
+// size of its own and a two-child If/Else body, each holding a 400px block.
+// Both used to publish 0 x 0, and either one alone leaves the content
+// shorter than the viewport, so the contentHeight assertion below fails if
+// either regresses. Both fixtures export `Shell` with a `title` slot.
+//
+// Run from the generated Qt output of either fixture, the directory where
+// `Shell.qml` and its `qmldir` live:
 //
 //     QT_QPA_PLATFORM=offscreen qml qt-column-shell-scroll-render-check.qml
 //
@@ -99,8 +106,9 @@ Window {
             // did not, it would be laid out zero pixels wide.
             win.check("ScrollView width", Math.round(scroll.width),
                       scroll.width > win.width / 2 && scroll.width <= win.width)
-            // Something to scroll: the 1600px block is taller than any
-            // viewport this window can give it.
+            // Something to scroll: the content (a 1600px block, or two
+            // 400px blocks in the content-sized-regions fixture) is taller
+            // than any viewport this window can give it.
             win.check("ScrollView contentHeight", Math.round(scroll.contentHeight),
                       scroll.contentHeight > scroll.height)
 
