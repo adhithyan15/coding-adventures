@@ -66,6 +66,52 @@ const PARAM_PROGRAM: &str = "(define (f p) (begin (w4) (car p)))\n(f (cons 7 8))
 const CAPTURE_PROGRAM: &str =
     "(define (g p) (lambda () (begin (w4) (car p))))\n((g (cons 7 8)))\n";
 
+/// Copies of a heap word in a *local*, not just in the parameter itself. Each
+/// is a `mov` that type propagation (or `default_any_to_i64`) types `i64`, so
+/// before the follow-up fix the copy's slot was missing from the stack map
+/// even once the parameter's was named; a compaction rewrote the original and
+/// left the copy pointing at the freed cell. The reading function reads the
+/// copy, never the original.
+///
+/// | tag            | the copy                                          | `mov` typed `i64` by        |
+/// |----------------|---------------------------------------------------|-----------------------------|
+/// | `let_copy`     | `(let ((q p)) …)`                                 | propagation from `p`        |
+/// | `copy_chain`   | `a ← p`, `b ← a`, `c ← b`                         | propagation, three times    |
+/// | `call_result`  | `(let ((x (f p 0))) …)`, a recursive call's result | `default_any_to_i64` (the call's own type is unknown while `f` is being compiled) |
+/// | `join_int`     | `(if (pair? c) p 0)` — both arms are `i64` movs   | propagation / literal       |
+/// | `join_pair`    | `(if (pair? c) p (cons 9 9))`                     | (rooted already: the other arm's `mov` is `any`, so the shared slot was declared — a guard) |
+const COPY_PROGRAMS: [(&str, &str); 5] = [
+    ("let_copy", "(define (f p) (let ((q p)) (begin (w4) (car q))))\n(f (cons 7 8))\n"),
+    (
+        "copy_chain",
+        "(define (f p) (let ((a p)) (let ((b a)) (let ((c b)) (begin (w4) (car c))))))\n\
+         (f (cons 7 8))\n",
+    ),
+    (
+        "call_result",
+        "(define (f p n) (if (pair? n) (let ((x (f p 0))) (begin (w4) (car x))) p))\n\
+         (f (cons 7 8) (cons 1 1))\n",
+    ),
+    (
+        "join_int",
+        "(define (f p c) (let ((x (if (pair? c) p 0))) (begin (w4) (car x))))\n\
+         (f (cons 7 8) (cons 1 1))\n",
+    ),
+    (
+        "join_pair",
+        "(define (f p c) (let ((x (if (pair? c) p (cons 9 9)))) (begin (w4) (car x))))\n\
+         (f (cons 7 8) (cons 1 1))\n",
+    ),
+];
+
+/// Every shape the compacting tests drive: the parameter itself, a captured
+/// value, and the local copies above.
+fn compacting_shapes() -> Vec<(&'static str, &'static str)> {
+    let mut v = vec![("param", PARAM_PROGRAM), ("captured", CAPTURE_PROGRAM)];
+    v.extend(COPY_PROGRAMS);
+    v
+}
+
 fn compile(src: &str) -> IIRModule {
     twig_ir_compiler::compile_source(&format!("{CHURN}{src}"), "gc_param_roots")
         .unwrap_or_else(|e| panic!("compile: {e}"))
@@ -102,9 +148,9 @@ fn splice_collection(m: &mut IIRModule, collect: &str, reuse: bool) {
         let mut again = f
             .instructions
             .iter()
-            .find(|i| i.op == "call")
+            .find(|i| i.op == "call" && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "w4"))
             .cloned()
-            .expect("the callee calls its allocating helper");
+            .expect("the callee calls its allocating helper (w4)");
         again.dest = Some("__reuse".into());
         extra.push(again);
     }
@@ -202,7 +248,7 @@ fn twig_param_survives_allocation_triggered_collections() {
 #[test]
 fn param_survives_precise_collection_inside_callee() {
     let dir = tempfile::tempdir().unwrap();
-    for (tag, src) in [("param", PARAM_PROGRAM), ("captured", CAPTURE_PROGRAM)] {
+    for (tag, src) in compacting_shapes() {
         for reuse in [false, true] {
             let mut m = compile(src);
             splice_collection(&mut m, "gc_collect_precise", reuse);
@@ -221,14 +267,24 @@ fn param_survives_precise_collection_inside_callee() {
 #[test]
 fn param_survives_compacting_collection_inside_callee() {
     let dir = tempfile::tempdir().unwrap();
-    for (tag, src) in [("param", PARAM_PROGRAM), ("captured", CAPTURE_PROGRAM)] {
+    // Every shape runs before the verdict, so one failure does not hide another.
+    let mut failures = Vec::new();
+    for (tag, src) in compacting_shapes() {
         for reuse in [false, true] {
             let mut m = compile(src);
             splice_collection(&mut m, "gc_collect_compacting", reuse);
             let exe = build(&m, &dir, &format!("compacting_{tag}_{reuse}"));
-            assert_reads_seven(&run(&exe), &format!("compacting {tag} reuse={reuse}"));
+            let out = run(&exe);
+            if out.status.code() != Some(7) {
+                failures.push(format!("{tag} reuse={reuse}: exit {:?}", out.status.code()));
+            }
         }
     }
+    assert!(
+        failures.is_empty(),
+        "`(car p)` must read 7 after a compaction inside the callee; a different value or \
+         a signal means a slot holding the pair was not a root and went stale: {failures:?}",
+    );
 }
 
 /// The same compacting case under valgrind memcheck, which flags the stale read
@@ -249,16 +305,18 @@ fn compacting_param_read_is_clean_under_memcheck() {
         return;
     }
     let dir = tempfile::tempdir().unwrap();
-    for (tag, src) in [("param", PARAM_PROGRAM), ("captured", CAPTURE_PROGRAM)] {
+    let mut failures = Vec::new();
+    for (tag, src) in compacting_shapes() {
         let mut m = compile(src);
         splice_collection(&mut m, "gc_collect_compacting", false);
         let exe = build(&m, &dir, &format!("memcheck_{tag}"));
         let out = Command::new("valgrind").arg("--quiet").arg(&exe).output().unwrap();
         let stderr = String::from_utf8_lossy(&out.stderr);
-        assert!(
-            !stderr.contains("Invalid read") && !stderr.contains("Invalid write"),
-            "{tag}: memcheck saw an access to freed memory:\n{stderr}",
-        );
-        assert_reads_seven(&out, &format!("memcheck {tag}"));
+        if stderr.contains("Invalid read") || stderr.contains("Invalid write") {
+            failures.push(format!("{tag}: memcheck saw an access to freed memory"));
+        } else if out.status.code() != Some(7) {
+            failures.push(format!("{tag}: exit {:?}", out.status.code()));
+        }
     }
+    assert!(failures.is_empty(), "{failures:?}");
 }

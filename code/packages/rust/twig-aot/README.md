@@ -95,7 +95,10 @@ never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
   while the backend gets the declared `any` and keeps the parameter's slot in
   every stack map. Before #18492 the param was retyped in place, and a compacting
   collection inside the callee left the parameter pointing at the freed old copy
-  of its argument. `tests/gc_param_roots.rs` reproduces that case end to end.
+  of its argument. The same goes for local copies (`let` bindings, `if` joins,
+  copy chains): `root_heap_word_copies` keeps every `mov` that may copy a heap
+  word typed `any` for the stack map while its mnemonic stays `mov_i64`.
+  `tests/gc_param_roots.rs` reproduces each case end to end.
 
 LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
