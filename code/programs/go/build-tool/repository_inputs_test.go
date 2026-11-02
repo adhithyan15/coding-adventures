@@ -43,6 +43,51 @@ func TestIsMosaicRepositorySource(t *testing.T) {
 	}
 }
 
+func TestIsTestBootstrapInput(t *testing.T) {
+	cases := []struct {
+		path string
+		want bool
+	}{
+		{"code/specs/fixtures/test-bootstrap-v1/cases.json", true},
+		{"code/specs/fixtures/test-bootstrap-v1/cases.tfv", true},
+		{"code/scripts/tfv.py", true},
+		{"code/scripts/bootstrap_harness_conformance.py", true},
+		// Lookalikes: another corpus version, another fixture, the
+		// validator's own tests (CI runs those on the contract path), and
+		// paths that merely contain the right words.
+		{"code/specs/fixtures/test-bootstrap-v10/cases.json", false},
+		{"code/specs/fixtures/test-bootstrap-v1", false},
+		{"code/specs/fixtures/ct-compare-v1/cases.json", false},
+		{"code/scripts/tests/test_bootstrap_harness_conformance.py", false},
+		{"code/scripts/tfv.pyc", false},
+		{"docs/code/specs/fixtures/test-bootstrap-v1/cases.json", false},
+		{`code\specs\fixtures\test-bootstrap-v1\cases.json`, false},
+	}
+	for _, tc := range cases {
+		if got := isTestBootstrapInput(tc.path); got != tc.want {
+			t.Errorf("isTestBootstrapInput(%q) = %v, want %v", tc.path, got, tc.want)
+		}
+	}
+}
+
+func TestTestBootstrapCorpusSelectsTheHarness(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/test-bootstrap", Language: "rust"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/test-bootstrap-v1/cases.tfv"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"rust/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "all"); err == nil {
+		t.Fatal("a corpus change with the harness missing must fail closed")
+	}
+}
+
 func TestRepositoryInputConsumersForChange(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/mosaic-package-resolver", Language: "rust"},
