@@ -5,6 +5,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — #18470 re-review — a builtin sees a boolean as a `Bool`
+
+- `CALL_BUILTIN` passed every argument register as `Value::Int`, so a boolean
+  reached the builtin as 0 / 1. The interpreter tier passes the `Bool` a
+  comparison produced, so a function such as `(b : bool) -> bool` calling
+  `(equal? b 0)` answered `#f` interpreted and `#t` once compiled. A call with
+  a boolean argument now encodes as the new `CALL_BUILTIN_KINDS` (opcode
+  `0x65`): each argument carries a kind byte, `0` for `Int` and `1` for
+  `Bool`. A register counts as boolean when it is a `bool` parameter or every
+  write to it is a comparison, a `const_bool` or typed `bool`; a `bool`
+  literal argument is a `Bool` too. A call with no boolean argument keeps the
+  old encoding, byte for byte. An unknown kind byte or a truncated argument
+  list fails closed. Test: `a_boolean_register_reaches_a_builtin_as_a_bool`.
+  Every `lang_matrix` Vm and Jit cell (2,084) and the other frontends' JIT
+  tests pass unchanged.
+
 ## Unreleased — #18470 review M1 — a promoted function keeps every value's kind
 
 - **A register cannot say what kind of value it holds, so `GenericCirJit` no longer compiles a function whose signature admits one it would lose.** `compile_function` refuses a function whose parameter or result is declared anything but an integer width, `bool`, `f64`, a `ref<…>` word or (a result) `void` — `any`, `str`, `symbol`, `closure`, `f32` … stay on the interpreter tier (`register_param_type` / `register_return_type`). Before, every non-`f64` parameter was seeded as an integer and every result came back as `Int`. That was harmless while every language on the VM called `0` false; once vm-core's Twig modules followed TW00 (`0` is true, #18493), a promoted `(define (id x) x)` turned `#f` into `Int(0)` and flipped the branch after it, and a nil or symbol argument failed the call ("integer parameter 0 received Null"). A `ref<…>` is still compiled: on the tagged-word pipelines (McCarthy on the JIT) a reference *is* an `i64` word carrying its own tag.

@@ -167,6 +167,13 @@ Rather than silently change those programs, LANG83 adds new ops whose edges are
 *defined* and identical everywhere. `i64_div_trunc` (Later) is the defined twin
 of `div`.
 
+A language that needs defined edges before `i64_div_trunc` exists writes them
+itself. Twig on the VM and JIT columns does (#18470): `iir-builtin-lowering::
+vm_lisp` puts a `Trap.DivZero` check and a `Trap.Overflow` check for
+`MIN / -1` in front of every `div` and `mod` in a Twig module, typed or from a
+dynamic `/` / `quotient` / `remainder` / `modulo`, matching twig-vm. vm-core's
+own `div` / `mod` keep the legacy edges in the table.
+
 ### Trap semantics
 
 A trap terminates the program. It is a **terminator**: control never falls

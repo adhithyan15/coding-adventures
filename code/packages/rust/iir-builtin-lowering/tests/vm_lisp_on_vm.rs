@@ -242,6 +242,27 @@ fn division_rounds_as_twig_vm_does() {
     }
 }
 
+/// #18470 review: a *typed* division — what Twig emits for `(/ a b)` when it
+/// knows both are integers — traps the same way. `(/ 7 0)` used to be an
+/// untyped `DivisionByZero` error and `MIN / -1` wrapped to `MIN`.
+#[test]
+fn a_typed_division_traps_like_the_dynamic_one() {
+    let run_op = |op: &str, a: i64, b: i64| {
+        run(vec![
+            ins("const", Some("a"), vec![Operand::Int(a)], "i64"),
+            ins("const", Some("b"), vec![Operand::Int(b)], "i64"),
+            ins(op, Some("r"), vec![var("a"), var("b")], "i64"),
+            ins("ret", None, vec![var("r")], "i64"),
+        ])
+    };
+    for op in ["div", "mod"] {
+        assert!(matches!(run_op(op, 7, 0), Err(VMError::Trap { ref kind }) if kind == "Trap.DivZero"), "{op} by 0");
+        assert!(matches!(run_op(op, i64::MIN, -1), Err(VMError::Trap { ref kind }) if kind == "Trap.Overflow"), "{op} MIN -1");
+    }
+    assert_eq!(run_op("div", -7, 2).unwrap(), Some(Value::Int(-3)));
+    assert_eq!(run_op("mod", -7, 2).unwrap(), Some(Value::Int(-1)));
+}
+
 /// A non-integer operand of any division name stops the program with a type
 /// error — the VM's own `div` would have read `#t` as 1 and `#f` as 0.
 #[test]

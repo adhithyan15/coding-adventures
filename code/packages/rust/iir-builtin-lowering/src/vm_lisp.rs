@@ -127,6 +127,15 @@
 //! | divisor 0, any of the four | error | `trap Trap.DivZero` (`div` / `mod` alone gave an untyped division error) |
 //! | `i64::MIN` by −1, any of the four | overflow error (`checked_*`) | `trap Trap.Overflow` (`div` alone wrapped to `i64::MIN`) |
 //!
+//! The same zero and overflow checks guard a **typed** `div` or `mod` in the
+//! module — what Twig emits for `(/ a b)` when it knows both operands are
+//! integers (`(/ 7 0)` was an untyped division-by-zero error and
+//! `(/ min -1)` wrapped). They are written here rather than by changing
+//! vm-core's `div` / `mod`: LANG83 leaves those legacy ops' edges to each
+//! backend on purpose ("Legacy edge behaviour"; the WASM, JVM, CLR, BEAM and
+//! VM columns all differ on `MIN / -1`), so a language that wants defined
+//! edges writes them, as Twig's rules do here.
+//!
 //! ## Who calls it
 //!
 //! Only a Lisp-family pipeline, on a module whose every value follows Lisp's
@@ -264,6 +273,17 @@ fn rewrite(instr: IIRInstr, bools: &HashSet<String>, fresh: &mut Fresh, out: &mu
             out.push(retarget(instr, "call_builtin", srcs, BOOL));
         }
         "jmp_if_false" | "jmp_if_true" => rewrite_branch(instr, bools, fresh, out),
+        // A typed division — Twig's `(/ a b)` when both operands are known
+        // integers (`typed_arith_op_for`) — gets the zero and overflow
+        // checks too. The operands are already integers, so no kind check.
+        // A division this pass guarded already ends its guard with the
+        // `__vm{n}_fits` label; it is left alone, so a second run adds
+        // nothing.
+        "div" | "mod" if instr.srcs.len() == 2 && !already_guarded(out) => {
+            let (a, b) = (instr.srcs[0].clone(), instr.srcs[1].clone());
+            emit_zero_and_overflow_checks(&a, &b, fresh, out);
+            out.push(instr);
+        }
         "call_builtin" => rewrite_builtin(instr, fresh, out),
         _ => out.push(instr),
     }
@@ -384,6 +404,25 @@ fn rewrite_builtin(instr: IIRInstr, fresh: &mut Fresh, out: &mut Vec<IIRInstr>) 
 ///   dest = <op> a, b
 /// ```
 fn emit_division(instr: IIRInstr, op: &str, a: &Operand, b: &Operand, fresh: &mut Fresh, out: &mut Vec<IIRInstr>) {
+    emit_integer_checks(a, b, fresh, out);
+    emit_zero_and_overflow_checks(a, b, fresh, out);
+    out.push(retarget(instr, op, vec![a.clone(), b.clone()], I64));
+}
+
+/// Is the last instruction written the end of a division guard this pass
+/// emitted (`label __vm{n}_fits`)? Twig reserves every `__` name for its
+/// compiler, so a program's own label cannot look like one.
+fn already_guarded(out: &[IIRInstr]) -> bool {
+    matches!(
+        out.last(),
+        Some(i) if i.op == "label"
+            && matches!(i.srcs.first(), Some(Operand::Var(l)) if l.starts_with("__vm") && l.ends_with("_fits"))
+    )
+}
+
+/// The kind checks: each operand must be an integer (`dyn_tag = 0`), or the
+/// program stops with a `TypeError`.
+fn emit_integer_checks(a: &Operand, b: &Operand, fresh: &mut Fresh, out: &mut Vec<IIRInstr>) {
     for x in [a, b] {
         let t = emit_tag(x.clone(), fresh, out);
         let is_int = fresh.name("isint");
@@ -395,6 +434,11 @@ fn emit_division(instr: IIRInstr, op: &str, a: &Operand, b: &Operand, fresh: &mu
         out.push(IIRInstr::new("type_assert", None, vec![x.clone()], I64));
         out.push(label(&ok));
     }
+}
+
+/// `Trap.DivZero` for a zero divisor, `Trap.Overflow` for `i64::MIN / -1`;
+/// ends with the `__vm{n}_fits` label [`already_guarded`] looks for.
+fn emit_zero_and_overflow_checks(a: &Operand, b: &Operand, fresh: &mut Fresh, out: &mut Vec<IIRInstr>) {
     let is_zero = fresh.name("divzero");
     let nonzero = fresh.name("nonzero");
     out.push(cmp_operand("cmp_eq", &is_zero, b, 0));
@@ -410,7 +454,6 @@ fn emit_division(instr: IIRInstr, op: &str, a: &Operand, b: &Operand, fresh: &mu
     out.push(IIRInstr::new("jmp_if_false", None, vec![var(&is_neg_one), var(&fits)], "void"));
     out.push(trap(TRAP_OVERFLOW));
     out.push(label(&fits));
-    out.push(retarget(instr, op, vec![a.clone(), b.clone()], I64));
 }
 
 /// Turn `instr` into a different one-instruction form, keeping its
@@ -660,6 +703,23 @@ mod tests {
             let traps: Vec<&Operand> = f.instructions.iter().filter(|i| i.op == "trap").map(|i| &i.srcs[0]).collect();
             assert_eq!(traps, [&Operand::Str(TRAP_DIV_ZERO.into()), &Operand::Str(TRAP_OVERFLOW.into())], "{name}");
             assert_eq!(f.instructions.iter().filter(|i| i.op == "type_assert").count(), 2, "{name}: both operands");
+        }
+    }
+
+    #[test]
+    fn a_typed_division_gets_the_zero_and_overflow_checks_once() {
+        for op in ["div", "mod"] {
+            let body = vec![ins(op, Some("r"), vec![var("a"), var("b")], I64)];
+            let f = lowered(vec![("a", "i64"), ("b", "i64")], body.clone());
+            let traps: Vec<&Operand> = f.instructions.iter().filter(|i| i.op == "trap").map(|i| &i.srcs[0]).collect();
+            assert_eq!(traps, [&Operand::Str(TRAP_DIV_ZERO.into()), &Operand::Str(TRAP_OVERFLOW.into())], "{op}");
+            assert!(!f.instructions.iter().any(|i| i.op == "type_assert"), "{op}: typed operands need no kind check");
+            assert_eq!(shape(&f.instructions[f.instructions.len() - 1..]), shape(&body), "{op} itself is unchanged");
+            // A second run recognises the guard and adds nothing.
+            let mut m = IIRModule::new("m", "twig");
+            m.add_or_replace(f.clone());
+            lower_lisp_for_vm(&mut m);
+            assert_eq!(shape(&m.functions[0].instructions), shape(&f.instructions), "{op}");
         }
     }
 

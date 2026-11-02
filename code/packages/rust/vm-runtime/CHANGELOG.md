@@ -1,5 +1,15 @@
 # Changelog — vm-runtime
 
+## Unreleased — #18470 review — a malformed symbol argument is refused
+
+- The in-process path used to turn a `Symbol` result whose payload does not
+  fit a `u32` id into `Value::Null`. Null is nil to a Lisp module, so a
+  malformed argument became a real value. `vmresult_to_value` now answers
+  `None` for it, and `vm_execute` returns the new `VmResult::trap(4)`
+  ("malformed argument") before running anything. Tests:
+  `symbol_result_round_trips_and_rejects_a_wide_payload`,
+  `a_malformed_symbol_argument_traps_before_execution`.
+
 ## Unreleased
 
 ### Fixed (`Value::Symbol` exhaustiveness)

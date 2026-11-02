@@ -161,6 +161,9 @@ an `i64` and cannot say whether it was an integer, `#f`, nil or a symbol, so
 declared `any`, `str`, `symbol` or another kind it would lose (#18470): such a
 function stays on the interpreter tier. Integer widths, `bool`, `f64` and a
 `ref<…>` word (the tagged-word pipelines' values) compile as before.
+A builtin call hands its arguments over the same way the interpreter would:
+a boolean register (a `bool` parameter, a comparison's result) as
+`Value::Bool`, through `CALL_BUILTIN_KINDS`, and an integer as `Value::Int`.
 
 ### Functions too big for a frame
 

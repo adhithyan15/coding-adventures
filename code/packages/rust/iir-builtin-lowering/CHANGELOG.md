@@ -1,5 +1,24 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — #18470 re-review — typed division is guarded too
+
+- `vm_lisp` now also guards a **typed** `div` / `mod` in a Lisp-family module
+  with the zero and overflow checks: `Trap.DivZero` for a zero divisor,
+  `Trap.Overflow` for `i64::MIN / -1`. Twig emits a typed `div` for `(/ a b)`
+  when both operands are known integers (`typed_arith_op_for`), which the pass
+  used to miss: `(/ 7 0)` was an untyped division-by-zero error and
+  `MIN / -1` wrapped. No kind check is needed, the operands being typed
+  integers. The guard ends with a `__vm{n}_fits` label, which a second run
+  recognises, so lowering stays idempotent.
+- Why not change vm-core's `div` / `mod` for every language: LANG83 registers
+  them with only a `Trap.DivZero` edge and documents that their `MIN / -1`
+  answer differs by backend on purpose ("Legacy edge behaviour"; programs
+  depend on it). Defined edges are a language's to write, as here; the
+  defined-edge op `i64_div_trunc` is still `Later` in the registry.
+- Tests: `a_typed_division_gets_the_zero_and_overflow_checks_once` (shape,
+  no kind check, idempotent) and `a_typed_division_traps_like_the_dynamic_one`
+  (run on vm-core).
+
 ## Unreleased — #18470 / #18493 — `vm_lisp`: Lisp's value rules for the generic VM
 
 - New module `vm_lisp` and `lower_lisp_for_vm(module)`: what `lisp_semantics`
