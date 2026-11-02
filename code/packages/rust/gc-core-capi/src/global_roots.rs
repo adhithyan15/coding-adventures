@@ -162,6 +162,21 @@ pub(crate) fn reset() {
     roots().clear();
 }
 
+/// Test-only guard: forgets every registered block when dropped, so a test that
+/// registers a block on its own stack or heap cannot leave the registry pointing at
+/// freed memory if one of its assertions panics. Declare it **after** the block it
+/// guards: locals drop in reverse order, so the registry is cleared before the
+/// block goes away.
+#[cfg(test)]
+pub(crate) struct ResetOnDrop;
+
+#[cfg(test)]
+impl Drop for ResetOnDrop {
+    fn drop(&mut self) {
+        reset();
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -178,6 +193,7 @@ mod tests {
         let _g = lock();
         reset();
         let mut block = [0i64; 3];
+        let _reset = ResetOnDrop;
         let base = block.as_mut_ptr();
         assert_eq!(unsafe { register(base, 3) }, 3);
         assert_eq!(unsafe { register(base, 3) }, 3, "same block again is accepted");
@@ -193,6 +209,7 @@ mod tests {
         let _g = lock();
         reset();
         let mut block = [0i64; 4];
+        let _reset = ResetOnDrop;
         let base = block.as_mut_ptr();
         unsafe {
             assert_eq!(register(std::ptr::null_mut(), 1), 0, "null");
