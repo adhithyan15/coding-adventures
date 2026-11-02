@@ -182,7 +182,9 @@ fn nnf_size_bound(p: &Predicate) -> usize {
     // `+ 4` covers the And, the two Ors and a Not that an expansion adds.
     let sum = |ps: &[&Predicate]| ps.iter().fold(4usize, |acc, q| acc.saturating_add(nnf_size_bound(q)));
     match p {
-        Predicate::Bool(_) | Predicate::Var(_) | Predicate::Int(_) | Predicate::Real(_) => 1,
+        // A leaf may come out wrapped in a `Not` (a negated copy inside an
+        // `Iff` expansion), so it is charged two nodes.
+        Predicate::Bool(_) | Predicate::Var(_) | Predicate::Int(_) | Predicate::Real(_) => 2,
         Predicate::Iff(a, b) => sum(&[a, b]).saturating_mul(2),
         Predicate::And(parts) | Predicate::Or(parts) | Predicate::Add(parts) => {
             sum(&parts.iter().collect::<Vec<_>>())
@@ -681,6 +683,22 @@ mod tests {
             // The bound really is an upper bound on what to_nnf builds.
             let built = count_nodes(&p.clone().to_nnf());
             assert!(nnf_size_bound(p) >= built, "{p:?}: bound {} < {built}", nnf_size_bound(p));
+        }
+        // Wide operands under Iff: every leaf of the negated copy gains a
+        // Not, which a bound charging leaves once would miss (≈1.5×).
+        let wide = |n: usize, tag: &str| Predicate::And((0..n).map(|i| vb(&format!("{tag}{i}"))).collect());
+        let mut nested = wide(300, "c");
+        for k in 0..6 {
+            nested = Predicate::Iff(Box::new(nested), Box::new(wide(50, &format!("k{k}_"))));
+        }
+        for p in [
+            Predicate::Iff(Box::new(wide(100, "a")), Box::new(vb("x"))),
+            Predicate::Iff(Box::new(wide(1000, "a")), Box::new(wide(1000, "b"))),
+            Predicate::Not(Box::new(Predicate::Iff(Box::new(wide(200, "a")), Box::new(wide(3, "b"))))),
+            nested,
+        ] {
+            let built = count_nodes(&p.clone().to_nnf());
+            assert!(nnf_size_bound(&p) >= built, "bound {} < {built}", nnf_size_bound(&p));
         }
         let mut rng = Rng(77);
         for _ in 0..500 {
