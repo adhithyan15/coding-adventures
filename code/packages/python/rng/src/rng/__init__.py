@@ -49,7 +49,9 @@ implementation of the computing stack from transistors to operating systems.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+from collections.abc import Callable
+
+__version__ = "0.2.0"
 
 # ── Constants ──────────────────────────────────────────────────────────────────
 
@@ -70,6 +72,65 @@ _FLOAT_DIV: float = 2**32
 
 
 # ── LCG ───────────────────────────────────────────────────────────────────────
+
+
+# ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ─────────────────────
+
+#: The signed 64-bit domain every lane shares for ``next_int_in_range``.
+_I64_MIN: int = -(1 << 63)
+_I64_MAX: int = (1 << 63) - 1
+
+
+def _int_in_range(
+    next_u32: Callable[[], int], next_u64: Callable[[], int], min_val: int, max_val: int
+) -> int:
+    """Uniform integer in ``[min_val, max_val]``, identical in every language.
+
+    ``span = max_val - min_val + 1`` is between 1 and 2^64. Taking ``r % span``
+    of a raw draw over-samples small offsets whenever the number of possible
+    draws is not a multiple of ``span``; rejecting the ``threshold`` lowest
+    draws removes exactly the excess::
+
+        span <= 2^32      draw 32 bits,  threshold = (2^32 - span) % span
+        span <  2^64      draw 64 bits,  threshold = (2^64 - span) % span
+        span == 2^64      every 64-bit draw is a valid offset: no rejection
+
+    Example, span = 3 in the 32-bit regime: 2^32 = 3 * 1431655765 + 1, so
+    threshold = 1. Rejecting r = 0 leaves 2^32 - 1 draws, an exact multiple
+    of 3, and each offset 0, 1, 2 then has the same 1431655765 chances.
+
+    The 32-bit regime is the original (v1) algorithm, so ranges of up to 2^32
+    values give the same sequence as before. v1 used it for every span, which
+    could never reach more than 2^32 - 1 above ``min_val``.
+
+    Bounds outside the signed 64-bit domain raise :class:`ValueError`, as
+    ``min_val > max_val`` does; Python's integers are unbounded, but the
+    spec's are not, and every lane must agree. Errors are raised before any
+    draw, so a rejected call leaves the generator untouched.
+    """
+    if not (_I64_MIN <= min_val <= _I64_MAX and _I64_MIN <= max_val <= _I64_MAX):
+        raise ValueError(
+            f"next_int_in_range bounds must be signed 64-bit integers, "
+            f"got [{min_val}, {max_val}]"
+        )
+    if min_val > max_val:
+        raise ValueError(
+            f"next_int_in_range requires min_val <= max_val, got {min_val} > {max_val}"
+        )
+    span = max_val - min_val + 1
+    if span <= 1 << 32:
+        threshold = ((1 << 32) - span) % span
+        while True:
+            r = next_u32()
+            if r >= threshold:
+                return min_val + r % span
+    if span < 1 << 64:
+        threshold = ((1 << 64) - span) % span
+        while True:
+            r = next_u64()
+            if r >= threshold:
+                return min_val + r % span
+    return min_val + next_u64()
 
 
 class LCG:
@@ -112,26 +173,10 @@ class LCG:
     def next_int_in_range(self, min_val: int, max_val: int) -> int:
         """Return a uniform random integer in ``[min_val, max_val]`` inclusive.
 
-        Uses rejection sampling to eliminate modulo bias.
-        ``threshold = (-range_size) % (1 << 32) % range_size``
-
-        Any draw below ``threshold`` is discarded; expected extra draws < 2.
+        Both bounds must be signed 64-bit integers with ``min_val <= max_val``.
+        See :func:`_int_in_range` for the three rejection-sampling regimes.
         """
-        if min_val > max_val:
-            raise ValueError(
-                f"next_int_in_range requires min_val <= max_val, "
-                f"got {min_val} > {max_val}"
-            )
-        range_size = max_val - min_val + 1
-        # Rejection threshold eliminates modulo bias.
-        # (-range_size) % (1 << 32) % range_size gives the number of values
-        # we must reject so the remaining values divide evenly into range_size
-        # bins.
-        threshold = (-range_size) % (1 << 32) % range_size
-        while True:
-            r = self.next_u32()
-            if r >= threshold:
-                return min_val + (r % range_size)
+        return _int_in_range(self.next_u32, self.next_u64, min_val, max_val)
 
 
 # ── Xorshift64 ────────────────────────────────────────────────────────────────
@@ -186,19 +231,10 @@ class Xorshift64:
     def next_int_in_range(self, min_val: int, max_val: int) -> int:
         """Return a uniform random integer in ``[min_val, max_val]`` inclusive.
 
-        Identical rejection-sampling algorithm to :meth:`LCG.next_int_in_range`.
+        Both bounds must be signed 64-bit integers with ``min_val <= max_val``.
+        See :func:`_int_in_range` for the three rejection-sampling regimes.
         """
-        if min_val > max_val:
-            raise ValueError(
-                f"next_int_in_range requires min_val <= max_val, "
-                f"got {min_val} > {max_val}"
-            )
-        range_size = max_val - min_val + 1
-        threshold = (-range_size) % (1 << 32) % range_size
-        while True:
-            r = self.next_u32()
-            if r >= threshold:
-                return min_val + (r % range_size)
+        return _int_in_range(self.next_u32, self.next_u64, min_val, max_val)
 
 
 # ── PCG32 ─────────────────────────────────────────────────────────────────────
@@ -273,16 +309,7 @@ class PCG32:
     def next_int_in_range(self, min_val: int, max_val: int) -> int:
         """Return a uniform random integer in ``[min_val, max_val]`` inclusive.
 
-        Identical rejection-sampling algorithm to :meth:`LCG.next_int_in_range`.
+        Both bounds must be signed 64-bit integers with ``min_val <= max_val``.
+        See :func:`_int_in_range` for the three rejection-sampling regimes.
         """
-        if min_val > max_val:
-            raise ValueError(
-                f"next_int_in_range requires min_val <= max_val, "
-                f"got {min_val} > {max_val}"
-            )
-        range_size = max_val - min_val + 1
-        threshold = (-range_size) % (1 << 32) % range_size
-        while True:
-            r = self.next_u32()
-            if r >= threshold:
-                return min_val + (r % range_size)
+        return _int_in_range(self.next_u32, self.next_u64, min_val, max_val)
