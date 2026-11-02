@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:0acc455c5597d031",
+  "lessonIds": [
+    "MW-C158-polar",
+    "MW-C158-answer",
+    "MW-C158-kad",
+    "MW-C158-olakhno",
+    "MW-W48-o",
+    "MW-R158-yes-or-no"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "marwadi/narration/ch158.txt",
+  "json": "marwadi/narration/ch158.json",
+  "textHash": "fnv1a64:fcad2ad0a56258da",
+  "jsonHash": "fnv1a64:09416a9916fcfe6a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C181-khir",
+  "pathSegment": "MW-PATH-181-BILOVO181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-181-BILOVO181",
+      "order": 4
+    }
+  ]
+}

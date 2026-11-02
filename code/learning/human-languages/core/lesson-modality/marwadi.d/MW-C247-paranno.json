@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C247-paranno",
+    "language": "marwadi",
+    "chapter": 247,
+    "sequence": 17320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2032d3180c02defc"
+  },
+  "findings": []
+}

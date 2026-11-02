@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:8d464498018271a0",
+  "lessonIds": [
+    "MW-C188-phul",
+    "MW-C188-phal",
+    "MW-C188-nim",
+    "MW-C188-jhupri",
+    "MW-C188-chhapro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch188.txt",
+  "json": "marwadi/narration/ch188.json",
+  "textHash": "fnv1a64:cddabcd0c3964c07",
+  "jsonHash": "fnv1a64:bcf7a3e7ec4931cc",
+  "findings": []
+}

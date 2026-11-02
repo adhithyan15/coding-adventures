@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-262-JANO262",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "MW-EXT-262-JANO262"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C283-kasido",
+    "language": "marwadi",
+    "chapter": 283,
+    "sequence": 19900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e954ac8635f3208"
+  },
+  "findings": []
+}

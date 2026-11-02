@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:4581b8edc5301dfa",
+  "lessonIds": [
+    "MW-C245-terno",
+    "MW-C245-juhar",
+    "MW-C245-dhukno",
+    "MW-C245-achambho",
+    "MW-C245-badhai"
+  ],
+  "tex": "marwadi/book/chapters/ch245-neighbours-come-to-call.tex"
+}

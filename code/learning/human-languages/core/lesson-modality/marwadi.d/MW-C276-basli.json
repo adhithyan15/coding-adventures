@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C276-basli",
+    "language": "marwadi",
+    "chapter": 276,
+    "sequence": 19510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d57e4965ca688c8a"
+  },
+  "findings": []
+}

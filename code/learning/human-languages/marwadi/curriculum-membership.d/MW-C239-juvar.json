@@ -1,0 +1,11 @@
+{
+  "id": "MW-C239-juvar",
+  "pathSegment": "MW-PATH-239-CROP239",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-239-CROP239",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "A Garden and a Tank",
+  "label": "ch:mw-a-garden-and-a-tank",
+  "canDo": "I can name the places around the old town.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-C207-buraj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can name the places around the old town.",
+    "assesses": [
+      "MW-LEX-C207-GARDEN207-03",
+      "MW-LEX-C207-GARDEN207-04",
+      "MW-LEX-C207-GARDEN207-05"
+    ]
+  }
+}

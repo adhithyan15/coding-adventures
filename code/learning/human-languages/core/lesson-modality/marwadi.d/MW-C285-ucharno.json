@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C285-ucharno",
+    "language": "marwadi",
+    "chapter": 285,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a840e4ff3f3c23a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:97b24faaef942462",
+  "lessonIds": [
+    "MW-C205-tikat",
+    "MW-C205-chukno",
+    "MW-C205-bharo",
+    "MW-C205-atakno",
+    "MW-C205-kandaktar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch205.txt",
+  "json": "marwadi/narration/ch205.json",
+  "textHash": "fnv1a64:403ad106f0603a27",
+  "jsonHash": "fnv1a64:2e4beee9a9ab850e",
+  "findings": []
+}

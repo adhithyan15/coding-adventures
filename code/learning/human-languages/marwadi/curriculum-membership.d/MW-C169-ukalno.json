@@ -1,0 +1,11 @@
+{
+  "id": "MW-C169-ukalno",
+  "pathSegment": "MW-PATH-169-ROTI169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-169-ROTI169",
+      "order": 2
+    }
+  ]
+}

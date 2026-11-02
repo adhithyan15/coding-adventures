@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C164-khulo",
+    "language": "marwadi",
+    "chapter": 164,
+    "sequence": 10020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b3c22e75c0e5a95"
+  },
+  "findings": []
+}

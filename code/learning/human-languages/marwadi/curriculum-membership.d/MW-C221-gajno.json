@@ -1,0 +1,11 @@
+{
+  "id": "MW-C221-gajno",
+  "pathSegment": "MW-PATH-221-RAIN221",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-221-RAIN221",
+      "order": 3
+    }
+  ]
+}

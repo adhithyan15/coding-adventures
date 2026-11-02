@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R156-mine-in-from",
+    "language": "marwadi",
+    "chapter": 156,
+    "sequence": 9700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65ff091db67b955b"
+  },
+  "findings": []
+}

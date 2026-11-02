@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 166,
+  "title": "Up at Daybreak",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0c85cae57b6b24e2",
+  "lessons": [
+    {
+      "id": "MW-C166-jagno",
+      "sequence": 11000,
+      "title": "जागणो (jāgṇo) — to wake up",
+      "headword": "जागणो",
+      "romanization": "jāgṇo",
+      "gloss": "to wake up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98ba45cc0d238398",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for brave, then the Marwadi for crazy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जागणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जागणो — jāgṇo — \"to wake up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं रोज तड़कै जागूं हूं। hū̃ roj taṛkai jāgū̃ hū̃. I wake up at daybreak every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): हूं आज तड़कै जाग्यो, hū̃ āj taṛkai jāgyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जागणो (jāgṇo) is inherited from Sanskrit jāgrati, \"they are awake\"; CDIAL lists Marwari jāgṇo, \"to wake\", under it (CDIAL 5175). Its partner जगावणो, to wake someone, is already yours."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāgṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāgṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāgṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāgṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ roj taṛkai jāgū̃ hū̃. — I wake up at daybreak every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ roj taṛkai jāgū̃ hū̃.* — I wake up at daybreak every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for brave, then the Marwadi for crazy, then say jāgṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for brave, then the Marwadi for crazy, then say *jāgṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जागणो (jāgṇo) mean? (\"To wake up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C166-jagno-type",
+              "prompt": "Say the Marwadi for 'to wake up'.",
+              "assesses": [
+                "MW-LEX-C166-JAG166-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जागणो",
+                "jāgṇo"
+              ],
+              "feedback": {
+                "correct": "Right: जागणो (jāgṇo) is 'to wake up'.",
+                "incorrect": "'to wake up' is जागणो (jāgṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C166-khangalno",
+      "sequence": 11010,
+      "title": "खंगाळणो (khaṅgāḷṇo) — to rinse",
+      "headword": "खंगाळणो",
+      "romanization": "khaṅgāḷṇo",
+      "gloss": "to rinse",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31c7f27c631fc71e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for crazy, then the Marwadi for to wake up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खंगाळणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खंगाळणो — khaṅgāḷṇo — \"to rinse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं दिनूगै मूंडो खंगाळूं हूं। hū̃ dinūgai mū̃ḍo khaṅgāḷū̃ hū̃. I rinse my mouth early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं लोटो खंगाळ्यो, mhaĩ loṭo khaṅgāḷyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खंगाळणो (khaṅgāḷṇo) comes from a reconstructed khakkhālayati, \"rinses\", which CDIAL thinks imitates the sound of rinsing; it lists Hindi khãgālnā and a Gujarati verb for rinsing the mouth in the morning (CDIAL 3762). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṅgāḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṅgāḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṅgāḷṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṅgāḷṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ dinūgai mū̃ḍo khaṅgāḷū̃ hū̃. — I rinse my mouth early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ dinūgai mū̃ḍo khaṅgāḷū̃ hū̃.* — I rinse my mouth early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for crazy, then the Marwadi for to wake up, then say khaṅgāḷṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for crazy, then the Marwadi for to wake up, then say *khaṅgāḷṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खंगाळणो (khaṅgāḷṇo) mean? (\"To rinse\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C166-khangalno-type",
+              "prompt": "Say the Marwadi for 'to rinse'.",
+              "assesses": [
+                "MW-LEX-C166-JAG166-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खंगाळणो",
+                "khaṅgāḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: खंगाळणो (khaṅgāḷṇo) is 'to rinse'.",
+                "incorrect": "'to rinse' is खंगाळणो (khaṅgāḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C166-nid",
+      "sequence": 11020,
+      "title": "नींद (nī̃d) — sleep",
+      "headword": "नींद",
+      "romanization": "nī̃d",
+      "gloss": "sleep",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fafb80fd359add5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to wake up, then the Marwadi for to rinse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नींद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नींद — nī̃d — \"sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज म्हारी नींद पूरी कोनी। āj mhārī nī̃d pūrī konī. I haven't had my full sleep today."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नींद (nī̃d) is inherited from Sanskrit nidrā, \"sleep\"; CDIAL lists Old Marwari nīda (CDIAL 7200). It is feminine: म्हारी नींद."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nī̃d",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nī̃d*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nī̃d, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nī̃d*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj mhārī nī̃d pūrī konī. — I haven't had my full sleep today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj mhārī nī̃d pūrī konī.* — I haven't had my full sleep today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to wake up, then the Marwadi for to rinse, then say nī̃d again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to wake up, then the Marwadi for to rinse, then say *nī̃d* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नींद (nī̃d) mean? (\"Sleep\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C166-nid-type",
+              "prompt": "Say the Marwadi for 'a night's sleep'.",
+              "assesses": [
+                "MW-LEX-C166-JAG166-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नींद",
+                "nī̃d"
+              ],
+              "feedback": {
+                "correct": "Right: नींद (nī̃d) is 'sleep'.",
+                "incorrect": "'a night's sleep' is नींद (nī̃d)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C166-podhno",
+      "sequence": 11030,
+      "title": "पोढणो (poḍhṇo) — to lie down (to sleep)",
+      "headword": "पोढणो",
+      "romanization": "poḍhṇo",
+      "gloss": "to lie down (to sleep)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46994462c504b5b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to rinse, then the Marwadi for a night's sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पोढणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोढणो — poḍhṇo — \"to lie down (to sleep)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी रोज आथण जल्दी पोढै है। dādī roj āthaṇ jaldī poḍhai hai. Grandmother lies down early every evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो खाट माथै पोढ्यो, vo khāṭ māthai poḍhyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोढणो (poḍhṇo) is inherited from Sanskrit pravardhate, \"grows up\"; CDIAL explains the later sense \"lie down, sleep\" from an older \"stretched out\", and lists Old Marwari poḍhaï, \"lies down\" (CDIAL 8789)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poḍhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poḍhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poḍhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poḍhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī roj āthaṇ jaldī poḍhai hai. — Grandmother lies down early every evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī roj āthaṇ jaldī poḍhai hai.* — Grandmother lies down early every evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to rinse, then the Marwadi for a night's sleep, then say poḍhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to rinse, then the Marwadi for a night's sleep, then say *poḍhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पोढणो (poḍhṇo) mean? (\"To lie down (to sleep)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C166-podhno-type",
+              "prompt": "Say the Marwadi for 'to lie down'.",
+              "assesses": [
+                "MW-LEX-C166-JAG166-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पोढणो",
+                "poḍhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: पोढणो (poḍhṇo) is 'to lie down (to sleep)'.",
+                "incorrect": "'to lie down' is पोढणो (poḍhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C166-sajh",
+      "sequence": 11040,
+      "title": "सांझ (sā̃jh) — dusk",
+      "headword": "सांझ",
+      "romanization": "sā̃jh",
+      "gloss": "dusk",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60d21ee6c65cf1ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a night's sleep, then the Marwadi for to lie down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सांझ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांझ — sā̃jh — \"dusk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सांझ घणी सांत है। sā̃jh ghaṇī sānt hai. Dusk is very calm."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांझ (sā̃jh) is inherited from Sanskrit sandhyā, \"twilight\", the joining of day and night; CDIAL lists Hindi sā̃jh (CDIAL 12918). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃jh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃jh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃jh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃jh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃jh ghaṇī sānt hai. — Dusk is very calm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃jh ghaṇī sānt hai.* — Dusk is very calm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a night's sleep, then the Marwadi for to lie down, then say sā̃jh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a night's sleep, then the Marwadi for to lie down, then say *sā̃jh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सांझ (sā̃jh) mean? (\"Dusk\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C166-sajh-type",
+              "prompt": "Say the Marwadi for 'dusk'.",
+              "assesses": [
+                "MW-LEX-C166-JAG166-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सांझ",
+                "sā̃jh"
+              ],
+              "feedback": {
+                "correct": "Right: सांझ (sā̃jh) is 'dusk'.",
+                "incorrect": "'dusk' is सांझ (sā̃jh)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-263-TELI263",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the village's tradesmen do.",
+  "prerequisites": []
+}

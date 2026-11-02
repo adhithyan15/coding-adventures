@@ -1,0 +1,11 @@
+{
+  "id": "MW-C233-nakel",
+  "pathSegment": "MW-PATH-233-GEAR233",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-233-GEAR233",
+      "order": 1
+    }
+  ]
+}

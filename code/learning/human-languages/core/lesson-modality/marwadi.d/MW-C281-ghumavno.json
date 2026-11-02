@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C281-ghumavno",
+    "language": "marwadi",
+    "chapter": 281,
+    "sequence": 19780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cc10e74a2b04212"
+  },
+  "findings": []
+}

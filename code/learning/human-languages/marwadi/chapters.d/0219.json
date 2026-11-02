@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Guests Are Coming",
+  "label": "ch:mw-guests-are-coming",
+  "canDo": "I can ask a guest about coming and say what I will bring.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C219-utavlo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can ask a guest about coming and say what I will bring.",
+    "assesses": [
+      "MW-LEX-C219-GUEST219-03",
+      "MW-LEX-C219-GUEST219-04",
+      "MW-LEX-C219-GUEST219-05"
+    ]
+  }
+}

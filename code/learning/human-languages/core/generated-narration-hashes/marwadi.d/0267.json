@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:139cdf650c98ee7d",
+  "lessonIds": [
+    "MW-C267-ijajat",
+    "MW-C267-raja",
+    "MW-C267-hukam",
+    "MW-C267-intjar",
+    "MW-C267-thamno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch267.txt",
+  "json": "marwadi/narration/ch267.json",
+  "textHash": "fnv1a64:96189d0314491dd6",
+  "jsonHash": "fnv1a64:e0e5ea37502b7154",
+  "findings": []
+}

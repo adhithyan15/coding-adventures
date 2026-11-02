@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:d202c22e63d5e60c",
+  "lessonIds": [
+    "MW-C212-sava",
+    "MW-C212-dedh",
+    "MW-C212-adhai",
+    "MW-C212-duno",
+    "MW-C212-chhatak"
+  ],
+  "tex": "marwadi/book/chapters/ch212-a-quarter-and-a-half.tex"
+}

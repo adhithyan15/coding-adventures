@@ -1,0 +1,11 @@
+{
+  "id": "MW-C236-un",
+  "pathSegment": "MW-PATH-236-BEAST236",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-236-BEAST236",
+      "order": 2
+    }
+  ]
+}

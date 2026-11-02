@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 220,
+  "title": "A Settled Plan",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:543152fbf993cdeb",
+  "lessons": [
+    {
+      "id": "MW-C220-pakko",
+      "sequence": 15200,
+      "title": "पक्को (pakko) — settled; firm",
+      "headword": "पक्को",
+      "romanization": "pakko",
+      "gloss": "settled; firm",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af5e77c8fce702fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the Teej festival, then the Marwadi for in a hurry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पक्को",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पक्को — pakko — \"settled; firm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बात पक्की है, हूं काल जासूं। bāt pakkī hai, hū̃ kāl jāsū̃. It's settled: I'm going tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पक्को (pakko) goes back to Sanskrit pakva, \"cooked, ripe\". Its doubled k matches Hindi pakkā, \"ripe, mature, real\", which CDIAL takes from Panjabi; the Old Marwari word CDIAL lists in the same entry is pāka, \"ripe\" (CDIAL 7621), the plain inherited shape. From ripe it has come to mean firm, settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāt pakkī hai, hū̃ kāl jāsū̃. — It's settled: I'm going tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāt pakkī hai, hū̃ kāl jāsū̃.* — It's settled: I'm going tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the Teej festival, then the Marwadi for in a hurry, then say pakko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the Teej festival, then the Marwadi for in a hurry, then say *pakko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पक्को (pakko) mean? (\"Settled; firm\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C220-pakko-type",
+              "prompt": "Say the Marwadi for 'settled'.",
+              "assesses": [
+                "MW-LEX-C220-PLAN220-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पक्को",
+                "pakko"
+              ],
+              "feedback": {
+                "correct": "Right: पक्को (pakko) is 'settled; firm'.",
+                "incorrect": "'settled' is पक्को (pakko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C220-tyar",
+      "sequence": 15210,
+      "title": "त्यार (tyār) — ready",
+      "headword": "त्यार",
+      "romanization": "tyār",
+      "gloss": "ready",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5966832c06266fa3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for in a hurry, then the Marwadi for settled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: त्यार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्यार — tyār — \"ready\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं अबार त्यार हूं। hū̃ abār tyār hū̃. I'm ready now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्यार (tyār) is usually traced to Persian taiyār, \"ready\", which Persian took from Arabic; Marwadi has worn it down to one syllable."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ abār tyār hū̃. — I'm ready now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ abār tyār hū̃.* — I'm ready now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for in a hurry, then the Marwadi for settled, then say tyār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for in a hurry, then the Marwadi for settled, then say *tyār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does त्यार (tyār) mean? (\"Ready\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C220-tyar-type",
+              "prompt": "Say the Marwadi for 'ready'.",
+              "assesses": [
+                "MW-LEX-C220-PLAN220-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "त्यार",
+                "tyār"
+              ],
+              "feedback": {
+                "correct": "Right: त्यार (tyār) is 'ready'.",
+                "incorrect": "'ready' is त्यार (tyār)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C220-taalno",
+      "sequence": 15220,
+      "title": "टालणो (ṭālṇo) — to put off; to avoid",
+      "headword": "टालणो",
+      "romanization": "ṭālṇo",
+      "gloss": "to put off; to avoid",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48c28dbb7fc8a1f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for settled, then the Marwadi for ready."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टालणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टालणो — ṭālṇo — \"to put off; to avoid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं जातरा कोनी टालसूं। hū̃ jātrā konī ṭālsū̃. I won't put off the journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं जातरा टाली, mhaĩ jātrā ṭālī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टालणो (ṭālṇo) is inherited from Sanskrit ṭalati, \"moves aside\", through its causative ṭālayati; CDIAL lists Marwari ṭālṇo, \"to pass (time)\", and Hindi and Gujarati verbs for averting and avoiding under it (CDIAL 5450). To move a plan aside is to put it off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭālṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭālṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭālṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭālṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ jātrā konī ṭālsū̃. — I won't put off the journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ jātrā konī ṭālsū̃.* — I won't put off the journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for settled, then the Marwadi for ready, then say ṭālṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for settled, then the Marwadi for ready, then say *ṭālṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टालणो (ṭālṇo) mean? (\"To put off; to avoid\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C220-taalno-type",
+              "prompt": "Say the Marwadi for 'to put off'.",
+              "assesses": [
+                "MW-LEX-C220-PLAN220-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "टालणो",
+                "ṭālṇo"
+              ],
+              "feedback": {
+                "correct": "Right: टालणो (ṭālṇo) is 'to put off; to avoid'.",
+                "incorrect": "'to put off' is टालणो (ṭālṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C220-badalno",
+      "sequence": 15230,
+      "title": "बदळणो (badaḷṇo) — to change; to exchange",
+      "headword": "बदळणो",
+      "romanization": "badaḷṇo",
+      "gloss": "to change; to exchange",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b0bcb1e0f3f6502",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for ready, then the Marwadi for to put off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बदळणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बदळणो — badaḷṇo — \"to change; to exchange\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल गेलो बदळसूं। hū̃ kāl gelo badaḷsū̃. Tomorrow I'll change my route."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं गेलो बदळ्यो, mhaĩ gelo badaḷyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बदळणो (badaḷṇo) is usually traced to Persian badal, \"an exchange, a substitute\", which Persian took from Arabic; Marwadi made a verb of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badaḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badaḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badaḷṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badaḷṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl gelo badaḷsū̃. — Tomorrow I'll change my route.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl gelo badaḷsū̃.* — Tomorrow I'll change my route.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for ready, then the Marwadi for to put off, then say badaḷṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for ready, then the Marwadi for to put off, then say *badaḷṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बदळणो (badaḷṇo) mean? (\"To change; to exchange\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C220-badalno-type",
+              "prompt": "Say the Marwadi for 'to change'.",
+              "assesses": [
+                "MW-LEX-C220-PLAN220-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बदळणो",
+                "badaḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बदळणो (badaḷṇo) is 'to change; to exchange'.",
+                "incorrect": "'to change' is बदळणो (badaḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C220-sodhno",
+      "sequence": 15240,
+      "title": "सोधणो (sodhṇo) — to find out; to search out",
+      "headword": "सोधणो",
+      "romanization": "sodhṇo",
+      "gloss": "to find out; to search out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d77974dc4938f52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to put off, then the Marwadi for to change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सोधणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोधणो — sodhṇo — \"to find out; to search out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं डूंगर कनै नुवो गेलो सोधसूं। hū̃ ḍū̃gar kanai nuvo gelo sodhsū̃. I'll search out a new path near the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं गेलो सोध्यो, mhaĩ gelo sodhyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोधणो (sodhṇo) is inherited from Sanskrit śoddhum, \"to purify\"; CDIAL lists the Old Marwari verb sodhaï, \"finds out\", and a Gujarati verb \"to search\" under it (CDIAL 12626)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sodhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sodhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sodhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sodhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ ḍū̃gar kanai nuvo gelo sodhsū̃. — I'll search out a new path near the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ ḍū̃gar kanai nuvo gelo sodhsū̃.* — I'll search out a new path near the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to put off, then the Marwadi for to change, then say sodhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to put off, then the Marwadi for to change, then say *sodhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सोधणो (sodhṇo) mean? (\"To find out; to search out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C220-sodhno-type",
+              "prompt": "Say the Marwadi for 'to find out'.",
+              "assesses": [
+                "MW-LEX-C220-PLAN220-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सोधणो",
+                "sodhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सोधणो (sodhṇo) is 'to find out; to search out'.",
+                "incorrect": "'to find out' is सोधणो (sodhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

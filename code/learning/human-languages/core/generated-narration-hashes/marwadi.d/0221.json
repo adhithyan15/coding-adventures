@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:e8ed1f98c7af1a5e",
+  "lessonIds": [
+    "MW-C221-meh",
+    "MW-C221-barasno",
+    "MW-C221-bijli",
+    "MW-C221-gajno",
+    "MW-C221-jhari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch221.txt",
+  "json": "marwadi/narration/ch221.json",
+  "textHash": "fnv1a64:40fd239eb144a88d",
+  "jsonHash": "fnv1a64:a12a0fa7e8ecf29a",
+  "findings": []
+}

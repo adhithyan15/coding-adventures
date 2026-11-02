@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:b0ee7a709239a5c3",
+  "lessonIds": [
+    "MW-C246-pihar",
+    "MW-C246-sasro",
+    "MW-C246-nuto",
+    "MW-C246-bitno",
+    "MW-C246-marno-die"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch246.txt",
+  "json": "marwadi/narration/ch246.json",
+  "textHash": "fnv1a64:128efca2b69d2481",
+  "jsonHash": "fnv1a64:ea8377e904e563d6",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C225-bistar",
+  "pathSegment": "MW-PATH-225-PACK225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-225-PACK225",
+      "order": 3
+    }
+  ]
+}

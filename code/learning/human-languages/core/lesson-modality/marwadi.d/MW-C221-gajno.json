@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C221-gajno",
+    "language": "marwadi",
+    "chapter": 221,
+    "sequence": 15280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dab832fcf1e93699"
+  },
+  "findings": []
+}

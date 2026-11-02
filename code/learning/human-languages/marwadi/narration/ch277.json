@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 277,
+  "title": "Songs and Dancing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:92617da418bb9a75",
+  "lessons": [
+    {
+      "id": "MW-C277-bhajan",
+      "sequence": 19560,
+      "title": "भजन (bhajan) — a devotional song",
+      "headword": "भजन",
+      "romanization": "bhajan",
+      "gloss": "a devotional song",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d631f9a8ab554af9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a clap, then the Marwadi for to ring out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भजन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भजन — bhajan — \"a devotional song\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी रोज भजन गावै है। dādī roj bhajan gāvai hai. Grandmother sings a hymn every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भजन (bhajan) is a tatsama, taken from Sanskrit bhajana, \"reverence, worship\" (Monier-Williams); in Marwadi it is the song of worship."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhajan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhajan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhajan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhajan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī roj bhajan gāvai hai. — Grandmother sings a hymn every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī roj bhajan gāvai hai.* — Grandmother sings a hymn every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a clap, then the Marwadi for to ring out, then say bhajan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a clap, then the Marwadi for to ring out, then say *bhajan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भजन (bhajan) mean? (\"A devotional song\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C277-bhajan-type",
+              "prompt": "Say the Marwadi for 'a devotional song'.",
+              "assesses": [
+                "MW-LEX-C277-BHAJAN277-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भजन",
+                "bhajan"
+              ],
+              "feedback": {
+                "correct": "Right: भजन (bhajan) is 'a devotional song'.",
+                "incorrect": "'a devotional song' is भजन (bhajan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C277-rag",
+      "sequence": 19570,
+      "title": "राग (rāg) — a melody",
+      "headword": "राग",
+      "romanization": "rāg",
+      "gloss": "a melody",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eae97d18d468459",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to ring out, then the Marwadi for a devotional song."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: राग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राग — rāg — \"a melody\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो राग जूनो है। yo rāg jūno hai. This melody is old."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राग (rāg) is a tatsama, taken from Sanskrit rāga, which Monier-Williams gives as \"a musical note, harmony, melody\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo rāg jūno hai. — This melody is old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo rāg jūno hai.* — This melody is old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to ring out, then the Marwadi for a devotional song, then say rāg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to ring out, then the Marwadi for a devotional song, then say *rāg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does राग (rāg) mean? (\"A melody\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C277-rag-type",
+              "prompt": "Say the Marwadi for 'a melody'.",
+              "assesses": [
+                "MW-LEX-C277-BHAJAN277-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "राग",
+                "rāg"
+              ],
+              "feedback": {
+                "correct": "Right: राग (rāg) is 'a melody'.",
+                "incorrect": "'a melody' is राग (rāg)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C277-lay",
+      "sequence": 19580,
+      "title": "लय (lay) — rhythm",
+      "headword": "लय",
+      "romanization": "lay",
+      "gloss": "rhythm",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da2e02b692e19654",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a devotional song, then the Marwadi for a melody."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लय — lay — \"rhythm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लय तेज है। lay tej hai. The rhythm is fast."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लय (lay) is a tatsama, taken from Sanskrit laya, which Monier-Williams gives, in music, as \"time\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lay, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lay*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lay tej hai. — The rhythm is fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lay tej hai.* — The rhythm is fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a devotional song, then the Marwadi for a melody, then say lay again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a devotional song, then the Marwadi for a melody, then say *lay* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लय (lay) mean? (\"Rhythm\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C277-lay-type",
+              "prompt": "Say the Marwadi for 'rhythm'.",
+              "assesses": [
+                "MW-LEX-C277-BHAJAN277-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लय",
+                "lay"
+              ],
+              "feedback": {
+                "correct": "Right: लय (lay) is 'rhythm'.",
+                "incorrect": "'rhythm' is लय (lay)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C277-dolno",
+      "sequence": 19590,
+      "title": "डोलणो (ḍolṇo) — to sway; to wander",
+      "headword": "डोलणो",
+      "romanization": "ḍolṇo",
+      "gloss": "to sway; to wander",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4df20b6d63e6338",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a melody, then the Marwadi for rhythm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डोलणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डोलणो — ḍolṇo — \"to sway; to wander\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरी नाचै है अर डोलै है। chhorī nāchai hai ar ḍolai hai. The girl dances and sways."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो गांव मांय डोल्यो, vo gā̃v mā̃y ḍolyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डोलणो (ḍolṇo) is inherited from Sanskrit dolāyate, \"moves to and fro\"; CDIAL lists Old Marwari ḍolaï, \"wanders\" (CDIAL 6585)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍolṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍolṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍolṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍolṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhorī nāchai hai ar ḍolai hai. — The girl dances and sways.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhorī nāchai hai ar ḍolai hai.* — The girl dances and sways.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a melody, then the Marwadi for rhythm, then say ḍolṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a melody, then the Marwadi for rhythm, then say *ḍolṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डोलणो (ḍolṇo) mean? (\"To sway; to wander\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C277-dolno-type",
+              "prompt": "Say the Marwadi for 'to sway'.",
+              "assesses": [
+                "MW-LEX-C277-BHAJAN277-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "डोलणो",
+                "ḍolṇo"
+              ],
+              "feedback": {
+                "correct": "Right: डोलणो (ḍolṇo) is 'to sway; to wander'.",
+                "incorrect": "'to sway' is डोलणो (ḍolṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C277-rijhno",
+      "sequence": 19600,
+      "title": "रीझणो (rījhṇo) — to be delighted",
+      "headword": "रीझणो",
+      "romanization": "rījhṇo",
+      "gloss": "to be delighted",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e66505607fb669c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for rhythm, then the Marwadi for to sway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रीझणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रीझणो — rījhṇo — \"to be delighted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी गीत सुणै है अर रीझै है। dādī gīt suṇai hai ar rījhai hai. Grandmother listens to the song and is delighted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो रीझ्यो, vo rījhyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रीझणो (rījhṇo) is inherited from Sanskrit ṛdhyati, \"increases, prospers\"; CDIAL lists Old Marwari rījhaï, \"is satisfied\", and Hindi rījhnā, \"to be enchanted\" (CDIAL 2457)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rījhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rījhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rījhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rījhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī gīt suṇai hai ar rījhai hai. — Grandmother listens to the song and is delighted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī gīt suṇai hai ar rījhai hai.* — Grandmother listens to the song and is delighted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for rhythm, then the Marwadi for to sway, then say rījhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for rhythm, then the Marwadi for to sway, then say *rījhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रीझणो (rījhṇo) mean? (\"To be delighted\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C277-rijhno-type",
+              "prompt": "Say the Marwadi for 'to be delighted'.",
+              "assesses": [
+                "MW-LEX-C277-BHAJAN277-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रीझणो",
+                "rījhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: रीझणो (rījhṇo) is 'to be delighted'.",
+                "incorrect": "'to be delighted' is रीझणो (rījhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

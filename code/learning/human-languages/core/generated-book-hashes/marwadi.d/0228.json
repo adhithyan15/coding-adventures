@@ -1,0 +1,14 @@
+{
+  "language": "marwadi",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:ab33dbeba6685489",
+  "lessonIds": [
+    "MW-C228-lukho",
+    "MW-C228-tapno",
+    "MW-C228-pasino",
+    "MW-C228-silo",
+    "MW-C228-sukno",
+    "MW-R228-review-223-228"
+  ],
+  "tex": "marwadi/book/chapters/ch228-summer-sun.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:2e1a47948ba4f4bd",
+  "lessonIds": [
+    "MW-C203-atro",
+    "MW-C203-dag",
+    "MW-C203-disa",
+    "MW-C203-bhatakno",
+    "MW-C203-disno",
+    "MW-R203-review-198-203"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch203.txt",
+  "json": "marwadi/narration/ch203.json",
+  "textHash": "fnv1a64:355da5d26d39c787",
+  "jsonHash": "fnv1a64:5da523b7ce8eb3ca",
+  "findings": []
+}

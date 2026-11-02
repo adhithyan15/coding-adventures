@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 183,
+  "title": "Small Things Around the House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:25f43c2eac95601e",
+  "lessons": [
+    {
+      "id": "MW-C183-karchhi",
+      "sequence": 11870,
+      "title": "कड़छी (kaṛchhī) — a ladle",
+      "headword": "कड़छी",
+      "romanization": "kaṛchhī",
+      "gloss": "a ladle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6432c22d39efaee0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to temper, then the Marwadi for to serve food."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कड़छी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कड़छी — kaṛchhī — \"a ladle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कड़छी कड़ाही मांय है। kaṛchhī kaṛāhī mā̃y hai. The ladle is in the wok."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कड़छी (kaṛchhī) comes from a reconstructed kaṭacchu, \"a ladle\"; CDIAL lists Hindi and Gujarati kaṛchī, \"an iron ladle\" (CDIAL 2633). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṛchhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṛchhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṛchhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṛchhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṛchhī kaṛāhī mā̃y hai. — The ladle is in the wok.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṛchhī kaṛāhī mā̃y hai.* — The ladle is in the wok.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to temper, then the Marwadi for to serve food, then say kaṛchhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to temper, then the Marwadi for to serve food, then say *kaṛchhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कड़छी (kaṛchhī) mean? (\"A ladle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C183-karchhi-type",
+              "prompt": "Say the Marwadi for 'a ladle'.",
+              "assesses": [
+                "MW-LEX-C183-HATH183-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कड़छी",
+                "kaṛchhī"
+              ],
+              "feedback": {
+                "correct": "Right: कड़छी (kaṛchhī) is 'a ladle'.",
+                "incorrect": "'a ladle' is कड़छी (kaṛchhī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C183-tokri",
+      "sequence": 11880,
+      "title": "टोकरी (ṭokrī) — a basket",
+      "headword": "टोकरी",
+      "romanization": "ṭokrī",
+      "gloss": "a basket",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eebe9ea669875060",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to serve food, then the Marwadi for a ladle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टोकरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोकरी — ṭokrī — \"a basket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "टोकरी मांय सबजी है। ṭokrī mā̃y sabjī hai. There are vegetables in the basket."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोकरी (ṭokrī) comes from a reconstructed ṭōkka, \"a basket\"; CDIAL lists Hindi ṭokrī (CDIAL 5477). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭokrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭokrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭokrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭokrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭokrī mā̃y sabjī hai. — There are vegetables in the basket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭokrī mā̃y sabjī hai.* — There are vegetables in the basket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to serve food, then the Marwadi for a ladle, then say ṭokrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to serve food, then the Marwadi for a ladle, then say *ṭokrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टोकरी (ṭokrī) mean? (\"A basket\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C183-tokri-type",
+              "prompt": "Say the Marwadi for 'a basket'.",
+              "assesses": [
+                "MW-LEX-C183-HATH183-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "टोकरी",
+                "ṭokrī"
+              ],
+              "feedback": {
+                "correct": "Right: टोकरी (ṭokrī) is 'a basket'.",
+                "incorrect": "'a basket' is टोकरी (ṭokrī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C183-angochho",
+      "sequence": 11890,
+      "title": "अंगोछो (aṅgochho) — a shoulder cloth",
+      "headword": "अंगोछो",
+      "romanization": "aṅgochho",
+      "gloss": "a shoulder cloth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef69e3f7634be696",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a ladle, then the Marwadi for a basket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अंगोछो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगोछो — aṅgochho — \"a shoulder cloth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो अंगोछो गीलो है। mhāro aṅgochho gīlo hai. My shoulder cloth is wet."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगोछो (aṅgochho) is inherited from Sanskrit aṅgoñcha, \"a towel\"; CDIAL lists Hindi ãgochā and Sindhi aṅgocho (CDIAL 139). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgochho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgochho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgochho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgochho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro aṅgochho gīlo hai. — My shoulder cloth is wet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro aṅgochho gīlo hai.* — My shoulder cloth is wet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a ladle, then the Marwadi for a basket, then say aṅgochho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a ladle, then the Marwadi for a basket, then say *aṅgochho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अंगोछो (aṅgochho) mean? (\"A shoulder cloth\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C183-angochho-type",
+              "prompt": "Say the Marwadi for 'a shoulder cloth'.",
+              "assesses": [
+                "MW-LEX-C183-HATH183-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अंगोछो",
+                "aṅgochho"
+              ],
+              "feedback": {
+                "correct": "Right: अंगोछो (aṅgochho) is 'a shoulder cloth'.",
+                "incorrect": "'a shoulder cloth' is अंगोछो (aṅgochho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C183-kajal",
+      "sequence": 11900,
+      "title": "काजळ (kājaḷ) — kohl",
+      "headword": "काजळ",
+      "romanization": "kājaḷ",
+      "gloss": "kohl",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7b95d0f8c5ab1f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a basket, then the Marwadi for a shoulder cloth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: काजळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काजळ — kājaḷ — \"kohl\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरी आंख मांय काजळ लगावै है। chhorī ā̃kh mā̃y kājaḷ lagāvai hai. The girl puts kohl in her eyes."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काजळ (kājaḷ) is inherited from Sanskrit kajjala, \"lamp-black\", a word CDIAL thinks may come from Dravidian or Munda; it lists Gujarati kājaḷ and Hindi kājal (CDIAL 2622). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kājaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kājaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kājaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kājaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhorī ā̃kh mā̃y kājaḷ lagāvai hai. — The girl puts kohl in her eyes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhorī ā̃kh mā̃y kājaḷ lagāvai hai.* — The girl puts kohl in her eyes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a basket, then the Marwadi for a shoulder cloth, then say kājaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a basket, then the Marwadi for a shoulder cloth, then say *kājaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does काजळ (kājaḷ) mean? (\"Kohl\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C183-kajal-type",
+              "prompt": "Say the Marwadi for 'kohl'.",
+              "assesses": [
+                "MW-LEX-C183-HATH183-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "काजळ",
+                "kājaḷ"
+              ],
+              "feedback": {
+                "correct": "Right: काजळ (kājaḷ) is 'kohl'.",
+                "incorrect": "'kohl' is काजळ (kājaḷ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C183-besan",
+      "sequence": 11910,
+      "title": "बेसण (besaṇ) — gram flour",
+      "headword": "बेसण",
+      "romanization": "besaṇ",
+      "gloss": "gram flour",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a17a63760ca81de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a shoulder cloth, then the Marwadi for kohl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बेसण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेसण — besaṇ — \"gram flour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बेसण पीळो है। besaṇ pīḷo hai. Gram flour is yellow."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेसण (besaṇ) is inherited from Sanskrit vesana, a kind of flour; CDIAL lists Gujarati vesaṇ and Hindi besan, \"gram flour\" (CDIAL 12133). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "besaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *besaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "besaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *besaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "besaṇ pīḷo hai. — Gram flour is yellow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *besaṇ pīḷo hai.* — Gram flour is yellow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a shoulder cloth, then the Marwadi for kohl, then say besaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a shoulder cloth, then the Marwadi for kohl, then say *besaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बेसण (besaṇ) mean? (\"Gram flour\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C183-besan-type",
+              "prompt": "Say the Marwadi for 'gram flour'.",
+              "assesses": [
+                "MW-LEX-C183-HATH183-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बेसण",
+                "besaṇ"
+              ],
+              "feedback": {
+                "correct": "Right: बेसण (besaṇ) is 'gram flour'.",
+                "incorrect": "'gram flour' is बेसण (besaṇ)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

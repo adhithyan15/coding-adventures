@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-155-VSTEM",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-155-VSTEM"
+  ],
+  "after": []
+}

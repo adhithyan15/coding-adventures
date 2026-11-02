@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C234-evaliyo",
+    "language": "marwadi",
+    "chapter": 234,
+    "sequence": 15920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca41a02484bd50cd"
+  },
+  "findings": []
+}

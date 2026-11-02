@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "At the Bank",
+  "label": "ch:mw-at-the-bank",
+  "canDo": "I can say what I keep and what I owe at the bank.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-C195-bachno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say what I keep and what I owe at the bank.",
+    "assesses": [
+      "MW-LEX-C195-BANK195-03",
+      "MW-LEX-C195-BANK195-04",
+      "MW-LEX-C195-BANK195-05"
+    ]
+  }
+}

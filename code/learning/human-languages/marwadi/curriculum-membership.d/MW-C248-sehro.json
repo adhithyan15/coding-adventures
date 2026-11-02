@@ -1,0 +1,11 @@
+{
+  "id": "MW-C248-sehro",
+  "pathSegment": "MW-PATH-248-MEHDI248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-248-MEHDI248",
+      "order": 4
+    }
+  ]
+}

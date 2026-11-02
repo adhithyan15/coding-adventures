@@ -1,0 +1,11 @@
+{
+  "id": "MW-W49-ddha",
+  "pathSegment": "MW-PATH-161-DID",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-161-DID",
+      "order": 3
+    }
+  ]
+}

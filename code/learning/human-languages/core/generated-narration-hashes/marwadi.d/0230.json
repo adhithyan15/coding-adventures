@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:7915f31402303a8c",
+  "lessonIds": [
+    "MW-C230-balno-scorch",
+    "MW-C230-dhalno",
+    "MW-C230-dharti",
+    "MW-C230-ak",
+    "MW-C230-kato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch230.txt",
+  "json": "marwadi/narration/ch230.json",
+  "textHash": "fnv1a64:67908611c64983ec",
+  "jsonHash": "fnv1a64:68b4fef3afe955c8",
+  "findings": []
+}

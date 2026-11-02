@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:2e46bcdec1ef30f0",
+  "lessonIds": [
+    "MW-C258-chinta",
+    "MW-C258-bharoso",
+    "MW-C258-dhiraj",
+    "MW-C258-sahno",
+    "MW-C258-hiyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch258.txt",
+  "json": "marwadi/narration/ch258.json",
+  "textHash": "fnv1a64:53bd1678aedc4334",
+  "jsonHash": "fnv1a64:20a36a71ecb2a864",
+  "findings": []
+}

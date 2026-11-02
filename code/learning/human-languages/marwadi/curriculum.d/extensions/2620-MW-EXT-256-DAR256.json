@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-256-DAR256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what frightens me and what makes me glad.",
+  "prerequisites": []
+}

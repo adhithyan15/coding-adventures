@@ -1,0 +1,11 @@
+{
+  "id": "MW-C182-milavno",
+  "pathSegment": "MW-PATH-182-JHATKO182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-182-JHATKO182",
+      "order": 2
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace CodingAdventures.CtCompare.Tests;
 
 public sealed class CtCompareTests
@@ -46,6 +48,76 @@ public sealed class CtCompareTests
         Assert.Equal(right, CtCompare.CtSelectBytes(left, right, false));
         Assert.Empty(CtCompare.CtSelectBytes([], [], true));
         Assert.Throws<ArgumentException>(() => CtCompare.CtSelectBytes("abc"u8, "abcd"u8, true));
+    }
+
+    [Fact]
+    public void NullArraysAreRejectedNotTreatedAsEmpty()
+    {
+        // Regression: a null byte[] used to convert to an empty span, so
+        // CtEq(null, Array.Empty<byte>()) returned true.
+        byte[]? missing = null;
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtEq(missing!, Array.Empty<byte>()));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtEq(Array.Empty<byte>(), missing!));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtEqFixed(missing!, Array.Empty<byte>()));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtSelectBytes(missing!, Array.Empty<byte>(), true));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtSelectBytes(Array.Empty<byte>(), missing!, false));
+    }
+
+    [Fact]
+    public void NullArrayMixedWithASpanIsRejected()
+    {
+        // Regression: with only array/array overloads, a null array next to a
+        // span fell through to span/span and became empty again.
+        byte[]? missing = null;
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtEq(missing!, ReadOnlySpan<byte>.Empty));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtEq(""u8, missing!));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtEqFixed(missing!, ""u8));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtEqFixed(""u8, missing!));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtSelectBytes(missing!, ""u8, true));
+        Assert.Throws<ArgumentNullException>(() => CtCompare.CtSelectBytes(""u8, missing!, true));
+        Span<byte> buffer = stackalloc byte[4];
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            Span<byte> local = stackalloc byte[4];
+            return CtCompare.CtEq(missing!, local[..0]);
+        });
+        Assert.False(CtCompare.CtEq(new byte[] { 1 }, buffer[..1]));
+        Assert.True(CtCompare.CtEq(buffer[..1], new byte[] { 0 }));
+        Assert.Equal(new byte[] { 0 }, CtCompare.CtSelectBytes(new byte[] { 0 }, "a"u8, true));
+        Assert.Equal(new byte[] { 0 }, CtCompare.CtSelectBytes("a"u8, new byte[] { 0 }, false));
+        Assert.True(CtCompare.CtEqFixed(new byte[] { 97 }, "a"u8));
+        Assert.True(CtCompare.CtEqFixed("a"u8, new byte[] { 97 }));
+    }
+
+    [Fact]
+    public void ArrayOverloadsAgreeWithSpanOverloads()
+    {
+        var left = new byte[] { 1, 2, 3 };
+        var right = new byte[] { 1, 2, 3 };
+        Assert.True(CtCompare.CtEq(left, right));
+        Assert.True(CtCompare.CtEqFixed(left, right));
+        Assert.True(CtCompare.CtEqFixed("abc"u8, "abc"u8));
+        Assert.False(CtCompare.CtEqFixed("abc"u8, "abd"u8));
+        Assert.Equal(left, CtCompare.CtSelectBytes(left, new byte[] { 9, 9, 9 }, true));
+    }
+
+    [Fact]
+    public void ChoiceStoredAsAnyNonZeroByteSelectsLeft()
+    {
+        // Unsafe code can store a non-0/1 byte in a bool; it still means true.
+        byte stored = 2;
+        var oddTrue = Unsafe.As<byte, bool>(ref stored);
+        Assert.Equal(new byte[] { 7 }, CtCompare.CtSelectBytes(new byte[] { 7 }, new byte[] { 8 }, oddTrue));
+    }
+
+    [Fact]
+    public void CtSelectBytesReturnsAFreshCopy()
+    {
+        var left = new byte[] { 1, 2, 3 };
+        var picked = CtCompare.CtSelectBytes(left, new byte[] { 4, 5, 6 }, true);
+        Assert.NotSame(left, picked);
+        left[0] = 99;
+        Assert.Equal(new byte[] { 1, 2, 3 }, picked);
     }
 
     [Fact]

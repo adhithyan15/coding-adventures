@@ -1,0 +1,11 @@
+{
+  "id": "MW-C176-badhno",
+  "pathSegment": "MW-PATH-176-GANTH176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-176-GANTH176",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,796 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 206,
+  "title": "The Third House, Upstairs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e1f2177f32fbbeb1",
+  "lessons": [
+    {
+      "id": "MW-C206-tijo",
+      "sequence": 13770,
+      "title": "तीजो (tījo) — third",
+      "headword": "तीजो",
+      "romanization": "tījo",
+      "gloss": "third",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3c0d2233953c739",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to get stuck, then the Marwadi for a bus conductor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तीजो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीजो — tījo — \"third\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तीजो घर म्हारो है। tījo ghar mhāro hai. The third house is mine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीजो (tījo) is inherited from Sanskrit tṛtīya, \"third\". CDIAL gives no Marwari form in this entry, but lists Hindi tījā, \"third\" (CDIAL 5912)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tījo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tījo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tījo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tījo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tījo ghar mhāro hai. — The third house is mine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tījo ghar mhāro hai.* — The third house is mine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to get stuck, then the Marwadi for a bus conductor, then say tījo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to get stuck, then the Marwadi for a bus conductor, then say *tījo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तीजो (tījo) mean? (\"Third\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C206-tijo-type",
+              "prompt": "Say the Marwadi for 'third'.",
+              "assesses": [
+                "MW-LEX-C206-LANE206-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तीजो",
+                "tījo"
+              ],
+              "feedback": {
+                "correct": "Right: तीजो (tījo) is 'third'.",
+                "incorrect": "'third' is तीजो (tījo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C206-chautho",
+      "sequence": 13780,
+      "title": "चौथो (chautho) — fourth",
+      "headword": "चौथो",
+      "romanization": "chautho",
+      "gloss": "fourth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b893bc39daac17f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a bus conductor, then the Marwadi for third."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चौथो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौथो — chautho — \"fourth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मंदिर चौथी गळी मांय है। mandir chauthī gaḷī mā̃y hai. The temple is in the fourth lane."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौथो (chautho) is inherited from Sanskrit caturtha, \"fourth\"; CDIAL lists Marwari cotho, \"4th\" (CDIAL 4600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chautho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chautho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chautho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chautho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandir chauthī gaḷī mā̃y hai. — The temple is in the fourth lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandir chauthī gaḷī mā̃y hai.* — The temple is in the fourth lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a bus conductor, then the Marwadi for third, then say chautho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a bus conductor, then the Marwadi for third, then say *chautho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चौथो (chautho) mean? (\"Fourth\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C206-chautho-type",
+              "prompt": "Say the Marwadi for 'fourth'.",
+              "assesses": [
+                "MW-LEX-C206-LANE206-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चौथो",
+                "chautho"
+              ],
+              "feedback": {
+                "correct": "Right: चौथो (chautho) is 'fourth'.",
+                "incorrect": "'fourth' is चौथो (chautho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C206-upar",
+      "sequence": 13790,
+      "title": "ऊपर (ūpar) — up; upstairs",
+      "headword": "ऊपर",
+      "romanization": "ūpar",
+      "gloss": "up; upstairs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13d563c890b00b97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for third, then the Marwadi for fourth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऊपर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊपर — ūpar — \"up; upstairs\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दफ्तर ऊपर है। daphtar ūpar hai. The office is upstairs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊपर (ūpar) is inherited from a reconstructed uppari, \"above\"; CDIAL lists Old Marwari ūpara, \"on\" (CDIAL 2333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūpar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūpar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūpar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūpar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daphtar ūpar hai. — The office is upstairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daphtar ūpar hai.* — The office is upstairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for third, then the Marwadi for fourth, then say ūpar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for third, then the Marwadi for fourth, then say *ūpar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ऊपर (ūpar) mean? (\"Up; upstairs\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C206-upar-type",
+              "prompt": "Say the Marwadi for 'upstairs'.",
+              "assesses": [
+                "MW-LEX-C206-LANE206-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ऊपर",
+                "ūpar"
+              ],
+              "feedback": {
+                "correct": "Right: ऊपर (ūpar) is 'up; upstairs'.",
+                "incorrect": "'upstairs' is ऊपर (ūpar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C206-par",
+      "sequence": 13800,
+      "title": "पार (pār) — across; on the other side",
+      "headword": "पार",
+      "romanization": "pār",
+      "gloss": "across; on the other side",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de9c9fbf86048f01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for fourth, then the Marwadi for upstairs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पार — pār — \"across; on the other side\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मंदिर नदी पार है। mandir nadī pār hai. The temple is across the river."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पार (pār) is inherited from Sanskrit pāra, \"the further bank\". CDIAL gives no Marwari form in this entry, but lists Hindi pār, \"on the other side of, across\" (CDIAL 8100)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandir nadī pār hai. — The temple is across the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandir nadī pār hai.* — The temple is across the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for fourth, then the Marwadi for upstairs, then say pār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for fourth, then the Marwadi for upstairs, then say *pār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पार (pār) mean? (\"Across; on the other side\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C206-par-type",
+              "prompt": "Say the Marwadi for 'on the other side'.",
+              "assesses": [
+                "MW-LEX-C206-LANE206-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पार",
+                "pār"
+              ],
+              "feedback": {
+                "correct": "Right: पार (pār) is 'across; on the other side'.",
+                "incorrect": "'on the other side' is पार (pār)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C206-algo",
+      "sequence": 13810,
+      "title": "अळगो (aḷgo) — separate; apart",
+      "headword": "अळगो",
+      "romanization": "aḷgo",
+      "gloss": "separate; apart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a0d82200b025738",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for upstairs, then the Marwadi for on the other side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अळगो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अळगो — aḷgo — \"separate; apart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो घर गांव सूं अळगो है। mhāro ghar gā̃v sū̃ aḷgo hai. My house stands apart from the village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अळगो (aḷgo) is inherited from Sanskrit alagna, \"unconnected\"; CDIAL lists Old Marwari alago, \"separate\" (CDIAL 700)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḷgo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḷgo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḷgo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḷgo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro ghar gā̃v sū̃ aḷgo hai. — My house stands apart from the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro ghar gā̃v sū̃ aḷgo hai.* — My house stands apart from the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for upstairs, then the Marwadi for on the other side, then say aḷgo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for upstairs, then the Marwadi for on the other side, then say *aḷgo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अळगो (aḷgo) mean? (\"Separate; apart\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C206-algo-type",
+              "prompt": "Say the Marwadi for 'separate'.",
+              "assesses": [
+                "MW-LEX-C206-LANE206-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अळगो",
+                "aḷgo"
+              ],
+              "feedback": {
+                "correct": "Right: अळगो (aḷgo) is 'separate; apart'.",
+                "incorrect": "'separate' is अळगो (aḷgo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

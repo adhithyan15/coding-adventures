@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C216-nikalno",
+    "language": "marwadi",
+    "chapter": 216,
+    "sequence": 15000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d5c8964f25269e5"
+  },
+  "findings": []
+}

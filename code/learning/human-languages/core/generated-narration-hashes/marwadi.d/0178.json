@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:99b5a78d9a2ed804",
+  "lessonIds": [
+    "MW-C178-ughno",
+    "MW-C178-jhakno",
+    "MW-C178-binno",
+    "MW-C178-bikherno",
+    "MW-C178-supno",
+    "MW-R178-review-173-178"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch178.txt",
+  "json": "marwadi/narration/ch178.json",
+  "textHash": "fnv1a64:e73fd95afb0fc654",
+  "jsonHash": "fnv1a64:6c8950974a1d28ce",
+  "findings": []
+}

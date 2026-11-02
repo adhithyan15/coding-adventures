@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Please Come In",
+  "label": "ch:mw-please-come-in",
+  "canDo": "I can greet a guest politely and ask for help.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-C266-asis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can greet a guest politely and ask for help.",
+    "assesses": [
+      "MW-LEX-C266-HAJAR266-03",
+      "MW-LEX-C266-HAJAR266-04",
+      "MW-LEX-C266-HAJAR266-05"
+    ]
+  }
+}

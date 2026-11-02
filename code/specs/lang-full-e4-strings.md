@@ -116,6 +116,13 @@ backend's existing hard-trap path (the same table as E5 — `ud2`/`udf`/`unreach
 `charAt`/indexer bounds check is reused (free); the static backends emit an
 explicit `cmp idx,len` + branch-to-trap.
 
+> **Superseded by LANG83 PR5a (planned).** Every out-of-range `str_index` /
+> `str_slice` raises the registered kind `Trap.Bounds` through each backend's
+> LANG83 trap sequence (flush, then report the kind), with the bounds checked
+> on the full `i64` before any narrowing. Neither the managed exceptions above
+> nor a bare `ud2`/`unreachable` will satisfy it. See
+> [LANG83 "PR5 — runtime strings"](LANG83-iir-standard-operation-registry.md#pr5--runtime-strings).
+
 ---
 
 ## 3. Per-backend representation

@@ -1,0 +1,20 @@
+{
+  "chapter": 164,
+  "title": "A Notice at the Dairy",
+  "label": "ch:mw-a2-a-notice-at-the-dairy",
+  "canDo": "I can read a dairy's notice of opening days and hours, with a price, and decide when to go.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-R164-dairy",
+    "kind": "task",
+    "summary": "Complete MW-R164-dairy: read a 51-word dairy notice and decide when to go for milk, and on which day not to.",
+    "assesses": [
+      "MW-LEX-C164-NOTICE164-01",
+      "MW-LEX-C164-NOTICE164-02",
+      "MW-LEX-C164-NOTICE164-03",
+      "MW-SKILL-C164-READ-NOTICE-01"
+    ]
+  }
+}

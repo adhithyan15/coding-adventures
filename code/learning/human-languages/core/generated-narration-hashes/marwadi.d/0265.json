@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:3c8192f514ccba8f",
+  "lessonIds": [
+    "MW-C265-mochi",
+    "MW-C265-nai",
+    "MW-C265-mudno",
+    "MW-C265-darji",
+    "MW-C265-chakar",
+    "MW-R265-review-260-265",
+    "MW-R265-review-final-265"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch265.txt",
+  "json": "marwadi/narration/ch265.json",
+  "textHash": "fnv1a64:a92e25ba99a36a1b",
+  "jsonHash": "fnv1a64:90a4c85bc33720d4",
+  "findings": []
+}

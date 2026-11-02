@@ -51,6 +51,31 @@ FILE FORMAT
 present it must appear in `lessons.d/_meta.md`, which is the single source of
 truth for the category list -- so adding a category is a deliberate edit to one
 small file rather than a typo that silently invents a new heading.
+
+QUIRKS.D: THE SECOND STORE
+==========================
+
+`quirks.d/` (VER26 section 6) uses exactly the same one-file-per-record layout
+and the same title-derived filenames. A lesson records a mistake *we* made; a
+quirk records a property of *the world* the verification tools must cope with --
+a language, a toolchain, an existing package, a CI runner. Its frontmatter is
+required and closed:
+
+    ---
+    package: rust/ct-compare
+    lane: rust
+    rung: E4
+    status: open
+    ---
+
+`package` and `lane` may be `*`; `rung` is one of E0-E6, bench, report or
+infra; `status` is open, mitigated or accepted. Values are taken verbatim (no
+inline comments), and a repeated key is an error.
+
+A quirk must never carry an untriaged counterexample, failing seed or crashing
+input (VER00 section 7.3), so `validate` also rejects `seed:`/`tape:`/
+`counterexample:`/`reproducer:` lines and long hexadecimal or decimal runs. Quirks are
+validated by the same `validate` call that CI already runs for lessons.
 """
 
 from __future__ import annotations
@@ -126,6 +151,32 @@ if hasattr(sys.stdout, "reconfigure"):
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LESSONS_DIR = REPO_ROOT / "lessons.d"
+QUIRKS_DIR = REPO_ROOT / "quirks.d"
+QUIRK_FIELDS = ("package", "lane", "rung", "status")
+QUIRK_RUNGS = frozenset(
+    {"E0", "E1", "E2", "E3", "E4", "E5", "E6", "bench", "report", "infra"}
+)
+QUIRK_STATUSES = frozenset({"open", "mitigated", "accepted"})
+# Material that could reproduce an untriaged failure. A hex run of 24 or more
+# characters is long enough to be a seed, a tape or a hash-addressed input; a
+# commit or PR is referenced by number instead.
+# A keyword line, tolerating list bullets and Markdown emphasis around the
+# keyword, followed by `:`, `=`, `-` or whitespace and a digit. `[ \t]` rather
+# than `\s` keeps the pattern from scanning across lines, which made it
+# quadratic on long runs of blank lines.
+QUIRK_SECRET_LINE = re.compile(
+    r"^[ \t]*(?:[-*][ \t]*)?[`*_]*(seed|tape|counterexample|reproducer)[`*_]*"
+    r"[ \t]*(?:[:=-]|[ \t]\d)",
+    re.IGNORECASE | re.MULTILINE,
+)
+# Long hexadecimal (with or without a 0x prefix, optionally split by - or _ as
+# in a UUID) and long decimal runs: the usual shapes of a seed or input hash.
+QUIRK_HEX_RUN = re.compile(r"(?:\b|0x)(?:[0-9a-fA-F][-_]?){24,}\b")
+QUIRK_DECIMAL_RUN = re.compile(r"\b\d{12,}\b")
+QUIRK_PLACEHOLDER = (
+    "TODO: what the tools met, how it shows up, and how it is handled. "
+    "Replace this line."
+)
 META = "_meta.md"
 UNCATEGORISED = "Uncategorised"
 PLACEHOLDER = (
@@ -274,6 +325,103 @@ def cmd_validate(lessons_dir: Path) -> int:
     return 1 if problems else 0
 
 
+def read_frontmatter(path: Path) -> dict[str, str]:
+    """The `key: value` pairs of a shard's frontmatter (empty if it has none)."""
+    raw = path.read_text(encoding="utf-8")
+    if not raw.startswith("---\n"):
+        return {}
+    end = raw.find("\n---\n", 4)
+    if end == -1:
+        raise ValueError(f"{path.name}: unterminated frontmatter")
+    fields: dict[str, str] = {}
+    for line in raw[4:end].splitlines():
+        key, _, value = line.partition(":")
+        key = key.strip()
+        if not key:
+            continue
+        # A repeated key would otherwise let the last value silently win, so
+        # `status: bogus` followed by `status: open` would pass.
+        if key in fields:
+            raise ValueError(f"{path.name}: duplicate frontmatter key {key!r}")
+        fields[key] = value.strip()
+    return fields
+
+
+def cmd_validate_quirks(quirks_dir: Path) -> int:
+    """Validate `quirks.d/`: the lesson rules, plus closed frontmatter and no
+    reproducing material."""
+    problems: list[str] = []
+    seen: dict[str, str] = {}
+    shards = [p for p in sorted(quirks_dir.glob("*.md")) if p.name != META]
+    for path in shards:
+        try:
+            quirk = parse_lesson(path)
+            fields = read_frontmatter(path)
+        except ValueError as error:
+            problems.append(str(error))
+            continue
+        for field in QUIRK_FIELDS:
+            if not fields.get(field):
+                problems.append(f"{path.name}: missing required field {field!r}")
+        extra = sorted(set(fields) - set(QUIRK_FIELDS))
+        if extra:
+            problems.append(f"{path.name}: unknown field(s) {extra}")
+        if fields.get("rung") and fields["rung"] not in QUIRK_RUNGS:
+            problems.append(f"{path.name}: rung {fields['rung']!r} is not one of {sorted(QUIRK_RUNGS)}")
+        if fields.get("status") and fields["status"] not in QUIRK_STATUSES:
+            problems.append(f"{path.name}: status {fields['status']!r} is not one of {sorted(QUIRK_STATUSES)}")
+        if not quirk.body.strip():
+            problems.append(f"{path.name}: has a title but no body")
+        elif QUIRK_PLACEHOLDER.split(".")[0] in quirk.body:
+            problems.append(f"{path.name}: still holds the `lessons.py new-quirk` placeholder")
+        text = path.read_text(encoding="utf-8")
+        if (
+            QUIRK_SECRET_LINE.search(text)
+            or QUIRK_HEX_RUN.search(text)
+            or QUIRK_DECIMAL_RUN.search(text)
+        ):
+            problems.append(
+                f"{path.name}: looks like it carries a seed, tape or reproducing "
+                "input; quirks must not (VER00 section 7.3)"
+            )
+        expected = slugify(quirk.title)
+        if expected != quirk.slug and not re.fullmatch(re.escape(expected) + r"-\d+", quirk.slug):
+            problems.append(f"{path.name}: title slugs to {expected!r}; rename the file")
+        if sum(1 for line in quirk.body.splitlines() if line.startswith("```")) % 2:
+            problems.append(f"{path.name}: unbalanced ``` code fence")
+        if quirk.title in seen:
+            problems.append(f"{path.name}: duplicate title, already used by {seen[quirk.title]}")
+        seen[quirk.title] = path.name
+    for problem in problems:
+        print(f"quirks: {problem}", file=sys.stderr)
+    print(f"quirks: {len(shards)} shards, {len(problems)} problem(s)")
+    return 1 if problems else 0
+
+
+def cmd_new_quirk(
+    quirks_dir: Path, title: str, package: str, lane: str, rung: str, status: str
+) -> int:
+    if rung not in QUIRK_RUNGS or status not in QUIRK_STATUSES:
+        print(
+            f"quirks: rung must be one of {sorted(QUIRK_RUNGS)} and status one of "
+            f"{sorted(QUIRK_STATUSES)}",
+            file=sys.stderr,
+        )
+        return 1
+    path = quirks_dir / f"{slugify(title)}.md"
+    if path.exists() or path.is_symlink():
+        print(f"quirks: {path.name} already exists -- edit it instead", file=sys.stderr)
+        return 1
+    # Exclusive create: never follow a symlink planted after the check above.
+    with path.open("x", encoding="utf-8") as handle:
+        handle.write(
+            f"---\npackage: {package}\nlane: {lane}\nrung: {rung}\nstatus: {status}\n---\n\n"
+            f"# {title}\n\n{QUIRK_PLACEHOLDER}\n"
+        )
+    print(path)
+    return 0
+
+
 def demote_headings(body: str) -> str:
     """Push a shard's own sub-headings one level deeper for the aggregate.
 
@@ -390,10 +538,26 @@ def main(argv: list[str] | None = None) -> int:
     new_parser = sub.add_parser("new")
     new_parser.add_argument("title")
     new_parser.add_argument("--category")
+    quirk_parser = sub.add_parser("new-quirk")
+    quirk_parser.add_argument("title")
+    quirk_parser.add_argument("--package", required=True)
+    quirk_parser.add_argument("--lane", required=True)
+    quirk_parser.add_argument("--rung", required=True)
+    quirk_parser.add_argument("--status", default="open")
+    parser.add_argument("--quirks-dir", type=Path, default=QUIRKS_DIR)
 
     args = parser.parse_args(argv)
     if args.command == "validate":
-        return cmd_validate(args.dir)
+        status = cmd_validate(args.dir)
+        # The default invocation (the one CI runs) checks both stores. An
+        # explicit --dir checks only that lessons directory.
+        if args.dir == LESSONS_DIR and args.quirks_dir.is_dir():
+            status |= cmd_validate_quirks(args.quirks_dir)
+        return status
+    if args.command == "new-quirk":
+        return cmd_new_quirk(
+            args.quirks_dir, args.title, args.package, args.lane, args.rung, args.status
+        )
     if args.command == "render":
         return cmd_render(args.dir, args.target)
     if args.command == "index":

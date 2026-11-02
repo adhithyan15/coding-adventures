@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-201-TOWN201",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "MW-EXT-201-TOWN201"
+  ],
+  "after": []
+}

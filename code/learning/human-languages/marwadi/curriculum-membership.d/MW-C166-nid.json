@@ -1,0 +1,11 @@
+{
+  "id": "MW-C166-nid",
+  "pathSegment": "MW-PATH-166-JAG166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-166-JAG166",
+      "order": 2
+    }
+  ]
+}

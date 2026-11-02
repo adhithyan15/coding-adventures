@@ -1,0 +1,11 @@
+{
+  "id": "MW-C247-byav",
+  "pathSegment": "MW-PATH-247-BYAV247",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-247-BYAV247",
+      "order": 0
+    }
+  ]
+}

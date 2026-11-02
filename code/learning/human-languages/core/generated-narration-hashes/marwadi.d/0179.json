@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:f024a3bfbeacb9df",
+  "lessonIds": [
+    "MW-C179-sil",
+    "MW-C179-kutno",
+    "MW-C179-dalno",
+    "MW-C179-chhilno",
+    "MW-C179-phatakno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch179.txt",
+  "json": "marwadi/narration/ch179.json",
+  "textHash": "fnv1a64:08c6cfef3fba9617",
+  "jsonHash": "fnv1a64:943deaa210ce291c",
+  "findings": []
+}

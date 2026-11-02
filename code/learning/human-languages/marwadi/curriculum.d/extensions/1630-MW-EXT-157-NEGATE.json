@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-157-NEGATE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that I or someone else does not do something, that someone is not here, and ask someone not to do something.",
+  "prerequisites": [
+    "MW-EXT-156-POSTP"
+  ]
+}

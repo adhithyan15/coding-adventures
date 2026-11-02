@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:ad5a42fac355be29",
+  "lessonIds": [
+    "MW-C153-hu-hai",
+    "MW-C153-aap-ho",
+    "MW-C153-unt",
+    "MW-W45-uu",
+    "MW-R153-am-is-are"
+  ],
+  "tex": "marwadi/book/chapters/ch153-am-is-are.tex"
+}

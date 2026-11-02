@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Bent and Straight",
+  "label": "ch:mw-bent-and-straight",
+  "canDo": "I can say whether a path is crooked or straight, and how a thing stands.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C231-dhilo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say whether a path is crooked or straight, and how a thing stands.",
+    "assesses": [
+      "MW-LEX-C231-SHAPE231-03",
+      "MW-LEX-C231-SHAPE231-04",
+      "MW-LEX-C231-SHAPE231-05"
+    ]
+  }
+}

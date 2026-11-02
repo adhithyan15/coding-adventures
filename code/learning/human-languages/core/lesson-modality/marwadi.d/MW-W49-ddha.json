@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "MW-W49-ddha",
+    "language": "marwadi",
+    "chapter": 161,
+    "sequence": 9910,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba3377a2b31c0419",
+    "detachableSegments": [
+      "Script you'll notice: ढ",
+      "Writing: ढ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

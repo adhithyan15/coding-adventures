@@ -1,0 +1,11 @@
+{
+  "id": "MW-C208-adalat",
+  "pathSegment": "MW-PATH-208-OFFICES208",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-208-OFFICES208",
+      "order": 3
+    }
+  ]
+}

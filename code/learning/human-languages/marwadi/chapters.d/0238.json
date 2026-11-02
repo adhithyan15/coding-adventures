@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Sowing",
+  "label": "ch:mw-sowing",
+  "canDo": "I can say I will dig the field, sow millet and plant a tree.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C238-bij",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say I will dig the field, sow millet and plant a tree.",
+    "assesses": [
+      "MW-LEX-C238-SOW238-03",
+      "MW-LEX-C238-SOW238-04",
+      "MW-LEX-C238-SOW238-05"
+    ]
+  }
+}

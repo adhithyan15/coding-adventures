@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-205-BUS205",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "MW-EXT-205-BUS205"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:36a347c0c90ab361",
+  "lessonIds": [
+    "MW-C214-pherno",
+    "MW-C214-sarikho",
+    "MW-C214-thaili",
+    "MW-C214-palatno",
+    "MW-C214-ladhno"
+  ],
+  "tex": "marwadi/book/chapters/ch214-taking-it-back.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-283-MOTI283",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "before": [],
+  "inline": [
+    "MW-EXT-283-MOTI283"
+  ],
+  "after": []
+}

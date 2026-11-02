@@ -1,0 +1,11 @@
+{
+  "id": "MW-C216-dero",
+  "pathSegment": "MW-PATH-216-OUT216",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-216-OUT216",
+      "order": 4
+    }
+  ]
+}

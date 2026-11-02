@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C194-kamavno",
+    "language": "marwadi",
+    "chapter": 194,
+    "sequence": 13150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ff27a312cd099ee"
+  },
+  "findings": []
+}

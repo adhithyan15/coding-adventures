@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:60a58e7c1ecb1235",
+  "lessonIds": [
+    "MW-C249-holi",
+    "MW-C249-gulal",
+    "MW-C249-sugan",
+    "MW-C249-divali",
+    "MW-C249-puja"
+  ],
+  "tex": "marwadi/book/chapters/ch249-holi-and-diwali.tex"
+}

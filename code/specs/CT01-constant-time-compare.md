@@ -19,7 +19,7 @@ shape. Each lane must review its optimized code or runtime limits separately.
 | --- | --- | --- | --- |
 | `eq` | Two byte strings | Equal lengths and bytes | Compare all `n` positions when lengths match; zero positions when lengths differ |
 | `eq_fixed` | Two byte strings of declared public width `n` | Byte equality | Compare all `n` positions |
-| `select_bytes` | Two byte strings of equal length and a boolean choice | Fresh copy of left for true, right for false | Read both inputs and write every one of `n` positions |
+| `select_bytes` | Two byte strings of equal length and a secret selection bit (a boolean or an integer bit; see below) | Fresh copy of left when the bit is set, right when it is clear | Read both inputs and write every one of `n` positions |
 | `eq_u64` | Two unsigned 64-bit values | Equality | Reduce a fixed 64-bit difference, independent of values |
 
 An `eq` length mismatch returns false without reading either content; length
@@ -29,9 +29,60 @@ portable runtime case: statically typed lanes may reject it before execution.
 `CT_SELECT_LENGTH_MISMATCH` before reading either input; native exception text
 is not standardized. The selection result must not alias a mutable input.
 
+### How a lane receives the selection bit
+
+`choice` is secret, so turning it into a mask must not branch on it. Some
+languages can turn a boolean into the integer 0 or 1 without a branch:
+- as a plain value conversion: Rust `choice as u8`, C++
+  `static_cast<unsigned>(choice)`, TypeScript `Number(choice)`, Python
+  `int(choice)`;
+- by reading the boolean's stored byte, as .NET does with `Unsafe.As`.
+
+Those lanes may take a boolean `choice`, but **only if their own code uses such
+a conversion**. A lane that writes `choice ? 1 : 0`, `if choice ...` or any
+other conditional is not compliant, whatever its language could do.
+
+C takes `choice` as an `int` used as a boolean, normalised with the value
+expression `choice != 0`, which involves no control flow.
+
+Optimisers and JIT compilers can reintroduce a branch on a value they know is 0
+or 1. CT01 makes no promise about compiled code, so each lane reviews its
+compiled output separately. Rust's `subtle` crate wraps the bit in an opaque
+type for this reason.
+
+Some languages have no branch-free way to turn a boolean into a number:
+- **Go** has no bool-to-integer conversion at all;
+- **Java and Kotlin** have none for `boolean`;
+- in **Ruby and Elixir**, every conversion is an `if`, a `?:` or a pattern match.
+
+Those lanes take `choice` as an **integer bit**: exactly 0 (select `right`) or
+1 (select `left`). The parameter may be a signed integer type, because the
+validation below rejects negative values too. This is how Go's own `crypto/subtle`
+selection functions work. Any other value is a caller error, raised before
+either input is read.
+
+The validation itself must not leak the bit. It must take the same path for 0
+and for 1. Testing `choice & ~1` for zero, one computation whose result is the
+same for both valid values, is acceptable. Comparing `choice` against each
+valid value in turn is **not**: a check like `[true, false].include?(choice)`
+stops at its first match, and so does a different amount of work for each
+value. The conformance corpus keeps a boolean `choice`, and an integer-bit
+lane's adapter maps `true` to 1 and `false` to 0. That mapping is itself a
+branch, which is fine only because corpus values are public test data:
+adapters are test-only code and never ship.
+
+**Callers must produce the bit without branching too.** The usual call is
+`select_bytes(a, b, eq(x, y))`. In an integer-bit lane, `eq` returns a
+boolean, so building the bit from it would need exactly the `if` this rule
+removes. Integer-bit lanes should therefore also offer equality variants that
+return the bit directly, as Go's `subtle.ConstantTimeCompare` returns an
+`int`. Until they do, callers must not convert an equality result into a
+selection bit with a conditional.
+
 For equal lengths, equality can XOR corresponding bytes into an accumulator
-and test only after the full loop. Selection can expand the boolean to an
-all-zero or all-one byte mask and compute `right ^ ((left ^ right) & mask)`.
+and test only after the full loop. Selection can expand the bit to an
+all-zero or all-one byte mask (`-bit & 0xFF`) and compute
+`right ^ ((left ^ right) & mask)`.
 An equivalent implementation is allowed, but no content-dependent early
 return, conditional selection branch, lookup index, or loop bound is allowed.
 The `eq_u64` reduction must inspect all 64 bits through a fixed operation

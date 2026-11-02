@@ -1,0 +1,11 @@
+{
+  "id": "MW-C180-chhiko",
+  "pathSegment": "MW-PATH-180-DHARO180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-180-DHARO180",
+      "order": 3
+    }
+  ]
+}

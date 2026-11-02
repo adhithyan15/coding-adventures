@@ -1,0 +1,14 @@
+{
+  "language": "marwadi",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:12dc3ee3ff310a76",
+  "lessonIds": [
+    "MW-C197-phon",
+    "MW-C197-nambar",
+    "MW-C197-bajno",
+    "MW-C197-sandeso",
+    "MW-C197-mitavno",
+    "MW-R197-review-191-197"
+  ],
+  "tex": "marwadi/book/chapters/ch197-a-call-and-a-message.tex"
+}

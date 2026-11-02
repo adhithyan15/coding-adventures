@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:fbc57df5a38059ba",
+  "lessonIds": [
+    "MW-C232-budho",
+    "MW-C232-mati",
+    "MW-C232-chikno",
+    "MW-C232-kakro",
+    "MW-C232-borri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch232.txt",
+  "json": "marwadi/narration/ch232.json",
+  "textHash": "fnv1a64:9dafce69f8e87391",
+  "jsonHash": "fnv1a64:b6d34c8b5b918529",
+  "findings": []
+}

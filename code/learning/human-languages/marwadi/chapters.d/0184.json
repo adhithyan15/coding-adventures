@@ -1,0 +1,21 @@
+{
+  "chapter": 184,
+  "title": "Mortar and Metal",
+  "label": "ch:mw-mortar-and-metal",
+  "canDo": "I can name the mortar and the metals pots are made of.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-R184-review-179-184",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can name the mortar and the metals pots are made of.",
+    "assesses": [
+      "MW-LEX-C184-OKHLI184-01",
+      "MW-LEX-C184-OKHLI184-02",
+      "MW-LEX-C184-OKHLI184-03",
+      "MW-LEX-C184-OKHLI184-04",
+      "MW-LEX-C184-OKHLI184-05"
+    ]
+  }
+}

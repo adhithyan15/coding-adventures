@@ -1,0 +1,11 @@
+{
+  "id": "MW-C267-thamno",
+  "pathSegment": "MW-PATH-267-RAJA267",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-267-RAJA267",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:886f97cdd3eb3872",
+  "lessonIds": [
+    "MW-C201-kot",
+    "MW-C201-mohallo",
+    "MW-C201-thano",
+    "MW-C201-saray",
+    "MW-C201-ghusno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch201.txt",
+  "json": "marwadi/narration/ch201.json",
+  "textHash": "fnv1a64:377069dbb3e0a7d2",
+  "jsonHash": "fnv1a64:0bf0ff2d115a960e",
+  "findings": []
+}

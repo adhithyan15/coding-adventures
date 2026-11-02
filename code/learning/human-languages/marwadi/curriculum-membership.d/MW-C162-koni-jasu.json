@@ -1,0 +1,11 @@
+{
+  "id": "MW-C162-koni-jasu",
+  "pathSegment": "MW-PATH-162-FUTURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-162-FUTURE",
+      "order": 1
+    }
+  ]
+}

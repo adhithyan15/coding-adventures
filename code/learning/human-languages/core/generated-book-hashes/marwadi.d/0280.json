@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:c11506dfb26f4b9f",
+  "lessonIds": [
+    "MW-C280-tim",
+    "MW-C280-ged",
+    "MW-C280-jhelno",
+    "MW-C280-nisano",
+    "MW-C280-sadhno"
+  ],
+  "tex": "marwadi/book/chapters/ch280-ball-games.tex"
+}

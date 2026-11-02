@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C211-map",
+    "language": "marwadi",
+    "chapter": 211,
+    "sequence": 14030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b169735b3a2c4baf"
+  },
+  "findings": []
+}

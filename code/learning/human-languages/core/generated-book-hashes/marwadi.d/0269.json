@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:6bcbbc294d006003",
+  "lessonIds": [
+    "MW-C269-bahano",
+    "MW-C269-inkar",
+    "MW-C269-arno",
+    "MW-C269-jid",
+    "MW-C269-tokno"
+  ],
+  "tex": "marwadi/book/chapters/ch269-not-now.tex"
+}

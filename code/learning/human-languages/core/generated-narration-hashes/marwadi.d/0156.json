@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:4aae51d4a980d185",
+  "lessonIds": [
+    "MW-C156-mhari",
+    "MW-C156-maay-mathai",
+    "MW-C156-su",
+    "MW-R156-mine-in-from"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marwadi/narration/ch156.txt",
+  "json": "marwadi/narration/ch156.json",
+  "textHash": "fnv1a64:fb8eabc88f976446",
+  "jsonHash": "fnv1a64:666db87279c5d4e1",
+  "findings": []
+}

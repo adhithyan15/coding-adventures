@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C220-tyar",
+    "language": "marwadi",
+    "chapter": 220,
+    "sequence": 15210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5966832c06266fa3"
+  },
+  "findings": []
+}
