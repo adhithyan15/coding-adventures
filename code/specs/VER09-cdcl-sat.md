@@ -359,6 +359,10 @@ Recorded while implementing:
    found that `Predicate::to_nnf` left `¬(a ⇔ b)` wrapped around a compound,
    so `to_cnf` returned a formula that was not CNF, and the tactic answered
    `Unknown`. `to_nnf` now rewrites it to `(a ∨ b) ∧ (¬a ∨ ¬b)`.
+4. **The distributive CNF conversion keeps its clause cap** (10 000 clauses).
+   Formulas past the cap still answer `Unknown`, as before. The Tseitin
+   encoding of VER10 removes the cap; re-pointing `SatTactic` at it is a
+   follow-up to VER10, not part of this spec.
 5. **Security review hardening.** The DIMACS default cap went from 2^24
    to 2^20 and limits are clamped to 2^31. The adapter gained the NNF size
    guard of §7, which bounds an exponential case that predates this spec.
@@ -366,7 +370,3 @@ Recorded while implementing:
 6. **A work budget** (`Solver::set_work_budget`, added with VER10). It
    counts watch-list visits, because a conflict budget alone does not bound
    time on formulas with millions of clauses.
-4. **The distributive CNF conversion keeps its clause cap** (10 000 clauses).
-   Formulas past the cap still answer `Unknown`, as before. The Tseitin
-   encoding of VER10 removes the cap; re-pointing `SatTactic` at it is a
-   follow-up to VER10, not part of this spec.
