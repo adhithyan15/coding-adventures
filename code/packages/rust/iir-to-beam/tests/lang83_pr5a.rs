@@ -23,6 +23,8 @@ const OP_IS_LT: u8 = 39;
 const OP_IS_GE: u8 = 40;
 const OP_IS_INTEGER: u8 = 45;
 const OP_MOVE: u8 = 64;
+const OP_GC_BIF1: u8 = 124;
+const OP_GC_BIF2: u8 = 125;
 
 fn v(n: &str) -> Operand {
     Operand::Var(n.into())
@@ -139,4 +141,112 @@ fn str_concat_raises_trap_overflow_past_the_module_ceiling() {
         assert_eq!((check.operands[1].tag, check.operands[1].value), (BEAMTag::I, want));
         assert_eq!(label_pc(&m, fail_label(check)), raises[0].0 + 1, "OK is just past the raise");
     }
+}
+
+// ── The trapping `length/1` save area ────────────────────────────────────────
+//
+// On a real VM (OTP 22+) the loader rewrites `gc_bif1 Fail Live length/1 Src
+// Dst` into
+//
+//   i_length_setup Live Src     ; x[Live] = Src, x[Live+1] = 0, x[Live+2] = Src
+//   i_length Fail Live Dst      ; walk (may yield and resume), then write Dst
+//
+// so `length` can pause half-way down a long list. Those three registers are
+// overwritten BEFORE `Dst` is written: `Live` is a clobber line, not a mere GC
+// hint. The first str_concat ceiling check computed `length(left)` into
+// x[live] and then ran `length(right)` with the same `Live`, so the setup
+// stored the string `right` over it and real `erl` raised
+// `badarith erlang:'+'("K", 1)` (CI on PR #18799, three real-`erl` tests).
+//
+// There is no `erl` here, so this pins the rule on the instruction stream: in
+// the straight-line code after each `length`, no register of its save area
+// other than `Dst` may be READ before something writes it again.
+
+/// Registers `ins` reads and the one it writes, for the opcodes that appear
+/// in the straight-line string expansions. `None` ends the scan: a label,
+/// jump or call changes the control flow or clobbers everything anyway.
+fn reads_writes(ins: &BEAMInstruction) -> Option<(Vec<u64>, Option<u64>)> {
+    let x = |i: usize| (ins.operands[i].tag == BEAMTag::X).then_some(ins.operands[i].value);
+    match ins.opcode {
+        OP_MOVE => Some((x(0).into_iter().collect(), x(1))),
+        OP_GC_BIF1 => Some((x(3).into_iter().collect(), x(4))),
+        OP_GC_BIF2 => Some(([x(3), x(4)].into_iter().flatten().collect(), x(5))),
+        OP_IS_LT | OP_IS_GE => Some(([x(1), x(2)].into_iter().flatten().collect(), None)),
+        OP_IS_INTEGER => Some((x(1).into_iter().collect(), None)),
+        _ => None,
+    }
+}
+
+/// Fail if any `length` call's save area is read after the call clobbered it.
+fn assert_length_save_area_never_read(m: &BEAMModule) {
+    let code = &m.instructions;
+    let mut seen = 0;
+    for (pc, ins) in code.iter().enumerate() {
+        if ins.opcode != OP_GC_BIF1 || import(m, ins.operands[2].value) != "erlang:length/1" {
+            continue;
+        }
+        seen += 1;
+        let live = ins.operands[1].value;
+        let dst = ins.operands[4].value;
+        // Registers still holding the setup's junk.
+        let mut junk: Vec<u64> = (live..live + 3).filter(|&r| r != dst).collect();
+        for later in &code[pc + 1..] {
+            let Some((reads, write)) = reads_writes(later) else { break };
+            for r in &reads {
+                assert!(
+                    !junk.contains(r),
+                    "pc {pc}: `length` with Live={live} clobbered x{r}, which {later:?} then reads"
+                );
+            }
+            if let Some(w) = write {
+                junk.retain(|&r| r != w);
+            }
+        }
+    }
+    assert!(seen > 0, "the module computes at least one length");
+}
+
+#[test]
+fn length_save_area_never_holds_a_value_still_needed() {
+    let concat = vec![
+        IIRInstr::new("str_concat", Some("c".into()), vec![v("a"), v("b")], "str"),
+        IIRInstr::new("str_len", Some("n".into()), vec![v("c")], "i64"),
+        IIRInstr::new("ret", None, vec![v("n")], "i64"),
+    ];
+    let index = vec![
+        IIRInstr::new("str_index", Some("n".into()), vec![v("a"), v("b")], "i64"),
+        IIRInstr::new("ret", None, vec![v("n")], "i64"),
+    ];
+    let slice = vec![
+        IIRInstr::new("str_slice", Some("t".into()), vec![v("a"), v("b"), v("c")], "str"),
+        IIRInstr::new("str_len", Some("n".into()), vec![v("t")], "i64"),
+        IIRInstr::new("ret", None, vec![v("n")], "i64"),
+    ];
+    for (params, body) in [(&["a", "b"][..], concat), (&["a", "b"][..], index), (&["a", "b", "c"][..], slice)] {
+        assert_length_save_area_never_read(&lower(params, body, None));
+    }
+}
+
+#[test]
+fn str_concat_second_length_declares_the_first_result_live() {
+    let m = lower(
+        &["a", "b"],
+        vec![
+            IIRInstr::new("str_concat", Some("c".into()), vec![v("a"), v("b")], "str"),
+            IIRInstr::new("ret", None, vec![v("c")], "i64"),
+        ],
+        None,
+    );
+    let lengths: Vec<&BEAMInstruction> = m
+        .instructions
+        .iter()
+        .filter(|i| i.opcode == OP_GC_BIF1 && import(&m, i.operands[2].value) == "erlang:length/1")
+        .collect();
+    assert_eq!(lengths.len(), 2, "length(a) and length(b)");
+    let first_dst = lengths[0].operands[4].value;
+    let second_live = lengths[1].operands[1].value;
+    assert!(
+        second_live > first_dst,
+        "length(b)'s save area (x{second_live}..) must start above length(a)'s result x{first_dst}"
+    );
 }

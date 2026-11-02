@@ -6,6 +6,8 @@
 - `str_slice` raises `'Trap.Bounds'` instead of `badarg`, and tests `is_integer` on both offsets before its range compares (Erlang orders `1.5` between `1` and `2`).
 - `str_concat` compares `length(A) + length(B)` with the module's string ceiling before `++` and raises `erlang:error('Trap.Overflow')` past it.
 - New `tests/lang83_pr5a.rs` pins the guards, their order, the reasons and the ceiling operand. CI's BEAM `lang_matrix` column executes the Twig `string-ref` trap row.
+- Fix: the `str_concat` ceiling check broke every `str_concat` on a real VM (`badarith erlang:'+'("K", 1)` in real-`erl` tests 71, 101 and 108). Since OTP 22 the loader turns `gc_bif1 Live length/1` into `i_length_setup`/`i_length`, which use `x[Live]..x[Live+2]` as a save area so `length` can yield; the setup writes them before the result lands. Both `length` calls said `Live = live`, so the second one stored the string `right` over the first result in `x[live]`. The second call now says `Live = s_la + 1` (the first result is live), and the register guard reserves four scratch registers, not two, because the save area reaches `next_reg + 3`.
+- Tests: `length_save_area_never_holds_a_value_still_needed` scans the straight-line code after every `length` in `str_concat`, `str_index` and `str_slice` and fails if a save-area register other than the destination is read before it is written again. `str_concat_second_length_declares_the_first_result_live` pins the `Live` operand directly. Both fail on the broken lowering, and neither needs `erl`.
 
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 

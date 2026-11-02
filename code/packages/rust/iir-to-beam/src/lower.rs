@@ -2115,8 +2115,8 @@ pub fn lower_iir_to_beam(
 
                     // ── LANG83 PR5a: the module's string ceiling ──────────────
                     //
-                    //   gc_bif1 length/1 left  -> s_la
-                    //   gc_bif1 length/1 right -> s_lb
+                    //   gc_bif1 Live=live     length/1 left  -> s_la
+                    //   gc_bif1 Live=s_la+1   length/1 right -> s_lb
                     //   gc_bif2 '+'/2 s_la s_lb -> s_la      ; an Erlang integer: no wrap
                     //   is_lt {f,OK} Ceiling s_la            ; fall through iff sum > ceiling
                     //   <erlang:error('Trap.Overflow')>
@@ -2124,13 +2124,45 @@ pub fn lower_iir_to_beam(
                     //
                     // Checked before `++` builds anything. Both scratch registers
                     // sit above every variable register (`live`), so they clobber
-                    // nothing; `gc_bif` keeps its operands safe itself.
-                    let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
+                    // no variable.
+                    //
+                    // ### Why the second `length` has a bigger `Live`
+                    //
+                    // `length/1` is not an ordinary guard BIF on a real VM. A
+                    // list can be a million cells long, so since OTP 22 the
+                    // loader rewrites every `gc_bif1 ... erlang:length/1` into a
+                    // pair that can yield half-way and resume later:
+                    //
+                    //   i_length_setup Live Src      ; x[Live]   = Src   (cursor)
+                    //                                ; x[Live+1] = 0     (count)
+                    //                                ; x[Live+2] = Src   (original)
+                    //   i_length Fail Live Dst       ; walk, maybe trap, then Dst
+                    //
+                    // The three registers starting at x[Live] are its private
+                    // save area, written BEFORE the result lands in Dst. So the
+                    // `Live` operand is not just a hint for the garbage
+                    // collector here: every register at or above it, up to
+                    // Live+2, is overwritten.
+                    //
+                    // The first `length` writes s_la = x[live]. If the second
+                    // one also said Live=live, its setup would store `right`
+                    // (the string itself) straight over s_la, and the `'+'`
+                    // below would compute `right + length(right)` -- exactly the
+                    // `badarith` `erlang:'+'("K", 1)` real `erl` raised on
+                    // every `str_concat` (CI, PR #18799). Declaring s_la live
+                    // (Live = s_la+1) is the honest statement anyway -- it IS
+                    // live -- and moves the save area to s_la+1..s_la+3, where
+                    // only s_lb (written last, by `i_length` itself) lives.
+                    //
+                    // The save area therefore reaches next_reg+3, so the guard
+                    // below reserves four registers, not two, the same budget
+                    // `str_slice`/`str_index` already keep for their `length`.
+                    let top = meta.next_reg.checked_add(3).filter(|t| *t < 255);
                     let Some(_) = top else {
                         return Err(IIRBeamError::UnsupportedOp {
                             function: fn_name.clone(),
                             op: format!(
-                                "str_concat: needs 2 scratch registers but only {} remain below x255",
+                                "str_concat: needs 4 scratch registers but only {} remain below x255",
                                 255u16 - meta.next_reg as u16
                             ),
                         });
@@ -2138,9 +2170,9 @@ pub fn lower_iir_to_beam(
                     let (s_la, s_lb) = (meta.next_reg, meta.next_reg + 1);
                     let ok_lbl = alloc_synth_label!("str_concat ceiling checks");
                     let overflow_atom = atoms.intern(interpreter_ir::exception_kind::TRAP_OVERFLOW);
-                    for (from, to) in [(left, s_la), (right, s_lb)] {
+                    for (from, to, live_here) in [(left, s_la, live), (right, s_lb, u64::from(s_la) + 1)] {
                         instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
-                            BEAMOperand::f(0), BEAMOperand::u(live),
+                            BEAMOperand::f(0), BEAMOperand::u(live_here),
                             BEAMOperand::u(import_length as u64),
                             BEAMOperand::x(from), BEAMOperand::x(to),
                         ]));
