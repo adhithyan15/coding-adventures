@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 boundary UpdateElementStyle color vertical slice",
+  "fixtures": [
+    {
+      "name": "keyed-boundary-colors",
+      "source": "C4Context\nSystem_Boundary(bank, \"Bank\") {\n  System(api, \"API\")\n}\nUpdateElementStyle(bank, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"#b91c1c\")"
+    },
+    {
+      "name": "positional-boundary-colors",
+      "source": "C4Container\nContainer_Boundary(platform, \"Platform\") {\n  Container(app, \"Banking App\")\n}\nUpdateElementStyle(platform, \"#dcfce7\", \"#14532d\", \"#166534\")"
+    }
+  ]
+}

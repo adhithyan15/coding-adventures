@@ -58,10 +58,13 @@
 //! assert_eq!(okm.len(), 32);
 //! ```
 
-use coding_adventures_blake2b::{Blake2bOptions, blake2b as b2b_hash};
-use coding_adventures_hmac::hmac;
+use coding_adventures_blake2b::{blake2b as b2b_hash, Blake2bOptions};
+use coding_adventures_hmac::{
+    hmac, hmac_sha256, hmac_sha256_segments, hmac_sha384, hmac_sha384_segments, HmacError,
+};
 use coding_adventures_sha256::sha256;
 use coding_adventures_sha512::sum512;
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 
 // ─── Hash Algorithm Selection ────────────────────────────────────────────────
 
@@ -153,6 +156,139 @@ impl HashAlgorithm {
     }
 }
 
+/// Repository-owned fixed-output hashes admitted by the fixed-memory Extract
+/// and Expand boundaries.
+///
+/// This is deliberately separate from [`HashAlgorithm`]. The legacy enum also
+/// contains allocation-backed compatibility algorithms that are not admitted
+/// for production TLS secret handling.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FixedHkdfHash {
+    /// HMAC-SHA-256 with a 32-byte PRK.
+    Sha256,
+    /// HMAC-SHA-384 with a 48-byte PRK.
+    Sha384,
+}
+
+impl FixedHkdfHash {
+    /// The exact PRK and RFC 5869 default-salt length for this hash.
+    pub const fn hash_len(self) -> usize {
+        match self {
+            Self::Sha256 => 32,
+            Self::Sha384 => 48,
+        }
+    }
+
+    /// HMAC's inner and outer hash block length for this algorithm.
+    const fn block_len(self) -> usize {
+        match self {
+            Self::Sha256 => 64,
+            Self::Sha384 => 128,
+        }
+    }
+
+    /// Largest complete hash input representable by the FIPS length field.
+    const fn max_message_bytes(self) -> u128 {
+        match self {
+            Self::Sha256 => u64::MAX as u128 / 8,
+            Self::Sha384 => u128::MAX / 8,
+        }
+    }
+}
+
+/// Wipe-on-drop pseudorandom key produced by [`hkdf_extract_fixed`] or copied
+/// from an already-derived exact-length value by [`HkdfPrk::import_exact`].
+///
+/// The owner uses one fixed 48-byte backing array and exposes only the selected
+/// hash's 32-byte or 48-byte prefix. Debug formatting reports metadata, never
+/// PRK bytes. Callers should retain this owner rather than copying its secret
+/// slice into longer-lived storage.
+pub struct HkdfPrk {
+    algorithm: FixedHkdfHash,
+    bytes: Zeroizing<[u8; 48]>,
+}
+
+/// Stable failure for importing an already-derived pseudorandom key.
+///
+/// The category deliberately omits the caller's length and bytes. The selected
+/// algorithm's required length is public through [`FixedHkdfHash::hash_len`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum HkdfPrkImportError {
+    /// The borrowed input was not exactly the selected hash's output length.
+    InvalidLength,
+}
+
+impl std::fmt::Display for HkdfPrkImportError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::InvalidLength => write!(
+                f,
+                "HKDF pseudorandom key must exactly match the selected hash length"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for HkdfPrkImportError {}
+
+impl HkdfPrk {
+    /// Import an already-derived pseudorandom key into fixed wipe-on-drop
+    /// storage.
+    ///
+    /// `bytes` must be exactly [`FixedHkdfHash::hash_len`] bytes. Validation
+    /// happens before any secret copy. Success copies that exact prefix into a
+    /// zero-initialized 48-byte owner, so the unused SHA-256 tail remains zero.
+    /// The borrowed source remains caller-owned and is not wiped here.
+    ///
+    /// This operation is deliberately **not** HKDF-Extract. It does not
+    /// establish the input's entropy, provenance, or protocol suitability.
+    /// Callers must use [`hkdf_extract_fixed`] for raw input keying material and
+    /// reserve this boundary for values that are already valid pseudorandom
+    /// keys, such as a hash-length TLS 1.3 secret produced by the reviewed key
+    /// schedule. Importing arbitrary raw key material would be misuse.
+    // Keep one uniquely named Rust-ABI symbol for the optimized-IR security
+    // gate. This is not a promised C ABI; it prevents newer LLVM pipelines
+    // from discarding the otherwise-unreferenced public method body.
+    #[unsafe(export_name = "coding_adventures_hkdf_import_exact_ir_audit")]
+    pub fn import_exact(
+        algorithm: FixedHkdfHash,
+        bytes: &[u8],
+    ) -> Result<Self, HkdfPrkImportError> {
+        if bytes.len() != algorithm.hash_len() {
+            return Err(HkdfPrkImportError::InvalidLength);
+        }
+
+        let mut staging = Zeroizing::new([0u8; 48]);
+        staging[..bytes.len()].copy_from_slice(bytes);
+        Ok(Self {
+            algorithm,
+            // Copy into the caller-owned result slot rather than moving the
+            // staging owner. The original staging storage must still drop and
+            // scrub after that copy.
+            bytes: Zeroizing::new(*staging),
+        })
+    }
+
+    /// The hash algorithm bound to this PRK.
+    pub const fn algorithm(&self) -> FixedHkdfHash {
+        self.algorithm
+    }
+
+    /// Borrow the selected hash's exact PRK bytes.
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.bytes[..self.algorithm.hash_len()]
+    }
+}
+
+impl std::fmt::Debug for HkdfPrk {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("HkdfPrk")
+            .field("algorithm", &self.algorithm)
+            .field("length", &self.algorithm.hash_len())
+            .finish_non_exhaustive()
+    }
+}
+
 // ─── Error Type ──────────────────────────────────────────────────────────────
 
 /// Errors that can occur during HKDF operations.
@@ -162,12 +298,16 @@ pub enum HkdfError {
     ///
     /// The Expand phase uses a single-byte counter (0x01..0xFF), so it can
     /// produce at most 255 HMAC blocks of HashLen bytes each.
-    OutputTooLong {
-        requested: usize,
-        maximum: usize,
-    },
+    OutputTooLong { requested: usize, maximum: usize },
     /// The requested output length is zero or negative.
     OutputTooShort,
+    /// A fixed-output Extract or Expand input exceeds the selected hash's
+    /// encoded message-length bound.
+    InputTooLong,
+    /// The fixed-output PRF rejected its key. Public Extract inputs cannot
+    /// cause this because an omitted salt is replaced with HashLen zero bytes;
+    /// this category preserves the underlying invariant without panicking.
+    PrfRejectedKey,
 }
 
 impl std::fmt::Display for HkdfError {
@@ -182,6 +322,12 @@ impl std::fmt::Display for HkdfError {
             HkdfError::OutputTooShort => {
                 write!(f, "HKDF output length must be positive")
             }
+            HkdfError::InputTooLong => {
+                write!(f, "HKDF input exceeds the selected hash length bound")
+            }
+            HkdfError::PrfRejectedKey => {
+                write!(f, "HKDF pseudorandom function rejected its key")
+            }
         }
     }
 }
@@ -189,6 +335,87 @@ impl std::fmt::Display for HkdfError {
 impl std::error::Error for HkdfError {}
 
 // ─── Extract ─────────────────────────────────────────────────────────────────
+
+fn map_fixed_hmac_error(error: HmacError) -> HkdfError {
+    match error {
+        HmacError::InputTooLong => HkdfError::InputTooLong,
+        HmacError::EmptyKey => HkdfError::PrfRejectedKey,
+    }
+}
+
+/// A borrowed fixed HMAC result that scrubs the original ABI result payload.
+///
+/// Protecting the borrowed array, rather than moving it into a second owner,
+/// ensures the storage first written by HMAC is the storage that gets wiped.
+struct FixedResultTag<'a, const N: usize>(&'a mut [u8; N]);
+
+impl<const N: usize> Drop for FixedResultTag<'_, N> {
+    fn drop(&mut self) {
+        self.0.zeroize();
+    }
+}
+
+fn copy_fixed_extract_tag<const N: usize>(
+    result: &mut Result<[u8; N], HmacError>,
+    prk: &mut [u8; 48],
+) -> Result<(), HkdfError> {
+    match result {
+        Ok(tag) => {
+            let tag = FixedResultTag(tag);
+            prk[..N].copy_from_slice(&tag.0[..]);
+            Ok(())
+        }
+        Err(HmacError::InputTooLong) => Err(HkdfError::InputTooLong),
+        Err(HmacError::EmptyKey) => Err(HkdfError::PrfRejectedKey),
+    }
+}
+
+/// Fixed-memory HKDF-Extract for repository-owned SHA-256 and SHA-384.
+///
+/// Implements RFC 5869 Section 2.2 without heap allocation:
+///
+/// ```text
+/// PRK = HMAC-Hash(salt, IKM)
+/// ```
+///
+/// An empty `salt` is replaced by exactly HashLen zero bytes. The algorithm is
+/// selected explicitly through [`FixedHkdfHash`], and the returned [`HkdfPrk`]
+/// wipes its fixed backing storage on drop. Temporary HMAC outputs are also
+/// wipe-on-drop. The IKM is borrowed without allocating an aggregate input
+/// buffer; the wiped hash state may retain one bounded partial block.
+///
+/// This function does not implement HKDF-Expand or a TLS key schedule.
+pub fn hkdf_extract_fixed(
+    salt: &[u8],
+    ikm: &[u8],
+    algorithm: FixedHkdfHash,
+) -> Result<HkdfPrk, HkdfError> {
+    let default_salt = [0u8; 48];
+    let effective_salt = if salt.is_empty() {
+        &default_salt[..algorithm.hash_len()]
+    } else {
+        salt
+    };
+
+    let mut prk = Zeroizing::new([0u8; 48]);
+    match algorithm {
+        FixedHkdfHash::Sha256 => {
+            let mut result = hmac_sha256(effective_salt, ikm);
+            copy_fixed_extract_tag(&mut result, &mut prk)?;
+        }
+        FixedHkdfHash::Sha384 => {
+            let mut result = hmac_sha384(effective_salt, ikm);
+            copy_fixed_extract_tag(&mut result, &mut prk)?;
+        }
+    }
+
+    Ok(HkdfPrk {
+        algorithm,
+        // Copy into the caller-owned result slot so the original PRK staging
+        // owner remains live long enough to scrub its own storage.
+        bytes: Zeroizing::new(*prk),
+    })
+}
 
 /// HKDF-Extract: concentrate entropy from IKM into a pseudorandom key.
 ///
@@ -241,6 +468,131 @@ pub fn hkdf_extract(salt: &[u8], ikm: &[u8], algorithm: HashAlgorithm) -> Vec<u8
 }
 
 // ─── Expand ──────────────────────────────────────────────────────────────────
+
+/// Return whether every inner HMAC input in fixed-memory Expand fits the
+/// selected hash's encoded message-length field.
+///
+/// The HMAC stream first consumes one normalized key block, followed by the
+/// logical message `T(i-1) || info || i`. Only blocks after the first include
+/// `T(i-1)`, so a one-block expansion preserves the slightly larger valid
+/// `info` boundary allowed by the standard. This public-length preflight occurs
+/// before any caller output is changed.
+fn fixed_expand_input_fits(algorithm: FixedHkdfHash, info_len: usize, block_count: usize) -> bool {
+    let previous_len = if block_count > 1 {
+        algorithm.hash_len()
+    } else {
+        0
+    };
+    let input_len = algorithm.block_len() as u128 + previous_len as u128 + info_len as u128 + 1;
+    input_len <= algorithm.max_message_bytes()
+}
+
+/// A borrowed HMAC result tag that scrubs the original result storage on drop.
+///
+/// Protecting the borrowed array, rather than moving it into a second owner,
+/// ensures the ABI return slot written by HMAC is the storage that gets wiped.
+/// Copy one successful fixed-output HMAC block into caller output and the
+/// wipe-on-drop previous-block owner. The tag remains in its original HMAC
+/// result storage, which is scrubbed on every exit before its lifetime ends.
+fn copy_fixed_expand_block<const N: usize>(
+    result: &mut Result<[u8; N], HmacError>,
+    previous: &mut [u8; 48],
+    output: &mut [u8],
+    written: usize,
+    take: usize,
+) -> Result<(), HmacError> {
+    match result {
+        Ok(tag) => {
+            let tag = FixedResultTag(tag);
+            output[written..written + take].copy_from_slice(&tag.0[..take]);
+            previous[..N].copy_from_slice(&tag.0[..]);
+            Ok(())
+        }
+        Err(HmacError::EmptyKey) => Err(HmacError::EmptyKey),
+        Err(HmacError::InputTooLong) => Err(HmacError::InputTooLong),
+    }
+}
+
+/// Fixed-memory HKDF-Expand for repository-owned SHA-256 and SHA-384.
+///
+/// Implements RFC 5869 Section 2.3 into caller-provided storage:
+///
+/// ```text
+/// T(0) = empty
+/// T(i) = HMAC-Hash(PRK, T(i-1) || info || i)
+/// OKM  = first L bytes of T(1) || ... || T(N)
+/// ```
+///
+/// The algorithm is bound to `prk`, preventing an Extract/Expand mismatch.
+/// Borrowed message segments avoid an aggregate HMAC-message allocation, one
+/// fixed 48-byte owner holds `T(i-1)`, and each temporary HMAC tag is wiped on
+/// drop. The function itself allocates no heap storage. On success, `output`
+/// belongs to the caller and is not wiped. Public length failures occur before
+/// `output` changes; an unexpected HMAC failure wipes all caller output before
+/// returning.
+///
+/// This function does not implement `HKDF-Expand-Label` or a TLS key schedule.
+///
+/// # Errors
+///
+/// Returns [`HkdfError::OutputTooShort`] when `output` is empty,
+/// [`HkdfError::OutputTooLong`] when it exceeds 255 times HashLen, or
+/// [`HkdfError::InputTooLong`] when an inner HMAC input would exceed the
+/// selected hash's encoded message-length bound.
+pub fn hkdf_expand_fixed(prk: &HkdfPrk, info: &[u8], output: &mut [u8]) -> Result<(), HkdfError> {
+    let algorithm = prk.algorithm();
+    let hash_len = algorithm.hash_len();
+    let maximum = 255 * hash_len;
+
+    if output.is_empty() {
+        return Err(HkdfError::OutputTooShort);
+    }
+    if output.len() > maximum {
+        return Err(HkdfError::OutputTooLong {
+            requested: output.len(),
+            maximum,
+        });
+    }
+
+    let block_count = output.len().div_ceil(hash_len);
+    if !fixed_expand_input_fits(algorithm, info.len(), block_count) {
+        return Err(HkdfError::InputTooLong);
+    }
+
+    let mut previous = Zeroizing::new([0u8; 48]);
+    let mut written = 0;
+
+    for block_index in 0..block_count {
+        let previous_block = if block_index == 0 {
+            &[][..]
+        } else {
+            &previous[..hash_len]
+        };
+        let counter = [(block_index + 1) as u8];
+        let segments = [previous_block, info, &counter[..]];
+        let remaining = output.len() - written;
+        let take = remaining.min(hash_len);
+
+        let result = match algorithm {
+            FixedHkdfHash::Sha256 => {
+                let mut tag = hmac_sha256_segments(prk.as_bytes(), &segments);
+                copy_fixed_expand_block(&mut tag, &mut previous, output, written, take)
+            }
+            FixedHkdfHash::Sha384 => {
+                let mut tag = hmac_sha384_segments(prk.as_bytes(), &segments);
+                copy_fixed_expand_block(&mut tag, &mut previous, output, written, take)
+            }
+        };
+
+        if let Err(error) = result {
+            output.zeroize();
+            return Err(map_fixed_hmac_error(error));
+        }
+        written += take;
+    }
+
+    Ok(())
+}
 
 /// HKDF-Expand: derive output keying material from a pseudorandom key.
 ///
@@ -386,6 +738,219 @@ mod tests {
     /// Helper: encode bytes to hex string.
     fn hex(bytes: &[u8]) -> String {
         bytes.iter().map(|b| format!("{b:02x}")).collect()
+    }
+
+    #[test]
+    fn fixed_extract_sha256_matches_rfc5869_tc1() {
+        let ikm = h("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");
+        let salt = h("000102030405060708090a0b0c");
+        let prk = hkdf_extract_fixed(&salt, &ikm, FixedHkdfHash::Sha256).unwrap();
+
+        assert_eq!(prk.algorithm(), FixedHkdfHash::Sha256);
+        assert_eq!(
+            hex(prk.as_bytes()),
+            "077709362c2e32df0ddc3f0dc47bba6390b6c73bb50f9c3122ec844ad7c2b3e5"
+        );
+    }
+
+    #[test]
+    fn fixed_extract_sha384_matches_rfc4231_tc2_prf() {
+        let prk = hkdf_extract_fixed(
+            b"Jefe",
+            b"what do ya want for nothing?",
+            FixedHkdfHash::Sha384,
+        )
+        .unwrap();
+
+        assert_eq!(prk.algorithm(), FixedHkdfHash::Sha384);
+        assert_eq!(
+            hex(prk.as_bytes()),
+            "af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649"
+        );
+    }
+
+    #[test]
+    fn fixed_extract_uses_hash_len_zero_default_salt() {
+        let sha256 = hkdf_extract_fixed(&[], b"ikm", FixedHkdfHash::Sha256).unwrap();
+        let legacy = hkdf_extract(&[], b"ikm", HashAlgorithm::Sha256);
+        assert_eq!(sha256.as_bytes(), legacy.as_slice());
+
+        let sha384 = hkdf_extract_fixed(&[], b"ikm", FixedHkdfHash::Sha384).unwrap();
+        let expected_sha384 = hmac_sha384(&[0u8; 48], b"ikm").unwrap();
+        assert_eq!(sha384.as_bytes(), expected_sha384.as_slice());
+    }
+
+    #[test]
+    fn fixed_prk_import_accepts_exact_sha256_and_sha384_lengths() {
+        for algorithm in [FixedHkdfHash::Sha256, FixedHkdfHash::Sha384] {
+            let bytes: Vec<u8> = (0..algorithm.hash_len())
+                .map(|index| (index as u8).wrapping_mul(17).wrapping_add(3))
+                .collect();
+            let imported = HkdfPrk::import_exact(algorithm, &bytes).unwrap();
+
+            assert_eq!(imported.algorithm(), algorithm);
+            assert_eq!(imported.as_bytes(), bytes);
+            if algorithm == FixedHkdfHash::Sha256 {
+                assert!(imported.bytes[32..].iter().all(|byte| *byte == 0));
+            }
+        }
+    }
+
+    #[test]
+    fn fixed_prk_import_rejects_every_non_exact_boundary_without_secret_data() {
+        for algorithm in [FixedHkdfHash::Sha256, FixedHkdfHash::Sha384] {
+            let expected = algorithm.hash_len();
+            for actual in [0, 1, expected - 1, expected + 1, 49] {
+                let bytes = vec![0xA5; actual];
+                let error = HkdfPrk::import_exact(algorithm, &bytes).unwrap_err();
+
+                assert_eq!(error, HkdfPrkImportError::InvalidLength);
+                assert_eq!(
+                    error.to_string(),
+                    "HKDF pseudorandom key must exactly match the selected hash length"
+                );
+                assert!(!error.to_string().contains(&actual.to_string()));
+                assert!(!error.to_string().contains("a5"));
+            }
+        }
+    }
+
+    #[test]
+    fn fixed_prk_import_expands_identically_to_the_original_owner() {
+        for algorithm in [FixedHkdfHash::Sha256, FixedHkdfHash::Sha384] {
+            let extracted = hkdf_extract_fixed(b"salt", b"ikm", algorithm).unwrap();
+            let imported = HkdfPrk::import_exact(algorithm, extracted.as_bytes()).unwrap();
+            let mut extracted_output = [0u8; 80];
+            let mut imported_output = [0u8; 80];
+
+            hkdf_expand_fixed(&extracted, b"import equivalence", &mut extracted_output).unwrap();
+            hkdf_expand_fixed(&imported, b"import equivalence", &mut imported_output).unwrap();
+
+            assert_eq!(imported_output, extracted_output);
+        }
+    }
+
+    #[test]
+    fn fixed_prk_debug_redacts_secret_bytes() {
+        let prk = hkdf_extract_fixed(b"salt", b"secret-ikm", FixedHkdfHash::Sha256).unwrap();
+        let rendered = format!("{prk:?}");
+
+        assert!(rendered.contains("Sha256"));
+        assert!(rendered.contains("length: 32"));
+        assert!(!rendered.contains(&hex(prk.as_bytes())));
+    }
+
+    #[test]
+    fn fixed_expand_sha256_matches_rfc5869_tc1() {
+        let ikm = h("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");
+        let salt = h("000102030405060708090a0b0c");
+        let info = h("f0f1f2f3f4f5f6f7f8f9");
+        let prk = hkdf_extract_fixed(&salt, &ikm, FixedHkdfHash::Sha256).unwrap();
+        let mut output = [0u8; 42];
+
+        hkdf_expand_fixed(&prk, &info, &mut output).unwrap();
+
+        assert_eq!(
+            hex(&output),
+            "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865"
+        );
+    }
+
+    #[test]
+    fn fixed_expand_sha384_matches_independent_vector() {
+        let ikm = h("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");
+        let salt = h("000102030405060708090a0b0c");
+        let info = h("f0f1f2f3f4f5f6f7f8f9");
+        let prk = hkdf_extract_fixed(&salt, &ikm, FixedHkdfHash::Sha384).unwrap();
+        let mut output = [0u8; 82];
+
+        hkdf_expand_fixed(&prk, &info, &mut output).unwrap();
+
+        assert_eq!(
+            hex(&output),
+            "9b5097a86038b805309076a44b3a9f38063e25b516dcbf369f394cfab43685f748b6457763e4f0204fc5d95d1da3e62587b22eb8943d0fab6bb631a2fe9df1a68c6ce5d56116a52005b3f122b88b39b7251f"
+        );
+    }
+
+    #[test]
+    fn fixed_expand_sha256_empty_info_matches_rfc5869_tc3() {
+        let ikm = h("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");
+        let prk = hkdf_extract_fixed(&[], &ikm, FixedHkdfHash::Sha256).unwrap();
+        let mut output = [0u8; 42];
+
+        hkdf_expand_fixed(&prk, &[], &mut output).unwrap();
+
+        assert_eq!(
+            hex(&output),
+            "8da4e775a563c18f715f802a063c5a31b8a11f5c5ee1879ec3454e5f3c738d2d9d201395faa4b61a96c8"
+        );
+    }
+
+    fn reference_expand_sha384(prk: &[u8], info: &[u8], length: usize) -> Vec<u8> {
+        let mut output = Vec::with_capacity(length);
+        let mut previous = Vec::new();
+
+        for counter in 1..=length.div_ceil(48) {
+            let mut message = Vec::with_capacity(previous.len() + info.len() + 1);
+            message.extend_from_slice(&previous);
+            message.extend_from_slice(info);
+            message.push(counter as u8);
+            previous = hmac_sha384(prk, &message).unwrap().to_vec();
+            output.extend_from_slice(&previous);
+        }
+        output.truncate(length);
+        output
+    }
+
+    #[test]
+    fn fixed_expand_matches_compatibility_references_across_output_boundaries() {
+        let info = b"fixed expand boundary context";
+        for algorithm in [FixedHkdfHash::Sha256, FixedHkdfHash::Sha384] {
+            let prk = hkdf_extract_fixed(b"salt", b"ikm", algorithm).unwrap();
+            let hash_len = algorithm.hash_len();
+            for length in [
+                1,
+                hash_len - 1,
+                hash_len,
+                hash_len + 1,
+                2 * hash_len,
+                2 * hash_len + 1,
+                255 * hash_len,
+            ] {
+                let mut actual = vec![0xA5; length];
+                hkdf_expand_fixed(&prk, info, &mut actual).unwrap();
+                let expected = match algorithm {
+                    FixedHkdfHash::Sha256 => {
+                        hkdf_expand(prk.as_bytes(), info, length, HashAlgorithm::Sha256).unwrap()
+                    }
+                    FixedHkdfHash::Sha384 => reference_expand_sha384(prk.as_bytes(), info, length),
+                };
+                assert_eq!(actual, expected, "{algorithm:?} output length {length}");
+            }
+        }
+    }
+
+    #[test]
+    fn fixed_expand_length_errors_do_not_modify_caller_output() {
+        for algorithm in [FixedHkdfHash::Sha256, FixedHkdfHash::Sha384] {
+            let prk = hkdf_extract_fixed(b"salt", b"ikm", algorithm).unwrap();
+            let mut empty = [];
+            assert_eq!(
+                hkdf_expand_fixed(&prk, b"info", &mut empty),
+                Err(HkdfError::OutputTooShort)
+            );
+
+            let maximum = 255 * algorithm.hash_len();
+            let mut oversized = vec![0xA5; maximum + 1];
+            assert_eq!(
+                hkdf_expand_fixed(&prk, b"info", &mut oversized),
+                Err(HkdfError::OutputTooLong {
+                    requested: maximum + 1,
+                    maximum,
+                })
+            );
+            assert!(oversized.iter().all(|byte| *byte == 0xA5));
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -613,6 +1178,12 @@ mod tests {
 
         let err = HkdfError::OutputTooShort;
         assert!(err.to_string().contains("positive"));
+
+        let err = HkdfError::InputTooLong;
+        assert!(err.to_string().contains("length bound"));
+
+        let err = HkdfError::PrfRejectedKey;
+        assert!(err.to_string().contains("rejected its key"));
     }
 
     // ═══════════════════════════════════════════════════════════════════════

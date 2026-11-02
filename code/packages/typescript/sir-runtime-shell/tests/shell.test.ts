@@ -1,4 +1,5 @@
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { backtick } from "../src/index.js";
 
 /**
@@ -16,24 +17,24 @@ function node(code: string): string {
 describe("backtick — Ruby `cmd` semantics", () => {
   it("returns the command's captured stdout", () => {
     const out = backtick(node("process.stdout.write('123')"));
-    expect(out).toContain("123");
+    assert.match(out, /123/);
   });
 
   it("returns exactly what was written to stdout", () => {
     const out = backtick(node("process.stdout.write('exact')"));
-    expect(out).toBe("exact");
+    assert.equal(out, "exact");
   });
 
   it("returns a string", () => {
     const out = backtick(node("process.stdout.write('hi')"));
-    expect(typeof out).toBe("string");
+    assert.equal(typeof out, "string");
   });
 
   it("preserves multi-line output in order", () => {
     const out = backtick(node("process.stdout.write('line1\\nline2')"));
-    expect(out).toContain("line1");
-    expect(out).toContain("line2");
-    expect(out.indexOf("line1")).toBeLessThan(out.indexOf("line2"));
+    assert.match(out, /line1/);
+    assert.match(out, /line2/);
+    assert.ok(out.indexOf("line1") < out.indexOf("line2"));
   });
 
   it("returns stdout even when the command exits non-zero", () => {
@@ -42,20 +43,20 @@ describe("backtick — Ruby `cmd` semantics", () => {
     const out = backtick(
       node("process.stdout.write('partial'); process.exit(3)"),
     );
-    expect(out).toBe("partial");
+    assert.equal(out, "partial");
   });
 
   it("returns empty string for a non-zero exit with no stdout", () => {
     const out = backtick(node("process.exit(5)"));
-    expect(out).toBe("");
+    assert.equal(out, "");
   });
 
   it("does not include stderr in the result", () => {
     const out = backtick(
       node("process.stderr.write('ERR'); process.stdout.write('OUT')"),
     );
-    expect(out).toBe("OUT");
-    expect(out).not.toContain("ERR");
+    assert.equal(out, "OUT");
+    assert.doesNotMatch(out, /ERR/);
   });
 
   it("returns empty string when the command cannot be spawned at all", () => {
@@ -65,6 +66,6 @@ describe("backtick — Ruby `cmd` semantics", () => {
     const out = backtick(
       "this-command-definitely-does-not-exist-xyzzy-42 --nope",
     );
-    expect(out).toBe("");
+    assert.equal(out, "");
   });
 });

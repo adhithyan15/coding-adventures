@@ -25,6 +25,11 @@ public static class MosaicRuntimeHost
     private static readonly System.Collections.Concurrent.ConcurrentQueue<string> ProfileSamples = new();
     private static int ProfileSampleCount;
     public static IDisposable? BeginProfile(string phase, object? component = null)
+        => BeginProfile(phase, component, null);
+
+    // PropertyInfo comes from the generated component schema, never runtime
+    // JSON keys or values. Keep label extraction behind the opt-in filters.
+    private static IDisposable? BeginProfile(string phase, object? component, PropertyInfo? property)
     {
         if (string.IsNullOrWhiteSpace(ProfilePath)) return null;
         // Detailed conversion/setter phases can exhaust the shared budget before
@@ -39,13 +44,14 @@ public static class MosaicRuntimeHost
             var count = System.Threading.Volatile.Read(ref ProfileSampleCount);
             if (count >= 4096) return null;
             if (System.Threading.Interlocked.CompareExchange(ref ProfileSampleCount, count + 1, count) == count)
-                return new ProfileScope(phase, component);
+                return new ProfileScope(phase, component, property);
         }
     }
 
     private sealed class ProfileScope : IDisposable
     {
         private readonly string phase;
+        private readonly string? property;
         private readonly long started = Stopwatch.GetTimestamp();
         private readonly long allocated = GC.GetAllocatedBytesForCurrentThread();
         private int disposed;
@@ -54,9 +60,11 @@ public static class MosaicRuntimeHost
         private readonly PropertyInfo? realizationProperty;
         private readonly (long, long)? realizationStart;
         private readonly (long, long, long, long)? projectionStart;
-        internal ProfileScope(string phase, object? component)
+        internal ProfileScope(string phase, object? component, PropertyInfo? metadata)
         {
             this.phase = phase;
+            var name = metadata?.Name;
+            property = name is { Length: > 128 } ? name.Substring(0, 128) : name;
             this.component = component;
             // The optional diagnostic contract keeps standalone controls independent
             // of this host. Never inspect application properties or enumerate rows.
@@ -94,6 +102,11 @@ public static class MosaicRuntimeHost
             if (System.Threading.Interlocked.Exchange(ref disposed, 1) != 0) return;
             var milliseconds = (Stopwatch.GetTimestamp() - started) * 1000.0 / Stopwatch.Frequency;
             var bytes = GC.GetAllocatedBytesForCurrentThread() - allocated;
+            if (property is not null)
+            {
+                ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes, property }));
+                return;
+            }
             // Intervals may overlap: these deltas describe work during this scope,
             // not exclusive attribution to an event or native element realization.
             var realizedEnd = ReadRealization();
@@ -1381,7 +1394,7 @@ public static class MosaicRuntimeHost
                         // Fixed phase names avoid leaking property names or values.
                         // Repeated scopes separate conversion from synchronous setters.
                         (bool converted, object? value) converted;
-                        using (BeginProfile("apply-props-convert"))
+                        using (BeginProfile("apply-props-convert", null, property))
                             converted = ConvertValue(value, property.PropertyType);
                         if (!converted.converted)
                         {
@@ -1390,7 +1403,7 @@ public static class MosaicRuntimeHost
                                     $"Mosaic runtime prop '{property.Name}' is not valid for {property.PropertyType.Name}");
                             continue;
                         }
-                        using (BeginProfile("apply-props-set"))
+                        using (BeginProfile("apply-props-set", null, property))
                             property.SetValue(component, ReuseEquivalentList(component, property, converted.value));
                     }
                 }
@@ -1467,13 +1480,18 @@ public static class MosaicRuntimeHost
         ///   tenth       mosaic-state.v1.json.corrupt.9
         /// </code>
         ///
-        /// A name is skipped when anything is there, file or directory, and
+        /// A name is skipped when anything is there
+        /// (<see cref="QuarantineNameTaken"/>), and
         /// <c>File.Move(..., overwrite: false)</c> throws rather than replace
         /// one that is already there: atomically on Windows, and through
         /// link/unlink on Unix (a file system without hard links falls back to
         /// check-then-rename, where a second instance quarantining at the same
-        /// moment could replace one rejected file with another). Nothing is
-        /// deleted first, so a move that fails halfway loses nothing either.
+        /// moment could replace one rejected file with another). When the move
+        /// throws and the name is now taken, something got there after the
+        /// check, and the next name is tried. That is decided by looking again,
+        /// not from the exception, which differs by what is there and by
+        /// platform. Nothing is deleted first, so a move that fails halfway
+        /// loses nothing either.
         ///
         /// If the move fails, or all ten names are taken, the rejected file is
         /// still at the live path, and the next save would write over it. So
@@ -1505,7 +1523,7 @@ public static class MosaicRuntimeHost
             for (var index = 0; index < MaxQuarantinedStates; index++)
             {
                 var candidate = index == 0 ? path + ".corrupt" : $"{path}.corrupt.{index}";
-                if (File.Exists(candidate) || Directory.Exists(candidate)) continue;
+                if (QuarantineNameTaken(candidate)) continue;
                 try
                 {
                     File.Move(path, candidate, overwrite: false);
@@ -1513,11 +1531,38 @@ public static class MosaicRuntimeHost
                 }
                 catch (Exception moveError)
                 {
+                    if (QuarantineNameTaken(candidate)) continue;
                     // TrimEnd: the warning adds its own full stop after this.
                     return $"Could not move it aside to {candidate}: {moveError.Message.TrimEnd('.')}";
                 }
             }
             return $"All {MaxQuarantinedStates} quarantine names beside it are taken; move them away to save again";
+        }
+
+        /// <summary>
+        /// Whether anything is at <paramref name="candidate"/>: a file, a
+        /// directory, or a symbolic link or junction, even one whose target
+        /// is gone.
+        /// </summary>
+        /// <remarks>
+        /// <c>File.Exists</c> and <c>Directory.Exists</c> cover a file and a
+        /// directory everywhere, but whether they see a dangling link depends
+        /// on the platform, so <c>LinkTarget</c>, which reads the link itself,
+        /// settles that. A name that cannot even be inspected counts as taken:
+        /// skipping it never overwrites anything.
+        /// </remarks>
+        private static bool QuarantineNameTaken(string candidate)
+        {
+            try
+            {
+                return File.Exists(candidate)
+                    || Directory.Exists(candidate)
+                    || new FileInfo(candidate).LinkTarget is not null;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
         }
 
         private void PersistSnapshot()

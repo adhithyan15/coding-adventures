@@ -148,6 +148,12 @@ When a package component is loaded, its own names are checked too:
   that slot by prop.
 - **Loop variables.** Inside a `For`, a name that matches the loop's
   binding is the loop variable, and substitution leaves it alone.
+- **Hygiene.** The names the consumer passes in (bound values, and the
+  children it splices into a mount) keep meaning the consumer's names. If a
+  callee `For` binds the same name, so that substitution would put the
+  consumer's `row` inside the callee's `For ( …, as: row )`, the callee's
+  binding and its uses are renamed first (`row` → `row-in1`). A binding
+  that captures nothing keeps its name (UI29 §3.4).
 
 The check reads the interface rather than the layout, because an unbound
 name that survives substitution means a slot of the *consumer*. It was

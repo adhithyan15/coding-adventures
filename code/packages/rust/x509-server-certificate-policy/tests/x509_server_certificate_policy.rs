@@ -8,8 +8,10 @@ use x509_certificate_policy::{
     X509CertificateValidityErrorKind,
 };
 use x509_server_certificate_policy::{
-    validate_x509_server_certificate_policy, X509ServerCertificatePolicyErrorKind,
+    validate_x509_server_certificate_policy, validate_x509_server_subject_alternative_name_policy,
+    X509ServerCertificatePolicyErrorKind, X509ServerSubjectAlternativeNamePolicyErrorKind,
 };
+use x509_subject_alt_name::SubjectAltNameErrorKind;
 use x509_time::{decode_x509_time, X509Time};
 
 const SIGNATURE_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
@@ -84,6 +86,10 @@ fn certificate(extensions: &[Vec<u8>]) -> Vec<u8> {
 }
 
 fn server_certificate() -> Vec<u8> {
+    server_certificate_with_san(&der(0x30, &der(0x82, b"api.example.test")))
+}
+
+fn server_certificate_with_san(subject_alt_name: &[u8]) -> Vec<u8> {
     certificate(&[
         extension(KEY_USAGE_OID_DER, true, &der(0x03, &[0x07, 0x80])),
         extension(
@@ -91,11 +97,7 @@ fn server_certificate() -> Vec<u8> {
             false,
             &der(0x30, &der(0x06, SERVER_AUTH_OID_DER)),
         ),
-        extension(
-            SUBJECT_ALT_NAME_OID_DER,
-            false,
-            &der(0x30, &der(0x82, b"api.example.test")),
-        ),
+        extension(SUBJECT_ALT_NAME_OID_DER, false, subject_alt_name),
     ])
 }
 
@@ -209,6 +211,101 @@ fn retains_all_server_policy_evidence_for_one_exact_certificate() {
         format!("{evidence:?}"),
         "ValidatedX509ServerCertificatePolicy"
     );
+}
+
+#[test]
+fn retains_the_exact_server_san_collection_for_later_path_policy() {
+    let subject_alt_name = der(
+        0x30,
+        &[
+            der(0x82, b"api.example.test"),
+            der(0x87, &[192, 0, 2, 1]),
+            der(0x86, b"https://api.example.test/path"),
+        ]
+        .concat(),
+    );
+    let encoded = server_certificate_with_san(&subject_alt_name);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &certificate,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&certificate, &algorithm_profiles()).unwrap();
+    let reference = ReferenceIdentity::parse("api.example.test").unwrap();
+    let purpose = X509CertificatePurposePolicy::new(SERVER_AUTH_OID).unwrap();
+    let server_policy = validate_x509_server_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &reference,
+        &observed_time(),
+        purpose,
+        Asn1Limits::default(),
+    )
+    .unwrap();
+
+    let retained =
+        validate_x509_server_subject_alternative_name_policy(server_policy, Asn1Limits::default())
+            .unwrap();
+
+    assert!(std::ptr::eq(retained.certificate(), &certificate));
+    assert_eq!(
+        retained.subject_alternative_name().dns_names(),
+        &["api.example.test"]
+    );
+    assert_eq!(
+        retained.subject_alternative_name().ip_addresses(),
+        &["192.0.2.1".parse::<std::net::IpAddr>().unwrap()]
+    );
+    assert_eq!(retained.subject_alternative_name().opaque_names(), 1);
+    assert_eq!(
+        format!("{retained:?}"),
+        "ValidatedX509ServerSubjectAlternativeNamePolicy"
+    );
+}
+
+#[test]
+fn target_san_retention_honors_a_fresh_budget_and_redacts_failures() {
+    let encoded = server_certificate();
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &certificate,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&certificate, &algorithm_profiles()).unwrap();
+    let reference = ReferenceIdentity::parse("api.example.test").unwrap();
+    let purpose = X509CertificatePurposePolicy::new(SERVER_AUTH_OID).unwrap();
+    let server_policy = validate_x509_server_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &reference,
+        &observed_time(),
+        purpose,
+        Asn1Limits::default(),
+    )
+    .unwrap();
+    let limits = Asn1Limits {
+        max_total_elements: 1,
+        ..Asn1Limits::default()
+    };
+
+    let error =
+        validate_x509_server_subject_alternative_name_policy(server_policy, limits).unwrap_err();
+
+    assert!(matches!(
+        error.kind(),
+        X509ServerSubjectAlternativeNamePolicyErrorKind::InvalidSubjectAlternativeName(
+            SubjectAltNameErrorKind::Structure(_)
+        )
+    ));
+    assert!(!error.to_string().contains("api.example.test"));
 }
 
 #[test]

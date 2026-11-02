@@ -1,5 +1,37 @@
 # Changelog
 
+## Unreleased — grammar-tools automatic insertion (E6 `@asi`)
+
+### Changed
+- `tests/cst_contract.rs`'s exhaustive `referenced_tokens` match covers the
+  new `GrammarElement::AutoInsert`, whose inserted token and closers are
+  token names.
+## Unreleased - `main` is sized to vm-core's frame limit (#18419)
+
+### Fixed
+
+- **A program whose `main` needs more registers than a vm-core frame holds
+  is refused by the compiler**, not by vm-core at load time
+  (`VMError::RegisterLimitExceeded`, more than 65,536 registers). Only the
+  trusted budgets (1 MiB, 256 Ki tokens) reach it: 257 lines of
+  `puts(1+…+1)` with 128 ones and one `puts(1)` compiled, then failed at VM
+  load. It is now `FrontendError::Budget { which: "registers per function",
+  limit: 65536, function: Some("main"), start: Some((258, 1)) }`. The same
+  gap and the same fix as `python-iir-compiler`, whose release path this
+  crate's mirrors.
+- The walker counts `main`'s distinct `dest`s as it emits them, reserving
+  the register of its closing `ret 0`, so the error names a statement; the
+  check is exact (65,536 compile and run, 65,537 do not). `finish` then puts
+  the module through vm-core's own `VMFrame::check_register_limit`.
+
+### Added
+
+- `MAX_REGISTERS_PER_FUNCTION`, re-exported from vm-core's
+  `VMFrame::MAX_FRAME_REGISTERS`.
+- `FrontendError::Budget` gains `function: Option<String>` and
+  `start: Option<(usize, usize)>`, `None` for every budget but this one.
+- `tests/register_limit.rs`: the boundary on the VM column.
+
 ## Unreleased — LANG84 R1b
 
 ### Added

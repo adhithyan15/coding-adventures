@@ -63,7 +63,7 @@ commands:
 | py_library        | uv pip install + pytest                   |
 | go_library        | go build + go test + go vet               |
 | ruby_library      | bundle install + rake test                |
-| ts_library        | npm install + vitest                      |
+| ts_library        | npm ci + lockfile-local test runner       |
 | rust_library      | cargo build + cargo test                  |
 | elixir_library    | mix deps.get + mix test                   |
 +-------------------+-------------------------------------------+
@@ -75,7 +75,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-
 
 # =========================================================================
 # Target Dataclass
@@ -459,8 +458,8 @@ def evaluate_build_file(
 #   go_binary         | go build ./...                | go test + go vet
 #   ruby_library      | bundle install --quiet        | bundle exec rake test
 #   ruby_binary       | bundle install --quiet        | bundle exec rake test
-#   ts_library        | npm install --silent          | npx vitest run --coverage
-#   ts_binary         | npm install --silent          | npx vitest run --coverage
+#   ts_library        | npm ci --quiet                | npm exec --offline vitest
+#   ts_binary         | npm ci --quiet                | npm exec --offline vitest
 #   rust_library      | cargo build                   | cargo test
 #   rust_binary       | cargo build                   | cargo test
 #   elixir_library    | mix deps.get                  | mix test --cover
@@ -530,12 +529,16 @@ def generate_commands(target: Target) -> list[str]:
         ]
 
     # --- TypeScript rules ---
-    # TypeScript packages use npm for dependencies and Vitest for testing.
+    # TypeScript packages install exactly the lockfile. Vitest runs offline
+    # from that install; Node-runner packages own their compile/test scripts.
     if rule in ("ts_library", "ts_binary"):
-        return [
-            "npm install --silent",
-            "npx vitest run --coverage",
-        ]
+        commands = ["npm ci --quiet"]
+        if target.test_runner == "node":
+            return commands + [
+                "npm run build --silent",
+                "npm run test:coverage --silent",
+            ]
+        return commands + ["npm exec --offline -- vitest run --coverage"]
 
     # --- Rust rules ---
     # Rust packages use Cargo for everything.

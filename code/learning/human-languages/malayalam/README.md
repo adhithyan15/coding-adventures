@@ -37,6 +37,18 @@ history owners.
 
 ## Progress
 
+- **The two A1 mocks are manifest-bound.** Each existing form now declares all
+  eleven published task-shape parts and exposes matching learner-paper,
+  answer-key, and rubric spans. This closes a repository evidence gap without
+  changing assessed prompts, answers, timing, or scoring, and makes no claim of
+  external certification, qualified recordings, standard setting, human
+  validation, learner readiness, or learner attainment.
+- **The two pre-A1 mocks are manifest-bound.** Each existing form now declares
+  all twelve published task-shape parts and exposes matching learner-paper,
+  answer-key, and rubric spans. This makes the repository's project-defined
+  artifact contract executable; it is not external certification, qualified
+  recording evidence, standard setting, human validation, learner readiness,
+  or learner attainment.
 - **Chapter 1 — Greetings** ([`lessons/ML-C01-*`](./lessons/)): hear and use
   *namaskāram* → eight sub-five-minute reading/writing steps → nandi → ate →
   illa → śari → practice. The first unit reaches tracing, guided copy, delayed

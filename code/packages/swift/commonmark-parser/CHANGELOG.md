@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented here.
 
+## 0.2.0 — 2026-10-25
+
+- Preserve fenced Markdown as `FencedBlockNode` with separate first-token
+  `name`, complete normalized `info`, and literal `value` fields.
+- Keep indented code blocks on the existing `CodeBlockNode` path.
+
 ## 0.1.0 — Initial release
 
 - `parse(_ markdown: String) -> BlockNode` — public entry point, returns `.document(...)` node

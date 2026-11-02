@@ -160,6 +160,12 @@ so the Column receives a finite horizontal constraint without breaking a
 nested Row that is itself shrink-wrapped. Authored branch flex continues to
 use `Expanded`.
 
+A Flutter `TextField` cannot lay out under the unbounded width a `Row` gives
+its non-flex children. A direct `Row` `HostInput` therefore lowers through
+`Expanded`, and so does a `Row` child one or more containers above a text
+field (`Row { Column, Box { Text, HostInput } }`), unless a fixed `width`,
+a `max-width` or a horizontal `HostScroll` bounds the field first (UI59 §12).
+
 Mosstyle `gap` values on `Row` and `Column` parts lower to horizontal and
 vertical `SizedBox` separators without replacing the flex container with a
 `Wrap`. Spacing is applied after Dart evaluates the generated child list, so

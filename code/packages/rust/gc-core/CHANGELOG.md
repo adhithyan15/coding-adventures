@@ -1,5 +1,32 @@
 # Changelog — gc-core
 
+## 0.37.0 — 2026-10-27 — `payload_size_at_base`: a size lookup that refuses non-base addresses (#18471)
+
+- **New `FlatHeap::payload_size_at_base(addr) -> Option<usize>`.** Returns the
+  payload size of the live block whose payload *starts exactly at* `addr`, and
+  `None` for anything else: null, a non-heap address, a freed block, an address
+  inside a block, or the address one past a block's end. The base test is the
+  one `classify_precise_word` already uses (`find_header(addr) + HEADER_SIZE ==
+  addr`). Same O(live blocks) cost as `payload_size`, and the same safety
+  argument: `addr` is matched against the live-block list before any header is
+  read.
+- **Why.** `find_header` matches interior and one-past-the-end addresses on
+  purpose (a conservative collector must keep an object alive through any
+  pointer into it), so `payload_size(P + 16)` on a 32-byte object at `P` returns
+  `32`. `vm-core` used that number to bound `P + 16 + idx*8`, which allowed
+  accesses up to 32 bytes past the end of the object. No program could reach
+  this, but a host passing a crafted `HeapRef` could. `vm-core` now uses this
+  method instead.
+- **`payload_size` is unchanged**, and keeps resolving interior addresses to
+  the whole block (its existing test pins that). Its doc now says it is not a
+  bound for an address that might not be a base, and points here.
+- Tests: `payload_size_at_base_reports_the_size_of_a_real_base_address`,
+  `…_refuses_an_interior_address`, `…_refuses_a_one_past_the_end_address`,
+  `…_refuses_null_garbage_and_freed_addresses`,
+  `…_follows_the_object_across_compaction` (which also checks the pre-move
+  address now gives `None`). None of them dereferences a
+  refused address. They also pass under Miri.
+
 ## 0.36.0 — 2026-08-11 — re-export the NaN-box tag constants at the crate root (AOT00-T10 PR-3 follow-up)
 
 - **`NAN_BOX_REF_TAG`/`NAN_BOX_TAG_BITS`/`NAN_BOX_TAG_MASK` now re-exported from

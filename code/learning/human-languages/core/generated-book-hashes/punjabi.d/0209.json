@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:58f749e8bb10c55a",
+  "lessonIds": [
+    "PA-C209-nila-return",
+    "PA-C209-nili",
+    "PA-C209-nili-review",
+    "PA-C209-blue-shoe",
+    "PA-C209-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch209-this-is-a-blue-shoe.tex"
+}

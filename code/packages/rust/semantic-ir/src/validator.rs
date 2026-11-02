@@ -149,6 +149,10 @@ struct ValidatorState<'m> {
     /// that case the strict upper-bound / required check is skipped
     /// (deferred to a later phase; see the DirectCall arm).
     fn_arity: HashMap<String, FnArity>,
+    /// Map from function name to the number of captures it declares, so
+    /// a `MakeClosure` can be checked to supply exactly that many values
+    /// (backends unpack captures by position).
+    fn_capture_count: HashMap<String, usize>,
     /// All global names declared in this module.
     global_names: HashSet<String>,
     /// `true` once a depth-overflow error has been recorded for
@@ -206,6 +210,7 @@ impl<'m> ValidatorState<'m> {
             observed: FeatureManifest::new(),
             function_names: HashSet::new(),
             fn_arity: HashMap::new(),
+            fn_capture_count: HashMap::new(),
             global_names: HashSet::new(),
             depth_overflow_reported: false,
             in_call_args: false,
@@ -288,6 +293,9 @@ impl<'m> ValidatorState<'m> {
                 .params
                 .iter()
                 .any(|p| p.kind != ParamKind::Required || p.name == "__sir_block__");
+            self.fn_capture_count
+                .entry(f.name.clone())
+                .or_insert(f.captures.len());
             self.fn_arity.entry(f.name.clone()).or_insert(FnArity {
                 min: f.required_param_count(),
                 max: f.params.len(),
@@ -1114,6 +1122,27 @@ impl<'m> ValidatorState<'m> {
                 // name resolution against the known callee) run first, then
                 // arity, then the recursive arg walk.
                 self.check_call_kwargs(fn_name, args, e.span());
+                // A closure body — a function with captures — is reached only
+                // through `MakeClosure`, which supplies its captured values
+                // ahead of the call's arguments.  A `DirectCall` has no way to
+                // supply them, and the arity check below counts `params`
+                // only, so a hand-built call passing `params.len()` arguments
+                // used to validate.  C, Go and Rust then failed to compile it
+                // (their prototype takes `captures…, params…`) and JavaScript
+                // shifted every argument into a capture slot (issue #18466).
+                // No frontend emits one — Twig's own path was closed in
+                // #18461 — so it is refused outright rather than given a
+                // captures-inclusive arity nobody could use.
+                let captures = self.fn_capture_count.get(fn_name).copied().unwrap_or(0);
+                if captures > 0 {
+                    self.error(
+                        format!(
+                            "direct call to `{fn_name}`, a closure body with {captures} \
+                             capture(s); call it through `MakeClosure` and `IndirectCall`"
+                        ),
+                        e.span(),
+                    );
+                }
                 if let Some(arity) = self.fn_arity.get(fn_name).copied() {
                     // SIR10 default-param call-arity rule.  Let R be the
                     // callee's required (leading no-default) param count and
@@ -1209,11 +1238,31 @@ impl<'m> ValidatorState<'m> {
                 span,
             } => {
                 self.observed.add(Feature::Closures);
-                if !self.function_names.contains(fn_name) {
-                    self.error(
+                match self.fn_capture_count.get(fn_name).copied() {
+                    None => self.error(
                         format!("make-closure references unknown function `{}`", fn_name),
                         span,
-                    );
+                    ),
+                    // Backends unpack captures BY POSITION into the body's
+                    // leading slots — the C backend's thunk reads `caps[i]`
+                    // from a buffer sized by this node — so a closure that
+                    // supplies fewer values than the body declares is an
+                    // out-of-bounds (or NULL) read in the emitted program,
+                    // and one that supplies more misaligns every parameter.
+                    // Security review of the #18461 fix (F1): a Twig
+                    // reference to a gensym'd `__lambda_<n>` built exactly
+                    // such a closure.
+                    Some(declared) if declared != captures.len() => self.error(
+                        format!(
+                            "make-closure of `{}` supplies {} capture value(s) but the \
+                             function declares {}",
+                            fn_name,
+                            captures.len(),
+                            declared
+                        ),
+                        span,
+                    ),
+                    Some(_) => {}
                 }
                 for c in captures {
                     self.check_expr(&c.value, env, depth + 1);
@@ -1926,6 +1975,132 @@ mod tests {
         });
         let r = validate(&m);
         assert!(!r.is_ok());
+    }
+
+    /// A `MakeClosure` must supply exactly as many capture values as its
+    /// target function declares.  Backends unpack captures positionally (the
+    /// C backend reads `caps[i]` from a buffer sized by the *closure*), so a
+    /// closure with fewer values than the body expects was an out-of-bounds /
+    /// NULL read in the emitted program.  Security review of the #18461 fix
+    /// (F1): `twig-to-semantic-ir` could produce one, and a hand-written
+    /// module still can.
+    #[test]
+    fn make_closure_capture_count_must_match_its_function() {
+        let closure_module = |supplied: usize, declared: usize| {
+            let mut m = empty_module(FeatureManifest::from_features(&[Feature::Closures]));
+            let nil = || Expr::NilLit { span: s() };
+            m.functions.push(Function {
+                name: "body".into(),
+                params: vec![],
+                return_type: None,
+                captures: (0..declared)
+                    .map(|i| Capture { name: format!("c{i}"), sir_type: None })
+                    .collect(),
+                body: Block { stmts: vec![], value: nil(), span: s() },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            });
+            m.functions.push(Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::MakeClosure {
+                        fn_name: "body".into(),
+                        captures: (0..supplied)
+                            .map(|i| CaptureValue { name: format!("c{i}"), value: nil() })
+                            .collect(),
+                        span: s(),
+                    },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            });
+            m
+        };
+        for (supplied, declared) in [(0, 0), (1, 1), (2, 2)] {
+            let r = validate(&closure_module(supplied, declared));
+            assert!(r.is_ok(), "{supplied}/{declared}: {:?}", r.issues);
+        }
+        for (supplied, declared) in [(0, 1), (1, 2), (2, 1)] {
+            let r = validate(&closure_module(supplied, declared));
+            assert!(
+                r.issues.iter().any(|i| i.severity == Severity::Error
+                    && i.message.contains("capture value(s)")),
+                "{supplied}/{declared}: {:?}",
+                r.issues
+            );
+        }
+    }
+
+    /// A `DirectCall` to a closure body (a function with captures) is
+    /// refused, whatever the argument count (issue #18466).  It used to be
+    /// arity-checked against `params` alone, so `body(x)` with one capture
+    /// and one param validated — then C, Go and Rust failed to compile it
+    /// and JavaScript shifted the argument into the capture slot.  A call to
+    /// a function with no captures is unaffected.
+    #[test]
+    fn a_direct_call_to_a_closure_body_is_refused() {
+        let call_module = |captures: usize, args: usize| {
+            let mut m = empty_module(FeatureManifest::from_features(&[Feature::DynamicTyping]));
+            let nil = || Expr::NilLit { span: s() };
+            m.functions.push(Function {
+                name: "body".into(),
+                params: vec![Param {
+                    name: "x".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: None,
+                    span: s(),
+                }],
+                return_type: None,
+                captures: (0..captures)
+                    .map(|i| Capture { name: format!("c{i}"), sir_type: None })
+                    .collect(),
+                body: Block { stmts: vec![], value: nil(), span: s() },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            });
+            m.functions.push(Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::DirectCall {
+                        fn_name: "body".into(),
+                        args: (0..args).map(|_| nil()).collect(),
+                        effects: EffectSet::PURE,
+                        span: s(),
+                    },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            });
+            m
+        };
+        let r = validate(&call_module(0, 1));
+        assert!(r.is_ok(), "a plain call must stay valid: {:?}", r.issues);
+        // `params.len()` arguments (what the old check accepted), and
+        // `captures + params` arguments (what the prototype takes).
+        for (captures, args) in [(1, 1), (1, 2), (2, 3)] {
+            let r = validate(&call_module(captures, args));
+            assert!(
+                r.issues.iter().any(|i| i.severity == Severity::Error
+                    && i.message.contains("a closure body with")),
+                "{captures} capture(s), {args} arg(s): {:?}",
+                r.issues
+            );
+        }
     }
 
     /// Build a single-function module whose function has `params` and a

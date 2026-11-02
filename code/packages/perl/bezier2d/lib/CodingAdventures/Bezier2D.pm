@@ -12,6 +12,7 @@ package CodingAdventures::Bezier2D;
 use strict;
 use warnings;
 use Exporter 'import';
+use POSIX qw(isfinite);
 use lib '../trig/lib';
 use lib '../point2d/lib';
 use CodingAdventures::Trig qw(sqrt_approx);
@@ -22,6 +23,87 @@ our @EXPORT_OK = qw(new_quad new_cubic);
 
 sub new_quad  { bless { p0=>$_[0], p1=>$_[1], p2=>$_[2] }, 'CodingAdventures::Bezier2D::Quad' }
 sub new_cubic { bless { p0=>$_[0], p1=>$_[1], p2=>$_[2], p3=>$_[3] }, 'CodingAdventures::Bezier2D::Cubic' }
+
+use constant MAX_FLATTENING_DEPTH => 32;
+use constant MAX_FLATTENING_SUBDIVISIONS => 65_535;
+
+sub _finite {
+    my ($value) = @_;
+    die "Bezier subdivision produced nonfinite geometry\n" unless isfinite($value);
+    return $value;
+}
+
+sub _scaled_distance {
+    my ($left, $right) = @_;
+    my $dx = _finite($left->x - $right->x);
+    my $dy = _finite($left->y - $right->y);
+    my $scale = abs($dx) > abs($dy) ? abs($dx) : abs($dy);
+    return 0.0 if $scale == 0.0;
+    my $nx = $dx / $scale;
+    my $ny = $dy / $scale;
+    return _finite($scale * sqrt(_finite($nx * $nx + $ny * $ny)));
+}
+
+sub _distance_to_segment {
+    my ($point, $start, $end) = @_;
+    my $dx = _finite($end->x - $start->x);
+    my $dy = _finite($end->y - $start->y);
+    my $scale = abs($dx) > abs($dy) ? abs($dx) : abs($dy);
+    return _scaled_distance($point, $start) if $scale == 0.0;
+
+    my $nx = $dx / $scale;
+    my $ny = $dy / $scale;
+    my $denominator = _finite($nx * $nx + $ny * $ny);
+    my $ox = _finite($point->x - $start->x);
+    my $oy = _finite($point->y - $start->y);
+    my $nox = _finite($ox / $scale);
+    my $noy = _finite($oy / $scale);
+    my $projection = _finite(_finite($nox * $nx + $noy * $ny) / $denominator);
+    $projection = 0.0 if $projection < 0.0;
+    $projection = 1.0 if $projection > 1.0;
+    my $nearest = new_point(
+        _finite($start->x + $projection * $dx),
+        _finite($start->y + $projection * $dy),
+    );
+    return _scaled_distance($point, $nearest);
+}
+
+sub _flatten {
+    my ($curve, $tolerance, $degree) = @_;
+    die "tolerance must be finite and positive\n"
+        unless isfinite($tolerance) && $tolerance > 0.0;
+    my @controls = $degree == 2
+        ? ($curve->p0, $curve->p1, $curve->p2)
+        : ($curve->p0, $curve->p1, $curve->p2, $curve->p3);
+    for my $point (@controls) {
+        die "control points must be finite\n"
+            unless isfinite($point->x) && isfinite($point->y);
+    }
+
+    my @points = ($controls[0]);
+    my @pending = ([$curve, 0]);
+    my $subdivisions = 0;
+    while (@pending) {
+        my ($current, $depth) = @{pop @pending};
+        my $endpoint = $degree == 2 ? $current->p2 : $current->p3;
+        my @off_curve = $degree == 2 ? ($current->p1) : ($current->p1, $current->p2);
+        my $error = 0.0;
+        for my $point (@off_curve) {
+            my $distance = _distance_to_segment($point, $current->p0, $endpoint);
+            $error = $distance if $distance > $error;
+        }
+        if ($error <= $tolerance) {
+            push @points, $endpoint;
+            next;
+        }
+        die "Bezier flattening exceeded the depth or subdivision budget\n"
+            if $depth >= MAX_FLATTENING_DEPTH || $subdivisions >= MAX_FLATTENING_SUBDIVISIONS;
+        $subdivisions++;
+        my ($left, $right) = $current->split(0.5);
+        push @pending, [$right, $depth + 1], [$left, $depth + 1];
+    }
+    return \@points;
+}
 
 # ---------------------------------------------------------------------------
 # QuadraticBezier
@@ -57,17 +139,7 @@ sub split {
 
 sub polyline {
     my ($self, $tol) = @_;
-    my $chord_mid = $self->{p0}->lerp($self->{p2}, 0.5);
-    my $curve_mid = $self->eval(0.5);
-    if ($chord_mid->distance($curve_mid) <= $tol) {
-        return [$self->{p0}, $self->{p2}];
-    }
-    my ($left, $right) = $self->split(0.5);
-    my $lpts = $left->polyline($tol);
-    my $rpts = $right->polyline($tol);
-    my @combined = @$lpts;
-    push @combined, @{$rpts}[1..$#$rpts];
-    return \@combined;
+    return CodingAdventures::Bezier2D::_flatten($self, $tol, 2);
 }
 
 sub bbox {
@@ -147,17 +219,7 @@ sub split {
 
 sub polyline {
     my ($self, $tol) = @_;
-    my $chord_mid = $self->{p0}->lerp($self->{p3}, 0.5);
-    my $curve_mid = $self->eval(0.5);
-    if ($chord_mid->distance($curve_mid) <= $tol) {
-        return [$self->{p0}, $self->{p3}];
-    }
-    my ($left, $right) = $self->split(0.5);
-    my $lpts = $left->polyline($tol);
-    my $rpts = $right->polyline($tol);
-    my @combined = @$lpts;
-    push @combined, @{$rpts}[1..$#$rpts];
-    return \@combined;
+    return CodingAdventures::Bezier2D::_flatten($self, $tol, 3);
 }
 
 sub bbox {

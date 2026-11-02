@@ -1,4 +1,6 @@
 defmodule CodingAdventures.Sha512Test do
+  import Bitwise
+
   @moduledoc """
   Tests for the SHA-512 implementation.
 
@@ -12,6 +14,127 @@ defmodule CodingAdventures.Sha512Test do
   use ExUnit.Case, async: true
 
   alias CodingAdventures.Sha512, as: S
+
+  @fixture Path.expand("../../../../specs/fixtures/sha512-v1/cases.txt", __DIR__)
+
+  defp fixture_lines(path \\ @fixture) do
+    lines =
+      File.open!(path, [:read, :binary], fn file ->
+        case IO.binread(file, 4097) do
+          :eof -> <<>>
+          raw -> raw
+        end
+      end)
+      |> parse_fixture()
+
+    assert Enum.count(lines, &String.starts_with?(&1, "V|")) == 9
+    assert Enum.count(lines, &String.starts_with?(&1, "L|")) == 6
+    lines
+  end
+
+  defp parse_fixture(raw) do
+    if byte_size(raw) not in 1..4096 or not String.valid?(raw),
+      do: raise(ArgumentError, "invalid fixture bytes")
+
+    lines =
+      raw
+      |> String.split("\n", trim: true)
+      |> Enum.map(&String.trim_trailing(&1, "\r"))
+      |> Enum.reject(&String.starts_with?(&1, "#"))
+
+    if length(lines) not in 1..64, do: raise(ArgumentError, "invalid fixture row count")
+    Enum.each(lines, &validate_fixture_row/1)
+    lines
+  end
+
+  defp validate_fixture_row(line) do
+    case String.split(String.trim_trailing(line, "\r"), "|", trim: false) do
+      ["V", id, input, chunks, digest] ->
+        unless id =~ ~r/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/ and byte_size(input) <= 8192 and
+                 input =~ ~r/\A(?:[0-9a-f]{2})*\z/ and digest =~ ~r/\A[0-9a-f]{128}\z/ do
+          raise ArgumentError, "malformed vector row"
+        end
+
+        byte_count = div(byte_size(input), 2)
+
+        parsed =
+          cond do
+            chunks == "" ->
+              []
+
+            chunks =~ ~r/\A[1-9][0-9]*(?:,[1-9][0-9]*)*\z/ ->
+              String.split(chunks, ",")
+              |> Enum.map(fn raw ->
+                {size, ""} = Integer.parse(raw)
+                if size > 4096, do: raise(ArgumentError, "malformed chunk"), else: size
+              end)
+
+            true ->
+              raise ArgumentError, "malformed chunks"
+          end
+
+        if byte_count > 4096 or byte_count == 0 != (chunks == "") or length(parsed) > 64 or
+             Enum.sum(parsed) != byte_count,
+           do: raise(ArgumentError, "malformed vector size")
+
+      ["L", id, high, low, expected] ->
+        unless id =~ ~r/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/ and high =~ ~r/\A[0-9a-f]{16}\z/ and
+                 low =~ ~r/\A[0-9a-f]{16}\z/ and
+                 (expected == "ERROR" or expected =~ ~r/\A[0-9a-f]{32}\z/) do
+          raise ArgumentError, "malformed length row"
+        end
+
+      _ ->
+        raise ArgumentError, "unknown or malformed fixture row"
+    end
+  end
+
+  test "fixture reader rejects malformed rows" do
+    digest = String.duplicate("0", 128)
+
+    for row <- [
+          "X|id|||",
+          "V|UPPER|00|1|#{digest}",
+          "V|bad|0|1|#{digest}",
+          "V|bad|00|2|#{digest}",
+          "L|bad|000000000000000G|0000000000000000|ERROR",
+          "L|bad|0000000000000000|0000000000000000|ABC"
+        ] do
+      assert_raise ArgumentError, fn -> parse_fixture(row) end
+    end
+  end
+
+  test "fixture reader rejects oversized file" do
+    path = Path.join(System.tmp_dir!(), "sha512-fixture-#{System.unique_integer([:positive])}")
+    File.write!(path, :binary.copy(<<0>>, 4097))
+    on_exit(fn -> File.rm(path) end)
+    assert_raise ArgumentError, fn -> fixture_lines(path) end
+  end
+
+  test "HF04 portable digest corpus" do
+    for line <- Enum.filter(fixture_lines(), &String.starts_with?(&1, "V|")) do
+      ["V", id, input_hex, _chunks, expected] = String.split(line, "|", trim: false)
+      data = Base.decode16!(input_hex, case: :lower)
+      assert S.sha512_hex(data) == expected, id
+    end
+  end
+
+  test "HF04 portable length corpus" do
+    for line <- Enum.filter(fixture_lines(), &String.starts_with?(&1, "L|")) do
+      ["L", id, high_hex, low_hex, expected] = String.split(line, "|", trim: false)
+      {high, ""} = Integer.parse(high_hex, 16)
+      {low, ""} = Integer.parse(low_hex, 16)
+      byte_count = high <<< 64 ||| low
+
+      if expected == "ERROR" do
+        assert_raise ArgumentError, ~r/less than 2\^128 bits/, fn ->
+          S.encode_bit_length(byte_count)
+        end
+      else
+        assert Base.encode16(S.encode_bit_length(byte_count), case: :lower) == expected, id
+      end
+    end
+  end
 
   # ─── FIPS 180-4 Test Vectors ─────────────────────────────────────────────
 

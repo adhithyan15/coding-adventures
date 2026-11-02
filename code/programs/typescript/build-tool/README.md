@@ -57,6 +57,7 @@ This is one of several build tool implementations in the monorepo (Python, Ruby,
 | `discovery.ts`                  | Walks directory tree, finds BUILD files, infers language                              |
 | `resolver.ts`                   | Parses dependency metadata, builds directed graph (Kahn's algorithm)                  |
 | `gitdiff.ts`                    | Git-based change detection (`git diff --name-only`)                                   |
+| `graph-diff.ts`                 | Pure bounded neutral graph and diff-selection operations                              |
 | `glob-match.ts`                 | Compiled Unicode-scalar portable globs with bounded dynamic programming               |
 | `hasher.ts`                     | SHA256 hashing of source files for cache-based change detection                       |
 | `cache.ts`                      | JSON cache file for fallback change detection                                         |
@@ -113,6 +114,30 @@ reverse closing-bracket index keeps parser work linear even for long unmatched
 bracket runs. Complete declared lists are compiled before candidate
 enumeration, so an invalid later pattern cannot hide behind an earlier match,
 an empty filesystem, an empty Git diff, or the always-relevant BUILD shortcut.
+
+## Process-free graph and diff selection
+
+`evaluateGraph()` and `evaluateDiffSelection()` form a pure production seam
+under the checkout-coupled resolver and Git adapter. They consume only
+caller-owned values and dynamically satisfy the exact eight graph and twelve
+diff-selection neutral cases. The operations provide canonical edges and
+prerequisite-first levels, deterministic dependent and prerequisite closure,
+exact BUILD-front handling, portable strict globs, shared repository-input
+fanout, and stable all-or-error results.
+
+Diff selection validates the complete request before selection. Every declared
+pattern/path pair is conservatively charged by Unicode-scalar length against
+one 50,000,000-unit operation ceiling before the matcher runs. Repository
+boundary data is supplied as inert decoded data with its domain-separated
+digest; the evaluator bounds depth, nodes, containers, and aggregate string
+bytes and rejects cycles or shared containers before canonical encoding. Root
+identity uses the pinned Unicode 17 NFC and full-casefold tables, so aliases or
+ancestor overlaps fail independently of host locale and punctuation order.
+
+Neither API locates fixtures, reads files, invokes Git, launches processes,
+inspects environment variables, accesses credentials or the network, consults
+time, or uses randomness. Fixture discovery and JSON decoding remain solely in
+the native test suite.
 
 ## Process-free orphan-crate validation
 

@@ -25,6 +25,9 @@ DEMO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(cd "$DEMO_DIR/../../../.." && pwd)"
 
 MOSAIC_COMPILE="$REPO_ROOT/code/packages/rust/target/debug/mosaic-compile"
+if [ -f "${MOSAIC_COMPILE}.exe" ]; then
+  MOSAIC_COMPILE="${MOSAIC_COMPILE}.exe"
+fi
 
 # Always (re)build mosaic-compile so emitter fixes reach the generated code.
 # cargo is incremental, so this is ~free when nothing changed. The old

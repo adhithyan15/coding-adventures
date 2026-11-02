@@ -233,6 +233,31 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
     }
 
+    /// Wrap a closure so it must be called with exactly `n` arguments —
+    /// SIR10's strict closure, emitted for the `lambda` marker (a Ruby
+    /// lambda, every Twig closure).  Any other count raises a catchable
+    /// `ArgumentError` before the body drains a missing argument as `nil`
+    /// or ignores an extra one.
+    pub fn strict_arity(c: Value, n: usize) -> Value {
+        if !matches!(c, Value::Closure(_)) {
+            return c;
+        }
+        Value::Closure(Rc::new(Closure {
+            fun: Box::new(move |args: Vec<Value>| {
+                if args.len() != n {
+                    raise(
+                        "ArgumentError",
+                        Value::Str(Rc::from(format!(
+                            "arity mismatch: closure expects {n} argument(s), got {}",
+                            args.len()
+                        ))),
+                    );
+                }
+                apply_closure(&c, args)
+            }),
+        }))
+    }
+
     // ── truthiness ────────────────────────────────────────────────
     pub fn truthy(v: &Value) -> bool {
         !matches!(v, Value::Bool(false) | Value::Nil)
@@ -5431,9 +5456,27 @@ pub const RUNTIME: &str = r##"mod __sir {
     /// banner for *our* `SirError` payloads on the caught path, so a rescued
     /// exception prints no spurious stderr noise.  A genuine (non-`SirError`)
     /// Rust panic still prints normally.
+    ///
+    /// In a module with no exception handling at all (`install_panic_hook`
+    /// never ran, so there is no `TryCatch` and no top-level `catch_unwind`),
+    /// nothing can catch the raise.  Unwinding would only end in Rust's
+    /// default report of an opaque payload — `panicked at …: Box<dyn Any>` —
+    /// so the exception is reported directly instead, exactly as
+    /// `report_uncaught` would (`Class: message`, exit 1).  That is how a
+    /// Twig closure called with the wrong number of arguments reports its
+    /// `ArgumentError` (`strict_arity`).
     pub fn raise(class: &str, msg: Value) -> ! {
-        std::panic::panic_any(SirError { class: class.to_string(), msg: format(&msg) })
+        let exc = SirError { class: class.to_string(), msg: format(&msg) };
+        if !EXCEPTIONS_ARMED.load(std::sync::atomic::Ordering::Relaxed) {
+            report_uncaught(&exc);
+        }
+        std::panic::panic_any(exc)
     }
+
+    /// Set by `install_panic_hook` — emitted only for a module that uses
+    /// exceptions — so `raise` knows whether anything can catch it.
+    static EXCEPTIONS_ARMED: std::sync::atomic::AtomicBool =
+        std::sync::atomic::AtomicBool::new(false);
 
     /// Bare `raise` with no in-flight exception threaded: re-raise as a
     /// generic `RuntimeError` (SIR v0 does not carry the current exception
@@ -5471,6 +5514,7 @@ pub const RUNTIME: &str = r##"mod __sir {
     ///
     /// Idempotent-safe to call once at program init.
     pub fn install_panic_hook() {
+        EXCEPTIONS_ARMED.store(true, std::sync::atomic::Ordering::Relaxed);
         let default = std::panic::take_hook();
         std::panic::set_hook(Box::new(move |info| {
             if info.payload().is::<SirError>() {

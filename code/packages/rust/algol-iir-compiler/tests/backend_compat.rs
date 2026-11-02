@@ -643,5 +643,6 @@ fn algol_proper_procedure_lowers_to_wasm_jvm_clr_beam_and_llvm() {
         &iir_to_llvm::IIRLlvmConfig::new("algol_proper_proc"),
     )
     .expect("ALGOL proper-procedure IIR should lower to LLVM");
-    assert!(llvm.contains("define void @bump"));
+    // `internal`: only the entry point is exported (iir-to-llvm, #18416).
+    assert!(llvm.contains("define internal void @bump"));
 }

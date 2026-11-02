@@ -1,0 +1,20 @@
+// Padding and a background make the shell a painted wrapper, which is the
+// harder of the two root shapes: the wrapper AND its content layout must
+// both reach the window.
+style Shell {
+  part app-shell {
+    padding : 24 ;
+    background : #f8fafc ;
+    gap : 18 ;
+  }
+  part content-scroll {
+    flex-grow : 1 ;
+  }
+  part content {
+    gap : 8 ;
+  }
+  part tall-block {
+    height : 1600 ;
+    background : #e2e8f0 ;
+  }
+}

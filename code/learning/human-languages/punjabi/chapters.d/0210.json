@@ -1,0 +1,18 @@
+{
+  "chapter": 210,
+  "title": "Aman Did the Work",
+  "label": "ch:pa-a2-ne",
+  "canDo": "I can recognise and use the agent marker in one named-person completed-action frame.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C210-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce one named-agent completed-action frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-GRAMMAR-AGENT-NE-210"
+    ],
+    "note": "This bounded Punjabi A2 mock-draft prerequisite does not by itself unblock mock 1 or provide mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

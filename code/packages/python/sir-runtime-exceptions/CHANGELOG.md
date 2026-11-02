@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — `class_of_thrown` reads a `sir_class` tag from any exception (issue #18466)
+
+Any exception carrying a string `sir_class` attribute is now classed by it,
+not only a `SirError`.  `sir-runtime-core`'s `ArityError` (a strict closure
+called with the wrong argument count) uses this to be an `ArgumentError`,
+so `rescue ArgumentError` catches it.  A non-string `sir_class` is ignored.
+
 ## 0.3.0 — `ancestry_chain` accessor for module-aware `is_a?`
 
 Exposes `ancestry_chain(class_name)`: the exception's class followed by each of

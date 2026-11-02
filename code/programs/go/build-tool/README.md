@@ -31,7 +31,7 @@ eleven native build-tool consumers, including Haskell, on every platform; a
 source-reference check guards the selector map against new direct adopters.
 
 Changes to the flat shared `graph-*.json` and `diff-selection-*.json`
-conformance cases also schedule their eleven direct native readers on each
+conformance cases also schedule their thirteen direct native readers on each
 platform. This fixture-only CI selection is bounded by the active language
 filter, fails if an applicable reader root is missing, and does not force a
 full build. Java, Kotlin, Dart, and OCaml readers are process-free domain
@@ -48,8 +48,9 @@ contains the exact case-to-reader relation.
 Changes to one of the eleven flat shared `hashing-cache-*.json` cases
 schedule its direct native test readers without forcing all build tools.
 C#, F#, and Lua read every case; Python reads missing, hit, and corrupt;
-Go, Perl, Ruby, and Swift read missing; TypeScript reads corrupt. Newly added
-flat cases require explicit classification before planning. The selector
+Go, Perl, and Swift read missing; Ruby reads missing plus the three dependency
+adversarial cases; TypeScript reads corrupt. Newly added flat cases require
+explicit classification before planning. The selector
 keeps ordinary changed packages, works on all three platform plans and
 single-language runs, and fails if an applicable reader root is missing.
 Some native tests assert only digest slices; this scheduling rule does not

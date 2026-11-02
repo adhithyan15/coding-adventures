@@ -1,0 +1,2 @@
+cargo test -p tls13-supported-groups --test tls13_supported_groups -- --nocapture
+cargo test -p tls13-supported-groups --doc

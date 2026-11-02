@@ -22,6 +22,11 @@ fn referenced_tokens(element: &GrammarElement, out: &mut BTreeSet<String>) {
         GrammarElement::TokenReference { name } => {
             out.insert(name.clone());
         }
+        // `@asi(T, C…)` names the token it inserts and its closers.
+        GrammarElement::AutoInsert { token, closers } => {
+            out.insert(token.clone());
+            out.extend(closers.iter().cloned());
+        }
         GrammarElement::Sequence { elements } | GrammarElement::Alternation { choices: elements } => {
             for inner in elements {
                 referenced_tokens(inner, out);

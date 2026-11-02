@@ -69,12 +69,52 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18334 — publish and audit v0.5.13.**
-The timeline-label floor #18305 merged in #18306 with all payload validation
-passing in run 40280477318. Prepare its compatible patch together with the
-authoritative toolkit-pin change, publish only after preparation merges, then
-audit immutable provenance, inventory, and checksums. Preparation is not publication.
-Feature composition and signing remain outside scope; artifact coverage is unchanged.
+**Next: #18746 — prepare, publish, and audit v0.5.16.**
+The P0 lifecycle gates are complete. Prioritize this compatible patch under
+#13543 before further fidelity work. Preparation must merge before a single
+main publication dispatch; every existing payload and the immutable release
+identity, inventory, checksums, and substantive notes must pass before closing.
+Artifact coverage is unchanged; signing remains blocked in #13977 and feature
+composition remains paused behind #14011.
+
+**Completed: #18563 — Qt Board drop-target layout styles.**
+Merged in #18612, validated on exact head
+`0e31fde53a0e51adef0bbca9c9917e2d5ec1c578` by TaskApp run 40954058583.
+Both themes preserve the authored 9-pixel card gap and remove exactly three
+layout drops (80 to 77), retaining state and unsupported-value exclusions.
+
+**Completed: #18581 — published and audited v0.5.15.**
+Immutable release source/tag/manifest `8819839dc63d78c4c5eeda21f833f51364746420`;
+publication run 40911228845 passed all six payloads. Verified 13 assets,
+12 checksum entries, and 11 manifest payloads; substantive notes retained.
+The P0 lifecycle gates are complete. This compatible release continues #13543;
+artifact coverage is unchanged and signing remains blocked in #13977.
+
+**Completed fidelity slice: #18559 — Qt empty Board drop-target floor.**
+Merged in #18562, with TaskApp payload run 40836764807 and all required checks
+passing on `95a6a47aacd0fc5d3a033d218d525d49e4dd364b`. Both themes preserve
+the 60-pixel minimum with numeric safety and state-override exclusions.
+
+Release validation discovered three previously invisible Qt col-drop styles:
+display, flex-direction, and gap (total 76 to 79). The selected #18563 slice
+lowers those three declarations; their reappearance now fails the contract.
+
+**Published and audited: #18550 — v0.5.14.**
+Run 40824813766 passed all six payloads and publication from
+`760775910601fc8523d9a4b5b3cbfbf9acae9e05`. The immutable tag, source,
+13 assets, 12 checksum entries, 11 manifest payloads, and substantive notes were
+audited. Coverage is unchanged; signing remains blocked in #13977.
+
+**Completed fidelity slice: #18394 — Qt due-date editor width floor.**
+Merged in #18396 with all required checks successful on
+`84f9e0f4f69b7ce46d05855b9797fd7d92ab55d8`; TaskApp payload run 40645495547
+passed. Both themes retain the 150-pixel control floor through conservative
+static-width validation. Shared styles and flex diagnostics are unchanged.
+
+**Published and audited: #18334 — v0.5.13.**
+Run 40340262448 passed all six payloads and publication from
+`d1730421d34c9fe6ebe9cc68473f505017659a5a`. The immutable release's 13 assets,
+12 checksum entries, and 11 manifest payloads were audited. Coverage is unchanged.
 
 **Published and audited: #18264 — v0.5.12 Qt rail checkpoint.**
 Run 40269564825 passed all payloads and publication. The immutable source is

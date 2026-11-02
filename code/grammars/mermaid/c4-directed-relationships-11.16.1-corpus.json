@@ -1,0 +1,39 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 directed relationship macro vertical slice",
+  "fixtures": [
+    {
+      "name": "short-up-relationship",
+      "source": "C4Context\nUpdateLayoutConfig(1, 1)\nSystem(target, \"Target\")\nPerson(source, \"Source\")\nRel_U(source, target, \"Up\")"
+    },
+    {
+      "name": "short-down-relationship",
+      "source": "C4Context\nUpdateLayoutConfig(1, 1)\nPerson(source, \"Source\")\nSystem(target, \"Target\")\nRel_D(source, target, \"Down\")"
+    },
+    {
+      "name": "short-left-relationship",
+      "source": "C4Context\nUpdateLayoutConfig(2, 1)\nSystem(target, \"Target\")\nPerson(source, \"Source\")\nRel_L(source, target, \"Left\")"
+    },
+    {
+      "name": "short-right-relationship",
+      "source": "C4Context\nUpdateLayoutConfig(2, 1)\nPerson(source, \"Source\")\nSystem(target, \"Target\")\nRel_R(source, target, \"Right\")"
+    },
+    {
+      "name": "long-up-relationship",
+      "source": "C4Container\nUpdateLayoutConfig(1, 1)\nContainer(target, \"Target\", \"Go\")\nContainer(source, \"Source\", \"Rust\")\nRel_Up(source, target, \"Up\")"
+    },
+    {
+      "name": "long-down-relationship",
+      "source": "C4Container\nUpdateLayoutConfig(1, 1)\nContainer(source, \"Source\", \"Rust\")\nContainer(target, \"Target\", \"Go\")\nRel_Down(source, target, \"Down\")"
+    },
+    {
+      "name": "long-left-relationship",
+      "source": "C4Container\nUpdateLayoutConfig(2, 1)\nContainer(target, \"Target\", \"Go\")\nContainer(source, \"Source\", \"Rust\")\nRel_Left(source, target, \"Left\")"
+    },
+    {
+      "name": "long-right-relationship",
+      "source": "C4Container\nUpdateLayoutConfig(2, 1)\nContainer(source, \"Source\", \"Rust\")\nContainer(target, \"Target\", \"Go\")\nRel_Right(source, target, \"Right\")"
+    }
+  ]
+}

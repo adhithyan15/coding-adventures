@@ -74,6 +74,21 @@ Errors (`FrontendError`) are the LANG84 C6 categories — `Lex`, `Parse`,
 `Unsupported`, `Budget`, `UnknownRelease`, `ReleaseNotAvailable` — and each
 names the release and a 1-based position (`Unsupported` also the CST rule).
 
+`main` must fit one vm-core frame: at most `MAX_REGISTERS_PER_FUNCTION`
+registers, which is vm-core's `VMFrame::MAX_FRAME_REGISTERS` (65,536)
+re-exported, counted as vm-core counts them. Only the trusted budgets
+(1 MiB, 256 Ki tokens) can reach it. A program over it is refused at compile
+time as a `Budget` naming `main` and the statement that went over, not at
+VM load:
+
+```text
+Ruby 3.3.6: registers per function exceeds the limit of 65536 in function `main` at 258:1
+```
+
+The register of `main`'s closing `ret 0` is reserved while statements are lowered, so the error always points at a
+statement, and the finished module also goes through vm-core's own
+`VMFrame::check_register_limit` (`tests/register_limit.rs`).
+
 ## Running
 
 `run_source_at(source, release)` compiles and runs on `vm-core`, returning
@@ -91,6 +106,8 @@ exits 1. `lang-aot` compiles the same modules for every other backend
 
 - `src/tests.rs` — outputs, emitted ops, refusals, budgets, and forged
   caller-supplied trees (token types, spellings, shapes).
+- `tests/register_limit.rs` — `main` at exactly 65,536 registers compiles and
+  runs on vm-core; one more is a positioned `Budget` error (#18419).
 - `tests/release_subsets.rs` — LANG84 stage I: the
   `code/grammars/ruby/corpus/rb-int-puts` corpus on every release whose
   `iir_status` claims it, IIR identity across them, the CSV/profile

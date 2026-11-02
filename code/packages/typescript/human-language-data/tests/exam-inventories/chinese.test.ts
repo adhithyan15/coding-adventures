@@ -116,7 +116,8 @@ describe("the committed Chinese A1 inventory", () => {
     // would be the easiest thing in the world to assert and the hardest to
     // defend, given that no search was run.
     expect(inventory.source).toMatch(/NO HSK WORD LIST OR CHARACTER LIST IS CITED ANYWHERE IN THIS FILE/);
-    expect(inventory.source).toMatch(/EXAM ENVELOPE: PARTIAL AND DANGLING/);
+    expect(inventory.source).toMatch(/EXAM ENVELOPE: PROJECT-DEFINED A1 TASK INVENTORY EXISTS, MOCKS ABSENT/);
+    expect(inventory.source).toMatch(/both A1 mocks the contract names remain absent/);
     expect(isExamInventoryComplete(inventory)).toBe(false);
     for (const dimension of EXAM_CONTENT_DIMENSIONS) {
       expect(inventory.scope[dimension].status, dimension).toBe("partial");

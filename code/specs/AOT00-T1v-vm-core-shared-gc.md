@@ -78,15 +78,41 @@ natively. This is **additive**: the existing array-heap ops are unchanged.
   NaN-boxing, mirroring exactly how the native cons-cell path represents a
   pair (`aarch64-backend`'s `alloc` op doc comment: *"Values are raw 64-bit
   words — no NaN-boxing"*). A word is either a nested `Value::HeapRef`'s raw
-  address or a plain `Value::Int`; decoded on load by `instr.type_hint`
-  (`"ref..."` vs. anything else) — the same convention `gc_core::HeapRef`'s
-  own docs establish (*"registers typed `ref<T>`"*). Bounds-checked against
+  address or a plain `Value::Int`. *(Amended: originally decoded on load by
+  `instr.type_hint`; since the tagged-field rework described below, a load
+  decodes from the word's own low 3 tag bits — `111` → `HeapRef`, anything
+  else → `Int` — and ignores `type_hint`, which cannot tell the two apart in
+  a dynamically typed `ref<any>` field.)* Bounds-checked against
   the object's *actual* allocated size via a new, general-purpose
   `FlatHeap::payload_size(addr) -> usize` (a `kind_of` sibling — resolved
   fresh from the live block's header, so it never goes stale across a
   compacting collection, unlike an address-keyed side table a caller might
   otherwise be tempted to maintain). `gc_field_store` runs
   `FlatHeap::write_barrier` when the stored value is a `HeapRef`.
+
+  **Amended (issue #18471): the bound is taken only at a block's base.**
+  `payload_size` resolves an address *inside* a block, or one past its end,
+  to the whole block's size (the same inclusive lookup the collector uses to
+  keep an object alive through any pointer into it). Checking
+  `idx*8 + 8 <= payload_size(obj)` for an interior `obj` therefore measured
+  the right length from the wrong start, admitting accesses past the
+  object's end. No op produces an interior `HeapRef`, but a host can pass
+  one in through `execute`'s arguments. The field ops now use
+  `FlatHeap::payload_size_at_base(addr) -> Option<usize>` (gc-core 0.37.0),
+  which answers only when `addr` is exactly a live block's base. The checks
+  run in this order, and the first failure decides the trap:
+
+  1. `idx >= 0`, and `idx` fits in the target's `usize` (it always does on
+     64-bit targets; on a 32-bit target a larger index traps instead of
+     truncating), or the op traps on the index;
+  2. `obj` must be the base address of a live block, or the op traps with
+     `"<op>: HeapRef is not the base address of a live heap object"` — this
+     covers null, garbage, freed, interior and one-past-the-end addresses.
+     The message deliberately omits the address, so VM errors never echo
+     heap layout;
+  3. `idx*8 + 8 <= size`, or the op traps as out of bounds.
+
+  `payload_size` itself is unchanged.
 - **`safepoint`** (paced) / **`gc_collect`** (unconditional) — mirrors
   `gc-core-capi`'s own split between its paced `__gc_safepoint` and its
   unconditional `__gc_collect_precise`/`__gc_collect_compacting` builtins.
@@ -198,7 +224,10 @@ fails loudly instead of silently corrupting an address.
 ## 4. Tests
 
 - `gc-core`: `payload_size_reports_allocated_bytes_and_zero_for_non_heap`,
-  `payload_size_survives_compaction_at_the_new_address`,
+  `payload_size_survives_compaction_at_the_new_address`, and (#18471) the
+  `payload_size_at_base_*` tests: a real base reports its size; interior,
+  one-past-the-end, null, garbage and freed addresses give `None`; the
+  relocated address after compaction is a base,
   `as_mut_ptr_reads_and_writes_through_to_the_ref`,
   `should_compact_follows_adaptive_policy_fragmentation_signal`.
 - `vm-core`: `tests/gc_heap.rs` — round-trip, nested-`HeapRef`-chain,
@@ -207,7 +236,9 @@ fails loudly instead of silently corrupting an address.
   proof: a collection genuinely reclaims an object once its only root is
   gone, not just that the API compiles) and
   `safepoint_over_threshold_collects_and_reclaims` (the paced dispatch
-  collects for real once the adaptive threshold is crossed).
+  collects for real once the adaptive threshold is crossed), and (#18471)
+  host-supplied interior, one-past-the-end, null and garbage `HeapRef`s
+  trapping on both field ops while a host-supplied base still works.
 - `gc-core-capi`: existing `safepoint_throttles_then_collects_at_threshold`
   continues to pass unchanged — proof the precise/compacting upgrade didn't
   regress the paced trigger's own behavior.

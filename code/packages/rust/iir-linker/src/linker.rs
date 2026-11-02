@@ -10,8 +10,8 @@ use interpreter_ir::module::IIRModule;
 use crate::error::LinkError;
 use crate::merge::merge_modules;
 use crate::resolve::{
-    build_export_map, check_entry_point, check_module_names, resolve_imports,
-    verify_imports_against,
+    build_export_map, check_entry_point, check_function_references, check_module_names,
+    resolve_imports, verify_imports_against,
 };
 
 // ---------------------------------------------------------------------------
@@ -26,7 +26,9 @@ use crate::resolve::{
 /// 1. Build the export map: `(module_name, public_name) → &IIRFunction`,
 ///    checking that each public name has exactly one owning module.
 /// 2. Resolve every import against the export map; type-check if annotations
-///    are present.  Check that the entry point resolves inside its module.
+///    are present.  Check that the entry point resolves inside its module,
+///    and that every function reference (`call`, `alloc_closure`, spawn
+///    target) names a function its module defines or imports.
 /// 3. Merge all functions into a single `IIRModule`, renaming collisions with
 ///    `"<module>::"` prefix and rewriting every function-name operand
 ///    accordingly.
@@ -44,6 +46,9 @@ use crate::resolve::{
 ///   (`LinkError::ConflictingExport`)
 /// - The entry module's `entry_point` is neither defined nor imported by
 ///   that module (`LinkError::UnresolvedEntryPoint`)
+/// - A function reference names something its module neither defines nor
+///   imports — for example another module's private function
+///   (`LinkError::UndeclaredCall`, issue #18432)
 ///
 /// # Example
 ///
@@ -130,6 +135,12 @@ impl IIRLinker {
         // Step 2b: The entry point must resolve inside its own module
         // (UnresolvedEntryPoint).
         all_errors.extend(check_entry_point(modules));
+
+        // Step 2c: Every function reference must name a function the module
+        // defines or imports (UndeclaredCall).  A bare name would otherwise
+        // bind to whoever owns it after merging — possibly another module's
+        // private function (#18432).
+        all_errors.append(&mut check_function_references(modules));
 
         if !all_errors.is_empty() {
             return Err(all_errors);

@@ -1164,6 +1164,534 @@ mod tests {
         assert!(m.manifest.contains(Feature::Closures));
     }
 
+    // ── a nested def that names itself or a sibling (#18468) ──────────
+    //
+    // A closure for a capturing function must thread *all* of that
+    // function's captures, wherever it is built: in the function's own
+    // body (a self-reference) or in a sibling's.  These helpers check
+    // that across a whole module, since the validator does not (yet).
+
+    /// Every `MakeClosure` in `m` as `(target, captures threaded)`, and
+    /// every `DirectCall` target.
+    fn closures_and_direct_calls(m: &semantic_ir::Module) -> (Vec<(String, usize)>, Vec<String>) {
+        use semantic_ir::Visitor;
+        #[derive(Default)]
+        struct Walk(Vec<(String, usize)>, Vec<String>);
+        impl Visitor for Walk {
+            fn visit_expr(&mut self, e: &Expr, depth: usize) {
+                match e {
+                    Expr::MakeClosure {
+                        fn_name, captures, ..
+                    } => self.0.push((fn_name.clone(), captures.len())),
+                    Expr::DirectCall { fn_name, .. } => self.1.push(fn_name.clone()),
+                    _ => {}
+                }
+                semantic_ir::walker::walk_expr_default(self, e, depth);
+            }
+        }
+        let mut w = Walk::default();
+        w.visit_module(m);
+        (w.0, w.1)
+    }
+
+    /// Assert that every closure in `m` threads exactly its target's
+    /// declared captures, that no `DirectCall` targets a capturing
+    /// function, and that `m` validates.
+    fn assert_closures_consistent(m: &semantic_ir::Module) {
+        let (closures, direct) = closures_and_direct_calls(m);
+        for (target, threaded) in &closures {
+            let declared = func(m, target).captures.len();
+            assert_eq!(
+                *threaded, declared,
+                "MakeClosure({target}) threads {threaded} capture(s); `{target}` declares {declared}"
+            );
+        }
+        for target in &direct {
+            assert!(
+                func(m, target).captures.is_empty(),
+                "DirectCall to capturing function `{target}` cannot pass its captures"
+            );
+        }
+        let v = semantic_ir::validate(m);
+        assert!(v.is_ok(), "module failed validation: {:?}", v.issues);
+    }
+
+    /// The capture names `name` declares.
+    fn capture_names<'a>(m: &'a semantic_ir::Module, name: &str) -> Vec<&'a str> {
+        func(m, name)
+            .captures
+            .iter()
+            .map(|c| c.name.as_str())
+            .collect()
+    }
+
+    #[test]
+    fn nested_def_naming_itself_as_a_value_threads_its_captures() {
+        // The program from #18468.  `h = go` inside `go` used to lower to
+        // `MakeClosure(go, [])` while `go` declares the capture `n`.
+        let m = lower(
+            "def outer(n):\n    def go(x):\n        h = go\n        return x + n\n    return go(1)\n",
+        );
+        assert_eq!(capture_names(&m, "go"), ["n"]);
+        match &func(&m, "go").body.stmts[0] {
+            Stmt::LetStarBinding {
+                name,
+                value:
+                    Expr::MakeClosure {
+                        fn_name, captures, ..
+                    },
+                ..
+            } => {
+                assert_eq!(name, "h");
+                assert_eq!(fn_name, "go");
+                assert_eq!(captures.len(), 1, "the self-reference threads go's capture");
+                assert_eq!(captures[0].name, "n");
+                // Inside `go`, `n` is go's own capture: go rebuilds itself
+                // from the values it was built with.
+                assert!(matches!(
+                    &captures[0].value,
+                    Expr::VarRef { name, scope: Scope::Capture, .. } if name == "n"
+                ));
+            }
+            other => panic!("expected `h = MakeClosure(go, ..)`, got {other:?}"),
+        }
+        assert_closures_consistent(&m);
+    }
+
+    #[test]
+    fn nested_def_recursive_call_goes_through_its_closure() {
+        // `go(x - 1)` inside `go` must pass `n` along.  A `DirectCall`
+        // cannot, so the call goes through go's re-threaded closure.
+        let m = lower(
+            "def outer(n):\n    def go(x):\n        if x == 0:\n            return n\n        else:\n            return go(x - 1)\n    return go(3)\n",
+        );
+        assert_eq!(capture_names(&m, "go"), ["n"]);
+        let Expr::If { else_branch, .. } = &func(&m, "go").body.value else {
+            panic!("expected go's body to be an If");
+        };
+        match &else_branch.value {
+            Expr::IndirectCall { target, args, .. } => {
+                assert_eq!(args.len(), 1);
+                assert!(matches!(
+                    target.as_ref(),
+                    Expr::MakeClosure { fn_name, captures, .. }
+                        if fn_name == "go" && captures.len() == 1
+                ));
+            }
+            other => panic!("expected IndirectCall(MakeClosure(go, [n])), got {other:?}"),
+        }
+        // `outer`'s own call, `go(3)`, threads `n` from outer's param.
+        match &func(&m, "outer").body.value {
+            Expr::IndirectCall { target, .. } => match target.as_ref() {
+                Expr::MakeClosure { captures, .. } => assert!(matches!(
+                    &captures[0].value,
+                    Expr::VarRef { name, scope: Scope::Param, .. } if name == "n"
+                )),
+                other => panic!("expected MakeClosure, got {other:?}"),
+            },
+            other => panic!("expected IndirectCall, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Closures));
+        assert_closures_consistent(&m);
+    }
+
+    #[test]
+    fn sibling_nested_defs_calling_each_other_share_captures() {
+        // `ev` calls `od` before `od`'s def is reached.  `od`'s capture
+        // list is planned when `ev` is lowered, so the closure `ev`
+        // builds for `od` matches what `od` later declares.
+        let m = lower(
+            "def outer(n):\n    def ev(x):\n        if x == 0:\n            return n\n        else:\n            return od(x - 1)\n    def od(x):\n        if x == 0:\n            return 0 - n\n        else:\n            return ev(x - 1)\n    return ev(4)\n",
+        );
+        assert_eq!(capture_names(&m, "ev"), ["n"]);
+        assert_eq!(capture_names(&m, "od"), ["n"]);
+        assert_closures_consistent(&m);
+    }
+
+    #[test]
+    fn a_sibling_used_early_passes_on_captures_it_does_not_read() {
+        // `ev` never reads `k`, but it builds a closure for `od`, which
+        // does.  So `ev` must capture `k` to pass it on.
+        let m = lower(
+            "def outer(n, k):\n    def ev(x):\n        if x == 0:\n            return n\n        else:\n            return od(x - 1)\n    def od(x):\n        if x == 0:\n            return k\n        else:\n            return ev(x - 1)\n    return ev(4)\n",
+        );
+        assert_eq!(capture_names(&m, "ev"), ["k", "n"]);
+        assert_eq!(capture_names(&m, "od"), ["k", "n"]);
+        assert_closures_consistent(&m);
+    }
+
+    #[test]
+    fn calling_an_uncle_closure_captures_what_it_needs() {
+        // `inner` calls `go` (defined in `outer`), which captures `n`.
+        // `inner` needs `n` to build go's closure, and so does `mid`, to
+        // build inner's.
+        let m = lower(
+            "def outer(n):\n    def go(z):\n        return z + n\n    def mid(y):\n        def inner(z):\n            return go(z)\n        return inner(y)\n    return mid(1)\n",
+        );
+        assert_eq!(capture_names(&m, "go"), ["n"]);
+        assert_eq!(capture_names(&m, "inner"), ["n"]);
+        assert_eq!(capture_names(&m, "mid"), ["n"]);
+        assert_closures_consistent(&m);
+    }
+
+    #[test]
+    fn calling_a_toplevel_def_that_reads_a_main_local_threads_it() {
+        // Top-level statements are `main`'s body, so `x` is a `main`
+        // local and `f` captures it.  `f()` must pass it.
+        let m = lower("x = 5\ndef f():\n    return x\n\nprint(f())\n");
+        assert_eq!(capture_names(&m, "f"), ["x"]);
+        assert_closures_consistent(&m);
+    }
+
+    #[test]
+    fn plain_recursion_still_lowers_to_a_direct_call() {
+        // A function that captures nothing keeps the plain `DirectCall`.
+        let m = lower(
+            "def fact(n):\n    if n == 0:\n        return 1\n    else:\n        return n * fact(n - 1)\n",
+        );
+        let (closures, direct) = closures_and_direct_calls(&m);
+        assert!(closures.is_empty());
+        assert_eq!(direct, ["fact"]);
+    }
+
+    #[test]
+    fn sibling_capturing_a_name_bound_after_its_first_use_is_rejected() {
+        // `ev` builds a closure for `od` before `m` exists, so it cannot
+        // thread `m`.  This is refused at compile time rather than
+        // producing a closure that is short one capture.
+        let err = compile_source(
+            "def outer(n):\n    def ev(x):\n        return od(x)\n    m = 1\n    def od(x):\n        return m\n    return ev(1)\n",
+            "test",
+        )
+        .expect_err("od's capture `m` is bound after ev uses od");
+        assert!(
+            err.message
+                .contains("`od` is used by a function defined before it"),
+            "{err}"
+        );
+        assert!(err.message.contains("`m`"), "{err}");
+    }
+
+    #[test]
+    fn calling_a_capturing_def_with_defaults_or_keywords_is_rejected() {
+        // A call through a closure gets no default filling or keyword
+        // matching on every backend, so these are refused, not guessed.
+        let err = compile_source(
+            "def outer(n):\n    def go(x, y=1):\n        return x + y + n\n    return go(1)\n",
+            "test",
+        )
+        .expect_err("default params on a capturing def called by name");
+        assert!(err.message.contains("default or keyword-only"), "{err}");
+
+        let err = compile_source(
+            "def outer(n):\n    def go(x):\n        return x + n\n    return go(x=1)\n",
+            "test",
+        )
+        .expect_err("keyword argument to a capturing def");
+        assert!(err.message.contains("keyword argument"), "{err}");
+    }
+
+    #[test]
+    fn calling_a_capturing_def_with_the_wrong_arity_is_rejected() {
+        // The validator checks a `DirectCall`'s arity; a call through a
+        // closure is checked here instead.
+        let err = compile_source(
+            "def outer(n):\n    def go(x):\n        return x + n\n    return go(1, 2)\n",
+            "test",
+        )
+        .expect_err("two arguments to a one-parameter def");
+        assert!(
+            err.message.contains("passes 2 argument(s) but it takes 1"),
+            "{err}"
+        );
+    }
+
+    #[test]
+    fn two_functions_with_the_same_name_are_rejected() {
+        // Nested defs are lifted into one namespace, so two `inner`s
+        // would share one capture list (and one SIR function name).
+        let err = compile_source(
+            "def a(n):\n    def inner(x):\n        return x + n\n    return inner(1)\n\ndef b(m):\n    def inner(x):\n        return x * m\n    return inner(2)\n",
+            "test",
+        )
+        .expect_err("a second `inner`");
+        assert!(
+            err.message.contains("a second function named `inner`"),
+            "{err}"
+        );
+        assert_eq!(err.line, 7, "points at the second `inner`");
+    }
+
+    #[test]
+    fn a_later_toplevel_def_capturing_a_main_local_bound_late_is_rejected() {
+        // `f` calls `g` before `x` exists, so `f` cannot pass `g` the
+        // value of `x`.  `g`'s capture list is planned when `f` is
+        // lowered, and `g` then reads a name bound after that point.
+        let err = compile_source(
+            "def f():\n    return g()\n\nx = 5\ndef g():\n    return x\n\nprint(f())\n",
+            "test",
+        )
+        .expect_err("f's call to g cannot pass g's capture");
+        assert!(
+            err.message
+                .contains("`g` is used by a function defined before it"),
+            "{err}"
+        );
+    }
+
+    #[test]
+    fn a_direct_call_to_a_function_that_later_gains_captures_is_rejected() {
+        // A method body plans nothing (it has no enclosing scope), so its
+        // call to the later top-level `g` is lowered before `g`'s capture
+        // list exists: a `DirectCall`.  `g` then captures the `main` local
+        // `x`.  The module-level safety net refuses the `DirectCall`,
+        // which could not pass `x`.
+        let err = compile_source(
+            "class A:\n    def m(self):\n        return g()\n\nx = 5\ndef g():\n    return x\n\nprint(A().m())\n",
+            "test",
+        )
+        .expect_err("the method's DirectCall to g cannot pass g's capture");
+        assert!(
+            err.message
+                .contains("before `g`'s captured variables are known"),
+            "{err}"
+        );
+    }
+
+    // ── security review of #18468: closures the planner cannot see ─────
+    //
+    // Each of these programs used to compile to a closure that threads
+    // fewer captures than its target declares (a NULL `caps[0]` read on
+    // the C backend), or to a closure that threads the wrong variable.
+    // Each is now refused with a positioned error.
+
+    /// Compile `src`, expecting an error whose message contains `needle`.
+    fn refused(src: &str, needle: &str) -> PythonLowerError {
+        let err = compile_source(src, "test").expect_err("program must be refused");
+        assert!(
+            err.message.contains(needle),
+            "expected `{needle}` in: {err}"
+        );
+        err
+    }
+
+    #[test]
+    fn method_naming_a_later_capturing_def_is_refused() {
+        // CPython prints 5.  A method body plans nothing, so `return g`
+        // builds `MakeClosure(g, [])` before `g` is lowered; `g` then
+        // captures the `main` local `x`.  The module-level closure check
+        // refuses the short closure, pointing at it.
+        let err = refused(
+            "class A:\n    def m(self):\n        return g\n\nx = 5\ndef g():\n    return x\n\nh = A().m()\nprint(h())\n",
+            "a closure for `g` is built before `g`'s captured variables are known",
+        );
+        assert_eq!(err.line, 3, "points at the bare `g` in the method");
+    }
+
+    #[test]
+    fn lambda_default_naming_a_later_capturing_def_is_refused() {
+        // The same short closure, built in a method's default value
+        // (`cb=lambda: g`), which the old call-graph safety net never
+        // walked.
+        refused(
+            "class A:\n    def m(self, cb=lambda: g):\n        return cb()\n\nx = 5\ndef g():\n    return x\n\nprint(A().m()())\n",
+            "a closure for `g` is built before `g`'s captured variables are known",
+        );
+    }
+
+    #[test]
+    fn main_level_reference_before_a_capturing_def_is_refused() {
+        // `h = g` before `def g` (a NameError in CPython) built a
+        // zero-capture closure for a function that captures `x`.
+        refused(
+            "x = 5\nh = g\ndef g():\n    return x\n\nprint(h())\n",
+            "a closure for `g` is built before `g`'s captured variables are known",
+        );
+    }
+
+    #[test]
+    fn a_synthesised_lambda_name_does_not_resolve() {
+        // `__lambda_0` is the frontend's own name for the lambda; source
+        // could name it and get a zero-capture closure for a lambda that
+        // captures `n`.  It is now an ordinary unresolved name.
+        refused(
+            "def outer(n):\n    f = lambda: n\n    return __lambda_0\n",
+            "unresolved name `__lambda_0`",
+        );
+    }
+
+    #[test]
+    fn a_user_def_named_like_a_lambda_does_not_collide() {
+        // The gensym skips names a `def` already uses, so the lambda's
+        // synthesised function gets a fresh name.
+        let m = lower("def __lambda_0():\n    return 1\n\nf = lambda: 2\nprint(f())\n");
+        assert!(m.functions.iter().any(|f| f.name == "__lambda_0"));
+        assert!(m.functions.iter().any(|f| f.name == "__lambda_1"));
+        assert_closures_consistent(&m);
+    }
+
+    #[test]
+    fn method_param_shadowing_a_capture_is_refused() {
+        // `g` captures the `main` local `x`.  Inside the method, `x` is the
+        // method's own param: a different variable.  Threading it would
+        // silently hand `g` the wrong value, so it is refused.
+        refused(
+            "x = 5\ndef g():\n    return x\n\nclass A:\n    def m(self, x):\n        return g()\n\nprint(A().m(1))\n",
+            "`g` captures `x`, which is not in scope here",
+        );
+    }
+
+    #[test]
+    fn local_shadowing_an_inherited_capture_is_refused() {
+        // CPython prints 5.  `f` would inherit `g`'s capture `n`, but `f`
+        // binds its own `n` (100), so it cannot pass `g` the outer `n`.
+        // Python, Ruby and Rust printed 100; C, Go and JS failed on a
+        // duplicate binding.
+        refused(
+            "def outer(n):\n    def g():\n        return n\n    def f():\n        n = 100\n        return g()\n    return f()\n\nprint(outer(5))\n",
+            "`f` binds its own `n`",
+        );
+    }
+
+    #[test]
+    fn param_shadowing_an_inherited_capture_is_refused() {
+        // The param version of the case above.
+        refused(
+            "def outer(n):\n    def g():\n        return n\n    def f(n):\n        return g()\n    return f(100)\n\nprint(outer(5))\n",
+            "`f` binds its own `n`",
+        );
+    }
+
+    #[test]
+    fn a_function_capturing_too_many_variables_is_refused() {
+        // 300 `main` locals read by one function: over MAX_CAPTURES (256).
+        let mut src = String::new();
+        for i in 0..300 {
+            src.push_str(&format!("v{i} = {i}\n"));
+        }
+        let names: Vec<String> = (0..300).map(|i| format!("v{i}")).collect();
+        src.push_str(&format!(
+            "def f():\n    return [{}]\n\nprint(f())\n",
+            names.join(", ")
+        ));
+        refused(
+            &src,
+            "would capture 300 variables, more than the limit of 256",
+        );
+    }
+
+    /// The review's generator: N top-level defs, each calling the next,
+    /// the root defined first.  None of them captures anything.
+    fn call_chain_source(n: usize) -> String {
+        let mut src = String::new();
+        for i in 0..n - 1 {
+            src.push_str(&format!("def f{i}(k):\n    return f{}(k)\n", i + 1));
+        }
+        src.push_str(&format!("def f{}(k):\n    return k\n", n - 1));
+        src.push_str("print(f0(1))\n");
+        src
+    }
+
+    /// A dispatcher defined first, calling N helpers defined below it.
+    /// `d(1)[i]` is `1 + i`, so the program prints N.
+    fn dispatcher_source(n: usize) -> String {
+        let calls: Vec<String> = (0..n).map(|i| format!("h{i}(k)")).collect();
+        let mut src = format!("def d(k):\n    return [{}]\n", calls.join(", "));
+        for i in 0..n {
+            src.push_str(&format!("def h{i}(k):\n    return k + {i}\n"));
+        }
+        src.push_str(&format!("print(d(1)[{}])\n", n - 1));
+        src
+    }
+
+    #[test]
+    fn a_long_capture_free_call_chain_compiles_and_runs() {
+        // 300 defs naming each other in a chain form one planning group of
+        // 300.  A group cap refused this ordinary program; it compiles on
+        // `main`, so it must compile here.
+        let src = call_chain_source(300);
+        let m = lower(&src);
+        assert!(m.functions.iter().all(|f| f.captures.is_empty()));
+        assert_closures_consistent(&m);
+        if let Some(out) = run_roundtrip(&src) {
+            assert_eq!(out, "1");
+        }
+    }
+
+    #[test]
+    fn a_dispatcher_calling_300_helpers_compiles_and_runs() {
+        // One function naming 300 later siblings: a group of 301.
+        let src = dispatcher_source(300);
+        let m = lower(&src);
+        assert_closures_consistent(&m);
+        if let Some(out) = run_roundtrip(&src) {
+            assert_eq!(out, "300");
+        }
+    }
+
+    #[test]
+    fn a_long_capturing_sibling_chain_compiles_and_runs() {
+        // 150 nested siblings in a chain; only the last reads `n`, so rule
+        // 2 carries `n` back along all 150 (one worklist step per edge).
+        let mut src = String::from("def outer(n):\n");
+        for i in 0..149 {
+            src.push_str(&format!("    def f{i}():\n        return f{}()\n", i + 1));
+        }
+        src.push_str("    def f149():\n        return n\n    return f0()\n\nprint(outer(7))\n");
+        let m = lower(&src);
+        assert!((0..150).all(|i| capture_names(&m, &format!("f{i}")) == ["n"]));
+        assert_closures_consistent(&m);
+        if let Some(out) = run_roundtrip(&src) {
+            assert_eq!(out, "7");
+        }
+    }
+
+    #[test]
+    fn the_quadratic_capture_chain_finishes_quickly() {
+        // The review's generator: V = 2000 `main` locals and a chain of
+        // M = 400 top-level defs, each calling the next, the last reading
+        // every local.  Unbounded, rule 2 would give each def all 2000
+        // captures (M·V slots).  MAX_CAPTURES stops it when the last def
+        // is found to read 2000 names, before any propagation.
+        let mut src = String::new();
+        for i in 0..2000 {
+            src.push_str(&format!("v{i} = {i}\n"));
+        }
+        for i in 0..399 {
+            src.push_str(&format!("def f{i}():\n    return f{}()\n", i + 1));
+        }
+        let names: Vec<String> = (0..2000).map(|i| format!("v{i}")).collect();
+        src.push_str(&format!("def f399():\n    return [{}]\n", names.join(", ")));
+        let started = std::time::Instant::now();
+        refused(&src, "limit");
+        assert!(
+            started.elapsed() < std::time::Duration::from_secs(60),
+            "took {:?}",
+            started.elapsed()
+        );
+    }
+
+    #[test]
+    fn a_nested_def_reusing_its_enclosing_def_name_is_refused() {
+        // `def f` inside `def f`: both lift to a module-level `f`.
+        let err = refused(
+            "def f(n):\n    def f(x):\n        return x + n\n    return f(1)\n",
+            "a second function named `f`",
+        );
+        assert_eq!(err.line, 2);
+    }
+
+    #[test]
+    fn a_direct_call_in_a_param_default_is_checked() {
+        // `a=g()` in a method default: a `DirectCall` to `g`, lowered
+        // before `g` captures the `main` local `x`.  The closure check
+        // walks parameter defaults too.
+        refused(
+            "class A:\n    def m(self, a=g()):\n        return a\n\nx = 5\ndef g():\n    return x\n\nprint(A().m())\n",
+            "`g` is called before `g`'s captured variables are known",
+        );
+    }
+
     // ── mutual recursion ──────────────────────────────────────────────
 
     #[test]
@@ -2049,6 +2577,70 @@ print(a(5))
 ";
         if let Some(out) = run_roundtrip(src) {
             assert_eq!(out, "15", "adder(10)(5) should print 15");
+        }
+    }
+
+    #[test]
+    fn e2e_nested_def_self_reference_and_recursion() {
+        // #18468: `go` names itself as a value and recursively, while
+        // capturing `n`.  go(3) = 2 * go(2) = ... = 8 * n = 40.
+        let src = "\
+def outer(n):
+    def go(x):
+        h = go
+        if x == 0:
+            return n
+        else:
+            return h(x - 1) * 2
+    return go(3)
+
+print(outer(5))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "40", "outer(5) should print 40");
+        }
+    }
+
+    #[test]
+    fn e2e_nested_def_direct_recursion() {
+        // go(3) = go(2) + 1 = ... = n + 3 = 8.
+        let src = "\
+def outer(n):
+    def go(x):
+        if x == 0:
+            return n
+        else:
+            return go(x - 1) + 1
+    return go(3)
+
+print(outer(5))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "8", "outer(5) should print 8");
+        }
+    }
+
+    #[test]
+    fn e2e_nested_def_mutual_recursion() {
+        // ev(4) -> od(3) -> ev(2) -> od(1) -> ev(0) = n = 5.
+        let src = "\
+def outer(n):
+    def ev(x):
+        if x == 0:
+            return n
+        else:
+            return od(x - 1)
+    def od(x):
+        if x == 0:
+            return 0 - n
+        else:
+            return ev(x - 1)
+    return ev(4)
+
+print(outer(5))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "5", "outer(5) should print 5");
         }
     }
 

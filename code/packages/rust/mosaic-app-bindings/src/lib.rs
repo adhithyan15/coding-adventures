@@ -2197,19 +2197,28 @@ mod tests {
     /// A state file the runtime rejects may be someone's only copy of their
     /// data, and so may the one an earlier rejection moved aside. Every host
     /// moves a rejected file to the FIRST FREE name -- `<state>.corrupt`, then
-    /// `.corrupt.1` to `.corrupt.9` -- with a move that refuses to replace,
+    /// `.corrupt.1` to `.corrupt.9` -- with a step that refuses to replace,
     /// never deletes an earlier quarantine first, and stops saving for the
     /// session when the file could not be moved (it is still at the live
     /// path, and the next save would write over it).
     ///
     /// | host    | refuses an existing target                     |
     /// |---------|------------------------------------------------|
-    /// | Compose | `Files.move` without `REPLACE_EXISTING`        |
-    /// | SwiftUI | `FileManager.moveItem`                         |
+    /// | Compose | `Files.createFile` claims the name, then an    |
+    /// |         | `ATOMIC_MOVE` onto the placeholder             |
+    /// | SwiftUI | `open(O_CREAT \| O_EXCL)` claims the name,     |
+    /// |         | then rename(2) onto the placeholder            |
     /// | XAML    | `File.Move(..., overwrite: false)`             |
     /// | Flutter | `createSync(exclusive: true)` claims the name  |
     /// | Qt      | `NewOnly` claims the name, then an atomic      |
     /// |         | `std::filesystem::rename` onto the placeholder |
+    ///
+    /// When that step fails, the host looks at the name again and moves on
+    /// if something is now there (`rescan`), rather than deciding from the
+    /// error: Windows reports a directory in the way as access denied, POSIX
+    /// as "exists". `Files.move` without `REPLACE_EXISTING` and
+    /// `FileManager.moveItem` are retired: on POSIX both check and then
+    /// rename(2), which replaces whatever appeared in between.
     #[test]
     fn emitted_native_bindings_never_replace_a_quarantined_state_file() {
         let application_id = "com.example.tasks";
@@ -2221,14 +2230,17 @@ mod tests {
             names: [&'static str; 3],
             /// Skip a name when anything is there.
             skip: &'static str,
-            /// The move that refuses to replace.
+            /// The step that refuses to replace.
             no_replace: &'static str,
+            /// After that step fails: skip the name if it is now taken.
+            rescan: &'static str,
             /// A failed move switches saving off...
             disable: &'static str,
             /// ...and the save checks that first.
             guard: [&'static str; 2],
-            /// What the single-slot quarantine did: delete, then move.
-            retired: [&'static str; 2],
+            /// What the single-slot quarantine did (delete, then move), and
+            /// moves that only check before replacing.
+            retired: &'static [&'static str],
         }
         let hosts = [
             Quarantine {
@@ -2240,15 +2252,17 @@ mod tests {
                     "private const val MOSAIC_MAX_QUARANTINED_STATES = 10",
                 ],
                 skip: "if (Files.exists(candidate, LinkOption.NOFOLLOW_LINKS)) continue",
-                no_replace: "Files.move(file.toPath(), candidate)\n",
+                no_replace: "Files.createFile(candidate)",
+                rescan: "if (Files.exists(candidate, LinkOption.NOFOLLOW_LINKS)) continue",
                 disable: "persistenceDisabled = true",
                 guard: [
                     "private fun persistSnapshot() {",
                     "if (persistenceDisabled) return",
                 ],
-                retired: [
+                retired: &[
                     "if (corrupt.exists()) corrupt.delete()",
                     "Files.move(file.toPath(), corrupt.toPath(), StandardCopyOption.REPLACE_EXISTING)",
+                    "Files.move(file.toPath(), candidate)\n",
                 ],
             },
             Quarantine {
@@ -2259,16 +2273,18 @@ mod tests {
                     "for index in 0..<maxQuarantinedStates",
                     "private static let maxQuarantinedStates = 10",
                 ],
-                skip: "if (try? manager.attributesOfItem(atPath: candidate.path)) != nil { continue }",
-                no_replace: "try manager.moveItem(at: url, to: candidate)",
+                skip: "if taken(candidate) { continue }",
+                no_replace: "if let refused = mosaicClaimQuarantineName(candidate.path) {",
+                rescan: "if taken(candidate) { continue }",
                 disable: "persistenceDisabled = true",
                 guard: [
                     "private func persistSnapshot() {",
                     "guard !persistenceDisabled else { return }",
                 ],
-                retired: [
+                retired: &[
                     "try? FileManager.default.removeItem(at: corrupt)",
                     "moveItem(at: url, to: corrupt)",
+                    "try manager.moveItem(at: url, to: candidate)",
                 ],
             },
             Quarantine {
@@ -2279,14 +2295,15 @@ mod tests {
                     "for (var index = 0; index < MaxQuarantinedStates; index++)",
                     "private const int MaxQuarantinedStates = 10;",
                 ],
-                skip: "if (File.Exists(candidate) || Directory.Exists(candidate)) continue;",
+                skip: "if (QuarantineNameTaken(candidate)) continue;",
                 no_replace: "File.Move(path, candidate, overwrite: false);",
+                rescan: "if (QuarantineNameTaken(candidate)) continue;",
                 disable: "persistenceDisabled = true;",
                 guard: [
                     "private void PersistSnapshot()",
                     "if (persistenceDisabled) return;",
                 ],
-                retired: [
+                retired: &[
                     "if (File.Exists(corrupt)) File.Delete(corrupt);",
                     "File.Move(path, corrupt)",
                 ],
@@ -2301,12 +2318,13 @@ mod tests {
                 ],
                 skip: "FileSystemEntity.typeSync(candidate.path, followLinks: false)",
                 no_replace: "candidate.createSync(exclusive: true);",
+                rescan: "if (taken(candidate)) continue;",
                 disable: "_persistenceDisabled = true;",
                 guard: [
                     "void _persistSnapshot() {",
                     "if (_persistenceDisabled) return;",
                 ],
-                retired: [
+                retired: &[
                     "if (corrupt.existsSync()) corrupt.deleteSync();",
                     "file.renameSync(corrupt.path)",
                 ],
@@ -2321,6 +2339,7 @@ mod tests {
                 ],
                 skip: "if (existing.exists() || existing.isSymLink()) continue;",
                 no_replace: "if (!placeholder.open(QIODevice::WriteOnly | QIODevice::NewOnly)) {",
+                rescan: "if (raced.exists() || raced.isSymLink()) continue;",
                 disable: "persistenceDisabled_ = true;",
                 guard: [
                     "void MosaicHost::persistSnapshot()",
@@ -2328,7 +2347,7 @@ mod tests {
                 ],
                 // QFile::rename falls back to a truncating copy when its native
                 // no-replace rename fails, so it must not do this move.
-                retired: [
+                retired: &[
                     "QFile::remove(corrupt);",
                     "file.rename(candidate)",
                 ],
@@ -2350,6 +2369,12 @@ mod tests {
                 skip < moved,
                 "{host}: a taken name must be skipped before moving"
             );
+            // A refusal is a taken name only if something is now there.
+            assert!(
+                source[moved..].contains(quarantine.rescan),
+                "{host}: a refused claim must look at the name again: {}",
+                quarantine.rescan
+            );
             // The guard is the save's first decision, before any snapshot or
             // write: a null snapshot would otherwise DELETE the rejected file.
             let [save, guard] = quarantine.guard;
@@ -2367,7 +2392,7 @@ mod tests {
                 state.is_some_and(|state| guarded < state),
                 "{host}: the save must check persistenceDisabled before finding the file"
             );
-            for retired in quarantine.retired {
+            for retired in quarantine.retired.iter() {
                 assert!(!source.contains(retired), "{host}: still has {retired}");
             }
             assert!(

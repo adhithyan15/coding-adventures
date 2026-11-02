@@ -1,5 +1,6 @@
+import assert from "node:assert/strict";
 import * as net from "net";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, it } from "node:test";
 
 import { type Connection, TcpServer, VERSION } from "../src/index.js";
 
@@ -56,14 +57,17 @@ afterEach(async () => {
 
 describe("TcpServer", () => {
   it("exports a version string", () => {
-    expect(VERSION).toBe("0.1.0");
+    assert.equal(VERSION, "0.1.0");
   });
 
   it("echoes bytes through the default handler without sockets", async () => {
     const server = new TcpServer({ port: 0 });
     const connection = makeConnection();
 
-    await expect(server.handle(connection, Buffer.from("hello"))).resolves.toEqual(Buffer.from("hello"));
+    assert.deepEqual(
+      await server.handle(connection, Buffer.from("hello")),
+      Buffer.from("hello"),
+    );
   });
 
   it("allows connection-aware handlers to transform data and state", async () => {
@@ -77,34 +81,34 @@ describe("TcpServer", () => {
     });
     const connection = makeConnection();
 
-    expect(await server.handle(connection, "buf")).toEqual(Buffer.alloc(0));
-    expect(await server.handle(connection, "fer")).toEqual(Buffer.from("buffer"));
-    expect(connection.selectedDb).toBe(2);
-    expect(connection.readBuffer).toHaveLength(0);
+    assert.deepEqual(await server.handle(connection, "buf"), Buffer.alloc(0));
+    assert.deepEqual(await server.handle(connection, "fer"), Buffer.from("buffer"));
+    assert.equal(connection.selectedDb, 2);
+    assert.equal(connection.readBuffer.length, 0);
   });
 
   it("starts, reports its address, and stops", async () => {
     const server = new TcpServer({ port: 0 });
-    expect(server.isRunning()).toBe(false);
-    expect(server.address()).toBeNull();
-    expect(() => server.tryAddress()).toThrow("server has not been started");
+    assert.equal(server.isRunning(), false);
+    assert.equal(server.address(), null);
+    assert.throws(() => server.tryAddress(), /server has not been started/);
 
     await start(server);
     await server.start();
 
-    expect(server.isRunning()).toBe(true);
-    expect(server.tryAddress().address).toBe("127.0.0.1");
-    expect(server.toString()).toContain("running");
+    assert.equal(server.isRunning(), true);
+    assert.equal(server.tryAddress().address, "127.0.0.1");
+    assert.match(server.toString(), /running/);
 
     await server.stop();
-    expect(server.isRunning()).toBe(false);
+    assert.equal(server.isRunning(), false);
   });
 
   it("handles a loopback echo request", async () => {
     const server = new TcpServer({ port: 0 });
     const port = await start(server);
 
-    await expect(sendRecv(port, "hello world")).resolves.toEqual(Buffer.from("hello world"));
+    assert.deepEqual(await sendRecv(port, "hello world"), Buffer.from("hello world"));
   });
 
   it("handles multiple sequential clients", async () => {
@@ -113,7 +117,7 @@ describe("TcpServer", () => {
     });
     const port = await start(server);
 
-    await expect(sendRecv(port, "one")).resolves.toEqual(Buffer.from("ONE"));
-    await expect(sendRecv(port, "two")).resolves.toEqual(Buffer.from("TWO"));
+    assert.deepEqual(await sendRecv(port, "one"), Buffer.from("ONE"));
+    assert.deepEqual(await sendRecv(port, "two"), Buffer.from("TWO"));
   });
 });
