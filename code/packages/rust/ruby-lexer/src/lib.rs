@@ -29,7 +29,7 @@
 //! literals, string interpolation, and parser-driven `f /x/`
 //! resolution all arrive in later phases.
 
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 
 use lexer::token::{Token, TokenType, TOKEN_SYNTHETIC};
 use state_machine::transducer::{EffectfulInput, EffectfulStateMachine};
@@ -1111,6 +1111,8 @@ impl RubyLexer {
     /// | `x = foo` ⏎ `(1)`           | `x = foo(1)`           | `x = foo`, then `(1)`       |
     /// | `puts` ⏎ `puts 2`           | `puts(puts 2)`         | a blank line, then `2`      |
     /// | `rescue Boom` ⏎ `puts 40`   | `rescue` + `Boom(puts 40)` | class `Boom`, body `puts 40` |
+    /// | `super` ⏎ `puts "hi"`       | `super(puts) ; "hi"`   | `super`, then `puts "hi"`   |
+    /// | `return; 42`                | `return 42`            | `return` (nil)              |
     ///
     /// The grammar is shared by six languages' parsers and only Rust's
     /// grammar tool has adjacency predicates, so the fix is portable data:
@@ -1126,7 +1128,15 @@ impl RubyLexer {
     /// 3. [`Self::tag_line_start_tokens`] — a `[`, `(`, `-` or `+` that
     ///    starts a line after a complete expression is re-tagged.
     /// 4. [`Self::end_lone_names`] — a name alone on its line, where a
-    ///    statement starts, gets a `;` after it.
+    ///    statement starts, gets a `;` after it, and so does a keyword that
+    ///    takes a paren-less argument list (`super`, `yield`, `return`,
+    ///    `break`, `next`) when its line (or a `;`) ends right after it.
+    ///
+    /// Every step is linear in the number of tokens: the synthetic `;`s
+    /// are found first and then spliced in by one rebuild of the token
+    /// vector ([`Self::insert_statement_ends`]), and block-parameter
+    /// positions are looked up in a set or walked in order, so a large file
+    /// costs no more per token than a small one.
     fn mark_statement_ends(&mut self) {
         self.semicolons_end_lines();
         self.end_rescue_class_lists();
@@ -1149,10 +1159,13 @@ impl RubyLexer {
                     t => t.type_ == TokenType::Keyword && t.value == "do",
                 };
             if opens {
-                if let Some(close) = (i + 1..self.tokens.len()).find(|&k| is_bar(&self.tokens[k])) {
-                    out.push((i, close));
-                    i = close;
-                }
+                // No closing bar anywhere after this one means no later bar
+                // either, so the search can stop (and never rescans).
+                let Some(close) = (i + 1..self.tokens.len()).find(|&k| is_bar(&self.tokens[k])) else {
+                    break;
+                };
+                out.push((i, close));
+                i = close;
             }
             i += 1;
         }
@@ -1170,42 +1183,67 @@ impl RubyLexer {
     /// The one `;` the grammar does use is kept: the one that starts a
     /// block's block-local names, `do |x; y|`.
     fn semicolons_end_lines(&mut self) {
+        // The bar pairs come in token order and never overlap, so one
+        // pointer walks them alongside `i`.
         let params = self.block_param_bars();
+        let mut next_pair = 0;
         for i in 0..self.tokens.len() {
-            if self.tokens[i].type_ == TokenType::Semicolon
-                && !params.iter().any(|&(open, close)| open < i && i < close)
-            {
+            while next_pair < params.len() && params[next_pair].1 < i {
+                next_pair += 1;
+            }
+            let inside_params = params
+                .get(next_pair)
+                .is_some_and(|&(open, close)| open < i && i < close);
+            if self.tokens[i].type_ == TokenType::Semicolon && !inside_params {
                 self.tokens[i].type_ = TokenType::Newline;
             }
         }
     }
 
-    /// Insert a synthetic `;` ([`STATEMENT_END`]) right after `tokens[i]`.
-    /// Its type is `Semicolon`, which no grammar rule matches by type; the
-    /// grammar consumes it as the literal `";"` only where a statement or a
-    /// `rescue` class list may end.
-    fn insert_statement_end_after(&mut self, i: usize) {
-        let (line, column) = {
-            let t = &self.tokens[i];
-            (t.line, t.column + t.value.chars().count())
-        };
-        self.tokens.insert(
-            i + 1,
-            Token {
+    /// Insert a synthetic `;` ([`STATEMENT_END`]) right after each
+    /// `tokens[i]` for `i` in `after` (ascending, no repeats), in one
+    /// rebuild of the token vector: O(tokens + insertions).  (Inserting
+    /// them one at a time with `Vec::insert` moved the whole tail each time,
+    /// which made a file of many short statements quadratic.)
+    ///
+    /// The token's type is `Semicolon`, which no grammar rule matches by
+    /// type; the grammar consumes it as the literal `";"` only where a
+    /// statement, a keyword's argument list or a `rescue` class list may end.
+    fn insert_statement_ends(&mut self, after: &[usize]) {
+        if after.is_empty() {
+            return;
+        }
+        let old_tokens = std::mem::take(&mut self.tokens);
+        let old_ws = std::mem::take(&mut self.whitespace_before_token);
+        let mut tokens = Vec::with_capacity(old_tokens.len() + after.len());
+        let mut ws = Vec::with_capacity(old_ws.len() + after.len());
+        let mut pending = after.iter().peekable();
+        for (i, token) in old_tokens.into_iter().enumerate() {
+            let insert_here = pending.next_if(|&&a| a == i).is_some();
+            let end = insert_here.then(|| Token {
                 type_: TokenType::Semicolon,
                 value: STATEMENT_END.to_string(),
-                line,
-                column,
+                line: token.line,
+                column: token.column + token.value.chars().count(),
                 type_name: None,
                 // Not in the source: the grammar parser leaves it out of
                 // every node's span, and `source_spelling` drops it.
                 flags: Some(TOKEN_SYNTHETIC),
                 cv: None,
-            },
-        );
-        if i < self.whitespace_before_token.len() {
-            self.whitespace_before_token.insert(i + 1, false);
+            });
+            tokens.push(token);
+            if let Some(w) = old_ws.get(i) {
+                ws.push(*w);
+            }
+            if let Some(end) = end {
+                tokens.push(end);
+                if i < old_ws.len() {
+                    ws.push(false);
+                }
+            }
         }
+        self.tokens = tokens;
+        self.whitespace_before_token = ws;
     }
 
     /// Step 2: end a `rescue` clause's class list at its line break.
@@ -1227,6 +1265,9 @@ impl RubyLexer {
     fn end_rescue_class_lists(&mut self) {
         let ends_line =
             |t: &Token| matches!(t.type_, TokenType::Newline | TokenType::Eof);
+        // Each `rescue` scans only its own class list, and the lists never
+        // overlap, so finding them all is linear; then one rebuild.
+        let mut ends = Vec::new();
         let mut i = 0;
         while i < self.tokens.len() {
             let is_rescue =
@@ -1262,12 +1303,13 @@ impl RubyLexer {
                 }
             }
             if let Some(at) = end_at {
-                self.insert_statement_end_after(at);
-                i = at + 2;
+                ends.push(at);
+                i = at + 1;
             } else {
                 i += 1;
             }
         }
+        self.insert_statement_ends(&ends);
     }
 
     /// Step 3: re-tag a `[`, `(`, `-` or `+` that starts a statement.
@@ -1323,11 +1365,14 @@ impl RubyLexer {
         }
     }
 
-    /// Step 4: end a statement that is one name alone on its line.
+    /// Step 4: end a statement that is one name alone on its line, and the
+    /// argument list of a keyword that ends its line.
     ///
     /// ```ruby
     /// puts          # a call with no arguments: prints a blank line
     /// puts 2
+    /// super         # the zero-argument `super`: forwards the parameters
+    /// puts "hi"
     /// ```
     ///
     /// A paren-less call's arguments start on the callee's own line, but
@@ -1337,60 +1382,100 @@ impl RubyLexer {
     /// name, `expression_stmt` consumes it, and a paren-less call cannot
     /// start with it.
     ///
-    /// The name must be where a statement starts: first on its line, after
-    /// a token that ends an expression ([`Self::ends_expression`]), a `;`
-    /// from step 2, the `|` that closes block parameters, `{`, or one of
-    /// `do`, `then`, `else`, `begin`, `ensure`.  After `,`, `(`, `=` or an
-    /// operator it is the rest of an expression and is left alone.  No `;`
-    /// goes in when the next line cannot be an argument anyway: it starts
-    /// with `end`, another clause keyword, a closing bracket, or a `.` that
-    /// continues a method chain.
+    /// The keywords that take a paren-less argument list have it too, and
+    /// worse, because a `;` is a line break here (step 1): `super` ⏎
+    /// `puts "hi"` read as `super(puts)` and then `"hi"`, and `return; 42`
+    /// as `return 42`.  So `super`, `yield`, `return`, `break` and `next`
+    /// at the end of a line get a `;` too, which their own rules consume
+    /// (`super_expr = "super" ( ";" | [ super_args ] )`, and the same shape
+    /// for the others).  `super` can stand anywhere an expression can
+    /// (`x = super`), so it gets the `;` wherever it ends a line, unless it
+    /// is a method name (`obj.super`, `def super`, `:super`).  The other
+    /// four are statements, so — like a name — they get it only where a
+    /// statement starts; elsewhere (`x = yield`) the grammar reads them as
+    /// a bare keyword value, which takes no arguments.
+    ///
+    /// A name or statement keyword must be where a statement starts: first
+    /// on its line, after a token that ends an expression
+    /// ([`Self::ends_expression`]), a `;` from step 2, the `|` that closes
+    /// block parameters, `{`, or one of `do`, `then`, `else`, `begin`,
+    /// `ensure`.  After `,`, `(`, `=` or an operator it is the rest of an
+    /// expression and is left alone.  No `;` goes in when the next line
+    /// cannot be an argument anyway: it starts with `end`, another clause
+    /// keyword, a closing bracket, or a `.` that continues a method chain.
     fn end_lone_names(&mut self) {
-        let closing_bars: Vec<usize> =
+        let closing_bars: HashSet<usize> =
             self.block_param_bars().into_iter().map(|(_, close)| close).collect();
-        // Find them all first, then insert from the back, so no index moves
-        // under the search.  (Whether a name is lone never depends on an
-        // earlier insertion: one would only replace a name that already
-        // ends an expression with a `;`, and both start a statement.)
-        let lone: Vec<usize> = (0..self.tokens.len())
-            .filter(|&i| self.is_lone_name(i, &closing_bars))
+        // Find them all first, then splice them in with one rebuild.
+        // (Whether a token ends its statement never depends on another
+        // insertion here: one would only replace a token that already ends
+        // an expression with a `;`, and both start a statement.)
+        let ends: Vec<usize> = (0..self.tokens.len())
+            .filter(|&i| self.ends_its_statement(i, &closing_bars))
             .collect();
-        for &i in lone.iter().rev() {
-            self.insert_statement_end_after(i);
-        }
+        self.insert_statement_ends(&ends);
     }
 
-    /// Whether `tokens[i]` is a name alone on its line where a statement
-    /// starts, followed by a line that could otherwise be read as its
-    /// argument (see [`Self::end_lone_names`]).  `closing_bars` holds the
-    /// indices of the `|` that close block parameters.
-    fn is_lone_name(&self, i: usize, closing_bars: &[usize]) -> bool {
-        let t = &self.tokens[i];
-        if t.type_ != TokenType::Name || !is_identifier_like(&t.value) {
-            return false;
+    /// Whether `tokens[i]` gets a synthetic `;` in step 4 (see
+    /// [`Self::end_lone_names`]): a name or keyword that ends its line where
+    /// that ends its statement, followed by a line that could otherwise be
+    /// read as its argument.  `closing_bars` holds the indices of the `|`
+    /// that close block parameters.
+    ///
+    /// Cost: the walks over `Newline` runs before and after `i` are paid
+    /// once per name or keyword that touches the run, so the whole pass is
+    /// linear.
+    fn ends_its_statement(&self, i: usize, closing_bars: &HashSet<usize>) -> bool {
+        #[derive(PartialEq)]
+        enum Kind {
+            /// A name, or `yield`/`return`/`break`/`next`: a statement start.
+            Statement,
+            /// `super`: anywhere but a method-name position.
+            Super,
         }
+        let t = &self.tokens[i];
+        let kind = match t.type_ {
+            TokenType::Name if is_identifier_like(&t.value) => Kind::Statement,
+            TokenType::Keyword => match t.value.as_str() {
+                "yield" | "return" | "break" | "next" => Kind::Statement,
+                "super" => Kind::Super,
+                _ => return false,
+            },
+            _ => return false,
+        };
         if self.tokens.get(i + 1).map(|t| t.type_) != Some(TokenType::Newline) {
             return false;
         }
-        // The token before: on an earlier line, and where a statement ends.
+        // The token before.
         let mut p = i;
         while p > 0 && self.tokens[p - 1].type_ == TokenType::Newline {
             p -= 1;
         }
-        if p == i && i > 0 {
-            return false; // something precedes the name on its own line
-        }
-        let statement_starts = p == 0 || {
-            let prev = p - 1;
-            let pt = &self.tokens[prev];
-            self.ends_expression(prev)
-                || pt.type_ == TokenType::Semicolon
-                || pt.type_ == TokenType::LBrace
-                || (pt.type_ == TokenType::Keyword
-                    && matches!(pt.value.as_str(), "do" | "then" | "else" | "begin" | "ensure"))
-                || closing_bars.contains(&prev)
+        let placed = if kind == Kind::Super {
+            // Not a method name: `obj.super`, `obj&.super`, `A::super`,
+            // `:super`, `def super`, `alias super …`.
+            i == 0 || {
+                let pt = &self.tokens[i - 1];
+                !(matches!(pt.type_, TokenType::Dot | TokenType::Colon)
+                    || (pt.type_ == TokenType::Name && pt.value == "&.")
+                    || (pt.type_ == TokenType::Keyword
+                        && matches!(pt.value.as_str(), "def" | "alias" | "undef")))
+            }
+        } else if p == i && i > 0 {
+            false // something precedes it on its own line
+        } else {
+            p == 0 || {
+                let prev = p - 1;
+                let pt = &self.tokens[prev];
+                self.ends_expression(prev)
+                    || pt.type_ == TokenType::Semicolon
+                    || pt.type_ == TokenType::LBrace
+                    || (pt.type_ == TokenType::Keyword
+                        && matches!(pt.value.as_str(), "do" | "then" | "else" | "begin" | "ensure"))
+                    || closing_bars.contains(&prev)
+            }
         };
-        if !statement_starts {
+        if !placed {
             return false;
         }
         // The token after: one that could start an argument.
@@ -5117,6 +5202,65 @@ mod tests {
         ] {
             assert_eq!(ends(src), 0, "{src:?}: {:?}", significant(src));
         }
+    }
+
+    #[test]
+    fn a_keyword_ending_its_line_ends_its_argument_list() {
+        // The value of the token right after each keyword: a synthetic `;`
+        // when the line (or a source `;`) ends there.  `super` ⏎ `puts
+        // "hi"` read as `super(puts)`, and `super; setup` as
+        // `super(setup)`, `return; 42` as `return 42`.
+        let after = |src: &str, kw: &str| -> Option<(TokenType, bool)> {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            let at = toks.iter().position(|t| t.type_ == TokenType::Keyword && t.value == kw)?;
+            toks.get(at + 1)
+                .map(|t| (t.type_, t.flags.unwrap_or(0) & TOKEN_SYNTHETIC != 0))
+        };
+        let ended = Some((TokenType::Semicolon, true));
+        for (src, kw) in [
+            ("def initialize\n  super\n  puts \"hi\"\nend", "super"),
+            ("def initialize\n  super; setup\nend", "super"),
+            ("x = super\nputs x", "super"),
+            ("def t\n  yield\n  puts \"x\"\nend", "yield"),
+            ("def t\n  yield; foo\nend", "yield"),
+            ("def f\n  return\n  42\nend", "return"),
+            ("def f\n  return; 42\nend", "return"),
+            ("while true\n  break\n  x\nend", "break"),
+            ("xs.each do |x|\n  next\n  puts x\nend", "next"),
+        ] {
+            assert_eq!(after(src, kw), ended, "{src:?}");
+        }
+        // Not when arguments follow on the line, when the next line cannot
+        // be an argument, when the keyword is a method name, or (for the
+        // statement keywords) when it is a value inside an expression.
+        for (src, kw) in [
+            ("super(1)\nputs 2", "super"),
+            ("super 1\nputs 2", "super"),
+            ("def f\n  super\nend", "super"),
+            ("x = obj.super\nputs x", "super"),
+            ("def f\n  return\nend", "return"),
+            ("x = super\n  .to_s", "super"),
+            ("x = yield\nputs x", "yield"),
+            ("a or return\nputs 1", "return"),
+        ] {
+            assert_ne!(after(src, kw), ended, "{src:?}");
+        }
+    }
+
+    /// The pass is linear: 200k lines that each end a statement (each a
+    /// lone name followed by another) once took a `Vec::insert` apiece,
+    /// each moving the whole tail of a 600k-token vector.  The whole lex
+    /// takes about 2 s in a debug build here; the bound leaves room for a
+    /// slow CI runner while still catching a quadratic pass.
+    #[test]
+    fn many_statement_ends_lex_in_bounded_time() {
+        let src = "a\nb\n".repeat(100_000);
+        let start = std::time::Instant::now();
+        let toks = tokenize_ruby_for_version(&src, "3.0").unwrap();
+        let elapsed = start.elapsed();
+        let ends = toks.iter().filter(|t| t.type_ == TokenType::Semicolon).count();
+        assert_eq!(ends, 199_999, "every name but the last ends its statement");
+        assert!(elapsed < std::time::Duration::from_secs(20), "took {elapsed:?}");
     }
 
     #[test]

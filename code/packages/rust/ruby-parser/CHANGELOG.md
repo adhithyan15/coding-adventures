@@ -4,6 +4,15 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
 
 ## Unreleased — statement ends before `-`, `+`, `(`, after a lone name and a `rescue` list (#18798)
 
+### Fixed (security review of #18798)
+
+- Regenerated: `super_expr`, `yield_statement`, `return_statement`,
+  `break_statement` and `next_statement` take the lexer's synthetic `;` in
+  place of their argument list (`"super" ( ";" | [ super_args ] )`), and
+  `factor`'s bare-KEYWORD alternative refuses the trailing-modifier
+  keywords, so `puts if c` is no longer `puts(if_modifier)` then `c`.
+  Test `test_parse_a_keyword_ending_its_line_takes_no_arguments`.
+
 ### Changed
 
 - Regenerated from `ruby.grammar`, which now:

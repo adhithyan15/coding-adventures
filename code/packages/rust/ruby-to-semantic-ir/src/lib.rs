@@ -10282,6 +10282,88 @@ b = "y"
         );
     }
 
+    /// #18798 (security review) — `super` ⏎ `puts "hi"`, the common
+    /// `initialize` shape, read as `super(puts)` then `"hi"`: it printed a
+    /// blank line, passed `nil` up and dropped `"hi"`.  The zero-argument
+    /// `super` and the `puts "hi"` are two statements; so are `super;
+    /// setup`, `yield; foo` and `return; 42`.
+    #[test]
+    fn a_keyword_ending_its_line_takes_nothing_from_the_next() {
+        let m = lower(
+            "class A\n  def initialize\n    puts \"A\"\n  end\nend\nclass B < A\n  def initialize\n    super\n    puts \"hi\"\n  end\nend\nB.new\n",
+        );
+        let init = m
+            .functions
+            .iter()
+            .filter(|f| f.name.contains("initialize"))
+            .find(|f| format!("{:?}", f.body).contains("__super__"))
+            .expect("B#initialize");
+        let calls: Vec<String> = init
+            .body
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                    Some(format!("{name}/{}", args.len()))
+                }
+                _ => None,
+            })
+            .chain(match &init.body.value {
+                Expr::BuiltinCall { name, args, .. } => Some(format!("{name}/{}", args.len())),
+                _ => None,
+            })
+            .collect();
+        // `__super__(method, class)` with nothing forwarded, then the
+        // `puts "hi"` (stream, terminator, unpack flag, value).
+        assert_eq!(calls, vec!["__super__/2", "__sys_write__/4"], "{:?}", init.body);
+        assert_valid(&m);
+
+        let m = lower("def t\n  yield; foo\nend\ndef foo\n  1\nend\nt { 2 }\n");
+        let t = func(&m, "t");
+        assert!(
+            format!("{:?}", t.body).contains("fn_name: \"foo\""),
+            "`foo` is a call of its own: {:?}",
+            t.body
+        );
+        let m = lower("def f\n  return; 42\nend\n");
+        let f = func(&m, "f");
+        assert!(
+            matches!(&f.body.stmts[0], Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                if name == "return" && matches!(args.as_slice(), [Expr::NilLit { .. }])),
+            "{:?}",
+            f.body
+        );
+    }
+
+    /// #18798 (security review) — only a `puts` that is a whole statement
+    /// prints a newline.  As a value (`x = puts`, `f(puts)`) it stays a
+    /// reference to an unknown name, which the validator refuses.
+    #[test]
+    fn a_bare_puts_used_as_a_value_is_not_a_call() {
+        for src in ["x = puts\n", "def f(a)\n  a\nend\nf(puts)\n"] {
+            let m = lower(src);
+            assert!(!format!("{m:?}").contains("__sys_write__"), "{src:?}");
+            assert!(!semantic_ir::validate(&m).is_ok(), "{src:?}");
+        }
+        // As a statement inside `if`/modifier/blocks it still prints.
+        let m = lower("if true\n  puts\nend\nputs if true\n");
+        assert_eq!(format!("{m:?}").matches("__sys_write__").count(), 2);
+        assert_valid(&m);
+    }
+
+    /// #18798 (security review) — an invented name skips a name spelled
+    /// only inside a `#{…}` interpolation too, which is lowered from the
+    /// string's text rather than from `Name` tokens.
+    #[test]
+    fn invented_names_skip_names_spelled_only_in_an_interpolation() {
+        let m = lower("def f\n  x = \"#{__rescue_value_0}\"\n  1\nrescue\n  2\nend\n");
+        let f = func(&m, "f");
+        let Some(Stmt::LetBinding { name, .. }) = f.body.stmts.first() else {
+            panic!("got {:?}", f.body.stmts);
+        };
+        assert_ne!(name, "__rescue_value_0");
+    }
+
     /// #18798 — a `rescue` line's class list ends at the line break:
     /// `rescue Boom` ⏎ `puts 40` read as the call `Boom(puts 40)`, which
     /// the validator refused.  A bare `rescue` ⏎ `note` keeps `note` as the

@@ -27,6 +27,12 @@
 //! on Rust a store into an outer local inside `begin`/`rescue` failed
 //! rustc (`cannot assign twice to immutable variable`).
 //!
+//! The security review of that change found more of the same: `super` ⏎
+//! `puts "hi"` read as `super(puts)` (and `super; setup` as
+//! `super(setup)`, now that `;` is a line break), `puts if c` as
+//! `puts(if_modifier)`, and a `rescue => e` binding that the clause stores
+//! into failed to compile on Rust and threw on JavaScript (`const`).
+//!
 //! Fixing the #18778 gaps turned up two more of the same kind, pinned here too:
 //!
 //! - a `while` body's last statement became the body's *value*, which the C
@@ -260,6 +266,37 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "rb_semicolons_separate_statements",
         "def risky; raise \"x\"; rescue => e; \"rescued\"; end\nputs risky\nx = 1; y = 2; puts x + y\n",
         "rescued\n3",
+    ),
+    // ── #18798 review: a keyword that ends its line ─────────────────────
+    // The `initialize` shape: the zero-argument `super`, then a statement.
+    (
+        "rb_super_ending_its_line",
+        "class A\n  def initialize\n    puts \"A\"\n  end\nend\nclass B < A\n  def initialize\n    super\n    puts \"hi\"\n  end\nend\nB.new\n",
+        "A\nhi",
+    ),
+    // `super; setup` and `x = super` ⏎ `puts x`.
+    (
+        "rb_super_before_a_semicolon_or_as_a_value",
+        "def setup\n  puts \"set\"\nend\nclass A\n  def initialize\n    puts \"A\"\n  end\n  def v\n    7\n  end\nend\nclass B < A\n  def initialize\n    super; setup\n  end\n  def v\n    x = super\n    puts x\n    x + 1\n  end\nend\nputs B.new.v\n",
+        "A\nset\n7\n8",
+    ),
+    (
+        "rb_yield_ending_its_line",
+        "def t\n  yield\n  puts \"x\"\nend\nt { puts \"b\" }\ndef u\n  yield; puts \"y\"\nend\nu { puts \"c\" }\n",
+        "b\nx\nc\ny",
+    ),
+    // A bare `puts` before a modifier, and inside an `if`.
+    (
+        "rb_bare_puts_with_a_modifier",
+        "puts 1\nputs if true\nputs 2\nif true\n  puts\nend\nputs 3\n",
+        "1\n\n2\n\n3",
+    ),
+    // The clause stores into its own binding (Rust: immutable `let`;
+    // JavaScript: `const`).
+    (
+        "rb_rescue_binding_reassigned_in_the_clause",
+        "begin\n  raise \"q\"\nrescue => e\n  e = 5\n  puts e\nend\n",
+        "5",
     ),
     // A store into an outer local inside `begin`/`rescue` (Rust declared
     // the local immutable).

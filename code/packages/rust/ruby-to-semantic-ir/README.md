@@ -107,7 +107,9 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
   line takes nothing from the next line (`puts` ⏎ `puts 2`), a `rescue`
   line's class list ends at the line break, and `;` separates statements.
   (The `ruby-lexer` crate marks these places; see its `mark_statement_ends`.)
-- **A bare `puts` (#18798)** prints a newline, like `puts()`.
+- **A bare `puts` statement (#18798)** prints a newline, like `puts()`.
+  (As a value, `x = puts`, it is refused.)  `super`, `yield`, `return`,
+  `break` and `next` take nothing from the next line or past a `;`.
 - **A method-level `rescue` keeps its value (#18798).**  `def risky; raise
   "x"; rescue => e; "rescued"; end` returns `"rescued"`: the last value of
   the body, or of the clause that caught the exception, goes through an

@@ -3597,6 +3597,45 @@ mod tests {
         );
     }
 
+    /// #18798 (security review) — a keyword with a paren-less argument list
+    /// takes nothing from the next line or past a `;`: `super` ⏎ `puts
+    /// "hi"` read as `super(puts)` then `"hi"`, and `return; 42` as
+    /// `return 42`.
+    #[test]
+    fn test_parse_a_keyword_ending_its_line_takes_no_arguments() {
+        for src in [
+            "super\nputs \"hi\"",
+            "super; setup",
+            "x = super\nputs x",
+        ] {
+            let ast = parse_ruby(src);
+            assert!(find_descendant(&ast, "super_args").is_none(), "{src:?}");
+            assert_eq!(statement_rules(&ast).len(), 2, "{src:?}");
+        }
+        for src in ["yield\nputs \"x\"", "yield; foo"] {
+            let ast = parse_ruby(src);
+            assert!(find_descendant(&ast, "yield_args").is_none(), "{src:?}");
+            let rules = statement_rules(&ast);
+            assert_eq!((rules.len(), rules[0].as_str()), (2, "yield_statement"), "{src:?}");
+        }
+        for (src, rule) in [
+            ("return\n42", "return_statement"),
+            ("return; 42", "return_statement"),
+            ("break\nx", "break_statement"),
+            ("next; x", "next_statement"),
+        ] {
+            let ast = parse_ruby(src);
+            let stmt = find_descendant(&ast, rule).expect(rule);
+            assert!(find_descendant(stmt, "expression").is_none(), "{src:?}");
+            assert_eq!(statement_rules(&ast).len(), 2, "{src:?}");
+        }
+        // Arguments on the keyword's own line are still its arguments.
+        let ast = parse_ruby("super 1\nputs 2");
+        assert!(find_descendant(&ast, "super_args").is_some());
+        let ast = parse_ruby("return 42");
+        assert!(find_descendant(&ast, "expression").is_some());
+    }
+
     /// #18798 — `rescue Boom` ⏎ `puts 40`: the class list ends at the line
     /// break (it read `Boom(puts 40)`), and `;` separates statements.
     #[test]

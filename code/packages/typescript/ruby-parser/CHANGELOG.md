@@ -6,6 +6,11 @@ All notable changes to the Ruby Parser (TypeScript) package will be documented i
 
 ### Changed
 
+- Regenerated again for the #18798 security review: `super`, `yield`,
+  `return`, `break` and `next` may take a `;` in place of their argument
+  list (a source `;` here, so `return; 42` no longer reads `return 42`),
+  and a trailing-modifier keyword (`if_modifier`, …) is never a bare value
+  in `factor` (`puts if c` was `puts(if_modifier)`).
 - Regenerated from `code/grammars/ruby/ruby.grammar` for #18798.  The new
   literals `( line start`, `- line start` and `+ line start` are token
   values only the Rust `ruby-lexer` produces, so for this package's lexer

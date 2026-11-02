@@ -45,3 +45,12 @@ can both start a statement and continue an expression (`[`, `(`, `-`, `+`,
 `*`, `/`, `::`), and decide for each where a newline ends the statement.  An
 end-to-end corpus should put such a token at the start of a line after an
 assignment and after a bare call.
+
+List the *line enders* too: every token after which a paren-less argument
+list may start.  #18798 first covered only names (`puts` ⏎ `puts 2`), and
+its security review found the keywords that take one — `super`, `yield`,
+`return`, `break`, `next` — still gluing (`super` ⏎ `puts "hi"` read as
+`super(puts)`), and made worse once `;` became a line break
+(`return; 42` read as `return 42`).  And a pass that inserts tokens must
+splice them in one rebuild: one `Vec::insert` per insertion made the pass
+quadratic on a file of short statements.

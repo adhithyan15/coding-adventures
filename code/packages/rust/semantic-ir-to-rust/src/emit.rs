@@ -1093,11 +1093,15 @@ fn emit_try_catch(
             // `Value::Exception` carrying the class tag and message, so
             // `e.class` / `e.is_a?` / `e.message` all answer.  It used to bind
             // the message STRING (see `exc_value`).
+            // #18798: `let mut` when the clause body stores into the binding
+            // (`rescue => e` ⏎ `e = 5`); a plain `let` failed rustc with
+            // "cannot assign twice to immutable variable".
             if let Some(bind) = &r.binding {
                 let _ = writeln!(
                     out,
-                    "{}let {}: __sir::Value = __sir::exc_value(&__exc);",
+                    "{}{} {}: __sir::Value = __sir::exc_value(&__exc);",
                     bpad,
+                    let_keyword(bind),
                     var_ident(bind)
                 );
             }

@@ -2,6 +2,11 @@
 
 ## Unreleased — `not` is a builtin; stores inside `begin`/`rescue` (#18798)
 
+- **A `rescue => e` binding the clause stores into** (`e = 5`) is now
+  declared with `let_keyword` (`let mut` when assigned); a plain `let` failed
+  rustc.  Test `stores_inside_try_catch_compile` (also covers the outer
+  local stored inside a `TryCatch`).
+
 - **`not`.**  Every Ruby `unless`, `until` and `!x` lowers to
   `BuiltinCall("not", [x])`, which panicked `unknown builtin: not`.  The
   emitter now inlines `__sir::Value::Bool(!__sir::truthy(&(x)))` and

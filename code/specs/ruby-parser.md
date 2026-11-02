@@ -266,9 +266,14 @@ lexers, which never produce these, parse as before.
 | unary `+` | `unary_plus = "+ line start" factor`, lowered to the operand.  It takes only the tagged token, so `super + 1` stays a sum. |
 | a name alone on its line, where a statement starts | followed by a synthetic `;` (`Semicolon`, flagged `TOKEN_SYNTHETIC`) when the next line could be its argument; `expression_stmt = expression [ ";" ]` consumes it.  `puts` ⏎ `puts 2` is two statements. |
 | `rescue` with no `=>` on its line | a synthetic `;` after the class list (or after a bare `rescue`); `rescue_clause` accepts `exception_list ";"` and `";"`.  `rescue Boom` ⏎ `puts 40` rescues `Boom`. |
-| a bare `puts` (not a local, not a user `def`) | lowers like `puts()`: a `__sys_write__` with no values, which prints a newline. |
+| `super`, `yield`, `return`, `break`, `next` ending a line (or before a `;`) | followed by a synthetic `;`, which the keyword's own rule takes in place of its argument list (`super_expr = "super" ( ";" \| [ super_args ] )`, and the same for the others), so `super` ⏎ `puts "hi"` and `return; 42` take nothing from what follows.  `super` gets it anywhere but a method-name position (`obj.super`, `def super`, `:super`); the four statement keywords only where a statement starts. |
+| a trailing-modifier keyword (`if_modifier`, …) | never a bare value: `factor`'s KEYWORD alternative refuses it, so `puts if c` is `puts`, guarded by `c`. |
+| a bare `puts` that is a whole statement (not a local, not a user `def`) | lowers like `puts()`: a `__sys_write__` with no values, which prints a newline.  As a value (`x = puts`) it stays an unknown name. |
 | a `def` with method-level `rescue`/`ensure` | its value is the body's last value, or the catching clause's, through an invented local `__rescue_value_<n>` (`let` nil, stored as the last statement of the body and of each `rescue` clause, returned).  `ensure` never changes it. |
-| invented names (`__for_<n>`, `__rescue_value_<n>`) | claimed from one pool holding every name the source spells, so no program name, even one assigned later, can be one. |
+| invented names (`__for_<n>`, `__rescue_value_<n>`) | claimed from one pool holding every name the source spells (including every word inside a string, which covers `#{…}`), so no program name, even one assigned later, can be one. |
+
+`mark_statement_ends` is linear in the number of tokens: its insertions are
+spliced in by one rebuild of the token vector.
 
 ## End-to-end success criteria
 

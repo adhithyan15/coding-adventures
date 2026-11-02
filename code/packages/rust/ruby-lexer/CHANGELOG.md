@@ -4,6 +4,28 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
 
 ## Unreleased — a newline or `;` ends a statement before `-`, `+`, `(` and after a lone name or a `rescue` list (#18798)
 
+### Fixed (security review of #18798)
+
+- **A keyword that ends its line ends its argument list.**  `super`,
+  `yield`, `return`, `break` and `next` take a paren-less argument list,
+  and the lone-name rule only covered names: `super` ⏎ `puts "hi"` (the
+  common `initialize` shape) read as `super(puts)` then `"hi"`, and since
+  `;` became a line break, `super; setup` / `yield; foo` / `return; 42`
+  read as `super(setup)` / `yield(foo)` / `return 42`.  Step 4 (now
+  `ends_its_statement`) puts a synthetic `;` after such a keyword too:
+  `super` wherever it ends a line (it can be a value, `x = super`) unless
+  it is a method name (`obj.super`, `def super`, `:super`); the other four
+  only where a statement starts.  Test
+  `a_keyword_ending_its_line_ends_its_argument_list`.
+- **The pass is linear.**  Each synthetic `;` was a `Vec::insert`, so the
+  pass was O(tokens × insertions); `;`-in-block-parameters and
+  closing-bar lookups were O(n × blocks).  The insertions are now spliced
+  in by one rebuild (`insert_statement_ends`), the block-parameter ranges
+  are walked with one pointer, the closing bars are a `HashSet`, and the
+  bar search stops at the first unclosed `|`.  Test
+  `many_statement_ends_lex_in_bounded_time` (200k lines, ~2 s for the whole
+  lex in a debug build).
+
 ### Added
 
 - **`mark_statement_ends`**, the lexer's last pass (after every era

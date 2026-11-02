@@ -201,9 +201,14 @@ brace_block  = LBRACE [ block_params ] { statement } RBRACE ;
 # the parameter list).
 block_params = "|" NAME { COMMA NAME } [ ";" NAME { COMMA NAME } ] "|" ;
 # Phase 6j — control-flow keywords: `return`, `break`, `next`.
-return_statement = "return" [ expression ] ;
-break_statement  = "break"  [ expression ] ;
-next_statement   = "next"   [ expression ] ;
+# #18798 — a line break ends the argument list: `return` ⏎ `42` returns
+# nil.  ruby-lexer puts a `;` after `return`/`break`/`next`/`yield`/
+# `super` where its line (or a source `;`) ends right after the keyword,
+# and each rule takes that `;` in place of its argument.  Without it
+# `return; 42` read as `return 42`.
+return_statement = "return" ( ";" | [ expression ] ) ;
+break_statement  = "break"  ( ";" | [ expression ] ) ;
+next_statement   = "next"   ( ";" | [ expression ] ) ;
 # Phase 11b (FC) — `redo` restarts the current loop iteration WITHOUT
 # re-evaluating the loop condition or advancing the iterator.  Unlike
 # `break`/`next`, `redo` never carries a value — it is a bare keyword.
@@ -256,7 +261,7 @@ undef_statement  = "undef" NAME ;
 #
 # Args reuse `call_arg` (Phase 6s) so splat (`yield *arr`) and
 # double-splat (`yield **hsh`) work uniformly with method-call args.
-yield_statement = "yield" [ yield_args ] ;
+yield_statement = "yield" ( ";" | [ yield_args ] ) ;
 yield_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
            | call_arg { COMMA call_arg } ;
 # Phase 22d (FC) — `super` keyword.  Inside a method, `super` calls the
@@ -912,7 +917,10 @@ term         = factor { ( STAR | SLASH ) factor } ;
 # is not required — `super + 1` has no `super_args` (the `+` cannot begin
 # a `call_arg`/`LPAREN`), so it parses as bare-`super` then the enclosing
 # `sum` applies `+ 1` to the produced value.
-super_expr   = "super" [ super_args ] ;
+# #18798 — `super` ⏎ `puts "hi"` (the common `initialize` shape) read as
+# `super(puts)` then `"hi"`; the `;` ruby-lexer puts after a `super` that
+# ends its line takes the place of `super_args` (see `return_statement`).
+super_expr   = "super" ( ";" | [ super_args ] ) ;
 # Bug fix — bracket-index READ (`recv[expr]`) had no general postfix
 # production at all: `factor`'s postfix repetition only admitted `dot_call`/
 # `scope_resolution`, so `[...]` after a receiver was NEVER recognized as an
@@ -941,7 +949,10 @@ super_expr   = "super" [ super_args ] ;
 # other languages' parsers compare the value alone, so for them
 # `puts "[ line start"` does not parse (as `puts "<"` already does not; #18798).
 index_suffix = !"[ line start" LBRACKET expression RBRACKET ;
-factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus | unary_plus ) { dot_call | scope_resolution | index_suffix } ;
+# #18798 — a trailing-modifier keyword (`if_modifier`, …; see
+# `modifier_statement`) is never a value, so `factor`'s bare-KEYWORD
+# alternative refuses it: `puts if c` read as `puts(if_modifier)`, then `c`.
+factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" !"if_modifier" !"unless_modifier" !"while_modifier" !"until_modifier" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus | unary_plus ) { dot_call | scope_resolution | index_suffix } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
 #
 # Ruby 1.9+ shorthand for creating a `Proc`/`Lambda`.  The parameter

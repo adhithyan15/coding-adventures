@@ -4,6 +4,22 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ## Unreleased — newline gluing, `rescue Klass` ⏎, bare `puts`, method-level `rescue` value (#18798)
 
+### Fixed (security review of #18798)
+
+- **`super` ⏎ `puts "hi"`** printed a blank line, passed `nil` up and
+  dropped `"hi"` (it read `super(puts)`); `super; setup`, `yield; foo` and
+  `return; 42` swallowed the next statement as an argument.  Test
+  `a_keyword_ending_its_line_takes_nothing_from_the_next`.
+- **A bare `puts` prints only as a whole statement** (`statement_puts`, the
+  positions of `expression_stmt`s that are just `puts`).  As a value
+  (`x = puts`, `f(puts)`) it stays an unknown name the validator refuses.
+  `puts if c` works (see ruby-parser).  Test
+  `a_bare_puts_used_as_a_value_is_not_a_call`.
+- **Invented names skip names spelled only in a `#{…}` interpolation**:
+  `collect_source_names` also takes every identifier-shaped word of every
+  string, since interpolation is lowered from the string's text.  Test
+  `invented_names_skip_names_spelled_only_in_an_interpolation`.
+
 ### Fixed
 
 - **A line that starts with `-`, `+` or `(` starts a statement.**

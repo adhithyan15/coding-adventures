@@ -805,7 +805,7 @@
       "version": "ruby",
       "kind": "grammar",
       "path": "code/grammars/ruby/ruby.grammar",
-      "sha256": "6ec034ab492cf06e3f49fc12fc6d71736531e9356dc23287cb2f7426c07f9b8c"
+      "sha256": "dfe5df0b1e863310a0e93d0ddfac952b03b8c6d27b43c7ecb2b3ffc40ee3c9a4"
     },
     {
       "family": "ruby",

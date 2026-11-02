@@ -6,6 +6,12 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ### Added (#18798)
 
+- Security review follow-up: 5 more programs — `super` ending its line,
+  `super; setup` and `x = super` ⏎ `puts x`, `yield` ending its line,
+  a bare `puts` before a modifier `if`, and a `rescue` binding the clause
+  reassigns (Rust and JavaScript refused or threw).  `return`/`break`/
+  `next` ending a line are covered by the frontend tests only: no backend
+  runs a `return`/`break`/`next` builtin yet (#18798).
 - `tests/ruby_sir_gaps.rs` gains 10 Ruby programs, each checked against
   real `ruby` and run on all six backends: a line starting with `-`, `+`
   or `(` (after an assignment, a name and `;`), an operator ending a line

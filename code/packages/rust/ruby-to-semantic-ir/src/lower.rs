@@ -80,7 +80,11 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         enclosing_visible: HashSet::new(),
         fresh_counter: 0,
         used_names: HashSet::new(),
+        statement_puts: HashSet::new(),
     };
+    // #18798 — the bare `puts` names that are whole statements; only those
+    // print a newline (see `Lowerer::bare_puts_call`).
+    collect_statement_puts(program, &mut lw.statement_puts);
     // #18798 — every name the source spells, so an invented local
     // (`__for_<n>`, `__rescue_value_<n>`) can never be one of them, even
     // one assigned later in the program (see `Lowerer::fresh_name`).
@@ -1114,14 +1118,59 @@ struct Lowerer {
     /// lesson of #18771: two generators with separate skip lists can invent
     /// the same name.)
     used_names: HashSet<String>,
+    /// #18798 — `(line, column)` of every bare `puts` that is a whole
+    /// statement on its own (an `expression_stmt` whose expression is just
+    /// that name).  See [`Lowerer::bare_puts_call`].
+    statement_puts: HashSet<(usize, usize)>,
 }
 
-/// #18798 — collect every `Name` token's value under `node` into `out`.
+/// #18798 — record where a bare `puts` is a whole statement: an
+/// `expression_stmt` whose expression is nothing but the name (a chain of
+/// single-child nodes ending in the one `Name` token `puts`).
+fn collect_statement_puts(node: &GrammarASTNode, out: &mut HashSet<(usize, usize)>) {
+    if node.rule_name == "expression_stmt" {
+        let mut inner = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            ASTNodeOrToken::Token(_) => None,
+        });
+        while let Some(n) = inner {
+            match n.children.as_slice() {
+                [ASTNodeOrToken::Node(only)] => inner = Some(only),
+                [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::Name && t.value == "puts" => {
+                    out.insert((t.line, t.column));
+                    break;
+                }
+                _ => break,
+            }
+        }
+    }
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(n) = child {
+            collect_statement_puts(n, out);
+        }
+    }
+}
+
+/// #18798 — collect every name the source spells under `node` into `out`:
+/// each `Name` token's value, and every identifier-shaped word inside a
+/// `String` token.  A string's `#{…}` interpolation is lowered from the
+/// token's text later, so a name used only there (`"#{__rescue_value_0}"`)
+/// is no `Name` token here; taking every word of every string is a cheap
+/// over-approximation (an extra word only makes an invented name skip one
+/// more spelling).
 fn collect_source_names(node: &GrammarASTNode, out: &mut HashSet<String>) {
     for child in &node.children {
         match child {
             ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => {
                 out.insert(t.value.clone());
+            }
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+                let is_word = |c: char| c.is_alphanumeric() || c == '_';
+                for word in t.value.split(|c: char| !is_word(c)) {
+                    if !word.is_empty() {
+                        out.insert(word.to_string());
+                    }
+                }
             }
             ASTNodeOrToken::Token(_) => {}
             ASTNodeOrToken::Node(n) => collect_source_names(n, out),
@@ -10577,7 +10626,9 @@ impl Lowerer {
                             } else if let Some(call) = self.bare_name_call(&tok.value, &span) {
                                 // #18778 — not a local: a call (`puts g`).
                                 return Ok(call);
-                            } else if let Some(call) = self.bare_puts_call(&tok.value, &span) {
+                            } else if let Some(call) =
+                                self.bare_puts_call(&tok.value, (tok.line, tok.column), &span)
+                            {
                                 // #18798 — a bare `puts` prints a newline.
                                 return Ok(call);
                             } else {
@@ -10714,8 +10765,13 @@ impl Lowerer {
     /// defines is left to `bare_name_call` (or refused, inside a class).
     /// Otherwise it is the `__sys_write__` that `puts()` lowers to, with no
     /// values, which every backend prints as a lone `"\n"`.
-    fn bare_puts_call(&mut self, name: &str, span: &Span) -> Option<Expr> {
-        if name != "puts" {
+    ///
+    /// Only where the `puts` is a whole statement (`at` is in
+    /// [`Self::statement_puts`]).  As a value (`x = puts`, `f(puts)`) it is
+    /// still refused as an unknown name: a name in a value position that
+    /// silently printed would be a surprise worth a compile error instead.
+    fn bare_puts_call(&mut self, name: &str, at: (usize, usize), span: &Span) -> Option<Expr> {
+        if name != "puts" || !self.statement_puts.contains(&at) {
             return None;
         }
         let shadowed = self.declared_locals.contains(name)
