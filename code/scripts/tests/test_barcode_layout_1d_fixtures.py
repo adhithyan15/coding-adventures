@@ -10,6 +10,7 @@ import runpy
 import subprocess
 import tempfile
 import unittest
+import unittest.mock
 from itertools import pairwise
 from pathlib import Path, PurePosixPath
 from typing import Any, ClassVar, Self
@@ -237,12 +238,52 @@ class LaneEvidenceError(AssertionError):
 #   tree               resolves, not a commit  rejected
 
 
+# Environment variables that tell git *which repository* to use. Git itself
+# sets several of them for the commands a hook runs (GIT_DIR, GIT_INDEX_FILE,
+# ...), and they beat the working directory: with GIT_DIR set, `cwd=repo` is
+# ignored and every command acts on the repository GIT_DIR names. A gate that
+# inherits them would read, and a scratch repository would write, the wrong
+# repository. They are dropped so `repo` always means `repo`.
+#
+#   variable                          what it would redirect
+#   --------------------------------  ---------------------------------------
+#   GIT_DIR / GIT_COMMON_DIR          the whole repository
+#   GIT_WORK_TREE                     the checked-out files
+#   GIT_INDEX_FILE                    the staging area
+#   GIT_OBJECT_DIRECTORY,             where objects are read and written
+#   GIT_ALTERNATE_OBJECT_DIRECTORIES
+#   GIT_NAMESPACE                     which refs are visible
+_GIT_LOCATION_VARIABLES = frozenset(
+    {
+        "GIT_DIR",
+        "GIT_COMMON_DIR",
+        "GIT_WORK_TREE",
+        "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_NAMESPACE",
+    }
+)
+
+
+def _git_env(base: dict[str, str] | None = None) -> dict[str, str]:
+    """``base`` (default: this process's environment) without location variables."""
+
+    source = os.environ if base is None else base
+    return {
+        key: value
+        for key, value in source.items()
+        if key not in _GIT_LOCATION_VARIABLES
+    }
+
+
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     """Run one git command in ``repo`` without raising; callers read the status."""
 
     return subprocess.run(
         ["git", *args],
         cwd=repo,
+        env=_git_env(),
         check=False,
         capture_output=True,
         text=True,
@@ -365,30 +406,45 @@ class _ScratchRepo:
     """A throwaway git repository that replays a squash-merged lane change.
 
     It runs with global and system git config disabled so a developer's
-    signing, hooks, or default-branch settings cannot change the outcome.
+    signing, hooks, or default-branch settings cannot change the outcome, and
+    with *every* inherited ``GIT_*`` variable removed first. The location
+    variables matter most (see `_GIT_LOCATION_VARIABLES`): run from inside a
+    git hook, an inherited GIT_DIR would send this class's init, add, commit
+    and merge into the developer's real repository instead of the scratch one.
     """
 
     def __enter__(self) -> Self:
         self._directory = tempfile.TemporaryDirectory()
-        self.root = Path(self._directory.name)
-        self._env = {
-            **os.environ,
-            "GIT_CONFIG_GLOBAL": os.devnull,
-            "GIT_CONFIG_SYSTEM": os.devnull,
-            "GIT_AUTHOR_NAME": "fixture",
-            "GIT_AUTHOR_EMAIL": "fixture@example.invalid",
-            "GIT_COMMITTER_NAME": "fixture",
-            "GIT_COMMITTER_EMAIL": "fixture@example.invalid",
-        }
-        self._run("init", "-q", "-b", "main")
-        self.base = self.commit(
-            {
-                "pkg/BUILD": "build\n",
-                "pkg/Cargo.lock": "lock\n",
-                "pkg/deep/go.sum": "sum\n",
-                "outside.txt": "not in the lane\n",
+        try:
+            self.root = Path(self._directory.name)
+            self._env = {
+                **{
+                    key: value
+                    for key, value in os.environ.items()
+                    if not key.startswith("GIT_")
+                },
+                "GIT_CONFIG_GLOBAL": os.devnull,
+                "GIT_CONFIG_SYSTEM": os.devnull,
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CEILING_DIRECTORIES": str(self.root.parent),
+                "GIT_AUTHOR_NAME": "fixture",
+                "GIT_AUTHOR_EMAIL": "fixture@example.invalid",
+                "GIT_COMMITTER_NAME": "fixture",
+                "GIT_COMMITTER_EMAIL": "fixture@example.invalid",
             }
-        )
+            self._run("init", "-q", "-b", "main")
+            self.base = self.commit(
+                {
+                    "pkg/BUILD": "build\n",
+                    "pkg/Cargo.lock": "lock\n",
+                    "pkg/deep/go.sum": "sum\n",
+                    "outside.txt": "not in the lane\n",
+                }
+            )
+        except BaseException:
+            # __exit__ never runs when __enter__ raises, so clean up here.
+            self._directory.cleanup()
+            raise
         return self
 
     def __exit__(self, *_exc: object) -> None:
@@ -930,6 +986,43 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
                     package_tree=tree,
                     verified_revision=tree,
                 )
+
+    def test_git_location_variables_cannot_redirect_the_scratch_repo(self) -> None:
+        # Git exports GIT_DIR / GIT_INDEX_FILE to the commands a hook runs. If
+        # they leaked into the scratch repository, its commits would land in
+        # whatever repository they name. Point them at a decoy and check the
+        # decoy is untouched and the evidence check still reads the scratch.
+        with tempfile.TemporaryDirectory() as decoy_root:
+            decoy = Path(decoy_root)
+            subprocess.run(
+                ["git", "init", "-q", str(decoy)],
+                env={
+                    **_git_env(),
+                    "GIT_CONFIG_GLOBAL": os.devnull,
+                    "GIT_CONFIG_SYSTEM": os.devnull,
+                },
+                check=True,
+                capture_output=True,
+            )
+            before = sorted(str(path.relative_to(decoy)) for path in decoy.rglob("*"))
+            redirect = {
+                "GIT_DIR": str(decoy / ".git"),
+                "GIT_WORK_TREE": str(decoy),
+                "GIT_INDEX_FILE": str(decoy / ".git" / "index"),
+            }
+            with (
+                unittest.mock.patch.dict(os.environ, redirect),
+                _ScratchRepo() as repo,
+            ):
+                verified, tree = repo.lane_change_then_squash()
+                _check_lane_tree_evidence(
+                    repo.root,
+                    package_root="pkg",
+                    package_tree=tree,
+                    verified_revision=verified,
+                )
+            after = sorted(str(path.relative_to(decoy)) for path in decoy.rglob("*"))
+            self.assertEqual(after, before)
 
     def test_generator_is_byte_for_byte_clean(self) -> None:
         namespace = runpy.run_path(str(FIXTURE_ROOT / "generate_cases.py"))
