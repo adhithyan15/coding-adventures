@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-212-AMOUNT212",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for one and a quarter, one and a half or double.",
+  "prerequisites": []
+}

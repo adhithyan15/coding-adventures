@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C208-tahsil",
+    "language": "marwadi",
+    "chapter": 208,
+    "sequence": 13880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:352a7edb76ac1434"
+  },
+  "findings": []
+}

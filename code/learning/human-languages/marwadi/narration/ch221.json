@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 221,
+  "title": "Rain to Come",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e8ed1f98c7af1a5e",
+  "lessons": [
+    {
+      "id": "MW-C221-meh",
+      "sequence": 15250,
+      "title": "मेह (meh) — the rains; rain",
+      "headword": "मेह",
+      "romanization": "meh",
+      "gloss": "the rains; rain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98351ae02db55070",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to change, then the Marwadi for to find out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेह — meh — \"the rains; rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सावण मांय मेह आवै है। sāvaṇ mā̃y meh āvai hai. The rains come in the monsoon month."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेह (meh) is inherited from Sanskrit megha, \"a cloud, rain\"; CDIAL lists Old Marwari meha, \"rain\" (CDIAL 10302)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvaṇ mā̃y meh āvai hai. — The rains come in the monsoon month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvaṇ mā̃y meh āvai hai.* — The rains come in the monsoon month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to change, then the Marwadi for to find out, then say meh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to change, then the Marwadi for to find out, then say *meh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेह (meh) mean? (\"The rains; rain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C221-meh-type",
+              "prompt": "Say the Marwadi for 'the rains'.",
+              "assesses": [
+                "MW-LEX-C221-RAIN221-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मेह",
+                "meh"
+              ],
+              "feedback": {
+                "correct": "Right: मेह (meh) is 'the rains; rain'.",
+                "incorrect": "'the rains' is मेह (meh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C221-barasno",
+      "sequence": 15260,
+      "title": "बरसणो (barasṇo) — to rain; to pour down",
+      "headword": "बरसणो",
+      "romanization": "barasṇo",
+      "gloss": "to rain; to pour down",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e14c44c9e42006c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to find out, then the Marwadi for the rains."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बरसणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बरसणो — barasṇo — \"to rain; to pour down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सावण मांय मेह घणो बरसै है। sāvaṇ mā̃y meh ghaṇo barsai hai. In the monsoon month it rains hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो मेह बरस्यो, vo meh barsyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बरसणो (barasṇo) is inherited from Sanskrit varṣati, \"rains\"; CDIAL lists Hindi barasnā, \"to rain\". CDIAL gives no Marwari form in this entry (CDIAL 11394). बरसात, rain, belongs to the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barasṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barasṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barasṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barasṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvaṇ mā̃y meh ghaṇo barsai hai. — In the monsoon month it rains hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvaṇ mā̃y meh ghaṇo barsai hai.* — In the monsoon month it rains hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to find out, then the Marwadi for the rains, then say barasṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to find out, then the Marwadi for the rains, then say *barasṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बरसणो (barasṇo) mean? (\"To rain; to pour down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C221-barasno-type",
+              "prompt": "Say the Marwadi for 'to rain'.",
+              "assesses": [
+                "MW-LEX-C221-RAIN221-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बरसणो",
+                "barasṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बरसणो (barasṇo) is 'to rain; to pour down'.",
+                "incorrect": "'to rain' is बरसणो (barasṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C221-bijli",
+      "sequence": 15270,
+      "title": "बीजळी (bījḷī) — lightning",
+      "headword": "बीजळी",
+      "romanization": "bījḷī",
+      "gloss": "lightning",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:381a5796e6656901",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the rains, then the Marwadi for to rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बीजळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बीजळी — bījḷī — \"lightning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बादल मांय बीजळी है। bādal mā̃y bījḷī hai. There's lightning in the clouds."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बीजळी (bījḷī) is inherited from Sanskrit vidyullatā, \"forked lightning\", built from vidyut, \"lightning\", and latā, \"a creeper\"; CDIAL lists Old Marwari bījalī (CDIAL 11745)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bījḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bījḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bījḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bījḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādal mā̃y bījḷī hai. — There's lightning in the clouds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādal mā̃y bījḷī hai.* — There's lightning in the clouds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the rains, then the Marwadi for to rain, then say bījḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the rains, then the Marwadi for to rain, then say *bījḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बीजळी (bījḷī) mean? (\"Lightning\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C221-bijli-type",
+              "prompt": "Say the Marwadi for 'lightning'.",
+              "assesses": [
+                "MW-LEX-C221-RAIN221-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बीजळी",
+                "bījḷī"
+              ],
+              "feedback": {
+                "correct": "Right: बीजळी (bījḷī) is 'lightning'.",
+                "incorrect": "'lightning' is बीजळी (bījḷī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C221-gajno",
+      "sequence": 15280,
+      "title": "गाजणो (gājṇo) — to thunder; to roar",
+      "headword": "गाजणो",
+      "romanization": "gājṇo",
+      "gloss": "to thunder; to roar",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dab832fcf1e93699",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to rain, then the Marwadi for lightning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गाजणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाजणो — gājṇo — \"to thunder; to roar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज रात बादल गाजै है। āj rāt bādal gājai hai. Tonight the clouds are thundering."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो बादल गाज्यो, vo bādal gājyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाजणो (gājṇo) is inherited from Sanskrit garjati, \"thunders, roars\"; CDIAL lists the Old Marwari verb gājaï, \"thunders\" (CDIAL 4046)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gājṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gājṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gājṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gājṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj rāt bādal gājai hai. — Tonight the clouds are thundering.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj rāt bādal gājai hai.* — Tonight the clouds are thundering.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to rain, then the Marwadi for lightning, then say gājṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to rain, then the Marwadi for lightning, then say *gājṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गाजणो (gājṇo) mean? (\"To thunder; to roar\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C221-gajno-type",
+              "prompt": "Say the Marwadi for 'to thunder'.",
+              "assesses": [
+                "MW-LEX-C221-RAIN221-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गाजणो",
+                "gājṇo"
+              ],
+              "feedback": {
+                "correct": "Right: गाजणो (gājṇo) is 'to thunder; to roar'.",
+                "incorrect": "'to thunder' is गाजणो (gājṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C221-jhari",
+      "sequence": 15290,
+      "title": "झड़ी (jhaṛī) — a spell of steady rain",
+      "headword": "झड़ी",
+      "romanization": "jhaṛī",
+      "gloss": "a spell of steady rain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbd093be0fd25750",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for lightning, then the Marwadi for to thunder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झड़ी — jhaṛī — \"a spell of steady rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सावण मांय झड़ी लागै है। sāvaṇ mā̃y jhaṛī lāgai hai. In the monsoon month the rain sets in for days."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झड़ी (jhaṛī) is inherited from a reconstructed jhaḍī, \"a rainstorm\"; CDIAL lists Marwari jhaṛī, \"continuous heavy rain\", and points to a Dravidian word for fine steady rain (CDIAL 5329)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvaṇ mā̃y jhaṛī lāgai hai. — In the monsoon month the rain sets in for days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvaṇ mā̃y jhaṛī lāgai hai.* — In the monsoon month the rain sets in for days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for lightning, then the Marwadi for to thunder, then say jhaṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for lightning, then the Marwadi for to thunder, then say *jhaṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झड़ी (jhaṛī) mean? (\"A spell of steady rain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C221-jhari-type",
+              "prompt": "Say the Marwadi for 'a spell of steady rain'.",
+              "assesses": [
+                "MW-LEX-C221-RAIN221-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "झड़ी",
+                "jhaṛī"
+              ],
+              "feedback": {
+                "correct": "Right: झड़ी (jhaṛī) is 'a spell of steady rain'.",
+                "incorrect": "'a spell of steady rain' is झड़ी (jhaṛī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

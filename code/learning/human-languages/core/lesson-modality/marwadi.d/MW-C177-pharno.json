@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C177-pharno",
+    "language": "marwadi",
+    "chapter": 177,
+    "sequence": 11560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cbcde0a3951ab8b"
+  },
+  "findings": []
+}

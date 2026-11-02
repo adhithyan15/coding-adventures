@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-204-OUT204",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can stroll round the town and find my way.",
+  "prerequisites": []
+}

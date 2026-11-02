@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:4587f65145e782d8",
+  "lessonIds": [
+    "MW-C180-dharno",
+    "MW-C180-ghalno",
+    "MW-C180-nakhno",
+    "MW-C180-chhiko",
+    "MW-C180-chhabri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch180.txt",
+  "json": "marwadi/narration/ch180.json",
+  "textHash": "fnv1a64:bff88af66c70b954",
+  "jsonHash": "fnv1a64:0cd8fe69ac001373",
+  "findings": []
+}

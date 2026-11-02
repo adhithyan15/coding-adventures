@@ -1,0 +1,11 @@
+{
+  "id": "MW-C290-saru",
+  "pathSegment": "MW-PATH-290-SARU290",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-290-SARU290",
+      "order": 2
+    }
+  ]
+}

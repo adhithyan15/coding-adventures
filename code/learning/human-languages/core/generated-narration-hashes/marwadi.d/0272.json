@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:2744f17329a9c9b4",
+  "lessonIds": [
+    "MW-C272-phagat",
+    "MW-C272-bi",
+    "MW-C272-jarur",
+    "MW-C272-besak",
+    "MW-C272-manjur",
+    "MW-R272-review-266-272"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch272.txt",
+  "json": "marwadi/narration/ch272.json",
+  "textHash": "fnv1a64:fe2357359a471af8",
+  "jsonHash": "fnv1a64:f1c07adf1cee6adb",
+  "findings": []
+}

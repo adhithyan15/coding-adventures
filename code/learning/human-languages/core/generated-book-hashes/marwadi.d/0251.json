@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:8b920c312b0b3cd0",
+  "lessonIds": [
+    "MW-C251-gardan",
+    "MW-C251-kadho",
+    "MW-C251-chhati",
+    "MW-C251-kohni",
+    "MW-C251-kamar"
+  ],
+  "tex": "marwadi/book/chapters/ch251-neck-chest-and-shoulders.tex"
+}

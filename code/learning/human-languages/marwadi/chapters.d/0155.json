@@ -1,0 +1,20 @@
+{
+  "chapter": 155,
+  "title": "Eat, Drink, Go, Come",
+  "label": "ch:mw-a2-eat-drink-go-come",
+  "canDo": "I can say what I and others eat, drink, and where we go and come from, every day, and write the letter ध from दूध.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-R155-eat-drink-go-come",
+    "kind": "production",
+    "summary": "Complete MW-R155-eat-drink-go-come: use खा, पी, जा and आ in the present, name milk, and write ध.",
+    "assesses": [
+      "MW-GRAMMAR-C155-VSTEM-01",
+      "MW-GRAMMAR-C155-VSTEM-MORE-01",
+      "MW-LEX-C155-FOOD155-01",
+      "MW-SCRIPT-C155-DHA-01"
+    ]
+  }
+}

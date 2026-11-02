@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-209-SHOP209",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who sells, who buys and what I order.",
+  "prerequisites": []
+}

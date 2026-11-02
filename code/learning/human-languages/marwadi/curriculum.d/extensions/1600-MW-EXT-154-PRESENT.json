@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-154-PRESENT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I do, what he does and what you do, every day, with any verb whose stem ends in a consonant.",
+  "prerequisites": [
+    "MW-EXT-153-BE"
+  ]
+}

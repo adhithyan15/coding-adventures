@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Not Now",
+  "label": "ch:mw-not-now",
+  "canDo": "I can turn something down and refuse.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-C269-tokno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can turn something down and refuse.",
+    "assesses": [
+      "MW-LEX-C269-BAHANO269-03",
+      "MW-LEX-C269-BAHANO269-04",
+      "MW-LEX-C269-BAHANO269-05"
+    ]
+  }
+}

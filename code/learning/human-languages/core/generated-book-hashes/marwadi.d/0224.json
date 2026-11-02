@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:e84a3efc9bc44d4f",
+  "lessonIds": [
+    "MW-C224-phirno",
+    "MW-C224-kathputli",
+    "MW-C224-ladu",
+    "MW-C224-uchhalno",
+    "MW-C224-nagaro"
+  ],
+  "tex": "marwadi/book/chapters/ch224-fun-at-the-fair.tex"
+}

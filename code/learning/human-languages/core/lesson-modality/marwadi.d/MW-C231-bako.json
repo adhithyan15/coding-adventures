@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C231-bako",
+    "language": "marwadi",
+    "chapter": 231,
+    "sequence": 15770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57d0b54cd50fd230"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:07534deb7af95819",
+  "lessonIds": [
+    "MW-C255-tabiyat",
+    "MW-C255-bigarno",
+    "MW-C255-sudharno-better",
+    "MW-C255-asu",
+    "MW-C255-kapno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch255.txt",
+  "json": "marwadi/narration/ch255.json",
+  "textHash": "fnv1a64:9e838b36af2f56b1",
+  "jsonHash": "fnv1a64:7aad310c8a6e4cf0",
+  "findings": []
+}

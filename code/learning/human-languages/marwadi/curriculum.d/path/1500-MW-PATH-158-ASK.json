@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-158-ASK",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "MW-EXT-158-ASK"
+  ],
+  "after": []
+}

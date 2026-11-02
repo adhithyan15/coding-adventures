@@ -1,8 +1,6 @@
 {
   "omits": [
     "VERB-INFINITIVE",
-    "VERB-PRESENT-HABITUAL",
-    "VERB-BE",
     "VERB-GO",
     "VERB-SAY",
     "VERB-SPEAK",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C171-kachro",
+    "language": "marwadi",
+    "chapter": 171,
+    "sequence": 11290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7add748fa5c0223"
+  },
+  "findings": []
+}

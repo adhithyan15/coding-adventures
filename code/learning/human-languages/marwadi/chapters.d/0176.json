@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Covering, Tying and Hanging",
+  "label": "ch:mw-covering-tying-and-hanging",
+  "canDo": "I can say that I cover the milk, tie a knot and hang things up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C176-tagno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say that I cover the milk, tie a knot and hang things up.",
+    "assesses": [
+      "MW-LEX-C176-GANTH176-03",
+      "MW-LEX-C176-GANTH176-04",
+      "MW-LEX-C176-GANTH176-05"
+    ]
+  }
+}

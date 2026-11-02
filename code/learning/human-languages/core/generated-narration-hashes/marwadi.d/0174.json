@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:8eeefec9cada1767",
+  "lessonIds": [
+    "MW-C174-odhno",
+    "MW-C174-odhni",
+    "MW-C174-sari",
+    "MW-C174-utaarno",
+    "MW-C174-choti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch174.txt",
+  "json": "marwadi/narration/ch174.json",
+  "textHash": "fnv1a64:6ac1c217df159b9e",
+  "jsonHash": "fnv1a64:22325d90916d6eee",
+  "findings": []
+}

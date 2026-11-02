@@ -1,0 +1,11 @@
+{
+  "id": "MW-C264-thokno",
+  "pathSegment": "MW-PATH-264-LUHAR264",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-264-LUHAR264",
+      "order": 2
+    }
+  ]
+}

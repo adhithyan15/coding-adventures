@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-196-POST196",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "MW-EXT-196-POST196"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:d2f87e0173f90d9c",
+  "lessonIds": [
+    "MW-C213-mol",
+    "MW-C213-ghatno",
+    "MW-C213-ghatavno",
+    "MW-C213-muphat",
+    "MW-C213-bikno"
+  ],
+  "tex": "marwadi/book/chapters/ch213-when-prices-come-down.tex"
+}

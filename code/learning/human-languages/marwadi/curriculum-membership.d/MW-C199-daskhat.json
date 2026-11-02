@@ -1,0 +1,11 @@
+{
+  "id": "MW-C199-daskhat",
+  "pathSegment": "MW-PATH-199-SEAL199",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-199-SEAL199",
+      "order": 1
+    }
+  ]
+}

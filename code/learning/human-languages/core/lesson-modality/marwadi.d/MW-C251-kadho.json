@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C251-kadho",
+    "language": "marwadi",
+    "chapter": 251,
+    "sequence": 17520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d14ae109af7bbb39"
+  },
+  "findings": []
+}

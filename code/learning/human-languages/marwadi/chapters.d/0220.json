@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "A Settled Plan",
+  "label": "ch:mw-a-settled-plan",
+  "canDo": "I can say my plan is settled, or that I will put it off or change it.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C220-sodhno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say my plan is settled, or that I will put it off or change it.",
+    "assesses": [
+      "MW-LEX-C220-PLAN220-03",
+      "MW-LEX-C220-PLAN220-04",
+      "MW-LEX-C220-PLAN220-05"
+    ]
+  }
+}

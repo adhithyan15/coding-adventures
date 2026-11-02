@@ -1,0 +1,11 @@
+{
+  "id": "MW-C193-nagad",
+  "pathSegment": "MW-PATH-193-MONEY193",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-193-MONEY193",
+      "order": 3
+    }
+  ]
+}

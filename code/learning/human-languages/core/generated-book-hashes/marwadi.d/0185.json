@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:2d1a7cf429fb3443",
+  "lessonIds": [
+    "MW-C185-dhaniyo",
+    "MW-C185-rai",
+    "MW-C185-methi",
+    "MW-C185-hig",
+    "MW-C185-saumph"
+  ],
+  "tex": "marwadi/book/chapters/ch185-spices.tex"
+}

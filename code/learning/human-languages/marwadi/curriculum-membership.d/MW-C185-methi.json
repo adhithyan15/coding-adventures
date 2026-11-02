@@ -1,0 +1,11 @@
+{
+  "id": "MW-C185-methi",
+  "pathSegment": "MW-PATH-185-MASALO185",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-185-MASALO185",
+      "order": 2
+    }
+  ]
+}

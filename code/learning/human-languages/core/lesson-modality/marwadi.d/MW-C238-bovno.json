@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C238-bovno",
+    "language": "marwadi",
+    "chapter": 238,
+    "sequence": 16130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb14a8e5ee43bafe"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 163,
+  "title": "Plans and Perhaps",
+  "label": "ch:mw-a2-plans-and-perhaps",
+  "canDo": "I can say a plan with its day, say perhaps and again, and write the letter फ from फेर.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-R163-plans",
+    "kind": "production",
+    "summary": "Complete MW-R163-plans: say a plan with its day, with perhaps and again, and write फ.",
+    "assesses": [
+      "MW-GRAMMAR-C163-FUT-PLAN-01",
+      "MW-LEX-C163-PLAN163-01",
+      "MW-LEX-C163-PLAN163-02",
+      "MW-SCRIPT-C163-PHA-01"
+    ]
+  }
+}

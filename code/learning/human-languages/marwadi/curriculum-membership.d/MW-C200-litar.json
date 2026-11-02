@@ -1,0 +1,11 @@
+{
+  "id": "MW-C200-litar",
+  "pathSegment": "MW-PATH-200-WEIGH200",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-200-WEIGH200",
+      "order": 4
+    }
+  ]
+}

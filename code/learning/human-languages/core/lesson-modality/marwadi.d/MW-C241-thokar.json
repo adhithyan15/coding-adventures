@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C241-thokar",
+    "language": "marwadi",
+    "chapter": 241,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33dd28ed95004305"
+  },
+  "findings": []
+}

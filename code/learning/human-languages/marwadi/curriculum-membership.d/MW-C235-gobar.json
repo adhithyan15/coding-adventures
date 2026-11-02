@@ -1,0 +1,11 @@
+{
+  "id": "MW-C235-gobar",
+  "pathSegment": "MW-PATH-235-YARD235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-235-YARD235",
+      "order": 2
+    }
+  ]
+}

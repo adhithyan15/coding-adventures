@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-219-GUEST219",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask a guest about coming and say what I will bring.",
+  "prerequisites": []
+}

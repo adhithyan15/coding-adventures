@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R165-first-pass-plans-and-notices",
+    "language": "marwadi",
+    "chapter": 165,
+    "sequence": 10090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0871ababc6f58aa5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C270-kasur",
+    "language": "marwadi",
+    "chapter": 270,
+    "sequence": 19210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc32d4ac02218614"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:b95be097759e2940",
+  "lessonIds": [
+    "MW-C239-juvar",
+    "MW-C239-sarsu",
+    "MW-C239-kapas",
+    "MW-C239-badhno-grow",
+    "MW-C239-kupal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch239.txt",
+  "json": "marwadi/narration/ch239.json",
+  "textHash": "fnv1a64:a52c8206c486ec74",
+  "jsonHash": "fnv1a64:b29566c2ad2b53a1",
+  "findings": []
+}

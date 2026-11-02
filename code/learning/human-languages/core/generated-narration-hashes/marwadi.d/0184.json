@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:ba05365c8c59424a",
+  "lessonIds": [
+    "MW-C184-okhli",
+    "MW-C184-chauko",
+    "MW-C184-pital",
+    "MW-C184-tabo",
+    "MW-C184-loho",
+    "MW-R184-review-179-184"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch184.txt",
+  "json": "marwadi/narration/ch184.json",
+  "textHash": "fnv1a64:900e9986f35b2345",
+  "jsonHash": "fnv1a64:ae3919ea674f5614",
+  "findings": []
+}

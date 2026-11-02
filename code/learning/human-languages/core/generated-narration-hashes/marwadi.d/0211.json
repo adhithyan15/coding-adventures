@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:7f9f7531c70d7ac2",
+  "lessonIds": [
+    "MW-C211-map",
+    "MW-C211-napno",
+    "MW-C211-moklo",
+    "MW-C211-tang",
+    "MW-C211-samavno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch211.txt",
+  "json": "marwadi/narration/ch211.json",
+  "textHash": "fnv1a64:e302cea4e1646e45",
+  "jsonHash": "fnv1a64:dcca7c7ff4da9180",
+  "findings": []
+}

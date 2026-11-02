@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-264-LUHAR264",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the smith, the potter and the carpenter make.",
+  "prerequisites": []
+}

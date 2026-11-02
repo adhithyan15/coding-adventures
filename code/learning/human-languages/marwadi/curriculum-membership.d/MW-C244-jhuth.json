@@ -1,0 +1,11 @@
+{
+  "id": "MW-C244-jhuth",
+  "pathSegment": "MW-PATH-244-JHAGRO244",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-244-JHAGRO244",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-W47-jha",
+  "pathSegment": "MW-PATH-157-NEGATE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-157-NEGATE",
+      "order": 3
+    }
+  ]
+}

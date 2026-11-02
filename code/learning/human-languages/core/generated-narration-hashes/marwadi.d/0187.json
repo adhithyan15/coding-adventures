@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:4e21c9b301eec1d4",
+  "lessonIds": [
+    "MW-C187-kotho",
+    "MW-C187-alo",
+    "MW-C187-bari",
+    "MW-C187-khuno",
+    "MW-C187-maliyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch187.txt",
+  "json": "marwadi/narration/ch187.json",
+  "textHash": "fnv1a64:edf1cc80cc331ea4",
+  "jsonHash": "fnv1a64:cd068129e527290a",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-265-MOCHI265",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "MW-EXT-265-MOCHI265"
+  ],
+  "after": []
+}

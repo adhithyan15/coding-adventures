@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C211-tang",
+    "language": "marwadi",
+    "chapter": 211,
+    "sequence": 14060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8eb8b4ad2a8c8500"
+  },
+  "findings": []
+}

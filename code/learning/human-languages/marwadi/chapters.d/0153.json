@@ -1,0 +1,21 @@
+{
+  "chapter": 153,
+  "title": "Am, Is, Are",
+  "label": "ch:mw-a2-am-is-are",
+  "canDo": "I can say am, is and are with हूं, आप, वो and any noun, and write the letter ऊ from ऊंट.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-R153-am-is-are",
+    "kind": "production",
+    "summary": "Complete MW-R153-am-is-are: say am, is and are for each person, name the camel, and write ऊ.",
+    "assesses": [
+      "MW-GRAMMAR-C153-BE-HU-01",
+      "MW-GRAMMAR-C153-BE-HAI-01",
+      "MW-GRAMMAR-C153-BE-HO-01",
+      "MW-LEX-C153-ANIMAL153-01",
+      "MW-SCRIPT-C153-UU-01"
+    ]
+  }
+}

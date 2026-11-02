@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C210-parakhno",
+    "language": "marwadi",
+    "chapter": 210,
+    "sequence": 13980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b06af5bf13987562"
+  },
+  "findings": []
+}

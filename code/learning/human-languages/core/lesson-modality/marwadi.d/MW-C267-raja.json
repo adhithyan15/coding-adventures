@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C267-raja",
+    "language": "marwadi",
+    "chapter": 267,
+    "sequence": 19060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29cf1855a55c7c8f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:73651847d0063270",
+  "lessonIds": [
+    "MW-C287-sikhavno",
+    "MW-C287-bhanavno",
+    "MW-C287-guru",
+    "MW-C287-chelo",
+    "MW-C287-akharo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch287.txt",
+  "json": "marwadi/narration/ch287.json",
+  "textHash": "fnv1a64:489aca7f2c33eed2",
+  "jsonHash": "fnv1a64:6a912b9d668f4685",
+  "findings": []
+}

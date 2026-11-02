@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 245,
+  "title": "Neighbours Come to Call",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f55a2a5fe44d191e",
+  "lessons": [
+    {
+      "id": "MW-C245-terno",
+      "sequence": 17200,
+      "title": "तेड़णो (teṛṇo) — to call someone over; to invite",
+      "headword": "तेड़णो",
+      "romanization": "teṛṇo",
+      "gloss": "to call someone over; to invite",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:683e4b8ad7fe1f63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a fault, then the Marwadi for a threat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तेड़णो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तेड़णो — teṛṇo — \"to call someone over; to invite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां पावणा तेड़ै है। mā̃ pāvṇā teṛai hai. Mother invites guests over."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं पावणा तेड़्या, mhaĩ pāvṇā teṛyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तेड़णो (teṛṇo) is inherited from a reconstructed tēḍati, \"summons\"; CDIAL lists an Old Marwari noun teṛū̃, \"a summons\", under it (CDIAL 5947a)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṛṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṛṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṛṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṛṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ pāvṇā teṛai hai. — Mother invites guests over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ pāvṇā teṛai hai.* — Mother invites guests over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a fault, then the Marwadi for a threat, then say teṛṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a fault, then the Marwadi for a threat, then say *teṛṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तेड़णो (teṛṇo) mean? (\"To call someone over; to invite\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C245-terno-type",
+              "prompt": "Say the Marwadi for 'to call someone over'.",
+              "assesses": [
+                "MW-LEX-C245-TEDNO245-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तेड़णो",
+                "teṛṇo"
+              ],
+              "feedback": {
+                "correct": "Right: तेड़णो (teṛṇo) is 'to call someone over; to invite'.",
+                "incorrect": "'to call someone over' is तेड़णो (teṛṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C245-juhar",
+      "sequence": 17210,
+      "title": "जुहार (juhār) — a respectful greeting",
+      "headword": "जुहार",
+      "romanization": "juhār",
+      "gloss": "a respectful greeting",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30277c1ae3158b28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a threat, then the Marwadi for to call someone over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जुहार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुहार — juhār — \"a respectful greeting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हैं जुहार कियो। mhaĩ juhār kiyo. I greeted them respectfully."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुहार (juhār) is inherited from Sanskrit jyotkāra, \"a shout of acclamation\"; CDIAL lists Old Marwari juhāra, a greeting said with the words \"live long\", under it (CDIAL 5300a)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaĩ juhār kiyo. — I greeted them respectfully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhaĩ juhār kiyo.* — I greeted them respectfully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a threat, then the Marwadi for to call someone over, then say juhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a threat, then the Marwadi for to call someone over, then say *juhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जुहार (juhār) mean? (\"A respectful greeting\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C245-juhar-type",
+              "prompt": "Say the Marwadi for 'a respectful greeting'.",
+              "assesses": [
+                "MW-LEX-C245-TEDNO245-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जुहार",
+                "juhār"
+              ],
+              "feedback": {
+                "correct": "Right: जुहार (juhār) is 'a respectful greeting'.",
+                "incorrect": "'a respectful greeting' is जुहार (juhār)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C245-dhukno",
+      "sequence": 17220,
+      "title": "ढूकणो (ḍhūkṇo) — to draw near; to arrive at the door",
+      "headword": "ढूकणो",
+      "romanization": "ḍhūkṇo",
+      "gloss": "to draw near; to arrive at the door",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dba5cb8bc40b8d1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to call someone over, then the Marwadi for a respectful greeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ढूकणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढूकणो — ḍhūkṇo — \"to draw near; to arrive at the door\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावणो घर कनै ढूक्यो। pāvṇo ghar kanai ḍhūkyo. The guest drew near the house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो पावणो ढूक्यो, vo pāvṇo ḍhūkyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढूकणो (ḍhūkṇo) is inherited from a reconstructed ḍhukyati, \"approaches\"; CDIAL lists the Old Marwari partner ḍhukāvaï, \"brings near\", and Hindi ḍhūknā, \"to approach\", under it (CDIAL 5592)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhūkṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhūkṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhūkṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhūkṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvṇo ghar kanai ḍhūkyo. — The guest drew near the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvṇo ghar kanai ḍhūkyo.* — The guest drew near the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to call someone over, then the Marwadi for a respectful greeting, then say ḍhūkṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to call someone over, then the Marwadi for a respectful greeting, then say *ḍhūkṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ढूकणो (ḍhūkṇo) mean? (\"To draw near; to arrive at the door\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C245-dhukno-type",
+              "prompt": "Say the Marwadi for 'to draw near'.",
+              "assesses": [
+                "MW-LEX-C245-TEDNO245-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ढूकणो",
+                "ḍhūkṇo"
+              ],
+              "feedback": {
+                "correct": "Right: ढूकणो (ḍhūkṇo) is 'to draw near; to arrive at the door'.",
+                "incorrect": "'to draw near' is ढूकणो (ḍhūkṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C245-achambho",
+      "sequence": 17230,
+      "title": "अचंभो (achambho) — a surprise; a wonder",
+      "headword": "अचंभो",
+      "romanization": "achambho",
+      "gloss": "a surprise; a wonder",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15d3e9b2d94bb87a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a respectful greeting, then the Marwadi for to draw near."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अचंभो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अचंभो — achambho — \"a surprise; a wonder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मामो आयो! यो अचंभो है। māmo āyo! yo achambho hai. My uncle has come! What a surprise."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अचंभो (achambho) is inherited from a reconstructed ācchambha, \"rigidity\", and so \"astonishment\", the stiffness of surprise. CDIAL gives no Marwari form in this entry; it lists Hindi acambhā, \"wonder\" (CDIAL 1079)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "achambho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *achambho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "achambho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *achambho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māmo āyo! yo achambho hai. — My uncle has come! What a surprise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māmo āyo! yo achambho hai.* — My uncle has come! What a surprise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a respectful greeting, then the Marwadi for to draw near, then say achambho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a respectful greeting, then the Marwadi for to draw near, then say *achambho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अचंभो (achambho) mean? (\"A surprise; a wonder\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C245-achambho-type",
+              "prompt": "Say the Marwadi for 'a surprise'.",
+              "assesses": [
+                "MW-LEX-C245-TEDNO245-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अचंभो",
+                "achambho"
+              ],
+              "feedback": {
+                "correct": "Right: अचंभो (achambho) is 'a surprise; a wonder'.",
+                "incorrect": "'a surprise' is अचंभो (achambho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C245-badhai",
+      "sequence": 17240,
+      "title": "बधाई (badhāī) — congratulations; good wishes",
+      "headword": "बधाई",
+      "romanization": "badhāī",
+      "gloss": "congratulations; good wishes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9acd0753ebbe7b5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to draw near, then the Marwadi for a surprise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बधाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बधाई — badhāī — \"congratulations; good wishes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाड़ोसी बधाई देवै है। pāṛosī badhāī devai hai. The neighbour offers congratulations."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बधाई (badhāī) is inherited from Sanskrit vardhāpayati, \"gladdens, congratulates\"; CDIAL lists Old Marwari badhāī, \"a present\", and Hindi badhāī, \"congratulations\", under it (CDIAL 11383)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badhāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badhāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badhāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badhāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṛosī badhāī devai hai. — The neighbour offers congratulations.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṛosī badhāī devai hai.* — The neighbour offers congratulations.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to draw near, then the Marwadi for a surprise, then say badhāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to draw near, then the Marwadi for a surprise, then say *badhāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बधाई (badhāī) mean? (\"Congratulations; good wishes\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C245-badhai-type",
+              "prompt": "Say the Marwadi for 'congratulations'.",
+              "assesses": [
+                "MW-LEX-C245-TEDNO245-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बधाई",
+                "badhāī"
+              ],
+              "feedback": {
+                "correct": "Right: बधाई (badhāī) is 'congratulations; good wishes'.",
+                "incorrect": "'congratulations' is बधाई (badhāī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

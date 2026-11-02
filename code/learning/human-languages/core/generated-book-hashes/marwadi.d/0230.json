@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:f13b115d5b5db908",
+  "lessonIds": [
+    "MW-C230-balno-scorch",
+    "MW-C230-dhalno",
+    "MW-C230-dharti",
+    "MW-C230-ak",
+    "MW-C230-kato"
+  ],
+  "tex": "marwadi/book/chapters/ch230-burning-sand-setting-sun.tex"
+}

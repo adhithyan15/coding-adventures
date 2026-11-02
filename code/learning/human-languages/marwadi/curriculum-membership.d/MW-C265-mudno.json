@@ -1,0 +1,11 @@
+{
+  "id": "MW-C265-mudno",
+  "pathSegment": "MW-PATH-265-MOCHI265",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-265-MOCHI265",
+      "order": 2
+    }
+  ]
+}

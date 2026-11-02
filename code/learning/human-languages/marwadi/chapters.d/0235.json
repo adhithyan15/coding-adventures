@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "The Cattle Yard",
+  "label": "ch:mw-the-cattle-yard",
+  "canDo": "I can name the cattle yard, fodder and dung, and say I keep goats.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C235-bhuso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can name the cattle yard, fodder and dung, and say I keep goats.",
+    "assesses": [
+      "MW-LEX-C235-YARD235-03",
+      "MW-LEX-C235-YARD235-04",
+      "MW-LEX-C235-YARD235-05"
+    ]
+  }
+}

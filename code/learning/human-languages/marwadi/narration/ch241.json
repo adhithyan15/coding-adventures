@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 241,
+  "title": "A Fall in the Lane",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d3b9aa585560f423",
+  "lessons": [
+    {
+      "id": "MW-C241-chot",
+      "sequence": 17000,
+      "title": "चोट (choṭ) — an injury; a hurt",
+      "headword": "चोट",
+      "romanization": "choṭ",
+      "gloss": "an injury; a hurt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f3bacf6fd2d7446",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for brave, then the Marwadi for crazy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चोट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चोट — choṭ — \"an injury; a hurt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी चोट घणी माड़ी कोनी। mhārī choṭ ghaṇī māṛī konī. My injury is not very bad."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चोट (choṭ) is inherited from Sanskrit cuṭati, \"cuts off, strikes\". CDIAL gives no Marwari form in this entry; it lists Hindi coṭ, \"wound\" (CDIAL 4857)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *choṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *choṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī choṭ ghaṇī māṛī konī. — My injury is not very bad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī choṭ ghaṇī māṛī konī.* — My injury is not very bad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for brave, then the Marwadi for crazy, then say choṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for brave, then the Marwadi for crazy, then say *choṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चोट (choṭ) mean? (\"An injury; a hurt\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C241-chot-type",
+              "prompt": "Say the Marwadi for 'an injury'.",
+              "assesses": [
+                "MW-LEX-C241-FALL241-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चोट",
+                "choṭ"
+              ],
+              "feedback": {
+                "correct": "Right: चोट (choṭ) is 'an injury; a hurt'.",
+                "incorrect": "'an injury' is चोट (choṭ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C241-thokar",
+      "sequence": 17010,
+      "title": "ठोकर (ṭhokar) — a stumble; a knock against the foot",
+      "headword": "ठोकर",
+      "romanization": "ṭhokar",
+      "gloss": "a stumble; a knock against the foot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33dd28ed95004305",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for crazy, then the Marwadi for an injury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठोकर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठोकर — ṭhokar — \"a stumble; a knock against the foot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काल सड़क माथै ठोकर लागी। kāl saṛak māthai ṭhokar lāgī. I stumbled on the road yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठोकर (ṭhokar) is inherited from a reconstructed ṭhōkk, \"knock\". CDIAL gives no Marwari form in this entry; it lists Hindi ṭhokar, \"blow\" (CDIAL 5513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl saṛak māthai ṭhokar lāgī. — I stumbled on the road yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl saṛak māthai ṭhokar lāgī.* — I stumbled on the road yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for crazy, then the Marwadi for an injury, then say ṭhokar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for crazy, then the Marwadi for an injury, then say *ṭhokar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठोकर (ṭhokar) mean? (\"A stumble; a knock against the foot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C241-thokar-type",
+              "prompt": "Say the Marwadi for 'a stumble'.",
+              "assesses": [
+                "MW-LEX-C241-FALL241-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ठोकर",
+                "ṭhokar"
+              ],
+              "feedback": {
+                "correct": "Right: ठोकर (ṭhokar) is 'a stumble; a knock against the foot'.",
+                "incorrect": "'a stumble' is ठोकर (ṭhokar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C241-ghav",
+      "sequence": 17020,
+      "title": "घाव (ghāv) — a wound",
+      "headword": "घाव",
+      "romanization": "ghāv",
+      "gloss": "a wound",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c60877cb2d290cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an injury, then the Marwadi for a stumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घाव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घाव — ghāv — \"a wound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घाव छोटो है, पण दरद घणो है। ghāv chhoṭo hai, paṇ darad ghaṇo hai. The wound is small, but it hurts a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घाव (ghāv) is inherited from Sanskrit ghāta, \"a blow, a bruise\". CDIAL gives no Marwari form in this entry; it lists Hindi ghāu, \"wound\" (CDIAL 4460)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāv",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāv*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāv, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāv*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāv chhoṭo hai, paṇ darad ghaṇo hai. — The wound is small, but it hurts a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāv chhoṭo hai, paṇ darad ghaṇo hai.* — The wound is small, but it hurts a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an injury, then the Marwadi for a stumble, then say ghāv again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an injury, then the Marwadi for a stumble, then say *ghāv* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घाव (ghāv) mean? (\"A wound\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C241-ghav-type",
+              "prompt": "Say the Marwadi for 'a wound'.",
+              "assesses": [
+                "MW-LEX-C241-FALL241-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "घाव",
+                "ghāv"
+              ],
+              "feedback": {
+                "correct": "Right: घाव (ghāv) is 'a wound'.",
+                "incorrect": "'a wound' is घाव (ghāv)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C241-tutno",
+      "sequence": 17030,
+      "title": "टूटणो (ṭūṭṇo) — to get broken; to break by itself",
+      "headword": "टूटणो",
+      "romanization": "ṭūṭṇo",
+      "gloss": "to get broken; to break by itself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad0a5a20ed99ee43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a stumble, then the Marwadi for a wound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टूटणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टूटणो — ṭūṭṇo — \"to get broken; to break by itself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी चूड़ी टूटी। mhārī chūṛī ṭūṭī. My bangle broke."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो प्यालो टूट्यो, vo pyālo ṭūṭyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टूटणो (ṭūṭṇo) is inherited from Sanskrit truṭyati, \"is broken\"; CDIAL lists Old Marwari tūṭaï, \"is broken\", under it (CDIAL 6065)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭūṭṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭūṭṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭūṭṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭūṭṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī chūṛī ṭūṭī. — My bangle broke.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī chūṛī ṭūṭī.* — My bangle broke.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a stumble, then the Marwadi for a wound, then say ṭūṭṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a stumble, then the Marwadi for a wound, then say *ṭūṭṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टूटणो (ṭūṭṇo) mean? (\"To get broken; to break by itself\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C241-tutno-type",
+              "prompt": "Say the Marwadi for 'to get broken'.",
+              "assesses": [
+                "MW-LEX-C241-FALL241-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "टूटणो",
+                "ṭūṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: टूटणो (ṭūṭṇo) is 'to get broken; to break by itself'.",
+                "incorrect": "'to get broken' is टूटणो (ṭūṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C241-khisakno",
+      "sequence": 17040,
+      "title": "खिसकणो (khisakṇo) — to slip; to slide out of place",
+      "headword": "खिसकणो",
+      "romanization": "khisakṇo",
+      "gloss": "to slip; to slide out of place",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c74109c0a9e7998",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a wound, then the Marwadi for to get broken."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खिसकणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिसकणो — khisakṇo — \"to slip; to slide out of place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सड़क माथै म्हारो पग खिसक्यो। saṛak māthai mhāro pag khisakyo. My foot slipped on the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): हूं खिसक्यो, hū̃ khisakyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिसकणो (khisakṇo) is inherited from a reconstructed khis, \"slip\". CDIAL gives no Marwari form in this entry; it lists Hindi khisaknā, \"to slip away\" (CDIAL 3888)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khisakṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khisakṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khisakṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khisakṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṛak māthai mhāro pag khisakyo. — My foot slipped on the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṛak māthai mhāro pag khisakyo.* — My foot slipped on the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a wound, then the Marwadi for to get broken, then say khisakṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a wound, then the Marwadi for to get broken, then say *khisakṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खिसकणो (khisakṇo) mean? (\"To slip; to slide out of place\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C241-khisakno-type",
+              "prompt": "Say the Marwadi for 'to slip'.",
+              "assesses": [
+                "MW-LEX-C241-FALL241-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खिसकणो",
+                "khisakṇo"
+              ],
+              "feedback": {
+                "correct": "Right: खिसकणो (khisakṇo) is 'to slip; to slide out of place'.",
+                "incorrect": "'to slip' is खिसकणो (khisakṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

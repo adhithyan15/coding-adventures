@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-210-CHOOSE210",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "MW-EXT-210-CHOOSE210"
+  ],
+  "after": []
+}

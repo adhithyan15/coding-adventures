@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-269-BAHANO269",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "MW-EXT-269-BAHANO269"
+  ],
+  "after": []
+}

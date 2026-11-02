@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C196-liphapho",
+    "language": "marwadi",
+    "chapter": 196,
+    "sequence": 13260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:443251a87c0911af"
+  },
+  "findings": []
+}

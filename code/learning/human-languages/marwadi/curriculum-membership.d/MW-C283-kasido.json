@@ -1,0 +1,11 @@
+{
+  "id": "MW-C283-kasido",
+  "pathSegment": "MW-PATH-283-MOTI283",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-283-MOTI283",
+      "order": 3
+    }
+  ]
+}

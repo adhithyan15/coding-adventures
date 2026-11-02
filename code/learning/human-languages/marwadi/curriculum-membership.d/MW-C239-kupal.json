@@ -1,0 +1,11 @@
+{
+  "id": "MW-C239-kupal",
+  "pathSegment": "MW-PATH-239-CROP239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-239-CROP239",
+      "order": 4
+    }
+  ]
+}

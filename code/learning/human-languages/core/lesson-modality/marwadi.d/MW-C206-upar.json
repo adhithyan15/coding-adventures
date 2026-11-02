@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C206-upar",
+    "language": "marwadi",
+    "chapter": 206,
+    "sequence": 13790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13d563c890b00b97"
+  },
+  "findings": []
+}

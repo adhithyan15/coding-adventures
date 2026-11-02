@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:d7009b5dbc346e8b",
+  "lessonIds": [
+    "MW-C181-jamavno",
+    "MW-C181-bilovno",
+    "MW-C181-mathani",
+    "MW-C181-galno",
+    "MW-C181-khir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch181.txt",
+  "json": "marwadi/narration/ch181.json",
+  "textHash": "fnv1a64:b2942c812af26185",
+  "jsonHash": "fnv1a64:4837c8919f49655e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Games and Contests",
+  "label": "ch:mw-games-and-contests",
+  "canDo": "I can name the games I play with friends.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "MW-C279-kusti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can name the games I play with friends.",
+    "assesses": [
+      "MW-LEX-C279-GOTHIYO279-03",
+      "MW-LEX-C279-GOTHIYO279-04",
+      "MW-LEX-C279-GOTHIYO279-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Walls and Doorways",
+  "label": "ch:mw-walls-and-doorways",
+  "canDo": "I can name what a house is built from.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C189-chaubaro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can name what a house is built from.",
+    "assesses": [
+      "MW-LEX-C189-THANBHO189-03",
+      "MW-LEX-C189-THANBHO189-04",
+      "MW-LEX-C189-THANBHO189-05"
+    ]
+  }
+}

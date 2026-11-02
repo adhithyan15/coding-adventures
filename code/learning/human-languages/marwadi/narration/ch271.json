@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 271,
+  "title": "Right or Wrong?",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc3e3ff91155d49d",
+  "lessons": [
+    {
+      "id": "MW-C271-kharo",
+      "sequence": 19250,
+      "title": "खरो (kharo) — correct; genuine",
+      "headword": "खरो",
+      "romanization": "kharo",
+      "gloss": "correct; genuine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e1318da9c7bd7bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to smash, then the Marwadi for to get cross."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खरो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खरो — kharo — \"correct; genuine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थारो जवाब खरो है। thāro javāb kharo hai. Your answer is correct."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खरो (kharo) is inherited from Sanskrit khara, \"hard, sharp\"; CDIAL lists Old Marwari kharaü, \"extreme\", Sindhi kharo, \"pure, genuine\", and Gujarati kharũ, \"real, good\" (CDIAL 3819). How the sense \"correct\" grew out of \"hard\" is not settled. It agrees like any -ो adjective: खरो जवाब, खरी बात."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāro javāb kharo hai. — Your answer is correct.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāro javāb kharo hai.* — Your answer is correct.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to smash, then the Marwadi for to get cross, then say kharo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to smash, then the Marwadi for to get cross, then say *kharo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खरो (kharo) mean? (\"Correct; genuine\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C271-kharo-type",
+              "prompt": "Say the Marwadi for 'correct'.",
+              "assesses": [
+                "MW-LEX-C271-SAHI271-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खरो",
+                "kharo"
+              ],
+              "feedback": {
+                "correct": "Right: खरो (kharo) is 'correct; genuine'.",
+                "incorrect": "'correct' is खरो (kharo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C271-galat",
+      "sequence": 19260,
+      "title": "गलत (galat) — wrong",
+      "headword": "गलत",
+      "romanization": "galat",
+      "gloss": "wrong",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c24749b71b999398",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to get cross, then the Marwadi for correct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गलत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गलत — galat — \"wrong\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो सबद गलत है। yo sabad galat hai. This word is wrong."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गलत (galat) is usually traced, through Persian ghalat, to Arabic ghalaṭ, \"error\". Like सही, it does not change."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo sabad galat hai. — This word is wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo sabad galat hai.* — This word is wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to get cross, then the Marwadi for correct, then say galat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to get cross, then the Marwadi for correct, then say *galat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गलत (galat) mean? (\"Wrong\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C271-galat-type",
+              "prompt": "Say the Marwadi for 'wrong'.",
+              "assesses": [
+                "MW-LEX-C271-SAHI271-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गलत",
+                "galat"
+              ],
+              "feedback": {
+                "correct": "Right: गलत (galat) is 'wrong'.",
+                "incorrect": "'wrong' is गलत (galat)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C271-sabut",
+      "sequence": 19270,
+      "title": "सबूत (sabūt) — proof",
+      "headword": "सबूत",
+      "romanization": "sabūt",
+      "gloss": "proof",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:017dc1f744226396",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for correct, then the Marwadi for wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सबूत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबूत — sabūt — \"proof\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सबूत कठै है? sabūt kaṭhai hai? Where's the proof?"
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबूत (sabūt) is usually traced, through Persian subūt, to Arabic thubūt, \"firmness; proof\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabūt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabūt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabūt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabūt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabūt kaṭhai hai? — Where's the proof?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabūt kaṭhai hai?* — Where's the proof?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for correct, then the Marwadi for wrong, then say sabūt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for correct, then the Marwadi for wrong, then say *sabūt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सबूत (sabūt) mean? (\"Proof\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C271-sabut-type",
+              "prompt": "Say the Marwadi for 'proof'.",
+              "assesses": [
+                "MW-LEX-C271-SAHI271-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सबूत",
+                "sabūt"
+              ],
+              "feedback": {
+                "correct": "Right: सबूत (sabūt) is 'proof'.",
+                "incorrect": "'proof' is सबूत (sabūt)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C271-sakhi",
+      "sequence": 19280,
+      "title": "साखी (sākhī) — a witness",
+      "headword": "साखी",
+      "romanization": "sākhī",
+      "gloss": "a witness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:754a6af7a1f6b942",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for wrong, then the Marwadi for proof."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: साखी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साखी — sākhī — \"a witness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "राम म्हारो साखी है। rām mhāro sākhī hai. Ram is my witness."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine or feminine noun, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साखी (sākhī) is inherited from Sanskrit sākṣin, \"a witness\"; CDIAL lists Old Marwari sākhī, \"witness\" (CDIAL 13321)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rām mhāro sākhī hai. — Ram is my witness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rām mhāro sākhī hai.* — Ram is my witness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for wrong, then the Marwadi for proof, then say sākhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for wrong, then the Marwadi for proof, then say *sākhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does साखी (sākhī) mean? (\"A witness\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C271-sakhi-type",
+              "prompt": "Say the Marwadi for 'a witness'.",
+              "assesses": [
+                "MW-LEX-C271-SAHI271-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "साखी",
+                "sākhī"
+              ],
+              "feedback": {
+                "correct": "Right: साखी (sākhī) is 'a witness'.",
+                "incorrect": "'a witness' is साखी (sākhī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C271-kasam",
+      "sequence": 19290,
+      "title": "कसम (kasam) — an oath",
+      "headword": "कसम",
+      "romanization": "kasam",
+      "gloss": "an oath",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57f29514e40953d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for proof, then the Marwadi for a witness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कसम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कसम — kasam — \"an oath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं कसम खाऊं हूं, यो साचो है। hū̃ kasam khāū̃ hū̃, yo sācho hai. I swear it: this is true."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कसम (kasam) is usually traced, through Persian qasam, to Arabic qasam, \"an oath\". You \"eat\" an oath: कसम खाऊं हूं, I swear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kasam khāū̃ hū̃, yo sācho hai. — I swear it: this is true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kasam khāū̃ hū̃, yo sācho hai.* — I swear it: this is true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for proof, then the Marwadi for a witness, then say kasam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for proof, then the Marwadi for a witness, then say *kasam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कसम (kasam) mean? (\"An oath\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C271-kasam-type",
+              "prompt": "Say the Marwadi for 'an oath'.",
+              "assesses": [
+                "MW-LEX-C271-SAHI271-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कसम",
+                "kasam"
+              ],
+              "feedback": {
+                "correct": "Right: कसम (kasam) is 'an oath'.",
+                "incorrect": "'an oath' is कसम (kasam)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

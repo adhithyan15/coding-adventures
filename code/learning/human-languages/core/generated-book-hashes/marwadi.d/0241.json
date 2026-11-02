@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:0acf5a13b63f86c5",
+  "lessonIds": [
+    "MW-C241-chot",
+    "MW-C241-thokar",
+    "MW-C241-ghav",
+    "MW-C241-tutno",
+    "MW-C241-khisakno"
+  ],
+  "tex": "marwadi/book/chapters/ch241-a-fall-in-the-lane.tex"
+}

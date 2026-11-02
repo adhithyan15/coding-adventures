@@ -1,0 +1,11 @@
+{
+  "id": "MW-C255-asu",
+  "pathSegment": "MW-PATH-255-TABIYAT255",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-255-TABIYAT255",
+      "order": 3
+    }
+  ]
+}
