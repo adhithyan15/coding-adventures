@@ -1727,6 +1727,56 @@ mod tests {
         __gc_reset();
     }
 
+    /// Mid-phase "constructor": for each child, allocate a fresh 2-word pair cell whose
+    /// car is that child — written straight into the block, with no write barrier, as
+    /// `__dyn_pair_new` does — park the cell in `globals[i + 1]`, and clear the parent's
+    /// slot (so the child is reachable only through the new cell).
+    #[inline(never)]
+    fn wrap_children_in_fresh_pairs(globals: &mut [i64], children: &[i64], pair_kind: u16) {
+        let parent = globals[0];
+        for (i, &c) in children.iter().enumerate() {
+            let cell = crate::__gc_alloc_kind(16, pair_kind);
+            assert!(cell != 0);
+            unsafe {
+                *(cell as *mut i64) = c; // car = child, no barrier
+                *((parent as *mut i64).add(i)) = 0;
+            }
+            globals[i + 1] = cell;
+        }
+    }
+
+    /// **Constructors bypass the barrier; newborns are born grey** (review of #18789). Each
+    /// child is reachable at `start` only through a traced parent. Mid-phase, a fresh pair
+    /// cell is built around it (fields written without a barrier), the parent's slot is
+    /// cleared, and the cell is published to a registered global. While newborns were born
+    /// black the finish re-scan stopped at the cells and swept every child; now the cells
+    /// are scanned, so every child survives. A batch, so stray stack words cannot make it
+    /// pass by accident.
+    #[test]
+    fn incremental_cycle_traces_fields_of_cells_built_mid_phase() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        let kind = movable_leaf_kind();
+        let offsets = [0i64, 8];
+        let pair_kind = unsafe { crate::__gc_register_kind(offsets.as_ptr(), 2) } as u16;
+        let mut globals = vec![0i64; GLOBAL_BATCH + 1];
+        let _reset = crate::global_roots::ResetOnDrop;
+        let n = globals.len() as i64;
+        assert_eq!(unsafe { crate::__gc_register_global_roots(globals.as_mut_ptr(), n) }, n);
+        let children = park_children_behind_a_parent(&mut globals, kind);
+
+        unsafe { __gc_collect_incremental_start() };
+        wrap_children_in_fresh_pairs(&mut globals, &children, pair_kind);
+        while unsafe { __gc_collect_incremental_step(1_000) } == 0 {}
+        let freed = unsafe { __gc_collect_incremental_finish() };
+
+        assert_eq!(freed, 0, "every child is the car of a published cell");
+        for (i, &c) in children.iter().enumerate() {
+            assert_eq!(unsafe { crate::__gc_kind_of(c) }, kind as i64, "child {i} is still live");
+        }
+        __gc_reset();
+    }
+
     /// `FlatHeap` is the type the scan collects over — a direct sanity check that
     /// the module's import is the real collector, not a stray re-export.
     #[test]

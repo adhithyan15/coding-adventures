@@ -25,7 +25,19 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | index_assignment | assignment | defined_expression | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | for_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | index_assignment | assignment | defined_expression | method_with_block | method_call !PLUS !MINUS !STAR !SLASH !"<<" !"==" !"!=" !"<=" !">=" !"<" !">" !"&&" !"||" !"and" !"or" !"..." !".." !"?" | method_call_no_paren | expression_stmt ;
+# #18778 — a parenthesised call is a whole statement only when no binary
+# operator follows it (the `!…` lookaheads after `method_call`).  `statement`
+# tries `method_call` before `expression_stmt`, and a PEG choice never
+# backtracks into an alternative that already matched: `f() + f` matched
+# `f()` as the statement and then failed at `+`, both at the start of a
+# statement and inside a block body (`->(x) { f() + f }`).  The lookaheads
+# make the `method_call` alternative give way, so `expression_stmt` parses
+# the whole sum.  The list is every operator that `ternary` … `term` can
+# continue an expression with; the same list guards `method_call` inside
+# `modifier_statement` (`f() + f if c`).  (`[` is left out: `f()[0]` as a
+# statement is rare, and leaving it out keeps a `[` on the next line from
+# ever gluing onto the call.)
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -105,7 +117,7 @@ mlhs_target  = [ "*" ] NAME ;
 # the start of a line / after a semicolon / after a non-expression-ending
 # token.  This split sidesteps the grammar's newline-insensitive default
 # mode (modifier syntax is intrinsically a same-line construct in Ruby).
-modifier_statement = ( assignment | method_call_no_paren | method_call | expression_stmt ) ( "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier" ) expression ;
+modifier_statement = ( assignment | method_call_no_paren | method_call !PLUS !MINUS !STAR !SLASH !"<<" !"==" !"!=" !"<=" !">=" !"<" !">" !"&&" !"||" !"and" !"or" !"..." !".." !"?" | expression_stmt ) ( "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier" ) expression ;
 # Phase 16e (FC) — method-level rescue/ensure: a `def` body may carry
 # trailing `rescue`/`ensure` clauses WITHOUT an explicit `begin` (the
 # whole method body is the protected region).  The body repetition gets
@@ -349,6 +361,14 @@ else_clause  = "else" { !"end" statement } ;
 unless_statement = "unless" expression { !"else" !"end" statement } [ else_clause ] "end" ;
 while_statement = "while" expression { !"end" statement } "end" ;
 until_statement = "until" expression { !"end" statement } "end" ;
+# #18778 — `for NAME in expression [do] … end`.  Unlike a block, a `for`
+# opens no scope: the loop variable and every local first assigned in the
+# body stay visible after the loop (the lowerer declares them before it).
+# The optional `do` matches Ruby's `for x in xs do … end`.  `in` is a
+# keyword that `factor` refuses, so the iterable expression stops in front
+# of it rather than swallowing it, and `do` likewise.  One loop variable
+# only: `for a, b in pairs` is not in this grammar yet.
+for_statement = "for" NAME "in" expression [ "do" ] { !"end" statement } "end" ;
 # Phase 6u — `case … when … else … end`.
 #
 # Shape:
@@ -448,7 +468,12 @@ begin_statement = "begin" { !"rescue" !"ensure" !"end" statement } { rescue_clau
 # would parse `x` as an exception type, then fail at `=`).
 # v0 deferred: write `rescue ExceptionType => _` as a workaround for
 # bare exception-type rescue.
-rescue_clause   = "rescue" [ exception_list "=>" NAME ] { !"rescue" !"ensure" !"end" statement } ;
+# #18778 — `rescue => e` (no class: Ruby's default `StandardError`) binds
+# the exception too.  Its `=>` alternative comes FIRST: the lexer gives `=>`
+# a `Name`-typed token, so `exception_list` could otherwise read `=>` itself
+# as a class name.  Before this, `rescue => e` matched the bare `rescue` and
+# left `=> e` to be read as a paren-less call to a method named `=>`.
+rescue_clause   = "rescue" [ "=>" NAME | exception_list "=>" NAME ] { !"rescue" !"ensure" !"end" statement } ;
 exception_list  = NAME { COMMA NAME } ;
 ensure_clause   = "ensure" { !"end" statement } ;
 # Phase 6p — compound assignment (`x += 1`, `x ||= 1`, etc.).
@@ -654,7 +679,7 @@ call_arg     = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
 # as the FIRST "argument", the exact bug this whole guard list exists to
 # prevent.)
 method_call_no_paren = ( NAME | !"super" KEYWORD )
-    !"<" !">" !"<=" !">=" !"!=" !"&&" !"||" !"<<"
+    !"<" !">" !"<=" !">=" !"!=" !"&&" !"||" !"<<" !"[ line start"
     expression { COMMA expression } ;
 expression_stmt = expression ;
 # Phase 6i — comparison operators at the top of the precedence pyramid.
@@ -874,7 +899,23 @@ super_expr   = "super" [ super_args ] ;
 # `index_suffix` alongside `dot_call`/`scope_resolution` here closes that
 # gap uniformly for every expression position — chained forms like
 # `a[0][1]` or `h[k].foo` fall out for free from the SAME repetition.
-index_suffix = LBRACKET expression RBRACKET ;
+#
+# #18778 — a `[` that starts a new line after a complete expression begins a
+# NEW statement (an array literal), as in Ruby: `x = 5` ⏎ `[1].each …` is two
+# statements.  This grammar ignores newlines, so it read `5[1].each …`, and
+# the C backend failed with `undefined method []`.  The Rust `ruby-lexer`
+# re-tags such a `[` (still an `LBRACKET` token) with the value
+# `[ line start`, and the lookahead stops an index suffix — or a
+# paren-less call's first argument — from starting there.  Lexers that do
+# not re-tag never produce that value, so for them nothing changes.
+# A literal matches a token's VALUE, whatever its type, so the tag must be a
+# value no name, keyword, number or operator can carry: it has spaces.  The
+# first tag, `lbracket_line_start`, was an identifier, and the lookahead
+# refused `puts lbracket_line_start` (review of #18778).  Only the Rust
+# grammar parser also skips `String` tokens when it matches a literal; the
+# other languages' parsers compare the value alone, so for them
+# `puts "[ line start"` does not parse (as `puts "<"` already does not; #18798).
+index_suffix = !"[ line start" LBRACKET expression RBRACKET ;
 factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution | index_suffix } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
 #
