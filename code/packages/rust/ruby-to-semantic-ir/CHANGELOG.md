@@ -2,6 +2,51 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## Unreleased — Ruby-on-SIR gaps (#18778)
+
+### Added
+
+- **`for x in xs [do] … end`** (`lower_for_statement`).  A `for` opens no
+  scope: `x` is a local of the enclosing scope, declared `nil` before the
+  loop when new, and keeps the last item.  The loop iterates a fresh
+  `__for_<n>` (skipping any spelling the program uses) and stores it into
+  `x` first thing in the body.  A literal `a...b` / `a..b` lowers to a
+  `ForRange` (stop `b` / `b + 1`), anything else to a `ForEach`.  A
+  parameter as the loop variable is refused with a clear message.
+- **Bare method names are calls** (`bare_name_call`).  Ruby reads a bare `g`
+  as a local only if an assignment or parameter `g` appears earlier in the
+  scope; otherwise it is `g()`.  The lowerer used to read every bare name as
+  a local, so `def g; 42; end; puts g` was refused ("references unknown name
+  `g`").  A name is now a `DirectCall` when it is a top-level `def` that no
+  class or module also defines, and is not a local of the current scope or
+  of a scope around the block/lambda being lowered.  The method names are
+  collected before any body is lowered (`collect_method_names`).
+
+### Fixed
+
+- **`rescue => e` with no class** binds `e`.  The grammar now parses it
+  (see `ruby-parser`); the binding is a local of the clause body, so a bare
+  `e` there reads the exception even when a method `e` exists.
+- **A loop body's last statement ran on C and Ruby** (`loop_body`).  The
+  `while` body's trailing expression became the body's *value*, which the C
+  and Ruby backends never emit: `while x < 3; x += 1; puts x; end` printed
+  nothing there.  The value is now an `ExprStmt`.  (The lesson "A loop
+  body's trailing expression is its block value" — `python-to-semantic-ir`
+  had the same bug.)
+- **A method ending in `x if c` returned `nil`** whether or not `c` held,
+  on every backend.  A tail `if`/`unless` modifier is now promoted like a
+  tail `if` statement: its one expression is the branch's value.
+- `f() + f` at the start of a statement and inside block / `->` bodies, and
+  a `[` that starts a new line, now parse as Ruby reads them (grammar and
+  lexer changes in `ruby-parser` / `ruby-lexer`).
+
+### Changed
+
+- `parenless_reference_to_non_block_method_is_left_alone` became
+  `parenless_reference_to_non_block_method_is_a_call_without_a_block`: a
+  bare `g` naming `def g(x)` is now the call `g()`, which the validator
+  refuses for its arity (Ruby raises `ArgumentError`).
+
 ## 0.11.0 — SIR21 T3b-2 Slice 4: `/` lowers to `div_floor`
 
 Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into

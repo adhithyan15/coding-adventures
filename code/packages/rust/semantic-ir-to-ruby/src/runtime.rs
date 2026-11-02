@@ -84,6 +84,59 @@ def sir_new(cls, *args)
   obj
 end
 
+# A class (or module) whose source name is not a Ruby constant — Python's
+# `class dog:` — is defined under a renamed constant (`SirCldog`, see
+# `ruby_const` in emit.rs), because `const_set` only takes a name with an
+# upper-case first letter.  This gives it back its source name wherever Ruby
+# shows a class name:
+#
+#   dog.name / dog.to_s / dog.inspect      -> "dog"
+#   an instance's default to_s / inspect   -> "#<dog>", "#<dog:0x…>"
+#   Ruby's own messages that ask for the
+#   name ("… for an instance of dog")      -> "dog"
+#
+# The instance methods only swap a LEADING `#<SirCldog` for `#<dog`, so a
+# user's own text that happens to contain the constant is left alone.  An
+# exception's default message is its class name, so that one exact string is
+# swapped too.  (Ruby's report of an uncaught exception reads the constant
+# directly and still says `SirCldog`; it goes to stderr, not the program's
+# output.)
+def sir_show_class_as(klass, shown)
+  internal = Module.instance_method(:name).bind_call(klass)
+  %i[name to_s inspect].each { |m| klass.define_singleton_method(m) { shown } }
+  return if klass.instance_of?(Module) || internal.nil?
+
+  lead = /\A#<#{Regexp.escape(internal)}(?=[:\s>])/
+  klass.define_method(:to_s) do
+    s = super()
+    s == internal ? shown : s.sub(lead) { "#<#{shown}" }
+  end
+  klass.define_method(:inspect) { super().sub(lead) { "#<#{shown}" } }
+end
+
+# `recv.each { |x| … }` (#18778) — the SIR collection method `each` with a
+# block (sir-collection-methods): call the block once per element, in order,
+# and return the receiver, as Ruby and the Go/C/Rust runtimes do.
+#
+#   receiver                         block gets
+#   an object whose class defines    (that method runs: `each` is a user
+#     `each` (`sir_um_each`)          method like any other)
+#   Array                            each element
+#   Hash                             each key and value, as two arguments
+#
+# Anything else raises `NoMethodError`, as Ruby would.  The block is a SIR
+# closure (a lambda), so it is called with `call`.
+def sir_each(recv, blk)
+  return recv.public_send(:sir_um_each, blk) if recv.respond_to?(:sir_um_each)
+
+  case recv
+  when Array then recv.each { |x| blk.call(x) }
+  when Hash then recv.each { |k, v| blk.call(k, v) }
+  else raise NoMethodError, "undefined method 'each' for #{recv.inspect}"
+  end
+  recv
+end
+
 # OOP slice 6 — the class that owns a `@@class variable` in the CURRENT method.
 # A method body runs in a hoisted top-level function (not a lexical class scope),
 # so `@@x` cannot be written directly ("class variable access from toplevel").

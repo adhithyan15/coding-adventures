@@ -532,6 +532,11 @@ impl RubyLexer {
         // fused-token shape (notably `end` of a same-line block
         // already in place if relevant).
         self.tag_modifier_keywords();
+        // #18778 — re-tag a `[` that starts a new statement (see
+        // `tag_line_start_brackets`).  Same reason as the modifier pass:
+        // the grammar ignores newlines, so the lexer says where one ends a
+        // statement.  Pre-1.0 Ruby — no era gating.
+        self.tag_line_start_brackets();
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
         }
@@ -1080,25 +1085,82 @@ impl RubyLexer {
             // gates `x ; if y ... end` (semicolon is NOT
             // expression-ending) versus `puts 1 if y` (the `1` IS
             // expression-ending).
-            let prev_ends_expr = match self.tokens[j].type_ {
-                TokenType::Number
-                | TokenType::String
-                | TokenType::Name
-                | TokenType::RParen
-                | TokenType::RBracket
-                | TokenType::RBrace => true,
-                TokenType::Keyword => matches!(
-                    self.tokens[j].value.as_str(),
-                    "nil" | "true" | "false" | "self" | "end"
-                ),
-                _ => false,
-            };
-            if !prev_ends_expr {
+            if !self.ends_expression(j) {
                 continue;
             }
             // Re-tag.  Mutating `value` only — `type_` stays Keyword.
             let new_value = format!("{}_modifier", self.tokens[i].value);
             self.tokens[i].value = new_value;
+        }
+    }
+
+    /// #18778 — re-tag an `[` that opens a new statement.
+    ///
+    /// In Ruby a newline after a complete expression ends the statement, so
+    /// a line that starts with `[` starts a new one with an array literal:
+    ///
+    /// ```text
+    /// x = 5
+    /// [1].each { |v| puts v }     # two statements: Ruby prints 1
+    /// ```
+    ///
+    /// The grammar ignores newlines, so it read `x = 5[1].each …` — an
+    /// index into `5` — and the C backend failed with `undefined method []`.
+    /// Worse, `puts` ⏎ `[7].each …` read as `puts([7].each …)` and printed a
+    /// wrong answer with no error at all.
+    ///
+    /// Trigger (both must hold):
+    /// - the token is `LBracket` `[`, and at least one `Newline` token sits
+    ///   between it and the preceding non-`Newline` token (a newline inside
+    ///   a multi-line string is part of that string, not a `Newline`
+    ///   token, so `"a⏎b"[0]` is still an index);
+    /// - that preceding token ends an expression — the same test
+    ///   [`Self::tag_modifier_keywords`] uses.  After `,`, `(`, `[`, an
+    ///   operator or a keyword such as `in`, the statement is not over, so
+    ///   a multi-line array (`[⏎  [1, 2],⏎  [3, 4]⏎]`) is unaffected.
+    ///
+    /// Effect: the token's `value` becomes `lbracket_line_start`; its
+    /// `type_` stays `LBracket`, so `array_literal` (which matches
+    /// `LBRACKET` by type) still accepts it, while `index_suffix` and a
+    /// paren-less call's first argument refuse that value (the grammar's
+    /// `!"lbracket_line_start"` lookaheads).
+    fn tag_line_start_brackets(&mut self) {
+        let mut prev: Option<usize> = None;
+        let mut newline_since_prev = false;
+        for i in 0..self.tokens.len() {
+            match self.tokens[i].type_ {
+                TokenType::Newline => {
+                    newline_since_prev = true;
+                    continue;
+                }
+                TokenType::LBracket
+                    if newline_since_prev && prev.is_some_and(|j| self.ends_expression(j)) =>
+                {
+                    self.tokens[i].value = "lbracket_line_start".to_string();
+                }
+                _ => {}
+            }
+            prev = Some(i);
+            newline_since_prev = false;
+        }
+    }
+
+    /// Whether `tokens[j]` can end an expression: a literal, a name, a
+    /// closing bracket, or one of the value keywords.  Shared by the
+    /// modifier-keyword and line-start-bracket passes.
+    fn ends_expression(&self, j: usize) -> bool {
+        match self.tokens[j].type_ {
+            TokenType::Number
+            | TokenType::String
+            | TokenType::Name
+            | TokenType::RParen
+            | TokenType::RBracket
+            | TokenType::RBrace => true,
+            TokenType::Keyword => matches!(
+                self.tokens[j].value.as_str(),
+                "nil" | "true" | "false" | "self" | "end"
+            ),
+            _ => false,
         }
     }
 
@@ -4555,6 +4617,59 @@ mod tests {
             assert!(
                 has_token(&toks, TokenType::Keyword, "if_modifier"),
                 "expected `if_modifier` in era {era}, got {toks:?}"
+            );
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // #18778 — a `[` that opens a new statement is re-tagged
+    // `lbracket_line_start` (still an `LBracket` token), so the grammar
+    // never reads it as an index into the line before.
+    // -----------------------------------------------------------------
+
+    /// The values of every `LBracket` token, in order.
+    fn bracket_values(src: &str) -> Vec<String> {
+        tokenize_ruby_for_version(src, "3.0")
+            .unwrap()
+            .into_iter()
+            .filter(|t| t.type_ == TokenType::LBracket)
+            .map(|t| t.value)
+            .collect()
+    }
+
+    #[test]
+    fn bracket_starting_a_line_after_an_expression_is_retagged() {
+        // After a number, a name and a closing `end`, in every era.
+        for src in ["x = 5\n[1].each", "puts\n[7]", "if a\n  b\nend\n[1]", "f(1)\n\n  [2]"] {
+            for era in ["1.8", "2.7", "3.0"] {
+                let toks = tokenize_ruby_for_version(src, era).unwrap();
+                assert!(
+                    toks.iter().any(|t| t.type_ == TokenType::LBracket
+                        && t.value == "lbracket_line_start"),
+                    "{src:?} in era {era}: {toks:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn bracket_that_continues_an_expression_is_left_alone() {
+        // An index on the same line; a bracket after `,` / `(` / `=` / an
+        // operator on the line before; nested brackets of a multi-line
+        // array; and an index right after a multi-line string, whose
+        // newline is inside the string token rather than a `Newline`.
+        for src in [
+            "a[0]",
+            "x = [\n  [1, 2],\n  [3, 4]\n]",
+            "f(1,\n  [2])",
+            "x =\n  [1]",
+            "x = 1 +\n  [2].size",
+            "\"a\nb\"[0]",
+        ] {
+            assert!(
+                bracket_values(src).iter().all(|v| v == "["),
+                "{src:?}: {:?}",
+                bracket_values(src)
             );
         }
     }

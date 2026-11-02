@@ -1,5 +1,41 @@
 # Changelog
 
+## Unreleased — class names that are not Ruby constants; `each` (#18778)
+
+### Fixed
+
+- **A class whose name is not a Ruby constant** (Python's `class dog:`, the
+  Python frontend's `__param_a`) died at run time with `wrong constant name
+  dog (NameError)`: `Object.const_set` takes only an upper-case first
+  letter.  Every constant position — `const_set` of a class, module or
+  constant, `Class.new(<super>)`, `sir_new`, `define_method`,
+  `define_singleton_method`, `public_send` on a class, `super`,
+  `include`/`extend`, a `Const` reference, and a `rescue` clause — now goes
+  through `ruby_const`, a one-to-one map per `::` segment: an upper-case
+  name passes through (so `StandardError` is Ruby's own class), a lower-case
+  or `_` name gets the `SirCl` prefix, and an upper-case name that already
+  starts with the `SirC` marker gets `SirCv`.  A renamed class or module is
+  followed by the new runtime helper `sir_show_class_as`, which gives it its
+  source name back for `name`, `to_s`, `inspect`, an instance's default
+  `to_s`/`inspect`, an exception's default message, and Ruby's own messages
+  that ask for the class name.  Tests
+  `lower_case_class_names_are_renamed_one_to_one_and_keep_their_names`,
+  `a_lower_case_exception_class_is_rescued_by_its_renamed_constant`,
+  `methods_and_mixins_of_a_renamed_class_use_its_constant`.
+
+### Added
+
+- **`recv.each { … }`**, the first built-in method this backend runs: the
+  Ruby frontend lowers `[1].each do |x| … end` to `__method__(recv, "each",
+  closure)`, which was refused (the Collections batch).  It now renders as
+  the runtime's `sir_each(recv, block)`: the receiver's own `each` when its
+  class defines one, else native `Array#each` / `Hash#each` (key and value
+  as two arguments); it returns the receiver.  Any other built-in method,
+  and `each` without a block, is still refused.  Tests
+  `each_with_a_block_runs_over_an_array_and_a_hash`,
+  `each_runs_a_user_classs_own_each_and_returns_the_receiver`,
+  `other_built_in_methods_are_still_refused`.
+
 ## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
 
 The execution tests named their temp files from the process id alone, or (in

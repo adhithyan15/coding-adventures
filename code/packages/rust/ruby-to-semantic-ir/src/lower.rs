@@ -75,7 +75,19 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         in_block_body: false,
         current_class: None,
         current_method: None,
+        top_level_methods: HashSet::new(),
+        nested_methods: HashSet::new(),
+        enclosing_visible: HashSet::new(),
+        for_counter: 0,
     };
+    // #18778 — learn every method name before lowering any body, so a bare
+    // `g` can be told apart from a local (see `Lowerer::bare_name_call`).
+    collect_method_names(
+        program,
+        false,
+        &mut lw.top_level_methods,
+        &mut lw.nested_methods,
+    );
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
     // the main-body lowerer knows which names resolve as
@@ -206,6 +218,35 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         metadata: Metadata::new(),
         span: lw.span_of(program),
     })
+}
+
+/// #18778 — is this `modifier_statement` an `if`/`unless` modifier (as
+/// opposed to a `while`/`until` loop modifier)?  The lexer re-tags the
+/// keyword, so the tag is a direct token child.
+fn is_conditional_modifier(node: &GrammarASTNode) -> bool {
+    node.children.iter().any(|c| {
+        matches!(c, ASTNodeOrToken::Token(t)
+            if t.value == "if_modifier" || t.value == "unless_modifier")
+    })
+}
+
+/// #18778 — a loop body as SIR wants it: statements only.
+///
+/// The body lowerers make a trailing expression statement the block's
+/// `value`, which is right for a method or an `if` branch.  A loop body's
+/// value means nothing, and the C and Ruby backends emit only a loop body's
+/// statements — so `while x < 3; x += 1; puts x; end` printed nothing on
+/// those two backends (the same bug `python-to-semantic-ir` had, see the
+/// lesson "A loop body's trailing expression is its block value").  The
+/// value moves back into the statements as an `ExprStmt`, and the block's
+/// value becomes `nil`.
+fn loop_body(mut body: Block) -> Block {
+    if !matches!(body.value, Expr::NilLit { .. }) {
+        let span = body.span.clone();
+        let value = std::mem::replace(&mut body.value, Expr::NilLit { span: span.clone() });
+        body.stmts.push(Stmt::ExprStmt { expr: value, span });
+    }
+    body
 }
 
 // ---------------------------------------------------------------------------
@@ -961,6 +1002,76 @@ struct Lowerer {
     /// (`__super__(method_name, class_name, …)`).  Set by
     /// `lower_def_statement` around its body lowering and restored after.
     current_method: Option<String>,
+    /// #18778 — names of the methods `def`ined at the top level (no
+    /// receiver, not inside a `class`/`module`), collected before any body is
+    /// lowered.  A top-level `def` is a private method of `Object`, callable
+    /// by a bare name from anywhere.  See [`Lowerer::bare_name_call`].
+    top_level_methods: HashSet<String>,
+    /// #18778 — names of the methods `def`ined inside a `class` or `module`.
+    /// Inside a method body a bare `m` may mean `self.m`, which this lowerer
+    /// cannot yet tell from the top-level `m`, so such a name is never
+    /// rewritten into a call there.
+    nested_methods: HashSet<String>,
+    /// #18778 — while a block or lambda body is lowered, the locals and
+    /// parameters of the scopes around it.  `declared_locals` restarts empty
+    /// for a block body (its captures are found afterwards), but Ruby lets a
+    /// block see every local around it, and a bare name that is one of them
+    /// is that local, never a method call.  Emptied for a `def` body, which
+    /// sees no outer local.
+    enclosing_visible: HashSet<String>,
+    /// #18778 — counter for the fresh loop variables `__for_<n>` that a
+    /// `for` loop iterates with (see [`Lowerer::lower_for_statement`]).
+    for_counter: usize,
+}
+
+/// #18778 — collect the names of the `def`s among `node`'s statements: a
+/// top-level `def m` (no receiver) into `top`, and any `def` inside a
+/// `class`/`module`, at any depth, into `nested`.  A top-level `def self.m`
+/// goes into neither: it is a singleton method of the main object, not a
+/// method that every scope can call by a bare name.
+fn collect_method_names(
+    node: &GrammarASTNode,
+    in_decl: bool,
+    top: &mut HashSet<String>,
+    nested: &mut HashSet<String>,
+) {
+    for child in &node.children {
+        let ASTNodeOrToken::Node(stmt) = child else {
+            continue;
+        };
+        if stmt.rule_name != "statement" {
+            continue;
+        }
+        let Some(ASTNodeOrToken::Node(inner)) = stmt
+            .children
+            .iter()
+            .find(|c| matches!(c, ASTNodeOrToken::Node(_)))
+        else {
+            continue;
+        };
+        match inner.rule_name.as_str() {
+            "def_statement" | "endless_def_statement" => {
+                let has_receiver = inner.children.iter().any(
+                    |c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "def_receiver"),
+                );
+                let name = inner.children.iter().find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                    _ => None,
+                });
+                if let Some(name) = name {
+                    if in_decl {
+                        nested.insert(name);
+                    } else if !has_receiver {
+                        top.insert(name);
+                    }
+                }
+            }
+            "class_statement" | "module_statement" => {
+                collect_method_names(inner, true, top, nested);
+            }
+            _ => {}
+        }
+    }
 }
 
 /// Phase Q9e (FC) — the reserved name of the synthesized trailing block
@@ -1142,6 +1253,8 @@ impl Lowerer {
             // Routing `module_statement` through the multi-statement path lets
             // the arm return that whole sequence (mirrors `class_statement`).
             "module_statement" => self.lower_module_statement_multi(node),
+            // #18778 — a `for` may declare its loop variable before the loop.
+            "for_statement" => self.lower_for_statement(node),
             _ => Ok(vec![self.lower_statement_inner(node)?]),
         }
     }
@@ -1277,6 +1390,23 @@ impl Lowerer {
                 // top-level loop — `until cond` lowers to
                 // `while !cond` (wrap the condition in `not`).
                 self.lower_while_or_until(node)
+            }
+            "for_statement" => {
+                // #18778 — every body path goes through
+                // `lower_statement_inner_multi`, which keeps the loop
+                // variable's declaration.  A single-statement caller can
+                // only take a `for` that needs none.
+                let mut stmts = self.lower_for_statement(node)?;
+                if stmts.len() == 1 {
+                    Ok(stmts.remove(0))
+                } else {
+                    Err(RubyLowerError {
+                        message: "unsupported: a `for` loop in a single-statement position"
+                            .to_string(),
+                        line: node.start_line.unwrap_or(0),
+                        column: node.start_column.unwrap_or(0),
+                    })
+                }
             }
             "method_with_block" => {
                 // Phase 6g
@@ -1743,6 +1873,49 @@ impl Lowerer {
             // a method that ends in a `case` return the matched arm's value
             // (recursing through the same helper), instead of `nil`.
             "case_statement" => self.lower_case_statement(inner)?,
+            // #18778 — `x + 1 if c` as the tail: Ruby's value is `x + 1`
+            // when `c` holds and `nil` otherwise.  `lower_modifier_statement`
+            // builds `If(c, [ExprStmt(x + 1)], nil)` for a statement, whose
+            // branch value is `nil`, so a method ending in a modifier `if`
+            // returned `nil` either way, on every backend.  Here the
+            // branch's one expression statement becomes its value.  (A loop
+            // modifier stays a statement: a loop's value is `nil`.  An
+            // assignment on the left stays a statement too.)
+            "modifier_statement" if is_conditional_modifier(inner) => {
+                match self.lower_modifier_statement(inner)? {
+                    Stmt::ExprStmt {
+                        expr:
+                            Expr::If {
+                                cond,
+                                mut then_branch,
+                                else_branch,
+                                span,
+                            },
+                        ..
+                    } => {
+                        if matches!(then_branch.stmts.as_slice(), [Stmt::ExprStmt { .. }]) {
+                            if let Some(Stmt::ExprStmt { expr, .. }) = then_branch.stmts.pop() {
+                                then_branch.value = expr;
+                            }
+                        }
+                        Expr::If {
+                            cond,
+                            then_branch,
+                            else_branch,
+                            span,
+                        }
+                    }
+                    other => {
+                        return Err(RubyLowerError {
+                            message: format!(
+                                "internal: a conditional modifier lowered to {other:?}"
+                            ),
+                            line: inner.start_line.unwrap_or(0),
+                            column: inner.start_column.unwrap_or(0),
+                        })
+                    }
+                }
+            }
             _ => return Ok(None),
         };
         Ok(Some(value))
@@ -1773,7 +1946,8 @@ impl Lowerer {
                 span: self.span_of(cond_node),
             };
         }
-        let body = self.lower_clause_statements(node)?;
+        // #18778 — a loop body has no value: see `loop_body`.
+        let body = loop_body(self.lower_clause_statements(node)?);
         // Phase 6c: the SIR validator requires `loops` to be
         // declared whenever the module emits a `Stmt::While` /
         // `Stmt::ForRange` / `Stmt::ForEach`.
@@ -1783,6 +1957,174 @@ impl Lowerer {
             body,
             span: self.span_of(node),
         })
+    }
+
+    // -------------------------------------------------------------------
+    // #18778 — `for x in iterable [do] … end`
+    // -------------------------------------------------------------------
+
+    /// Lower a `for_statement` (`for NAME in expression [do] … end`).
+    ///
+    /// A Ruby `for` is NOT a block: it opens no scope.  The loop variable
+    /// is an ordinary local of the enclosing scope, so it keeps the last
+    /// item after the loop, and is `nil` if the loop never ran:
+    ///
+    /// ```ruby
+    /// for x in [1, 2]; end
+    /// p x                     # 2
+    /// for y in []; end
+    /// p y                     # nil
+    /// ```
+    ///
+    /// A SIR `ForEach`/`ForRange` declares its variable fresh, scoped to
+    /// the body.  So the loop iterates a fresh `__for_<n>` instead, and the
+    /// body starts by storing it into the real variable, which is declared
+    /// `nil` before the loop when nothing declared it yet:
+    ///
+    /// ```text
+    ///   let x = nil                         (only if `x` is new here)
+    ///   ForEach  { var: __for_0, iter,      body: [x = __for_0, …body] }
+    ///   ForRange { var: __for_0, a, b, 1,   body: [x = __for_0, …body] }   for `a...b`
+    /// ```
+    ///
+    /// A literal range iterable (`a...b`, or `a..b`, whose stop is
+    /// `b + 1`) becomes a `ForRange`, which every backend counts natively;
+    /// anything else is a `ForEach` over the value.  The body is lowered
+    /// like a `while` body: statements only (see [`loop_body`]), and locals
+    /// it introduces stay inside it (unlike Ruby, where they would leak —
+    /// the same limitation `while` has; a later read of one is refused by
+    /// the validator, never mis-run).
+    ///
+    /// Not handled: `for a, b in pairs` (the grammar takes one name), and
+    /// the loop's own value (Ruby's `for` returns the iterable; here it is
+    /// a statement, so a method that ENDS in a `for` returns `nil`).
+    fn lower_for_statement(&mut self, node: &GrammarASTNode) -> Result<Vec<Stmt>, RubyLowerError> {
+        let span = self.span_of(node);
+        let err = |message: &str| RubyLowerError {
+            message: message.to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        };
+        let var_tok = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t),
+                _ => None,
+            })
+            .ok_or_else(|| err("for_statement missing its loop variable"))?;
+        let var = var_tok.value.clone();
+        if is_constant_name(&var) || is_instance_var_name(&var) || is_class_var_name(&var) {
+            return Err(err(&format!(
+                "unsupported: a `for` loop variable that is not a local (`{var}`)"
+            )));
+        }
+        // Storing into a parameter is not something every backend can do (a
+        // Rust parameter is immutable; see the lesson "A frontend cannot
+        // store into a SIR parameter"), and this lowerer has no parameter
+        // copy yet, so a parameter as the loop variable is refused cleanly.
+        if self.current_params.contains(&var) {
+            return Err(err(&format!(
+                "unsupported: a `for` loop variable that is a parameter (`{var}`)"
+            )));
+        }
+        let iter_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| err("for_statement missing its iterable"))?;
+        // The iterable is evaluated once, before the loop, in the
+        // enclosing scope (and before the loop variable exists).
+        let iter = self.lower_expression(iter_node)?;
+
+        let mut out: Vec<Stmt> = Vec::new();
+        if !self.declared_locals.contains(&var) {
+            self.declared_locals.insert(var.clone());
+            out.push(Stmt::LetBinding {
+                name: var.clone(),
+                sir_type: None,
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            });
+        }
+
+        // The fresh iteration variable, skipping any spelling the program
+        // already uses for a local, parameter or method.
+        let tmp = loop {
+            let candidate = format!("__for_{}", self.for_counter);
+            self.for_counter += 1;
+            let taken = self.declared_locals.contains(&candidate)
+                || self.current_params.contains(&candidate)
+                || self.enclosing_visible.contains(&candidate)
+                || self.top_level_methods.contains(&candidate)
+                || self.nested_methods.contains(&candidate);
+            if !taken {
+                break candidate;
+            }
+        };
+
+        let store = Stmt::Assign {
+            name: var.clone(),
+            scope: Scope::Local,
+            value: Expr::VarRef {
+                name: tmp.clone(),
+                scope: Scope::Local,
+                span: span.clone(),
+            },
+            span: span.clone(),
+        };
+        let saved_locals = self.declared_locals.clone();
+        self.declared_locals.insert(tmp.clone());
+        let body = self.lower_clause_statements(node);
+        self.declared_locals = saved_locals;
+        let mut body = loop_body(body?);
+        body.stmts.insert(0, store);
+
+        self.features_used.insert(Feature::Loops);
+        self.features_used.insert(Feature::MutableBindings);
+        self.features_used.insert(Feature::DynamicTyping);
+
+        let int = |value: i64| Expr::IntLit {
+            value,
+            span: span.clone(),
+        };
+        let looped = match iter {
+            Expr::BuiltinCall { name, mut args, .. }
+                if name == "range"
+                    && args.len() == 3
+                    && !matches!(args[0], Expr::NilLit { .. })
+                    && !matches!(args[1], Expr::NilLit { .. })
+                    && matches!(args[2], Expr::BoolLit { .. }) =>
+            {
+                let exclusive = matches!(args[2], Expr::BoolLit { value: true, .. });
+                let end = args.remove(1);
+                let start = args.remove(0);
+                let stop = if exclusive {
+                    end
+                } else {
+                    Expr::BuiltinCall {
+                        name: "+".to_string(),
+                        args: vec![end, int(1)],
+                        effects: EffectSet::PURE,
+                        span: span.clone(),
+                    }
+                };
+                Stmt::ForRange {
+                    var: tmp,
+                    start,
+                    stop,
+                    step: int(1),
+                    body,
+                    span,
+                }
+            }
+            iter => Stmt::ForEach {
+                var: tmp,
+                iter,
+                body,
+                span,
+            },
+        };
+        out.push(looped);
+        Ok(out)
     }
 
     // -------------------------------------------------------------------
@@ -5703,6 +6045,8 @@ impl Lowerer {
         // parameter inside the expression resolves as `Scope::Param`.
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
+        // #18778 — a `def` body sees no local from outside it.
+        let saved_visible = std::mem::take(&mut self.enclosing_visible);
         // Phase RB2 — mark that we are inside a method body so a block
         // literal that `yield`s captures *this* method's block.
         let saved_in_def = self.in_def_body;
@@ -5734,6 +6078,7 @@ impl Lowerer {
         // Restore the outer scope.
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
+        self.enclosing_visible = saved_visible;
 
         // Phase Q9e — an endless def may also `yield` (`def t = yield`);
         // thread the explicit block param if so.
@@ -5814,6 +6159,8 @@ impl Lowerer {
         // them inside the body gets `Scope::Param` (validator-correct).
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
+        // #18778 — a `def` body sees no local from outside it.
+        let saved_visible = std::mem::take(&mut self.enclosing_visible);
         // Phase RB2 — mark that we are inside a method body so a block
         // literal that `yield`s captures *this* method's block.
         let saved_in_def = self.in_def_body;
@@ -5912,6 +6259,7 @@ impl Lowerer {
         // the program lowers correctly.
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
+        self.enclosing_visible = saved_visible;
         // O2 — restore the enclosing method name (usually `None`).
         self.current_method = saved_method;
 
@@ -7054,7 +7402,22 @@ impl Lowerer {
                         }
                         found
                     };
-                    let rescue_body = self.lower_flat_statements(n)?;
+                    // #18778 — the binding is a local of the clause body, so
+                    // a bare `e` there reads it, even when a method `e`
+                    // exists (see `bare_name_call`).  `rescue => e` with no
+                    // class (Ruby's default `StandardError`) reaches here
+                    // too, now that the grammar parses it: the `=>` and the
+                    // name are direct children, and `exception_types` stays
+                    // empty — a catch-all clause, as every backend renders
+                    // an empty type list.
+                    let newly_bound = binding
+                        .as_ref()
+                        .filter(|b| self.declared_locals.insert((*b).clone()));
+                    let rescue_body = self.lower_flat_statements(n);
+                    if let Some(b) = newly_bound {
+                        self.declared_locals.remove(b);
+                    }
+                    let rescue_body = rescue_body?;
                     rescues.push(RescueClause {
                         exception_types,
                         binding,
@@ -7565,6 +7928,11 @@ impl Lowerer {
         // `lower_def_statement`).
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
+        // #18778 — the scopes around the block stay visible to a bare name
+        // in its body (see `bare_name_call`); restored below.
+        let saved_visible = self.enclosing_visible.clone();
+        self.enclosing_visible.extend(saved_locals.iter().cloned());
+        self.enclosing_visible.extend(saved_params.iter().cloned());
         // M4 — snapshot the *immediate* enclosing scope (the method or outer
         // block whose body we are lowering inside of) so that, after the body
         // is lowered, we can recognise free reads of its locals/params and
@@ -7668,6 +8036,7 @@ impl Lowerer {
         // Restore outer scope.
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
+        self.enclosing_visible = saved_visible;
         self.in_block_body = saved_in_block;
 
         // Sequential-assignment fix-up for the block body (see
@@ -7895,6 +8264,11 @@ impl Lowerer {
         // + tracked in current_params so VarRefs get Scope::Param).
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
+        // #18778 — as for a block: the scopes around stay visible to a bare
+        // name (see `bare_name_call`).
+        let saved_visible = self.enclosing_visible.clone();
+        self.enclosing_visible.extend(saved_locals.iter().cloned());
+        self.enclosing_visible.extend(saved_params.iter().cloned());
         for p in &params {
             self.declared_locals.insert(p.name.clone());
             self.current_params.insert(p.name.clone());
@@ -7954,6 +8328,7 @@ impl Lowerer {
         // Restore outer scope.
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
+        self.enclosing_visible = saved_visible;
 
         // Sequential-assignment fix-up for this block body (see
         // `sequentialize_let_bindings`).
@@ -9866,6 +10241,9 @@ impl Lowerer {
                                 Scope::Const
                             } else if self.current_params.contains(&tok.value) {
                                 Scope::Param
+                            } else if let Some(call) = self.bare_name_call(&tok.value, &span) {
+                                // #18778 — not a local: a call (`puts g`).
+                                return Ok(call);
                             } else {
                                 Scope::Local
                             };
@@ -9932,6 +10310,55 @@ impl Lowerer {
             message: "factor node had no recognisable leaf".to_string(),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
+        })
+    }
+
+    /// #18778 — a bare identifier that is not a local is a method call.
+    ///
+    /// Ruby decides what a bare `g` means while it parses: `g` is a local
+    /// variable if an assignment to `g` (or a parameter `g`) appears EARLIER
+    /// in the same scope, and otherwise a call of the method `g` with no
+    /// arguments, exactly like `g()`:
+    ///
+    /// ```ruby
+    /// def g; 42; end
+    /// puts g        # no local `g` yet: a call, prints 42
+    /// g = 1
+    /// puts g        # the local now: prints 1
+    /// puts g()      # parentheses always call: prints 42
+    /// ```
+    ///
+    /// This lowerer used to read every bare name as a local, so `puts g`
+    /// produced a `VarRef` the validator refused ("references unknown name
+    /// `g`").  The rule here:
+    ///
+    /// | `name` is …                                        | lowers to            |
+    /// |----------------------------------------------------|----------------------|
+    /// | a local or parameter assigned before this point    | `VarRef` (caller)    |
+    /// | a local of a scope around this block or lambda     | `VarRef` (caller)    |
+    /// | a top-level `def` only                             | `DirectCall(name)`   |
+    /// | also a method of some `class`/`module`             | `VarRef` (caller)    |
+    /// | not a method at all                                | `VarRef` (caller)    |
+    ///
+    /// "Before this point" is `declared_locals`, which grows as assignments
+    /// are lowered, in source order: the parse-order rule Ruby uses.  A name
+    /// that a class also defines is left alone: inside that class's methods
+    /// a bare `m` means `self.m`, which a `DirectCall` to the top-level `m`
+    /// would get wrong, and refusing (the validator's unknown-name error) is
+    /// better than a wrong answer.  The last two rows keep today's refusal.
+    fn bare_name_call(&self, name: &str, span: &Span) -> Option<Expr> {
+        let is_local = self.declared_locals.contains(name)
+            || self.current_params.contains(name)
+            || self.enclosing_visible.contains(name);
+        if is_local || !self.top_level_methods.contains(name) || self.nested_methods.contains(name)
+        {
+            return None;
+        }
+        Some(Expr::DirectCall {
+            fn_name: name.to_string(),
+            args: Vec::new(),
+            effects: EffectSet::PURE,
+            span: span.clone(),
         })
     }
 

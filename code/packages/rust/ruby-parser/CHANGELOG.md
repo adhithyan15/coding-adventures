@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## Unreleased — `for`, `rescue => e`, `f() + f`, line-start `[` (#18778)
+
+### Changed
+
+- `src/_grammar.rs` (the `legacy` module) regenerated from
+  `code/grammars/ruby/ruby.grammar`, which gained:
+  - `for_statement = "for" NAME "in" expression [ "do" ] { !"end" statement } "end"`;
+  - `rescue_clause` takes `rescue => e` with no class (its `=>`
+    alternative first, since `=>` lexes as a `Name`);
+  - a `method_call` statement (and a `method_call` before a modifier) must
+    not be followed by a binary operator, so `f() + f` parses as one
+    expression at the start of a statement and inside a block body;
+  - `index_suffix` and `method_call_no_paren`'s first argument refuse a
+    `[` that `ruby-lexer` re-tagged `lbracket_line_start`.
+- Tests: `test_parse_for_loop_with_and_without_do`,
+  `test_parse_rescue_arrow_without_an_exception_class`,
+  `test_parse_call_plus_name_as_a_statement`,
+  `test_parse_bracket_on_a_new_line_starts_a_new_statement`.
+
 ## Unreleased — LANG84 R1b: `=begin`/`=end`, `__END__`, fail closed
 
 ### Changed

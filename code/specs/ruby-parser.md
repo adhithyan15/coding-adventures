@@ -236,6 +236,22 @@ We **don't** build all 15 era machines upfront.  Phases:
 
 Each phase is its own PR with full tests before merging.
 
+### Phase 5 lowering rules added for #18778
+
+The legacy grammar (`code/grammars/ruby/ruby.grammar`) ignores newlines, and
+the lowerer used to read every bare name as a local.  Both broke ordinary
+Ruby; the rules below follow Ruby's own:
+
+| construct | rule |
+|---|---|
+| `[` at the start of a line, after an expression-ending token | starts a new statement.  The Rust lexer re-tags it `lbracket_line_start` (still an `LBRACKET`), and `index_suffix` and a paren-less call's first argument refuse that value, so `x = 5` ⏎ `[1].each …` is two statements, not `5[1]`. |
+| `f() + f` | a parenthesised call is a whole statement only when no binary operator follows (lookaheads after `method_call` in `statement` and `modifier_statement`), so `expression_stmt` parses the sum — also inside a block or `->` body. |
+| `for x in xs [do] … end` | a `for_statement`.  No new scope: `x` is a local of the enclosing scope (declared `nil` first if new) that keeps the last item; the loop iterates a fresh `__for_<n>` and stores it into `x`.  A literal `a...b` / `a..b` is a `ForRange`, anything else a `ForEach`.  A parameter as the loop variable is refused. |
+| `rescue => e` | binds `e` with an empty class list (Ruby's default `StandardError`, a catch-all here); `e` is a local of the clause body. |
+| a bare name `g` | a local if an assignment or parameter `g` appears earlier in the scope (or in a scope around a block/lambda); otherwise a call `g()` when `g` is a top-level `def` that no class or module also defines; otherwise unchanged (refused by the validator). |
+| a loop body | statements only: a trailing expression is an `ExprStmt`, never the body's value (the C and Ruby backends emit only a loop body's statements). |
+| `x if c` as a method's last statement | the method's value is `x` when `c` holds, `nil` otherwise. |
+
 ## End-to-end success criteria
 
 A program of moderate complexity must round-trip:

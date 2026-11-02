@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## Unreleased — a `[` that starts a line starts a statement (#18778)
+
+### Added
+
+- **`tag_line_start_brackets`.**  A newline after a complete expression
+  ends a Ruby statement, so a line that starts with `[` starts a new one:
+  `x = 5` ⏎ `[1].each …` is two statements.  The legacy grammar ignores
+  newlines and read `5[1].each …` (the C backend failed with `undefined
+  method []`; `puts` ⏎ `[7].each …` printed the wrong thing everywhere).  A
+  `[` with a `Newline` token between it and an expression-ending token is
+  re-tagged `lbracket_line_start` (type still `LBracket`); the grammar's
+  `index_suffix` and paren-less-call argument refuse that value.  All eras.
+  Tests `bracket_starting_a_line_after_an_expression_is_retagged` and
+  `bracket_that_continues_an_expression_is_left_alone`.
+- `ends_expression`, the expression-ending test, now shared by the
+  modifier-keyword pass and the new pass (no behaviour change for
+  modifiers).
+
 ## Unreleased — LANG84 R1b: embedded documents, `__END__` and the refusals
 
 ### Changed
