@@ -22,6 +22,7 @@ int main() {
     const unsigned char rhs[2] = {0x01, 0x03};
     int must_fail = 0;
     int failed_after_passes;
+    int eps_evaluations = 0;
 
     /* --- these must PASS (edge cases of ISO_CHECK_EQ_DBL) --- */
     ISO_CHECK_EQ_DBL(not_a_number, not_a_number, 0.0);
@@ -29,6 +30,10 @@ int main() {
     ISO_CHECK_EQ_DBL(-infinity, -infinity, 0.0);
     ISO_CHECK_EQ_DBL(0.3, 0.3, not_a_number);
     ISO_CHECK_EQ_DBL(1.0, 1.0 + 1e-12, 1e-9);
+    /* Each argument is evaluated exactly once, even when the exact-equality
+     * shortcut decides the check before the tolerance is needed. */
+    ISO_CHECK_EQ_DBL(1.0, 1.0, (eps_evaluations++, 1e-9));
+    ISO_CHECK_EQ_INT(eps_evaluations, 1);
     failed_after_passes = iso_test_checks_failed;
 
     /* --- these must FAIL --- */

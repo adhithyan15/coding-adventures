@@ -163,12 +163,15 @@ static int iso_test_checks_failed = 0;
  *     0.3    0.3    NaN    pass     pass   (via a == b)
  *     0.3    0.31   NaN    pass     FAIL
  *
+ * Each argument is evaluated exactly once, like every other check here.
+ *
  * Do not build tests with -ffast-math: it lets the compiler assume no NaN
  * exists and fold `x != x` to false. */
 #define ISO_CHECK_EQ_DBL(a, b, eps)                                            \
     do {                                                                       \
         double iso_a_ = (double)(a);                                           \
         double iso_b_ = (double)(b);                                           \
+        double iso_e_ = (double)(eps);                                         \
         double iso_d_ = iso_a_ - iso_b_;                                       \
         int iso_ok_;                                                           \
         if (iso_d_ < 0) {                                                      \
@@ -176,14 +179,14 @@ static int iso_test_checks_failed = 0;
         }                                                                      \
         iso_ok_ = iso_a_ == iso_b_                                             \
                   || (iso_a_ != iso_a_ && iso_b_ != iso_b_)                    \
-                  || iso_d_ <= (double)(eps);                                  \
+                  || iso_d_ <= iso_e_;                                         \
         iso_test_checks_run++;                                                 \
         if (!iso_ok_) {                                                        \
             iso_test_checks_failed++;                                          \
             printf("  FAIL %s:%d  ISO_CHECK_EQ_DBL(%s, %s): %g != %g "         \
                    "(|d|=%g, eps %g)\n",                                       \
                    __FILE__, __LINE__, #a, #b, iso_a_, iso_b_, iso_d_,         \
-                   (double)(eps));                                            \
+                   iso_e_);                                                    \
         }                                                                      \
     } while (0)
 
