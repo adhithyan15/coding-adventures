@@ -1,0 +1,959 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 336,
+  "title": "Work in the Bazaar",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:41269a21cbade9a5",
+  "lessons": [
+    {
+      "id": "PA-C336-karigar",
+      "sequence": 20380,
+      "title": "ਕਾਰੀਗਰ (kārīgar) — a craftsman",
+      "headword": "ਕਾਰੀਗਰ",
+      "romanization": "kārīgar",
+      "gloss": "a craftsman",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e177923a39b7538e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to hammer into shape, then the Punjabi for a mechanic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਾਰੀਗਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਾਰੀਗਰ — kārīgar — \"a craftsman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਕਾਰੀਗਰ ਲੱਕੜ ਦਾ ਕੰਮ ਕਰਦਾ ਹੈ। eh kārīgar lakkaṛ dā kamm kardā hai. This craftsman does woodwork."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਾਰੀਗਰ (kārīgar) is a loan, usually traced to Persian kārīgar, \"a craftsman\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārīgar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārīgar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārīgar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārīgar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh kārīgar lakkaṛ dā kamm kardā hai. — This craftsman does woodwork.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh kārīgar lakkaṛ dā kamm kardā hai.* — This craftsman does woodwork.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to hammer into shape, then the Punjabi for a mechanic, then say kārīgar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to hammer into shape, then the Punjabi for a mechanic, then say *kārīgar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਾਰੀਗਰ (kārīgar) mean? (\"A craftsman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C336-mazdur",
+      "sequence": 20390,
+      "title": "ਮਜ਼ਦੂਰ (mazdūr) — a labourer",
+      "headword": "ਮਜ਼ਦੂਰ",
+      "romanization": "mazdūr",
+      "gloss": "a labourer",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2147ce9289a865ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a mechanic, then the Punjabi for a craftsman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਜ਼ਦੂਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਜ਼ਦੂਰ — mazdūr — \"a labourer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਜ਼ਦੂਰ ਸਵੇਰ ਤੋਂ ਸ਼ਾਮ ਤੱਕ ਇੱਟਾਂ ਚੁੱਕਦੇ ਹਨ। mazdūr saver ton shām tak iṭṭāṁ chukkde han. The labourers carry bricks from morning till evening."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਜ਼ਦੂਰ (mazdūr) is a loan, usually traced to Persian mazdūr, \"a hired labourer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazdūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazdūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazdūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazdūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazdūr saver ton shām tak iṭṭāṁ chukkde han. — The labourers carry bricks from morning till evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazdūr saver ton shām tak iṭṭāṁ chukkde han.* — The labourers carry bricks from morning till evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a mechanic, then the Punjabi for a craftsman, then say mazdūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a mechanic, then the Punjabi for a craftsman, then say *mazdūr* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਜ਼ਦੂਰ (mazdūr) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਜ਼ਦੂਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਜ਼ਦੂਰ (mazdūr) mean? (\"A labourer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C336-kasai",
+      "sequence": 20400,
+      "title": "ਕਸਾਈ (kasāī) — a butcher",
+      "headword": "ਕਸਾਈ",
+      "romanization": "kasāī",
+      "gloss": "a butcher",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88e842f89f3f4015",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a craftsman, then the Punjabi for a labourer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਸਾਈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਸਾਈ — kasāī — \"a butcher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਸਾਈ ਦੀ ਦੁਕਾਨ ਬਾਜ਼ਾਰ ਦੇ ਕੋਨੇ ਉੱਤੇ ਹੈ। kasāī dī dukān bāzār de kone utte hai. The butcher's shop is on the corner of the bazaar."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਸਾਈ (kasāī) is a loan, usually traced through Persian to Arabic qaṣṣāb, \"a butcher\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasāī dī dukān bāzār de kone utte hai. — The butcher's shop is on the corner of the bazaar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasāī dī dukān bāzār de kone utte hai.* — The butcher's shop is on the corner of the bazaar.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a craftsman, then the Punjabi for a labourer, then say kasāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a craftsman, then the Punjabi for a labourer, then say *kasāī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਸਾਈ (kasāī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਸਾਈ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਸਾਈ (kasāī) mean? (\"A butcher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C336-daraivar",
+      "sequence": 20410,
+      "title": "ਡਰਾਈਵਰ (ḍarāīvar) — a driver",
+      "headword": "ਡਰਾਈਵਰ",
+      "romanization": "ḍarāīvar",
+      "gloss": "a driver",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3d6fc7b4c37ea08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a labourer, then the Punjabi for a butcher."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਡਰਾਈਵਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡਰਾਈਵਰ — ḍarāīvar — \"a driver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਾਡਾ ਡਰਾਈਵਰ ਬੱਸ ਬਹੁਤ ਹੌਲੀ ਚਲਾਉਂਦਾ ਹੈ। sāḍā ḍarāīvar bass bahut haulī chalāundā hai. Our driver drives the bus very slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine or feminine noun, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡਰਾਈਵਰ (ḍarāīvar) is borrowed from English driver."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍarāīvar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍarāīvar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍarāīvar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍarāīvar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍā ḍarāīvar bass bahut haulī chalāundā hai. — Our driver drives the bus very slowly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍā ḍarāīvar bass bahut haulī chalāundā hai.* — Our driver drives the bus very slowly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a labourer, then the Punjabi for a butcher, then say ḍarāīvar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a labourer, then the Punjabi for a butcher, then say *ḍarāīvar* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਡਰਾਈਵਰ (ḍarāīvar) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਡਰਾਈਵਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਡਰਾਈਵਰ (ḍarāīvar) mean? (\"A driver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C336-murammat",
+      "sequence": 20420,
+      "title": "ਮੁਰੰਮਤ (murammat) — a repair",
+      "headword": "ਮੁਰੰਮਤ",
+      "romanization": "murammat",
+      "gloss": "a repair",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cea820c83f6d3e18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a butcher, then the Punjabi for a driver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੁਰੰਮਤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੁਰੰਮਤ — murammat — \"a repair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪਿਛਲੇ ਮਹੀਨੇ ਅਸੀਂ ਘਰ ਦੀ ਮੁਰੰਮਤ ਕੀਤੀ। pichhle mahīne asīṁ ghar dī murammat kītī. Last month we repaired the house."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੁਰੰਮਤ (murammat) is a loan, usually traced through Persian to Arabic marammat, \"repair\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murammat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murammat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murammat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murammat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pichhle mahīne asīṁ ghar dī murammat kītī. — Last month we repaired the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pichhle mahīne asīṁ ghar dī murammat kītī.* — Last month we repaired the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a butcher, then the Punjabi for a driver, then say murammat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a butcher, then the Punjabi for a driver, then say *murammat* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮੁਰੰਮਤ (murammat) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮੁਰੰਮਤ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮੁਰੰਮਤ (murammat) mean? (\"A repair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R336-review-330-336",
+      "sequence": 20430,
+      "title": "Looking back: from Brothers' and Sisters' Spouses to Work in the Bazaar",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Brothers' and Sisters' Spouses to Work in the Bazaar",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c9f89cbc2a80484",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a brother's wife and a sister's husband."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brother's wife, a sister's husband, a husband's sister, a husband's younger brother's wife, a husband's elder brother's wife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brother's wife, a sister's husband, a husband's sister, a husband's younger brother's wife, a husband's elder brother's wife]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a father's younger brother, a father's elder brother, a mother's brother, a mother's sister, a mother's sister's husband",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a father's younger brother, a father's elder brother, a mother's brother, a mother's sister, a mother's sister's husband]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brother's son, a sister's son, a neighbour, a woman's female friend, to call out to someone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brother's son, a sister's son, a neighbour, a woman's female friend, to call out to someone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a barber, to shave, a washerman, a cobbler, a gardener",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a barber, to shave, a washerman, a cobbler, a gardener]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wool, to spin thread, to knit, a weaver, to dye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wool, to spin thread, to knit, a weaver, to dye]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gold, a goldsmith, iron, to hammer into shape, a mechanic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gold, a goldsmith, iron, to hammer into shape, a mechanic]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a craftsman, a labourer, a butcher, a driver, a repair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a craftsman, a labourer, a butcher, a driver, a repair]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A brother's wife? (ਭਰਜਾਈ, bharjāī.) A sister's husband? (ਜੀਜਾ, jījā.) A husband's sister? (ਨਣਾਨ, naṇān.) A husband's younger brother's wife? (ਦਰਾਣੀ, darāṇī.) A husband's elder brother's wife? (ਜਠਾਣੀ, jaṭhāṇī.) A father's younger brother? (ਚਾਚਾ, chāchā.) A father's elder brother? (ਤਾਇਆ, tāiā.) A mother's brother? (ਮਾਮਾ, māmā.) A mother's sister? (ਮਾਸੀ, māsī.) A mother's sister's husband? (ਮਾਸੜ, māsaṛ.) A brother's son? (ਭਤੀਜਾ, bhatījā.) A sister's son? (ਭਾਣਜਾ, bhāṇjā.) A neighbour? (ਗੁਆਂਢੀ, guāṇḍhī.) A woman's female friend? (ਸਹੇਲੀ, sahelī.) To call out to someone? (ਪੁਕਾਰਨਾ, pukārnā.) A barber? (ਨਾਈ, nāī.) To shave? (ਮੁੰਨਣਾ, munnṇā.) A washerman? (ਧੋਬੀ, dhobī.) A cobbler? (ਮੋਚੀ, mochī.) A gardener? (ਮਾਲੀ, mālī.) Wool? (ਉੱਨ, unn.) To spin thread? (ਕੱਤਣਾ, kattṇā.) To knit? (ਬੁਣਨਾ, buṇnā.) A weaver? (ਜੁਲਾਹਾ, julāhā.) To dye? (ਰੰਗਣਾ, raṅgṇā.) Gold? (ਸੋਨਾ, sonā.) A goldsmith? (ਸੁਨਿਆਰ, suniār.) Iron? (ਲੋਹਾ, lohā.) To hammer into shape? (ਘੜਨਾ, ghaṛnā.) A mechanic? (ਮਿਸਤਰੀ, misatrī.) A craftsman? (ਕਾਰੀਗਰ, kārīgar.) A labourer? (ਮਜ਼ਦੂਰ, mazdūr.) A butcher? (ਕਸਾਈ, kasāī.) A driver? (ਡਰਾਈਵਰ, ḍarāīvar.) A repair? (ਮੁਰੰਮਤ, murammat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R336-review-final-336",
+      "sequence": 20440,
+      "title": "Work in the Bazaar — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfe854aada3cbd5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a craftsman and a labourer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a craftsman, a labourer, a butcher, a driver, a repair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a craftsman, a labourer, a butcher, a driver, a repair]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A craftsman? (ਕਾਰੀਗਰ, kārīgar.) A labourer? (ਮਜ਼ਦੂਰ, mazdūr.) A butcher? (ਕਸਾਈ, kasāī.) A driver? (ਡਰਾਈਵਰ, ḍarāīvar.) A repair? (ਮੁਰੰਮਤ, murammat.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

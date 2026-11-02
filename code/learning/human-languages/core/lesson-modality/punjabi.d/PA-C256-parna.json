@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C256-parna",
+    "language": "punjabi",
+    "chapter": 256,
+    "sequence": 15190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9ba96baa60156f0"
+  },
+  "findings": []
+}

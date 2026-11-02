@@ -1,0 +1,11 @@
+{
+  "id": "PA-C272-riksha",
+  "pathSegment": "PA-PATH-272-CROWD272",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-272-CROWD272",
+      "order": 3
+    }
+  ]
+}

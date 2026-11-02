@@ -1,0 +1,11 @@
+{
+  "id": "PA-C308-vachchha",
+  "pathSegment": "PA-PATH-308-FEED308",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-308-FEED308",
+      "order": 2
+    }
+  ]
+}

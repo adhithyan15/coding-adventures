@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Gone Missing",
+  "label": "ch:pa-a2-gone-missing",
+  "canDo": "I can say what went missing and who took it.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C311-nuksan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say what went missing and who took it.",
+    "assesses": [
+      "PA-LEX-C311-LOST311-03",
+      "PA-LEX-C311-LOST311-04",
+      "PA-LEX-C311-LOST311-05"
+    ]
+  }
+}

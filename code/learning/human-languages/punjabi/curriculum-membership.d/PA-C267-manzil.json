@@ -1,0 +1,11 @@
+{
+  "id": "PA-C267-manzil",
+  "pathSegment": "PA-PATH-267-OFFICE267",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-267-OFFICE267",
+      "order": 1
+    }
+  ]
+}

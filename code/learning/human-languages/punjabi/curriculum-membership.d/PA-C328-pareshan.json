@@ -1,0 +1,11 @@
+{
+  "id": "PA-C328-pareshan",
+  "pathSegment": "PA-PATH-328-CARE328",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-328-CARE328",
+      "order": 1
+    }
+  ]
+}

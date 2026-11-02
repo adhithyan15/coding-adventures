@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:1a8dd19fd647fb37",
+  "lessonIds": [
+    "PA-C324-bamh",
+    "PA-C324-modha",
+    "PA-C324-haphna",
+    "PA-C324-pasina",
+    "PA-C324-chakkar"
+  ],
+  "tex": "punjabi/book/chapters/ch324-aching-and-out-of-breath.tex"
+}

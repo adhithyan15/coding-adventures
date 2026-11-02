@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:a313125734285526",
+  "lessonIds": [
+    "PA-C272-vichharna",
+    "PA-C272-sipahi",
+    "PA-C272-chauki",
+    "PA-C272-riksha",
+    "PA-C272-parak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch272.txt",
+  "json": "punjabi/narration/ch272.json",
+  "textHash": "fnv1a64:f476068d60b2369b",
+  "jsonHash": "fnv1a64:028fea878429cd4c",
+  "findings": []
+}

@@ -1,0 +1,753 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 284,
+  "title": "Getting Off",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a1db711333140aa5",
+  "lessons": [
+    {
+      "id": "PA-C284-utarna",
+      "sequence": 17150,
+      "title": "ਉਤਰਨਾ (utarnā) — to get off; to come down",
+      "headword": "ਉਤਰਨਾ",
+      "romanization": "utarnā",
+      "gloss": "to get off; to come down",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87ad9e57ccd03897",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to get stuck, then the Punjabi for to sway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਉਤਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਤਰਨਾ — utarnā — \"to get off; to come down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਅਗਲੇ ਸਟੇਸ਼ਨ ਉੱਤੇ ਉਤਰਾਂਗਾ। maiṁ agle saṭeshan utte utrāṅgā. I will get off at the next station."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਬੱਸ ਤੋਂ ਉਤਰਿਆ, maiṁ bass ton utriā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਤਰਨਾ (utarnā) is inherited from Sanskrit uttarati, \"alights, descends\"; CDIAL lists Punjabi uttarṇā, \"to descend\", under it (CDIAL 1770)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utarnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utarnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utarnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utarnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ agle saṭeshan utte utrāṅgā. — I will get off at the next station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ agle saṭeshan utte utrāṅgā.* — I will get off at the next station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to get stuck, then the Punjabi for to sway, then say utarnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to get stuck, then the Punjabi for to sway, then say *utarnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਉਤਰਨਾ (utarnā) mean? (\"To get off; to come down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C284-utaarna",
+      "sequence": 17160,
+      "title": "ਉਤਾਰਨਾ (utārnā) — to take down; to unload",
+      "headword": "ਉਤਾਰਨਾ",
+      "romanization": "utārnā",
+      "gloss": "to take down; to unload",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b2184dd54a3cb90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to sway, then the Punjabi for to get off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਉਤਾਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਤਾਰਨਾ — utārnā — \"to take down; to unload\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਬੱਸ ਦੀ ਛੱਤ ਤੋਂ ਅਟੈਚੀ ਉਤਾਰੇਗਾ। Aman bass dī chhatt ton aṭaichī utāregā. Aman will take the suitcase down from the roof of the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਅਟੈਚੀ ਉਤਾਰੀ, maiṁ aṭaichī utārī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਤਾਰਨਾ (utārnā) is the causative partner of utarnā, inherited from Sanskrit uttārayati, \"makes descend\"; CDIAL lists Punjabi utārṇā, \"to make descend\", under it (CDIAL 1770)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aman bass dī chhatt ton aṭaichī utāregā. — Aman will take the suitcase down from the roof of the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aman bass dī chhatt ton aṭaichī utāregā.* — Aman will take the suitcase down from the roof of the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to sway, then the Punjabi for to get off, then say utārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to sway, then the Punjabi for to get off, then say *utārnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਉਤਾਰਨਾ (utārnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਉਤਾਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਉਤਾਰਨਾ (utārnā) mean? (\"To take down; to unload\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C284-dhakka",
+      "sequence": 17170,
+      "title": "ਧੱਕਾ (dhakkā) — a push; a shove",
+      "headword": "ਧੱਕਾ",
+      "romanization": "dhakkā",
+      "gloss": "a push; a shove",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c29ebd82499eb25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to get off, then the Punjabi for to take down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਧੱਕਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਧੱਕਾ — dhakkā — \"a push; a shove\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਦਰਵਾਜ਼ੇ ਨੂੰ ਧੱਕਾ ਦਿੱਤਾ। Aman ne darvāze nū̃ dhakkā dittā. Aman gave the door a push."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਧੱਕਾ (dhakkā) is inherited from a reconstructed dhakk, \"push, strike\"; CDIAL lists Punjabi dhakkā, \"a push, blow\", under it (CDIAL 6701)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhakkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhakkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhakkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhakkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aman ne darvāze nū̃ dhakkā dittā. — Aman gave the door a push.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aman ne darvāze nū̃ dhakkā dittā.* — Aman gave the door a push.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to get off, then the Punjabi for to take down, then say dhakkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to get off, then the Punjabi for to take down, then say *dhakkā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਧੱਕਾ (dhakkā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਧੱਕਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਧੱਕਾ (dhakkā) mean? (\"A push; a shove\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C284-akhri",
+      "sequence": 17180,
+      "title": "ਆਖ਼ਰੀ (ākhrī) — last; final",
+      "headword": "ਆਖ਼ਰੀ",
+      "romanization": "ākhrī",
+      "gloss": "last; final",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c17b4bce1484d77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to take down, then the Punjabi for a push."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਆਖ਼ਰੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਆਖ਼ਰੀ — ākhrī — \"last; final\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਆਖ਼ਰੀ ਸਟੇਸ਼ਨ ਹੈ। eh ākhrī saṭeshan hai. This is the last station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਆਖ਼ਰੀ (ākhrī) is a loan, usually traced through Persian to Arabic ākhir, \"last\", with the ending -ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh ākhrī saṭeshan hai. — This is the last station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh ākhrī saṭeshan hai.* — This is the last station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to take down, then the Punjabi for a push, then say ākhrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to take down, then the Punjabi for a push, then say *ākhrī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਆਖ਼ਰੀ (ākhrī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਆਖ਼ਰੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਆਖ਼ਰੀ (ākhrī) mean? (\"Last; final\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C284-apparna",
+      "sequence": 17190,
+      "title": "ਅੱਪੜਨਾ (appaṛnā) — to get to; to reach a place",
+      "headword": "ਅੱਪੜਨਾ",
+      "romanization": "appaṛnā",
+      "gloss": "to get to; to reach a place",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:187a60d3fc4bf446",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a push, then the Punjabi for last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਅੱਪੜਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅੱਪੜਨਾ — appaṛnā — \"to get to; to reach a place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੱਸ ਦੁਪਹਿਰ ਤੱਕ ਸ਼ਹਿਰ ਅੱਪੜੇਗੀ। bass dupahir tak shahir appṛegī. The bus will get to the city by noon."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਸਟੇਸ਼ਨ ਅੱਪੜਿਆ, maiṁ saṭeshan appṛiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅੱਪੜਨਾ (appaṛnā) is inherited from Sanskrit āpatati, \"flies towards\"; CDIAL lists Punjabi appaṛṇā, \"to arrive, come to hand\", under it (CDIAL 1193)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bass dupahir tak shahir appṛegī. — The bus will get to the city by noon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bass dupahir tak shahir appṛegī.* — The bus will get to the city by noon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a push, then the Punjabi for last, then say appaṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a push, then the Punjabi for last, then say *appaṛnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅੱਪੜਨਾ (appaṛnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅੱਪੜਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਅੱਪੜਨਾ (appaṛnā) mean? (\"To get to; to reach a place\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

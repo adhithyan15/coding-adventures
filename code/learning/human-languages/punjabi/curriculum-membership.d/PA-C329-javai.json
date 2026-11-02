@@ -1,0 +1,11 @@
+{
+  "id": "PA-C329-javai",
+  "pathSegment": "PA-PATH-329-INLAW329",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-329-INLAW329",
+      "order": 3
+    }
+  ]
+}

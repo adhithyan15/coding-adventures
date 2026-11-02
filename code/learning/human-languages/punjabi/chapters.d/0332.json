@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Nephews, Friends and Neighbours",
+  "label": "ch:pa-a2-nephews-friends-and-neighbours",
+  "canDo": "I can name a nephew, a friend and the people next door.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C332-pukarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can name a nephew, a friend and the people next door.",
+    "assesses": [
+      "PA-LEX-C332-KIN332-03",
+      "PA-LEX-C332-KIN332-04",
+      "PA-LEX-C332-KIN332-05"
+    ]
+  }
+}

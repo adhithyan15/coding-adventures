@@ -1,0 +1,959 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 252,
+  "title": "Bundles and Curtains",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:0b96a145ad4d3743",
+  "lessons": [
+    {
+      "id": "PA-C252-potli",
+      "sequence": 14380,
+      "title": "ਪੋਟਲੀ (poṭlī) — a small bundle",
+      "headword": "ਪੋਟਲੀ",
+      "romanization": "poṭlī",
+      "gloss": "a small bundle",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74a8aee610886a28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a bread basket, then the Punjabi for copper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੋਟਲੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੋਟਲੀ — poṭlī — \"a small bundle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਦੀ ਪੋਟਲੀ ਵਿੱਚ ਗੁੜ ਹੈ। dādī dī poṭlī vich guṛ hai. There is jaggery in my grandmother's little bundle."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੋਟਲੀ (poṭlī) is inherited from Sanskrit pōṭṭalī, \"bundle\", a late word that CDIAL sets under a reconstructed pōṭṭa, \"bundle\"; CDIAL lists Punjabi poṭlī, \"small bag\" (CDIAL 8396)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭlī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭlī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī dī poṭlī vich guṛ hai. — There is jaggery in my grandmother's little bundle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī dī poṭlī vich guṛ hai.* — There is jaggery in my grandmother's little bundle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a bread basket, then the Punjabi for copper, then say poṭlī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a bread basket, then the Punjabi for copper, then say *poṭlī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੋਟਲੀ (poṭlī) mean? (\"A small bundle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C252-pand",
+      "sequence": 14390,
+      "title": "ਪੰਡ (paṇḍ) — a large bundle (carried on the head)",
+      "headword": "ਪੰਡ",
+      "romanization": "paṇḍ",
+      "gloss": "a large bundle (carried on the head)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50626911e1dbc3ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for copper, then the Punjabi for a small bundle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੰਡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੰਡ — paṇḍ — \"a large bundle (carried on the head)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਸ ਦੇ ਸਿਰ ਉੱਤੇ ਕੱਪੜਿਆਂ ਦੀ ਪੰਡ ਹੈ। us de sir utte kappṛiāṁ dī paṇḍ hai. There is a bundle of clothes on her head."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੰਡ (paṇḍ) is inherited from Sanskrit piṇḍa, \"lump, clod, piece\"; CDIAL lists Punjabi paṇḍ, \"bundle\" (CDIAL 8168)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us de sir utte kappṛiāṁ dī paṇḍ hai. — There is a bundle of clothes on her head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us de sir utte kappṛiāṁ dī paṇḍ hai.* — There is a bundle of clothes on her head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for copper, then the Punjabi for a small bundle, then say paṇḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for copper, then the Punjabi for a small bundle, then say *paṇḍ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪੰਡ (paṇḍ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪੰਡ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੰਡ (paṇḍ) mean? (\"A large bundle (carried on the head)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C252-van",
+      "sequence": 14400,
+      "title": "ਵਾਣ (vāṇ) — cot rope; coarse rope for weaving a cot",
+      "headword": "ਵਾਣ",
+      "romanization": "vāṇ",
+      "gloss": "cot rope; coarse rope for weaving a cot",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea92a9c0a4f7a742",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a small bundle, then the Punjabi for a large bundle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵਾਣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਾਣ — vāṇ — \"cot rope; coarse rope for weaving a cot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੰਜੇ ਦਾ ਵਾਣ ਪੁਰਾਣਾ ਹੈ। manje dā vāṇ purāṇā hai. The rope of the cot is old."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਾਣ (vāṇ) is inherited from a reconstructed vāṇa, \"a sort of rush, twisted grass rope\"; CDIAL lists Punjabi vāṇ, \"rush for rope-making, coarse twine\" (CDIAL 11483)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manje dā vāṇ purāṇā hai. — The rope of the cot is old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manje dā vāṇ purāṇā hai.* — The rope of the cot is old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a small bundle, then the Punjabi for a large bundle, then say vāṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a small bundle, then the Punjabi for a large bundle, then say *vāṇ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵਾਣ (vāṇ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵਾਣ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵਾਣ (vāṇ) mean? (\"Cot rope; coarse rope for weaving a cot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C252-takhta",
+      "sequence": 14410,
+      "title": "ਤਖ਼ਤਾ (takhtā) — a wooden board",
+      "headword": "ਤਖ਼ਤਾ",
+      "romanization": "takhtā",
+      "gloss": "a wooden board",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0db8a932545d1c5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a large bundle, then the Punjabi for cot rope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਖ਼ਤਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਖ਼ਤਾ — takhtā — \"a wooden board\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਤਖ਼ਤੇ ਉੱਤੇ ਭਾਂਡੇ ਰੱਖਦਾ ਹਾਂ। maiṁ takhte utte bhāṇḍe rakkhdā hāṁ. I keep the pots on a wooden board."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਖ਼ਤਾ (takhtā) is borrowed: it is usually traced to Persian takhta, \"a board, a plank\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takhtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takhtā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takhtā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takhtā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ takhte utte bhāṇḍe rakkhdā hāṁ. — I keep the pots on a wooden board.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ takhte utte bhāṇḍe rakkhdā hāṁ.* — I keep the pots on a wooden board.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a large bundle, then the Punjabi for cot rope, then say takhtā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a large bundle, then the Punjabi for cot rope, then say *takhtā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤਖ਼ਤਾ (takhtā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤਖ਼ਤਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਖ਼ਤਾ (takhtā) mean? (\"A wooden board\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C252-parda",
+      "sequence": 14420,
+      "title": "ਪਰਦਾ (pardā) — a curtain",
+      "headword": "ਪਰਦਾ",
+      "romanization": "pardā",
+      "gloss": "a curtain",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e598d138e162d0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for cot rope, then the Punjabi for a wooden board."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਰਦਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰਦਾ — pardā — \"a curtain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਖਿੜਕੀ ਉੱਤੇ ਇੱਕ ਨੀਲਾ ਪਰਦਾ ਹੈ। khiṛkī utte ikk nīlā pardā hai. There is a blue curtain at the window."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰਦਾ (pardā) is borrowed: it is usually traced to Persian parda, \"a curtain, a veil\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiṛkī utte ikk nīlā pardā hai. — There is a blue curtain at the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiṛkī utte ikk nīlā pardā hai.* — There is a blue curtain at the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for cot rope, then the Punjabi for a wooden board, then say pardā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for cot rope, then the Punjabi for a wooden board, then say *pardā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਰਦਾ (pardā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਰਦਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਰਦਾ (pardā) mean? (\"A curtain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R252-review-246-252",
+      "sequence": 14430,
+      "title": "Looking back: from Beams and Roofs to Bundles and Curtains",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Beams and Roofs to Bundles and Curtains",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d730092a20330de9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for wood and a rafter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wood, a rafter, a thatched roof, a roof gutter, a high shelf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wood, a rafter, a thatched roof, a roof gutter, a high shelf]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wall niche, a small window, a corner of a room, a low stool, a trunk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wall niche, a small window, a corner of a room, a low stool, a trunk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a covered entrance, a door frame, a door bolt, a chain, a wall peg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a covered entrance, a door frame, a door bolt, a chain, a wall peg]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to light a fire, to blow on a fire, smoke, charcoal, an ember",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to light a fire, to blow on a fire, smoke, charcoal, an ember]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a clay cooking pot, a large pan, a metal jug, a water pitcher, brass",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a clay cooking pot, a large pan, a metal jug, a water pitcher, brass]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wooden spoon, a hanging net, a flat basket, a bread basket, copper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wooden spoon, a hanging net, a flat basket, a bread basket, copper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a small bundle, a large bundle, cot rope, a wooden board, a curtain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a small bundle, a large bundle, cot rope, a wooden board, a curtain]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Wood? (ਲੱਕੜ, lakkaṛ.) A rafter? (ਕੜੀ, kaṛī.) A thatched roof? (ਛੱਪਰ, chhappar.) A roof gutter? (ਪਰਨਾਲਾ, parnālā.) A high shelf? (ਪਰਛੱਤੀ, parchhattī.) A wall niche? (ਆਲਾ, ālā.) A small window? (ਬਾਰੀ, bārī.) A corner of a room? (ਖੂੰਜਾ, khūnjā.) A low stool? (ਪੀੜ੍ਹਾ, pīṛhā.) A trunk? (ਸੰਦੂਕ, sandūk.) A covered entrance? (ਡਿਉਢੀ, ḍiuḍhī.) A door frame? (ਚੌਖਟ, chaukhaṭ.) A door bolt? (ਅਰਲ, aral.) A chain? (ਸੰਗਲ, saṅgal.) A wall peg? (ਖੂੰਟੀ, khūṇṭī.) To light a fire? (ਬਾਲਣਾ, bālṇā.) To blow on a fire? (ਫੂਕਣਾ, phūkṇā.) Smoke? (ਧੂੰਆਂ, dhūṁāṁ.) Charcoal? (ਕੋਲਾ, kolā.) An ember? (ਅੰਗਿਆਰ, aṅgiār.) A clay cooking pot? (ਹਾਂਡੀ, hāṇḍī.) A large pan? (ਕੜਾਹਾ, kaṛāhā.) A metal jug? (ਗੜਵਾ, gaṛvā.) A water pitcher? (ਗਾਗਰ, gāgar.) Brass? (ਪਿੱਤਲ, pittal.) A wooden spoon? (ਡੋਈ, ḍoī.) A hanging net? (ਛਿੱਕਾ, chhikkā.) A flat basket? (ਛਾਬਾ, chhābā.) A bread basket? (ਚੰਗੇਰ, chaṅger.) Copper? (ਤਾਂਬਾ, tāmbā.) A small bundle? (ਪੋਟਲੀ, poṭlī.) A large bundle? (ਪੰਡ, paṇḍ.) Cot rope? (ਵਾਣ, vāṇ.) A wooden board? (ਤਖ਼ਤਾ, takhtā.) A curtain? (ਪਰਦਾ, pardā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R252-review-final-252",
+      "sequence": 14440,
+      "title": "Bundles and Curtains — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6a266ca84241bb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a small bundle and a large bundle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a small bundle, a large bundle, cot rope, a wooden board, a curtain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a small bundle, a large bundle, cot rope, a wooden board, a curtain]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A small bundle? (ਪੋਟਲੀ, poṭlī.) A large bundle? (ਪੰਡ, paṇḍ.) Cot rope? (ਵਾਣ, vāṇ.) A wooden board? (ਤਖ਼ਤਾ, takhtā.) A curtain? (ਪਰਦਾ, pardā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

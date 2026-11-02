@@ -1,0 +1,11 @@
+{
+  "id": "PA-C347-thap",
+  "pathSegment": "PA-PATH-347-DRUM347",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-347-DRUM347",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:69a2461b1fc031e1",
+  "lessonIds": [
+    "PA-C328-hausla",
+    "PA-C328-pareshan",
+    "PA-C328-tasalli",
+    "PA-C328-dabauna",
+    "PA-C328-sahina"
+  ],
+  "tex": "punjabi/book/chapters/ch328-caring-for-the-sick.tex"
+}

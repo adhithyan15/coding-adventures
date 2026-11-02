@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C329-sass",
+    "language": "punjabi",
+    "chapter": 329,
+    "sequence": 20030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:967554072ec82780"
+  },
+  "findings": []
+}

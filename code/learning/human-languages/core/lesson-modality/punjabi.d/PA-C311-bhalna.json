@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C311-bhalna",
+    "language": "punjabi",
+    "chapter": 311,
+    "sequence": 19100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d149c7ad2aa348e"
+  },
+  "findings": []
+}

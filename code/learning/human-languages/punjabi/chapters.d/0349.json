@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Singers and Songs",
+  "label": "ch:pa-a2-singers-and-songs",
+  "canDo": "I can say which singers and songs I like.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C349-sarahuna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say which singers and songs I like.",
+    "assesses": [
+      "PA-LEX-C349-SONG349-03",
+      "PA-LEX-C349-SONG349-04",
+      "PA-LEX-C349-SONG349-05"
+    ]
+  }
+}

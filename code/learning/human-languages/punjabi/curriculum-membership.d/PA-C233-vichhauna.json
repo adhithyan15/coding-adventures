@@ -1,0 +1,11 @@
+{
+  "id": "PA-C233-vichhauna",
+  "pathSegment": "PA-PATH-233-DIN233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-233-DIN233",
+      "order": 2
+    }
+  ]
+}

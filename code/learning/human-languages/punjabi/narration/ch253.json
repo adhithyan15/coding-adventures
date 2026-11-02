@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 253,
+  "title": "Rules at the Gate",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1c37b2d00483dbd2",
+  "lessons": [
+    {
+      "id": "PA-C253-niyam",
+      "sequence": 15000,
+      "title": "ਨਿਯਮ (niyam) — a rule",
+      "headword": "ਨਿਯਮ",
+      "romanization": "niyam",
+      "gloss": "a rule",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fffa050251f51d59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to take out, then the Punjabi for perhaps."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਨਿਯਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਿਯਮ — niyam — \"a rule\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੈਂਕ ਦਾ ਨਿਯਮ ਸਖ਼ਤ ਹੈ। baiṅk dā niyam sakht hai. The bank's rule is strict."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਿਯਮ (niyam) is taken over from Sanskrit niyama, \"any fixed rule or law\", a tatsama (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baiṅk dā niyam sakht hai. — The bank's rule is strict.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baiṅk dā niyam sakht hai.* — The bank's rule is strict.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to take out, then the Punjabi for perhaps, then say niyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to take out, then the Punjabi for perhaps, then say *niyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਨਿਯਮ (niyam) mean? (\"A rule\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C253-notis",
+      "sequence": 15010,
+      "title": "ਨੋਟਿਸ (noṭis) — a notice",
+      "headword": "ਨੋਟਿਸ",
+      "romanization": "noṭis",
+      "gloss": "a notice",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b09a54224a8c8c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for perhaps, then the Punjabi for a rule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਨੋਟਿਸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨੋਟਿਸ — noṭis — \"a notice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਫ਼ਤਰ ਦੇ ਦਰਵਾਜ਼ੇ ਉੱਤੇ ਨਵਾਂ ਨੋਟਿਸ ਹੈ। daftar de darvāze utte navāṁ noṭis hai. There is a new notice on the office door."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨੋਟਿਸ (noṭis) is borrowed from English notice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noṭis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noṭis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noṭis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noṭis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daftar de darvāze utte navāṁ noṭis hai. — There is a new notice on the office door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daftar de darvāze utte navāṁ noṭis hai.* — There is a new notice on the office door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for perhaps, then the Punjabi for a rule, then say noṭis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for perhaps, then the Punjabi for a rule, then say *noṭis* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਨੋਟਿਸ (noṭis) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਨੋਟਿਸ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਨੋਟਿਸ (noṭis) mean? (\"A notice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C253-katar",
+      "sequence": 15020,
+      "title": "ਕਤਾਰ (katār) — a queue; a line of people",
+      "headword": "ਕਤਾਰ",
+      "romanization": "katār",
+      "gloss": "a queue; a line of people",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc48aa50a8ef66af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a rule, then the Punjabi for a notice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਤਾਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਤਾਰ — katār — \"a queue; a line of people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੈਂਕ ਵਿੱਚ ਲੰਮੀ ਕਤਾਰ ਹੈ। baiṅk vich lammī katār hai. There is a long queue in the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਤਾਰ (katār) is a loan, usually traced through Persian to Arabic qitār, \"a line of camels\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baiṅk vich lammī katār hai. — There is a long queue in the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baiṅk vich lammī katār hai.* — There is a long queue in the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a rule, then the Punjabi for a notice, then say katār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a rule, then the Punjabi for a notice, then say *katār* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਤਾਰ (katār) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਤਾਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਤਾਰ (katār) mean? (\"A queue; a line of people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C253-hatna",
+      "sequence": 15030,
+      "title": "ਹਟਣਾ (haṭṇā) — to move out of the way; to step back",
+      "headword": "ਹਟਣਾ",
+      "romanization": "haṭṇā",
+      "gloss": "to move out of the way; to step back",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da6adf81d9f47845",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a notice, then the Punjabi for a queue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹਟਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਟਣਾ — haṭṇā — \"to move out of the way; to step back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਲੋਕ ਬੱਸ ਲਈ ਸੜਕ ਤੋਂ ਹਟਦੇ ਹਨ। lok bass laī saṛak ton haṭde han. People move off the road for the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਸੜਕ ਤੋਂ ਹਟਿਆ, maiṁ saṛak ton haṭiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਟਣਾ (haṭṇā) is inherited from a reconstructed haṭṭ, \"move\"; CDIAL lists Punjabi haṭṇā, \"to move back or out of the way\", under it (CDIAL 13943)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lok bass laī saṛak ton haṭde han. — People move off the road for the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lok bass laī saṛak ton haṭde han.* — People move off the road for the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a notice, then the Punjabi for a queue, then say haṭṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a notice, then the Punjabi for a queue, then say *haṭṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹਟਣਾ (haṭṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹਟਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹਟਣਾ (haṭṇā) mean? (\"To move out of the way; to step back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C253-ishtihar",
+      "sequence": 15040,
+      "title": "ਇਸ਼ਤਿਹਾਰ (ishtihār) — an advertisement",
+      "headword": "ਇਸ਼ਤਿਹਾਰ",
+      "romanization": "ishtihār",
+      "gloss": "an advertisement",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82e344f05f53b3b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a queue, then the Punjabi for to move out of the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਇਸ਼ਤਿਹਾਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਸ਼ਤਿਹਾਰ — ishtihār — \"an advertisement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਖ਼ਬਾਰ ਵਿੱਚ ਨੌਕਰੀ ਦਾ ਇਸ਼ਤਿਹਾਰ ਹੈ। akhbār vich naukrī dā ishtihār hai. There is a job advertisement in the newspaper."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਸ਼ਤਿਹਾਰ (ishtihār) is a loan, usually traced through Persian to Arabic ishtihār, \"making known\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtihār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtihār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtihār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtihār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhbār vich naukrī dā ishtihār hai. — There is a job advertisement in the newspaper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhbār vich naukrī dā ishtihār hai.* — There is a job advertisement in the newspaper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a queue, then the Punjabi for to move out of the way, then say ishtihār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a queue, then the Punjabi for to move out of the way, then say *ishtihār* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਇਸ਼ਤਿਹਾਰ (ishtihār) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਇਸ਼ਤਿਹਾਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਇਸ਼ਤਿਹਾਰ (ishtihār) mean? (\"An advertisement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

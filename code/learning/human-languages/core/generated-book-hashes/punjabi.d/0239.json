@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:7fa77f14a6210b6d",
+  "lessonIds": [
+    "PA-C239-tava",
+    "PA-C239-sekna",
+    "PA-C239-chimta",
+    "PA-C239-dhakkna",
+    "PA-C239-ghiu"
+  ],
+  "tex": "punjabi/book/chapters/ch239-bread-on-the-griddle.tex"
+}

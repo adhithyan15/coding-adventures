@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:223863b244180d4d",
+  "lessonIds": [
+    "PA-C245-vihra",
+    "PA-C245-kotha",
+    "PA-C245-chubara",
+    "PA-C245-thammh",
+    "PA-C245-itt",
+    "PA-R245-review-239-245"
+  ],
+  "tex": "punjabi/book/chapters/ch245-our-courtyard-house.tex"
+}

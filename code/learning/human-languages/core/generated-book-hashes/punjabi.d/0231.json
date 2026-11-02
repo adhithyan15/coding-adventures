@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:59f0e8f67e3c8007",
+  "lessonIds": [
+    "PA-C231-tel",
+    "PA-C231-gundna",
+    "PA-C231-gutt",
+    "PA-C231-paranda",
+    "PA-C231-lat",
+    "PA-R231-review-225-231"
+  ],
+  "tex": "punjabi/book/chapters/ch231-combing-and-plaiting.tex"
+}

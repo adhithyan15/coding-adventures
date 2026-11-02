@@ -1,0 +1,11 @@
+{
+  "id": "PA-C335-suniar",
+  "pathSegment": "PA-PATH-335-METAL335",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-335-METAL335",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:baae69968ada63ff",
+  "lessonIds": [
+    "PA-C269-pachhanna",
+    "PA-C269-naksha",
+    "PA-C269-nishan",
+    "PA-C269-dhukkna",
+    "PA-C269-toa"
+  ],
+  "tex": "punjabi/book/chapters/ch269-finding-the-way.tex"
+}

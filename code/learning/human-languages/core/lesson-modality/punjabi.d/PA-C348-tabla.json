@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C348-tabla",
+    "language": "punjabi",
+    "chapter": 348,
+    "sequence": 21570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53489ad69b43bf74"
+  },
+  "findings": []
+}

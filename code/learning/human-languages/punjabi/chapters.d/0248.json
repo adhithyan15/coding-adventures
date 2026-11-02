@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "At the Door",
+  "label": "ch:pa-a2-at-the-door",
+  "canDo": "I can name the parts of a doorway.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C248-khunti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can name the parts of a doorway.",
+    "assesses": [
+      "PA-LEX-C248-GHR248-03",
+      "PA-LEX-C248-GHR248-04",
+      "PA-LEX-C248-GHR248-05"
+    ]
+  }
+}

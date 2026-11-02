@@ -1,0 +1,11 @@
+{
+  "id": "PA-C270-mil",
+  "pathSegment": "PA-PATH-270-SEARCH270",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-270-SEARCH270",
+      "order": 3
+    }
+  ]
+}

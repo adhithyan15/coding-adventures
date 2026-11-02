@@ -1,0 +1,11 @@
+{
+  "id": "PA-C225-kahla",
+  "pathSegment": "PA-PATH-225-DIN225",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-225-DIN225",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C253-katar",
+  "pathSegment": "PA-PATH-253-RULE253",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-253-RULE253",
+      "order": 2
+    }
+  ]
+}

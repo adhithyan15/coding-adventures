@@ -1,0 +1,11 @@
+{
+  "id": "PA-C247-sanduk",
+  "pathSegment": "PA-PATH-247-GHR247",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-247-GHR247",
+      "order": 4
+    }
+  ]
+}

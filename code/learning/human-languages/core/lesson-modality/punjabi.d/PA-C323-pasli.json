@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C323-pasli",
+    "language": "punjabi",
+    "chapter": 323,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46a348b39fe6af28"
+  },
+  "findings": []
+}

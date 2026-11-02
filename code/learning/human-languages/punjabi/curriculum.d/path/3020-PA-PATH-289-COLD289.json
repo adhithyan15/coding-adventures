@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-289-COLD289",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "PA-EXT-289-COLD289"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C288-soka",
+  "pathSegment": "PA-PATH-288-HEAT288",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-288-HEAT288",
+      "order": 4
+    }
+  ]
+}

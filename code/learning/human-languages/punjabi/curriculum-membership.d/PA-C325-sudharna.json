@@ -1,0 +1,11 @@
+{
+  "id": "PA-C325-sudharna",
+  "pathSegment": "PA-PATH-325-BETTER325",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-325-BETTER325",
+      "order": 0
+    }
+  ]
+}

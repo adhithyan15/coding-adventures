@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-332-KIN332",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "PA-EXT-332-KIN332"
+  ],
+  "after": []
+}

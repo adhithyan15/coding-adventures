@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Grain and Straw",
+  "label": "ch:pa-a2-grain-and-straw",
+  "canDo": "I can talk about the grain and the straw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C306-bori",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can talk about the grain and the straw.",
+    "assesses": [
+      "PA-LEX-C306-WINNOW306-03",
+      "PA-LEX-C306-WINNOW306-04",
+      "PA-LEX-C306-WINNOW306-05"
+    ]
+  }
+}

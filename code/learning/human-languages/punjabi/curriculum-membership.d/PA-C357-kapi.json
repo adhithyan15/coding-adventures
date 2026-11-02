@@ -1,0 +1,11 @@
+{
+  "id": "PA-C357-kapi",
+  "pathSegment": "PA-PATH-357-SCHOOL357",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-357-SCHOOL357",
+      "order": 1
+    }
+  ]
+}

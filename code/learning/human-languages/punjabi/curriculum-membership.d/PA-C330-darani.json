@@ -1,0 +1,11 @@
+{
+  "id": "PA-C330-darani",
+  "pathSegment": "PA-PATH-330-SPOUSE330",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-330-SPOUSE330",
+      "order": 3
+    }
+  ]
+}

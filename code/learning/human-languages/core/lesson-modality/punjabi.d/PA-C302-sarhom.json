@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C302-sarhom",
+    "language": "punjabi",
+    "chapter": 302,
+    "sequence": 18120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:514690faa3fbd432"
+  },
+  "findings": []
+}

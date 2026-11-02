@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:8960535161010cc3",
+  "lessonIds": [
+    "PA-C225-pasarna",
+    "PA-C225-jagauna",
+    "PA-C225-vihla",
+    "PA-C225-letna",
+    "PA-C225-kahla"
+  ],
+  "tex": "punjabi/book/chapters/ch225-waking-up-early.tex"
+}

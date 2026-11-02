@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:185615d57429b471",
+  "lessonIds": [
+    "PA-C300-fasal",
+    "PA-C300-harhi",
+    "PA-C300-sauni",
+    "PA-C300-kapah",
+    "PA-C300-ganna"
+  ],
+  "tex": "punjabi/book/chapters/ch300-crops-of-the-year.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:2fd992417d5c376a",
+  "lessonIds": [
+    "PA-C271-uttar",
+    "PA-C271-dakkhan",
+    "PA-C271-purab",
+    "PA-C271-pachchham",
+    "PA-C271-ghumauna"
+  ],
+  "tex": "punjabi/book/chapters/ch271-north-south-east-west.tex"
+}

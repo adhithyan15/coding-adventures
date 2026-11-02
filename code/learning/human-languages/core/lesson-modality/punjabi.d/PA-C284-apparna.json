@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C284-apparna",
+    "language": "punjabi",
+    "chapter": 284,
+    "sequence": 17190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:187a60d3fc4bf446"
+  },
+  "findings": []
+}

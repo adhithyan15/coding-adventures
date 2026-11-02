@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Water for the Fields",
+  "label": "ch:pa-a2-water-for-the-fields",
+  "canDo": "I can say how the fields get their water.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C303-halat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can say how the fields get their water.",
+    "assesses": [
+      "PA-LEX-C303-WATER303-03",
+      "PA-LEX-C303-WATER303-04",
+      "PA-LEX-C303-WATER303-05"
+    ]
+  }
+}

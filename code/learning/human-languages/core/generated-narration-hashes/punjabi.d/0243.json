@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:af0e80e3b3a00c72",
+  "lessonIds": [
+    "PA-C243-pauna",
+    "PA-C243-gholna",
+    "PA-C243-ralauna",
+    "PA-C243-chhanna",
+    "PA-C243-chakkhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch243.txt",
+  "json": "punjabi/narration/ch243.json",
+  "textHash": "fnv1a64:500621acebc7371e",
+  "jsonHash": "fnv1a64:ceec3f2f117a1cbf",
+  "findings": []
+}

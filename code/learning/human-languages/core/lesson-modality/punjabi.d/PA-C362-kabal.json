@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C362-kabal",
+    "language": "punjabi",
+    "chapter": 362,
+    "sequence": 22280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:106b04c8ff21ec94"
+  },
+  "findings": []
+}

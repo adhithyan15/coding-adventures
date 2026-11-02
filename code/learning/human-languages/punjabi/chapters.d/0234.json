@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Lights Out",
+  "label": "ch:pa-a2-lights-out",
+  "canDo": "I can say what I do before I sleep.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C234-palangh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say what I do before I sleep.",
+    "assesses": [
+      "PA-LEX-C234-DIN234-03",
+      "PA-LEX-C234-DIN234-04",
+      "PA-LEX-C234-DIN234-05"
+    ]
+  }
+}

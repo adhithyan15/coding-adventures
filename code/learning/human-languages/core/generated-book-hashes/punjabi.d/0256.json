@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:19dc8df3249ee4ec",
+  "lessonIds": [
+    "PA-C256-dakia",
+    "PA-C256-parsal",
+    "PA-C256-pahunchauna",
+    "PA-C256-ghallna",
+    "PA-C256-parna"
+  ],
+  "tex": "punjabi/book/chapters/ch256-the-postman-s-round.tex"
+}

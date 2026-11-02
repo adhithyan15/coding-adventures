@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 228,
+  "title": "Drying the Clothes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7bf2af3050dfaf42",
+  "lessons": [
+    {
+      "id": "PA-C228-nichorna",
+      "sequence": 13150,
+      "title": "ਨਿਚੋੜਨਾ (nichoṛnā) — to wring",
+      "headword": "ਨਿਚੋੜਨਾ",
+      "romanization": "nichoṛnā",
+      "gloss": "to wring",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d6aef247ef182c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for grime, then the Punjabi for a tap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਨਿਚੋੜਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਿਚੋੜਨਾ — nichoṛnā — \"to wring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਗਿੱਲੇ ਕੱਪੜੇ ਨਿਚੋੜਦੀ ਹਾਂ। maiṁ gille kappṛe nichoṛdī hāṁ. I wring out the wet clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਤੌਲੀਆ ਨਿਚੋੜਿਆ, maiṁ taulīā nichoṛiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਿਚੋੜਨਾ (nichoṛnā) is inherited from a reconstructed niścōṭayati, \"presses out\"; CDIAL lists Punjabi nicoṛṇā, \"to wring\" (CDIAL 7449)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nichoṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nichoṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nichoṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nichoṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ gille kappṛe nichoṛdī hāṁ. — I wring out the wet clothes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ gille kappṛe nichoṛdī hāṁ.* — I wring out the wet clothes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for grime, then the Punjabi for a tap, then say nichoṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for grime, then the Punjabi for a tap, then say *nichoṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਨਿਚੋੜਨਾ (nichoṛnā) mean? (\"To wring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C228-sukauna",
+      "sequence": 13160,
+      "title": "ਸੁਕਾਉਣਾ (sukāuṇā) — to dry something",
+      "headword": "ਸੁਕਾਉਣਾ",
+      "romanization": "sukāuṇā",
+      "gloss": "to dry something",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a39c4421de2f702e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a tap, then the Punjabi for to wring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸੁਕਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੁਕਾਉਣਾ — sukāuṇā — \"to dry something\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਸੀਂ ਕੱਪੜੇ ਛੱਤ ਉੱਤੇ ਸੁਕਾਉਂਦੇ ਹਾਂ। asīṁ kappṛe chhatt utte sukāunde hāṁ. We dry the clothes on the roof."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਕੱਪੜੇ ਸੁਕਾਏ, maiṁ kappṛe sukāe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੁਕਾਉਣਾ (sukāuṇā) is the causative of a verb inherited from a reconstructed śuṣkati, \"becomes dry\"; CDIAL lists Punjabi sukkṇā, \"dries up\", and its causative sukhāuṇā (CDIAL 12552)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sukāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sukāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sukāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sukāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asīṁ kappṛe chhatt utte sukāunde hāṁ. — We dry the clothes on the roof.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asīṁ kappṛe chhatt utte sukāunde hāṁ.* — We dry the clothes on the roof.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a tap, then the Punjabi for to wring, then say sukāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a tap, then the Punjabi for to wring, then say *sukāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸੁਕਾਉਣਾ (sukāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸੁਕਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸੁਕਾਉਣਾ (sukāuṇā) mean? (\"To dry something\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C228-tangna",
+      "sequence": 13170,
+      "title": "ਟੰਗਣਾ (ṭaṅgṇā) — to hang up",
+      "headword": "ਟੰਗਣਾ",
+      "romanization": "ṭaṅgṇā",
+      "gloss": "to hang up",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae141c688bd66a41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to wring, then the Punjabi for to dry something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਟੰਗਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟੰਗਣਾ — ṭaṅgṇā — \"to hang up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਕਮੀਜ਼ ਕਿੱਲ ਉੱਤੇ ਟੰਗਦਾ ਹਾਂ। maiṁ kamīz kill utte ṭaṅgdā hāṁ. I hang my shirt on a nail."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਕਮੀਜ਼ ਟੰਗੀ, maiṁ kamīz ṭaṅgī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟੰਗਣਾ (ṭaṅgṇā) is inherited from a reconstructed ṭaṅg, \"hang up\"; CDIAL lists Punjabi ṭaṅgṇā, \"to hang up\" (CDIAL 5436)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaṅgṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaṅgṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaṅgṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaṅgṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ kamīz kill utte ṭaṅgdā hāṁ. — I hang my shirt on a nail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ kamīz kill utte ṭaṅgdā hāṁ.* — I hang my shirt on a nail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to wring, then the Punjabi for to dry something, then say ṭaṅgṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to wring, then the Punjabi for to dry something, then say *ṭaṅgṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਟੰਗਣਾ (ṭaṅgṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਟੰਗਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਟੰਗਣਾ (ṭaṅgṇā) mean? (\"To hang up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C228-rassi",
+      "sequence": 13180,
+      "title": "ਰੱਸੀ (rassī) — a rope; a washing line",
+      "headword": "ਰੱਸੀ",
+      "romanization": "rassī",
+      "gloss": "a rope; a washing line",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40007804d4fc8801",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to dry something, then the Punjabi for to hang up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰੱਸੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੱਸੀ — rassī — \"a rope; a washing line\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਿੱਲੇ ਕੱਪੜੇ ਰੱਸੀ ਉੱਤੇ ਹਨ। gille kappṛe rassī utte han. The wet clothes are on the line."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੱਸੀ (rassī) is inherited from Sanskrit raśmi, \"rope, bridle, ray of light\"; CDIAL lists Punjabi rassī, \"rope\" (CDIAL 10648)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rassī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rassī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rassī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rassī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gille kappṛe rassī utte han. — The wet clothes are on the line.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gille kappṛe rassī utte han.* — The wet clothes are on the line.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to dry something, then the Punjabi for to hang up, then say rassī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to dry something, then the Punjabi for to hang up, then say *rassī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਰੱਸੀ (rassī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਰੱਸੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰੱਸੀ (rassī) mean? (\"A rope; a washing line\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C228-punjhna",
+      "sequence": 13190,
+      "title": "ਪੂੰਝਣਾ (pūnjhṇā) — to wipe",
+      "headword": "ਪੂੰਝਣਾ",
+      "romanization": "pūnjhṇā",
+      "gloss": "to wipe",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfd638e7e3034e54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to hang up, then the Punjabi for a rope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੂੰਝਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੂੰਝਣਾ — pūnjhṇā — \"to wipe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਤੌਲੀਏ ਨਾਲ ਮੂੰਹ ਪੂੰਝਦਾ ਹਾਂ। maiṁ taulīe nāl mūnh pūnjhdā hāṁ. I wipe my face with a towel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਮੇਜ਼ ਪੂੰਝਿਆ, maiṁ mez pūnjhiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੂੰਝਣਾ (pūnjhṇā) is inherited from Sanskrit prōñchati, \"wipes off\"; CDIAL lists Punjabi pū̃jhṇā, \"wipes off\" (CDIAL 9011)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūnjhṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūnjhṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūnjhṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūnjhṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ taulīe nāl mūnh pūnjhdā hāṁ. — I wipe my face with a towel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ taulīe nāl mūnh pūnjhdā hāṁ.* — I wipe my face with a towel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to hang up, then the Punjabi for a rope, then say pūnjhṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to hang up, then the Punjabi for a rope, then say *pūnjhṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪੂੰਝਣਾ (pūnjhṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪੂੰਝਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੂੰਝਣਾ (pūnjhṇā) mean? (\"To wipe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

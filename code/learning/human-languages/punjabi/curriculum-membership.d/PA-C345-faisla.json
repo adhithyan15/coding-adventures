@@ -1,0 +1,11 @@
+{
+  "id": "PA-C345-faisla",
+  "pathSegment": "PA-PATH-345-DECIDE345",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-345-DECIDE345",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 347,
+  "title": "The Big Drum",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:39c3c1624c2ecfdc",
+  "lessons": [
+    {
+      "id": "PA-C347-dhol",
+      "sequence": 21510,
+      "title": "ਢੋਲ (ḍhol) — a drum; a big two-sided drum",
+      "headword": "ਢੋਲ",
+      "romanization": "ḍhol",
+      "gloss": "a drum; a big two-sided drum",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:935361edc14fd338",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for helpless, then the Punjabi for a pity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਢੋਲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢੋਲ — ḍhol — \"a drum; a big two-sided drum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਢੋਲ ਦੀ ਆਵਾਜ਼ ਬਹੁਤ ਪਸੰਦ ਹੈ। mainū̃ ḍhol dī āvāz bahut pasand hai. I really like the sound of the drum."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢੋਲ (ḍhol) is inherited from Sanskrit ḍhola, \"drum\"; CDIAL lists Punjabi ḍhol, \"drum\", under it (CDIAL 5608)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainū̃ ḍhol dī āvāz bahut pasand hai. — I really like the sound of the drum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainū̃ ḍhol dī āvāz bahut pasand hai.* — I really like the sound of the drum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for helpless, then the Punjabi for a pity, then say ḍhol again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for helpless, then the Punjabi for a pity, then say *ḍhol* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਢੋਲ (ḍhol) mean? (\"A drum; a big two-sided drum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C347-vajauna",
+      "sequence": 21520,
+      "title": "ਵਜਾਉਣਾ (vajāuṇā) — to play an instrument; to beat a drum",
+      "headword": "ਵਜਾਉਣਾ",
+      "romanization": "vajāuṇā",
+      "gloss": "to play an instrument; to beat a drum",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e592effec5b528da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a pity, then the Punjabi for a drum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵਜਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਜਾਉਣਾ — vajāuṇā — \"to play an instrument; to beat a drum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਭਰਾ ਸ਼ਾਮ ਨੂੰ ਢੋਲ ਵਜਾਉਂਦਾ ਹੈ। merā bharā shām nū̃ ḍhol vajāundā hai. My brother plays the drum in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਢੋਲ ਵਜਾਇਆ, maiṁ ḍhol vajāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਜਾਉਣਾ (vajāuṇā) is the causative partner of vajjṇā, \"to sound\", which goes back to Sanskrit vādyate, \"is made to sound\"; CDIAL lists Punjabi vajjṇā under it (CDIAL 11513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vajāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vajāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vajāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vajāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā bharā shām nū̃ ḍhol vajāundā hai. — My brother plays the drum in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā bharā shām nū̃ ḍhol vajāundā hai.* — My brother plays the drum in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a pity, then the Punjabi for a drum, then say vajāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a pity, then the Punjabi for a drum, then say *vajāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵਜਾਉਣਾ (vajāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵਜਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵਜਾਉਣਾ (vajāuṇā) mean? (\"To play an instrument; to beat a drum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C347-tal",
+      "sequence": 21530,
+      "title": "ਤਾਲ (tāl) — rhythm; the beat",
+      "headword": "ਤਾਲ",
+      "romanization": "tāl",
+      "gloss": "rhythm; the beat",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87c82efafd6e3d5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a drum, then the Punjabi for to play an instrument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਾਲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਾਲ — tāl — \"rhythm; the beat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਤਾਲ ਨਾਲ ਨੱਚਦੀ ਹੈ। oh tāl nāl nachchdī hai. She dances in time with the beat."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਾਲ (tāl) is inherited from Sanskrit tāla, \"clap, rhythm\"; CDIAL lists Punjabi tāl, \"beating time with the hands\", under it (CDIAL 5748)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oh tāl nāl nachchdī hai. — She dances in time with the beat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oh tāl nāl nachchdī hai.* — She dances in time with the beat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a drum, then the Punjabi for to play an instrument, then say tāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a drum, then the Punjabi for to play an instrument, then say *tāl* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤਾਲ (tāl) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤਾਲ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਾਲ (tāl) mean? (\"Rhythm; the beat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C347-thap",
+      "sequence": 21540,
+      "title": "ਥਾਪ (thāp) — a drumbeat; a beat of the hand on a drum",
+      "headword": "ਥਾਪ",
+      "romanization": "thāp",
+      "gloss": "a drumbeat; a beat of the hand on a drum",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:797f3ce157bd5f31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to play an instrument, then the Punjabi for rhythm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਥਾਪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥਾਪ — thāp — \"a drumbeat; a beat of the hand on a drum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਢੋਲ ਦੀ ਥਾਪ ਦੂਰ ਤੱਕ ਜਾਂਦੀ ਹੈ। ḍhol dī thāp dūr tak jāndī hai. The beat of the drum carries a long way."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥਾਪ (thāp) is inherited from a reconstructed thapp, \"slap, pat\"; CDIAL lists Punjabi thāp, \"pat, slap\", under it and marks it masculine (CDIAL 6091). CDIAL does not give the sense \"drumbeat\", and the feminine use taught here (the beat of the drum) is not recorded there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol dī thāp dūr tak jāndī hai. — The beat of the drum carries a long way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol dī thāp dūr tak jāndī hai.* — The beat of the drum carries a long way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to play an instrument, then the Punjabi for rhythm, then say thāp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to play an instrument, then the Punjabi for rhythm, then say *thāp* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਥਾਪ (thāp) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਥਾਪ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਥਾਪ (thāp) mean? (\"A drumbeat; a beat of the hand on a drum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C347-tari",
+      "sequence": 21550,
+      "title": "ਤਾੜੀ (tāṛī) — a clap; clapping",
+      "headword": "ਤਾੜੀ",
+      "romanization": "tāṛī",
+      "gloss": "a clap; clapping",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7772fe7c47d6b9bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for rhythm, then the Punjabi for a drumbeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਾੜੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਾੜੀ — tāṛī — \"a clap; clapping\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗੀਤ ਤੋਂ ਬਾਅਦ ਸਭ ਲੋਕ ਤਾੜੀਆਂ ਵਜਾਉਂਦੇ ਹਨ। gīt ton bāad sabh lok tāṛīāṁ vajāunde han. After the song everyone claps."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਾੜੀ (tāṛī) is inherited from Sanskrit tāla, \"clap, rhythm\"; CDIAL lists Punjabi tālī, \"clapping\", and Lahnda tāṛī, \"clapping the hands\", under it (CDIAL 5748)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gīt ton bāad sabh lok tāṛīāṁ vajāunde han. — After the song everyone claps.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gīt ton bāad sabh lok tāṛīāṁ vajāunde han.* — After the song everyone claps.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for rhythm, then the Punjabi for a drumbeat, then say tāṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for rhythm, then the Punjabi for a drumbeat, then say *tāṛī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤਾੜੀ (tāṛī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤਾੜੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਾੜੀ (tāṛī) mean? (\"A clap; clapping\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

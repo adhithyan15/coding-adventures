@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 307,
+  "title": "The Buffalo",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9619270f4b12a155",
+  "lessons": [
+    {
+      "id": "PA-C307-majjh",
+      "sequence": 18330,
+      "title": "ਮੱਝ (majjh) — a buffalo",
+      "headword": "ਮੱਝ",
+      "romanization": "majjh",
+      "gloss": "a buffalo",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e5292f08b15f79c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for rice straw, then the Punjabi for a sack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੱਝ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੱਝ — majjh — \"a buffalo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਾਡੀ ਮੱਝ ਬਹੁਤ ਦੁੱਧ ਦਿੰਦੀ ਹੈ। sāḍī majjh bahut dudh dindī hai. Our buffalo gives a lot of milk."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੱਝ (majjh) is inherited from a reconstructed mahyā, \"buffalo\"; CDIAL lists Punjabi majjh under it (CDIAL 9980)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majjh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majjh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majjh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majjh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍī majjh bahut dudh dindī hai. — Our buffalo gives a lot of milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍī majjh bahut dudh dindī hai.* — Our buffalo gives a lot of milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for rice straw, then the Punjabi for a sack, then say majjh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for rice straw, then the Punjabi for a sack, then say *majjh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮੱਝ (majjh) mean? (\"A buffalo\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C307-katta",
+      "sequence": 18340,
+      "title": "ਕੱਟਾ (kaṭṭā) — a buffalo calf",
+      "headword": "ਕੱਟਾ",
+      "romanization": "kaṭṭā",
+      "gloss": "a buffalo calf",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:273d00405f0702bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a sack, then the Punjabi for a buffalo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕੱਟਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੱਟਾ — kaṭṭā — \"a buffalo calf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੱਝ ਦਾ ਕੱਟਾ ਛੋਟਾ ਹੈ। majjh dā kaṭṭā chhoṭā hai. The buffalo's calf is small."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੱਟਾ (kaṭṭā) is inherited from a reconstructed kaṭṭa, \"young male animal\"; CDIAL lists Punjabi kaṭṭā, \"yearling buffalo\", under it (CDIAL 2645)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majjh dā kaṭṭā chhoṭā hai. — The buffalo's calf is small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majjh dā kaṭṭā chhoṭā hai.* — The buffalo's calf is small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a sack, then the Punjabi for a buffalo, then say kaṭṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a sack, then the Punjabi for a buffalo, then say *kaṭṭā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੱਟਾ (kaṭṭā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੱਟਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕੱਟਾ (kaṭṭā) mean? (\"A buffalo calf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C307-chona",
+      "sequence": 18350,
+      "title": "ਚੋਣਾ (choṇā) — to milk an animal",
+      "headword": "ਚੋਣਾ",
+      "romanization": "choṇā",
+      "gloss": "to milk an animal",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:716c68308e6bb3be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a buffalo, then the Punjabi for a buffalo calf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚੋਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੋਣਾ — choṇā — \"to milk an animal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਸਵੇਰੇ ਮੱਝ ਚੋਵਾਂਗਾ। maiṁ savere majjh chovāṅgā. I will milk the buffalo in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਮੱਝ ਚੋਈ, maiṁ majjh choī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੋਣਾ (choṇā) is inherited from Sanskrit cyōtati, \"flows, trickles\"; CDIAL lists Punjabi coṇā, \"to leak, milk\", under it (CDIAL 4948)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *choṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *choṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ savere majjh chovāṅgā. — I will milk the buffalo in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ savere majjh chovāṅgā.* — I will milk the buffalo in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a buffalo, then the Punjabi for a buffalo calf, then say choṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a buffalo, then the Punjabi for a buffalo calf, then say *choṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚੋਣਾ (choṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚੋਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚੋਣਾ (choṇā) mean? (\"To milk an animal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C307-than",
+      "sequence": 18360,
+      "title": "ਥਣ (thaṇ) — a teat; an udder",
+      "headword": "ਥਣ",
+      "romanization": "thaṇ",
+      "gloss": "a teat; an udder",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4744ece9c0c15d12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a buffalo calf, then the Punjabi for to milk an animal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਥਣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥਣ — thaṇ — \"a teat; an udder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੱਝ ਦੇ ਥਣਾਂ ਵਿੱਚ ਬਹੁਤ ਦੁੱਧ ਹੈ। majjh de thaṇāṁ vich bahut dudh hai. There is a lot of milk in the buffalo's teats."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥਣ (thaṇ) is inherited from Sanskrit stana, \"female breast, udder\"; CDIAL lists Punjabi thaṇ, \"teat\", under it (CDIAL 13666)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majjh de thaṇāṁ vich bahut dudh hai. — There is a lot of milk in the buffalo's teats.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majjh de thaṇāṁ vich bahut dudh hai.* — There is a lot of milk in the buffalo's teats.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a buffalo calf, then the Punjabi for to milk an animal, then say thaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a buffalo calf, then the Punjabi for to milk an animal, then say *thaṇ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਥਣ (thaṇ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਥਣ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਥਣ (thaṇ) mean? (\"A teat; an udder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C307-charna",
+      "sequence": 18370,
+      "title": "ਚਰਨਾ (charnā) — to graze",
+      "headword": "ਚਰਨਾ",
+      "romanization": "charnā",
+      "gloss": "to graze",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bba5588c2065839",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to milk an animal, then the Punjabi for a teat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਰਨਾ — charnā — \"to graze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਾਂ ਦਰਿਆ ਦੇ ਕਿਨਾਰੇ ਚਰਦੀ ਹੈ। gāṁ dariā de kināre chardī hai. The cow grazes on the bank of the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਬੱਕਰੀ ਚਰੀ, oh bakkrī charī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਰਨਾ (charnā) is inherited from Sanskrit carati, \"moves, grazes\"; CDIAL lists Punjabi carnā, \"to graze\", under it (CDIAL 4686)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṁ dariā de kināre chardī hai. — The cow grazes on the bank of the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṁ dariā de kināre chardī hai.* — The cow grazes on the bank of the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to milk an animal, then the Punjabi for a teat, then say charnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to milk an animal, then the Punjabi for a teat, then say *charnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਰਨਾ (charnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚਰਨਾ (charnā) mean? (\"To graze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

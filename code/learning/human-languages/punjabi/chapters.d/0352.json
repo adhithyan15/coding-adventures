@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Games Indoors",
+  "label": "ch:pa-a2-games-indoors",
+  "canDo": "I can talk about the indoor games I like.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C352-inam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can talk about the indoor games I like.",
+    "assesses": [
+      "PA-LEX-C352-BOARD352-03",
+      "PA-LEX-C352-BOARD352-04",
+      "PA-LEX-C352-BOARD352-05"
+    ]
+  }
+}

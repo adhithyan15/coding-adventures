@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Getting Dressed",
+  "label": "ch:pa-a2-getting-dressed",
+  "canDo": "I can talk about putting on and taking off clothes.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C230-jhumka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can talk about putting on and taking off clothes.",
+    "assesses": [
+      "PA-LEX-C230-DIN230-03",
+      "PA-LEX-C230-DIN230-04",
+      "PA-LEX-C230-DIN230-05"
+    ]
+  }
+}

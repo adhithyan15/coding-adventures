@@ -1,0 +1,21 @@
+{
+  "chapter": 259,
+  "title": "When the Phone Rings",
+  "label": "ch:pa-a2-when-the-phone-rings",
+  "canDo": "I can give a phone number and talk about a call.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-R259-review-253-259",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can give a phone number and talk about a call.",
+    "assesses": [
+      "PA-LEX-C259-PHONE259-01",
+      "PA-LEX-C259-PHONE259-02",
+      "PA-LEX-C259-PHONE259-03",
+      "PA-LEX-C259-PHONE259-04",
+      "PA-LEX-C259-PHONE259-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:17318ce6355140ab",
+  "lessonIds": [
+    "PA-C356-kaimra",
+    "PA-C356-tasvir",
+    "PA-C356-foto",
+    "PA-C356-ailbam",
+    "PA-C356-farem"
+  ],
+  "tex": "punjabi/book/chapters/ch356-pictures-and-photos.tex"
+}

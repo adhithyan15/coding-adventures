@@ -1,0 +1,11 @@
+{
+  "id": "PA-C313-vadhai",
+  "pathSegment": "PA-PATH-313-WED313",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-313-WED313",
+      "order": 4
+    }
+  ]
+}

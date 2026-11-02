@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "I'm Not So Sure",
+  "label": "ch:pa-a2-i-m-not-so-sure",
+  "canDo": "I can say that I doubt something or that I am sure of it.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C341-jachna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say that I doubt something or that I am sure of it.",
+    "assesses": [
+      "PA-LEX-C341-DOUBT341-03",
+      "PA-LEX-C341-DOUBT341-04",
+      "PA-LEX-C341-DOUBT341-05"
+    ]
+  }
+}

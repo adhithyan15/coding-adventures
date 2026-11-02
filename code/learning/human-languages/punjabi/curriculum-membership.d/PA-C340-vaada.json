@@ -1,0 +1,11 @@
+{
+  "id": "PA-C340-vaada",
+  "pathSegment": "PA-PATH-340-AGREE340",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-340-AGREE340",
+      "order": 0
+    }
+  ]
+}

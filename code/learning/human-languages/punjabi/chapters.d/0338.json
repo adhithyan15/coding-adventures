@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Is It Allowed?",
+  "label": "ch:pa-a2-is-it-allowed",
+  "canDo": "I can ask for permission and say what is not allowed.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C338-tokna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can ask for permission and say what is not allowed.",
+    "assesses": [
+      "PA-LEX-C338-PERM338-03",
+      "PA-LEX-C338-PERM338-04",
+      "PA-LEX-C338-PERM338-05"
+    ]
+  }
+}

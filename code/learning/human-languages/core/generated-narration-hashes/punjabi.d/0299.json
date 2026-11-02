@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:ce5572a966c241a5",
+  "lessonIds": [
+    "PA-C299-kandha",
+    "PA-C299-khal",
+    "PA-C299-lahir",
+    "PA-C299-khara",
+    "PA-C299-sohna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch299.txt",
+  "json": "punjabi/narration/ch299.json",
+  "textHash": "fnv1a64:9c280336adf2b33c",
+  "jsonHash": "fnv1a64:24eff99c736b9006",
+  "findings": []
+}

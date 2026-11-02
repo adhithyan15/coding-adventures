@@ -1,0 +1,11 @@
+{
+  "id": "PA-C299-lahir",
+  "pathSegment": "PA-PATH-299-WATER299",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-299-WATER299",
+      "order": 2
+    }
+  ]
+}

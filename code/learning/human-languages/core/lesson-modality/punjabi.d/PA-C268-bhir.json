@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C268-bhir",
+    "language": "punjabi",
+    "chapter": 268,
+    "sequence": 15800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e08de1ab8c848f68"
+  },
+  "findings": []
+}

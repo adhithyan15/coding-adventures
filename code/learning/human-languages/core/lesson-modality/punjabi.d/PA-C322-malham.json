@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C322-malham",
+    "language": "punjabi",
+    "chapter": 322,
+    "sequence": 19700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d87e226e0cc24b51"
+  },
+  "findings": []
+}

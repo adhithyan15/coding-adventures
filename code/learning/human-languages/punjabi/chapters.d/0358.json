@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "What We Study",
+  "label": "ch:pa-a2-what-we-study",
+  "canDo": "I can name my school subjects and say who teaches them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C358-parhauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can name my school subjects and say who teaches them.",
+    "assesses": [
+      "PA-LEX-C358-SUBJ358-03",
+      "PA-LEX-C358-SUBJ358-04",
+      "PA-LEX-C358-SUBJ358-05"
+    ]
+  }
+}

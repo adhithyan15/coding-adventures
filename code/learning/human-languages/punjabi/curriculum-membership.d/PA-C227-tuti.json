@@ -1,0 +1,11 @@
+{
+  "id": "PA-C227-tuti",
+  "pathSegment": "PA-PATH-227-DIN227",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-227-DIN227",
+      "order": 4
+    }
+  ]
+}

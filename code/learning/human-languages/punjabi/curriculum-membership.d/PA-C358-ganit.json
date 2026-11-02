@@ -1,0 +1,11 @@
+{
+  "id": "PA-C358-ganit",
+  "pathSegment": "PA-PATH-358-SUBJ358",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-358-SUBJ358",
+      "order": 1
+    }
+  ]
+}

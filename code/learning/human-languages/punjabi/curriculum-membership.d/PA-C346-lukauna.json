@@ -1,0 +1,11 @@
+{
+  "id": "PA-C346-lukauna",
+  "pathSegment": "PA-PATH-346-SORRY346",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-346-SORRY346",
+      "order": 1
+    }
+  ]
+}

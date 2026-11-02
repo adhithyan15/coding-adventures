@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-259-PHONE259",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-259-PHONE259"
+  ],
+  "after": []
+}

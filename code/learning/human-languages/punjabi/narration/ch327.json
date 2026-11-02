@@ -1,0 +1,753 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 327,
+  "title": "Hurt Feelings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:777018462991eaab",
+  "lessons": [
+    {
+      "id": "PA-C327-russna",
+      "sequence": 19920,
+      "title": "ਰੁੱਸਣਾ (russṇā) — to sulk",
+      "headword": "ਰੁੱਸਣਾ",
+      "romanization": "russṇā",
+      "gloss": "to sulk",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9bd7b5522556080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for worry, then the Punjabi for embarrassment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰੁੱਸਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੁੱਸਣਾ — russṇā — \"to sulk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਛੋਟਾ ਭਰਾ ਖਿਡੌਣੇ ਲਈ ਰੁੱਸਿਆ। merā chhoṭā bharā khiḍauṇe laī russiā. My little brother sulked over a toy."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): ਉਹ ਮੇਰੇ ਨਾਲ ਰੁੱਸੀ, oh mere nāl russī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੁੱਸਣਾ (russṇā) is inherited from Sanskrit ruṣyati, \"is angry\"; CDIAL lists Punjabi russṇā, \"to get angry\", under it (CDIAL 10794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "russṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *russṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "russṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *russṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā chhoṭā bharā khiḍauṇe laī russiā. — My little brother sulked over a toy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā chhoṭā bharā khiḍauṇe laī russiā.* — My little brother sulked over a toy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for worry, then the Punjabi for embarrassment, then say russṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for worry, then the Punjabi for embarrassment, then say *russṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰੁੱਸਣਾ (russṇā) mean? (\"To sulk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C327-khijhna",
+      "sequence": 19930,
+      "title": "ਖਿਝਣਾ (khijhṇā) — to get annoyed",
+      "headword": "ਖਿਝਣਾ",
+      "romanization": "khijhṇā",
+      "gloss": "to get annoyed",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9b4b380420f9e4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for embarrassment, then the Punjabi for to sulk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਖਿਝਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖਿਝਣਾ — khijhṇā — \"to get annoyed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਰੌਲੇ ਤੋਂ ਦਾਦਾ ਜੀ ਖਿਝਦੇ ਹਨ। raule ton dādā jī khijhde han. Grandfather gets annoyed at noise."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਭੀੜ ਵਿੱਚ ਬਹੁਤ ਖਿਝਿਆ, maiṁ bhīṛ vich bahut khijhiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖਿਝਣਾ (khijhṇā) is inherited from Sanskrit kṣīyate, \"is worn away, is injured\"; CDIAL lists Punjabi khijhṇā, \"to be vexed\", under it (CDIAL 3695)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khijhṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khijhṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khijhṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khijhṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raule ton dādā jī khijhde han. — Grandfather gets annoyed at noise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raule ton dādā jī khijhde han.* — Grandfather gets annoyed at noise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for embarrassment, then the Punjabi for to sulk, then say khijhṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for embarrassment, then the Punjabi for to sulk, then say *khijhṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਖਿਝਣਾ (khijhṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਖਿਝਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਖਿਝਣਾ (khijhṇā) mean? (\"To get annoyed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C327-ikalla",
+      "sequence": 19940,
+      "title": "ਇਕੱਲਾ (ikallā) — alone",
+      "headword": "ਇਕੱਲਾ",
+      "romanization": "ikallā",
+      "gloss": "alone",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3486cacd9f287088",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to sulk, then the Punjabi for to get annoyed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਇਕੱਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਕੱਲਾ — ikallā — \"alone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਛੁੱਟੀ ਵਿੱਚ ਮੈਂ ਘਰ ਵਿੱਚ ਇਕੱਲਾ ਸੀ। chhuṭṭī vich maiṁ ghar vich ikallā sī. During the holiday I was alone at home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਕੱਲਾ (ikallā) is inherited from a reconstructed ekkala, \"alone\"; CDIAL lists Punjabi ikallā, \"alone\", under it (CDIAL 2506)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikallā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikallā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikallā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikallā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhuṭṭī vich maiṁ ghar vich ikallā sī. — During the holiday I was alone at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhuṭṭī vich maiṁ ghar vich ikallā sī.* — During the holiday I was alone at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to sulk, then the Punjabi for to get annoyed, then say ikallā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to sulk, then the Punjabi for to get annoyed, then say *ikallā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਇਕੱਲਾ (ikallā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਇਕੱਲਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਇਕੱਲਾ (ikallā) mean? (\"Alone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C327-dukkh",
+      "sequence": 19950,
+      "title": "ਦੁੱਖ (dukkh) — sorrow",
+      "headword": "ਦੁੱਖ",
+      "romanization": "dukkh",
+      "gloss": "sorrow",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e236145a5b4321e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to get annoyed, then the Punjabi for alone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਦੁੱਖ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦੁੱਖ — dukkh — \"sorrow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਸ ਖ਼ਬਰ ਤੋਂ ਮੈਨੂੰ ਬਹੁਤ ਦੁੱਖ ਹੋਇਆ। us khabar ton mainū̃ bahut dukkh hoiā. That news made me very sad."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦੁੱਖ (dukkh) is inherited from Sanskrit duḥkha, \"difficulty, pain\"; CDIAL lists Punjabi dukkh, \"sorrow, pain\", under it (CDIAL 6375)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukkh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukkh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukkh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukkh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us khabar ton mainū̃ bahut dukkh hoiā. — That news made me very sad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us khabar ton mainū̃ bahut dukkh hoiā.* — That news made me very sad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to get annoyed, then the Punjabi for alone, then say dukkh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to get annoyed, then the Punjabi for alone, then say *dukkh* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਦੁੱਖ (dukkh) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਦੁੱਖ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਦੁੱਖ (dukkh) mean? (\"Sorrow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C327-hanjhu",
+      "sequence": 19960,
+      "title": "ਹੰਝੂ (hanjhū) — a teardrop",
+      "headword": "ਹੰਝੂ",
+      "romanization": "hanjhū",
+      "gloss": "a teardrop",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66cb5a51e009abe9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for alone, then the Punjabi for sorrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹੰਝੂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੰਝੂ — hanjhū — \"a teardrop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਵਿਆਹ ਵਿੱਚ ਮੇਰੀ ਭੈਣ ਦੀ ਅੱਖ ਵਿੱਚ ਹੰਝੂ ਆਇਆ। viāh vich merī bhaiṇ dī akkh vich hanjhū āiā. At the wedding a tear came to my sister's eye."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੰਝੂ (hanjhū) is inherited from Sanskrit aśru, \"a tear\"; CDIAL lists Punjabi hañjhū, \"tear\", under it (CDIAL 919)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanjhū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanjhū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanjhū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanjhū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viāh vich merī bhaiṇ dī akkh vich hanjhū āiā. — At the wedding a tear came to my sister's eye.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viāh vich merī bhaiṇ dī akkh vich hanjhū āiā.* — At the wedding a tear came to my sister's eye.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for alone, then the Punjabi for sorrow, then say hanjhū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for alone, then the Punjabi for sorrow, then say *hanjhū* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹੰਝੂ (hanjhū) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹੰਝੂ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹੰਝੂ (hanjhū) mean? (\"A teardrop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

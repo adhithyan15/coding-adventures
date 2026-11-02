@@ -1,0 +1,11 @@
+{
+  "id": "PA-C307-than",
+  "pathSegment": "PA-PATH-307-BUFF307",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-307-BUFF307",
+      "order": 3
+    }
+  ]
+}

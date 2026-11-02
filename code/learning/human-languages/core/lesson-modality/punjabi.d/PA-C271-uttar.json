@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C271-uttar",
+    "language": "punjabi",
+    "chapter": 271,
+    "sequence": 15920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62ea95c882c87bf2"
+  },
+  "findings": []
+}

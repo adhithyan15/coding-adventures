@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:15692ddcbd82fc4b",
+  "lessonIds": [
+    "PA-C314-jammna",
+    "PA-C314-niana",
+    "PA-C314-palna",
+    "PA-C314-pota",
+    "PA-C314-dohta"
+  ],
+  "tex": "punjabi/book/chapters/ch314-a-baby-in-the-house.tex"
+}

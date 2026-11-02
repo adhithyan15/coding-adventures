@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:b3501845ad0cea4d",
+  "lessonIds": [
+    "PA-C353-latu",
+    "PA-C353-mukabla",
+    "PA-C353-kuddna",
+    "PA-C353-udauna",
+    "PA-C353-khidauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch353.txt",
+  "json": "punjabi/narration/ch353.json",
+  "textHash": "fnv1a64:2968edf67bd46041",
+  "jsonHash": "fnv1a64:150a0d1ccccc3262",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C330-jathani",
+    "language": "punjabi",
+    "chapter": 330,
+    "sequence": 20120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ba15ac5f6c5e21e"
+  },
+  "findings": []
+}

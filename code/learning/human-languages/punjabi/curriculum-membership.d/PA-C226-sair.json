@@ -1,0 +1,11 @@
+{
+  "id": "PA-C226-sair",
+  "pathSegment": "PA-PATH-226-DIN226",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-226-DIN226",
+      "order": 4
+    }
+  ]
+}

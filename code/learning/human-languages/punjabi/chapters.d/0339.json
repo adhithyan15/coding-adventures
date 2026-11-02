@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "No, Thank You",
+  "label": "ch:pa-a2-no-thank-you",
+  "canDo": "I can say no politely and give a reason.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C339-arna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can say no politely and give a reason.",
+    "assesses": [
+      "PA-LEX-C339-REFUSE339-03",
+      "PA-LEX-C339-REFUSE339-04",
+      "PA-LEX-C339-REFUSE339-05"
+    ]
+  }
+}

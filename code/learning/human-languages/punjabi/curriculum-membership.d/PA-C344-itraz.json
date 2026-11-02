@@ -1,0 +1,11 @@
+{
+  "id": "PA-C344-itraz",
+  "pathSegment": "PA-PATH-344-ARGUE344",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-344-ARGUE344",
+      "order": 4
+    }
+  ]
+}

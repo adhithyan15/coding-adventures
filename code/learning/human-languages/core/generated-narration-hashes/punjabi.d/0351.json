@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:34cc376924397038",
+  "lessonIds": [
+    "PA-C351-gend",
+    "PA-C351-haki",
+    "PA-C351-tim",
+    "PA-C351-maich",
+    "PA-C351-harauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch351.txt",
+  "json": "punjabi/narration/ch351.json",
+  "textHash": "fnv1a64:02f1f714c15e5f5a",
+  "jsonHash": "fnv1a64:4309d2f71be77cba",
+  "findings": []
+}

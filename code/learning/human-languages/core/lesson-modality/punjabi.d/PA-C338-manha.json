@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C338-manha",
+    "language": "punjabi",
+    "chapter": 338,
+    "sequence": 21060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f13227da475637a6"
+  },
+  "findings": []
+}

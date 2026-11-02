@@ -1,0 +1,21 @@
+{
+  "chapter": 336,
+  "title": "Work in the Bazaar",
+  "label": "ch:pa-a2-work-in-the-bazaar",
+  "canDo": "I can say what work people do in the bazaar.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R336-review-final-336",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say what work people do in the bazaar.",
+    "assesses": [
+      "PA-LEX-C336-TRADE336-01",
+      "PA-LEX-C336-TRADE336-02",
+      "PA-LEX-C336-TRADE336-03",
+      "PA-LEX-C336-TRADE336-04",
+      "PA-LEX-C336-TRADE336-05"
+    ]
+  }
+}

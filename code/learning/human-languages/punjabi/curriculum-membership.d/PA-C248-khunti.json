@@ -1,0 +1,11 @@
+{
+  "id": "PA-C248-khunti",
+  "pathSegment": "PA-PATH-248-GHR248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-248-GHR248",
+      "order": 4
+    }
+  ]
+}

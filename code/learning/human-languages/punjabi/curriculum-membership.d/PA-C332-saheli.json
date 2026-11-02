@@ -1,0 +1,11 @@
+{
+  "id": "PA-C332-saheli",
+  "pathSegment": "PA-PATH-332-KIN332",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-332-KIN332",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:2764c441586f07cc",
+  "lessonIds": [
+    "PA-C262-fis",
+    "PA-C262-kiraia",
+    "PA-C262-jurmana",
+    "PA-C262-rasid",
+    "PA-C262-chukauna"
+  ],
+  "tex": "punjabi/book/chapters/ch262-fees-and-fines.tex"
+}

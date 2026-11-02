@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:40d4de07f00f1150",
+  "lessonIds": [
+    "PA-C362-kabal",
+    "PA-C362-nipunn",
+    "PA-C362-chamkauna",
+    "PA-C362-tarashna",
+    "PA-C362-azmauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch362.txt",
+  "json": "punjabi/narration/ch362.json",
+  "textHash": "fnv1a64:abfaf8dfd65f5815",
+  "jsonHash": "fnv1a64:009d7d20e0e902e8",
+  "findings": []
+}

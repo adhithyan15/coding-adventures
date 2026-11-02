@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:b7fb35d6d0ed2b42",
+  "lessonIds": [
+    "PA-C342-samjhauna",
+    "PA-C342-matlab",
+    "PA-C342-karan",
+    "PA-C342-sapshat",
+    "PA-C342-sujhauna"
+  ],
+  "tex": "punjabi/book/chapters/ch342-what-do-you-mean.tex"
+}

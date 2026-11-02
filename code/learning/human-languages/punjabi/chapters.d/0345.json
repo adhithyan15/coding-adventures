@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Making Up Our Minds",
+  "label": "ch:pa-a2-making-up-our-minds",
+  "canDo": "I can set a condition and say what we decided.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C345-tajviz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can set a condition and say what we decided.",
+    "assesses": [
+      "PA-LEX-C345-DECIDE345-03",
+      "PA-LEX-C345-DECIDE345-04",
+      "PA-LEX-C345-DECIDE345-05"
+    ]
+  }
+}

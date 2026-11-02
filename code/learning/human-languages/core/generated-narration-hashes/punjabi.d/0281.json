@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:5d484835af602953",
+  "lessonIds": [
+    "PA-C281-program",
+    "PA-C281-irada",
+    "PA-C281-salah",
+    "PA-C281-taalna",
+    "PA-C281-turant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch281.txt",
+  "json": "punjabi/narration/ch281.json",
+  "textHash": "fnv1a64:dd9b30a467b2ea05",
+  "jsonHash": "fnv1a64:8356ff7d50cb24a2",
+  "findings": []
+}

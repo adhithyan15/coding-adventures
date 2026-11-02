@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:478cba7480f9153a",
+  "lessonIds": [
+    "PA-C279-kharab",
+    "PA-C279-nakli",
+    "PA-C279-asli",
+    "PA-C279-vatauna",
+    "PA-C279-shikait"
+  ],
+  "tex": "punjabi/book/chapters/ch279-taking-something-back.tex"
+}

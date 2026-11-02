@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:c7885db2514dd63a",
+  "lessonIds": [
+    "PA-C298-kanda",
+    "PA-C298-buta",
+    "PA-C298-kikkar",
+    "PA-C298-sanghna",
+    "PA-C298-kumlauna"
+  ],
+  "tex": "punjabi/book/chapters/ch298-thorns-and-bushes.tex"
+}

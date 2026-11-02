@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-266-TOWN266",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "PA-EXT-266-TOWN266"
+  ],
+  "after": []
+}

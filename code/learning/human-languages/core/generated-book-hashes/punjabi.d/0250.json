@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:ccde1758516546b5",
+  "lessonIds": [
+    "PA-C250-handi",
+    "PA-C250-karaha",
+    "PA-C250-garva",
+    "PA-C250-gagar",
+    "PA-C250-pittal"
+  ],
+  "tex": "punjabi/book/chapters/ch250-pots-and-pans.tex"
+}

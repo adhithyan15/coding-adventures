@@ -1,0 +1,959 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 308,
+  "title": "Feeding the Animals",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:cee0e3ae6953d96e",
+  "lessons": [
+    {
+      "id": "PA-C308-chara",
+      "sequence": 18380,
+      "title": "ਚਾਰਾ (chārā) — fodder",
+      "headword": "ਚਾਰਾ",
+      "romanization": "chārā",
+      "gloss": "fodder",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c82659327bd08b14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a teat, then the Punjabi for to graze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚਾਰਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਾਰਾ — chārā — \"fodder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਮੱਝ ਲਈ ਹਰਾ ਚਾਰਾ ਲਿਆਵਾਂਗਾ। maiṁ majjh laī harā chārā liāvāṅgā. I will bring green fodder for the buffalo."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਾਰਾ (chārā) is inherited from Sanskrit cāra, \"grazing, fodder\"; CDIAL lists Punjabi cārā, \"fodder\", under it (CDIAL 4755)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chārā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chārā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ majjh laī harā chārā liāvāṅgā. — I will bring green fodder for the buffalo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ majjh laī harā chārā liāvāṅgā.* — I will bring green fodder for the buffalo.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a teat, then the Punjabi for to graze, then say chārā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a teat, then the Punjabi for to graze, then say *chārā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚਾਰਾ (chārā) mean? (\"Fodder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C308-goha",
+      "sequence": 18390,
+      "title": "ਗੋਹਾ (gohā) — cow dung",
+      "headword": "ਗੋਹਾ",
+      "romanization": "gohā",
+      "gloss": "cow dung",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5204d7768e5f76a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to graze, then the Punjabi for fodder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗੋਹਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੋਹਾ — gohā — \"cow dung\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗੋਹਾ ਰੂੜੀ ਉੱਤੇ ਜਾਂਦਾ ਹੈ। gohā rūṛī utte jāndā hai. The cow dung goes onto the manure heap."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੋਹਾ (gohā) is inherited from Sanskrit gōśakṛt, \"cowdung\"; CDIAL lists Punjabi gohā, \"cowdung\", under it (CDIAL 4333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gohā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gohā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gohā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gohā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gohā rūṛī utte jāndā hai. — The cow dung goes onto the manure heap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gohā rūṛī utte jāndā hai.* — The cow dung goes onto the manure heap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to graze, then the Punjabi for fodder, then say gohā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to graze, then the Punjabi for fodder, then say *gohā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗੋਹਾ (gohā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗੋਹਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗੋਹਾ (gohā) mean? (\"Cow dung\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C308-vachchha",
+      "sequence": 18400,
+      "title": "ਵੱਛਾ (vachchhā) — a calf",
+      "headword": "ਵੱਛਾ",
+      "romanization": "vachchhā",
+      "gloss": "a calf",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e686e4fdf0f83d37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for fodder, then the Punjabi for cow dung."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵੱਛਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੱਛਾ — vachchhā — \"a calf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਾਂ ਦਾ ਵੱਛਾ ਖੇਤ ਵਿੱਚ ਦੌੜਦਾ ਹੈ। gāṁ dā vachchhā khet vich dauṛdā hai. The cow's calf runs in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੱਛਾ (vachchhā) is inherited from Sanskrit vatsa, \"calf, child\"; CDIAL lists Punjabi vacchā, \"suckling buffalo calf\", under it (CDIAL 11239)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vachchhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vachchhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vachchhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vachchhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṁ dā vachchhā khet vich dauṛdā hai. — The cow's calf runs in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṁ dā vachchhā khet vich dauṛdā hai.* — The cow's calf runs in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for fodder, then the Punjabi for cow dung, then say vachchhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for fodder, then the Punjabi for cow dung, then say *vachchhā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵੱਛਾ (vachchhā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵੱਛਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵੱਛਾ (vachchhā) mean? (\"A calf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C308-sing",
+      "sequence": 18410,
+      "title": "ਸਿੰਗ (siṅg) — a horn",
+      "headword": "ਸਿੰਗ",
+      "romanization": "siṅg",
+      "gloss": "a horn",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a69b27f268b7fcc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for cow dung, then the Punjabi for a calf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸਿੰਗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਿੰਗ — siṅg — \"a horn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬਲਦ ਦੇ ਸਿੰਗ ਲੰਮੇ ਹਨ। balad de siṅg lamme han. The ox's horns are long."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਿੰਗ (siṅg) is inherited from Sanskrit śṛṅga, \"horn\"; CDIAL lists Punjabi siṅg under it (CDIAL 12583)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṅg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṅg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṅg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṅg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "balad de siṅg lamme han. — The ox's horns are long.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *balad de siṅg lamme han.* — The ox's horns are long.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for cow dung, then the Punjabi for a calf, then say siṅg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for cow dung, then the Punjabi for a calf, then say *siṅg* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸਿੰਗ (siṅg) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸਿੰਗ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸਿੰਗ (siṅg) mean? (\"A horn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C308-hakkna",
+      "sequence": 18420,
+      "title": "ਹੱਕਣਾ (hakkṇā) — to drive cattle; to herd",
+      "headword": "ਹੱਕਣਾ",
+      "romanization": "hakkṇā",
+      "gloss": "to drive cattle; to herd",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8885f8605060cc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a calf, then the Punjabi for a horn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹੱਕਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੱਕਣਾ — hakkṇā — \"to drive cattle; to herd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸ਼ਾਮ ਨੂੰ ਮੈਂ ਮੱਝਾਂ ਘਰ ਹੱਕਾਂਗਾ। shām nū̃ maiṁ majjhāṁ ghar hakkāṅgā. In the evening I will drive the buffaloes home."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਮੱਝਾਂ ਹੱਕੀਆਂ, maiṁ majjhāṁ hakkīāṁ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੱਕਣਾ (hakkṇā) is inherited from Sanskrit hakkayati, \"calls to\"; CDIAL lists Punjabi hakkṇā, \"to drive away\", under it (CDIAL 13939)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakkṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakkṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakkṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakkṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shām nū̃ maiṁ majjhāṁ ghar hakkāṅgā. — In the evening I will drive the buffaloes home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shām nū̃ maiṁ majjhāṁ ghar hakkāṅgā.* — In the evening I will drive the buffaloes home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a calf, then the Punjabi for a horn, then say hakkṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a calf, then the Punjabi for a horn, then say *hakkṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹੱਕਣਾ (hakkṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹੱਕਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹੱਕਣਾ (hakkṇā) mean? (\"To drive cattle; to herd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R308-review-302-308",
+      "sequence": 18430,
+      "title": "Looking back: from Sowing Time to Feeding the Animals",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Sowing Time to Feeding the Animals",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64b3b443fd6d2bbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a garden bed and a manure heap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a garden bed, a manure heap, to scatter, to sprout, mustard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a garden bed, a manure heap, to scatter, to sprout, mustard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a canal, a well, to irrigate, a farmer, a Persian wheel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a canal, a well, to irrigate, a farmer, a Persian wheel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a weeding hoe, to hoe, to ripen, an ear of grain, a grain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a weeding hoe, to hoe, to ripen, an ear of grain, a grain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reaping, to reap, a sickle, to thresh, a heap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: reaping, to reap, a sickle, to thresh, a heap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a winnowing basket, to winnow, chopped straw, rice straw, a sack",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a winnowing basket, to winnow, chopped straw, rice straw, a sack]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a buffalo, a buffalo calf, to milk an animal, a teat, to graze",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a buffalo, a buffalo calf, to milk an animal, a teat, to graze]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fodder, cow dung, a calf, a horn, to drive cattle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fodder, cow dung, a calf, a horn, to drive cattle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A garden bed? (ਕਿਆਰੀ, kiārī.) A manure heap? (ਰੂੜੀ, rūṛī.) To scatter? (ਖਿਲਾਰਨਾ, khilārnā.) To sprout? (ਉੱਗਣਾ, uggṇā.) Mustard? (ਸਰ੍ਹੋਂ, sarhoṁ.) A canal? (ਨਹਿਰ, nahir.) A well? (ਖੂਹ, khūh.) To irrigate? (ਸਿੰਜਣਾ, sinjṇā.) A farmer? (ਕਿਸਾਨ, kisān.) A Persian wheel? (ਹਲਟ, halaṭ.) A weeding hoe? (ਖੁਰਪਾ, khurpā.) To hoe? (ਗੋਡਣਾ, goḍṇā.) To ripen? (ਪੱਕਣਾ, pakkṇā.) An ear of grain? (ਸਿੱਟਾ, siṭṭā.) A grain? (ਦਾਣਾ, dāṇā.) Reaping? (ਵਾਢੀ, vāḍhī.) To reap? (ਲੁਣਨਾ, luṇnā.) A sickle? (ਦਾਤੀ, dātī.) To thresh? (ਗਾਹੁਣਾ, gāhuṇā.) A heap? (ਢੇਰ, ḍher.) A winnowing basket? (ਛੱਜ, chhajj.) To winnow? (ਛੱਟਣਾ, chhaṭṭṇā.) Chopped straw? (ਤੂੜੀ, tūṛī.) Rice straw? (ਪਰਾਲੀ, parālī.) A sack? (ਬੋਰੀ, borī.) A buffalo? (ਮੱਝ, majjh.) A buffalo calf? (ਕੱਟਾ, kaṭṭā.) To milk an animal? (ਚੋਣਾ, choṇā.) A teat? (ਥਣ, thaṇ.) To graze? (ਚਰਨਾ, charnā.) Fodder? (ਚਾਰਾ, chārā.) Cow dung? (ਗੋਹਾ, gohā.) A calf? (ਵੱਛਾ, vachchhā.) A horn? (ਸਿੰਗ, siṅg.) To drive cattle? (ਹੱਕਣਾ, hakkṇā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R308-review-final-308",
+      "sequence": 18440,
+      "title": "Feeding the Animals — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:156ee25737cd98d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for fodder and cow dung."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fodder, cow dung, a calf, a horn, to drive cattle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fodder, cow dung, a calf, a horn, to drive cattle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Fodder? (ਚਾਰਾ, chārā.) Cow dung? (ਗੋਹਾ, gohā.) A calf? (ਵੱਛਾ, vachchhā.) A horn? (ਸਿੰਗ, siṅg.) To drive cattle? (ਹੱਕਣਾ, hakkṇā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

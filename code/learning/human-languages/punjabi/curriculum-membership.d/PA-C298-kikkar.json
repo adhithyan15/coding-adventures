@@ -1,0 +1,11 @@
+{
+  "id": "PA-C298-kikkar",
+  "pathSegment": "PA-PATH-298-THORN298",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-298-THORN298",
+      "order": 2
+    }
+  ]
+}

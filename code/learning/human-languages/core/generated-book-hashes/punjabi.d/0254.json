@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:1c5cfbbce36081e0",
+  "lessonIds": [
+    "PA-C254-faram",
+    "PA-C254-arzi",
+    "PA-C254-sahi",
+    "PA-C254-ghalat",
+    "PA-C254-mitauna"
+  ],
+  "tex": "punjabi/book/chapters/ch254-a-form-at-the-counter.tex"
+}

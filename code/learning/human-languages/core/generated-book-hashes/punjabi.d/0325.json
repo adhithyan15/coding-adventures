@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:ef3351b687812b63",
+  "lessonIds": [
+    "PA-C325-sudharna",
+    "PA-C325-vigarna",
+    "PA-C325-parhez",
+    "PA-C325-chabauna",
+    "PA-C325-pir"
+  ],
+  "tex": "punjabi/book/chapters/ch325-getting-better.tex"
+}

@@ -1,0 +1,753 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 346,
+  "title": "Owning Up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:afa9a06971c9d45b",
+  "lessons": [
+    {
+      "id": "PA-C346-kasur",
+      "sequence": 21460,
+      "title": "ਕਸੂਰ (kasūr) — a fault; blame",
+      "headword": "ਕਸੂਰ",
+      "romanization": "kasūr",
+      "gloss": "a fault; blame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee9bb8b17abb28d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to settle a matter, then the Punjabi for a proposal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਸੂਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਸੂਰ — kasūr — \"a fault; blame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਮੇਰਾ ਕਸੂਰ ਨਹੀਂ ਹੈ। eh merā kasūr nahīṁ hai. This is not my fault."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਸੂਰ (kasūr) is a loan, usually traced through Persian to Arabic quṣūr, \"shortcoming\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh merā kasūr nahīṁ hai. — This is not my fault.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh merā kasūr nahīṁ hai.* — This is not my fault.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to settle a matter, then the Punjabi for a proposal, then say kasūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to settle a matter, then the Punjabi for a proposal, then say *kasūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਸੂਰ (kasūr) mean? (\"A fault; blame\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C346-lukauna",
+      "sequence": 21470,
+      "title": "ਲੁਕਾਉਣਾ (lukāuṇā) — to hide something; to keep something secret",
+      "headword": "ਲੁਕਾਉਣਾ",
+      "romanization": "lukāuṇā",
+      "gloss": "to hide something; to keep something secret",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:460aab47bb40b1d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a proposal, then the Punjabi for a fault."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਲੁਕਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੁਕਾਉਣਾ — lukāuṇā — \"to hide something; to keep something secret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਕੁਝ ਨਹੀਂ ਲੁਕਾਉਂਦਾ ਹਾਂ। maiṁ kujh nahīṁ lukāundā hāṁ. I am not hiding anything."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਚਾਬੀ ਲੁਕਾਈ, maiṁ chābī lukāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੁਕਾਉਣਾ (lukāuṇā) is the causative partner of lukṇā, \"to hide oneself\", which goes back to Sanskrit lupyate, \"is lost, is removed\"; CDIAL lists Punjabi lukṇā under it (CDIAL 11083)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lukāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lukāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lukāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lukāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ kujh nahīṁ lukāundā hāṁ. — I am not hiding anything.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ kujh nahīṁ lukāundā hāṁ.* — I am not hiding anything.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a proposal, then the Punjabi for a fault, then say lukāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a proposal, then the Punjabi for a fault, then say *lukāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਲੁਕਾਉਣਾ (lukāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਲੁਕਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਲੁਕਾਉਣਾ (lukāuṇā) mean? (\"To hide something; to keep something secret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C346-ilzam",
+      "sequence": 21480,
+      "title": "ਇਲਜ਼ਾਮ (ilzām) — an accusation; a charge",
+      "headword": "ਇਲਜ਼ਾਮ",
+      "romanization": "ilzām",
+      "gloss": "an accusation; a charge",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b10e92fac53843a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a fault, then the Punjabi for to hide something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਇਲਜ਼ਾਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਲਜ਼ਾਮ — ilzām — \"an accusation; a charge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਇਲਜ਼ਾਮ ਸੱਚਾ ਨਹੀਂ ਹੈ। eh ilzām sachchā nahīṁ hai. This accusation is not true."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਲਜ਼ਾਮ (ilzām) is a loan, usually traced through Persian to Arabic ilzām, \"binding someone\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilzām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilzām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilzām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilzām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh ilzām sachchā nahīṁ hai. — This accusation is not true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh ilzām sachchā nahīṁ hai.* — This accusation is not true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a fault, then the Punjabi for to hide something, then say ilzām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a fault, then the Punjabi for to hide something, then say *ilzām* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਇਲਜ਼ਾਮ (ilzām) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਇਲਜ਼ਾਮ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਇਲਜ਼ਾਮ (ilzām) mean? (\"An accusation; a charge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C346-majbur",
+      "sequence": 21490,
+      "title": "ਮਜਬੂਰ (majbūr) — helpless; forced by circumstances",
+      "headword": "ਮਜਬੂਰ",
+      "romanization": "majbūr",
+      "gloss": "helpless; forced by circumstances",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e28dcee5b74c3ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to hide something, then the Punjabi for an accusation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਜਬੂਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਜਬੂਰ — majbūr — \"helpless; forced by circumstances\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਮਜਬੂਰ ਹਾਂ ਅਤੇ ਅੱਜ ਨਹੀਂ ਆਵਾਂਗਾ। maiṁ majbūr hāṁ ate ajj nahīṁ āvāṅgā. I can't help it, and I won't come today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਜਬੂਰ (majbūr) is a loan, usually traced through Persian to Arabic majbūr, \"compelled\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majbūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majbūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majbūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majbūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ majbūr hāṁ ate ajj nahīṁ āvāṅgā. — I can't help it, and I won't come today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ majbūr hāṁ ate ajj nahīṁ āvāṅgā.* — I can't help it, and I won't come today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to hide something, then the Punjabi for an accusation, then say majbūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to hide something, then the Punjabi for an accusation, then say *majbūr* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਜਬੂਰ (majbūr) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਜਬੂਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਜਬੂਰ (majbūr) mean? (\"Helpless; forced by circumstances\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C346-afsos",
+      "sequence": 21500,
+      "title": "ਅਫ਼ਸੋਸ (afsos) — regret; it's a pity",
+      "headword": "ਅਫ਼ਸੋਸ",
+      "romanization": "afsos",
+      "gloss": "regret; it's a pity",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fea0ee18ec13b512",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an accusation, then the Punjabi for helpless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਅਫ਼ਸੋਸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਫ਼ਸੋਸ — afsos — \"regret; it's a pity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਬਹੁਤ ਅਫ਼ਸੋਸ ਹੈ ਕਿ ਮੈਂ ਨਹੀਂ ਆਇਆ। mainū̃ bahut afsos hai ki maiṁ nahīṁ āiā. I am very sorry that I didn't come."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਫ਼ਸੋਸ (afsos) is a loan, usually traced to Persian afsōs, \"regret\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afsos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afsos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afsos, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afsos*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainū̃ bahut afsos hai ki maiṁ nahīṁ āiā. — I am very sorry that I didn't come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainū̃ bahut afsos hai ki maiṁ nahīṁ āiā.* — I am very sorry that I didn't come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an accusation, then the Punjabi for helpless, then say afsos again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an accusation, then the Punjabi for helpless, then say *afsos* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅਫ਼ਸੋਸ (afsos) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅਫ਼ਸੋਸ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਅਫ਼ਸੋਸ (afsos) mean? (\"Regret; it's a pity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

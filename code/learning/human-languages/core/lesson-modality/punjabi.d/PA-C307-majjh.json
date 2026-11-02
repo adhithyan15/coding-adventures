@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C307-majjh",
+    "language": "punjabi",
+    "chapter": 307,
+    "sequence": 18330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e5292f08b15f79c"
+  },
+  "findings": []
+}

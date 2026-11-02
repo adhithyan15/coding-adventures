@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C268-kandaktar",
+    "language": "punjabi",
+    "chapter": 268,
+    "sequence": 15780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:241e5ea923f46b9f"
+  },
+  "findings": []
+}

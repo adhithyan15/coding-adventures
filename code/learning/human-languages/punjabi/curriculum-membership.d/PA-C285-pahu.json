@@ -1,0 +1,11 @@
+{
+  "id": "PA-C285-pahu",
+  "pathSegment": "PA-PATH-285-HOME285",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-285-HOME285",
+      "order": 4
+    }
+  ]
+}

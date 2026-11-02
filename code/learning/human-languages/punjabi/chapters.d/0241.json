@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Cutting Vegetables",
+  "label": "ch:pa-a2-cutting-vegetables",
+  "canDo": "I can say how I peel and cut vegetables.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C241-vesan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say how I peel and cut vegetables.",
+    "assesses": [
+      "PA-LEX-C241-KAM241-03",
+      "PA-LEX-C241-KAM241-04",
+      "PA-LEX-C241-KAM241-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C262-chukauna",
+  "pathSegment": "PA-PATH-262-FEE262",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-262-FEE262",
+      "order": 4
+    }
+  ]
+}

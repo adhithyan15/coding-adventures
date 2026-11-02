@@ -1,0 +1,11 @@
+{
+  "id": "PA-C268-sit",
+  "pathSegment": "PA-PATH-268-STAND268",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-268-STAND268",
+      "order": 2
+    }
+  ]
+}

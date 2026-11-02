@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:23a7dc3b485b7201",
+  "lessonIds": [
+    "PA-C300-fasal",
+    "PA-C300-harhi",
+    "PA-C300-sauni",
+    "PA-C300-kapah",
+    "PA-C300-ganna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch300.txt",
+  "json": "punjabi/narration/ch300.json",
+  "textHash": "fnv1a64:a19e705fc5a41b92",
+  "jsonHash": "fnv1a64:8f4aed3548b8cae4",
+  "findings": []
+}

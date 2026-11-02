@@ -1,0 +1,11 @@
+{
+  "id": "PA-C279-kharab",
+  "pathSegment": "PA-PATH-279-SWAP279",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-279-SWAP279",
+      "order": 0
+    }
+  ]
+}

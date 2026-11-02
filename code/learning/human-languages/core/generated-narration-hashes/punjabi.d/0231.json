@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:127fe2bc11947f11",
+  "lessonIds": [
+    "PA-C231-tel",
+    "PA-C231-gundna",
+    "PA-C231-gutt",
+    "PA-C231-paranda",
+    "PA-C231-lat",
+    "PA-R231-review-225-231"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch231.txt",
+  "json": "punjabi/narration/ch231.json",
+  "textHash": "fnv1a64:5f7533c694de02e2",
+  "jsonHash": "fnv1a64:6364b5bf0842b3e4",
+  "findings": []
+}

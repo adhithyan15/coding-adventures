@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Bags for the Road",
+  "label": "ch:pa-a2-bags-for-the-road",
+  "canDo": "I can talk about packing for a journey.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C282-nikalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can talk about packing for a journey.",
+    "assesses": [
+      "PA-LEX-C282-BAGS282-03",
+      "PA-LEX-C282-BAGS282-04",
+      "PA-LEX-C282-BAGS282-05"
+    ]
+  }
+}

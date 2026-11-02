@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Crops of the Year",
+  "label": "ch:pa-a2-crops-of-the-year",
+  "canDo": "I can name the crops of the farming year.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C300-ganna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can name the crops of the farming year.",
+    "assesses": [
+      "PA-LEX-C300-CROP300-03",
+      "PA-LEX-C300-CROP300-04",
+      "PA-LEX-C300-CROP300-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:b56a7d9239393547",
+  "lessonIds": [
+    "PA-C245-vihra",
+    "PA-C245-kotha",
+    "PA-C245-chubara",
+    "PA-C245-thammh",
+    "PA-C245-itt",
+    "PA-R245-review-239-245"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch245.txt",
+  "json": "punjabi/narration/ch245.json",
+  "textHash": "fnv1a64:84b8057e6dcc8b59",
+  "jsonHash": "fnv1a64:dc7367ba529426d3",
+  "findings": []
+}

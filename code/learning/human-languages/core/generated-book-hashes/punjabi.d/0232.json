@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:8e36c99dfe81267e",
+  "lessonIds": [
+    "PA-C232-sajauna",
+    "PA-C232-sametna",
+    "PA-C232-yad",
+    "PA-C232-uddharna",
+    "PA-C232-tunnna"
+  ],
+  "tex": "punjabi/book/chapters/ch232-putting-things-away.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C278-laddna",
+  "pathSegment": "PA-PATH-278-STOCK278",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-278-STOCK278",
+      "order": 1
+    }
+  ]
+}

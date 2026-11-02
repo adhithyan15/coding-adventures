@@ -65,10 +65,12 @@ function realReport() {
 }
 
 // The atom-budget witness, built synthetically and at IMPORT for the same reason
-// REAL_REPORT is. The claim it carries is "a track can attain pre-A1 while an A1
-// lesson is over budget", and the corpus stopped holding a real example when the
-// final witness attained A1. So take a track that attains A1 on the real
-// corpus, mark one of its A1 lessons over budget in the ramp report, and run the
+// REAL_REPORT is. The claim it carries is "an over-budget lesson at level L blocks
+// L, and only L": the track still attains the level below. The corpus stopped
+// holding a real example long ago, and the fixture's level cannot be fixed either:
+// it used A1 until the last A1 track (Punjabi) attained A2. So take the LOWEST
+// rung above pre-A1 that some track has attained on the real corpus, mark one of
+// that track's lessons at that rung over budget in the ramp report, and run the
 // gate again on otherwise identical inputs.
 const SYNTHETIC_WITNESS = (() => {
   const e = REAL_EVERYTHING;
@@ -81,8 +83,13 @@ const SYNTHETIC_WITNESS = (() => {
     continuity: measureContinuity(e.lessons),
   };
   const baseline = runLevelGate(inputs);
+  const level = baseline.tracks
+    .map((t) => t.attained)
+    .filter((l): l is CefrLevel => l !== null && l !== "pre-A1")
+    .sort((a, b) => levelRank(a) - levelRank(b))[0]!;
+  const below = CEFR_LEVELS[levelRank(level) - 1]!;
   const track = baseline.tracks
-    .filter((t) => t.attained === "A1")
+    .filter((t) => t.attained === level)
     .map((t) => t.language)
     .sort()[0]!;
   const stageOf = new Map(e.spine.nodes.map((node) => [node.id, node.stage]));
@@ -91,10 +98,10 @@ const SYNTHETIC_WITNESS = (() => {
     .filter((l) => l.language === track)
     .map((l) => l.realization.lessonId)
     .sort()
-    .find((id) => stageOf.get(nodeOf.get(id) ?? "") === "A1")!;
+    .find((id) => stageOf.get(nodeOf.get(id) ?? "") === level)!;
   const overBudget = { lessonId: lesson, language: track, chapter: null, atoms: 4, budget: 3 };
   const gate = runLevelGate({ ...inputs, ramp: { ...inputs.ramp, lessons: [...inputs.ramp.lessons, overBudget] } });
-  return { track, lesson, baseline: baseline.tracks.find((t) => t.language === track)!, gate };
+  return { level, below, track, lesson, baseline: baseline.tracks.find((t) => t.language === track)!, gate };
 })();
 
 describe("the gate that would have caught the A2 claim", () => {
@@ -168,13 +175,14 @@ describe("the gate that would have caught the A2 claim", () => {
   it("scopes the atom budget to the level, so a high lesson cannot block a low one", () => {
     // Before the criteria were level-scoped, an over-budget lesson above pre-A1
     // blocked pre-A1 anyway. The real corpus eventually stopped carrying a stable
-    // witness, so the claim now uses the synthetic fixture built above: one A1
-    // lesson of an A1 track marked over budget, everything else the real corpus.
-    const { track, lesson, baseline, gate } = SYNTHETIC_WITNESS;
-    expect(baseline.attained, `${track} attains A1 before the injection`).toBe("A1");
+    // witness, so the claim now uses the synthetic fixture built above: one lesson
+    // at a track's attained level L marked over budget, everything else the real
+    // corpus. The track falls exactly one rung, to the level below L, and no further.
+    const { level, below, track, lesson, baseline, gate } = SYNTHETIC_WITNESS;
+    expect(baseline.attained, `${track} attains ${level} before the injection`).toBe(level);
     const witness = gate.tracks.find((t) => t.language === track)!;
-    expect(witness.attained, `${track} with ${lesson} over budget`).toBe("pre-A1");
-    expect(witness.inProgressAt).toBe("A1");
+    expect(witness.attained, `${track} with ${lesson} over budget`).toBe(below);
+    expect(witness.inProgressAt).toBe(level);
     expect(witness.blockers.filter((b) => b.criterion === "atom-budget")).toEqual([
       expect.objectContaining({ shortfall: 1 }),
     ]);

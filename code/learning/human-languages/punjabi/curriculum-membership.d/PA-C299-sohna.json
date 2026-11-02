@@ -1,0 +1,11 @@
+{
+  "id": "PA-C299-sohna",
+  "pathSegment": "PA-PATH-299-WATER299",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-299-WATER299",
+      "order": 4
+    }
+  ]
+}

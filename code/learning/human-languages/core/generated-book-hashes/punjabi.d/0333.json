@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:4d2976e4da9baeee",
+  "lessonIds": [
+    "PA-C333-nai",
+    "PA-C333-munnna",
+    "PA-C333-dhobi",
+    "PA-C333-mochi",
+    "PA-C333-mali"
+  ],
+  "tex": "punjabi/book/chapters/ch333-the-barber-and-the-washerman.tex"
+}

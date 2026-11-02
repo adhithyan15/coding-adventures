@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:d1102fc993c2b1d0",
+  "lessonIds": [
+    "PA-C247-ala",
+    "PA-C247-bari",
+    "PA-C247-khunja",
+    "PA-C247-pirha",
+    "PA-C247-sanduk"
+  ],
+  "tex": "punjabi/book/chapters/ch247-inside-the-room.tex"
+}

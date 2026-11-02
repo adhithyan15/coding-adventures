@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:d33d7b81ea88630d",
+  "lessonIds": [
+    "PA-C241-chhillna",
+    "PA-C241-katarna",
+    "PA-C241-chirna",
+    "PA-C241-mirach",
+    "PA-C241-vesan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch241.txt",
+  "json": "punjabi/narration/ch241.json",
+  "textHash": "fnv1a64:3c803bd0ad9b5fe1",
+  "jsonHash": "fnv1a64:cc182a785e7bf691",
+  "findings": []
+}

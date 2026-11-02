@@ -1,0 +1,11 @@
+{
+  "id": "PA-C297-chubhna",
+  "pathSegment": "PA-PATH-297-TOUCH297",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-297-TOUCH297",
+      "order": 4
+    }
+  ]
+}

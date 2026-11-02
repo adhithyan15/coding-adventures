@@ -1,0 +1,11 @@
+{
+  "id": "PA-C297-khundha",
+  "pathSegment": "PA-PATH-297-TOUCH297",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-297-TOUCH297",
+      "order": 3
+    }
+  ]
+}

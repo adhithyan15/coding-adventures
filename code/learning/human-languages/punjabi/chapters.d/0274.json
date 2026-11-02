@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Yards and Metres",
+  "label": "ch:pa-a2-yards-and-metres",
+  "canDo": "I can say how long or wide something is.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-C274-jora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say how long or wide something is.",
+    "assesses": [
+      "PA-LEX-C274-SIZE274-03",
+      "PA-LEX-C274-SIZE274-04",
+      "PA-LEX-C274-SIZE274-05"
+    ]
+  }
+}

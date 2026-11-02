@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C312-tohfa",
+    "language": "punjabi",
+    "chapter": 312,
+    "sequence": 19190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:173ae1bec7728ebd"
+  },
+  "findings": []
+}

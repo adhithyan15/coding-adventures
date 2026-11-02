@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:d87585de7fcbd51f",
+  "lessonIds": [
+    "PA-C265-ure",
+    "PA-C265-pare",
+    "PA-C265-vichkar",
+    "PA-C265-vat",
+    "PA-C265-koh"
+  ],
+  "tex": "punjabi/book/chapters/ch265-this-side-and-that.tex"
+}

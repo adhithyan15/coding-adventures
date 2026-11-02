@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C254-mitauna",
+    "language": "punjabi",
+    "chapter": 254,
+    "sequence": 15090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9498031092a1e9f"
+  },
+  "findings": []
+}

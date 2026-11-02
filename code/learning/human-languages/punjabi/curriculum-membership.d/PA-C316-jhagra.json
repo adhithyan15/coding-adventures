@@ -1,0 +1,11 @@
+{
+  "id": "PA-C316-jhagra",
+  "pathSegment": "PA-PATH-316-QUARREL316",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-316-QUARREL316",
+      "order": 1
+    }
+  ]
+}

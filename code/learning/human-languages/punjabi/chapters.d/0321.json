@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "A Cough and a Cold",
+  "label": "ch:pa-a2-a-cough-and-a-cold",
+  "canDo": "I can say that I have a cold or a cough.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C321-nigalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can say that I have a cold or a cough.",
+    "assesses": [
+      "PA-LEX-C321-COLD321-03",
+      "PA-LEX-C321-COLD321-04",
+      "PA-LEX-C321-COLD321-05"
+    ]
+  }
+}

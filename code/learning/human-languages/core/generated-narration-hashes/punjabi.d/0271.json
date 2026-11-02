@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:c90c41a94b4e9b6b",
+  "lessonIds": [
+    "PA-C271-uttar",
+    "PA-C271-dakkhan",
+    "PA-C271-purab",
+    "PA-C271-pachchham",
+    "PA-C271-ghumauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch271.txt",
+  "json": "punjabi/narration/ch271.json",
+  "textHash": "fnv1a64:96ae2c08712fdab8",
+  "jsonHash": "fnv1a64:c46f4d8dea973094",
+  "findings": []
+}

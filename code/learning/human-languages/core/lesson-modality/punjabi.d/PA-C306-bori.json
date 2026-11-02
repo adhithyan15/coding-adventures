@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C306-bori",
+    "language": "punjabi",
+    "chapter": 306,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a5dffc232154c29"
+  },
+  "findings": []
+}

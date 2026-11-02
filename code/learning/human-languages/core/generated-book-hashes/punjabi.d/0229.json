@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:8f514f128dd50a9a",
+  "lessonIds": [
+    "PA-C229-gandh",
+    "PA-C229-bannhna",
+    "PA-C229-kassna",
+    "PA-C229-dori",
+    "PA-C229-ghundi"
+  ],
+  "tex": "punjabi/book/chapters/ch229-knots-and-strings.tex"
+}

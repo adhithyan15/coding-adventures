@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:97b9bcba8a66d534",
+  "lessonIds": [
+    "PA-C281-program",
+    "PA-C281-irada",
+    "PA-C281-salah",
+    "PA-C281-taalna",
+    "PA-C281-turant"
+  ],
+  "tex": "punjabi/book/chapters/ch281-plans-for-the-holidays.tex"
+}

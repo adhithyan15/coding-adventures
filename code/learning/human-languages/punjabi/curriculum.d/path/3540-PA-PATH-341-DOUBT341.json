@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-341-DOUBT341",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "PA-EXT-341-DOUBT341"
+  ],
+  "after": []
+}

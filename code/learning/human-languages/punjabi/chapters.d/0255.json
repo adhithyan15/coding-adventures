@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Letters and Stamps",
+  "label": "ch:pa-a2-letters-and-stamps",
+  "canDo": "I can talk about sending a letter by post.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C255-chhapna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can talk about sending a letter by post.",
+    "assesses": [
+      "PA-LEX-C255-POST255-03",
+      "PA-LEX-C255-POST255-04",
+      "PA-LEX-C255-POST255-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Grinding and Pounding",
+  "label": "ch:pa-a2-grinding-and-pounding",
+  "canDo": "I can name the tools that grind spices.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C240-kuttna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can name the tools that grind spices.",
+    "assesses": [
+      "PA-LEX-C240-KAM240-03",
+      "PA-LEX-C240-KAM240-04",
+      "PA-LEX-C240-KAM240-05"
+    ]
+  }
+}

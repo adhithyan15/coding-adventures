@@ -1,0 +1,11 @@
+{
+  "id": "PA-C354-jadu",
+  "pathSegment": "PA-PATH-354-STORY354",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-354-STORY354",
+      "order": 4
+    }
+  ]
+}

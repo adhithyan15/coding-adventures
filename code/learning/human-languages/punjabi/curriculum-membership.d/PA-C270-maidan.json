@@ -1,0 +1,11 @@
+{
+  "id": "PA-C270-maidan",
+  "pathSegment": "PA-PATH-270-SEARCH270",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-270-SEARCH270",
+      "order": 4
+    }
+  ]
+}

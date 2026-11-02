@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C274-jora",
+    "language": "punjabi",
+    "chapter": 274,
+    "sequence": 16120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44c81a3eb725d7be"
+  },
+  "findings": []
+}

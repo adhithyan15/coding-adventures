@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C260-dedh",
+    "language": "punjabi",
+    "chapter": 260,
+    "sequence": 15390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9f143d23f2220de"
+  },
+  "findings": []
+}

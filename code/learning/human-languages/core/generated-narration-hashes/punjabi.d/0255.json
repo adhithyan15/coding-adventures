@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:1e09863432fc2abf",
+  "lessonIds": [
+    "PA-C255-dak",
+    "PA-C255-lifafa",
+    "PA-C255-mohar",
+    "PA-C255-kaghaz",
+    "PA-C255-chhapna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch255.txt",
+  "json": "punjabi/narration/ch255.json",
+  "textHash": "fnv1a64:fab21563d85eccff",
+  "jsonHash": "fnv1a64:b852a51d0ff90bea",
+  "findings": []
+}

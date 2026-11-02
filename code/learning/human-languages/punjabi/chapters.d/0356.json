@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Pictures and Photos",
+  "label": "ch:pa-a2-pictures-and-photos",
+  "canDo": "I can say which pictures and photos I like.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C356-farem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say which pictures and photos I like.",
+    "assesses": [
+      "PA-LEX-C356-PHOTO356-03",
+      "PA-LEX-C356-PHOTO356-04",
+      "PA-LEX-C356-PHOTO356-05"
+    ]
+  }
+}

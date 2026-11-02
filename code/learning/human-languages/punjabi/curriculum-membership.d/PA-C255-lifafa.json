@@ -1,0 +1,11 @@
+{
+  "id": "PA-C255-lifafa",
+  "pathSegment": "PA-PATH-255-POST255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-255-POST255",
+      "order": 1
+    }
+  ]
+}

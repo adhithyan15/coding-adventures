@@ -1,0 +1,11 @@
+{
+  "id": "PA-C258-kamauna",
+  "pathSegment": "PA-PATH-258-LOAN258",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-258-LOAN258",
+      "order": 4
+    }
+  ]
+}

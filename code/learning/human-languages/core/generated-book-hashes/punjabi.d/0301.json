@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:441a36aca0022695",
+  "lessonIds": [
+    "PA-C301-hal",
+    "PA-C301-balad",
+    "PA-C301-jula",
+    "PA-C301-vahuna",
+    "PA-C301-jotna",
+    "PA-R301-review-295-301"
+  ],
+  "tex": "punjabi/book/chapters/ch301-ploughing-the-field.tex"
+}

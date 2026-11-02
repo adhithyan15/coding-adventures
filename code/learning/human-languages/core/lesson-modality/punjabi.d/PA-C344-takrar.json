@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C344-takrar",
+    "language": "punjabi",
+    "chapter": 344,
+    "sequence": 21380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8f0845b218fa528"
+  },
+  "findings": []
+}
