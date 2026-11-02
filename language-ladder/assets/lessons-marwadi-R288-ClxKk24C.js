@@ -1,0 +1,106 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R290-review-285-290
+spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
+sequence: 20280
+chapter: 290
+type: review
+headword: (dialogue)
+gloss: a review of the words from Learning by Heart to Starting and Finishing
+concept_tag: REVIEW
+prerequisites: [MW-C285-akhar, MW-C285-pano, MW-C285-path, MW-C285-ratno, MW-C285-ucharno, MW-C286-imtihan, MW-C286-hisab, MW-C286-natijo, MW-C286-darjo, MW-C286-akno, MW-C287-sikhavno, MW-C287-bhanavno, MW-C287-guru, MW-C287-chelo, MW-C287-akharo, MW-C288-mehnat, MW-C288-layak, MW-C288-ustad, MW-C288-dhandho, MW-C288-majur, MW-C289-masin, MW-C289-chalavno, MW-C289-ghisno, MW-C289-rando, MW-C289-chitarno, MW-C290-bahi, MW-C290-rojgar, MW-C290-saru, MW-C290-khatam, MW-C290-abhyas]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C285-AKHAR285-01, MW-LEX-C285-AKHAR285-02, MW-LEX-C285-AKHAR285-03, MW-LEX-C285-AKHAR285-04, MW-LEX-C285-AKHAR285-05, MW-LEX-C286-IMTIHAN286-01, MW-LEX-C286-IMTIHAN286-02, MW-LEX-C286-IMTIHAN286-03, MW-LEX-C286-IMTIHAN286-04, MW-LEX-C286-IMTIHAN286-05, MW-LEX-C287-GURU287-01, MW-LEX-C287-GURU287-02, MW-LEX-C287-GURU287-03, MW-LEX-C287-GURU287-04, MW-LEX-C287-GURU287-05, MW-LEX-C288-KAM288-01, MW-LEX-C288-KAM288-02, MW-LEX-C288-KAM288-03, MW-LEX-C288-KAM288-04, MW-LEX-C288-KAM288-05, MW-LEX-C289-MASIN289-01, MW-LEX-C289-MASIN289-02, MW-LEX-C289-MASIN289-03, MW-LEX-C289-MASIN289-04, MW-LEX-C289-MASIN289-05, MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02, MW-LEX-C290-SARU290-03, MW-LEX-C290-SARU290-04, MW-LEX-C290-SARU290-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C285-AKHAR285-01, MW-LEX-C285-AKHAR285-02, MW-LEX-C285-AKHAR285-03, MW-LEX-C285-AKHAR285-04, MW-LEX-C285-AKHAR285-05, MW-LEX-C286-IMTIHAN286-01, MW-LEX-C286-IMTIHAN286-02, MW-LEX-C286-IMTIHAN286-03, MW-LEX-C286-IMTIHAN286-04, MW-LEX-C286-IMTIHAN286-05, MW-LEX-C287-GURU287-01, MW-LEX-C287-GURU287-02, MW-LEX-C287-GURU287-03, MW-LEX-C287-GURU287-04, MW-LEX-C287-GURU287-05, MW-LEX-C288-KAM288-01, MW-LEX-C288-KAM288-02, MW-LEX-C288-KAM288-03, MW-LEX-C288-KAM288-04, MW-LEX-C288-KAM288-05, MW-LEX-C289-MASIN289-01, MW-LEX-C289-MASIN289-02, MW-LEX-C289-MASIN289-03, MW-LEX-C289-MASIN289-04, MW-LEX-C289-MASIN289-05, MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02, MW-LEX-C290-SARU290-03, MW-LEX-C290-SARU290-04, MW-LEX-C290-SARU290-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C285-akhar, MW-C285-pano, MW-C285-path, MW-C285-ratno, MW-C285-ucharno, MW-C286-imtihan, MW-C286-hisab, MW-C286-natijo, MW-C286-darjo, MW-C286-akno, MW-C287-sikhavno, MW-C287-bhanavno, MW-C287-guru, MW-C287-chelo, MW-C287-akharo, MW-C288-mehnat, MW-C288-layak, MW-C288-ustad, MW-C288-dhandho, MW-C288-majur, MW-C289-masin, MW-C289-chalavno, MW-C289-ghisno, MW-C289-rando, MW-C289-chitarno, MW-C290-bahi, MW-C290-rojgar, MW-C290-saru, MW-C290-khatam, MW-C290-abhyas]
+---
+
+# Looking back: from Learning by Heart to Starting and Finishing
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C285-AKHAR285-01, MW-LEX-C285-AKHAR285-02] -->
+
+[PAUSE 3s] Say the Marwadi for a letter of the alphabet and a page.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C285-AKHAR285-01, MW-LEX-C285-AKHAR285-02, MW-LEX-C285-AKHAR285-03, MW-LEX-C285-AKHAR285-04, MW-LEX-C285-AKHAR285-05, MW-LEX-C286-IMTIHAN286-01, MW-LEX-C286-IMTIHAN286-02, MW-LEX-C286-IMTIHAN286-03, MW-LEX-C286-IMTIHAN286-04, MW-LEX-C286-IMTIHAN286-05, MW-LEX-C287-GURU287-01, MW-LEX-C287-GURU287-02, MW-LEX-C287-GURU287-03, MW-LEX-C287-GURU287-04, MW-LEX-C287-GURU287-05, MW-LEX-C288-KAM288-01, MW-LEX-C288-KAM288-02, MW-LEX-C288-KAM288-03, MW-LEX-C288-KAM288-04, MW-LEX-C288-KAM288-05, MW-LEX-C289-MASIN289-01, MW-LEX-C289-MASIN289-02, MW-LEX-C289-MASIN289-03, MW-LEX-C289-MASIN289-04, MW-LEX-C289-MASIN289-05, MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02, MW-LEX-C290-SARU290-03, MW-LEX-C290-SARU290-04, MW-LEX-C290-SARU290-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a letter of the alphabet, a page, a lesson, to learn by heart, to pronounce]
+- [YOU SAY: an exam, sums, a result, a class at school, to mark schoolwork]
+- [YOU SAY: to teach a skill, to teach lessons, a guru, a pupil, a wrestling ground]
+- [YOU SAY: hard work, capable, a master of a craft, a trade, a labourer]
+- [YOU SAY: a machine, to drive, to rub smooth, a carpenter's plane, to paint a picture]
+- [YOU SAY: a ledger, employment, begun, finished, practice]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C285-AKHAR285-01, MW-LEX-C285-AKHAR285-02, MW-LEX-C285-AKHAR285-03, MW-LEX-C285-AKHAR285-04, MW-LEX-C285-AKHAR285-05, MW-LEX-C286-IMTIHAN286-01, MW-LEX-C286-IMTIHAN286-02, MW-LEX-C286-IMTIHAN286-03, MW-LEX-C286-IMTIHAN286-04, MW-LEX-C286-IMTIHAN286-05, MW-LEX-C287-GURU287-01, MW-LEX-C287-GURU287-02, MW-LEX-C287-GURU287-03, MW-LEX-C287-GURU287-04, MW-LEX-C287-GURU287-05, MW-LEX-C288-KAM288-01, MW-LEX-C288-KAM288-02, MW-LEX-C288-KAM288-03, MW-LEX-C288-KAM288-04, MW-LEX-C288-KAM288-05, MW-LEX-C289-MASIN289-01, MW-LEX-C289-MASIN289-02, MW-LEX-C289-MASIN289-03, MW-LEX-C289-MASIN289-04, MW-LEX-C289-MASIN289-05, MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02, MW-LEX-C290-SARU290-03, MW-LEX-C290-SARU290-04, MW-LEX-C290-SARU290-05] -->
+<!-- hl-activity: {"id":"MW-R290-review-285-290-type","kind":"text","assesses":["MW-LEX-C285-AKHAR285-01"],"prompt":"Type the Marwadi for 'a letter of the alphabet'.","answer":"आखर","accepted":["ākhar"],"feedback":{"correct":"Right: आखर (ākhar) is 'a letter of the alphabet'.","incorrect":"'a letter of the alphabet' is आखर (ākhar)."},"response_seconds":10} -->
+
+[PAUSE 3s] A letter of the alphabet? (**आखर**, *ākhar*.) A page? (**पानो**, *pāno*.) A lesson? (**पाठ**, *pāṭh*.) To learn by heart? (**रटणो**, *raṭṇo*.) To pronounce? (**उचारणो**, *uchārṇo*.) An exam? (**इम्तिहान**, *imtihān*.) Sums? (**हिसाब**, *hisāb*.) A result? (**नतीजो**, *natījo*.) A class at school? (**दरजो**, *darjo*.) To mark schoolwork? (**आंकणो**, *ā̃kṇo*.) To teach a skill? (**सिखावणो**, *sikhāvṇo*.) To teach lessons? (**भणावणो**, *bhaṇāvṇo*.) A guru? (**गुरु**, *guru*.) A pupil? (**चेलो**, *chelo*.) A wrestling ground? (**अखाड़ो**, *akhāṛo*.) Hard work? (**मेहनत**, *mehnat*.) Capable? (**लायक**, *lāyak*.) A master of a craft? (**उस्ताद**, *ustād*.) A trade? (**धंधो**, *dhandho*.) A labourer? (**मजूर**, *majūr*.) A machine? (**मसीन**, *masīn*.) To drive? (**चलावणो**, *chalāvṇo*.) To rub smooth? (**घिसणो**, *ghisṇo*.) A carpenter's plane? (**रंदो**, *rando*.) To paint a picture? (**चीतरणो**, *chītarṇo*.) A ledger? (**बही**, *bahī*.) Employment? (**रोजगार**, *rojgār*.) Begun? (**सरू**, *sarū*.) Finished? (**खतम**, *khatam*.) Practice? (**अभ्यास**, *abhyās*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R290-review-final-290
+spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
+sequence: 20290
+chapter: 290
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [MW-C290-bahi, MW-C290-rojgar, MW-C290-saru, MW-C290-khatam, MW-C290-abhyas]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02, MW-LEX-C290-SARU290-03, MW-LEX-C290-SARU290-04, MW-LEX-C290-SARU290-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02, MW-LEX-C290-SARU290-03, MW-LEX-C290-SARU290-04, MW-LEX-C290-SARU290-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C290-bahi, MW-C290-rojgar, MW-C290-saru, MW-C290-khatam, MW-C290-abhyas]
+---
+
+# Starting and Finishing — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02] -->
+
+[PAUSE 3s] Say the Marwadi for a ledger and employment.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02, MW-LEX-C290-SARU290-03, MW-LEX-C290-SARU290-04, MW-LEX-C290-SARU290-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a ledger, employment, begun, finished, practice]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C290-SARU290-01, MW-LEX-C290-SARU290-02, MW-LEX-C290-SARU290-03, MW-LEX-C290-SARU290-04, MW-LEX-C290-SARU290-05] -->
+<!-- hl-activity: {"id":"MW-R290-review-final-290-type","kind":"text","assesses":["MW-LEX-C290-SARU290-01"],"prompt":"Type the Marwadi for 'a ledger'.","answer":"बही","accepted":["bahī"],"feedback":{"correct":"Right: बही (bahī) is 'a ledger'.","incorrect":"'a ledger' is बही (bahī)."},"response_seconds":10} -->
+
+[PAUSE 3s] A ledger? (**बही**, *bahī*.) Employment? (**रोजगार**, *rojgār*.) Begun? (**सरू**, *sarū*.) Finished? (**खतम**, *khatam*.) Practice? (**अभ्यास**, *abhyās*.)
+`;export{t as n,r as t};

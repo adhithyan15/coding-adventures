@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R272-review-266-272
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 19350
+chapter: 272
+type: review
+headword: (dialogue)
+gloss: a review of the words from Please Come In to Only This, and Me Too
+concept_tag: REVIEW
+prerequisites: [MW-C266-hajar, MW-C266-madad, MW-C266-meharbani, MW-C266-araj, MW-C266-asis, MW-C267-ijajat, MW-C267-raja, MW-C267-hukam, MW-C267-intjar, MW-C267-thamno, MW-C268-kaivno, MW-C268-sunavno, MW-C268-salah, MW-C268-matlab, MW-C268-sipharas, MW-C269-bahano, MW-C269-inkar, MW-C269-arno, MW-C269-jid, MW-C269-tokno, MW-C270-maphi, MW-C270-kasur, MW-C270-pachhtano, MW-C270-phorno, MW-C270-khijno, MW-C271-kharo, MW-C271-galat, MW-C271-sabut, MW-C271-sakhi, MW-C271-kasam, MW-C272-phagat, MW-C272-bi, MW-C272-jarur, MW-C272-besak, MW-C272-manjur]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C266-HAJAR266-01, MW-LEX-C266-HAJAR266-02, MW-LEX-C266-HAJAR266-03, MW-LEX-C266-HAJAR266-04, MW-LEX-C266-HAJAR266-05, MW-LEX-C267-RAJA267-01, MW-LEX-C267-RAJA267-02, MW-LEX-C267-RAJA267-03, MW-LEX-C267-RAJA267-04, MW-LEX-C267-RAJA267-05, MW-LEX-C268-KAIVNO268-01, MW-LEX-C268-KAIVNO268-02, MW-LEX-C268-KAIVNO268-03, MW-LEX-C268-KAIVNO268-04, MW-LEX-C268-KAIVNO268-05, MW-LEX-C269-BAHANO269-01, MW-LEX-C269-BAHANO269-02, MW-LEX-C269-BAHANO269-03, MW-LEX-C269-BAHANO269-04, MW-LEX-C269-BAHANO269-05, MW-LEX-C270-MAPHI270-01, MW-LEX-C270-MAPHI270-02, MW-LEX-C270-MAPHI270-03, MW-LEX-C270-MAPHI270-04, MW-LEX-C270-MAPHI270-05, MW-LEX-C271-SAHI271-01, MW-LEX-C271-SAHI271-02, MW-LEX-C271-SAHI271-03, MW-LEX-C271-SAHI271-04, MW-LEX-C271-SAHI271-05, MW-LEX-C272-PHAGAT272-01, MW-LEX-C272-PHAGAT272-02, MW-LEX-C272-PHAGAT272-03, MW-LEX-C272-PHAGAT272-04, MW-LEX-C272-PHAGAT272-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C266-HAJAR266-01, MW-LEX-C266-HAJAR266-02, MW-LEX-C266-HAJAR266-03, MW-LEX-C266-HAJAR266-04, MW-LEX-C266-HAJAR266-05, MW-LEX-C267-RAJA267-01, MW-LEX-C267-RAJA267-02, MW-LEX-C267-RAJA267-03, MW-LEX-C267-RAJA267-04, MW-LEX-C267-RAJA267-05, MW-LEX-C268-KAIVNO268-01, MW-LEX-C268-KAIVNO268-02, MW-LEX-C268-KAIVNO268-03, MW-LEX-C268-KAIVNO268-04, MW-LEX-C268-KAIVNO268-05, MW-LEX-C269-BAHANO269-01, MW-LEX-C269-BAHANO269-02, MW-LEX-C269-BAHANO269-03, MW-LEX-C269-BAHANO269-04, MW-LEX-C269-BAHANO269-05, MW-LEX-C270-MAPHI270-01, MW-LEX-C270-MAPHI270-02, MW-LEX-C270-MAPHI270-03, MW-LEX-C270-MAPHI270-04, MW-LEX-C270-MAPHI270-05, MW-LEX-C271-SAHI271-01, MW-LEX-C271-SAHI271-02, MW-LEX-C271-SAHI271-03, MW-LEX-C271-SAHI271-04, MW-LEX-C271-SAHI271-05, MW-LEX-C272-PHAGAT272-01, MW-LEX-C272-PHAGAT272-02, MW-LEX-C272-PHAGAT272-03, MW-LEX-C272-PHAGAT272-04, MW-LEX-C272-PHAGAT272-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C266-hajar, MW-C266-madad, MW-C266-meharbani, MW-C266-araj, MW-C266-asis, MW-C267-ijajat, MW-C267-raja, MW-C267-hukam, MW-C267-intjar, MW-C267-thamno, MW-C268-kaivno, MW-C268-sunavno, MW-C268-salah, MW-C268-matlab, MW-C268-sipharas, MW-C269-bahano, MW-C269-inkar, MW-C269-arno, MW-C269-jid, MW-C269-tokno, MW-C270-maphi, MW-C270-kasur, MW-C270-pachhtano, MW-C270-phorno, MW-C270-khijno, MW-C271-kharo, MW-C271-galat, MW-C271-sabut, MW-C271-sakhi, MW-C271-kasam, MW-C272-phagat, MW-C272-bi, MW-C272-jarur, MW-C272-besak, MW-C272-manjur]
+---
+
+# Looking back: from Please Come In to Only This, and Me Too
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C266-HAJAR266-01, MW-LEX-C266-HAJAR266-02] -->
+
+[PAUSE 3s] Say the Marwadi for at your service and help.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C266-HAJAR266-01, MW-LEX-C266-HAJAR266-02, MW-LEX-C266-HAJAR266-03, MW-LEX-C266-HAJAR266-04, MW-LEX-C266-HAJAR266-05, MW-LEX-C267-RAJA267-01, MW-LEX-C267-RAJA267-02, MW-LEX-C267-RAJA267-03, MW-LEX-C267-RAJA267-04, MW-LEX-C267-RAJA267-05, MW-LEX-C268-KAIVNO268-01, MW-LEX-C268-KAIVNO268-02, MW-LEX-C268-KAIVNO268-03, MW-LEX-C268-KAIVNO268-04, MW-LEX-C268-KAIVNO268-05, MW-LEX-C269-BAHANO269-01, MW-LEX-C269-BAHANO269-02, MW-LEX-C269-BAHANO269-03, MW-LEX-C269-BAHANO269-04, MW-LEX-C269-BAHANO269-05, MW-LEX-C270-MAPHI270-01, MW-LEX-C270-MAPHI270-02, MW-LEX-C270-MAPHI270-03, MW-LEX-C270-MAPHI270-04, MW-LEX-C270-MAPHI270-05, MW-LEX-C271-SAHI271-01, MW-LEX-C271-SAHI271-02, MW-LEX-C271-SAHI271-03, MW-LEX-C271-SAHI271-04, MW-LEX-C271-SAHI271-05, MW-LEX-C272-PHAGAT272-01, MW-LEX-C272-PHAGAT272-02, MW-LEX-C272-PHAGAT272-03, MW-LEX-C272-PHAGAT272-04, MW-LEX-C272-PHAGAT272-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: at your service, help, a kindness, a petition, a blessing]
+- [YOU SAY: permission, leave to go, an order, waiting, to hold on]
+- [YOU SAY: to say, to recite, counsel, a meaning, a good word for someone]
+- [YOU SAY: an excuse, a refusal, to dig in one's heels, stubbornness, to interrupt]
+- [YOU SAY: pardon, a wrongdoing, to regret, to smash, to get cross]
+- [YOU SAY: correct, wrong, proof, a witness, an oath]
+- [YOU SAY: only, also, certainly, of course, agreed]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C266-HAJAR266-01, MW-LEX-C266-HAJAR266-02, MW-LEX-C266-HAJAR266-03, MW-LEX-C266-HAJAR266-04, MW-LEX-C266-HAJAR266-05, MW-LEX-C267-RAJA267-01, MW-LEX-C267-RAJA267-02, MW-LEX-C267-RAJA267-03, MW-LEX-C267-RAJA267-04, MW-LEX-C267-RAJA267-05, MW-LEX-C268-KAIVNO268-01, MW-LEX-C268-KAIVNO268-02, MW-LEX-C268-KAIVNO268-03, MW-LEX-C268-KAIVNO268-04, MW-LEX-C268-KAIVNO268-05, MW-LEX-C269-BAHANO269-01, MW-LEX-C269-BAHANO269-02, MW-LEX-C269-BAHANO269-03, MW-LEX-C269-BAHANO269-04, MW-LEX-C269-BAHANO269-05, MW-LEX-C270-MAPHI270-01, MW-LEX-C270-MAPHI270-02, MW-LEX-C270-MAPHI270-03, MW-LEX-C270-MAPHI270-04, MW-LEX-C270-MAPHI270-05, MW-LEX-C271-SAHI271-01, MW-LEX-C271-SAHI271-02, MW-LEX-C271-SAHI271-03, MW-LEX-C271-SAHI271-04, MW-LEX-C271-SAHI271-05, MW-LEX-C272-PHAGAT272-01, MW-LEX-C272-PHAGAT272-02, MW-LEX-C272-PHAGAT272-03, MW-LEX-C272-PHAGAT272-04, MW-LEX-C272-PHAGAT272-05] -->
+<!-- hl-activity: {"id":"MW-R272-review-266-272-type","kind":"text","assesses":["MW-LEX-C266-HAJAR266-01"],"prompt":"Type the Marwadi for 'at your service'.","answer":"हाजर","accepted":["hājar"],"feedback":{"correct":"Right: हाजर (hājar) is 'present; at your service'.","incorrect":"'at your service' is हाजर (hājar)."},"response_seconds":10} -->
+
+[PAUSE 3s] At your service? (**हाजर**, *hājar*.) Help? (**मदद**, *madad*.) A kindness? (**मेहरबानी**, *meharbānī*.) A petition? (**अरज**, *araj*.) A blessing? (**आसीस**, *āsīs*.) Permission? (**इजाजत**, *ijājat*.) Leave to go? (**रजा**, *rajā*.) An order? (**हुकम**, *hukam*.) Waiting? (**इंतजार**, *intjār*.) To hold on? (**थमणो**, *thamṇo*.) To say? (**कैवणो**, *kaivṇo*.) To recite? (**सुणावणो**, *suṇāvṇo*.) Counsel? (**सलाह**, *salāh*.) A meaning? (**मतलब**, *matlab*.) A good word for someone? (**सिफारस**, *siphāras*.) An excuse? (**बहानो**, *bahāno*.) A refusal? (**इनकार**, *inkār*.) To dig in one's heels? (**अड़णो**, *aṛṇo*.) Stubbornness? (**जिद**, *jid*.) To interrupt? (**टोकणो**, *ṭokṇo*.) Pardon? (**माफी**, *māphī*.) A wrongdoing? (**कसूर**, *kasūr*.) To regret? (**पछताणो**, *pachhtāṇo*.) To smash? (**फोड़णो**, *phoṛṇo*.) To get cross? (**खीजणो**, *khījṇo*.) Correct? (**खरो**, *kharo*.) Wrong? (**गलत**, *galat*.) Proof? (**सबूत**, *sabūt*.) A witness? (**साखी**, *sākhī*.) An oath? (**कसम**, *kasam*.) Only? (**फगत**, *phagat*.) Also? (**बी**, *bī*.) Certainly? (**जरूर**, *jarūr*.) Of course? (**बेसक**, *besak*.) Agreed? (**मंजूर**, *mañjūr*.)
+`;export{t};

@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R234-review-229-234
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 15970
+chapter: 234
+type: review
+headword: (dialogue)
+gloss: a review of the words from Light and White to The Herd
+concept_tag: REVIEW
+prerequisites: [MW-C229-ujas, MW-C229-ujlo, MW-C229-jhino, MW-C229-dholo, MW-C229-chamakno, MW-C230-balno-scorch, MW-C230-dhalno, MW-C230-dharti, MW-C230-ak, MW-C230-kato, MW-C231-bako, MW-C231-sidho, MW-C231-ubho, MW-C231-gol, MW-C231-dhilo, MW-C232-budho, MW-C232-mati, MW-C232-chikno, MW-C232-kakro, MW-C232-borri, MW-C233-palan, MW-C233-nakel, MW-C233-saj, MW-C233-kasno, MW-C233-ghughro, MW-C234-evaliyo, MW-C234-lathi, MW-C234-charno, MW-C234-hakno, MW-C234-sambhalno]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C229-LIGHT229-01, MW-LEX-C229-LIGHT229-02, MW-LEX-C229-LIGHT229-03, MW-LEX-C229-LIGHT229-04, MW-LEX-C229-LIGHT229-05, MW-LEX-C230-SUN230-01, MW-LEX-C230-SUN230-02, MW-LEX-C230-SUN230-03, MW-LEX-C230-SUN230-04, MW-LEX-C230-SUN230-05, MW-LEX-C231-SHAPE231-01, MW-LEX-C231-SHAPE231-02, MW-LEX-C231-SHAPE231-03, MW-LEX-C231-SHAPE231-04, MW-LEX-C231-SHAPE231-05, MW-LEX-C232-EARTH232-01, MW-LEX-C232-EARTH232-02, MW-LEX-C232-EARTH232-03, MW-LEX-C232-EARTH232-04, MW-LEX-C232-EARTH232-05, MW-LEX-C233-GEAR233-01, MW-LEX-C233-GEAR233-02, MW-LEX-C233-GEAR233-03, MW-LEX-C233-GEAR233-04, MW-LEX-C233-GEAR233-05, MW-LEX-C234-HERD234-01, MW-LEX-C234-HERD234-02, MW-LEX-C234-HERD234-03, MW-LEX-C234-HERD234-04, MW-LEX-C234-HERD234-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C229-LIGHT229-01, MW-LEX-C229-LIGHT229-02, MW-LEX-C229-LIGHT229-03, MW-LEX-C229-LIGHT229-04, MW-LEX-C229-LIGHT229-05, MW-LEX-C230-SUN230-01, MW-LEX-C230-SUN230-02, MW-LEX-C230-SUN230-03, MW-LEX-C230-SUN230-04, MW-LEX-C230-SUN230-05, MW-LEX-C231-SHAPE231-01, MW-LEX-C231-SHAPE231-02, MW-LEX-C231-SHAPE231-03, MW-LEX-C231-SHAPE231-04, MW-LEX-C231-SHAPE231-05, MW-LEX-C232-EARTH232-01, MW-LEX-C232-EARTH232-02, MW-LEX-C232-EARTH232-03, MW-LEX-C232-EARTH232-04, MW-LEX-C232-EARTH232-05, MW-LEX-C233-GEAR233-01, MW-LEX-C233-GEAR233-02, MW-LEX-C233-GEAR233-03, MW-LEX-C233-GEAR233-04, MW-LEX-C233-GEAR233-05, MW-LEX-C234-HERD234-01, MW-LEX-C234-HERD234-02, MW-LEX-C234-HERD234-03, MW-LEX-C234-HERD234-04, MW-LEX-C234-HERD234-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C229-ujas, MW-C229-ujlo, MW-C229-jhino, MW-C229-dholo, MW-C229-chamakno, MW-C230-balno-scorch, MW-C230-dhalno, MW-C230-dharti, MW-C230-ak, MW-C230-kato, MW-C231-bako, MW-C231-sidho, MW-C231-ubho, MW-C231-gol, MW-C231-dhilo, MW-C232-budho, MW-C232-mati, MW-C232-chikno, MW-C232-kakro, MW-C232-borri, MW-C233-palan, MW-C233-nakel, MW-C233-saj, MW-C233-kasno, MW-C233-ghughro, MW-C234-evaliyo, MW-C234-lathi, MW-C234-charno, MW-C234-hakno, MW-C234-sambhalno]
+---
+
+# Looking back: from Light and White to The Herd
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C229-LIGHT229-01, MW-LEX-C229-LIGHT229-02] -->
+
+[PAUSE 3s] Say the Marwadi for daylight and bright.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C229-LIGHT229-01, MW-LEX-C229-LIGHT229-02, MW-LEX-C229-LIGHT229-03, MW-LEX-C229-LIGHT229-04, MW-LEX-C229-LIGHT229-05, MW-LEX-C230-SUN230-01, MW-LEX-C230-SUN230-02, MW-LEX-C230-SUN230-03, MW-LEX-C230-SUN230-04, MW-LEX-C230-SUN230-05, MW-LEX-C231-SHAPE231-01, MW-LEX-C231-SHAPE231-02, MW-LEX-C231-SHAPE231-03, MW-LEX-C231-SHAPE231-04, MW-LEX-C231-SHAPE231-05, MW-LEX-C232-EARTH232-01, MW-LEX-C232-EARTH232-02, MW-LEX-C232-EARTH232-03, MW-LEX-C232-EARTH232-04, MW-LEX-C232-EARTH232-05, MW-LEX-C233-GEAR233-01, MW-LEX-C233-GEAR233-02, MW-LEX-C233-GEAR233-03, MW-LEX-C233-GEAR233-04, MW-LEX-C233-GEAR233-05, MW-LEX-C234-HERD234-01, MW-LEX-C234-HERD234-02, MW-LEX-C234-HERD234-03, MW-LEX-C234-HERD234-04, MW-LEX-C234-HERD234-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: daylight, bright, fine, white, to shine]
+- [YOU SAY: to be scorching, to go down (of the sun), the earth, swallow-wort, a thorn]
+- [YOU SAY: crooked, straight, standing, round, loose]
+- [YOU SAY: elderly, soil, smooth, a pebble, a jujube bush]
+- [YOU SAY: a camel saddle, a camel's nose-peg, trappings (of a camel or a horse), to tighten, a small bell]
+- [YOU SAY: a shepherd, a long stick, to graze, to drive (animals or a cart), to look after]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C229-LIGHT229-01, MW-LEX-C229-LIGHT229-02, MW-LEX-C229-LIGHT229-03, MW-LEX-C229-LIGHT229-04, MW-LEX-C229-LIGHT229-05, MW-LEX-C230-SUN230-01, MW-LEX-C230-SUN230-02, MW-LEX-C230-SUN230-03, MW-LEX-C230-SUN230-04, MW-LEX-C230-SUN230-05, MW-LEX-C231-SHAPE231-01, MW-LEX-C231-SHAPE231-02, MW-LEX-C231-SHAPE231-03, MW-LEX-C231-SHAPE231-04, MW-LEX-C231-SHAPE231-05, MW-LEX-C232-EARTH232-01, MW-LEX-C232-EARTH232-02, MW-LEX-C232-EARTH232-03, MW-LEX-C232-EARTH232-04, MW-LEX-C232-EARTH232-05, MW-LEX-C233-GEAR233-01, MW-LEX-C233-GEAR233-02, MW-LEX-C233-GEAR233-03, MW-LEX-C233-GEAR233-04, MW-LEX-C233-GEAR233-05, MW-LEX-C234-HERD234-01, MW-LEX-C234-HERD234-02, MW-LEX-C234-HERD234-03, MW-LEX-C234-HERD234-04, MW-LEX-C234-HERD234-05] -->
+<!-- hl-activity: {"id":"MW-R234-review-229-234-type","kind":"text","assesses":["MW-LEX-C229-LIGHT229-01"],"prompt":"Type the Marwadi for 'daylight'.","answer":"उजास","accepted":["ujās"],"feedback":{"correct":"Right: उजास (ujās) is 'daylight; brightness'.","incorrect":"'daylight' is उजास (ujās)."},"response_seconds":10} -->
+
+[PAUSE 3s] Daylight? (**उजास**, *ujās*.) Bright? (**ऊजळो**, *ūjḷo*.) Fine? (**झीणो**, *jhīṇo*.) White? (**धोळो**, *dhoḷo*.) To shine? (**चमकणो**, *chamakṇo*.) To be scorching? (**बळणो**, *baḷṇo*.) To go down (of the sun)? (**ढळणो**, *ḍhaḷṇo*.) The earth? (**धरती**, *dhartī*.) Swallow-wort? (**आक**, *āk*.) A thorn? (**कांटो**, *kā̃ṭo*.) Crooked? (**बांको**, *bā̃ko*.) Straight? (**सीधो**, *sīdho*.) Standing? (**ऊभो**, *ūbho*.) Round? (**गोळ**, *goḷ*.) Loose? (**ढीलो**, *ḍhīlo*.) Elderly? (**बूढो**, *būḍho*.) Soil? (**माटी**, *māṭī*.) Smooth? (**चिकणो**, *chikṇo*.) A pebble? (**कांकरो**, *kā̃kro*.) A jujube bush? (**बोरड़ी**, *borṛī*.) A camel saddle? (**पलाण**, *palāṇ*.) A camel's nose-peg? (**नकेल**, *nakel*.) Trappings (of a camel or a horse)? (**साज**, *sāj*.) To tighten? (**कसणो**, *kasṇo*.) A small bell? (**घूघरो**, *ghūghro*.) A shepherd? (**एवाळियो**, *evāḷiyo*.) A long stick? (**लाठी**, *lāṭhī*.) To graze? (**चरणो**, *charṇo*.) To drive (animals or a cart)? (**हांकणो**, *hā̃kṇo*.) To look after? (**संभाळणो**, *sambhāḷṇo*.)
+`;export{t};

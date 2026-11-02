@@ -1,0 +1,106 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R265-review-260-265
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 18280
+chapter: 265
+type: review
+headword: (dialogue)
+gloss: a review of the words from Married Into the Family to Shoes, Shaves and Shirts
+concept_tag: REVIEW
+prerequisites: [MW-C260-bahu, MW-C260-javai, MW-C260-bhavaj, MW-C260-bahnoi, MW-C260-salo, MW-C261-masi, MW-C261-bhatijo, MW-C261-bhanjo, MW-C261-poto, MW-C261-dohito, MW-C262-jano, MW-C262-banjaro, MW-C262-saheli, MW-C262-chaudhri, MW-C262-karigar, MW-C263-pujari, MW-C263-mali, MW-C263-teli, MW-C263-dhobi, MW-C263-sunar, MW-C264-gharno, MW-C264-luhar, MW-C264-thokno, MW-C264-kumhar, MW-C264-suthar, MW-C265-mochi, MW-C265-nai, MW-C265-mudno, MW-C265-darji, MW-C265-chakar]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C260-BAHU260-01, MW-LEX-C260-BAHU260-02, MW-LEX-C260-BAHU260-03, MW-LEX-C260-BAHU260-04, MW-LEX-C260-BAHU260-05, MW-LEX-C261-MASI261-01, MW-LEX-C261-MASI261-02, MW-LEX-C261-MASI261-03, MW-LEX-C261-MASI261-04, MW-LEX-C261-MASI261-05, MW-LEX-C262-JANO262-01, MW-LEX-C262-JANO262-02, MW-LEX-C262-JANO262-03, MW-LEX-C262-JANO262-04, MW-LEX-C262-JANO262-05, MW-LEX-C263-TELI263-01, MW-LEX-C263-TELI263-02, MW-LEX-C263-TELI263-03, MW-LEX-C263-TELI263-04, MW-LEX-C263-TELI263-05, MW-LEX-C264-LUHAR264-01, MW-LEX-C264-LUHAR264-02, MW-LEX-C264-LUHAR264-03, MW-LEX-C264-LUHAR264-04, MW-LEX-C264-LUHAR264-05, MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02, MW-LEX-C265-MOCHI265-03, MW-LEX-C265-MOCHI265-04, MW-LEX-C265-MOCHI265-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C260-BAHU260-01, MW-LEX-C260-BAHU260-02, MW-LEX-C260-BAHU260-03, MW-LEX-C260-BAHU260-04, MW-LEX-C260-BAHU260-05, MW-LEX-C261-MASI261-01, MW-LEX-C261-MASI261-02, MW-LEX-C261-MASI261-03, MW-LEX-C261-MASI261-04, MW-LEX-C261-MASI261-05, MW-LEX-C262-JANO262-01, MW-LEX-C262-JANO262-02, MW-LEX-C262-JANO262-03, MW-LEX-C262-JANO262-04, MW-LEX-C262-JANO262-05, MW-LEX-C263-TELI263-01, MW-LEX-C263-TELI263-02, MW-LEX-C263-TELI263-03, MW-LEX-C263-TELI263-04, MW-LEX-C263-TELI263-05, MW-LEX-C264-LUHAR264-01, MW-LEX-C264-LUHAR264-02, MW-LEX-C264-LUHAR264-03, MW-LEX-C264-LUHAR264-04, MW-LEX-C264-LUHAR264-05, MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02, MW-LEX-C265-MOCHI265-03, MW-LEX-C265-MOCHI265-04, MW-LEX-C265-MOCHI265-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C260-bahu, MW-C260-javai, MW-C260-bhavaj, MW-C260-bahnoi, MW-C260-salo, MW-C261-masi, MW-C261-bhatijo, MW-C261-bhanjo, MW-C261-poto, MW-C261-dohito, MW-C262-jano, MW-C262-banjaro, MW-C262-saheli, MW-C262-chaudhri, MW-C262-karigar, MW-C263-pujari, MW-C263-mali, MW-C263-teli, MW-C263-dhobi, MW-C263-sunar, MW-C264-gharno, MW-C264-luhar, MW-C264-thokno, MW-C264-kumhar, MW-C264-suthar, MW-C265-mochi, MW-C265-nai, MW-C265-mudno, MW-C265-darji, MW-C265-chakar]
+---
+
+# Looking back: from Married Into the Family to Shoes, Shaves and Shirts
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C260-BAHU260-01, MW-LEX-C260-BAHU260-02] -->
+
+[PAUSE 3s] Say the Marwadi for a daughter-in-law and a son-in-law.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C260-BAHU260-01, MW-LEX-C260-BAHU260-02, MW-LEX-C260-BAHU260-03, MW-LEX-C260-BAHU260-04, MW-LEX-C260-BAHU260-05, MW-LEX-C261-MASI261-01, MW-LEX-C261-MASI261-02, MW-LEX-C261-MASI261-03, MW-LEX-C261-MASI261-04, MW-LEX-C261-MASI261-05, MW-LEX-C262-JANO262-01, MW-LEX-C262-JANO262-02, MW-LEX-C262-JANO262-03, MW-LEX-C262-JANO262-04, MW-LEX-C262-JANO262-05, MW-LEX-C263-TELI263-01, MW-LEX-C263-TELI263-02, MW-LEX-C263-TELI263-03, MW-LEX-C263-TELI263-04, MW-LEX-C263-TELI263-05, MW-LEX-C264-LUHAR264-01, MW-LEX-C264-LUHAR264-02, MW-LEX-C264-LUHAR264-03, MW-LEX-C264-LUHAR264-04, MW-LEX-C264-LUHAR264-05, MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02, MW-LEX-C265-MOCHI265-03, MW-LEX-C265-MOCHI265-04, MW-LEX-C265-MOCHI265-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a daughter-in-law, a son-in-law, a brother's wife, a sister's husband, a wife's brother]
+- [YOU SAY: a mother's sister, a brother's son, a sister's son, a son's son, a daughter's son]
+- [YOU SAY: a person (when counting), a travelling trader, a woman's friend, a village headman, a craftsman]
+- [YOU SAY: a temple priest, a gardener, an oil-presser, a washerman, a goldsmith]
+- [YOU SAY: to shape (metal or clay), a blacksmith, to hammer, a potter, a carpenter]
+- [YOU SAY: a cobbler, a barber, to shave, a tailor, a servant]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C260-BAHU260-01, MW-LEX-C260-BAHU260-02, MW-LEX-C260-BAHU260-03, MW-LEX-C260-BAHU260-04, MW-LEX-C260-BAHU260-05, MW-LEX-C261-MASI261-01, MW-LEX-C261-MASI261-02, MW-LEX-C261-MASI261-03, MW-LEX-C261-MASI261-04, MW-LEX-C261-MASI261-05, MW-LEX-C262-JANO262-01, MW-LEX-C262-JANO262-02, MW-LEX-C262-JANO262-03, MW-LEX-C262-JANO262-04, MW-LEX-C262-JANO262-05, MW-LEX-C263-TELI263-01, MW-LEX-C263-TELI263-02, MW-LEX-C263-TELI263-03, MW-LEX-C263-TELI263-04, MW-LEX-C263-TELI263-05, MW-LEX-C264-LUHAR264-01, MW-LEX-C264-LUHAR264-02, MW-LEX-C264-LUHAR264-03, MW-LEX-C264-LUHAR264-04, MW-LEX-C264-LUHAR264-05, MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02, MW-LEX-C265-MOCHI265-03, MW-LEX-C265-MOCHI265-04, MW-LEX-C265-MOCHI265-05] -->
+<!-- hl-activity: {"id":"MW-R265-review-260-265-type","kind":"text","assesses":["MW-LEX-C260-BAHU260-01"],"prompt":"Type the Marwadi for 'a daughter-in-law'.","answer":"बहू","accepted":["bahū"],"feedback":{"correct":"Right: बहू (bahū) is 'a daughter-in-law; a young wife of the house'.","incorrect":"'a daughter-in-law' is बहू (bahū)."},"response_seconds":10} -->
+
+[PAUSE 3s] A daughter-in-law? (**बहू**, *bahū*.) A son-in-law? (**जंवाई**, *jãvāī*.) A brother's wife? (**भावज**, *bhāvaj*.) A sister's husband? (**बहनोई**, *bahnoī*.) A wife's brother? (**साळो**, *sāḷo*.) A mother's sister? (**मासी**, *māsī*.) A brother's son? (**भतीजो**, *bhatījo*.) A sister's son? (**भाणजो**, *bhāṇjo*.) A son's son? (**पोतो**, *poto*.) A daughter's son? (**दोहितो**, *dohito*.) A person (when counting)? (**जणो**, *jaṇo*.) A travelling trader? (**बणजारो**, *baṇjāro*.) A woman's friend? (**सहेली**, *sahelī*.) A village headman? (**चौधरी**, *chaudhrī*.) A craftsman? (**कारीगर**, *kārīgar*.) A temple priest? (**पुजारी**, *pujārī*.) A gardener? (**माळी**, *māḷī*.) An oil-presser? (**तेली**, *telī*.) A washerman? (**धोबी**, *dhobī*.) A goldsmith? (**सुनार**, *sunār*.) To shape (metal or clay)? (**घड़णो**, *ghaṛṇo*.) A blacksmith? (**लुहार**, *luhār*.) To hammer? (**ठोकणो**, *ṭhokṇo*.) A potter? (**कुम्हार**, *kumhār*.) A carpenter? (**सुथार**, *suthār*.) A cobbler? (**मोची**, *mochī*.) A barber? (**नाई**, *nāī*.) To shave? (**मूंडणो**, *mū̃ḍṇo*.) A tailor? (**दरजी**, *darjī*.) A servant? (**चाकर**, *chākar*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R265-review-final-265
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 18290
+chapter: 265
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [MW-C265-mochi, MW-C265-nai, MW-C265-mudno, MW-C265-darji, MW-C265-chakar]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02, MW-LEX-C265-MOCHI265-03, MW-LEX-C265-MOCHI265-04, MW-LEX-C265-MOCHI265-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02, MW-LEX-C265-MOCHI265-03, MW-LEX-C265-MOCHI265-04, MW-LEX-C265-MOCHI265-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C265-mochi, MW-C265-nai, MW-C265-mudno, MW-C265-darji, MW-C265-chakar]
+---
+
+# Shoes, Shaves and Shirts — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02] -->
+
+[PAUSE 3s] Say the Marwadi for a cobbler and a barber.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02, MW-LEX-C265-MOCHI265-03, MW-LEX-C265-MOCHI265-04, MW-LEX-C265-MOCHI265-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a cobbler, a barber, to shave, a tailor, a servant]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C265-MOCHI265-01, MW-LEX-C265-MOCHI265-02, MW-LEX-C265-MOCHI265-03, MW-LEX-C265-MOCHI265-04, MW-LEX-C265-MOCHI265-05] -->
+<!-- hl-activity: {"id":"MW-R265-review-final-265-type","kind":"text","assesses":["MW-LEX-C265-MOCHI265-01"],"prompt":"Type the Marwadi for 'a cobbler'.","answer":"मोची","accepted":["mochī"],"feedback":{"correct":"Right: मोची (mochī) is 'a cobbler'.","incorrect":"'a cobbler' is मोची (mochī)."},"response_seconds":10} -->
+
+[PAUSE 3s] A cobbler? (**मोची**, *mochī*.) A barber? (**नाई**, *nāī*.) To shave? (**मूंडणो**, *mū̃ḍṇo*.) A tailor? (**दरजी**, *darjī*.) A servant? (**चाकर**, *chākar*.)
+`;export{t as n,r as t};

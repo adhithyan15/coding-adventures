@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R203-review-198-203
+spine_node: SPINE-ASK-LOCATION
+sequence: 13660
+chapter: 203
+type: review
+headword: (dialogue)
+gloss: a review of the words from At the Office to How Far Is It?
+concept_tag: REVIEW
+prerequisites: [MW-C198-daphtar, MW-C198-aphsar, MW-C198-arji, MW-C198-binti, MW-C198-samjhavno, MW-C199-mohar, MW-C199-daskhat, MW-C199-rasid, MW-C199-lekho, MW-C199-madno, MW-C200-taraju, MW-C200-ser, MW-C200-kilo, MW-C200-pav, MW-C200-litar, MW-C201-kot, MW-C201-mohallo, MW-C201-thano, MW-C201-saray, MW-C201-ghusno, MW-C202-murno, MW-C202-pachho, MW-C202-ulto, MW-C202-ado, MW-C202-tirchho, MW-C203-atro, MW-C203-dag, MW-C203-disa, MW-C203-bhatakno, MW-C203-disno]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C198-OFFICE198-01, MW-LEX-C198-OFFICE198-02, MW-LEX-C198-OFFICE198-03, MW-LEX-C198-OFFICE198-04, MW-LEX-C198-OFFICE198-05, MW-LEX-C199-SEAL199-01, MW-LEX-C199-SEAL199-02, MW-LEX-C199-SEAL199-03, MW-LEX-C199-SEAL199-04, MW-LEX-C199-SEAL199-05, MW-LEX-C200-WEIGH200-01, MW-LEX-C200-WEIGH200-02, MW-LEX-C200-WEIGH200-03, MW-LEX-C200-WEIGH200-04, MW-LEX-C200-WEIGH200-05, MW-LEX-C201-TOWN201-01, MW-LEX-C201-TOWN201-02, MW-LEX-C201-TOWN201-03, MW-LEX-C201-TOWN201-04, MW-LEX-C201-TOWN201-05, MW-LEX-C202-WAY202-01, MW-LEX-C202-WAY202-02, MW-LEX-C202-WAY202-03, MW-LEX-C202-WAY202-04, MW-LEX-C202-WAY202-05, MW-LEX-C203-STEPS203-01, MW-LEX-C203-STEPS203-02, MW-LEX-C203-STEPS203-03, MW-LEX-C203-STEPS203-04, MW-LEX-C203-STEPS203-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C198-OFFICE198-01, MW-LEX-C198-OFFICE198-02, MW-LEX-C198-OFFICE198-03, MW-LEX-C198-OFFICE198-04, MW-LEX-C198-OFFICE198-05, MW-LEX-C199-SEAL199-01, MW-LEX-C199-SEAL199-02, MW-LEX-C199-SEAL199-03, MW-LEX-C199-SEAL199-04, MW-LEX-C199-SEAL199-05, MW-LEX-C200-WEIGH200-01, MW-LEX-C200-WEIGH200-02, MW-LEX-C200-WEIGH200-03, MW-LEX-C200-WEIGH200-04, MW-LEX-C200-WEIGH200-05, MW-LEX-C201-TOWN201-01, MW-LEX-C201-TOWN201-02, MW-LEX-C201-TOWN201-03, MW-LEX-C201-TOWN201-04, MW-LEX-C201-TOWN201-05, MW-LEX-C202-WAY202-01, MW-LEX-C202-WAY202-02, MW-LEX-C202-WAY202-03, MW-LEX-C202-WAY202-04, MW-LEX-C202-WAY202-05, MW-LEX-C203-STEPS203-01, MW-LEX-C203-STEPS203-02, MW-LEX-C203-STEPS203-03, MW-LEX-C203-STEPS203-04, MW-LEX-C203-STEPS203-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C198-daphtar, MW-C198-aphsar, MW-C198-arji, MW-C198-binti, MW-C198-samjhavno, MW-C199-mohar, MW-C199-daskhat, MW-C199-rasid, MW-C199-lekho, MW-C199-madno, MW-C200-taraju, MW-C200-ser, MW-C200-kilo, MW-C200-pav, MW-C200-litar, MW-C201-kot, MW-C201-mohallo, MW-C201-thano, MW-C201-saray, MW-C201-ghusno, MW-C202-murno, MW-C202-pachho, MW-C202-ulto, MW-C202-ado, MW-C202-tirchho, MW-C203-atro, MW-C203-dag, MW-C203-disa, MW-C203-bhatakno, MW-C203-disno]
+---
+
+# Looking back: from At the Office to How Far Is It?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C198-OFFICE198-01, MW-LEX-C198-OFFICE198-02] -->
+
+[PAUSE 3s] Say the Marwadi for an office and an officer.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C198-OFFICE198-01, MW-LEX-C198-OFFICE198-02, MW-LEX-C198-OFFICE198-03, MW-LEX-C198-OFFICE198-04, MW-LEX-C198-OFFICE198-05, MW-LEX-C199-SEAL199-01, MW-LEX-C199-SEAL199-02, MW-LEX-C199-SEAL199-03, MW-LEX-C199-SEAL199-04, MW-LEX-C199-SEAL199-05, MW-LEX-C200-WEIGH200-01, MW-LEX-C200-WEIGH200-02, MW-LEX-C200-WEIGH200-03, MW-LEX-C200-WEIGH200-04, MW-LEX-C200-WEIGH200-05, MW-LEX-C201-TOWN201-01, MW-LEX-C201-TOWN201-02, MW-LEX-C201-TOWN201-03, MW-LEX-C201-TOWN201-04, MW-LEX-C201-TOWN201-05, MW-LEX-C202-WAY202-01, MW-LEX-C202-WAY202-02, MW-LEX-C202-WAY202-03, MW-LEX-C202-WAY202-04, MW-LEX-C202-WAY202-05, MW-LEX-C203-STEPS203-01, MW-LEX-C203-STEPS203-02, MW-LEX-C203-STEPS203-03, MW-LEX-C203-STEPS203-04, MW-LEX-C203-STEPS203-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an office, an officer, an application, a request, to explain]
+- [YOU SAY: an official stamp, a signature, a receipt, a reckoning, to write down]
+- [YOU SAY: scales, a seer, a kilo, a quarter, a litre]
+- [YOU SAY: a fort, a neighbourhood, a police station, an inn, to get in]
+- [YOU SAY: to turn, back again, the wrong way round, crosswise, slanting]
+- [YOU SAY: a distance, a pace, a direction, to lose one's way, to be visible]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C198-OFFICE198-01, MW-LEX-C198-OFFICE198-02, MW-LEX-C198-OFFICE198-03, MW-LEX-C198-OFFICE198-04, MW-LEX-C198-OFFICE198-05, MW-LEX-C199-SEAL199-01, MW-LEX-C199-SEAL199-02, MW-LEX-C199-SEAL199-03, MW-LEX-C199-SEAL199-04, MW-LEX-C199-SEAL199-05, MW-LEX-C200-WEIGH200-01, MW-LEX-C200-WEIGH200-02, MW-LEX-C200-WEIGH200-03, MW-LEX-C200-WEIGH200-04, MW-LEX-C200-WEIGH200-05, MW-LEX-C201-TOWN201-01, MW-LEX-C201-TOWN201-02, MW-LEX-C201-TOWN201-03, MW-LEX-C201-TOWN201-04, MW-LEX-C201-TOWN201-05, MW-LEX-C202-WAY202-01, MW-LEX-C202-WAY202-02, MW-LEX-C202-WAY202-03, MW-LEX-C202-WAY202-04, MW-LEX-C202-WAY202-05, MW-LEX-C203-STEPS203-01, MW-LEX-C203-STEPS203-02, MW-LEX-C203-STEPS203-03, MW-LEX-C203-STEPS203-04, MW-LEX-C203-STEPS203-05] -->
+<!-- hl-activity: {"id":"MW-R203-review-198-203-type","kind":"text","assesses":["MW-LEX-C198-OFFICE198-01"],"prompt":"Type the Marwadi for 'an office'.","answer":"दफ्तर","accepted":["daphtar"],"feedback":{"correct":"Right: दफ्तर (daphtar) is 'an office'.","incorrect":"'an office' is दफ्तर (daphtar)."},"response_seconds":10} -->
+
+[PAUSE 3s] An office? (**दफ्तर**, *daphtar*.) An officer? (**अफसर**, *aphsar*.) An application? (**अरजी**, *arjī*.) A request? (**बिनती**, *bintī*.) To explain? (**समझावणो**, *samjhāvṇo*.) An official stamp? (**मोहर**, *mohar*.) A signature? (**दसखत**, *daskhat*.) A receipt? (**रसीद**, *rasīd*.) A reckoning? (**लेखो**, *lekho*.) To write down? (**मांडणो**, *mā̃ḍṇo*.) Scales? (**तराजू**, *tarājū*.) A seer? (**सेर**, *ser*.) A kilo? (**किलो**, *kilo*.) A quarter? (**पाव**, *pāv*.) A litre? (**लीटर**, *līṭar*.) A fort? (**कोट**, *koṭ*.) A neighbourhood? (**मोहल्लो**, *mohallo*.) A police station? (**थाणो**, *thāṇo*.) An inn? (**सराय**, *sarāy*.) To get in? (**घुसणो**, *ghusṇo*.) To turn? (**मुड़णो**, *muṛṇo*.) Back again? (**पाछो**, *pāchho*.) The wrong way round? (**उलटो**, *ulṭo*.) Crosswise? (**आडो**, *āḍo*.) Slanting? (**तिरछो**, *tirchho*.) A distance? (**आंतरो**, *ā̃tro*.) A pace? (**डग**, *ḍag*.) A direction? (**दिसा**, *disā*.) To lose one's way? (**भटकणो**, *bhaṭakṇo*.) To be visible? (**दीसणो**, *dīsṇo*.)
+`;export{t};

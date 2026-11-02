@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R259-review-254-259
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 17970
+chapter: 259
+type: review
+headword: (dialogue)
+gloss: a review of the words from At the Healer's to My Husband's Family
+concept_tag: REVIEW
+prerequisites: [MW-C254-vaid, MW-C254-goli, MW-C254-sujno, MW-C254-aram, MW-C254-alas, MW-C255-tabiyat, MW-C255-bigarno, MW-C255-sudharno-better, MW-C255-asu, MW-C255-kapno, MW-C256-darno, MW-C256-dukh, MW-C256-sukh, MW-C256-anand, MW-C256-umang, MW-C257-ris, MW-C257-rusno, MW-C257-laj, MW-C257-nisaso, MW-C257-olmo, MW-C258-chinta, MW-C258-bharoso, MW-C258-dhiraj, MW-C258-sahno, MW-C258-hiyo, MW-C259-sasu, MW-C259-susro, MW-C259-devar, MW-C259-nanad, MW-C259-dhani]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C254-VAID254-01, MW-LEX-C254-VAID254-02, MW-LEX-C254-VAID254-03, MW-LEX-C254-VAID254-04, MW-LEX-C254-VAID254-05, MW-LEX-C255-TABIYAT255-01, MW-LEX-C255-TABIYAT255-02, MW-LEX-C255-TABIYAT255-03, MW-LEX-C255-TABIYAT255-04, MW-LEX-C255-TABIYAT255-05, MW-LEX-C256-DAR256-01, MW-LEX-C256-DAR256-02, MW-LEX-C256-DAR256-03, MW-LEX-C256-DAR256-04, MW-LEX-C256-DAR256-05, MW-LEX-C257-RIS257-01, MW-LEX-C257-RIS257-02, MW-LEX-C257-RIS257-03, MW-LEX-C257-RIS257-04, MW-LEX-C257-RIS257-05, MW-LEX-C258-CHINTA258-01, MW-LEX-C258-CHINTA258-02, MW-LEX-C258-CHINTA258-03, MW-LEX-C258-CHINTA258-04, MW-LEX-C258-CHINTA258-05, MW-LEX-C259-SASU259-01, MW-LEX-C259-SASU259-02, MW-LEX-C259-SASU259-03, MW-LEX-C259-SASU259-04, MW-LEX-C259-SASU259-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C254-VAID254-01, MW-LEX-C254-VAID254-02, MW-LEX-C254-VAID254-03, MW-LEX-C254-VAID254-04, MW-LEX-C254-VAID254-05, MW-LEX-C255-TABIYAT255-01, MW-LEX-C255-TABIYAT255-02, MW-LEX-C255-TABIYAT255-03, MW-LEX-C255-TABIYAT255-04, MW-LEX-C255-TABIYAT255-05, MW-LEX-C256-DAR256-01, MW-LEX-C256-DAR256-02, MW-LEX-C256-DAR256-03, MW-LEX-C256-DAR256-04, MW-LEX-C256-DAR256-05, MW-LEX-C257-RIS257-01, MW-LEX-C257-RIS257-02, MW-LEX-C257-RIS257-03, MW-LEX-C257-RIS257-04, MW-LEX-C257-RIS257-05, MW-LEX-C258-CHINTA258-01, MW-LEX-C258-CHINTA258-02, MW-LEX-C258-CHINTA258-03, MW-LEX-C258-CHINTA258-04, MW-LEX-C258-CHINTA258-05, MW-LEX-C259-SASU259-01, MW-LEX-C259-SASU259-02, MW-LEX-C259-SASU259-03, MW-LEX-C259-SASU259-04, MW-LEX-C259-SASU259-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C254-vaid, MW-C254-goli, MW-C254-sujno, MW-C254-aram, MW-C254-alas, MW-C255-tabiyat, MW-C255-bigarno, MW-C255-sudharno-better, MW-C255-asu, MW-C255-kapno, MW-C256-darno, MW-C256-dukh, MW-C256-sukh, MW-C256-anand, MW-C256-umang, MW-C257-ris, MW-C257-rusno, MW-C257-laj, MW-C257-nisaso, MW-C257-olmo, MW-C258-chinta, MW-C258-bharoso, MW-C258-dhiraj, MW-C258-sahno, MW-C258-hiyo, MW-C259-sasu, MW-C259-susro, MW-C259-devar, MW-C259-nanad, MW-C259-dhani]
+---
+
+# Looking back: from At the Healer's to My Husband's Family
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C254-VAID254-01, MW-LEX-C254-VAID254-02] -->
+
+[PAUSE 3s] Say the Marwadi for a traditional healer and a pill.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C254-VAID254-01, MW-LEX-C254-VAID254-02, MW-LEX-C254-VAID254-03, MW-LEX-C254-VAID254-04, MW-LEX-C254-VAID254-05, MW-LEX-C255-TABIYAT255-01, MW-LEX-C255-TABIYAT255-02, MW-LEX-C255-TABIYAT255-03, MW-LEX-C255-TABIYAT255-04, MW-LEX-C255-TABIYAT255-05, MW-LEX-C256-DAR256-01, MW-LEX-C256-DAR256-02, MW-LEX-C256-DAR256-03, MW-LEX-C256-DAR256-04, MW-LEX-C256-DAR256-05, MW-LEX-C257-RIS257-01, MW-LEX-C257-RIS257-02, MW-LEX-C257-RIS257-03, MW-LEX-C257-RIS257-04, MW-LEX-C257-RIS257-05, MW-LEX-C258-CHINTA258-01, MW-LEX-C258-CHINTA258-02, MW-LEX-C258-CHINTA258-03, MW-LEX-C258-CHINTA258-04, MW-LEX-C258-CHINTA258-05, MW-LEX-C259-SASU259-01, MW-LEX-C259-SASU259-02, MW-LEX-C259-SASU259-03, MW-LEX-C259-SASU259-04, MW-LEX-C259-SASU259-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a traditional healer, a pill, to swell up, rest, sluggishness]
+- [YOU SAY: one's health, to get worse, to get better, a tear (from the eye), to tremble]
+- [YOU SAY: to be afraid, sorrow, contentment, joy, high spirits]
+- [YOU SAY: anger, to sulk, modesty, a sigh, a reproach]
+- [YOU SAY: worry, trust, patience, to bear (pain), the heart (as the seat of feeling)]
+- [YOU SAY: a mother-in-law, a father-in-law, a husband's younger brother, a husband's sister, a husband (in his wife's words)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C254-VAID254-01, MW-LEX-C254-VAID254-02, MW-LEX-C254-VAID254-03, MW-LEX-C254-VAID254-04, MW-LEX-C254-VAID254-05, MW-LEX-C255-TABIYAT255-01, MW-LEX-C255-TABIYAT255-02, MW-LEX-C255-TABIYAT255-03, MW-LEX-C255-TABIYAT255-04, MW-LEX-C255-TABIYAT255-05, MW-LEX-C256-DAR256-01, MW-LEX-C256-DAR256-02, MW-LEX-C256-DAR256-03, MW-LEX-C256-DAR256-04, MW-LEX-C256-DAR256-05, MW-LEX-C257-RIS257-01, MW-LEX-C257-RIS257-02, MW-LEX-C257-RIS257-03, MW-LEX-C257-RIS257-04, MW-LEX-C257-RIS257-05, MW-LEX-C258-CHINTA258-01, MW-LEX-C258-CHINTA258-02, MW-LEX-C258-CHINTA258-03, MW-LEX-C258-CHINTA258-04, MW-LEX-C258-CHINTA258-05, MW-LEX-C259-SASU259-01, MW-LEX-C259-SASU259-02, MW-LEX-C259-SASU259-03, MW-LEX-C259-SASU259-04, MW-LEX-C259-SASU259-05] -->
+<!-- hl-activity: {"id":"MW-R259-review-254-259-type","kind":"text","assesses":["MW-LEX-C254-VAID254-01"],"prompt":"Type the Marwadi for 'a traditional healer'.","answer":"वैद","accepted":["vaid"],"feedback":{"correct":"Right: वैद (vaid) is 'a traditional healer; a physician'.","incorrect":"'a traditional healer' is वैद (vaid)."},"response_seconds":10} -->
+
+[PAUSE 3s] A traditional healer? (**वैद**, *vaid*.) A pill? (**गोळी**, *goḷī*.) To swell up? (**सूजणो**, *sūjṇo*.) Rest? (**आराम**, *ārām*.) Sluggishness? (**आळस**, *āḷas*.) One's health? (**तबियत**, *tabiyat*.) To get worse? (**बिगड़णो**, *bigaṛṇo*.) To get better? (**सुधरणो**, *sudharṇo*.) A tear (from the eye)? (**आंसू**, *ā̃sū*.) To tremble? (**कांपणो**, *kā̃pṇo*.) To be afraid? (**डरणो**, *ḍarṇo*.) Sorrow? (**दुख**, *dukh*.) Contentment? (**सुख**, *sukh*.) Joy? (**आणंद**, *āṇand*.) High spirits? (**उमंग**, *umaṅg*.) Anger? (**रीस**, *rīs*.) To sulk? (**रूसणो**, *rūsṇo*.) Modesty? (**लाज**, *lāj*.) A sigh? (**निसासो**, *nisāso*.) A reproach? (**ओळमो**, *oḷmo*.) Worry? (**चिंता**, *chintā*.) Trust? (**भरोसो**, *bharoso*.) Patience? (**धीरज**, *dhīraj*.) To bear (pain)? (**सहणो**, *sahṇo*.) The heart (as the seat of feeling)? (**हियो**, *hiyo*.) A mother-in-law? (**सासू**, *sāsū*.) A father-in-law? (**सुसरो**, *susro*.) A husband's younger brother? (**देवर**, *devar*.) A husband's sister? (**नणद**, *naṇad*.) A husband (in his wife's words)? (**धणी**, *dhaṇī*.)
+`;export{t};

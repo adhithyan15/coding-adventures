@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R209-review-204-209
+spine_node: SPINE-SAY-WHAT-I-WANT
+sequence: 13970
+chapter: 209
+type: review
+headword: (dialogue)
+gloss: a review of the words from Out and About to Shopkeeper and Customer
+concept_tag: REVIEW
+prerequisites: [MW-C204-ghumno, MW-C204-bhir, MW-C204-maidan, MW-C204-kinaro, MW-C204-nakso, MW-C205-tikat, MW-C205-chukno, MW-C205-bharo, MW-C205-atakno, MW-C205-kandaktar, MW-C206-tijo, MW-C206-chautho, MW-C206-upar, MW-C206-par, MW-C206-algo, MW-C207-bagicho, MW-C207-kund, MW-C207-nako, MW-C207-phatak, MW-C207-buraj, MW-C208-aspatal, MW-C208-tahsil, MW-C208-karkhano, MW-C208-adalat, MW-C208-khulno, MW-C209-baniyo, MW-C209-gahak, MW-C209-seth, MW-C209-saudo, MW-C209-mangavno]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C204-OUT204-01, MW-LEX-C204-OUT204-02, MW-LEX-C204-OUT204-03, MW-LEX-C204-OUT204-04, MW-LEX-C204-OUT204-05, MW-LEX-C205-BUS205-01, MW-LEX-C205-BUS205-02, MW-LEX-C205-BUS205-03, MW-LEX-C205-BUS205-04, MW-LEX-C205-BUS205-05, MW-LEX-C206-LANE206-01, MW-LEX-C206-LANE206-02, MW-LEX-C206-LANE206-03, MW-LEX-C206-LANE206-04, MW-LEX-C206-LANE206-05, MW-LEX-C207-GARDEN207-01, MW-LEX-C207-GARDEN207-02, MW-LEX-C207-GARDEN207-03, MW-LEX-C207-GARDEN207-04, MW-LEX-C207-GARDEN207-05, MW-LEX-C208-OFFICES208-01, MW-LEX-C208-OFFICES208-02, MW-LEX-C208-OFFICES208-03, MW-LEX-C208-OFFICES208-04, MW-LEX-C208-OFFICES208-05, MW-LEX-C209-SHOP209-01, MW-LEX-C209-SHOP209-02, MW-LEX-C209-SHOP209-03, MW-LEX-C209-SHOP209-04, MW-LEX-C209-SHOP209-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C204-OUT204-01, MW-LEX-C204-OUT204-02, MW-LEX-C204-OUT204-03, MW-LEX-C204-OUT204-04, MW-LEX-C204-OUT204-05, MW-LEX-C205-BUS205-01, MW-LEX-C205-BUS205-02, MW-LEX-C205-BUS205-03, MW-LEX-C205-BUS205-04, MW-LEX-C205-BUS205-05, MW-LEX-C206-LANE206-01, MW-LEX-C206-LANE206-02, MW-LEX-C206-LANE206-03, MW-LEX-C206-LANE206-04, MW-LEX-C206-LANE206-05, MW-LEX-C207-GARDEN207-01, MW-LEX-C207-GARDEN207-02, MW-LEX-C207-GARDEN207-03, MW-LEX-C207-GARDEN207-04, MW-LEX-C207-GARDEN207-05, MW-LEX-C208-OFFICES208-01, MW-LEX-C208-OFFICES208-02, MW-LEX-C208-OFFICES208-03, MW-LEX-C208-OFFICES208-04, MW-LEX-C208-OFFICES208-05, MW-LEX-C209-SHOP209-01, MW-LEX-C209-SHOP209-02, MW-LEX-C209-SHOP209-03, MW-LEX-C209-SHOP209-04, MW-LEX-C209-SHOP209-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C204-ghumno, MW-C204-bhir, MW-C204-maidan, MW-C204-kinaro, MW-C204-nakso, MW-C205-tikat, MW-C205-chukno, MW-C205-bharo, MW-C205-atakno, MW-C205-kandaktar, MW-C206-tijo, MW-C206-chautho, MW-C206-upar, MW-C206-par, MW-C206-algo, MW-C207-bagicho, MW-C207-kund, MW-C207-nako, MW-C207-phatak, MW-C207-buraj, MW-C208-aspatal, MW-C208-tahsil, MW-C208-karkhano, MW-C208-adalat, MW-C208-khulno, MW-C209-baniyo, MW-C209-gahak, MW-C209-seth, MW-C209-saudo, MW-C209-mangavno]
+---
+
+# Looking back: from Out and About to Shopkeeper and Customer
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C204-OUT204-01, MW-LEX-C204-OUT204-02] -->
+
+[PAUSE 3s] Say the Marwadi for to stroll and a crowd.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C204-OUT204-01, MW-LEX-C204-OUT204-02, MW-LEX-C204-OUT204-03, MW-LEX-C204-OUT204-04, MW-LEX-C204-OUT204-05, MW-LEX-C205-BUS205-01, MW-LEX-C205-BUS205-02, MW-LEX-C205-BUS205-03, MW-LEX-C205-BUS205-04, MW-LEX-C205-BUS205-05, MW-LEX-C206-LANE206-01, MW-LEX-C206-LANE206-02, MW-LEX-C206-LANE206-03, MW-LEX-C206-LANE206-04, MW-LEX-C206-LANE206-05, MW-LEX-C207-GARDEN207-01, MW-LEX-C207-GARDEN207-02, MW-LEX-C207-GARDEN207-03, MW-LEX-C207-GARDEN207-04, MW-LEX-C207-GARDEN207-05, MW-LEX-C208-OFFICES208-01, MW-LEX-C208-OFFICES208-02, MW-LEX-C208-OFFICES208-03, MW-LEX-C208-OFFICES208-04, MW-LEX-C208-OFFICES208-05, MW-LEX-C209-SHOP209-01, MW-LEX-C209-SHOP209-02, MW-LEX-C209-SHOP209-03, MW-LEX-C209-SHOP209-04, MW-LEX-C209-SHOP209-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to stroll, a crowd, an open ground, an edge, a map]
+- [YOU SAY: a ticket, to miss, a fare, to get stuck, a bus conductor]
+- [YOU SAY: third, fourth, upstairs, on the other side, separate]
+- [YOU SAY: a garden, a water tank, a checkpoint, a big gate, a tower]
+- [YOU SAY: a hospital, a sub-district office, a factory, a court of law, to come open]
+- [YOU SAY: a trader, a customer, a merchant, a deal, to order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C204-OUT204-01, MW-LEX-C204-OUT204-02, MW-LEX-C204-OUT204-03, MW-LEX-C204-OUT204-04, MW-LEX-C204-OUT204-05, MW-LEX-C205-BUS205-01, MW-LEX-C205-BUS205-02, MW-LEX-C205-BUS205-03, MW-LEX-C205-BUS205-04, MW-LEX-C205-BUS205-05, MW-LEX-C206-LANE206-01, MW-LEX-C206-LANE206-02, MW-LEX-C206-LANE206-03, MW-LEX-C206-LANE206-04, MW-LEX-C206-LANE206-05, MW-LEX-C207-GARDEN207-01, MW-LEX-C207-GARDEN207-02, MW-LEX-C207-GARDEN207-03, MW-LEX-C207-GARDEN207-04, MW-LEX-C207-GARDEN207-05, MW-LEX-C208-OFFICES208-01, MW-LEX-C208-OFFICES208-02, MW-LEX-C208-OFFICES208-03, MW-LEX-C208-OFFICES208-04, MW-LEX-C208-OFFICES208-05, MW-LEX-C209-SHOP209-01, MW-LEX-C209-SHOP209-02, MW-LEX-C209-SHOP209-03, MW-LEX-C209-SHOP209-04, MW-LEX-C209-SHOP209-05] -->
+<!-- hl-activity: {"id":"MW-R209-review-204-209-type","kind":"text","assesses":["MW-LEX-C204-OUT204-01"],"prompt":"Type the Marwadi for 'to stroll'.","answer":"घूमणो","accepted":["ghūmṇo"],"feedback":{"correct":"Right: घूमणो (ghūmṇo) is 'to stroll; to go round'.","incorrect":"'to stroll' is घूमणो (ghūmṇo)."},"response_seconds":10} -->
+
+[PAUSE 3s] To stroll? (**घूमणो**, *ghūmṇo*.) A crowd? (**भीड़**, *bhīṛ*.) An open ground? (**मैदान**, *maidān*.) An edge? (**किनारो**, *kināro*.) A map? (**नक्सो**, *nakso*.) A ticket? (**टिकट**, *ṭikaṭ*.) To miss? (**चूकणो**, *chūkṇo*.) A fare? (**भाड़ो**, *bhāṛo*.) To get stuck? (**अटकणो**, *aṭakṇo*.) A bus conductor? (**कंडक्टर**, *kaṇḍakṭar*.) Third? (**तीजो**, *tījo*.) Fourth? (**चौथो**, *chautho*.) Upstairs? (**ऊपर**, *ūpar*.) On the other side? (**पार**, *pār*.) Separate? (**अळगो**, *aḷgo*.) A garden? (**बगीचो**, *bagīcho*.) A water tank? (**कुंड**, *kuṇḍ*.) A checkpoint? (**नाको**, *nāko*.) A big gate? (**फाटक**, *phāṭak*.) A tower? (**बुरज**, *buraj*.) A hospital? (**अस्पताल**, *aspatāl*.) A sub-district office? (**तहसील**, *tahsīl*.) A factory? (**कारखानो**, *kārkhāno*.) A court of law? (**अदालत**, *adālat*.) To come open? (**खुलणो**, *khulṇo*.) A trader? (**बाणियो**, *bāṇiyo*.) A customer? (**गाहक**, *gāhak*.) A merchant? (**सेठ**, *seṭh*.) A deal? (**सौदो**, *saudo*.) To order? (**मंगावणो**, *maṅgāvṇo*.)
+`;export{t};

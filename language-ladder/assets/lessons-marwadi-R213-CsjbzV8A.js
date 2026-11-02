@@ -1,0 +1,106 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R215-review-210-215
+spine_node: SPINE-SAY-WHAT-I-WANT
+sequence: 14280
+chapter: 215
+type: review
+headword: (dialogue)
+gloss: a review of the words from Choosing the Right One to Wrapping Up
+concept_tag: REVIEW
+prerequisites: [MW-C210-parakhno, MW-C210-bhat, MW-C210-namuno, MW-C210-nakli, MW-C210-chunno, MW-C211-map, MW-C211-napno, MW-C211-moklo, MW-C211-tang, MW-C211-samavno, MW-C212-sava, MW-C212-dedh, MW-C212-adhai, MW-C212-duno, MW-C212-chhatak, MW-C213-mol, MW-C213-ghatno, MW-C213-ghatavno, MW-C213-muphat, MW-C213-bikno, MW-C214-pherno, MW-C214-sarikho, MW-C214-thaili, MW-C214-palatno, MW-C214-ladhno, MW-C215-lapetno, MW-C215-kagad, MW-C215-potli, MW-C215-ochho, MW-C215-khutno]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C210-CHOOSE210-01, MW-LEX-C210-CHOOSE210-02, MW-LEX-C210-CHOOSE210-03, MW-LEX-C210-CHOOSE210-04, MW-LEX-C210-CHOOSE210-05, MW-LEX-C211-SIZE211-01, MW-LEX-C211-SIZE211-02, MW-LEX-C211-SIZE211-03, MW-LEX-C211-SIZE211-04, MW-LEX-C211-SIZE211-05, MW-LEX-C212-AMOUNT212-01, MW-LEX-C212-AMOUNT212-02, MW-LEX-C212-AMOUNT212-03, MW-LEX-C212-AMOUNT212-04, MW-LEX-C212-AMOUNT212-05, MW-LEX-C213-PRICE213-01, MW-LEX-C213-PRICE213-02, MW-LEX-C213-PRICE213-03, MW-LEX-C213-PRICE213-04, MW-LEX-C213-PRICE213-05, MW-LEX-C214-RETURN214-01, MW-LEX-C214-RETURN214-02, MW-LEX-C214-RETURN214-03, MW-LEX-C214-RETURN214-04, MW-LEX-C214-RETURN214-05, MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02, MW-LEX-C215-WRAP215-03, MW-LEX-C215-WRAP215-04, MW-LEX-C215-WRAP215-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C210-CHOOSE210-01, MW-LEX-C210-CHOOSE210-02, MW-LEX-C210-CHOOSE210-03, MW-LEX-C210-CHOOSE210-04, MW-LEX-C210-CHOOSE210-05, MW-LEX-C211-SIZE211-01, MW-LEX-C211-SIZE211-02, MW-LEX-C211-SIZE211-03, MW-LEX-C211-SIZE211-04, MW-LEX-C211-SIZE211-05, MW-LEX-C212-AMOUNT212-01, MW-LEX-C212-AMOUNT212-02, MW-LEX-C212-AMOUNT212-03, MW-LEX-C212-AMOUNT212-04, MW-LEX-C212-AMOUNT212-05, MW-LEX-C213-PRICE213-01, MW-LEX-C213-PRICE213-02, MW-LEX-C213-PRICE213-03, MW-LEX-C213-PRICE213-04, MW-LEX-C213-PRICE213-05, MW-LEX-C214-RETURN214-01, MW-LEX-C214-RETURN214-02, MW-LEX-C214-RETURN214-03, MW-LEX-C214-RETURN214-04, MW-LEX-C214-RETURN214-05, MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02, MW-LEX-C215-WRAP215-03, MW-LEX-C215-WRAP215-04, MW-LEX-C215-WRAP215-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C210-parakhno, MW-C210-bhat, MW-C210-namuno, MW-C210-nakli, MW-C210-chunno, MW-C211-map, MW-C211-napno, MW-C211-moklo, MW-C211-tang, MW-C211-samavno, MW-C212-sava, MW-C212-dedh, MW-C212-adhai, MW-C212-duno, MW-C212-chhatak, MW-C213-mol, MW-C213-ghatno, MW-C213-ghatavno, MW-C213-muphat, MW-C213-bikno, MW-C214-pherno, MW-C214-sarikho, MW-C214-thaili, MW-C214-palatno, MW-C214-ladhno, MW-C215-lapetno, MW-C215-kagad, MW-C215-potli, MW-C215-ochho, MW-C215-khutno]
+---
+
+# Looking back: from Choosing the Right One to Wrapping Up
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C210-CHOOSE210-01, MW-LEX-C210-CHOOSE210-02] -->
+
+[PAUSE 3s] Say the Marwadi for to test and a sort.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C210-CHOOSE210-01, MW-LEX-C210-CHOOSE210-02, MW-LEX-C210-CHOOSE210-03, MW-LEX-C210-CHOOSE210-04, MW-LEX-C210-CHOOSE210-05, MW-LEX-C211-SIZE211-01, MW-LEX-C211-SIZE211-02, MW-LEX-C211-SIZE211-03, MW-LEX-C211-SIZE211-04, MW-LEX-C211-SIZE211-05, MW-LEX-C212-AMOUNT212-01, MW-LEX-C212-AMOUNT212-02, MW-LEX-C212-AMOUNT212-03, MW-LEX-C212-AMOUNT212-04, MW-LEX-C212-AMOUNT212-05, MW-LEX-C213-PRICE213-01, MW-LEX-C213-PRICE213-02, MW-LEX-C213-PRICE213-03, MW-LEX-C213-PRICE213-04, MW-LEX-C213-PRICE213-05, MW-LEX-C214-RETURN214-01, MW-LEX-C214-RETURN214-02, MW-LEX-C214-RETURN214-03, MW-LEX-C214-RETURN214-04, MW-LEX-C214-RETURN214-05, MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02, MW-LEX-C215-WRAP215-03, MW-LEX-C215-WRAP215-04, MW-LEX-C215-WRAP215-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to test, a sort, a sample, fake, to pick out]
+- [YOU SAY: a size, to measure, roomy, tight, to fit]
+- [YOU SAY: plus a quarter, one and a half, two and a half, double, a chhatak]
+- [YOU SAY: the cost, to decrease, to lower, free of charge, to be sold]
+- [YOU SAY: to give back, alike, a small bag, to flip over, to turn up]
+- [YOU SAY: to wrap, paper, a small bundle, too small, to run out]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C210-CHOOSE210-01, MW-LEX-C210-CHOOSE210-02, MW-LEX-C210-CHOOSE210-03, MW-LEX-C210-CHOOSE210-04, MW-LEX-C210-CHOOSE210-05, MW-LEX-C211-SIZE211-01, MW-LEX-C211-SIZE211-02, MW-LEX-C211-SIZE211-03, MW-LEX-C211-SIZE211-04, MW-LEX-C211-SIZE211-05, MW-LEX-C212-AMOUNT212-01, MW-LEX-C212-AMOUNT212-02, MW-LEX-C212-AMOUNT212-03, MW-LEX-C212-AMOUNT212-04, MW-LEX-C212-AMOUNT212-05, MW-LEX-C213-PRICE213-01, MW-LEX-C213-PRICE213-02, MW-LEX-C213-PRICE213-03, MW-LEX-C213-PRICE213-04, MW-LEX-C213-PRICE213-05, MW-LEX-C214-RETURN214-01, MW-LEX-C214-RETURN214-02, MW-LEX-C214-RETURN214-03, MW-LEX-C214-RETURN214-04, MW-LEX-C214-RETURN214-05, MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02, MW-LEX-C215-WRAP215-03, MW-LEX-C215-WRAP215-04, MW-LEX-C215-WRAP215-05] -->
+<!-- hl-activity: {"id":"MW-R215-review-210-215-type","kind":"text","assesses":["MW-LEX-C210-CHOOSE210-01"],"prompt":"Type the Marwadi for 'to test'.","answer":"परखणो","accepted":["parakhṇo"],"feedback":{"correct":"Right: परखणो (parakhṇo) is 'to test; to check'.","incorrect":"'to test' is परखणो (parakhṇo)."},"response_seconds":10} -->
+
+[PAUSE 3s] To test? (**परखणो**, *parakhṇo*.) A sort? (**भांत**, *bhā̃t*.) A sample? (**नमूनो**, *namūno*.) Fake? (**नकली**, *naklī*.) To pick out? (**चुणणो**, *chuṇṇo*.) A size? (**माप**, *māp*.) To measure? (**नापणो**, *nāpṇo*.) Roomy? (**मोकळो**, *mokḷo*.) Tight? (**तंग**, *taṅg*.) To fit? (**समावणो**, *samāvṇo*.) Plus a quarter? (**सवा**, *savā*.) One and a half? (**डेढ**, *ḍeḍh*.) Two and a half? (**अढाई**, *aḍhāī*.) Double? (**दूणो**, *dūṇo*.) A chhatak? (**छटांक**, *chhaṭā̃k*.) The cost? (**मोल**, *mol*.) To decrease? (**घटणो**, *ghaṭṇo*.) To lower? (**घटावणो**, *ghaṭāvṇo*.) Free of charge? (**मुफत**, *muphat*.) To be sold? (**बिकणो**, *bikṇo*.) To give back? (**फेरणो**, *pherṇo*.) Alike? (**सारीखो**, *sārīkho*.) A small bag? (**थैली**, *thailī*.) To flip over? (**पलटणो**, *palaṭṇo*.) To turn up? (**लाधणो**, *lādhṇo*.) To wrap? (**लपेटणो**, *lapeṭṇo*.) Paper? (**कागद**, *kāgad*.) A small bundle? (**पोटली**, *poṭlī*.) Too small? (**ओछो**, *ochho*.) To run out? (**खुटणो**, *khuṭṇo*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R215-review-final-215
+spine_node: SPINE-SAY-WHAT-I-WANT
+sequence: 14290
+chapter: 215
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [MW-C215-lapetno, MW-C215-kagad, MW-C215-potli, MW-C215-ochho, MW-C215-khutno]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02, MW-LEX-C215-WRAP215-03, MW-LEX-C215-WRAP215-04, MW-LEX-C215-WRAP215-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02, MW-LEX-C215-WRAP215-03, MW-LEX-C215-WRAP215-04, MW-LEX-C215-WRAP215-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C215-lapetno, MW-C215-kagad, MW-C215-potli, MW-C215-ochho, MW-C215-khutno]
+---
+
+# Wrapping Up — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02] -->
+
+[PAUSE 3s] Say the Marwadi for to wrap and paper.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02, MW-LEX-C215-WRAP215-03, MW-LEX-C215-WRAP215-04, MW-LEX-C215-WRAP215-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to wrap, paper, a small bundle, too small, to run out]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C215-WRAP215-01, MW-LEX-C215-WRAP215-02, MW-LEX-C215-WRAP215-03, MW-LEX-C215-WRAP215-04, MW-LEX-C215-WRAP215-05] -->
+<!-- hl-activity: {"id":"MW-R215-review-final-215-type","kind":"text","assesses":["MW-LEX-C215-WRAP215-01"],"prompt":"Type the Marwadi for 'to wrap'.","answer":"लपेटणो","accepted":["lapeṭṇo"],"feedback":{"correct":"Right: लपेटणो (lapeṭṇo) is 'to wrap'.","incorrect":"'to wrap' is लपेटणो (lapeṭṇo)."},"response_seconds":10} -->
+
+[PAUSE 3s] To wrap? (**लपेटणो**, *lapeṭṇo*.) Paper? (**कागद**, *kāgad*.) A small bundle? (**पोटली**, *poṭlī*.) Too small? (**ओछो**, *ochho*.) To run out? (**खुटणो**, *khuṭṇo*.)
+`;export{t as n,r as t};

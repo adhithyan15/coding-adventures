@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R197-review-191-197
+spine_node: SPINE-READ-PRACTICAL-TEXTS
+sequence: 13350
+chapter: 197
+type: review
+headword: (dialogue)
+gloss: a review of the words from A Notice on the Door to A Call and a Message
+concept_tag: REVIEW
+prerequisites: [MW-C191-suchna, MW-C191-niyam, MW-C191-mana, MW-C191-savdhan, MW-C191-manno, MW-C192-khatro, MW-C192-dhire, MW-C192-kharo, MW-C192-chhapno, MW-C192-sudharno, MW-C193-rupiyo, MW-C193-sikko, MW-C193-not, MW-C193-nagad, MW-C193-chukavno, MW-C194-kamavno, MW-C194-kharchno, MW-C194-tankha, MW-C194-napho, MW-C194-udhar, MW-C195-baink, MW-C195-khato, MW-C195-karaj, MW-C195-baki, MW-C195-bachno, MW-C196-dak, MW-C196-liphapho, MW-C196-parsal, MW-C196-thikano, MW-C196-mokalno, MW-C197-phon, MW-C197-nambar, MW-C197-bajno, MW-C197-sandeso, MW-C197-mitavno]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C191-NOTICE191-01, MW-LEX-C191-NOTICE191-02, MW-LEX-C191-NOTICE191-03, MW-LEX-C191-NOTICE191-04, MW-LEX-C191-NOTICE191-05, MW-LEX-C192-BOARD192-01, MW-LEX-C192-BOARD192-02, MW-LEX-C192-BOARD192-03, MW-LEX-C192-BOARD192-04, MW-LEX-C192-BOARD192-05, MW-LEX-C193-MONEY193-01, MW-LEX-C193-MONEY193-02, MW-LEX-C193-MONEY193-03, MW-LEX-C193-MONEY193-04, MW-LEX-C193-MONEY193-05, MW-LEX-C194-EARN194-01, MW-LEX-C194-EARN194-02, MW-LEX-C194-EARN194-03, MW-LEX-C194-EARN194-04, MW-LEX-C194-EARN194-05, MW-LEX-C195-BANK195-01, MW-LEX-C195-BANK195-02, MW-LEX-C195-BANK195-03, MW-LEX-C195-BANK195-04, MW-LEX-C195-BANK195-05, MW-LEX-C196-POST196-01, MW-LEX-C196-POST196-02, MW-LEX-C196-POST196-03, MW-LEX-C196-POST196-04, MW-LEX-C196-POST196-05, MW-LEX-C197-PHONE197-01, MW-LEX-C197-PHONE197-02, MW-LEX-C197-PHONE197-03, MW-LEX-C197-PHONE197-04, MW-LEX-C197-PHONE197-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C191-NOTICE191-01, MW-LEX-C191-NOTICE191-02, MW-LEX-C191-NOTICE191-03, MW-LEX-C191-NOTICE191-04, MW-LEX-C191-NOTICE191-05, MW-LEX-C192-BOARD192-01, MW-LEX-C192-BOARD192-02, MW-LEX-C192-BOARD192-03, MW-LEX-C192-BOARD192-04, MW-LEX-C192-BOARD192-05, MW-LEX-C193-MONEY193-01, MW-LEX-C193-MONEY193-02, MW-LEX-C193-MONEY193-03, MW-LEX-C193-MONEY193-04, MW-LEX-C193-MONEY193-05, MW-LEX-C194-EARN194-01, MW-LEX-C194-EARN194-02, MW-LEX-C194-EARN194-03, MW-LEX-C194-EARN194-04, MW-LEX-C194-EARN194-05, MW-LEX-C195-BANK195-01, MW-LEX-C195-BANK195-02, MW-LEX-C195-BANK195-03, MW-LEX-C195-BANK195-04, MW-LEX-C195-BANK195-05, MW-LEX-C196-POST196-01, MW-LEX-C196-POST196-02, MW-LEX-C196-POST196-03, MW-LEX-C196-POST196-04, MW-LEX-C196-POST196-05, MW-LEX-C197-PHONE197-01, MW-LEX-C197-PHONE197-02, MW-LEX-C197-PHONE197-03, MW-LEX-C197-PHONE197-04, MW-LEX-C197-PHONE197-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C191-suchna, MW-C191-niyam, MW-C191-mana, MW-C191-savdhan, MW-C191-manno, MW-C192-khatro, MW-C192-dhire, MW-C192-kharo, MW-C192-chhapno, MW-C192-sudharno, MW-C193-rupiyo, MW-C193-sikko, MW-C193-not, MW-C193-nagad, MW-C193-chukavno, MW-C194-kamavno, MW-C194-kharchno, MW-C194-tankha, MW-C194-napho, MW-C194-udhar, MW-C195-baink, MW-C195-khato, MW-C195-karaj, MW-C195-baki, MW-C195-bachno, MW-C196-dak, MW-C196-liphapho, MW-C196-parsal, MW-C196-thikano, MW-C196-mokalno, MW-C197-phon, MW-C197-nambar, MW-C197-bajno, MW-C197-sandeso, MW-C197-mitavno]
+---
+
+# Looking back: from A Notice on the Door to A Call and a Message
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C191-NOTICE191-01, MW-LEX-C191-NOTICE191-02] -->
+
+[PAUSE 3s] Say the Marwadi for a notice and a rule.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C191-NOTICE191-01, MW-LEX-C191-NOTICE191-02, MW-LEX-C191-NOTICE191-03, MW-LEX-C191-NOTICE191-04, MW-LEX-C191-NOTICE191-05, MW-LEX-C192-BOARD192-01, MW-LEX-C192-BOARD192-02, MW-LEX-C192-BOARD192-03, MW-LEX-C192-BOARD192-04, MW-LEX-C192-BOARD192-05, MW-LEX-C193-MONEY193-01, MW-LEX-C193-MONEY193-02, MW-LEX-C193-MONEY193-03, MW-LEX-C193-MONEY193-04, MW-LEX-C193-MONEY193-05, MW-LEX-C194-EARN194-01, MW-LEX-C194-EARN194-02, MW-LEX-C194-EARN194-03, MW-LEX-C194-EARN194-04, MW-LEX-C194-EARN194-05, MW-LEX-C195-BANK195-01, MW-LEX-C195-BANK195-02, MW-LEX-C195-BANK195-03, MW-LEX-C195-BANK195-04, MW-LEX-C195-BANK195-05, MW-LEX-C196-POST196-01, MW-LEX-C196-POST196-02, MW-LEX-C196-POST196-03, MW-LEX-C196-POST196-04, MW-LEX-C196-POST196-05, MW-LEX-C197-PHONE197-01, MW-LEX-C197-PHONE197-02, MW-LEX-C197-PHONE197-03, MW-LEX-C197-PHONE197-04, MW-LEX-C197-PHONE197-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a notice, a rule, forbidden, careful, to obey]
+- [YOU SAY: danger, slowly, a pit, to print, to mend]
+- [YOU SAY: a rupee, a coin, a banknote, in cash, to pay]
+- [YOU SAY: to earn, to spend, a salary, a profit, credit]
+- [YOU SAY: a bank, a bank account, a debt, remaining, to be left over]
+- [YOU SAY: the post, an envelope, a parcel, an address, to send off]
+- [YOU SAY: a phone, a phone number, to ring, a message, to rub out]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C191-NOTICE191-01, MW-LEX-C191-NOTICE191-02, MW-LEX-C191-NOTICE191-03, MW-LEX-C191-NOTICE191-04, MW-LEX-C191-NOTICE191-05, MW-LEX-C192-BOARD192-01, MW-LEX-C192-BOARD192-02, MW-LEX-C192-BOARD192-03, MW-LEX-C192-BOARD192-04, MW-LEX-C192-BOARD192-05, MW-LEX-C193-MONEY193-01, MW-LEX-C193-MONEY193-02, MW-LEX-C193-MONEY193-03, MW-LEX-C193-MONEY193-04, MW-LEX-C193-MONEY193-05, MW-LEX-C194-EARN194-01, MW-LEX-C194-EARN194-02, MW-LEX-C194-EARN194-03, MW-LEX-C194-EARN194-04, MW-LEX-C194-EARN194-05, MW-LEX-C195-BANK195-01, MW-LEX-C195-BANK195-02, MW-LEX-C195-BANK195-03, MW-LEX-C195-BANK195-04, MW-LEX-C195-BANK195-05, MW-LEX-C196-POST196-01, MW-LEX-C196-POST196-02, MW-LEX-C196-POST196-03, MW-LEX-C196-POST196-04, MW-LEX-C196-POST196-05, MW-LEX-C197-PHONE197-01, MW-LEX-C197-PHONE197-02, MW-LEX-C197-PHONE197-03, MW-LEX-C197-PHONE197-04, MW-LEX-C197-PHONE197-05] -->
+<!-- hl-activity: {"id":"MW-R197-review-191-197-type","kind":"text","assesses":["MW-LEX-C191-NOTICE191-01"],"prompt":"Type the Marwadi for 'a notice'.","answer":"सूचना","accepted":["sūchnā"],"feedback":{"correct":"Right: सूचना (sūchnā) is 'a notice'.","incorrect":"'a notice' is सूचना (sūchnā)."},"response_seconds":10} -->
+
+[PAUSE 3s] A notice? (**सूचना**, *sūchnā*.) A rule? (**नियम**, *niyam*.) Forbidden? (**मना**, *manā*.) Careful? (**सावधान**, *sāvdhān*.) To obey? (**मानणो**, *mānṇo*.) Danger? (**खतरो**, *khatro*.) Slowly? (**धीरे**, *dhīre*.) A pit? (**खाड़ो**, *khāṛo*.) To print? (**छापणो**, *chhāpṇo*.) To mend? (**सुधारणो**, *sudhārṇo*.) A rupee? (**रुपियो**, *rupiyo*.) A coin? (**सिक्को**, *sikko*.) A banknote? (**नोट**, *noṭ*.) In cash? (**नगद**, *nagad*.) To pay? (**चुकावणो**, *chukāvṇo*.) To earn? (**कमावणो**, *kamāvṇo*.) To spend? (**खरचणो**, *kharchṇo*.) A salary? (**तनखा**, *tankhā*.) A profit? (**नफो**, *napho*.) Credit? (**उधार**, *udhār*.) A bank? (**बैंक**, *baiṅk*.) A bank account? (**खातो**, *khāto*.) A debt? (**करज**, *karaj*.) Remaining? (**बाकी**, *bākī*.) To be left over? (**बचणो**, *bachṇo*.) The post? (**डाक**, *ḍāk*.) An envelope? (**लिफाफो**, *liphāpho*.) A parcel? (**पारसल**, *pārsal*.) An address? (**ठिकाणो**, *ṭhikāṇo*.) To send off? (**मोकलणो**, *mokalṇo*.) A phone? (**फोन**, *phon*.) A phone number? (**नंबर**, *nambar*.) To ring? (**बाजणो**, *bājṇo*.) A message? (**संदेसो**, *sandeso*.) To rub out? (**मिटावणो**, *miṭāvṇo*.)
+`;export{t};
