@@ -1,5 +1,22 @@
 # Changelog — twig-vm
 
+## Unreleased — #18474: the compiler's register budget is the frame limit
+
+### Tests
+
+- `compiler_register_budget_is_the_frame_limit` pins
+  `twig_ir_compiler::MAX_REGISTERS_PER_FUNCTION` to
+  `MAX_REGISTERS_PER_FRAME` (twig-ir-compiler cannot depend on this crate,
+  so it writes the number down; this test keeps the two equal), and the
+  compiler's module instruction budget to at most
+  `MAX_PROFILED_INSTRUCTION_SLOTS`.
+- `a_main_of_exactly_the_frame_limit_runs`: 65,536 top-level `1`s compile
+  and run on the dispatcher.
+- `a_main_one_register_over_the_frame_is_a_compile_error`: 65,537 are
+  `TwigRunError::Compile` at 65537:1. Before #18474 they compiled and then
+  failed in the dispatcher. Both large tests are skipped under Miri (safe
+  Rust only, 2¹⁶ parse and dispatch steps).
+
 ## Unreleased — #18453: `str_cmp`, `str_slice`; `and` / `or` inside a lambda
 
 ### Fixed

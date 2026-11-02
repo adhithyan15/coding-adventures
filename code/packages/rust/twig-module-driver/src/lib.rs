@@ -398,6 +398,15 @@ pub fn compile_module_tree(
             path: current_path.clone(),
             error: e,
         };
+        // The compiler's source-bytes budget (#18474).  `compile_source`
+        // checks it before lexing; this driver parses each file itself and
+        // hands the compiler a tree, so it checks here, before the parser.
+        twig_ir_compiler::budgets::check_source(&source).map_err(|error| {
+            ModuleDriverError::Compile {
+                path: current_path.clone(),
+                error,
+            }
+        })?;
         let cst = twig_parser::parse_to_ast(&source).map_err(parse_error)?;
         let program = twig_parser::extract_program(&cst).map_err(parse_error)?;
         parse_trees.insert(current_path.clone(), cst);
@@ -1130,6 +1139,31 @@ mod tests {
         let root = write_temp(&dir, "main.tw", "(+ 1 2)");
         let m = compile_module_tree(&root, &[]).unwrap();
         assert_eq!(m.entry_point.as_deref(), Some("main"));
+    }
+
+    /// Every file of the graph is held to the compiler's source-bytes
+    /// budget (#18474), as `compile_source` holds a string to it: a file
+    /// of exactly `MAX_SOURCE_BYTES` compiles, one byte more is a
+    /// `Compile` error naming the file.  Before #18474 the driver parsed
+    /// a file of any size.
+    #[test]
+    fn source_bytes_budget_applies_to_every_file() {
+        use twig_ir_compiler::MAX_SOURCE_BYTES;
+        let dir = make_tempdir("source_bytes_budget");
+        // A comment fills the budget; `1` keeps the program non-empty.
+        let program = |len: usize| format!(";{}\n1", "a".repeat(len - 3));
+
+        let root = write_temp(&dir, "at.tw", &program(MAX_SOURCE_BYTES));
+        compile_module_tree(&root, &[]).expect("a file of exactly the budget compiles");
+
+        let root = write_temp(&dir, "over.tw", &program(MAX_SOURCE_BYTES + 1));
+        match compile_module_tree(&root, &[]) {
+            Err(ModuleDriverError::Compile { path, error }) => {
+                assert!(path.ends_with("over.tw"), "{path:?}");
+                assert!(error.message.starts_with("source bytes exceeds"), "{error}");
+            }
+            other => panic!("expected a source-bytes Compile error, got {other:?}"),
+        }
     }
 
     #[test]

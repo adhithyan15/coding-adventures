@@ -383,17 +383,28 @@ fn imported_globals_reach_the_type_gate() {
 /// A wide `(and 1 1 … 1)` used to recurse once per argument inside the
 /// compiler — argument count is bounded by neither the parser's nesting
 /// limit nor `MAX_COMPILE_DEPTH` — and overflowed the stack at about
-/// 20,000 arguments.  The lowering is now a loop: 50,000 arguments compile
-/// on a 1 MiB thread.
+/// 20,000 arguments.  The lowering is now a loop: 21,000 arguments compile
+/// on a quarter of that stack, a 256 KiB thread.
+///
+/// Each argument costs `main` three registers for `and` and two for `or`,
+/// so 50,000 arguments (this test's width until #18474) need 100,000 to
+/// 150,000 — more than a VM frame holds.  That program used to compile and
+/// fail at run time; now the register budget refuses it, after lowering it
+/// in the same constant stack.  21,000 is the widest round `and` under the
+/// budget (63,000 registers).
 #[test]
 fn wide_and_or_compile_in_constant_stack() {
     std::thread::Builder::new()
-        .stack_size(1 << 20)
+        .stack_size(1 << 18)
         .spawn(|| {
             for form in ["and", "or"] {
-                let src = format!("({form}{})", " 1".repeat(50_000));
+                let src = format!("({form}{})", " 1".repeat(21_000));
                 twig_ir_compiler::compile_source(&src, "m")
-                    .unwrap_or_else(|e| panic!("({form} …×50000): {e:?}"));
+                    .unwrap_or_else(|e| panic!("({form} …×21000): {e:?}"));
+                let src = format!("({form}{})", " 1".repeat(50_000));
+                let e = twig_ir_compiler::compile_source(&src, "m")
+                    .expect_err("about 100,000 registers is past the frame limit");
+                assert!(e.message.starts_with("registers per function exceeds"), "{e}");
             }
         })
         .unwrap()

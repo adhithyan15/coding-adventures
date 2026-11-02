@@ -1,5 +1,23 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18474: every file is held to the compiler's source budget
+
+### Fixed
+
+- **A module file of any size was parsed.** `compile_source` now refuses
+  Twig source over `twig_ir_compiler::MAX_SOURCE_BYTES` (1 MiB) before
+  lexing, but this driver parses each file itself and hands the compiler a
+  tree, so it skipped that check. It now calls
+  `twig_ir_compiler::budgets::check_source` before the parser and reports a
+  breach as `ModuleDriverError::Compile` naming the file. The compiler's
+  tree and function budgets already applied, through
+  `compile_ast_with_externs_and_globals`.
+
+### Tests
+
+- `source_bytes_budget_applies_to_every_file`: a file of exactly 1 MiB
+  compiles; one byte more is a `Compile` error naming it.
+
 ## Unreleased — #18438: an imported function shadows a builtin
 
 ### Tests

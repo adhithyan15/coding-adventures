@@ -320,6 +320,32 @@ the prefix changes no symbol.
 `RESERVED_PREFIXES`, `RESERVED_NAMESPACE` and `reserved_prefix` are exported
 for tools that want the same rule.
 
+## Budgets
+
+Twig source is untrusted wherever a user hands `twig-vm` a file, so the
+compiler bounds what a program can make it do and refuses what its VMs
+cannot run, before anything reaches a backend (#18474, `src/budgets.rs`):
+
+| Budget | Limit | Why this number |
+|--------|-------|-----------------|
+| `MAX_SOURCE_BYTES` | 1 MiB | the trusted ceiling of the Python and Ruby frontends; the repo's largest Twig file is 29 KB |
+| `MAX_CST_ITEMS` | 2²⁰ nodes + tokens | ordinary Twig is ~0.6 items per byte, so 1 MiB of it fits (the repo's 29 KB `cst-parser.tw` alone is 17,142 items, over the 16,384 other pilots use) |
+| tree depth | 256 | unchanged: `check_cst`, `MAX_COMPILE_DEPTH` |
+| `MAX_REGISTERS_PER_FUNCTION` | 2¹⁶ | the frame limit of twig-vm and of vm-core; counted as vm-core counts (params + distinct non-param dests) |
+| `MAX_IIR_INSTRUCTIONS_PER_FUNCTION` | 2¹⁸ | four instructions per register at the register limit |
+| `MAX_IIR_INSTRUCTIONS_PER_MODULE` | 2²⁰ | twig-vm's profile-slot cap; stops a record's quadratic accessor expansion |
+
+A breach is a `TwigCompileError` naming the budget, the function, and the
+source of the instruction that went over:
+
+```text
+65,537 lines of `1`             → TwigCompileError at 65537:1: registers per function exceeds the limit of 65536 in function `main`
+(record P (f0 : int) … (f1444 : int))
+                                → IIR instructions per module exceeds the limit of 1048576 in function `p-f1443`
+```
+
+Every program under the budgets compiles to the same IIR as before.
+
 ## Usage
 
 ```rust
@@ -374,7 +400,8 @@ tests verifying that annotations survive the parse → compile → IIR pipeline.
 `tests/cst_walk.rs` pins the LANG84 contract: a source check that no compiler
 file names the typed AST, the `compile_ast*` entry points, `check_cst` errors
 matching the extractor's on hand-built malformed trees (including the depth
-guard), and the sugar / type-gate behaviour.
+guard), and the sugar / type-gate behaviour. `tests/budgets.rs` runs every
+budget exactly at its limit and one past it.
 
 ## Where it fits in the stack
 

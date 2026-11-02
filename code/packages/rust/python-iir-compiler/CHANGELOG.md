@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased — #18475: the float pilot gets the vm-core register backstop
+
+### Fixed
+
+- **The LANG79 float pilot (`compile_source`, `compile_ast`) never
+  checked its module against vm-core's frame limit.** The release path
+  puts every function through `VMFrame::check_register_limit`
+  (`check_frames`, #18419); the pilot did not. Its 16,384-item tree cap
+  keeps it far below 65,536 registers today, but only because two numbers
+  in two places happen to agree. `compile_ast` now ends with
+  `check_pilot_frames`, the same backstop, so a module the pilot returns is
+  one vm-core will load, whatever the caps become. One linear pass.
+
+### Tests
+
+- `pilot_frames_are_held_to_the_vm_core_frame_limit`: a `main` of exactly
+  65,536 registers passes the backstop, 65,537 is refused naming `main`,
+  and the pilot's real output passes through it.
+
 ## Unreleased — grammar-tools automatic insertion (E6 `@asi`)
 
 ### Changed

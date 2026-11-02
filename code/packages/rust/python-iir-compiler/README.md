@@ -186,6 +186,13 @@ builtin. `print(1.0)` uses the one-float builtin, and
 each value. Four or more arguments, keyword arguments, other callees, and
 unsupported expressions fail explicitly.
 
+The pilot's budgets are its own: 64 KiB of source, and for a tree handed to
+`compile_ast` 16,384 items, depth 64 and 1 MiB of text. Since #18475 every
+module it returns also goes through vm-core's `VMFrame::check_register_limit`,
+the backstop the release path uses, so "compiles" implies "vm-core will load
+it" even if those caps change. (Today the item cap alone keeps the pilot far
+below vm-core's 65,536 registers.)
+
 Module-level float bindings are supported. A statement `NAME = <float
 expression>` evaluates the value and then binds it; names may be rebound and
 read in any float expression, including every `print` argument:

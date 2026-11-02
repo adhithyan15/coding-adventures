@@ -154,6 +154,7 @@ use lang_refined_types::{Kind, Predicate, RefinedType};
 
 use parser::grammar_parser::GrammarASTNode;
 
+use crate::budgets::{check_cst_items, ModuleBudget};
 use crate::check_cst::check_cst;
 use crate::cst::{
     classify_annotation, Annotation, ApplyView, ExprKind, ExprNode, Exprs, FormKind, IfView,
@@ -836,6 +837,10 @@ pub struct Compiler {
     /// other modules can call its functions (see
     /// [`Self::infer_main_direct_string_param_types`]).
     has_externs: bool,
+    /// The running instruction total and per-function checks of
+    /// [`crate::budgets`] (#18474).  Every finished function goes through
+    /// [`Self::admit_function`], never straight into [`Self::functions`].
+    budget: ModuleBudget,
 }
 
 impl Compiler {
@@ -853,7 +858,26 @@ impl Compiler {
             lambda_counter: 0,
             variant_tags: HashMap::new(),
             has_externs: false,
+            budget: ModuleBudget::default(),
         }
+    }
+
+    /// Add a finished function to the module, after checking it against
+    /// the register and instruction budgets (`crate::budgets`, #18474).
+    ///
+    /// This is the only way a function enters [`Self::functions`], so no
+    /// function reaches a backend unchecked.  `declared` is the position of
+    /// the source form it came from: the error points there when none of
+    /// the function's own instructions carries a position (the compiler
+    /// writes record and union helpers with `SourceLoc::SYNTHETIC`).
+    fn admit_function(
+        &mut self,
+        function: IIRFunction,
+        declared: (usize, usize),
+    ) -> Result<(), TwigCompileError> {
+        self.budget.admit(&function, declared)?;
+        self.functions.push(function);
+        Ok(())
     }
 
     /// Pre-populate `fn_globals` with extern function names from other modules.
@@ -893,6 +917,9 @@ impl Compiler {
     /// This is the lowering only — the optional TW05-B type-check gate
     /// lives in [`crate::compile_ast`] and its siblings.
     pub fn compile(mut self, program: &GrammarASTNode, module_name: &str) -> Result<IIRModule, TwigCompileError> {
+        // `compile` is public, so it measures the tree itself rather than
+        // trusting a `compile_ast*` caller to have done it (#18474).
+        check_cst_items(program)?;
         check_cst(program)?;
         // Names beginning `__lisp_` / `__dyn_` belong to the compiler's own
         // functions and the runtime's symbols, which later passes recognise
@@ -1108,7 +1135,9 @@ impl Compiler {
             param_refinements: Vec::new(),
             return_refinement: None,
         };
-        self.functions.push(main_fn);
+        // `main` has no declaration of its own; a breach with no
+        // instruction position to blame points at the program's start.
+        self.admit_function(main_fn, (1, 1))?;
 
         // ── LANG56: populate exports from module_info ─────────────────────────
         //
@@ -1726,7 +1755,7 @@ impl Compiler {
         let return_refinement: Option<RefinedType> =
             lam.return_annotation().map(type_annotation_to_refined_type);
 
-        self.functions.push(IIRFunction {
+        self.admit_function(IIRFunction {
             name: name.to_string(),
             params: params.clone(),
             return_type: return_type.clone(),
@@ -1738,7 +1767,7 @@ impl Compiler {
             source_map: ctx.source_map,
             param_refinements,
             return_refinement,
-        });
+        }, (lam_line, lam_column))?;
         self.fn_return_types.insert(name.to_string(), return_type);
         self.fn_param_types.insert(
             name.to_string(),
@@ -1827,7 +1856,7 @@ impl Compiler {
             lam_loc,
         );
 
-        self.functions.push(IIRFunction {
+        self.admit_function(IIRFunction {
             name: fn_name.clone(),
             params,
             return_type: "any".into(),
@@ -1839,7 +1868,7 @@ impl Compiler {
             source_map: inner.source_map,
             param_refinements: Vec::new(),
             return_refinement: None,
-        });
+        }, (lam_line, lam_column))?;
 
         // 3. Emit `alloc_closure` at the call site (LANG34).
         //
@@ -3422,6 +3451,11 @@ impl Compiler {
     /// - Predicate `<lower(Name)>?(v)` → `(pair? v)`
     fn emit_record_def(&mut self, rec: RecordView<'_>) -> Result<(), TwigCompileError> {
         let loc = SourceLoc::SYNTHETIC;
+        // Every helper below is compiler-written (`loc` is synthetic), so a
+        // budget breach points at the `(record …)` form itself.  The
+        // accessors are where the module budget matters most: field *i*'s
+        // accessor walks *i* `cdr`s, ≈ n²/2 instructions for n fields.
+        let declared = rec.pos();
         let prefix = rec.name().to_lowercase();
 
         // ── Constructor: Name(f0, f1, …, fn) ──────────────────────────
@@ -3494,7 +3528,7 @@ impl Compiler {
             }
             ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(tail)], "ref<LispyPair>"), loc);
 
-            self.functions.push(IIRFunction {
+            self.admit_function(IIRFunction {
                 name: rec.name().to_string(),
                 params: params.iter().map(|p| (p.clone(), "any".to_string())).collect(),
                 return_type: "any".into(),
@@ -3506,7 +3540,7 @@ impl Compiler {
                 source_map: ctx.source_map,
                 param_refinements: Vec::new(),
                 return_refinement: None,
-            });
+            }, declared)?;
         }
 
         // ── Accessors: <prefix>-<field>(r) → car(cdr^i(r)) ───────────
@@ -3541,7 +3575,7 @@ impl Compiler {
             ctx.record_type(&field_val, "ref<any>");
             ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(field_val)], "ref<any>"), loc);
 
-            self.functions.push(IIRFunction {
+            self.admit_function(IIRFunction {
                 name: format!("{prefix}-{field}"),
                 params: vec![("r".to_string(), "any".to_string())],
                 return_type: "any".into(),
@@ -3553,7 +3587,7 @@ impl Compiler {
                 source_map: ctx.source_map,
                 param_refinements: Vec::new(),
                 return_refinement: None,
-            });
+            }, declared)?;
         }
 
         // ── Predicate: <prefix>?(v) → (pair? v) ───────────────────────
@@ -3569,7 +3603,7 @@ impl Compiler {
             ), loc);
             ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(pred)], "any"), loc);
 
-            self.functions.push(IIRFunction {
+            self.admit_function(IIRFunction {
                 name: format!("{prefix}?"),
                 params: vec![("v".to_string(), "any".to_string())],
                 return_type: "any".into(),
@@ -3581,7 +3615,7 @@ impl Compiler {
                 source_map: ctx.source_map,
                 param_refinements: Vec::new(),
                 return_refinement: None,
-            });
+            }, declared)?;
         }
         Ok(())
     }
@@ -3596,6 +3630,9 @@ impl Compiler {
         let loc = SourceLoc::SYNTHETIC;
 
         for (tag, variant) in union.variants().enumerate() {
+            // As in `emit_record_def`: the helpers are synthetic, so a
+            // budget breach points at the variant's declaration.
+            let declared = variant.pos();
             let vprefix = variant.name().to_lowercase();
 
             // ── Constructor: VarName(f0, …, fn) ───────────────────────
@@ -3741,7 +3778,7 @@ impl Compiler {
                 ), loc);
                 ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(head)], "ref<LispyPair>"), loc);
 
-                self.functions.push(IIRFunction {
+                self.admit_function(IIRFunction {
                     name: variant.name().to_string(),
                     params: params.iter().map(|p| (p.clone(), "any".to_string())).collect(),
                     return_type: "any".into(),
@@ -3753,7 +3790,7 @@ impl Compiler {
                     source_map: ctx.source_map,
                     param_refinements: Vec::new(),
                     return_refinement: None,
-                });
+                }, declared)?;
             }
 
             // ── Predicate: VarName?(v) → (= (car v) tag) ──────────────
@@ -3793,7 +3830,7 @@ impl Compiler {
                 ), loc);
                 ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(result)], "any"), loc);
 
-                self.functions.push(IIRFunction {
+                self.admit_function(IIRFunction {
                     name: format!("{}?", variant.name()),
                     params: vec![("v".to_string(), "any".to_string())],
                     return_type: "any".into(),
@@ -3805,7 +3842,7 @@ impl Compiler {
                     source_map: ctx.source_map,
                     param_refinements: Vec::new(),
                     return_refinement: None,
-                });
+                }, declared)?;
             }
 
             // ── Accessors: <vprefix>-<field>(v) → car(cdr^(k+1) v) ────
@@ -3840,7 +3877,7 @@ impl Compiler {
                 ctx.record_type(&fval, "ref<any>");
                 ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(fval)], "ref<any>"), loc);
 
-                self.functions.push(IIRFunction {
+                self.admit_function(IIRFunction {
                     name: format!("{vprefix}-{field}"),
                     params: vec![("v".to_string(), "any".to_string())],
                     return_type: "any".into(),
@@ -3852,7 +3889,7 @@ impl Compiler {
                     source_map: ctx.source_map,
                     param_refinements: Vec::new(),
                     return_refinement: None,
-                });
+                }, declared)?;
             }
         }
         Ok(())
