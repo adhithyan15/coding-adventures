@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          coding-adventures-rng
-version:       0.1.0
+version:       0.2.0
 synopsis:      Three classic pseudorandom number generators: LCG, Xorshift64, PCG32
 license:       MIT
 author:        Adhithya Rajasekaran
@@ -18,6 +18,7 @@ test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     other-modules:    RngSpec
+                    , ConformanceSpec
     build-depends:    base >=4.14
                     , coding-adventures-rng
                     , hspec == 2.*

@@ -118,39 +118,77 @@ local function lcg_advance(state)
     return state * LCG_MULTIPLIER + LCG_INCREMENT
 end
 
--- rejection_sample(next_u32_fn, min, max): uniform integer in [min, max].
+-- ============================================================================
+-- Bounded draws (spec rng.md, "Rejection Sampling", v2)
+-- ============================================================================
 --
--- ## Why Rejection Sampling?
+-- rejection_sample(next_u32_fn, min, max): a uniform integer in [min, max],
+-- identical in every language of the repository.
 --
--- Naïve modulo (value % range) over-samples low values whenever 2^32 is not
--- evenly divisible by range. For example, with range = 3:
+-- span = max - min + 1 lies between 1 and 2^64. Naïve modulo (r % span)
+-- over-samples low values whenever the number of possible draws is not a
+-- multiple of span. For example, with span = 3:
 --   2^32 = 4294967296 = 3 × 1431655765 + 1
--- So value 0 would be drawn 1431655766 times vs. 1431655765 for 1 and 2.
+-- so offset 0 would be drawn once more than 1 and 2. Rejecting the
+-- `threshold` lowest draws removes exactly the excess. Three regimes, chosen
+-- by span alone:
 --
--- Fix: compute the "rejection threshold" — the smallest multiple of range
--- reachable by a uint32. Discard any draw below threshold. Expected extra
--- draws per call is < 2 for all range sizes.
+--   span <= 2^32    draw 32 bits,  threshold = (2^32 - span) % span
+--   span <  2^64    draw 64 bits,  threshold = (2^64 - span) % span
+--   span == 2^64    the whole integer domain: every 64-bit value is valid
 --
---   threshold = (2^32 - range) % range  =  (-range) % range  (mod 2^32)
+-- Lua integers are signed 64-bit and wrap, so a 64-bit unsigned value is held
+-- as an integer whose top bit may be set: compare with math.ult and divide
+-- with umod below. The whole domain's span, 2^64, wraps to 0.
 --
-local function rejection_sample(next_u32_fn, min_val, max_val)
-    if min_val > max_val then
-        error("next_int_in_range requires min_val <= max_val, got " .. min_val .. " > " .. max_val, 2)
+-- v1 masked the span to 32 bits and drew 32 bits for every span: a range
+-- wider than 2^32 could never return more than 2^32 - 1 above min, and a span
+-- that is a multiple of 2^32 divided by zero.
+
+-- Unsigned 64-bit remainder a % b, for b ~= 0, on wrapping signed integers.
+--
+--   b >= 2^63 (negative as signed): a < b, or a - b is the remainder.
+--   a <  2^63 (non-negative):       ordinary %.
+--   otherwise: halve a (>> is a logical shift), divide, double, and fix up:
+--     a = 2*(a>>1) + bit,  (a>>1) = q*b + rh  ⇒  a - 2*q*b = 2*rh + bit < 2b
+local function umod(a, b)
+    if b < 0 then
+        if math.ult(a, b) then return a end
+        return a - b
     end
-    local min, max = min_val, max_val
-    local range = max - min + 1
-    -- (-range) mod range in 32-bit arithmetic:
-    -- In Lua we compute: (2^32 - range) % range, but since range fits in 32
-    -- bits and Lua uses 64-bit integers, we can just do:
-    local u_range = range & 0xFFFFFFFF
-    -- threshold = (2^32 mod range) = (-u_range mod u_range) mod 2^32
-    -- Equivalent: mask32((-u_range)) % u_range
-    local neg_range = mask32(-u_range)
-    local threshold = neg_range % u_range
+    if a >= 0 then return a % b end
+    local r = a - (((a >> 1) // b) << 1) * b
+    if not math.ult(r, b) then r = r - b end
+    return r
+end
+
+local TWO_32 = 1 << 32
+
+local function rejection_sample(next_u32_fn, min_val, max_val)
+    if math.type(min_val) ~= "integer" or math.type(max_val) ~= "integer" or min_val > max_val then
+        error("next_int_in_range needs integer bounds with min <= max, got ["
+            .. tostring(min_val) .. ", " .. tostring(max_val) .. "]", 3)
+    end
+    local function next_u64()
+        local hi = next_u32_fn()
+        return (hi << 32) | next_u32_fn()
+    end
+    local span = max_val - min_val + 1 -- wrapping: 2^64 becomes 0
+    if span == 0 then
+        return min_val + next_u64()
+    end
+    if span > 0 and span <= TWO_32 then
+        local threshold = (TWO_32 - span) % span
+        while true do
+            local r = next_u32_fn()
+            if r >= threshold then return min_val + r % span end
+        end
+    end
+    local threshold = umod(-span, span) -- (2^64 - span) mod span
     while true do
-        local r = next_u32_fn()
-        if r >= threshold then
-            return min + (r % range)
+        local r = next_u64()
+        if not math.ult(r, threshold) then
+            return min_val + umod(r, span) -- wraps back into [min, max]
         end
     end
 end
