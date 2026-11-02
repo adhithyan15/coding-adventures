@@ -13,7 +13,7 @@ set of asserted predicates, is there a satisfying model?"
 constraint-core   (predicate AST + normalisation)
       │
 constraint-engine  (this crate)
-      │   ├─ sat_tactic  — boolean DPLL/CDCL
+      │   ├─ sat_tactic  — boolean CDCL (adapter over the cdcl-sat crate, VER09)
       │   ├─ lia_tactic  — Cooper's algorithm for linear integer arithmetic
       │   └─ Engine      — dispatches to the right tactic; Nelson-Oppen
       │                    combination for multi-theory queries
@@ -38,7 +38,7 @@ This three-way split maps directly onto LANG23's three outcomes:
 
 | Logic | Tactic | Complete? |
 |-------|--------|-----------|
-| `QF_Bool` | SAT (DPLL) | Yes |
+| `QF_Bool` | SAT (CDCL, via `cdcl-sat`) | Yes (within a 1 000 000-conflict budget) |
 | `QF_LIA` | LIA (Cooper) | Yes |
 | Others | — | No → Unknown |
 
@@ -80,8 +80,16 @@ arithmetic.  Variable elimination proceeds by:
 Complete for the formulae arising from LANG23 refinement predicates
 (bounded ranges, equalities, disequalities, linear sums).
 
-## SAT tactic — DPLL
+## SAT tactic — CDCL, via `cdcl-sat`
 
-Standard DPLL with unit propagation and pure-literal elimination.  Used for
-pure boolean formulas.  The engine automatically selects this tactic when no
-integer variables are declared.
+Since VER09 (`code/specs/VER09-cdcl-sat.md`) the SAT tactic is a thin
+adapter over the [`cdcl-sat`](../cdcl-sat) crate: a conflict-driven
+clause-learning solver with two watched literals, first-UIP learning,
+backjumping, VSIDS and Luby restarts. The adapter converts each predicate
+to CNF (`constraint-core`'s `to_cnf`), gives each variable name a solver
+variable, and solves with a 1 000 000-conflict budget (`Unknown` past it).
+Used for pure boolean formulas.  The engine automatically selects this
+tactic when no integer variables are declared.
+
+The pre-VER09 DPLL survives as `sat/dpll_oracle.rs`, compiled only for
+tests, where it cross-checks the adapter.
