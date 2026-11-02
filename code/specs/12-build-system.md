@@ -154,7 +154,8 @@ tables under `[target.<cfg>.…]` for every cfg, as a union over all targets
 because CI builds on several hosts. Entries are read both as inline tables
 (`name = { path = "..." }`, whose arrays may continue onto later lines) and as
 `[<table>.<name>]` sub-tables with a `path = "..."` key; a quoted `package`
-field renames the dependency. Before
+field renames the dependency. A field or sub-table key may be bare or quoted
+(`"path" = "..."` is the `path` key, as Cargo reads it). Before
 2026-11-01 only the top-level `[dependencies]` table was read, so a change to
 a build or target-specific dependency rebuilt and re-tested none of its
 dependents: `paint-metal`, `paint-vm-cairo` and `paint-vm-direct2d` under the
@@ -163,6 +164,13 @@ barcode crates, the sandbox crates under the chief-of-staff launchers, and
 `[dev-dependencies]` in every form are not edges; they are test triggers (see
 below). The exact line-reading procedure, including the out-of-scope TOML
 shapes, is the cross-implementation contract in `build-tool-conformance.md`.
+That procedure is lenient, so in the Go tool the strict test-trigger reader
+below also screens these link tables of every Rust and WASM package and stops
+the plan on any shape the procedure does not model. The edge reader carries
+its own limits (a manifest that is not a regular file or exceeds 1 MiB, or one
+entry continuing past 256 lines or 64 KiB, stops the plan), because it runs
+before that reader. A dependency that resolves to the package itself is a
+`DEPENDENCY_SELF_EDGE` error, never a self-loop.
 
 Mosaic is a domain language, not an implementation lane, so only the Go
 reference tool resolves it (the conformance contract does not require the
@@ -390,6 +398,21 @@ outside it:
   unique (Cargo ignores `Package`, so it must not be read as a rename), with a
   one-line string, boolean or array-of-strings value; nested inline tables,
   trailing commas, escapes and `workspace = true` are refused;
+- for a Rust or WASM package, a write into a graph-edge table
+  (`[dependencies]`, `[build-dependencies]`, `[build_dependencies]` and their
+  `[target.<cfg>.…]` forms) in a shape the lenient edge reader does not
+  model. Accepted: `[D]` and `[target.<cfg>.D]` holding one-segment keys whose
+  value is a one-line string or an inline table (which may continue onto
+  later lines) whose fields are all `key = value` with one-segment keys; and
+  `[D.<name>]` and `[target.<cfg>.D.<name>]` sub-tables holding one-segment
+  keys with one-line values. Refused: dotted keys there or anywhere else that
+  reach such a table (`a.path = ...` in `[build-dependencies]`,
+  `build-dependencies.a.path = ...` at the root, `dependencies.a = ...` under
+  `[target.<cfg>]`), inline tables that spell one
+  (`build-dependencies = { ... }` under `[target.<cfg>]`, `target = { ... }`),
+  deeper headers and arrays of tables (`[dependencies.a.features]`,
+  `[[dependencies]]`), any other value (an array, a number), a value that
+  spans lines in a sub-table, and any backslash in such a table's values;
 - a manifest that is not a regular file or exceeds 1 MiB, or one entry
   continuing past 256 lines or 64 KiB.
 

@@ -749,23 +749,39 @@ below; anything it does not describe contributes nothing.
    are never examined as headers or entries. TOML 1.0 allows exactly this for
    an array inside an inline table, and the repository writes
    `name = { path = "...", features = [` with the array on later lines. If
-   the file ends first, the entry contributes nothing. The completed value
-   must end with `}`. The text between the outer braces is split into
-   fields at each `,` that is outside strings and not nested inside `[...]`
-   or `{...}`, and each field's key is the trimmed text before its first `=`
-   outside strings. The entry is a candidate only if a field has the key
-   `path` (exactly: bare and lowercase) and its trimmed value is exactly one
-   non-empty string. The candidate's name is the value of the first field
-   with the key `package` (exactly) whose trimmed value is exactly one
-   non-empty string, if there is such a field, and the entry key otherwise. Fields
-   inside a nested table, such as `x = { path = "..." }` as the value of a
-   field, are not fields of the entry.
+   the file ends first, the entry contributes nothing. The brackets are
+   counted over the joined value as one text: a string still open at the end
+   of one line continues after the joining space (a backslash ending a basic
+   string's line makes that space part of the string), and the count resumes
+   where the string closes. Each line's comment was still removed on its
+   own, in step 1. A reader should carry its scanning state from one line to
+   the next rather than rescan the joined value for every line it appends,
+   because rescanning is quadratic in a long entry; either way the result is
+   the same. The completed value must end with `}`. The text between the
+   outer braces is split into fields at each `,` that is outside strings and
+   not nested inside `[...]` or `{...}`. A field's key is the trimmed text
+   before its first `=` outside strings, and must be a bare key or exactly
+   one complete string, taken as its value verbatim exactly as entry keys
+   and header segments are. So `path`, `"path"` and `'path'` are all the key
+   `path`, while `Path`, `"Path"`, `"pa\u0074h"` (escapes are not decoded)
+   and a dotted key such as `path.x` are not, and a field whose key has any
+   other shape contributes nothing. The entry is a candidate only if a field
+   has the key `path`, compared exactly and case-sensitively, and its trimmed
+   value is exactly one non-empty string. The candidate's name is the value
+   of the first field with the key `package` (compared the same way) whose
+   trimmed value is exactly one non-empty string, if there is such a field,
+   and the entry key otherwise. Fields inside a nested table, such as
+   `x = { path = "..." }` as the value of a field, are not fields of the
+   entry.
 4. *Sub-table entries.* In a dependency sub-table, a line `K = V` whose key
-   `K` is exactly `path` or `package` (bare, lowercase) and whose trimmed
-   value `V` is exactly one non-empty string sets that field; the first such
-   line for a key wins and every other line is ignored. When the sub-table
-   ends it is a candidate if `path` was set, named by `package` if that was
-   set and by `N` otherwise.
+   `K` is a bare key or exactly one complete string (taken as its value, as
+   in step 3) equal to `path` or `package`, compared exactly and
+   case-sensitively, and whose trimmed value `V` is exactly one non-empty
+   string, sets that field. So `"path" = "../a"` and `'path' = "../a"` set
+   `path`, and `Path = "../a"` sets nothing. The first such line for a key
+   wins and every other line is ignored. When the sub-table ends it is a
+   candidate if `path` was set, named by `package` if that was set and by
+   `N` otherwise.
 5. *Matching.* Each candidate name is ASCII-lowercased and matched against
    the known Cargo package names, which are the package directory alias and
    the `[package]` `name`. A `package` rename is authoritative: the entry key
@@ -774,18 +790,33 @@ below; anything it does not describe contributes nothing.
    without `path`), `git`, `version`, `workspace = true`, `optional`,
    `default-features` and `features` fields (a feature list that names a
    package included), comments, and every other key, field or table
-   contribute nothing.
+   contribute nothing. A candidate that resolves to the package itself is
+   rejected as `DEPENDENCY_SELF_EDGE`, as in every ecosystem: it is neither
+   dropped nor drawn.
 
 These shapes are out of scope: a conforming reader need not handle them, the
 shared fixtures do not use them, and the repository's manifests avoid them.
-They are multi-line strings (`"""` or `'''`) and everything inside them;
-dotted keys that spell a dependency or a dependency table (`foo.path =
-"..."` in a read table, or `dependencies.foo = { ... }` and `target = { ...
-}` elsewhere); a multi-line
-array value with a continuation line that begins with `[` and ends with `]`
-(which this procedure reads as a header) when that array is not the
-continuation of an inline dependency entry; and escape sequences in keys
-and header segments, which are compared verbatim. Shared fixtures also avoid
+They are multi-line strings (`"""` or `'''`) and everything inside them,
+including a line inside one that looks like a header (this procedure would
+end the table there); dotted keys that spell a dependency or a dependency
+table (`foo.path = "..."` in an inline dependency table, `x.y = "..."` in a
+dependency sub-table, `dependencies.foo.path = "..."` at the root, or
+`dependencies.foo = { ... }` under `[target.<cfg>]`); inline tables that
+spell a dependency table (`build-dependencies = { foo = { path = "..." } }`
+under `[target.<cfg>]`, `target = { ... }` at the root); a multi-line value
+with a continuation line that begins with `[` and ends with `]` (which this
+procedure reads as a header) when that value is not the continuation of an
+inline dependency entry; and escape sequences in keys and header segments,
+which are compared verbatim. Out of scope means that a lenient reader
+following this procedure may drop, or invent, an edge for such a manifest.
+CI does not depend on that: the Go reference tool, which is the tool CI
+plans with, also reads every Rust and WASM package manifest with a strict,
+fail-closed reader (`12-build-system.md`). That reader refuses a manifest
+that uses a multi-line string anywhere, and one that writes into
+`[dependencies]`, `[build-dependencies]`, `[build_dependencies]` or a
+`[target.<cfg>.…]` form of them in any shape this procedure does not model
+(including every dotted-key and inline-table shape above), so such a
+manifest stops the plan instead of silently losing an edge. Shared fixtures also avoid
 `[dev-dependencies.<name>]` and `[target.<cfg>.dev-dependencies.<name>]`
 sub-tables: they contribute no edge under this contract, but the Go reference
 tool's separate fail-closed test-trigger reader refuses them, so such a case
