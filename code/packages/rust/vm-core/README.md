@@ -314,6 +314,13 @@ cargo test -p vm-core
 
 ## LANG83 operation support
 
+**Strings (LANG83 PR5a).** `str_index` / `str_slice` out of range return
+`VMError::Trap { kind: "Trap.Bounds" }` (the predicates `0 ≤ i < len` and
+`0 ≤ a ≤ b ≤ len` are evaluated on the full `i64`), and `str_concat` returns
+`VMError::Trap { kind: "Trap.Overflow" }` when the result would exceed the
+module's string ceiling (`IIRModule::str_ceiling`, carried in
+`DispatchCtx::str_max_bytes`), before allocating.
+
 `vm_core::op_support::op_support(name)` (and `op_support_table()`) is this backend's answer,
 `Lowered` or `Refused(reason)`, for every operation in the
 [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry

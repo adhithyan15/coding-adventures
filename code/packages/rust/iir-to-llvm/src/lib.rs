@@ -1692,6 +1692,9 @@ impl FnState<'_> {
 }
 
 /// Emit one LLVM `define` block for one IIR function.
+// One argument per module-wide table the body needs (LANG83 PR5a added the
+// string ceiling); bundling them into a struct would only rename the list.
+#[allow(clippy::too_many_arguments)]
 fn lower_function(
     func: &IIRFunction,
     internal: bool,
