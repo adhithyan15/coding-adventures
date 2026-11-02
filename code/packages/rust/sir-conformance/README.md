@@ -94,6 +94,25 @@ Before running each program on every backend, it checks the lowered SIR: every
 `MakeClosure` must thread exactly its target's capture count, and no
 `DirectCall` may target a capturing function.
 
+`tests/local_shadows_function.rs` checks that a variable never shadows a
+function of the same name (#18485).  SIR keeps the two namespaces apart, and
+Ruby relies on it (`def f; 40; end; f = 2; puts f() + f` prints 42).  Ruby
+programs cover a `main` local, a method local, a parameter, a `rescue`
+binding and a recursive method whose parameter spells its own name; each is
+checked against real `ruby` and run on every backend.  Hand-built SIR modules
+cover what the Ruby frontend cannot spell yet: a `for` range variable, a
+`for each` variable, a closure capture and a keyword parameter.
+
+`tests/python_statement_forms.rs` also pins that the Python frontend's
+invented names never coincide (#18771).  Its `KNOWN_GAPS` table lists the
+`(program, backend)` cells that fail for a reason the file does not test.
+Each listed cell must still fail: once its bug is fixed, the test reports the
+entry as stale.
+
+Every run writes its source and binary under a name ending in the process id
+and a process-wide counter, so tests running on parallel threads of one test
+binary never share a file (#18485).
+
 Adding a program is one `Program { name, frontend, source, expected }` entry
 in `tests/conformance.rs`. `frontend` defaults nothing — pick the `Frontend`
 variant matching `source`'s language (`Frontend::Ruby` for every pre-existing

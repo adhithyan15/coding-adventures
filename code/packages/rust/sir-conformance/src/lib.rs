@@ -55,6 +55,7 @@
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use semantic_ir::{BackendErrorKind, Module};
 
@@ -311,16 +312,41 @@ fn normalise(s: &str) -> String {
     s.replace("\r\n", "\n").trim_end_matches('\n').to_string()
 }
 
+/// A path in the system temp directory for one run's emitted source or
+/// binary, unique to this call.
+///
+/// The name is `sir_conf_<program>_<target>_<pid>_<n><ext>`:
+///
+/// | part        | keeps apart                                            |
+/// |-------------|--------------------------------------------------------|
+/// | `<program>` | readability: a leftover file says what it was          |
+/// | `<pid>`     | two test *processes* (`cargo test` runs each test file as its own binary, in parallel) |
+/// | `<n>`       | two calls in *one* process                             |
+///
+/// The counter is the fix for #18485.  The name used to stop at the process
+/// id, but `cargo test` runs the tests of one binary on parallel threads,
+/// which share that id.  Two tests compiling the same program for the same
+/// target wrote, compiled, ran and deleted the *same* file at once, and one
+/// failed when the other deleted its source or overwrote its binary.
+/// [`TEMP_COUNTER`] is a process-wide atomic, so no two calls, on any
+/// thread, ever see the same `<n>`.  (A caller that asks for the source and
+/// the binary of one run gets two numbers; they differ in extension anyway.)
 fn temp_path(name: &str, target: Target, ext: &str) -> PathBuf {
+    let n = TEMP_COUNTER.fetch_add(1, Ordering::Relaxed);
     let mut p = std::env::temp_dir();
     p.push(format!(
-        "sir_conf_{}_{}_{}{ext}",
+        "sir_conf_{}_{}_{}_{n}{ext}",
         name,
         target.tag(),
         std::process::id()
     ));
     p
 }
+
+/// The per-process counter behind [`temp_path`].  `Relaxed` is enough: the
+/// only promise needed is that every `fetch_add` returns a different value,
+/// which atomicity alone gives.
+static TEMP_COUNTER: AtomicU64 = AtomicU64::new(0);
 
 // ── Python ────────────────────────────────────────────────────────────────
 //
@@ -570,5 +596,44 @@ fn finish(
             source,
         )),
         Err(e) => RunOutcome::Skipped(format!("{tag} toolchain vanished mid-run: {e}")),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Two calls for the same `(program, target, extension)` in one process
+    /// get different paths (#18485).  Every test in a test binary shares a
+    /// process id, and the harness runs those tests on parallel threads, so a
+    /// name built from the process id alone let two tests that compile the
+    /// same program for the same target overwrite or delete each other's
+    /// files mid-run.
+    #[test]
+    fn temp_paths_are_unique_within_one_process() {
+        let a = temp_path("same_program", Target::Rust, ".rs");
+        let b = temp_path("same_program", Target::Rust, ".rs");
+        assert_ne!(a, b);
+    }
+
+    /// The same holds across threads: many threads asking at once never
+    /// receive a path another thread was also given.
+    #[test]
+    fn temp_paths_are_unique_across_threads() {
+        let handles: Vec<_> = (0..8)
+            .map(|_| {
+                std::thread::spawn(|| {
+                    (0..64)
+                        .map(|_| temp_path("same_program", Target::C, ".c"))
+                        .collect::<Vec<_>>()
+                })
+            })
+            .collect();
+        let mut all = std::collections::HashSet::new();
+        for h in handles {
+            for p in h.join().expect("thread finishes") {
+                assert!(all.insert(p.clone()), "path handed out twice: {p:?}");
+            }
+        }
     }
 }
