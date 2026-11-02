@@ -1,7 +1,10 @@
 # Mosaic editor convergence fit-audit (v1)
 
-**Status:** PROPOSED. Nothing in this document has been built, and no code
-changes with it.
+**Status:** ACCEPTED (updated 2026-11-02). `DraftEditor` is the shared editor.
+E1, E2, E3, E4 and E5 have merged; PR-6 is blocked (§4.3, step 4); E6 has a
+PROPOSED spec with open questions; E7 is open. §6 links each item to its pull
+request. When written (2026-10-26) this document was PROPOSED and changed no
+code; §1 to §5 still describe the repository as audited then.
 **Audited:** 2026-10-26, against `origin/main` at `79322a77c56`.
 **Program:** [#14415](https://github.com/adhithyan15/coding-adventures/issues/14415) ·
 Journal: [#14416](https://github.com/adhithyan15/coding-adventures/issues/14416) ·
@@ -30,6 +33,11 @@ surface. Three of them are general content editors and are the candidates.
 The other two are recorded so that nobody counts them as editors later.
 
 ### 1.1 The three candidates
+
+This table is the audit-time snapshot. Since then E1 made `DraftEditor`
+0.2.0, E3 made `Notes` 0.3.0 and E4 made `NoteEditor` 0.2.0, and each change
+is recorded in its package's changelog. The table is kept as audited because
+§2 to §5 argue from it.
 
 | | `Notes` (`mosaic-pkg-notes`) | `DraftEditor` (`mosaic-pkg-draft-editor`) | `NoteEditor` (`mosaic-pkg-note-editor`) |
 | --- | --- | --- | --- |
@@ -306,16 +314,16 @@ E5 to E8 (§6) are independent of this order.
 
 ## 6. Follow-up work items (one PR each)
 
-| ID | Work | Size | Depends on |
-| --- | --- | :-: | --- |
-| **E1** | `DraftEditor` 0.2.0: add `body-placeholder` (probe A), bind it in Journal in the same PR (R1), add a story for it, and correct the stale rationale in the spec, `.mil`, gate header and README (R6) | S | — |
-| **E2** | Give `mosaic-pkg-notes` a `native_complete_gate.rs`, modelled on `DraftEditor`'s: both themes, zero capability degradations, and today's 12 drops pinned in both directions. Add populated stories. | S | — |
-| **E3** | `Notes` 0.3.0 on `RecordList` and `DraftEditor` (probe C). Host: widen `note-rows`, `delete-label: ""` for an unsaved note. Literals move to the call site, the task field gets an `a11y-label`, the SwiftUI and XAML emitter tests match `draft-editor-body` by prefix, the gate's pins shrink, and the manifest and `lib.rs` comments are fixed. | M | E1, E2 |
-| **PR-6** | (existing) `Notes` on `HostNavigationSplit`, removing the remaining flex drops | S | E3 |
-| **E4** | `NoteEditor` 0.2.0: the focused field becomes a body-only `DraftEditor` (probe B), multi-line, and saves on Ctrl/Cmd+Enter. The host never sends an empty `body-label` and passes the placeholder through `body-placeholder`. `tags-input` gets an `a11y-label`. Pin or fix R2's two drops, add populated stories, and check Engram's UI tests (R3). | M | E1 |
-| **E5** | Trestle note drafts: show an error when Save is refused (an unknown task), as Journal's `draft-error` does, and cap title and body as typed, as Journal does (R4, R5) | S | — |
-| **E6** | Decide what an unbound package-component slot means (R1). Either it takes its zero value, as UI14 says for primitives, or every slot addition is a breaking version. Then make the compiler and the publishing spec agree. | S decision, M build | — |
-| **E7** | Populated stories and `a11y-label`s for `NoteTypeEditor`'s inputs. The same isolation gap, outside this convergence. | S | — |
+| ID | Work | Size | Depends on | Status (2026-11-02) |
+| --- | --- | :-: | --- | --- |
+| **E1** | `DraftEditor` 0.2.0: add `body-placeholder` (probe A), bind it in Journal in the same PR (R1), add a story for it, and correct the stale rationale in the spec, `.mil`, gate header and README (R6) | S | — | Merged, #18414 |
+| **E2** | Give `mosaic-pkg-notes` a `native_complete_gate.rs`, modelled on `DraftEditor`'s: both themes, zero capability degradations, and today's 12 drops pinned in both directions. Add populated stories. | S | — | Merged, #18422 |
+| **E3** | `Notes` 0.3.0 on `RecordList` and `DraftEditor` (probe C). Host: widen `note-rows`, `delete-label: ""` for an unsaved note. Literals move to the call site, the task field gets an `a11y-label`, the SwiftUI and XAML emitter tests match `draft-editor-body` by prefix, the gate's pins shrink, and the manifest and `lib.rs` comments are fixed. | M | E1, E2 | Merged, #18455 |
+| **PR-6** | (existing) `Notes` on `HostNavigationSplit`, removing the remaining flex drops | S | E3 | Blocked: see §4.3, step 4 |
+| **E4** | `NoteEditor` 0.2.0: the focused field becomes a body-only `DraftEditor` (probe B), multi-line, and saves on Ctrl/Cmd+Enter. The host never sends an empty `body-label` and passes the placeholder through `body-placeholder`. `tags-input` gets an `a11y-label`. Pin or fix R2's two drops, add populated stories, and check Engram's UI tests (R3). | M | E1 | Merged, #18764 (§8) |
+| **E5** | Trestle note drafts: show an error when Save is refused (an unknown task), as Journal's `draft-error` does, and cap title and body as typed, as Journal does (R4, R5) | S | — | Merged, #18423 |
+| **E6** | Decide what an unbound package-component slot means (R1). Either it takes its zero value, as UI14 says for primitives, or every slot addition is a breaking version. Then make the compiler and the publishing spec agree. | S decision, M build | — | Spec merged, #18380 (PROPOSED, open questions); not built |
+| **E7** | Populated stories and `a11y-label`s for `NoteTypeEditor`'s inputs. The same isolation gap, outside this convergence. | S | — | Open |
 
 ## 7. What this does not conclude
 
@@ -334,7 +342,7 @@ E5 to E8 (§6) are independent of this order.
 
 ## 8. Addendum: E4 as built (`NoteEditor` 0.2.0)
 
-**Status:** E4 is implemented on branch `feat/note-editor-on-draft-editor`.
+**Status:** E4 merged in #18764 (2026-11-02).
 It follows §4.2 and the §6 E4 row. Where those left a choice open, the
 decision is recorded below with its reason. Measured on `origin/main` at
 `4ff0435529e`.
