@@ -38,6 +38,7 @@ its certificate.
 | Assumptions, failed-assumption cores, incremental clause addition | `Solver::solve_with_assumptions` |
 | Conflict budget (`Unknown` instead of running forever) | `Solver::set_conflict_budget` |
 | Strict DIMACS CNF reader and writer | `src/dimacs.rs` |
+| DRAT proof logging, certified by `drat-check` (VER11) | `src/proof.rs`, `Solver::enable_proof` |
 
 Every source file is written to be read top to bottom. The module comments
 explain the algorithm before the code implements it.
@@ -61,6 +62,14 @@ s.add_clause(&[a.negative(), b.positive()]);   // a → b
 assert_eq!(s.solve_with_assumptions(&[a.positive(), b.negative()]), SolveResult::Unsat);
 assert_eq!(s.failed_assumptions().len(), 2);   // both assumptions are to blame
 assert_eq!(s.solve(), SolveResult::Sat);        // nothing was learned as a fact
+
+// With a certificate: record a DRAT proof, then hand it to drat-check.
+let mut s = Solver::new();
+s.enable_proof();                                // before the first clause
+s.add_clause(&[a.positive()]);
+s.add_clause(&[a.negative()]);
+assert_eq!(s.solve(), SolveResult::Unsat);
+let drat_text = s.proof().unwrap().to_drat_text();  // "0\n"
 ```
 
 ## How it is tested
@@ -78,6 +87,10 @@ assert_eq!(s.solve(), SolveResult::Sat);        // nothing was learned as a fact
 - **DIMACS:** every error path, and writer/reader round trips.
 - **Old DPLL:** `constraint-engine` cross-checks its adapter against the
   pre-VER09 DPLL and against truth tables.
+- **Certified UNSAT:** every UNSAT answer in the corpus above is re-solved
+  with proof logging, and the trusted kernel `drat-check` must accept the
+  proof. A negative corpus of truncated, reordered and tampered proofs
+  must all be rejected.
 
 Line coverage is above 99%.
 
