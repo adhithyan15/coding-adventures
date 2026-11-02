@@ -307,3 +307,21 @@ fn a_proof_built_to_be_slow_hits_the_work_budget() {
         other => panic!("expected the work budget to stop it, got {other:?}"),
     }
 }
+
+/// The second slow-proof construction from the security review: a long RAT
+/// lemma whose every resolvent is a tautology, found only at its last
+/// literal. Building those resolvents is quadratic and was once uncharged.
+#[test]
+fn tautological_resolvents_are_charged() {
+    let k = 3000;
+    let formula = format!("p cnf 3 {k}\n{}", "-1 2 0\n".repeat(k));
+    let lemma = format!("1 {}-2 0\n", "3 ".repeat(k));
+    let proof = format!("{lemma}d 1 3 -2 0\n").repeat(5);
+    let limits = Limits { max_work: 2_000_000, ..Limits::default() };
+    match check_with_limits(&formula, &proof, limits) {
+        Err(Rejection::ResourceLimit { step: 0, .. }) => {}
+        other => panic!("expected the budget to stop the first step, got {other:?}"),
+    }
+    // With room to spare it runs to the honest verdict.
+    assert_eq!(check(&formula, &proof), Err(Rejection::NoEmptyClause));
+}

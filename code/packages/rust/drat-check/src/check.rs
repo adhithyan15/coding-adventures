@@ -183,6 +183,9 @@ impl Database {
     fn propagate(&mut self) -> bool {
         let mut head = 0;
         while head < self.trail.len() {
+            if !self.spend(1) {
+                return false;
+            }
             let false_lit = neg(self.trail[head]);
             head += 1;
             let mut ws = std::mem::take(&mut self.watches[false_lit as usize]);
@@ -244,6 +247,10 @@ impl Database {
     /// Is `lemma` RUP: does assuming it false lead to a conflict by unit
     /// propagation over the database?
     pub(crate) fn is_rup(&mut self, lemma: &[Lit]) -> bool {
+        // Charge for assigning (and later unassigning) the negated lemma.
+        if !self.spend(lemma.len()) {
+            return false;
+        }
         let mut conflict = self.empties > 0;
         for &l in lemma {
             if conflict {
@@ -293,6 +300,11 @@ impl Database {
             .filter(|&id| self.alive[id] && self.clauses[id].contains(&neg(pivot)))
             .collect();
         partners.into_iter().all(|id| {
+            // Building a resolvent costs its length, even when it then turns
+            // out to be a tautology that needs no propagation.
+            if !self.spend(lemma.len() + self.clauses[id].len()) {
+                return false;
+            }
             let mut resolvent = lemma.to_vec();
             resolvent.extend(self.clauses[id].iter().copied().filter(|&l| l != neg(pivot)));
             self.is_rup(&resolvent)
@@ -466,7 +478,7 @@ mod tests {
         let proof = vec![add(&[1]), del(&[1, 2]), add(&[]), add(&[5])];
         assert_eq!(
             run(2, &f, &proof, u64::MAX),
-            Outcome::Refuted { step: 2, lemmas: 2, rat_lemmas: 0, deletions: 1, work: 13 }
+            Outcome::Refuted { step: 2, lemmas: 2, rat_lemmas: 0, deletions: 1, work: 16 }
         );
     }
 
@@ -506,7 +518,7 @@ mod tests {
         let proof = vec![add(&[3, 1]), add(&[-3, -1]), add(&[])];
         assert_eq!(
             run(3, &f, &proof, u64::MAX),
-            Outcome::Refuted { step: 2, lemmas: 3, rat_lemmas: 0, deletions: 0, work: 6 }
+            Outcome::Refuted { step: 2, lemmas: 3, rat_lemmas: 0, deletions: 0, work: 10 }
         );
         let f = vec![c(&[1, 2])];
         let proof = vec![add(&[3, 1]), add(&[-3, -1])];
