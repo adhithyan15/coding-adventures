@@ -123,6 +123,42 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 	},
+	{
+		name:     "typescript/rng",
+		language: "typescript",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "java/rng",
+		language: "java",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "kotlin/rng",
+		language: "kotlin",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "csharp/rng",
+		language: "csharp",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "fsharp/rng",
+		language: "fsharp",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "dart/rng",
+		language: "dart",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
 }
 
 // isRngCorpus reports whether a changed path is in the shared rng corpus,
