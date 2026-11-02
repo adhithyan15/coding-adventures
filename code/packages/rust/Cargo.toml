@@ -140,6 +140,7 @@ members = [
     "compute-unit",
     "constraint-core",
     "constraint-engine",
+    "cdcl-sat",
     "constraint-instructions",
     "constraint-vm",
     "core",

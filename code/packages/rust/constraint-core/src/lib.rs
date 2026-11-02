@@ -478,6 +478,17 @@ impl Predicate {
                     a.to_nnf(),
                     Predicate::not(*b).to_nnf(),
                 ]),
+                // ¬(a ⇔ b) is exclusive-or: (a ∨ b) ∧ (¬a ∨ ¬b).
+                // Without this arm the negation stayed wrapped around the
+                // And/Or that `Iff` expands to, and `to_cnf` returned a
+                // formula that was not CNF.
+                Predicate::Iff(a, b) => Predicate::and(vec![
+                    Predicate::or(vec![a.clone().to_nnf(), b.clone().to_nnf()]),
+                    Predicate::or(vec![
+                        Predicate::not(*a).to_nnf(),
+                        Predicate::not(*b).to_nnf(),
+                    ]),
+                ]),
                 // Negate atomic comparisons (an LIA optimisation;
                 // ¬(a < b) ≡ a ≥ b, etc.)
                 Predicate::Lt(a, b) => Predicate::Ge(a, b),
@@ -1348,6 +1359,21 @@ mod tests {
         let lt = Predicate::Lt(Box::new(vx()), Box::new(vy()));
         let nnf = Predicate::Not(Box::new(lt)).to_nnf();
         assert_eq!(nnf, Predicate::Ge(Box::new(vx()), Box::new(vy())));
+    }
+
+    #[test]
+    fn nnf_pushes_not_through_iff() {
+        // ¬(a ⇔ b) must not keep a Not around a compound: its NNF is the
+        // XOR clauses (a ∨ b) ∧ (¬a ∨ ¬b).
+        let a = Predicate::Var("a".into());
+        let b = Predicate::Var("b".into());
+        let p = Predicate::Not(Box::new(Predicate::Iff(Box::new(a.clone()), Box::new(b.clone()))));
+        let expected = Predicate::and(vec![
+            Predicate::or(vec![a.clone(), b.clone()]),
+            Predicate::or(vec![Predicate::not(a), Predicate::not(b)]),
+        ]);
+        assert_eq!(p.clone().to_nnf(), expected);
+        assert_eq!(p.to_cnf().unwrap(), expected);
     }
 
     #[test]
