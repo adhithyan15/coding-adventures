@@ -37,6 +37,10 @@ function Try-Step([string]$label, [scriptblock]$body) {
 Try-Step 'positive: conforming C'   { Iso-BuildAndRun -Lang c   -Name conforming -Sources @('selftest\conforming.c') }
 Try-Step 'positive: conforming C++' { Iso-BuildAndRun -Lang cpp -Name conforming -Sources @('selftest\conforming.cpp') }
 
+# 1b. Falsifiable: every iso_test.h check must be able to fail.
+Try-Step 'falsifiable: C'   { Iso-BuildAndRun -Lang c   -Name falsifiable -Sources @('selftest\falsifiable.c') }
+Try-Step 'falsifiable: C++' { Iso-BuildAndRun -Lang cpp -Name falsifiable -Sources @('selftest\falsifiable.cpp') }
+
 # 2. Negative: non-conforming fixtures must be rejected.
 Try-Step 'negative: non-conforming C must be rejected'   { Iso-ExpectCompileFail -Lang c   -Source 'selftest\nonconforming.c' }
 Try-Step 'negative: non-conforming C++ must be rejected' { Iso-ExpectCompileFail -Lang cpp -Source 'selftest\nonconforming.cpp' }
