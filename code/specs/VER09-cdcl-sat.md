@@ -207,9 +207,9 @@ without adding them as clauses. Assumption `i` occupies decision level
 `i + 1`, before any free decision. If an assumption is already false when
 its turn comes, the formula plus the assumptions is UNSAT, and the solver
 computes the **failed-assumption core**: the subset of assumptions that,
-by following reasons back from the falsified assumption, forced it. The
-core is returned as the negations of those assumptions, as a clause that
-the formula implies (MiniSat's `analyzeFinal`).
+by following reasons back from the falsified assumption, forced it
+(MiniSat's `analyzeFinal`). `failed_assumptions()` returns that subset,
+sorted. The clause made of their negations is implied by the formula.
 
 Learned clauses never mention an assumption as a fact, only as a literal,
 so they stay valid for later calls with different assumptions. That is what
@@ -340,5 +340,19 @@ file is the caller's job and the caller's capability. Its
 
 ## 10. Divergences
 
-None yet. Any divergence found while implementing is recorded here and in
-the commit that makes it.
+Recorded while implementing:
+
+1. **`Var::positive` / `Var::negative`**, not `pos` / `neg`. Clippy rejects a
+   method called `neg` because it reads like `std::ops::Neg::neg`.
+2. **`add_clause` propagates units immediately.** §4.7 does not say when a
+   level-0 unit is propagated. Propagating at once means the next clause is
+   simplified against everything already implied, and a contradiction among
+   units is found when it is added.
+3. **A `constraint-core` fix rides along.** The adapter's differential test
+   found that `Predicate::to_nnf` left `¬(a ⇔ b)` wrapped around a compound,
+   so `to_cnf` returned a formula that was not CNF, and the tactic answered
+   `Unknown`. `to_nnf` now rewrites it to `(a ∨ b) ∧ (¬a ∨ ¬b)`.
+4. **The distributive CNF conversion keeps its clause cap** (10 000 clauses).
+   Formulas past the cap still answer `Unknown`, as before. The Tseitin
+   encoding of VER10 removes the cap; re-pointing `SatTactic` at it is a
+   follow-up to VER10, not part of this spec.
