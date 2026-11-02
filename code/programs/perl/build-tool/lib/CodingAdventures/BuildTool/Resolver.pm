@@ -19,7 +19,7 @@ package CodingAdventures::BuildTool::Resolver;
 #   Ruby:       coding_adventures_<snake>    in Gemfile / .gemspec
 #   Go:         github.com/adhithyan15/...   in go.mod
 #   TypeScript: @coding-adventures/<kebab>   in package.json dependencies
-#   Rust:       <kebab> path = "../.."       in Cargo.toml [dependencies]
+#   Rust:       <kebab> path = "../.."       in Cargo.toml link tables
 #   Elixir:     :coding_adventures_<snake>   in mix.exs
 #   Lua:        coding-adventures-<kebab>    in .rockspec
 #
@@ -616,21 +616,370 @@ sub _parse_typescript_deps {
 
 # _parse_rust_deps -- Extract internal dependencies from Cargo.toml.
 #
-# Rust packages in this repo are referenced as path dependencies:
-#   logic-gates = { path = "../../packages/rust/logic-gates" }
-# We look for crate names that exist in our known_names map.
+# Which Cargo tables are build-graph edges
+# ----------------------------------------
+#
+# A graph edge means "rebuild and re-test the dependent when this changes",
+# so it must cover everything Cargo compiles INTO the crate:
+#
+#   table                                 edge?  why
+#   ------------------------------------  -----  -----------------------------
+#   [dependencies]                        yes    linked into the library
+#   [build-dependencies]                  yes    compiled into build.rs
+#   [build_dependencies]                  yes    legacy spelling of the above
+#   [target.<cfg>.<one of the above>]     yes    union over every cfg: CI
+#                                                builds on several hosts
+#   [dev-dependencies] (every form)       no     tests only; Cargo allows a
+#                                                dev-dependency cycle
+#   [patch], [replace], [workspace], ...  no     not a dependency of the crate
+#
+# Both TOML spellings of a path dependency are read:
+#
+#   [dependencies]
+#   logic-gates = { path = "../logic-gates" }          <- inline table
+#   gates = { package = "logic-gates", path = "..." }  <- renamed
+#
+#   [dependencies.logic-gates]                         <- sub-table
+#   path = "../logic-gates"
+#
+# The line procedure is the Rust paragraph of
+# code/specs/build-tool-conformance.md; every build-tool front implements it
+# and the shared fixture resolution-rust-field-aware pins it. Each candidate
+# name is looked up among the known Cargo names (directory name and declared
+# [package] name); duplicates -- the same crate in [dependencies] and
+# [build-dependencies], say -- collapse to one dependency.
 sub _parse_rust_deps {
     my ($self, $pkg, $known_ref) = @_;
     my $cargo = File::Spec->catfile($pkg->{path}, 'Cargo.toml');
     my $text = _slurp($cargo) // return ();
 
-    my @deps;
-    # Match lines of the form: crate-name = { path = "..." }
-    while ($text =~ /^([a-z][a-z0-9_-]*)\s*=\s*\{[^}]*path\s*=/mg) {
-        my $dep = lc $1;
-        push @deps, $known_ref->{$dep} if exists $known_ref->{$dep};
+    my (@deps, %seen);
+    for my $crate (cargo_link_dependency_names($text)) {
+        next unless exists $known_ref->{$crate};
+        my $dep = $known_ref->{$crate};
+        push @deps, $dep unless $seen{$dep}++;
     }
     return @deps;
+}
+
+# The table names whose path entries link into, or build, the crate.
+# Compared exactly with `eq`: TOML keys are case-sensitive, so
+# `[Dependencies]` is some other table.
+my %CARGO_LINK_TABLE = map { $_ => 1 } qw(dependencies build-dependencies build_dependencies);
+
+# cargo_link_dependency_names($text) -- every path dependency's crate name.
+#
+# Returns lower-case names in manifest order, duplicates kept (the caller
+# collapses them). _slurp reads the manifest as raw bytes; every character
+# the procedure compares is ASCII, so scanning bytes is exact.
+#
+# It is one pass over the lines with a three-state machine:
+#
+#   'ignored'  not a link table; its lines are skipped
+#   'inline'   [D] or [target.C.D]: one entry per line
+#   'sub'      [D.N] or [target.C.D.N]: the path/package keys of entry N
+#
+# Every header line -- even a malformed one, or an array of tables -- ends
+# the current table, and so does the end of the file; a sub-table's entry is
+# complete only then, because its keys may come in either order.
+#
+# One inline entry may cover several lines. TOML 1.0 lets an ARRAY inside an
+# inline table span lines, and the repository writes exactly that:
+#
+#   coding_adventures_vault_pm_cli = { path = "../vault-pm-cli", features = [
+#       "crash-injection",
+#   ] }
+#
+# So while the value still has an unclosed `{` or `[`, the next lines are
+# joined onto it with one space (and are not looked at as headers or
+# entries). If the file ends first, the entry contributes nothing.
+sub cargo_link_dependency_names {
+    my ($text) = @_;
+
+    # Step 1: lines. A leading BOM is ignored, whether the text is raw bytes
+    # (EF BB BF) or already decoded (U+FEFF). Split at LF only, keeping
+    # trailing empty fields (-1), and drop one trailing CR per line.
+    $text =~ s/\A(?:\xEF\xBB\xBF|\x{FEFF})//;
+    my @lines = split /\n/, $text, -1;
+    my $clean = sub {
+        my ($raw) = @_;
+        $raw =~ s/\r\z//;
+        return _trim_spaces_and_tabs(_strip_toml_line_comment($raw));
+    };
+
+    my @names;
+    my ($kind, $sub_key, $sub_path, $sub_package) = ('ignored');
+    my $finish_table = sub {
+        push @names, _ascii_lc($sub_package // $sub_key)
+            if $kind eq 'sub' && defined $sub_path;
+    };
+
+    my $index = 0;
+    while ($index < @lines) {
+        my $line = $clean->($lines[$index++]);
+
+        # Step 2: headers. Every header ends the current table.
+        if ($line =~ /\A\[/ && $line =~ /\]\z/) {
+            $finish_table->();
+            ($kind, $sub_key) = _classify_cargo_link_header($line);
+            ($sub_path, $sub_package) = (undef, undef);
+            next;
+        }
+
+        my $equals = _index_toml_outside_strings($line, '=');
+        next if $equals < 0;
+
+        if ($kind eq 'inline') {
+            # Step 3: inline entries, continued while a bracket is open.
+            my $value = _trim_spaces_and_tabs(substr($line, $equals + 1));
+            while (defined $value && $value =~ /\A\{/ && _toml_open_bracket_depth($value) > 0) {
+                if ($index >= @lines) {
+                    $value = undef;    # the file ended inside the value: no entry
+                    last;
+                }
+                $value .= ' ' . $clean->($lines[$index++]);
+            }
+            next unless defined $value;
+            my $crate = _cargo_path_dependency_name(substr($line, 0, $equals), $value);
+            push @names, $crate if defined $crate;
+        } elsif ($kind eq 'sub') {
+            # Step 4: only the two bare, lower-case keys matter; first wins.
+            # `version`, `features`, `optional` ... are ignored.
+            my $value = _toml_single_string(substr($line, $equals + 1));
+            next unless defined $value;
+            my $key = _trim_spaces_and_tabs(substr($line, 0, $equals));
+            if ($key eq 'path') {
+                $sub_path //= $value;
+            } elsif ($key eq 'package') {
+                $sub_package //= $value;
+            }
+        }
+    }
+    $finish_table->();
+    return @names;
+}
+
+# _classify_cargo_link_header($line) -- how to read the lines under a header.
+#
+# The line is already comment-stripped and trimmed, and starts with `[` and
+# ends with `]`. Returns ($kind, $sub_key). The header is split into
+# dotted-key segments at every `.` OUTSIDE a string and each segment is
+# decoded, so a cfg header is one segment however much punctuation it quotes:
+#
+#   [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+#    target  C (one quoted segment)                   D
+#
+#   [target."thumbv8m.main-none-eabihf".dependencies.pi]  -> sub-table pi
+#   [target.x86_64-unknown-linux-gnu.build-dependencies]  -> bare triple
+#   ["dependencies"]                                      -> [dependencies]
+#
+# Exactly [D], [D.N], [target.C.D] and [target.C.D.N] are read; arrays of
+# tables, malformed headers and every other segment list are ignored.
+sub _classify_cargo_link_header {
+    my ($line) = @_;
+    return ('ignored') if $line =~ /\A\[\[/;    # array of tables, e.g. [[bin]]
+
+    my @segments;
+    for my $raw (_split_toml_outside_strings(substr($line, 1, length($line) - 2), '.', 0)) {
+        my $segment = _toml_key_segment($raw);
+        return ('ignored') unless defined $segment;
+        push @segments, $segment;
+    }
+    # Drop `target` and the cfg, whatever it is.
+    splice(@segments, 0, 2) if @segments >= 3 && $segments[0] eq 'target';
+    return ('ignored') unless $CARGO_LINK_TABLE{ $segments[0] };
+    return ('inline') if @segments == 1;
+    return ('sub', $segments[1]) if @segments == 2;
+    return ('ignored');
+}
+
+# _cargo_path_dependency_name($key, $value) -- the crate a complete inline
+# entry names, or undef. Only path dependencies can point at a repository
+# package; the name is the `package` rename if there is one, else the key:
+#
+#   logic-gates = { path = "../logic-gates" }                    -> logic-gates
+#   gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+#   serde = "1"                                -> undef (not a table)
+#   x = { version = "1", features = ["path"] } -> undef (no path field)
+#   foo.path = "../foo"                        -> undef (dotted key)
+#
+# Fields are split at commas outside strings AND outside nested `[...]` or
+# `{...}`, so a `features` array cannot leak a fake field and a nested
+# table's `path` is not the entry's. Field keys must be exactly `path` and
+# `package` (Cargo ignores `Package`). The first usable field of each wins.
+sub _cargo_path_dependency_name {
+    my ($key, $value) = @_;
+    my $crate = _toml_key_segment($key);
+    return undef unless defined $crate;
+
+    $value = _trim_spaces_and_tabs($value);
+    return undef unless length($value) >= 2 && $value =~ /\A\{/ && $value =~ /\}\z/;
+
+    my ($path, $package);
+    for my $field (_split_toml_outside_strings(substr($value, 1, length($value) - 2), ',', 1)) {
+        my $equals = _index_toml_outside_strings($field, '=');
+        next if $equals < 0;
+        my $field_value = _toml_single_string(substr($field, $equals + 1));
+        next unless defined $field_value;
+        my $field_key = _trim_spaces_and_tabs(substr($field, 0, $equals));
+        if ($field_key eq 'path') {
+            $path //= $field_value;
+        } elsif ($field_key eq 'package') {
+            $package //= $field_value;
+        }
+    }
+    return undef unless defined $path;
+    return _ascii_lc($package // $crate);
+}
+
+# _toml_string_end($text, $start) -- index just past the string opening at
+# $start (a `"` or `'`), or -1 if it is not closed on this line. In a basic
+# "..." string a backslash makes the next character part of the string, so
+# `\"` does not end it; a literal '...' string has no escapes.
+sub _toml_string_end {
+    my ($text, $start) = @_;
+    my $quote = substr($text, $start, 1);
+    my $length = length $text;
+    for (my $index = $start + 1; $index < $length; $index++) {
+        my $character = substr($text, $index, 1);
+        if ($quote eq '"' && $character eq '\\') {
+            $index++;
+        } elsif ($character eq $quote) {
+            return $index + 1;
+        }
+    }
+    return -1;
+}
+
+# _strip_toml_line_comment($line) -- drop everything from the first `#`
+# outside a string. An unclosed string runs to the end of the line.
+sub _strip_toml_line_comment {
+    my ($line) = @_;
+    my $length = length $line;
+    for (my $index = 0; $index < $length; $index++) {
+        my $character = substr($line, $index, 1);
+        if ($character eq '"' || $character eq "'") {
+            my $end = _toml_string_end($line, $index);
+            return $line if $end < 0;
+            $index = $end - 1;
+        } elsif ($character eq '#') {
+            return substr($line, 0, $index);
+        }
+    }
+    return $line;
+}
+
+# _index_toml_outside_strings($text, $target) -- index of the first $target
+# character outside every string, or -1.
+sub _index_toml_outside_strings {
+    my ($text, $target) = @_;
+    my $length = length $text;
+    for (my $index = 0; $index < $length; $index++) {
+        my $character = substr($text, $index, 1);
+        if ($character eq '"' || $character eq "'") {
+            my $end = _toml_string_end($text, $index);
+            return -1 if $end < 0;
+            $index = $end - 1;
+        } elsif ($character eq $target) {
+            return $index;
+        }
+    }
+    return -1;
+}
+
+# _toml_open_bracket_depth($text) -- how many `{` and `[` outside strings
+# stay unclosed. Zero (or less) means an inline value is complete:
+#
+#   { path = "../a", features = [   -> 2
+#   { path = "../a" }               -> 0
+sub _toml_open_bracket_depth {
+    my ($text) = @_;
+    my $depth = 0;
+    my $length = length $text;
+    for (my $index = 0; $index < $length; $index++) {
+        my $character = substr($text, $index, 1);
+        if ($character eq '"' || $character eq "'") {
+            my $end = _toml_string_end($text, $index);
+            return $depth if $end < 0;
+            $index = $end - 1;
+        } elsif ($character eq '{' || $character eq '[') {
+            $depth++;
+        } elsif ($character eq '}' || $character eq ']') {
+            $depth--;
+        }
+    }
+    return $depth;
+}
+
+# _split_toml_outside_strings($text, $separator, $nested) -- split at every
+# separator outside strings. With $nested, a separator inside `[...]` or
+# `{...}` does not split either. An unclosed string runs to the end of the
+# last part.
+sub _split_toml_outside_strings {
+    my ($text, $separator, $nested) = @_;
+    my @parts;
+    my $start = 0;
+    my $depth = 0;
+    my $length = length $text;
+    for (my $index = 0; $index < $length; $index++) {
+        my $character = substr($text, $index, 1);
+        if ($character eq '"' || $character eq "'") {
+            my $end = _toml_string_end($text, $index);
+            last if $end < 0;
+            $index = $end - 1;
+        } elsif ($nested && ($character eq '[' || $character eq '{')) {
+            $depth++;
+        } elsif ($nested && ($character eq ']' || $character eq '}')) {
+            $depth--;
+        } elsif ($character eq $separator && $depth == 0) {
+            push @parts, substr($text, $start, $index - $start);
+            $start = $index + 1;
+        }
+    }
+    push @parts, substr($text, $start);
+    return @parts;
+}
+
+# _toml_key_segment($raw) -- decode one key or header segment, or undef. A
+# bare key (ASCII letters, digits, `_`, `-`) or exactly one complete string,
+# whose value is the text between its quotes, verbatim (escapes are not
+# decoded): `dependencies`, `'cfg(unix)'` -> `cfg(unix)`.
+sub _toml_key_segment {
+    my ($raw) = @_;
+    my $segment = _trim_spaces_and_tabs($raw);
+    return undef if $segment eq '';
+    if ($segment =~ /\A["']/) {
+        return undef unless _toml_string_end($segment, 0) == length $segment;
+        return substr($segment, 1, length($segment) - 2);
+    }
+    # [A-Za-z0-9_-] spelled out: \w would also match non-ASCII letters.
+    return $segment =~ /\A[A-Za-z0-9_-]+\z/ ? $segment : undef;
+}
+
+# _toml_single_string($raw) -- the content of a value that is exactly one
+# non-empty string: `"1"` is one; `"a" "b"`, `1`, `""`, `["x"]` are not.
+sub _toml_single_string {
+    my ($raw) = @_;
+    my $value = _trim_spaces_and_tabs($raw);
+    return undef unless $value =~ /\A["']/;
+    return undef unless _toml_string_end($value, 0) == length $value;
+    my $content = substr($value, 1, length($value) - 2);
+    return $content eq '' ? undef : $content;
+}
+
+# Trim only spaces and tabs (\s would also eat \f, \v, NBSP, ...).
+sub _trim_spaces_and_tabs {
+    my ($text) = @_;
+    $text =~ s/\A[ \t]+//;
+    $text =~ s/[ \t]+\z//;
+    return $text;
+}
+
+# Lower-case only A-Z (`lc` may also fold Latin-1 or Unicode letters).
+sub _ascii_lc {
+    my ($text) = @_;
+    $text =~ tr/A-Z/a-z/;
+    return $text;
 }
 
 # _parse_elixir_deps -- Extract internal dependencies from mix.exs.

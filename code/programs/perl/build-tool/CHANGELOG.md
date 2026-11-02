@@ -70,6 +70,32 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
+- Rust resolution now follows the Cargo link-table contract: path
+  dependencies count in `[dependencies]`, `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three, in
+  both the inline and the `[dependencies.<name>]` sub-table form, and in no
+  other table. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md`, ported
+  from the Go reference: headers are split into dotted-key segments outside
+  strings (quoted cfgs stay one segment, table names compare case-sensitively,
+  `[[...]]` and malformed headers end the table); comments are stripped
+  outside strings; inline values whose arrays continue onto later lines are
+  joined; `path` and `package` field keys must be exact and hold one non-empty
+  string; names are ASCII-lowercased and deduplicated. Dev-dependencies (every
+  form), `[patch]`, `[replace]`, `[workspace]` and registry entries add no
+  edge.
+- The old reader matched every `name = { ... path = ...` line in the whole
+  manifest, so `[dev-dependencies]`, `[patch]` and `[workspace]` path
+  entries drew edges, while sub-tables, quoted keys and `package` renames
+  were missed. All of these now follow the contract.
+- Tests: `t/17-cargo-link-tables.t` runs the 46 one-shape cases of the Go
+  reference `TestCargoLinkDependencyNames`, a raw-byte BOM/CRLF manifest,
+  duplicate collapse and the declared-name alias;
+  `t/13-resolution-utf8.t` reads the shared
+  `resolution-rust-field-aware.json` fixture. The reader returns the same
+  dependency names as the Go reader for all 1,650 tracked `Cargo.toml`
+  files.
+
 - The emitted-Perl verifier requires an explicit reviewed Perl 5.38.2
   executable, uses taint mode with a minimal environment and no ambient Perl
   module paths, retains at most 8 KiB from each child stream, and unconditionally
