@@ -123,12 +123,17 @@ the shipping configuration*, at the tagged commit.
 | **E6** | Native/UI tests | Does the shipped surface work on the real platform? | `scenario` blocks tagged `[ui]` |
 | — | Microbenchmarks | Does it meet its stated cost? | `budget` blocks |
 
-Formal verification is **required everywhere** (E5 is not optional). The
-general question of what "verified" means for code written in 22 languages
-is **deferred** (§7.5). In the meantime E5 is discharged by SAT-backed
-proof wherever the code already has a precise formal meaning (§7.6), and
-the assurance report labels exactly what each proof covers. Microbenchmarks are evidence, not a rung: they gate only the
-packages that state a budget.
+Formal verification is **required everywhere** (E5 is not optional), and
+it means one precise thing: an **assume–guarantee** statement (§7.5). *If*
+the package's stated assumptions about its language, runtime and inputs
+hold, *then* its claims hold for every input. We do not try to control what
+the language or platform does with our code. We control our own logic,
+write down exactly what it relies on, and prove the logic under those
+assumptions. The proofs are SAT-backed (§7.6), and the assurance report
+labels exactly what each proof covers.
+
+Microbenchmarks are evidence, not a rung: they gate only the packages that
+state a budget.
 
 Rungs switch on **one at a time** as the tooling for each lands (§10). Once a
 rung is live it is blocking for every shipped package. A package that
@@ -178,6 +183,9 @@ system and a logic.
    rejects claims that cannot be true, using the solver, before any code
    exists. Specs-first then has teeth: an inconsistent spec fails before it
    is implemented.
+6. **Explicit about what it relies on.** Every guarantee is conditional on
+   named assumptions (§7.5.1). A Warrant file states them in an `assume`
+   section; nothing the proof relies on may be left implicit.
 
 ### 4.3 Sketch
 
@@ -193,6 +201,17 @@ warrant bitset
   op member : (s: BitSet, i: Nat) -> Bool
   op encode : BitSet -> Bytes
   op decode : Bytes -> Result<BitSet, DecodeError>
+
+  -- What every guarantee below is conditional on (§7.5.2).
+  -- Platform assumptions are cited from the shared catalogue, never
+  -- invented; each one has a conformance test in every language lane.
+  assume platform:
+    u64.wraps                 -- fixed-width unsigned arithmetic wraps mod 2^64
+    array.index.bounds_checked
+    bytes.immutable
+  -- Environment assumptions are the caller's side of the contract.
+  assume environment:
+    decode.bytes : len <= 2^20
 
   -- E1: a concrete example, compiled to a pure unit test.
   example insert_into_empty:
@@ -458,9 +477,10 @@ to gate on wall-clock time.** Gating uses deterministic counts:
 Wall-clock numbers are reported but never block. Complexity budgets
 (`amortised O(1)`) are checked by fitting counts across a range of sizes.
 
-### 7.5 Formal verification (E5) — VER09 to VER13
+### 7.5 Formal verification (E5) — VER09 to VER14
 
-Built in-house, in layers, each of which checks the one below:
+The proof machinery is built in-house, in layers, each of which checks the
+one below:
 
 1. **SAT** — grow `constraint-engine` from DPLL to CDCL (watched literals,
    clause learning, restarts). Its Cargo description already claims CDCL
@@ -480,28 +500,152 @@ Built in-house, in layers, each of which checks the one below:
 5. **Refinement types** — LANG23 and the existing `lang-refinement-checker`
    become one consumer of the same stack.
 
-**What does "verified" mean for code in 22 languages?** This is the open
-question the program cannot hide. A proof is about a formal meaning, and a
-proof about Python code needs a formal semantics of Python. There are three
-honest options:
+#### 7.5.1 What "verified" means: assume–guarantee
 
-- **(a) Prove the model, test the code.** Proofs cover the Warrant model.
-  Each implementation is tied to the model by stateful property tests and
-  fuzzing. Cheap, but the shipped code itself is not proved.
-- **(b) Semantics per language.** Write formal semantics for a verifiable
-  subset of each language, and prove the code directly. True to the policy,
-  but 22 semantics is a career, not a project.
-- **(c) One verified core, compiled out.** Write the logic that needs
-  proving once, in a core language whose semantics we own. Prove it there,
-  then generate each language's implementation with the repo's existing code
-  generators, checking each translation with translation validation.
-  Hand-written code in each language shrinks to thin bindings. This plays
-  to the repo's strength, which is compilers.
+A proof is about a formal meaning. A proof about Python code would, taken
+literally, need a formal semantics of all of Python, and of CPython, the OS
+and the CPU beneath it. Twenty-two of those is a career, not a project, and
+most of it describes things this repository does not control anyway. Once
+our code is handed to a language runtime, what the runtime does with it is
+not ours to guarantee.
 
-**This decision is deferred** (§12). The current leaning is (c) as the
-destination, with (a) as the interim. Until it is made, §7.6 governs: prove
-with SAT wherever a formal meaning already exists, and label everything
-else honestly.
+So E5 proves a **conditional guarantee**, the standard framing in
+verification work, known as assume–guarantee reasoning:
+
+```
+    assumptions (platform + environment)   ⇒   claims hold for every input
+```
+
+What we control, and therefore prove, is the **implementation logic** of
+the package. What we do not control is written down as an **assumption**,
+named and explicit:
+
+```
+                      ┌────────────────────────────────────┐
+   PROVED             │  our implementation logic          │  ← the package
+                      ├────────────────────────────────────┤
+   ASSUMED, NAMED,    │  the language subset we use        │  e.g. "i64 wraps",
+   AND TESTED         │  the standard library calls we use │  "sort is stable",
+   (§7.5.3)           │  the inputs we accept              │  "len(input) ≤ 2^20"
+                      ├────────────────────────────────────┤
+   OUT OF SCOPE       │  compiler, runtime, OS, hardware   │  not ours to control
+                      └────────────────────────────────────┘
+```
+
+The guarantee is only as strong as its assumptions are true, so assumptions
+are never left implicit. The next three subsections keep them honest.
+
+#### 7.5.2 Assumptions are declared
+
+Every Warrant file has an `assume` section (§4.3), in two kinds:
+
+- **Platform assumptions** describe how the language and standard library
+  behave on the constructs the package uses. They come from a shared,
+  per-language **assumption catalogue** (VER13), so `i64.wraps` means the
+  same thing everywhere. A package may only cite catalogue entries. It may
+  not invent private assumptions about the platform.
+- **Environment assumptions** describe the inputs and the world the package
+  is given, for example "the input is at most 2^20 bytes" or "the callback
+  does not re-enter". These are the package's preconditions. The release
+  gate shows them to users, because they are the contract a caller must keep.
+
+The assurance report lists, for every proved claim, the exact assumptions
+the proof used. An assumption no proof uses is flagged for removal.
+
+#### 7.5.3 Assumptions are tested in every language
+
+Each platform assumption in the catalogue has a **conformance test** in its
+language's lane: does integer overflow wrap as assumed, is `sort` stable,
+does a map return the last value stored. These run on every toolchain the
+repository supports. When a new language version breaks one, the gate fails
+and names the assumption, rather than the guarantee silently becoming
+false.
+
+#### 7.5.4 The code stays inside the assumed subset
+
+Assumptions describe a **subset** of each language: the constructs whose
+behaviour the catalogue pins down. The per-language analyzer (VER08, the
+same one that audits capabilities) rejects code that leaves that subset:
+
+- `eval` and dynamic code loading;
+- monkey-patching, and redefining builtins;
+- reflection used to reach private state;
+- `unsafe`, FFI and `cgo` without a matching native proof (§8.3).
+
+That restriction is on *our* code, so it is fully in scope. Code that
+genuinely needs a construct outside the subset is not provable. It ships
+with tests and fuzzing, labelled `not-yet-provable` (§7.6.5) until the
+catalogue grows to cover it.
+
+#### 7.5.5 The model of our logic
+
+To prove anything, the code must be translated into a precise model. That
+model is `semantic-ir` (§7.6.2). Front ends already lower Python,
+JavaScript, Ruby, Java, C and Twig into it, and SIR21 pins its integer
+semantics. A front end is our code too, so it is checked like our code:
+the property engine continuously runs the SIR model and the real
+implementation side by side on the same generated inputs, and any
+divergence is a bug in the front end.
+
+Languages without a SIR front end get one, in the order packages in that
+language want to ship (VER14). Until a language has one, its packages are
+labelled `not-yet-provable`.
+
+#### 7.5.6 Owned layers: assumptions become guarantees
+
+The assume–guarantee shape composes, and this repository is unusual in
+owning the layers underneath its libraries. It has its own:
+
+- Python lexer, parser and compiler (`python-parser`, `python-iir-compiler`);
+- Python VM (PY02);
+- register VM and IR stack;
+- gate-level CPUs, down to `logic-gates` and transistors.
+
+When the layer beneath a package is one of ours, a platform assumption the
+package makes is **not an assumption at all. It is a claim of the layer
+below, and that layer proves it.**
+
+```
+   library        claims C          assume i64.wraps, sort.stable
+                     ▲                         │
+                     │ discharged by           ▼
+   our Python VM  claims: i64.wraps, sort.stable      assume: ISA semantics
+                     ▲                                       │
+                     │ discharged by                         ▼
+   our CPU (gate-  claims: ISA semantics (proved by           assume: Boolean gates
+   level netlist)  equivalence checking, §7.6.1)              behave as gates
+```
+
+Proofs chain upward. The library's claims hold if the VM's claims hold, and
+those hold if the CPU's claims hold. The only assumptions left are at the
+bottom of the stack this repository owns. The goal is the one pursued by
+the verified-stack projects: CompCert (a verified C compiler), CakeML (a
+verified ML compiler and runtime) and seL4 (a verified OS kernel).
+
+Three rules make this work:
+
+1. **Catalogue entries are claims somewhere.** Each entry in the
+   per-language assumption catalogue (VER13) is, word for word, a claim in
+   the Warrant file of the repository's own implementation of that
+   language, where one exists. Assumption and claim are the same formula,
+   so discharging one with the other is a check, not an argument.
+2. **The report says which stack a guarantee is for.** One package, two
+   guarantees:
+   - On a third-party runtime (CPython, V8, the JVM), its platform
+     assumptions stay assumptions, backed by the conformance tests of
+     §7.5.3.
+   - On the repository's own stack, those same assumptions are discharged
+     by proofs, and the report labels the guarantee `proved-to-<layer>`,
+     naming the lowest owned layer the proof chain reaches.
+3. **A layer can only discharge what it has proved.** If our Python VM's
+   `sort.stable` claim is only `bounded(k)`, a library relying on it
+   inherits `bounded(k)`. The weakest label in a chain is the chain's label,
+   the same never-round-up rule as §7.6.5.
+
+This also says where proof effort pays off most. Proving a claim once in
+a low layer, such as our VM's integer arithmetic, discharges that assumption
+for every package above it. Lower-layer proofs are therefore the
+highest-leverage work in the program.
 
 ### 7.6 SAT first: prove what already has a formal meaning
 
@@ -554,8 +698,8 @@ anywhere in the program, which makes it the first target.
 `semantic-ir` (SIR10) is the repository's narrow-waist IR. Front ends
 already lower Python, JavaScript, Ruby, Java, C and Twig into it, and SIR21
 pins its integer semantics. That gives code in those languages a formal
-meaning. It is the meaning of the SIR lowering, which the assurance report
-names as such.
+meaning: the model of our logic, under the package's stated platform
+assumptions (§7.5.5).
 
 The pipeline:
 
@@ -589,7 +733,11 @@ in every language from the day Warrant exists (VER04, VER05):
 - **Consistency**: the claims of a package can all be true at once. A spec
   that contradicts itself is rejected before anyone implements it.
 - **Model-level proofs**: claims about the Warrant `model` are proved
-  outright. That covers rung (a) of §7.5 and needs nothing else.
+  outright, before any implementation exists.
+- **Assumption hygiene**: the solver checks that the `assume` section is
+  itself consistent, and flags an assumption strong enough to make a claim
+  trivially true. An assumption like `len <= 0` proves everything and
+  guarantees nothing.
 - **Solver-generated test inputs**: the solver finds inputs that satisfy
   awkward refinements (`i < 2^20 ∧ popcount(s) == 7`). It also finds
   inputs that take every branch of the model and that sit exactly on every
@@ -613,17 +761,17 @@ graph.
 
 #### 7.6.5 Labels
 
-Every E5 result in the assurance report carries exactly one label, and the
-gate never rounds a weaker one up:
+Every E5 result in the assurance report carries exactly one label, plus the
+list of assumptions it used. The gate never rounds a weaker label up:
 
 | Label | Meaning |
 |---|---|
-| `proved` | UNSAT with a checked certificate, over all inputs |
+| `proved` | UNSAT with a checked certificate, over all inputs, under the listed assumptions |
+| `proved-to-<layer>` | As `proved`, with platform assumptions discharged by our own layers down to `<layer>` (§7.5.6) |
 | `proved-per-run` | Translation validation: this artifact, not the tool in general |
 | `bounded(k)` | No counterexample within `k` cycles, unrollings or steps |
-| `proved-over-sir` | Proved about the SIR lowering of the code |
-| `proved-over-model` | Proved about the Warrant model; the implementation is tied by tests |
-| `not-yet-provable` | No formal meaning available yet; allowed only until the §7.5 decision |
+| `proved-over-model` | Proved about the Warrant model only; no SIR front end links the implementation yet |
+| `not-yet-provable` | The code uses constructs outside the assumed subset, or its language has no front end yet. It ships on tests and fuzzing, and the report says so. |
 
 #### 7.6.6 The solver work this needs
 
@@ -830,9 +978,10 @@ ends with its rung **live and blocking**.
 | S1 | CDCL, DRAT checker, Tseitin/AIG encodings, bit-blaster, incremental solving | — | VER09–VER11 |
 | S2 | Hardware equivalence checking, synthesis translation validation, CPU k-induction | E5 for hardware | VER18 |
 | S3 | Vacuity, consistency and model proofs; solver-generated inputs (needs Warrant v0) | E5 `proved-over-model` | VER04, VER05 |
-| S4 | SIR symbolic execution, bounded and inductive proofs, back-end translation validation | E5 `proved-over-sir` | VER19 |
+| S4 | SIR symbolic execution, bounded and inductive proofs, back-end translation validation | E5 `proved` / `bounded(k)` under assumptions | VER19 |
 | 6 | SMT theories, VC generation | E5 widening | VER10, VER12 |
-| 7 | Deferred: the general meaning of E5 (§7.5) | E5 everywhere | VER13–VER14 |
+| 7 | Assumption catalogue and conformance tests per lane; subset enforcement; SIR front ends for remaining languages | E5 everywhere, under assumptions | VER13, VER14 |
+| 8 | Discharging catalogue entries with proofs of our own VMs, compilers and CPUs | `proved-to-<layer>` | per layer |
 | — | Native/UI lanes per platform, when each app ships | E6 | per platform |
 
 Each phase builds its tool's **reference lanes** first, TypeScript and
@@ -862,8 +1011,8 @@ S4 for S1.
 | VER10 | SMT theories: EUF, LIA, bit-vectors, arrays |
 | VER11 | Proof certificates and the trusted kernel |
 | VER12 | Verification-condition generation from Warrant |
-| VER13 | The verified core language |
-| VER14 | Translation validation for generated implementations |
+| VER13 | Platform assumption catalogue, per-language conformance tests, subset enforcement |
+| VER14 | SIR front ends for the remaining languages, with differential front-end checking |
 | VER15 | Weakness registry (CWE inventory) and per-package weakness matrix |
 | VER16 | Native attack harness: checked allocator, checked C interpreter, attack corpora |
 | VER17 | Chaos injection on the real host |
@@ -872,8 +1021,10 @@ S4 for S1.
 
 ## 12. Open decisions
 
-1. **The meaning of E5** (§7.5): **deferred** by the project owner. SAT-backed
-   proof (§7.6) proceeds meanwhile, wherever a formal meaning already exists.
+1. **Resolved — the meaning of E5** (§7.5): assume–guarantee. We prove our
+   implementation logic under named, tested platform and environment
+   assumptions. We do not attempt to control the language or platform, and
+   on our own stack, lower layers' proofs discharge those assumptions.
 2. **Warrant syntax family**: an ML-style syntax like the §4.3 sketch, or one
    closer to an existing in-repo language (Twig, Nib) so the tooling can be
    reused.
@@ -894,6 +1045,12 @@ are:
 - every public symbol must be covered by a claim;
 - mutation testing, a later child spec, checks that the claims are strong
   enough to notice when the code is broken.
+
+A guarantee is also only as true as its assumptions. On a third-party
+runtime, a platform bug that the conformance tests do not exercise can
+falsify a proved claim. That is the accepted boundary: we guarantee our
+logic, not the platform's. The assumption list printed with every
+guarantee is what makes that boundary visible to users instead of hidden.
 
 Moving all of this in-house also moves the bugs in-house. A bug in a test
 framework, property engine or prover is worse than most, because it fails
