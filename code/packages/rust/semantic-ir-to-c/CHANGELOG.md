@@ -2,6 +2,18 @@
 
 ## Unreleased — `nil` inside an array; Ruby's `[]=` (#18798)
 
+- **Two Integers compare exactly.** `_sir_lt`/`_sir_gt`/`_sir_le`/`_sir_ge`
+  compared every number as a `double`, which holds integers exactly only up
+  to 2^53: `9007199254740993 > 9007199254740992` was false.  It showed up
+  when the Ruby frontend began lowering a `for` over a range that can
+  `break` or `return` to a `while` on such a comparison (a `ForRange` had
+  counted in `int64_t`): `9007199254740993...9007199254740996` ran 2 trips
+  instead of 3, `9223372036854775805..9223372036854775806` none instead of
+  2.  Two Integers now compare as `int64_t`, as `_sir_value_eq` already
+  did; a Float on either side still compares as a `double`.  Tests
+  `compile_and_run_int_compare.rs` (outputs are ruby 3.3.6's; both failed
+  before the fix).
+
 - Security review: the comment on `_sir_array_bracket_set` now says why the
   old buffer is not freed when the array grows (a block helper may be
   iterating a snapshot of it; the arena never frees, which is what makes that

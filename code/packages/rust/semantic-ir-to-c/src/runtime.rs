@@ -522,20 +522,33 @@ SirValue _sir_divide(int n, ...) { va_list ap; SirValue *xs; SirValue r; va_star
 
 /* ---- comparison + equality ---------------------------------- */
 
+/* Two Integers compare as `int64_t`, exactly; anything else numeric compares
+ * as a `double`, as Ruby compares an Integer with a Float.  A `double` holds
+ * every integer only up to 2^53, so comparing two Integers through it said
+ * `9007199254740993 > 9007199254740992` was false (#18798 re-review: a `for`
+ * over a range that can `break` is a `while` on this comparison, and counted
+ * 2 trips of 9007199254740993...9007199254740996, not 3).  `_sir_value_eq`
+ * already compared two Integers this way. */
+#define SIR_BOTH_INT(a, b) ((a).tag == SIR_INT && (b).tag == SIR_INT)
+
 SirValue _sir_lt(SirValue a, SirValue b) {
     if (a.tag == SIR_STR && b.tag == SIR_STR) return _sir_bool(strcmp(a.as.s, b.as.s) < 0);
+    if (SIR_BOTH_INT(a, b)) return _sir_bool(a.as.i < b.as.i);
     return _sir_bool(_sir_as_num(a) < _sir_as_num(b));
 }
 SirValue _sir_gt(SirValue a, SirValue b) {
     if (a.tag == SIR_STR && b.tag == SIR_STR) return _sir_bool(strcmp(a.as.s, b.as.s) > 0);
+    if (SIR_BOTH_INT(a, b)) return _sir_bool(a.as.i > b.as.i);
     return _sir_bool(_sir_as_num(a) > _sir_as_num(b));
 }
 SirValue _sir_le(SirValue a, SirValue b) {
     if (a.tag == SIR_STR && b.tag == SIR_STR) return _sir_bool(strcmp(a.as.s, b.as.s) <= 0);
+    if (SIR_BOTH_INT(a, b)) return _sir_bool(a.as.i <= b.as.i);
     return _sir_bool(_sir_as_num(a) <= _sir_as_num(b));
 }
 SirValue _sir_ge(SirValue a, SirValue b) {
     if (a.tag == SIR_STR && b.tag == SIR_STR) return _sir_bool(strcmp(a.as.s, b.as.s) >= 0);
+    if (SIR_BOTH_INT(a, b)) return _sir_bool(a.as.i >= b.as.i);
     return _sir_bool(_sir_as_num(a) >= _sir_as_num(b));
 }
 
