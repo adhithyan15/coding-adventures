@@ -232,6 +232,10 @@ pub fn check_program(
         };
     }
 
+    if let Some(refused) = refuse_generated_names(program) {
+        return refused;
+    }
+
     // ── Pass 1: collect declarations ──────────────────────────────────────
     let mut env = TypeEnv::new();
     check::collect_forms(program, &mut env, &mode);
@@ -389,6 +393,9 @@ pub fn check_program_with_globals(
     }
 
     // ── Pass 1: collect declarations ──────────────────────────────────────
+    if let Some(refused) = refuse_generated_names(program) {
+        return refused;
+    }
     check::collect_forms(program, &mut env, &mode);
 
     // ── Pass 2: walk expression bodies ────────────────────────────────────
@@ -410,6 +417,32 @@ pub fn check_program_with_globals(
         errors,
         ok,
     }
+}
+
+/// The generated-name budget (`twig_parser::MAX_GENERATED_NAME_BYTES`,
+/// #18474 review), applied before Pass 1 registers a single accessor.
+///
+/// Pass 1 (`TypeEnv::register_record` / `register_union`) formats a
+/// `name-field` global per record field, so a long record name times many
+/// fields is quadratic work.  A `Program` from `twig_parser::extract_program`
+/// was already checked there; this check covers a `Program` built some other
+/// way, at the cost of one pass of arithmetic.  A refusal is one error with
+/// `ok: false` in every mode: the checker has not looked at the program, so
+/// it cannot call it well-typed.
+fn refuse_generated_names(program: &Program) -> Option<TypeCheckResult<TypedProgram>> {
+    let error = twig_parser::check_generated_names(program).err()?;
+    Some(TypeCheckResult {
+        typed_ast: TypedProgram {
+            program: program.clone(),
+            env: TypeEnv::new(),
+        },
+        errors: vec![TypeErrorDiagnostic {
+            message: error.message,
+            line: error.line,
+            column: error.column,
+        }],
+        ok: false,
+    })
 }
 
 // ---------------------------------------------------------------------------

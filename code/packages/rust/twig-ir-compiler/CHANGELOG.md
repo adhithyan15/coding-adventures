@@ -1,5 +1,41 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18474 security review: names, functions, driver budgets
+
+### Added
+
+- **Name and generated-name budgets** (from `twig-parser`, re-exported:
+  `MAX_NAME_BYTES` 256, `MAX_GENERATED_NAME_BYTES` 1 MiB). `check_cst_items`
+  is now public and also refuses a `NAME` token over 256 bytes, so a
+  hand-built tree gets the lexer's rule. The pre-pass charges each record's
+  and union variant's invented names (`twig_parser::generated_name_bytes`)
+  before formatting one.
+- **`MAX_FUNCTIONS_PER_MODULE` (2¹⁶)**, twig-vm's `MAX_PROFILED_FUNCTIONS` /
+  `MAX_IC_FUNCTIONS`: the 65,537th function is a compile error, not a
+  run-time refusal. `check_linked_functions` holds a linked program to it.
+- **Driver budgets**, with the driver: `MAX_PROGRAM_SOURCE_BYTES` (4 MiB,
+  `check_graph_source_bytes`) and `MAX_IMPORTED_NAMES` (2²⁰,
+  `check_imported_names`).
+
+### Fixed
+
+- **Names of any length reached the pre-pass**, which formatted
+  `{record}-{field}` per field: a 512 KB record name × 58,000 fields was
+  about 30 GB, and `emit_record_def` built about 750 MB of 512 KB accessor
+  names before the module budget tripped. Both are refused now.
+
+### Tests
+
+- `tests/budgets.rs`: the review's record through `compile_source` and
+  `compile_typed_source`; a 256-byte name compiles and 257 is refused; a
+  hand-built tree with a long name is refused by `compile_ast` and
+  `Compiler::compile`; generated names at exactly 1 MiB compile and one
+  byte more is refused through both source entry points; 65,536 functions
+  compile and 65,537 are refused.
+- `tests/cst_walk.rs`: the CST-only import contract allows the parser's
+  CST-level budget items (never the `Program`-level
+  `check_generated_names`), and now scans `src/budgets.rs` too.
+
 ## Unreleased — #18474: compile-time resource budgets
 
 ### Added

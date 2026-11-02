@@ -1,5 +1,50 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18474 security review: graph budgets, non-regular files
+
+### Changed
+
+- **`read_source` refuses anything but a regular file, without blocking.**
+  It now reads through the new `bounded-source-file` crate:
+  `fs::metadata(path).is_file()` before opening, `O_NONBLOCK` on Unix so a
+  path swapped for a FIFO or tty cannot block `open`, `is_file()` and the
+  size on the open handle, then the bounded read. A FIFO used to block
+  forever; `/dev/zero` is refused as not a regular file (`Io`,
+  `InvalidInput`) instead of being read to the budget.
+
+### Fixed
+
+- **The driver did graph-wide work before any graph budget.** Up to 1,000
+  modules of 1 MiB were read, parsed, extracted, type-checked and cloned
+  before Phase 4. Now:
+  - the graph's source is held to `MAX_PROGRAM_SOURCE_BYTES` (4 MiB) as
+    each file is read, before it is parsed;
+  - `twig_ir_compiler::check_cst_items` runs right after `parse_to_ast`;
+  - the export lists copied over every import edge are charged, summed,
+    against `MAX_IMPORTED_NAMES` (2²⁰) before any copying;
+  - the linked program's functions are held to `MAX_FUNCTIONS_PER_MODULE`.
+- **`library_exports` was quadratic**: `defined.contains` per export. It
+  uses a set.
+- Names over 256 bytes, and over-budget generated names, are refused in
+  Phase 1 by `twig-parser`.
+
+### Tests
+
+- `read_source_refuses_devices_and_fifos_without_blocking` (Unix):
+  `/dev/zero` and a writerless FIFO are refused; the FIFO case runs on a
+  thread with a 10 s deadline.
+- `program_source_bytes_budget_applies_to_the_whole_graph`: exactly 4 MiB
+  over five files compiles; one byte more is refused at the fifth file.
+- `cst_items_budget_runs_in_phase_one`: an oversized library is refused
+  before a strict importer's type error, which a control case shows Phase
+  3.5 would otherwise report first.
+- `imported_names_budget_bounds_edges_times_exports`: 1,024 imports of a
+  1,024-export module (exactly 2²⁰) compile; 1,025 are refused.
+- `linked_program_is_held_to_the_module_function_budget`: exactly 2¹⁶
+  linked functions link; one more is refused.
+- `long_names_are_refused_in_phase_one`: a 256-byte record name compiles;
+  the review's 512 KB one is a `Parse` error.
+
 ## Unreleased — #18474: source and linked-program budgets
 
 ### Added

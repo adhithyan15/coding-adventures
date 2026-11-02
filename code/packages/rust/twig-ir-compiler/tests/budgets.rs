@@ -348,3 +348,145 @@ fn a_record_whose_accessors_pass_the_module_budget_is_refused() {
     assert!(e.message.contains("in function `p-f"), "{e}");
     assert_eq!((e.line, e.column), (3, 2));
 }
+
+// ---------------------------------------------------------------------------
+// Names (#18474 security review)
+// ---------------------------------------------------------------------------
+//
+// A record makes the toolchain invent a predicate and one accessor name per
+// field, each repeating the record's name. With no limit on a name's length
+// a 512 KB record name × thousands of fields cost tens of GB of names in the
+// compiler's pre-pass before any instruction budget counted. Names are now
+// capped at the parser (`MAX_NAME_BYTES`) and the invented names are charged
+// against `MAX_GENERATED_NAME_BYTES` before one is formatted.
+
+use twig_ir_compiler::{MAX_FUNCTIONS_PER_MODULE, MAX_GENERATED_NAME_BYTES, MAX_NAME_BYTES};
+
+/// The review's repro: a 512 KB record name with 2,000 fields. Refused
+/// through both source entry points, before any accessor name exists.
+#[test]
+fn the_review_s_long_record_name_is_refused_through_both_source_entry_points() {
+    let fields: String = (0..2_000).map(|i| format!(" (f{i} : int)")).collect();
+    let src = format!("(record {}{fields})\n1", "A".repeat(1 << 19));
+    let expected = format!("name bytes exceeds the limit of {MAX_NAME_BYTES}");
+    assert_eq!(compile_source(&src, "m").unwrap_err().message, format!("parse error: {expected}"));
+    // The typed path reports the type checker's parse, wrapped once more.
+    let typed = compile_typed_source(&src, "m").unwrap_err().message;
+    assert!(typed.ends_with(&expected), "{typed}");
+}
+
+#[test]
+fn a_name_of_exactly_the_limit_compiles_and_one_byte_more_is_refused() {
+    let at = "n".repeat(MAX_NAME_BYTES);
+    compiles(&format!("(define ({at} {at}) {at}) ({at} 1)"));
+    let over = "n".repeat(MAX_NAME_BYTES + 1);
+    let e = compile_source(&format!("(define ({over}) 1)"), "m").unwrap_err();
+    assert!(e.message.ends_with("name bytes exceeds the limit of 256"), "{e}");
+}
+
+/// A hand-built tree never went through the lexer, so the compiler's own
+/// tree walk (`check_cst_items`) applies the name limit to it.
+#[test]
+fn a_hand_built_tree_with_a_long_name_is_refused_by_the_tree_walk() {
+    fn lengthen_names(node: &mut GrammarASTNode) {
+        for child in &mut node.children {
+            match child {
+                ASTNodeOrToken::Node(inner) => lengthen_names(inner),
+                ASTNodeOrToken::Token(t) if t.effective_type_name() == "NAME" => {
+                    t.value = "n".repeat(MAX_NAME_BYTES + 1);
+                }
+                ASTNodeOrToken::Token(_) => {}
+            }
+        }
+    }
+    let mut cst = twig_parser::parse_to_ast("(define (f x) x) (f 1)").unwrap();
+    lengthen_names(&mut cst);
+    let e = compile_ast(&cst, "m").unwrap_err();
+    assert!(e.message.ends_with("name bytes exceeds the limit of 256"), "{e}");
+    let e = twig_ir_compiler::Compiler::new().compile(&cst, "m").unwrap_err();
+    assert!(e.message.ends_with("name bytes exceeds the limit of 256"), "{e}");
+}
+
+/// Records whose invented names come to exactly `target` bytes, while the
+/// module stays far under every instruction budget: records of 16 fields
+/// with 256-byte names (8,465 bytes and 204 instructions each), then
+/// field-less records (one `name?` of up to 257 bytes each) for the rest.
+fn records_generating(target: usize) -> String {
+    // Padded on the left with `a`: a name cannot start with a digit.
+    let long = |tag: usize| format!("{:a>256}", format!("R{tag}"));
+    let field = |i: usize| format!("{:a>256}", format!("f{i}"));
+    let full = twig_parser::generated_name_bytes(256, [256; 16]);
+    let mut src = String::new();
+    let mut left = target;
+    let mut tag = 0;
+    while left >= full + 2 {
+        let fields: String = (0..16).map(|i| format!(" ({} : int)", field(i))).collect();
+        src.push_str(&format!("(record {}{fields})\n", long(tag)));
+        left -= full;
+        tag += 1;
+    }
+    while left > 0 {
+        // `name?` is name + 1 bytes; never leave a remainder of 1.
+        let piece = if left > 257 { 257.min(left - 2) } else { left };
+        let name = format!("{:a>width$}", format!("Q{tag}"), width = piece - 1);
+        src.push_str(&format!("(record {name})\n"));
+        left -= piece;
+        tag += 1;
+    }
+    src.push_str("1\n");
+    src
+}
+
+#[test]
+fn generated_names_at_the_limit_compile() {
+    let module = compiles(&records_generating(MAX_GENERATED_NAME_BYTES));
+    let made: usize = module
+        .functions
+        .iter()
+        .filter(|f| f.name.ends_with('?') || f.name.contains('-'))
+        .map(|f| f.name.len())
+        .sum();
+    assert_eq!(made, MAX_GENERATED_NAME_BYTES, "the invented names sit on the limit");
+}
+
+/// One byte more is refused by the compiler's pre-pass (through
+/// `compile_source`, whose parser does not extract a `Program`) and by
+/// `extract_program` (through `compile_typed_source`'s type checker).
+#[test]
+fn generated_names_one_byte_past_the_limit_are_refused_before_any_is_made() {
+    let src = records_generating(MAX_GENERATED_NAME_BYTES + 1);
+    let expected = format!("generated name bytes exceeds the limit of {MAX_GENERATED_NAME_BYTES}");
+    assert_eq!(compile_source(&src, "m").unwrap_err().message, format!("parse error: {expected}"));
+    let typed = compile_typed_source(&src, "m").unwrap_err().message;
+    assert!(typed.ends_with(&expected), "{typed}");
+}
+
+// ---------------------------------------------------------------------------
+// Functions per module
+// ---------------------------------------------------------------------------
+
+/// A union of `variants` empty variants (two functions each: constructor
+/// and predicate), then `defines` one-function `define`s; `main` is one more.
+fn many_functions(variants: usize, defines: usize) -> String {
+    let variants: String = (0..variants).map(|i| format!(" (V{i})")).collect();
+    let defines: String = (0..defines).map(|i| format!("(define (g{i}) 1)\n")).collect();
+    format!("(union U{variants})\n{defines}1\n")
+}
+
+#[test]
+fn functions_at_the_limit_compile() {
+    // 2 × 32,767 + 1 + main = 65,536.
+    let module = compiles(&many_functions(32_767, 1));
+    assert_eq!(module.functions.len(), MAX_FUNCTIONS_PER_MODULE);
+}
+
+/// One function more is refused at compile time; twig-vm would have
+/// refused to profile or cache the 65,537th function at run time.
+#[test]
+fn functions_past_the_limit_are_refused() {
+    let e = refused_by(&many_functions(32_767, 2), "functions per module");
+    assert_eq!(
+        e.message,
+        format!("functions per module exceeds the limit of {MAX_FUNCTIONS_PER_MODULE} in function `main`")
+    );
+}

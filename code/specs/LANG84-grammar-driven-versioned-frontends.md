@@ -257,8 +257,11 @@ that went over. Twig, which is not a LANG84 release-path frontend and has no
 `FrontendBudgets` value, carries the same budgets as fixed constants since
 #18474: 1 MiB of source, 2²⁰ CST items, 65,536 registers and 2¹⁸
 instructions per function, 2²⁰ instructions per module and per linked
-multi-module program (TW00 "Compile-time budgets"); its file runners check a
-file's size before reading it and read at most the budget plus one byte. Its register budget is the stricter of twig-vm's and vm-core's
+multi-module program, 2¹⁶ functions per module, 256-byte names and 1 MiB of
+generated record/union names (TW00 "Compile-time budgets"); its file
+runners, and `lang-aot`'s, read through `bounded-source-file`: regular files
+only, never blocking, size checked before reading, at most the budget plus
+one byte read. Its register budget is the stricter of twig-vm's and vm-core's
 frame limits (both 2¹⁶); twig-ir-compiler depends on neither, so tests in
 twig-vm and in twig-ir-compiler (vm-core as a dev-dependency) pin the
 number to both. Registers the compiler emits after the last statement (the

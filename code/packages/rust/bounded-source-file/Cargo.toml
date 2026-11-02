@@ -1,0 +1,12 @@
+[package]
+name = "bounded-source-file"
+version = "0.1.0"
+edition = "2021"
+description = "Read a source file without ever holding more than a byte budget: regular files only, size checked before reading, read bounded after."
+
+[dependencies]
+
+# `O_NONBLOCK` for the open, so a FIFO or tty swapped in after the
+# regular-file check cannot block the open (see src/lib.rs).
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"

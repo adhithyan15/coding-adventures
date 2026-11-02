@@ -42,6 +42,7 @@ const SOURCES: &[(&str, &str)] = &[
     ("src/check_cst.rs", include_str!("../src/check_cst.rs")),
     ("src/free_vars.rs", include_str!("../src/free_vars.rs")),
     ("src/errors.rs", include_str!("../src/errors.rs")),
+    ("src/budgets.rs", include_str!("../src/budgets.rs")),
 ];
 
 /// The *code* lines of a source file: everything outside `//` comments
@@ -105,7 +106,22 @@ fn compiler_source_imports_only_cst_level_items_from_the_parser_crate() {
     // Every item the compiler names from `twig_parser` must be on this
     // list.  `parse`, `Program`, `Expr`, `Form`, `Lambda`, `TypeAnnotation`
     // and the rest of the typed AST are deliberately absent.
-    let allowed = ["parse_to_ast", "TwigParseError", "MAX_AST_DEPTH", "check_membership_int_count"];
+    //
+    // The input budgets (#18474 review) are on it too: they read token
+    // spellings and name lengths, never the typed AST.  The one budget
+    // helper that takes a typed `Program`, `check_generated_names`, is not.
+    let allowed = [
+        "parse_to_ast",
+        "TwigParseError",
+        "MAX_AST_DEPTH",
+        "check_membership_int_count",
+        "check_name_token",
+        "generated_name_bytes",
+        "GeneratedNameBudget",
+        "MAX_GENERATED_NAME_BYTES",
+        "MAX_NAME_BYTES",
+        "MAX_TOKENS",
+    ];
     let mut seen = 0;
     for (file, src) in SOURCES {
         for line in code_lines(src) {

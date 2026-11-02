@@ -1,5 +1,17 @@
 # Changelog — `twig-aot`
 
+## Unreleased — #18474 security review: bounded source reads
+
+- **Every `compile_file_*` entry point and `emit_object_to_disk` read the
+  source with `std::fs::read_to_string`**, so a huge file was read whole,
+  `/dev/zero` never returned and a FIFO blocked forever. They now read
+  through `read_twig_source` (`bounded-source-file`, limit
+  `twig_ir_compiler::MAX_SOURCE_BYTES`): only a regular file, size checked
+  first, at most 1 MiB + 1 bytes read. Errors stay `AotError::Io`
+  (`InvalidInput` / `FileTooLarge`).
+- Test `source_files_are_read_within_the_budget`: a sparse file one byte
+  over and a directory are refused; a file of exactly 1 MiB compiles.
+
 ## Unreleased — #18492 — dynamic parameters stay GC roots
 
 - **Bug.** `prepare_module_for_aot` retyped every dynamic (`any` / `polymorphic`) parameter to `i64` in place, so signed comparisons would be emitted. The x86-64 and AArch64 backends build each function's GC stack map from the param types in `FunctionContext`, and `i64` is on their "never a reference" deny-list, so no Twig parameter was ever named in a stack map. Allocation-triggered collections were unaffected (they scan the stack conservatively), and so was `gc_collect_precise` (the caller's `any` temporary still rooted the argument). But a **compacting** collection inside the callee moved the argument, rewrote the caller's slot and freed the old cell, leaving the callee's parameter pointing at freed memory. Reproduced on Linux x86-64: `(define (f p) (begin (w4) (car p))) (f (cons 7 8))` with `gc_collect_compacting` spliced in before the `car` exited 51 instead of 7, and valgrind memcheck reported `__dyn_pair_first` reading a block freed by `FlatHeap::sweep`. A closure's captured values reach the lifted lambda body as parameters, so they were affected the same way.

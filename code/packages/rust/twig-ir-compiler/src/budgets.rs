@@ -34,6 +34,11 @@
 //! | IIR instructions per function | 2¹⁸ = 262,144 | `instructions.len()`                            | four instructions per register at the register limit, while a branchy `(if x x x)` spends six per register |
 //! | IIR instructions per module | 2²⁰ = 1,048,576 | the sum over every function                    | twig-vm profiles at most 2²⁰ instruction slots (`MAX_PROFILED_INSTRUCTION_SLOTS`); the other frontends' cap is 1,000,000 (LANG84 C5) |
 //! | IIR instructions per linked program | 2²⁰ (the same constant) | the sum over every module of a `twig-module-driver` graph | the linker merges the graph into the one module the VM runs, so it gets one module's budget ([`check_linked_instructions`]) |
+//! | functions per module, and per linked program | 2¹⁶ | functions admitted | twig-vm profiles and caches at most 2¹⁶ distinct functions a run (`MAX_PROFILED_FUNCTIONS`, `MAX_IC_FUNCTIONS`) |
+//! | name bytes | 256 | each `NAME` token: in `twig_parser::parse_to_ast`, and in [`check_cst_items`] for a hand-built tree | see `twig_parser::budgets` |
+//! | generated name bytes | 1 MiB | record and union predicate/accessor names, by arithmetic before any is formatted: here in the pre-pass, in `twig_parser::extract_program` and in the type checker | a long record name × many fields was ≈ 30 GB of names before any other budget counted (#18474 security review) |
+//! | source bytes per program | 4 MiB | `twig-module-driver`, summed as each file is read | [`MAX_PROGRAM_SOURCE_BYTES`] |
+//! | imported names per program | 2²⁰ | `twig-module-driver`, summed over import edges before merging | [`MAX_IMPORTED_NAMES`] |
 //!
 //! ## Registers: the stricter of two VM frames
 //!
@@ -106,6 +111,34 @@ pub const MAX_IIR_INSTRUCTIONS_PER_FUNCTION: usize = 1 << 18;
 /// Instructions a whole module may hold, summed over its functions: 2²⁰.
 pub const MAX_IIR_INSTRUCTIONS_PER_MODULE: usize = 1 << 20;
 
+/// Functions one module may hold: 2¹⁶, twig-vm's `MAX_PROFILED_FUNCTIONS`
+/// and `MAX_IC_FUNCTIONS`.  twig-vm refuses to profile or cache a
+/// 65,537th distinct function in a run; a module (or a linked program)
+/// with more is refused here instead, at compile time.
+pub const MAX_FUNCTIONS_PER_MODULE: usize = 1 << 16;
+
+/// Source bytes a whole `twig-module-driver` import graph may hold: 4 MiB.
+///
+/// Each file is held to [`MAX_SOURCE_BYTES`], but a graph may hold 1,000
+/// files, and the driver reads, parses, extracts and type-checks all of
+/// them before it compiles one.  The graph links into *one* module, held to
+/// one module's [`MAX_IIR_INSTRUCTIONS_PER_MODULE`]; the densest Twig spends
+/// one instruction per two source bytes (`1` on a line), so past about
+/// 2 MiB of such code a graph could not link anyway.  4 MiB is that, with
+/// room for comments and sparser code, and it bounds the driver's
+/// pre-compile work at four maximum-size files instead of a thousand.
+pub const MAX_PROGRAM_SOURCE_BYTES: usize = 4 << 20;
+
+/// Imported names a `twig-module-driver` graph may merge, summed over every
+/// import edge: 2²⁰.  Each edge copies the imported module's export list
+/// into the importer's type-checker globals and its compiler externs, so a
+/// graph where many modules import one module with many exports does
+/// edges × exports work; this bounds it at one module's worth of
+/// instructions.
+pub const MAX_IMPORTED_NAMES: usize = 1 << 20;
+
+pub use twig_parser::{MAX_GENERATED_NAME_BYTES, MAX_NAME_BYTES, MAX_TOKENS};
+
 /// A budget error.  `which` is the budget's name as the table above
 /// spells it; `function` names the function for the per-function budgets.
 fn breach(
@@ -143,6 +176,24 @@ pub fn check_source_len(len: u64) -> Result<(), TwigCompileError> {
     Ok(())
 }
 
+/// Refuse an import graph whose source, summed over every file read so far,
+/// exceeds [`MAX_PROGRAM_SOURCE_BYTES`].
+pub fn check_graph_source_bytes(total: u64) -> Result<(), TwigCompileError> {
+    if total > MAX_PROGRAM_SOURCE_BYTES as u64 {
+        return Err(breach("source bytes per program", MAX_PROGRAM_SOURCE_BYTES, None, (1, 1)));
+    }
+    Ok(())
+}
+
+/// Refuse an import graph whose import edges, summed, would merge more than
+/// [`MAX_IMPORTED_NAMES`] exported names.
+pub fn check_imported_names(total: usize) -> Result<(), TwigCompileError> {
+    if total > MAX_IMPORTED_NAMES {
+        return Err(breach("imported names per program", MAX_IMPORTED_NAMES, None, (1, 1)));
+    }
+    Ok(())
+}
+
 /// Refuse a program linked from several modules whose instructions,
 /// summed over every module, exceed [`MAX_IIR_INSTRUCTIONS_PER_MODULE`].
 ///
@@ -166,14 +217,32 @@ pub fn check_linked_instructions(total: usize) -> Result<(), TwigCompileError> {
     Ok(())
 }
 
+/// [`check_linked_instructions`]' twin for [`MAX_FUNCTIONS_PER_MODULE`]: a
+/// linked program is one module to twig-vm, so it gets one module's
+/// function budget.
+pub fn check_linked_functions(total: usize) -> Result<(), TwigCompileError> {
+    if total > MAX_FUNCTIONS_PER_MODULE {
+        return Err(breach("functions per linked program", MAX_FUNCTIONS_PER_MODULE, None, (1, 1)));
+    }
+    Ok(())
+}
+
 /// Count the tree's items without recursion, and stop at the first item
-/// past [`MAX_CST_ITEMS`].
+/// past [`MAX_CST_ITEMS`].  The same walk refuses a `NAME` token longer than
+/// [`MAX_NAME_BYTES`]: a tree from `twig_parser::parse_to_ast` had its
+/// names checked there, but a hand-built one did not, and this walk visits
+/// every token anyway.
 ///
 /// The count is taken *before* a child node is queued, so a hostile tree
 /// costs at most the budget's worth of work however wide or deep it is
 /// (lesson: *depth limits do not bound breadth*).  The error points at the
 /// node whose child went over.
-pub(crate) fn check_cst_items(root: &GrammarASTNode) -> Result<(), TwigCompileError> {
+///
+/// Public so a caller that parses Twig itself can refuse an oversized tree
+/// before doing anything else with it: `twig-module-driver` runs it right
+/// after `parse_to_ast`, before extracting, type-checking or keeping the
+/// tree.
+pub fn check_cst_items(root: &GrammarASTNode) -> Result<(), TwigCompileError> {
     let mut pending = vec![root];
     let mut items = 1_usize;
     while let Some(node) = pending.pop() {
@@ -182,8 +251,9 @@ pub(crate) fn check_cst_items(root: &GrammarASTNode) -> Result<(), TwigCompileEr
                 return Err(breach("CST items", MAX_CST_ITEMS, None, crate::cst::pos(node)));
             }
             items += 1;
-            if let ASTNodeOrToken::Node(inner) = child {
-                pending.push(inner);
+            match child {
+                ASTNodeOrToken::Node(inner) => pending.push(inner),
+                ASTNodeOrToken::Token(token) => twig_parser::check_name_token(token)?,
             }
         }
     }
@@ -195,6 +265,7 @@ pub(crate) fn check_cst_items(root: &GrammarASTNode) -> Result<(), TwigCompileEr
 #[derive(Debug, Default)]
 pub(crate) struct ModuleBudget {
     instructions: usize,
+    functions: usize,
 }
 
 impl ModuleBudget {
@@ -240,11 +311,21 @@ impl ModuleBudget {
             return Err(breach("IIR instructions per function", limit, name, at));
         }
 
+        // ── Functions in the module so far ────────────────────────────
+        //
+        // Checked before the instruction total so a breach of both (a
+        // union of 40,000 empty variants) names the budget that twig-vm
+        // would have refused first.
+        if self.functions == MAX_FUNCTIONS_PER_MODULE {
+            return Err(breach("functions per module", MAX_FUNCTIONS_PER_MODULE, name, declared));
+        }
+
         // ── Instructions in the module so far ─────────────────────────
         let limit = MAX_IIR_INSTRUCTIONS_PER_MODULE;
         match self.instructions.checked_add(function.instructions.len()) {
             Some(total) if total <= limit => {
                 self.instructions = total;
+                self.functions += 1;
                 Ok(())
             }
             _ => Err(breach(

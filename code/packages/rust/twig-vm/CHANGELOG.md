@@ -1,5 +1,22 @@
 # Changelog — twig-vm
 
+## Unreleased — #18474 security review: the CLI never blocks on a file
+
+### Fixed
+
+- `twig-vm <FILE>` refuses anything but a regular file without blocking
+  (via `twig_module_driver::read_source`, now on `bounded-source-file`): a
+  FIFO with no writer used to block it forever, and `/dev/zero` is refused
+  as `not a regular file`.
+
+### Tests
+
+- `tests/cli_source_budget.rs` gains `a_fifo_is_refused_without_blocking`
+  (the child is killed after 10 s if it blocks), `/dev/zero` now expects
+  `not a regular file`, and `a_long_record_name_is_refused_before_any_
+  accessor_name_is_made` runs the review's 512 KB record name through the
+  binary (a 256-byte name runs).
+
 ## Unreleased — #18474: the compiler's register budget is the frame limit
 
 ### Fixed

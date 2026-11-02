@@ -938,6 +938,13 @@ impl Compiler {
         //   as `fn_globals` so direct calls reach the fast `call` path.
         // - `Form::UnionDef` generates constructors + predicates + accessors *and*
         //   populates `self.variant_tags` so `match` lowering can look up tags.
+        //
+        // Records and unions *invent* names here — a predicate and one
+        // accessor per field, each repeating the declaration's name — so
+        // their bytes grow as name length × field count.  Each declaration
+        // is charged against `MAX_GENERATED_NAME_BYTES` by arithmetic
+        // before one of its names is formatted (#18474 security review).
+        let mut generated = twig_parser::GeneratedNameBudget::default();
         for form in program.forms() {
             match form {
                 FormKind::Define(def) => {
@@ -948,6 +955,12 @@ impl Compiler {
                     }
                 }
                 FormKind::RecordDef(rec) => {
+                    let (line, column) = rec.pos();
+                    let bytes = twig_parser::generated_name_bytes(
+                        rec.name().len(),
+                        rec.fields().map(str::len),
+                    );
+                    generated.add(bytes, line, column)?;
                     // Constructor name (same as type name, e.g. "Span").
                     self.fn_globals.insert(rec.name().to_string());
                     // Accessor names: <lower(RecordName)>-<field-name>.
@@ -959,6 +972,14 @@ impl Compiler {
                     self.fn_globals.insert(format!("{prefix}?"));
                 }
                 FormKind::UnionDef(union) => {
+                    for variant in union.variants() {
+                        let (line, column) = variant.pos();
+                        let bytes = twig_parser::generated_name_bytes(
+                            variant.name().len(),
+                            variant.fields().map(str::len),
+                        );
+                        generated.add(bytes, line, column)?;
+                    }
                     for (idx, variant) in union.variants().enumerate() {
                         // Constructor name (same as variant name, e.g. "IntLit").
                         self.fn_globals.insert(variant.name().to_string());

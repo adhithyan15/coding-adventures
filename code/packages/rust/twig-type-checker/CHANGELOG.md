@@ -1,5 +1,23 @@
 # Changelog — twig-type-checker
 
+## Unreleased — #18474 security review: generated-name budget before Pass 1
+
+### Fixed
+
+- **`register_record` / `register_union` formatted one `name-field` global
+  per field with no limit**, so a long record name times many fields was
+  tens of GB of names. A `Program` from `twig_parser::extract_program` is
+  now refused there; `check_program` and `check_program_with_globals` also
+  run `twig_parser::check_generated_names` before Pass 1, for a `Program`
+  built some other way. A refusal is one error with `ok: false` in every
+  mode, since the checker never looked at the program.
+
+### Tests
+
+- `tests/generated_names.rs`: a hand-built program over the budget is
+  refused by both entry points with no accessor registered; one under it is
+  checked as before.
+
 ## Unreleased — #18438: a user definition shadows a builtin
 
 ### Fixed

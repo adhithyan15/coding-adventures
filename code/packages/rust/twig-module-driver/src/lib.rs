@@ -376,11 +376,23 @@ pub fn compile_module_tree(
 
     queue.push_back(root_canonical.clone());
     visited.insert(root_canonical.clone());
+    // Source bytes read so far, over the whole graph: held to
+    // `MAX_PROGRAM_SOURCE_BYTES` (4 MiB) as each file is read, before it is
+    // parsed, so the graph's parse, extract and type-check work is bounded
+    // by four maximum-size files rather than `MAX_MODULES` of them.
+    let mut program_source_bytes: u64 = 0;
 
     while let Some(current_path) = queue.pop_front() {
         // Read source, never more than the compiler's source budget
         // (`read_source`, #18474).
         let source = read_source(&current_path)?;
+        program_source_bytes = program_source_bytes.saturating_add(source.len() as u64);
+        twig_ir_compiler::budgets::check_graph_source_bytes(program_source_bytes).map_err(
+            |error| ModuleDriverError::Compile {
+                path: current_path.clone(),
+                error,
+            },
+        )?;
 
         let module_name = unique_module_name(
             derive_module_name(&current_path, search_roots),
@@ -395,6 +407,13 @@ pub fn compile_module_tree(
             error: e,
         };
         let cst = twig_parser::parse_to_ast(&source).map_err(parse_error)?;
+        // The compiler's tree budget (items, and name length for a tree
+        // that did not come from the lexer) right away, before the tree is
+        // extracted, type-checked or kept for Phase 4.
+        twig_ir_compiler::check_cst_items(&cst).map_err(|error| ModuleDriverError::Compile {
+            path: current_path.clone(),
+            error,
+        })?;
         let program = twig_parser::extract_program(&cst).map_err(parse_error)?;
         parse_trees.insert(current_path.clone(), cst);
 
@@ -524,6 +543,39 @@ pub fn compile_module_tree(
         .iter()
         .map(|(path, _, name)| (path.as_path(), name.as_str()))
         .collect();
+
+    // ── Phase 3.25: the imported-names budget ────────────────────────────────
+    //
+    // Phases 3.5 and 4 copy, for every import edge, the imported module's
+    // export list into the importer (type-checker globals, compiler externs
+    // and `IIRImport`s).  That is edges × exports work: a thousand modules
+    // each importing one module that exports 50,000 names is fifty million
+    // copies.  Charge every edge its export clause's length, summed over the
+    // graph, against `MAX_IMPORTED_NAMES` before any copying starts.  The
+    // export clause is the right charge: `extract_module_exports` and
+    // `visible_imports` each walk exactly that list per edge.
+    {
+        let clause_len: std::collections::HashMap<&Path, usize> = discovered
+            .iter()
+            .map(|(path, program, _)| {
+                let len = program.module_info.as_ref().map_or(0, |info| info.exports.len());
+                (path.as_path(), len)
+            })
+            .collect();
+        let mut imported_names: usize = 0;
+        for (path, _, _) in &discovered {
+            for (_, dep) in adjacency.get(path).map(Vec::as_slice).unwrap_or(&[]) {
+                let charge = clause_len.get(dep.as_path()).copied().unwrap_or(0);
+                imported_names = imported_names.saturating_add(charge);
+                twig_ir_compiler::budgets::check_imported_names(imported_names).map_err(
+                    |error| ModuleDriverError::Compile {
+                        path: path.clone(),
+                        error,
+                    },
+                )?;
+            }
+        }
+    }
 
     // ── Phase 3.5: Type-check each module in dependency order ────────────────
     //
@@ -677,6 +729,9 @@ pub fn compile_module_tree(
     // program's budget (`check_linked_instructions`, #18474), checked as
     // each module is added so an oversized graph stops early.
     let mut linked_instructions: usize = 0;
+    // And the linked program's functions, held to one module's
+    // `MAX_FUNCTIONS_PER_MODULE` (twig-vm's per-run function caps).
+    let mut linked_functions: usize = 0;
 
     for (path, _program, module_name) in &discovered {
         let globals_for_path = module_extra_globals.get(path).unwrap_or(&empty_globals);
@@ -737,12 +792,13 @@ pub fn compile_module_tree(
         }
 
         linked_instructions = linked_instructions.saturating_add(instruction_count(&iir_mod));
-        twig_ir_compiler::budgets::check_linked_instructions(linked_instructions).map_err(
-            |error| ModuleDriverError::Compile {
+        linked_functions = linked_functions.saturating_add(iir_mod.functions.len());
+        twig_ir_compiler::budgets::check_linked_instructions(linked_instructions)
+            .and_then(|()| twig_ir_compiler::budgets::check_linked_functions(linked_functions))
+            .map_err(|error| ModuleDriverError::Compile {
                 path: path.clone(),
                 error,
-            },
-        )?;
+            })?;
 
         modules.push(iir_mod);
     }
@@ -768,12 +824,12 @@ pub fn compile_module_tree(
     // merged module holds exactly the instructions counted above.  Checking
     // the result itself keeps that true by construction rather than by the
     // linker's current behaviour.
-    twig_ir_compiler::budgets::check_linked_instructions(instruction_count(&linked)).map_err(
-        |error| ModuleDriverError::Compile {
+    twig_ir_compiler::budgets::check_linked_instructions(instruction_count(&linked))
+        .and_then(|()| twig_ir_compiler::budgets::check_linked_functions(linked.functions.len()))
+        .map_err(|error| ModuleDriverError::Compile {
             path: root_canonical.clone(),
             error,
-        },
-    )?;
+        })?;
     Ok(linked)
 }
 
@@ -782,46 +838,41 @@ fn instruction_count(module: &IIRModule) -> usize {
     module.functions.iter().map(|f| f.instructions.len()).sum()
 }
 
-/// Read a Twig source file, refusing it if it is longer than the
-/// compiler's source budget, `twig_ir_compiler::MAX_SOURCE_BYTES` (1 MiB).
+/// Read a Twig source file, refusing it if it is not a regular file or is
+/// longer than the compiler's source budget,
+/// `twig_ir_compiler::MAX_SOURCE_BYTES` (1 MiB).
 ///
-/// `read_to_string` would read the whole file before anyone could measure
-/// it, so a 10 GB file cost 10 GB of memory just to be refused.  Instead
-/// two checks bracket the read:
+/// `read_to_string` read the whole file before anyone could measure it, so
+/// a 10 GB file cost 10 GB of memory just to be refused, `/dev/zero` never
+/// returned, and a FIFO with no writer blocked forever.  The reading is
+/// `bounded_source_file::read_to_string`:
 ///
-/// | Check | Catches |
-/// |-------|---------|
-/// | the open file's `metadata().len()` | a file that is too big now, before a byte is read |
-/// | reading through `take(MAX + 1)` and counting | a file that grows after the size check, or one whose size the metadata does not report (a pipe, `/dev/zero`) |
+/// | Step | Catches |
+/// |------|---------|
+/// | `fs::metadata(path).is_file()` | a FIFO, tty, device or directory, before `open` |
+/// | `open` with `O_NONBLOCK` (Unix) | a path swapped for a FIFO after that check: `open` still returns |
+/// | the open handle's `is_file()` and `len()` | the swap, and a file too big now, before a byte is read |
+/// | reading through `take(MAX + 1)` and counting | a file that grows after the size check |
 ///
-/// The size comes from the *open handle*, not the path, so the file
-/// measured is the file read.  At most `MAX_SOURCE_BYTES + 1` bytes are
-/// ever buffered.  A breach is `ModuleDriverError::Compile` carrying the
-/// compiler's own `source bytes` error; a file that is not UTF-8 is
-/// `Io` with `InvalidData`, as `read_to_string` reported it.
+/// At most `MAX_SOURCE_BYTES + 1` bytes are ever buffered.  A file over the
+/// budget is `ModuleDriverError::Compile` with the compiler's own
+/// `source bytes` error; anything else (not a regular file, not UTF-8, an
+/// I/O failure) is `Io`.
 ///
 /// Public so that `twig-vm`'s command line reads files the same way.
 pub fn read_source(path: &Path) -> Result<String, ModuleDriverError> {
-    use std::io::Read;
-
-    let io = |error| ModuleDriverError::Io {
-        path: path.to_path_buf(),
-        error,
-    };
-    let too_big = |error| ModuleDriverError::Compile {
-        path: path.to_path_buf(),
-        error,
-    };
     let limit = twig_ir_compiler::MAX_SOURCE_BYTES as u64;
-
-    let file = std::fs::File::open(path).map_err(io)?;
-    twig_ir_compiler::budgets::check_source_len(file.metadata().map_err(io)?.len())
-        .map_err(too_big)?;
-    let mut bytes = Vec::new();
-    file.take(limit + 1).read_to_end(&mut bytes).map_err(io)?;
-    twig_ir_compiler::budgets::check_source_len(bytes.len() as u64).map_err(too_big)?;
-    String::from_utf8(bytes)
-        .map_err(|e| io(std::io::Error::new(std::io::ErrorKind::InvalidData, e)))
+    bounded_source_file::read_to_string(path, limit).map_err(|error| {
+        if error.kind() == std::io::ErrorKind::FileTooLarge {
+            // Over the budget, by size or by reading: report it as the
+            // compiler would have, so the message names the budget.
+            let error = twig_ir_compiler::budgets::check_source_len(limit + 1)
+                .expect_err("one byte over the budget is always refused");
+            ModuleDriverError::Compile { path: path.to_path_buf(), error }
+        } else {
+            ModuleDriverError::Io { path: path.to_path_buf(), error }
+        }
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -921,9 +972,12 @@ fn library_exports(program: &Program, defined: &[String]) -> Vec<String> {
     let Some(info) = program.module_info.as_ref() else {
         return Vec::new();
     };
+    // A set, not `defined.contains`: that was exports × definitions string
+    // compares, quadratic in a module that defines and exports many names.
+    let defined: HashSet<&str> = defined.iter().map(String::as_str).collect();
     info.exports
         .iter()
-        .filter(|name| name.as_str() != LIBRARY_ENTRY && defined.contains(name))
+        .filter(|name| name.as_str() != LIBRARY_ENTRY && defined.contains(name.as_str()))
         .cloned()
         .collect()
 }
@@ -1248,22 +1302,43 @@ mod tests {
         fs::remove_file(&huge).unwrap();
     }
 
-    /// The size check alone is not enough: a file can grow after it, and
-    /// some files do not report their size at all.  `/dev/zero` has a
-    /// metadata length of 0 and never ends, the extreme case of both.  The
-    /// bounded read stops after `MAX_SOURCE_BYTES + 1` bytes and refuses it;
-    /// `read_to_string` would have read until memory ran out.
+    /// Anything that is not a regular file is refused before it is read,
+    /// and without blocking: `/dev/zero` (size 0, endless), and a FIFO with
+    /// no writer, which blocks a plain `open` forever.  Both used to be
+    /// read with `read_to_string`.  (A file that grows after the size check
+    /// is cut off by the bounded read; `bounded-source-file`'s own tests
+    /// cover that with a reader longer than its size.)
     #[cfg(unix)]
     #[test]
-    fn read_source_bounds_a_file_that_is_longer_than_its_size_says() {
-        let zero = Path::new("/dev/zero");
-        assert_eq!(fs::metadata(zero).unwrap().len(), 0, "the size check passes");
-        match read_source(zero) {
-            Err(ModuleDriverError::Compile { error, .. }) => {
-                assert!(error.message.starts_with("source bytes exceeds"), "{error}");
+    fn read_source_refuses_devices_and_fifos_without_blocking() {
+        let not_regular = |path: &Path| match read_source(path) {
+            Err(ModuleDriverError::Io { error, .. }) => {
+                assert_eq!(error.kind(), std::io::ErrorKind::InvalidInput, "{error}");
             }
-            other => panic!("expected a source-bytes refusal, got {other:?}"),
+            other => panic!("expected `not a regular file`, got {other:?}"),
+        };
+        not_regular(Path::new("/dev/zero"));
+
+        let dir = make_tempdir("read_source_fifo");
+        let fifo = dir.join("pipe.tw");
+        let _ = fs::remove_file(&fifo);
+        let made = std::process::Command::new("mkfifo").arg(&fifo).status();
+        if !made.map(|s| s.success()).unwrap_or(false) {
+            eprintln!("mkfifo unavailable; skipping the FIFO half");
+            return;
         }
+        let (tx, rx) = std::sync::mpsc::channel();
+        let path = fifo.clone();
+        std::thread::spawn(move || {
+            let _ = tx.send(compile_module_tree(&path, &[]).map(|_| ()));
+        });
+        match rx.recv_timeout(std::time::Duration::from_secs(10)).expect("must not block") {
+            Err(ModuleDriverError::Io { error, .. }) => {
+                assert_eq!(error.kind(), std::io::ErrorKind::InvalidInput, "{error}");
+            }
+            other => panic!("expected `not a regular file`, got {other:?}"),
+        }
+        let _ = fs::remove_file(&fifo);
     }
 
     /// Bytes that are not UTF-8 stay the `Io`/`InvalidData` error
@@ -1329,6 +1404,164 @@ mod tests {
                 assert!(path.ends_with("lib.tw"), "{path:?}");
             }
             other => panic!("expected the linked-program budget, got {:?}", other.map(|m| total(&m))),
+        }
+    }
+
+    /// The whole graph's source is held to `MAX_PROGRAM_SOURCE_BYTES`
+    /// (4 MiB) as each file is read, before it is parsed.  `main.tw` imports
+    /// four libraries; three are exactly 1 MiB and the fourth makes the
+    /// total exactly 4 MiB, which compiles.  One byte more in the fourth is
+    /// refused at that file.  Before this budget the driver read and parsed
+    /// up to `MAX_MODULES` (1,000) files of 1 MiB each.
+    #[test]
+    fn program_source_bytes_budget_applies_to_the_whole_graph() {
+        use twig_ir_compiler::{MAX_PROGRAM_SOURCE_BYTES, MAX_SOURCE_BYTES};
+        let dir = make_tempdir("program_source_bytes");
+        // A module of exactly `len` bytes: its header, a comment, `1`.
+        let module = |name: &str, len: usize| {
+            let head = format!("(module {name})\n;");
+            let src = format!("{head}{}\n1", "a".repeat(len - head.len() - 2));
+            assert_eq!(src.len(), len);
+            src
+        };
+        let root = "(module main (import l1 l2 l3 l4))\n1\n".to_string();
+        let root_path = write_temp(&dir, "main.tw", &root);
+        for lib in ["l1", "l2", "l3"] {
+            write_temp(&dir, &format!("{lib}.tw"), &module(lib, MAX_SOURCE_BYTES));
+        }
+        let last = MAX_PROGRAM_SOURCE_BYTES - 3 * MAX_SOURCE_BYTES - root.len();
+        write_temp(&dir, "l4.tw", &module("l4", last));
+        compile_module_tree(&root_path, &[dir.as_path()]).expect("exactly 4 MiB compiles");
+
+        write_temp(&dir, "l4.tw", &module("l4", last + 1));
+        match compile_module_tree(&root_path, &[dir.as_path()]) {
+            Err(ModuleDriverError::Compile { path, error }) => {
+                assert!(path.ends_with("l4.tw"), "{path:?}");
+                assert_eq!(
+                    error.message,
+                    format!("source bytes per program exceeds the limit of {MAX_PROGRAM_SOURCE_BYTES}")
+                );
+            }
+            other => panic!("expected the program source budget, got {other:?}"),
+        }
+    }
+
+    /// The compiler's tree budget runs in Phase 1, right after parsing, so
+    /// an oversized tree is refused before it is extracted, type-checked or
+    /// kept.  `main.tw` is `(typed strict)` with a type error, and imports a
+    /// library whose tree is over `MAX_CST_ITEMS`.  Phase 3.5 would report
+    /// main's type error before Phase 4 compiled the library; the refusal
+    /// is the library's tree budget, so it came first.
+    #[test]
+    fn cst_items_budget_runs_in_phase_one() {
+        let dir = make_tempdir("phase_one_cst_items");
+        let big = |refs: usize| format!("(module big)\n(let ((x 1)) {})\n", "x ".repeat(refs));
+        let root = write_temp(&dir, "main.tw", "(module main (typed strict) (import big))\n(define (f x) x)\n(f 1 2)\n");
+        // Control: with a small library the refusal is main's type error,
+        // from Phase 3.5, so that is what a Phase 4 tree check would lose to.
+        write_temp(&dir, "big.tw", &big(10));
+        assert!(
+            matches!(compile_module_tree(&root, &[dir.as_path()]), Err(ModuleDriverError::TypeErrors { .. })),
+            "the control must fail in Phase 3.5"
+        );
+        // 349,600 body references: 3 items each, over the 2^20 budget.
+        write_temp(&dir, "big.tw", &big(349_600));
+        match compile_module_tree(&root, &[dir.as_path()]) {
+            Err(ModuleDriverError::Compile { path, error }) => {
+                assert!(path.ends_with("big.tw"), "{path:?}");
+                assert!(error.message.starts_with("CST items exceeds"), "{error}");
+            }
+            other => panic!("expected the CST items budget, got {other:?}"),
+        }
+    }
+
+    /// Every import edge copies the imported module's export list, so the
+    /// edges' export clauses, summed, are held to `MAX_IMPORTED_NAMES`
+    /// (2^20) before any copying.  `lib` lists 1,024 exports and `main`
+    /// imports it 1,024 times: exactly 2^20, which compiles.  A 1,025th
+    /// import is refused.
+    #[test]
+    fn imported_names_budget_bounds_edges_times_exports() {
+        use twig_ir_compiler::MAX_IMPORTED_NAMES;
+        let dir = make_tempdir("imported_names");
+        let exports: String = (0..1024).map(|i| format!(" e{i}")).collect();
+        write_temp(&dir, "lib.tw", &format!("(module lib (export{exports}))\n(define (e0) 0)\n"));
+        let root = |imports: usize| {
+            write_temp(&dir, "main.tw", &format!("(module main (import{}))\n(e0)\n", " lib".repeat(imports)))
+        };
+        assert_eq!(1024 * 1024, MAX_IMPORTED_NAMES);
+        compile_module_tree(&root(1024), &[dir.as_path()]).expect("exactly 2^20 imported names");
+        match compile_module_tree(&root(1025), &[dir.as_path()]) {
+            Err(ModuleDriverError::Compile { path, error }) => {
+                assert!(path.ends_with("main.tw"), "{path:?}");
+                assert_eq!(
+                    error.message,
+                    format!("imported names per program exceeds the limit of {MAX_IMPORTED_NAMES}")
+                );
+            }
+            other => panic!("expected the imported-names budget, got {other:?}"),
+        }
+    }
+
+    /// The linked program is one module to twig-vm, so its functions are
+    /// held to one module's `MAX_FUNCTIONS_PER_MODULE` (2^16), though each
+    /// module is under it.  Each empty union variant is two functions (its
+    /// constructor and predicate); `main.tw` is padded with one-function
+    /// `define`s to a linked total of exactly 2^16, which links.  One
+    /// `define` more is refused at `lib.tw`.
+    #[test]
+    fn linked_program_is_held_to_the_module_function_budget() {
+        use twig_ir_compiler::MAX_FUNCTIONS_PER_MODULE as LIMIT;
+        let union = |name: &str, variants: usize| {
+            let variants: String = (0..variants).map(|i| format!(" ({name}{i})")).collect();
+            format!("(union {name}{variants})")
+        };
+        let dir = make_tempdir("linked_function_budget");
+        write_temp(&dir, "lib.tw", &format!("(module lib (export f))\n(define (f) 1)\n{}\n", union("V", 18_000)));
+        let tree = |defines: usize| {
+            let defines: String = (0..defines).map(|i| format!("(define (g{i}) 1)\n")).collect();
+            let root = write_temp(&dir, "main.tw", &format!(
+                "(module main (import lib))\n{}\n{defines}(f)\n",
+                union("W", 14_000)
+            ));
+            compile_module_tree(&root, &[dir.as_path()])
+        };
+        let probe = tree(1).expect("the probe is under the budget").functions.len();
+        assert!(probe < LIMIT, "{probe}");
+        let defines = 1 + (LIMIT - probe);
+        assert_eq!(tree(defines).expect("exactly the budget links").functions.len(), LIMIT);
+        match tree(defines + 1) {
+            Err(ModuleDriverError::Compile { path, error }) => {
+                assert!(path.ends_with("lib.tw"), "{path:?}");
+                assert_eq!(
+                    error.message,
+                    format!("functions per linked program exceeds the limit of {LIMIT}")
+                );
+            }
+            other => panic!("expected the linked function budget, got {:?}", other.map(|m| m.functions.len())),
+        }
+    }
+
+    /// Names are capped at the parser (`MAX_NAME_BYTES`, 256): the
+    /// security review's record, a 512 KB name with many fields, is refused
+    /// in Phase 1 as a parse error before a single accessor name is made.
+    /// A 256-byte name compiles.
+    #[test]
+    fn long_names_are_refused_in_phase_one() {
+        use twig_ir_compiler::MAX_NAME_BYTES;
+        let dir = make_tempdir("long_names");
+        let record = |name_len: usize| {
+            let fields: String = (0..1_000).map(|i| format!(" (f{i} : int)")).collect();
+            format!("(record {}{fields})\n1\n", "A".repeat(name_len))
+        };
+        let at = write_temp(&dir, "at.tw", &record(MAX_NAME_BYTES));
+        compile_module_tree(&at, &[]).expect("a 256-byte record name compiles");
+        let over = write_temp(&dir, "over.tw", &record(1 << 19));
+        match compile_module_tree(&over, &[]) {
+            Err(ModuleDriverError::Parse { error, .. }) => {
+                assert_eq!(error.message, format!("name bytes exceeds the limit of {MAX_NAME_BYTES}"));
+            }
+            other => panic!("expected the name budget, got {other:?}"),
         }
     }
 

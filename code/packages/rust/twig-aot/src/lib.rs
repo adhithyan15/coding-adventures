@@ -448,6 +448,21 @@ impl From<std::io::Error> for AotError {
     fn from(e: std::io::Error) -> Self { AotError::Io(e) }
 }
 
+/// Read a Twig source file for compilation without ever holding more than
+/// the compiler's source budget (`twig_ir_compiler::MAX_SOURCE_BYTES`,
+/// 1 MiB; #18474 security review).
+///
+/// Every `compile_file_*` entry point used `std::fs::read_to_string`, which
+/// reads a whole file before anything can measure it: a 10 GB file cost
+/// 10 GB, `/dev/zero` never returned and a FIFO blocked forever.
+/// `bounded_source_file` refuses anything but a regular file (without
+/// blocking), checks the size first, and reads at most the budget plus one
+/// byte.  Failures are `AotError::Io`, as before: `InvalidInput` for not a
+/// regular file, `FileTooLarge` for over the budget.
+fn read_twig_source(path: &Path) -> std::io::Result<String> {
+    bounded_source_file::read_to_string(path, twig_ir_compiler::MAX_SOURCE_BYTES as u64)
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -781,7 +796,7 @@ pub fn compile_file_macos_arm64(
     src_path: &Path,
     out_path: &Path,
 ) -> Result<(), AotError> {
-    let source = std::fs::read_to_string(src_path)?;
+    let source = read_twig_source(src_path)?;
     let stem = src_path.file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("twig");
@@ -1984,7 +1999,7 @@ pub fn emit_object_to_disk(
     target: EmitObjectTarget,
 ) -> Result<EmittedObject, AotError> {
     use std::io::Write as _;
-    let source = std::fs::read_to_string(src)?;
+    let source = read_twig_source(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
 
     // Produce the object bytes (no linking).
@@ -2062,7 +2077,7 @@ fn with_extension(base: &Path, ext: &str) -> PathBuf {
 /// that wasn't done on Linux.
 #[cfg(target_os = "linux")]
 pub fn compile_file_linux_x86_64(src: &Path, out: &Path) -> Result<(), AotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_twig_source(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
     let obj_bytes = compile_linux_x86_64_object(&source, stem)?;
     link_linux_x86_64_executable(&obj_bytes, stem, out)
@@ -2166,7 +2181,7 @@ pub fn link_linux_x86_64_executable(
 /// message if none is available.
 #[cfg(target_os = "windows")]
 pub fn compile_file_windows_x86_64(src: &Path, out: &Path) -> Result<(), AotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_twig_source(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
     let obj_bytes = compile_windows_x86_64_object(&source, stem)?;
     link_windows_x86_64_executable(&obj_bytes, stem, out)
@@ -4239,6 +4254,33 @@ mod dynval_runtime_golden;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// #18474 review: an object is emitted only from a regular file within
+    /// the source budget. A sparse file one byte over the budget, and a
+    /// directory, are refused as `AotError::Io` before they are read; a
+    /// file of exactly the budget is read (and compiled).
+    #[test]
+    fn source_files_are_read_within_the_budget() {
+        use std::io::ErrorKind;
+        let dir = tempfile::tempdir().unwrap();
+        let kind = |src: &Path| match emit_object_to_disk(src, &dir.path().join("out"), EmitObjectTarget::LinuxX86_64) {
+            Err(AotError::Io(e)) => Some(e.kind()),
+            Err(other) => panic!("expected an I/O refusal, got {other}"),
+            Ok(_) => None,
+        };
+        let limit = twig_ir_compiler::MAX_SOURCE_BYTES as u64;
+
+        let over = dir.path().join("over.tw");
+        std::fs::File::create(&over).unwrap().set_len(limit + 1).unwrap();
+        assert_eq!(kind(&over), Some(ErrorKind::FileTooLarge));
+        assert_eq!(kind(dir.path()), Some(ErrorKind::InvalidInput));
+
+        let at = dir.path().join("at.tw");
+        let src = format!(";{}\n42", "a".repeat(limit as usize - 4));
+        assert_eq!(src.len() as u64, limit);
+        std::fs::write(&at, src).unwrap();
+        assert_eq!(kind(&at), None, "a file of exactly the budget compiles");
+    }
 
     #[test]
     fn msvc_dynamic_crt_libraries_follow_dependency_order() {

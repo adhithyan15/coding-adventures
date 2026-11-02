@@ -334,6 +334,10 @@ cannot run, before anything reaches a backend (#18474, `src/budgets.rs`):
 | `MAX_REGISTERS_PER_FUNCTION` | 2¹⁶ | the frame limit of twig-vm and of vm-core; counted as vm-core counts (params + distinct non-param dests) |
 | `MAX_IIR_INSTRUCTIONS_PER_FUNCTION` | 2¹⁸ | four instructions per register at the register limit |
 | `MAX_IIR_INSTRUCTIONS_PER_MODULE` | 2²⁰ | twig-vm's profile-slot cap; stops a record's quadratic accessor expansion |
+| `MAX_FUNCTIONS_PER_MODULE` | 2¹⁶ | twig-vm's per-run function caps (`MAX_PROFILED_FUNCTIONS`, `MAX_IC_FUNCTIONS`) |
+| `MAX_NAME_BYTES` | 256 | from `twig-parser`; checked by the lexer, and by `check_cst_items` for a hand-built tree |
+| `MAX_GENERATED_NAME_BYTES` | 1 MiB | from `twig-parser`; a record's invented accessor names are charged before one is formatted, so a long name × many fields cannot cost tens of GB |
+| `MAX_PROGRAM_SOURCE_BYTES`, `MAX_IMPORTED_NAMES` | 4 MiB, 2²⁰ | used by `twig-module-driver` across an import graph |
 
 A breach is a `TwigCompileError` naming the budget, the function, and the
 source of the instruction that went over:
