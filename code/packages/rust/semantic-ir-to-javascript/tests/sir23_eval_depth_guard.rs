@@ -129,9 +129,10 @@ fn run_eval_at_depth(n: u32) -> Option<String> {
 "#
     ));
 
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_eval_depth_{n}_{}.js", unique_suffix()));
-    std::fs::write(&path, &source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
 
@@ -273,12 +274,13 @@ fn comparison_of_two_deep_identical_trees_stays_unevaluated_past_the_term_equals
 "#,
     );
 
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!(
         "sir_eval_termequals_depth_{}.js",
         unique_suffix()
     ));
-    std::fs::write(&path, &source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
 

@@ -5,6 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — #18470 re-review — a builtin sees a boolean as a `Bool`
+
+- `CALL_BUILTIN` passed every argument register as `Value::Int`, so a boolean
+  reached the builtin as 0 / 1. The interpreter tier passes the `Bool` a
+  comparison produced, so a function such as `(b : bool) -> bool` calling
+  `(equal? b 0)` answered `#f` interpreted and `#t` once compiled. A call with
+  a boolean argument now encodes as the new `CALL_BUILTIN_KINDS` (opcode
+  `0x65`): each argument carries a kind byte, `0` for `Int` and `1` for
+  `Bool`. A register counts as boolean when it is a `bool` parameter or every
+  write to it is a comparison, a `const_bool` or typed `bool`; a `bool`
+  literal argument is a `Bool` too. A call with no boolean argument keeps the
+  old encoding, byte for byte. An unknown kind byte or a truncated argument
+  list fails closed. Test: `a_boolean_register_reaches_a_builtin_as_a_bool`.
+  Every `lang_matrix` Vm and Jit cell (2,084) and the other frontends' JIT
+  tests pass unchanged.
+
+## Unreleased — #18470 review M1 — a promoted function keeps every value's kind
+
+- **A register cannot say what kind of value it holds, so `GenericCirJit` no longer compiles a function whose signature admits one it would lose.** `compile_function` refuses a function whose parameter or result is declared anything but an integer width, `bool`, `f64`, a `ref<…>` word or (a result) `void` — `any`, `str`, `symbol`, `closure`, `f32` … stay on the interpreter tier (`register_param_type` / `register_return_type`). Before, every non-`f64` parameter was seeded as an integer and every result came back as `Int`. That was harmless while every language on the VM called `0` false; once vm-core's Twig modules followed TW00 (`0` is true, #18493), a promoted `(define (id x) x)` turned `#f` into `Int(0)` and flipped the branch after it, and a nil or symbol argument failed the call ("integer parameter 0 received Null"). A `ref<…>` is still compiled: on the tagged-word pipelines (McCarthy on the JIT) a reference *is* an `i64` word carrying its own tag.
+- **`PARAM_I64` accepts only an `Int`.** A `Bool` used to read as 0 / 1. The new `PARAM_BOOL` (opcode `0x64`) seeds a `bool`-typed parameter from a `Bool` (0 / 1) or an `Int`; anything else fails the call closed. Error messages name the value's kind, not the value.
+- Measured with every `lang_matrix` program that declares the JIT column, run three times on one `JITCore` so promotion fires: the set of compiled functions is identical before and after (386 programs compile at least one function; none of them is Twig). The change only matters for a dynamically-typed function that becomes hot.
+- Tests: `bool_parameter_has_its_own_checked_prologue`, `a_signature_a_register_cannot_carry_is_refused` (including a `ref<…>` parameter given a structural nil, symbol or boolean failing closed); `f64_parameter_is_loaded_by_a_checked_prologue` now expects a `Bool` or `Symbol` given to an integer parameter to fail closed. `lang-aot`'s `twig_dynamic_values_agree_between_the_vm_and_a_promoted_jit` is the end-to-end check.
+
 ## Unreleased — #18417 — a builtin callback can fail the run
 
 - `GenericCirJit`'s `CALL_BUILTIN` stops the run right after a callback that has recorded an error in the error slot. A callback captures `error_handle()` to do that, since it returns a plain `Value` and cannot return an `Err`. Before, the run went on with the callback's placeholder result, and the error only surfaced when `JITCore` drained the slot at the end. The check is one mutex lock per builtin call. `error_handle`'s doc states the contract. New test `a_callback_that_records_an_error_stops_the_run`. `lang-aot`'s McCarthy `car` / `cdr` use it to fail on a non-pair.

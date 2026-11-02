@@ -20,7 +20,6 @@
 //!
 //! Gates on `go`; logs a skip when absent.
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
@@ -97,7 +96,7 @@ fn demo_module(name: &str, stmts: Vec<Stmt>) -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -110,11 +109,12 @@ fn run(module: &Module) -> Option<String> {
         return None;
     }
     let artifact = compile(module).expect("module should compile to Go source");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let src_path = dir.join(format!("sir_go_shift_{}_{}.go", unique_suffix(), module.name));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
-    let run_out = Command::new("go").arg("run").arg(&src_path).output().expect("invoke go run");
+    let run_out = sir_test_scratch::go_command().arg("run").arg(&src_path).output().expect("invoke go run");
     let _ = std::fs::remove_file(&src_path);
     if !run_out.status.success() {
         panic!(

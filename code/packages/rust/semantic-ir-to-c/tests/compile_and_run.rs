@@ -46,12 +46,13 @@ fn unique_stem(name: &str) -> String {
 fn compile_and_run(cc: &str, module: &semantic_ir::Module, name: &str) -> String {
     let artifact = semantic_ir_to_c::compile(module).expect("C backend compile");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     let stem = unique_stem(name);
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
 
-    std::fs::File::create(&cpath)
+    sir_test_scratch::create_new(&cpath)
         .and_then(|mut f| f.write_all(artifact.source.as_bytes()))
         .expect("write .c");
 

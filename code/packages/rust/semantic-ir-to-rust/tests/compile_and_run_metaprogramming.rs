@@ -173,11 +173,12 @@ fn rustc_available() -> bool {
 /// Compile emitted Rust and run the binary → `(stdout, exit_success)`.  `None`
 /// on a missing linker (skip).  Mirrors the other Rust exec-proofs.
 fn compile_and_run(source: &str, tag: &str) -> Option<(String, bool)> {
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = format!("{}_{}", unique_suffix(), tag);
     let src_path = dir.join(format!("sir_m6_{nonce}.rs"));
     let bin_path = dir.join(format!("sir_m6_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");

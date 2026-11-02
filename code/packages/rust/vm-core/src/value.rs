@@ -1,6 +1,6 @@
 //! [`Value`] — the dynamic value type stored in VM registers.
 //!
-//! Python's `Any` registry is replaced in Rust by a closed enum.  The six
+//! Python's `Any` registry is replaced in Rust by a closed enum.  The seven
 //! variants cover every type the standard IIR opcode handlers produce:
 //!
 //! | Variant | IIR type strings | Notes |
@@ -10,7 +10,8 @@
 //! | `Bool(bool)` | `"bool"` | |
 //! | `Str(String)` | `"str"` | Heap-allocated (plain Rust `String`, not GC-managed) |
 //! | `HeapRef(gc_core::HeapRef)` | `"ref<T>"` | A `gc_alloc`'d object on the shared `FlatHeap` collector |
-//! | `Null` | `"void"`, none | Default register value; ret_void result |
+//! | `Symbol(u32)` | none (`dyn_symbol`'s result) | An interned atom: equal iff the ids are (#18470) |
+//! | `Null` | `"void"`, none | Default register value; ret_void result; the dynamic nil (`dyn_nil`) |
 //!
 //! `HeapRef` is the one variant vm-core itself roots precisely at a
 //! `safepoint` (see `dispatch::run_safepoint`): every `Value::HeapRef` found
@@ -24,7 +25,28 @@
 //! Rust bump arena that is never collected — arrays have no analogous real
 //! collector to reuse yet, a deliberate, separate gap, not an oversight.
 //!
-//! Language frontends that need additional value kinds beyond these six may
+//! ## Dynamic values: nil, booleans and symbols are kinds of their own (#18470, #18493)
+//!
+//! A dynamically-typed frontend (the Lisp family: Twig today) needs every
+//! value to say what *kind* it is at run time: `number?`, `symbol?`,
+//! `boolean?`, `null?` and its truthiness rule all ask. Until #18470 two kinds
+//! had no spelling here, and borrowed `Int`'s:
+//!
+//! | value | before | now |
+//! |-------|--------|-----|
+//! | nil | `Int(0)` — the same value as the integer `0` | `Null` (from `dyn_nil`) |
+//! | a symbol `'a` | `Int(2^29 + id)` — an integer in a reserved range | `Symbol(id)` (from `dyn_symbol`) |
+//!
+//! So `(null? 0)` answered `#t`, `(if 0 1 2)` could not tell `0` from nil, and
+//! `(= 'a 536870912)` compared a symbol equal to a perfectly good integer.
+//! `Symbol` is the one new variant. It is the LANG83 `Dynamic` family's
+//! representation of an interned atom: language-neutral (Ruby, Erlang and
+//! JavaScript have the same thing), and carrying only an identity — which
+//! *name* an id stands for is the business of whoever interned it
+//! ([`crate::builtins`]'s `dyn_symbol`). What a symbol *means* to a language,
+//! like everything else here, is the compiler's to emit (LANG83 PR7).
+//!
+//! Language frontends that need additional value kinds beyond these may
 //! extend this in a wrapper enum without modifying vm-core itself.
 //!
 //! # Arithmetic helpers
@@ -67,6 +89,14 @@ pub enum Value {
     /// the null reference; `is_truthy` and `gc_field_load`/`gc_field_store`
     /// (see `dispatch.rs`) both treat it as such.
     HeapRef(gc_core::HeapRef),
+    /// An interned atom (LANG83 PR7f `dyn_symbol`, #18470). Two symbols are
+    /// the same value iff their ids are equal; an id is meaningful only inside
+    /// the VM that interned it. A symbol is not a number: every numeric
+    /// extractor ([`Value::as_i64`], [`Value::as_f64`]) answers `None`, so an
+    /// arithmetic or ordering op on one is a clean type error, never a silent
+    /// integer. In a GC field it is stored as `(id << 32) | 0b010`, the tagged
+    /// word the native backends use for a symbol (`dispatch.rs`, field tags).
+    Symbol(u32),
     /// The absence of a value — default register contents and `ret_void` result.
     #[default]
     Null,
@@ -130,6 +160,12 @@ impl Value {
     ///
     /// This mirrors Python's `bool()` semantics and the behaviour of
     /// `jmp_if_true` / `jmp_if_false` in the Python vm-core.
+    ///
+    /// It is the *machine's* branch rule, not any source language's. A
+    /// language whose truthiness differs writes its own rule as IIR before the
+    /// branch, so the branch only ever sees a `0` / `1`. Twig's rule — only
+    /// `#f` and nil are false, so `0` and `""` are true (TW00) — is emitted by
+    /// `iir-builtin-lowering::vm_lisp` (#18493); the VM never learns it.
     pub fn is_truthy(&self) -> bool {
         match self {
             Value::Bool(b)    => *b,
@@ -137,6 +173,7 @@ impl Value {
             Value::Float(f)   => *f != 0.0,
             Value::Str(s)     => !s.is_empty(),
             Value::HeapRef(r) => !r.is_null(),
+            Value::Symbol(_)  => true,
             Value::Null       => false,
         }
     }
@@ -177,6 +214,9 @@ impl Value {
             Value::Float(_)   => "f64",
             Value::Str(_)     => "str",
             Value::HeapRef(_) => "ref",
+            // No IIR type names a symbol's machine shape, so the profiler
+            // records it as "any" and the JIT never specialises on it.
+            Value::Symbol(_)  => "any",
             Value::Null       => "any",
         }
     }
@@ -191,6 +231,7 @@ impl std::fmt::Display for Value {
             Value::Bool(b)    => write!(f, "{b}"),
             Value::Str(s)     => write!(f, "{s:?}"),
             Value::HeapRef(r) => write!(f, "{r}"),
+            Value::Symbol(id) => write!(f, "symbol#{id}"),
             Value::Null       => write!(f, "null"),
         }
     }
@@ -218,6 +259,21 @@ mod tests {
         assert!(!Value::Str("".into()).is_truthy());
         assert!(Value::HeapRef(gc_core::HeapRef::new(0x1000)).is_truthy());
         assert!(!Value::HeapRef(gc_core::HeapRef::NULL).is_truthy());
+        assert!(Value::Symbol(0).is_truthy());
+    }
+
+    /// #18470: a symbol is an atom of its own — never a number, equal only to
+    /// the same id.
+    #[test]
+    fn symbol_is_not_a_number_and_compares_by_id() {
+        assert_eq!(Value::Symbol(3), Value::Symbol(3));
+        assert_ne!(Value::Symbol(3), Value::Symbol(4));
+        assert_ne!(Value::Symbol(0), Value::Int(0));
+        assert!(Value::Symbol(7).as_i64().is_none());
+        assert!(Value::Symbol(7).as_f64().is_none());
+        assert!(Value::Symbol(7).as_heap_ref().is_none());
+        assert_eq!(Value::Symbol(7).iir_type_name(), "any");
+        assert_eq!(Value::Symbol(7).to_string(), "symbol#7");
     }
 
     #[test]
