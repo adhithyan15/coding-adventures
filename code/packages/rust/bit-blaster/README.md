@@ -10,10 +10,11 @@ From machine integers to certified SAT proofs: **and-inverter graphs**,
 VER00 §7.6 proves claims about integer code ("for every pair of 32-bit
 inputs, the implementation equals the specification") by asking a SAT
 solver for a counterexample. The solver speaks Boolean clauses, so the
-integers have to become clauses, exactly. This crate does that:
+integers have to become clauses, exactly. This crate holds the circuits
+that do it:
 
 ```text
-  QF_BV problem (.smt2, via smt-lib-format)          smt.rs
+  constraint-engine BV tactic  /  VER18 netlists  /  VER19 WIR
         │  every w-bit value → w signals
         ▼
   bit-vector circuits: adders, shifters, comparators   bv.rs
@@ -26,6 +27,11 @@ integers have to become clauses, exactly. This crate does that:
                                                tseitin.rs
 ```
 
+SMT-LIB `QF_BV` problems do not come here directly. They go through the
+existing LANG24 stack: `smt-lib-format` → `constraint-vm` →
+`constraint-engine`, whose BV tactic (`constraint-engine/src/bv.rs`) lowers
+predicates onto these circuits.
+
 ## What is inside
 
 | Module | Contents |
@@ -33,27 +39,27 @@ integers have to become clauses, exactly. This crate does that:
 | `aig` | `Aig` and `Edge` (`2·node + complement`); `and` with constant folding and structural hashing; `or`/`xor`/`mux`; 64-pattern bit-parallel `simulate` |
 | `tseitin` | Incremental Tseitin encoding of an edge's cone into a `Solver` or a `Cnf`. Stack-based, so deep circuits cannot overflow |
 | `bv` | `BitVec` plus `not and or xor add sub neg mul`, shifts by constants and by bit-vectors (barrel shifter), `eq`, unsigned and signed comparisons, `ite`, all with exact SMT-LIB semantics |
-| `smt` | Decides `smt-lib-format` programs in `QF_BV`: declarations, assertions, `check-sat`, push/pop/reset. Each UNSAT carries its CNF and DRAT proof. Widths and circuit size are bounded |
 
 ## Usage
 
+Prove an identity for **all** inputs by refuting a miter, then certify it:
+
 ```rust
-use bit_blaster::smt::{check_program, Answer};
+use bit_blaster::{aig::Aig, bv::{self, BitVec}, tseitin::Tseitin};
+use cdcl_sat::{Cnf, Solver, SolveResult};
 
-let program = smt_lib_format::read(
-    "(declare-const x (_ BitVec 8))
-     (assert (= (bvadd x #x01) (_ bv5 8)))
-     (check-sat)",
-).unwrap();
-match &check_program(&program).unwrap()[0] {
-    Answer::Sat(model) => assert_eq!(model["x"].as_u128(), Some(4)),
-    Answer::Unsat { .. } => unreachable!(),
-}
+let mut g = Aig::new();
+let (a, b) = (BitVec::input(&mut g, 32), BitVec::input(&mut g, 32));
+let ab = bv::add(&mut g, &a, &b);
+let ba = bv::add(&mut g, &b, &a);
+let same = bv::eq(&mut g, &ab, &ba);
+
+let mut cnf = Cnf::new(0);
+Tseitin::new().assert_true(&g, !same, &mut cnf);       // "they differ somewhere"
+let mut s = Solver::from_cnf_with_proof(&cnf);
+assert_eq!(s.solve(), SolveResult::Unsat);              // nowhere: all 2^64 pairs
+// s.proof() → drat_check::check(...) certifies it.
 ```
-
-To prove an identity for **all** inputs, build a miter and refute it (see
-the crate docs for the full example). For instance, a 16-bit subtraction
-miter is refuted and its DRAT proof certified by `drat-check`.
 
 ## How it is tested
 
@@ -67,17 +73,11 @@ miter is refuted and its DRAT proof certified by `drat-check`.
   commutativity, De Morgan, XOR cancellation, comparison dualities, and
   shift and multiply identities. Each is proved UNSAT, and `drat-check`
   accepts the proof. A false identity yields a real counterexample.
-- **QF_BV corpus** (`tests/qfbv/*.smt2`, 15 files, 23 answers) read
-  through `smt-lib-format`. Every SAT model is re-evaluated by an
-  independent concrete evaluator. Every UNSAT is certified by `drat-check`,
-  and is brute-forced too when its inputs total 16 bits or fewer.
-- **Random QF_BV:** 400 problems over three ≤ 4-bit variables, compared
-  against brute force.
-- **Refusals:** 29 malformed or unsupported inputs are each refused with a
-  reason.
+- **End to end:** the QF_BV corpus and the random problems run through
+  `constraint-vm`, in `constraint-vm/tests/qfbv.rs`.
 
-Expected answers were derived in-house. No external solver is a dependency
-or was needed as an oracle. Line coverage is above 99%.
+No external solver is a dependency or was needed as an oracle. Line
+coverage is 100%.
 
 ## Capabilities
 

@@ -16,7 +16,7 @@
 //! shifts by the width or more give all zeros (all copies of the sign bit
 //! for `ashr`), and everything wraps. Both operands of a binary operation
 //! must have the same width; a mismatch panics, because it is a bug in the
-//! caller. The SMT front end (`smt.rs`) checks widths before it gets here,
+//! caller. The QF_BV tactic in `constraint-engine` checks widths before it gets here,
 //! so hostile input never reaches the panic.
 //!
 //! ## The adder, the heart of it

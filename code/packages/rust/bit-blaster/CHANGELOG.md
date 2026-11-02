@@ -17,12 +17,9 @@ Initial release: VER10 part 1, encodings and bit-blasting.
   ripple-carry add/sub/neg, shift-and-add mul, constant and barrel shifts
   (logical and arithmetic, SMT-LIB overflow semantics), equality, unsigned
   and signed comparisons, and `ite`.
-- `smt`: `check_program` / `check_program_with(Limits)` decide
-  `smt-lib-format` programs in `QF_BV`, including `#b`/`#x`/`(_ bvN w)`
-  literals, n-ary left-associative operators, Booleans, push/pop/reset and
-  shadowing. UNSAT answers carry the CNF and its DRAT proof. Unsupported
-  constructs are refused with a reason; width and AIG-size limits and
-  the predicate depth limit bound hostile input.
-- Tests: exhaustive widths 1–8, random widths 9–64, Tseitin exactness,
-  DRAT-certified miters, a 15-file QF_BV corpus, 400 random QF_BV problems
-  against brute force, and refusal cases.
+- Tests: exhaustive widths 1–8, random widths 9–64, Tseitin exactness on
+  every input of 200 random AIGs, and DRAT-certified miters at 8, 16 and
+  32 bits.
+- SMT-LIB `QF_BV` reaches these circuits through the existing stack:
+  `constraint-engine`'s BV tactic, run by `constraint-vm`. This crate has
+  no program interpreter of its own.

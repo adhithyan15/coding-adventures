@@ -40,7 +40,19 @@ This three-way split maps directly onto LANG23's three outcomes:
 |-------|--------|-----------|
 | `QF_Bool` | SAT (CDCL, via `cdcl-sat`) | Yes (within a 1 000 000-conflict budget) |
 | `QF_LIA` | LIA (Cooper) | Yes |
+| `QF_BV` | BV (bit-blasting via `bit-blaster`, CDCL, UNSAT certified by `drat-check`) | Yes, for widths ≤ 512 and within a 1 000 000-conflict budget |
 | Others | — | No → Unknown |
+
+### The BV tactic (VER10)
+
+`src/bv.rs` lowers predicates over `Bool` and `BitVec(w)` variables to
+circuits: `bvadd` becomes a ripple-carry adder, `bvult` a borrow chain, and
+so on, with exact SMT-LIB semantics. The circuits are Tseitin-encoded and
+solved by `cdcl-sat`. Models give each bit-vector as `Value::BitVec` (bits
+least significant first; `as_bv_u128`, displays as `#b…`). Every `Unsat`
+has passed the trusted kernel `drat-check` first; a rejected proof becomes
+`Unknown`. `BitVec` mixed with `Int` is `Unknown`, since there is no BV–LIA
+combination yet.
 
 ## Usage
 

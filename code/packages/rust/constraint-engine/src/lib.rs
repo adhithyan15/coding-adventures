@@ -58,6 +58,7 @@ use std::collections::HashMap;
 
 use constraint_core::{Logic, Predicate, Sort};
 
+pub mod bv;
 pub mod lia;
 pub mod sat;
 
@@ -119,9 +120,8 @@ impl Default for Model {
 
 /// A concrete value that can appear in a satisfying model.
 ///
-/// The set is intentionally small in v1 (Bool + Int + Real via rational).
-/// Richer sorts (BitVec, Array, Uninterpreted) produce `Unknown` when
-/// their tactics aren't yet wired up.
+/// Bool, Int, Real (as a rational) and, since VER10, bit-vectors. Array and
+/// uninterpreted sorts produce `Unknown` until their tactics exist.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
     /// Boolean assignment.
@@ -130,6 +130,9 @@ pub enum Value {
     Int(i128),
     /// Rational assignment (for Real-sorted variables).
     Real(i128, i128), // (num, den) — always reduced by gcd
+    /// Bit-vector assignment (for `BitVec(w)`-sorted variables): `w` bits,
+    /// least significant first.
+    BitVec(Vec<bool>),
 }
 
 impl Value {
@@ -139,6 +142,17 @@ impl Value {
             Some(*n)
         } else {
             None
+        }
+    }
+
+    /// A bit-vector's value as an unsigned integer, or `None` if this is not
+    /// a bit-vector or it is wider than 128 bits.
+    pub fn as_bv_u128(&self) -> Option<u128> {
+        match self {
+            Value::BitVec(bits) if bits.len() <= 128 => {
+                Some(bits.iter().enumerate().map(|(i, &b)| (b as u128) << i).sum())
+            }
+            _ => None,
         }
     }
 
@@ -163,6 +177,11 @@ impl std::fmt::Display for Value {
                 } else {
                     write!(f, "{n}/{d}")
                 }
+            }
+            // SMT-LIB binary literal, most significant bit first.
+            Value::BitVec(bits) => {
+                write!(f, "#b")?;
+                bits.iter().rev().try_for_each(|&b| write!(f, "{}", b as u8))
             }
         }
     }
@@ -312,7 +331,9 @@ impl Engine {
     /// |---|---|---|
     /// | Bool only | `QF_Bool` / not set | SAT (CDCL) |
     /// | Int only or mixed Bool+Int | `QF_LIA` / not set | LIA (Cooper) + SAT for Bool residual |
-    /// | Real, BitVec, Array, Uninterpreted | any | `Unknown` |
+    /// | BitVec (with or without Bool) | `QF_BV` / not set | BV (bit-blasting + CDCL), UNSAT certified by `drat-check` |
+    /// | BitVec mixed with Int | any | `Unknown` |
+    /// | Real, Array, Uninterpreted | any | `Unknown` |
     /// | Quantified predicates | any | `Unknown` |
     pub fn check_sat(&self) -> SolverResult {
         // Fast path: empty conjunction is trivially SAT.
@@ -325,7 +346,7 @@ impl Engine {
         if let Some(logic) = self.logic {
             if !is_supported_logic(logic) {
                 return SolverResult::Unknown(format!(
-                    "logic {logic} is not yet supported (v1 supports QF_Bool, QF_LIA)"
+                    "logic {logic} is not yet supported (supported: QF_Bool, QF_LIA, QF_BV)"
                 ));
             }
         }
@@ -333,7 +354,8 @@ impl Engine {
         // Reject unsupported sorts.
         if let Some(bad) = self.unsupported_sort_in_env() {
             return SolverResult::Unknown(format!(
-                "sort `{bad}` is not yet supported (v1 supports Bool, Int)"
+                "sort `{bad}` is not yet supported (supported: Bool, Int, BitVec up to {} bits)",
+                bv::MAX_BV_WIDTH
             ));
         }
 
@@ -347,8 +369,18 @@ impl Engine {
         // Classify the formula by sorts present.
         let has_int = self.sort_env.values().any(|s| matches!(s, Sort::Int));
         let has_bool = self.sort_env.values().any(|s| matches!(s, Sort::Bool));
+        let has_bv = self.sort_env.values().any(|s| matches!(s, Sort::BitVec(_)));
 
-        if has_int {
+        if has_bv && has_int {
+            return SolverResult::Unknown(
+                "BitVec mixed with Int is not supported (no combination of BV and LIA yet)".into(),
+            );
+        }
+        if has_bv || self.logic == Some(Logic::QF_BV) {
+            // Bit-vectors (and any Booleans alongside them) go to the BV
+            // tactic, which also handles pure-Bool QF_BV problems.
+            bv::BvTactic::solve(&self.assertions, &self.sort_env)
+        } else if has_int {
             // LIA path.  Booleans are handled via substitution in the LIA
             // tactic — we ground Bool variables to {0, 1} and let Cooper
             // reduce them.
@@ -373,11 +405,16 @@ impl Engine {
         m
     }
 
-    /// Return the name of the first variable whose sort isn't supported in
-    /// v1 (`Bool` and `Int` are supported; everything else is not).
+    /// Return the name of the first variable whose sort isn't supported
+    /// (`Bool`, `Int`, and `BitVec` of width 1..=`MAX_BV_WIDTH`).
     fn unsupported_sort_in_env(&self) -> Option<String> {
         for (name, sort) in &self.sort_env {
-            if !matches!(sort, Sort::Bool | Sort::Int) {
+            let ok = match sort {
+                Sort::Bool | Sort::Int => true,
+                Sort::BitVec(w) => (1..=bv::MAX_BV_WIDTH).contains(&(*w as usize)),
+                _ => false,
+            };
+            if !ok {
                 return Some(name.clone());
             }
         }
@@ -449,7 +486,7 @@ impl Default for Engine {
 // ---------------------------------------------------------------------------
 
 fn is_supported_logic(logic: Logic) -> bool {
-    matches!(logic, Logic::QF_Bool | Logic::QF_LIA)
+    matches!(logic, Logic::QF_Bool | Logic::QF_LIA | Logic::QF_BV)
 }
 
 fn default_value_for_sort(sort: &Sort) -> Option<Value> {
@@ -457,6 +494,11 @@ fn default_value_for_sort(sort: &Sort) -> Option<Value> {
         Sort::Bool => Some(Value::Bool(false)),
         Sort::Int => Some(Value::Int(0)),
         Sort::Real => Some(Value::Real(0, 1)),
+        // Capped: a declared-but-unused `(_ BitVec 4000000000)` must not
+        // allocate four billion bits for a trivial model.
+        Sort::BitVec(w) if (1..=bv::MAX_BV_WIDTH).contains(&(*w as usize)) => {
+            Some(Value::BitVec(vec![false; *w as usize]))
+        }
         _ => None,
     }
 }

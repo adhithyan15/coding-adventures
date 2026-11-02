@@ -4,10 +4,13 @@
 //! claims like "for every 32-bit `a` and `b`, the implementation and the
 //! specification agree" by asking a SAT solver for a counterexample. Before
 //! the solver can be asked, the integers have to become Boolean formulas,
-//! exactly. This crate does that, in three layers:
+//! exactly. This crate holds the circuits; `constraint-engine`'s BV tactic
+//! lowers SMT-LIB `QF_BV` predicates onto them, and `constraint-vm` runs
+//! `.smt2` programs through that tactic. VER18 (hardware) and VER19 (WIR)
+//! build circuits here directly, without predicates.
 //!
 //! ```text
-//!   QF_BV problem (.smt2, via smt-lib-format)          smt.rs
+//!   QF_BV predicate (constraint-engine::bv)  /  netlist  /  WIR
 //!         │  every w-bit value → w signals
 //!         ▼
 //!   bit-vector circuits: adders, shifters, comparators   bv.rs
@@ -52,7 +55,6 @@
 //! | [`aig`] | `Aig`, `Edge`: AND gates, inverters, structural hashing, 64-way simulation |
 //! | [`tseitin`] | incremental Tseitin encoding of an AIG cone into a solver or CNF |
 //! | [`bv`] | `BitVec` and the QF_BV operations as circuits |
-//! | [`smt`] | deciding `smt-lib-format` programs in `QF_BV`, with certificates |
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
@@ -60,5 +62,4 @@
 
 pub mod aig;
 pub mod bv;
-pub mod smt;
 pub mod tseitin;

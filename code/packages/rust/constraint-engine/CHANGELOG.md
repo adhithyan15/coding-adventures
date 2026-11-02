@@ -1,5 +1,34 @@
 # Changelog — `constraint-engine`
 
+## 0.3.0 — 2026-11-02
+
+VER10: a QF_BV tactic.
+
+### Added
+
+- `bv::BvTactic` decides conjunctions over `Bool` and `BitVec(w)`
+  variables (`1 ≤ w ≤ 512`) by bit-blasting them with the new
+  `bit-blaster` crate and solving with `cdcl-sat`. Supported: `#b`/`#x`/
+  `(_ bvN w)` literals; `bvnot bvneg bvand bvor bvxor bvadd bvsub bvmul`
+  (n-ary, left-associative); `bvshl bvlshr bvashr`; unsigned and signed
+  comparisons; `=`, `distinct`, Boolean connectives and `ite`. Anything
+  else answers `Unknown` with a reason.
+- **Certified UNSAT:** the tactic logs a DRAT proof and runs `drat-check`
+  on it before reporting `Unsat`. A rejected proof is `Unknown`.
+- Bounds: widths ≤ `MAX_BV_WIDTH` (512), circuits ≤ `MAX_AIG_NODES`
+  (4 million, checked per operation), `BV_CONFLICT_BUDGET` (1 000 000).
+- `Value::BitVec(Vec<bool>)` (least significant bit first), with
+  `Value::as_bv_u128` and `#b…` display.
+
+### Changed
+
+- `Engine::check_sat` routes problems with any `BitVec` variable, or with
+  logic `QF_BV`, to the BV tactic. `QF_BV` and `BitVec(1..=512)` are now
+  supported; `BitVec` mixed with `Int` answers `Unknown`.
+- The trivial model of an assertion-free problem gives `BitVec` variables
+  all-zero values. Widths above the limit get none, so a huge unused
+  declaration allocates nothing.
+
 ## 0.2.0 — 2026-11-02
 
 VER09: the SAT tactic now runs on the `cdcl-sat` CDCL solver.

@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/bit-blaster",
   "capabilities": [],
-  "justification": "Pure computation: builds and-inverter graphs, encodes them to clauses and solves them in memory. No filesystem, network, process, clock or environment access. Its dependencies (cdcl-sat, constraint-core, constraint-instructions) are pure as well."
+  "justification": "Pure computation: builds and-inverter graphs, encodes them to clauses and solves them in memory. No filesystem, network, process, clock or environment access. Its one dependency, cdcl-sat, is pure as well."
 }
