@@ -88,7 +88,7 @@ private let floatDiv: Double = 4294967296.0  // 2^32
 ///   var g = LCG(seed: 1)
 ///   print(g.nextU32())  // 1817669548
 ///   print(g.nextU32())  // 2187888307
-public struct LCG {
+public struct LCG: U32Source {
     // State is the full 64-bit accumulator.  Declared var because nextU32
     // must mutate it.
     var state: UInt64
@@ -139,34 +139,18 @@ public struct LCG {
 
     /// Return a uniform random Int64 in the closed interval [min, max].
     ///
-    /// # Rejection sampling
-    ///
-    /// A naïve `rawValue % rangeSize` produces modulo bias whenever 2^32 is
-    /// not divisible by rangeSize.  Example: range = 3.  There are 2^32 / 3
-    /// full chunks plus a remainder of 1.  Values 0 and 1 are slightly more
-    /// likely to appear.
-    ///
-    /// Rejection sampling fixes this by discarding draws below:
-    ///
-    ///   threshold = (-rangeSize) mod rangeSize  (arithmetic mod 2^32)
-    ///
-    /// Any raw value ≥ threshold is accepted; the expected number of extra
-    /// draws per call is less than 2 for any range size.
-    ///
-    /// - Parameters:
-    ///   - min: lower bound (inclusive)
-    ///   - max: upper bound (inclusive); must be ≥ min
-    /// - Returns: uniformly distributed value in [min, max]
+    /// Spec rng.md v2 rejection sampling, the same in every language; see
+    /// `intInRange` at the end of this file. Traps if `min > max`; use
+    /// `tryIntInRange` to get `nil` instead.
     public mutating func nextIntInRange(min: Int64, max: Int64) -> Int64 {
         precondition(min <= max, "nextIntInRange requires min <= max")
-        let rangeSize = UInt64(bitPattern: max - min + 1)
-        let threshold = (0 &- rangeSize) % rangeSize
-        while true {
-            let r = UInt64(nextU32())
-            if r >= threshold {
-                return min + Int64(bitPattern: r % rangeSize)
-            }
-        }
+        return intInRange(&self, min, max)!
+    }
+
+    /// Like `nextIntInRange`, but returns `nil` without drawing anything
+    /// when `min > max`.
+    public mutating func tryIntInRange(min: Int64, max: Int64) -> Int64? {
+        intInRange(&self, min, max)
     }
 }
 
@@ -202,7 +186,7 @@ public struct LCG {
 ///   var g = Xorshift64(seed: 1)
 ///   print(g.nextU32())  // 1082269761
 ///   print(g.nextU32())  // 201397313
-public struct Xorshift64 {
+public struct Xorshift64: U32Source {
     var state: UInt64
 
     /// Seed the generator.
@@ -244,17 +228,15 @@ public struct Xorshift64 {
 
     /// Return a uniform random Int64 in [min, max] using rejection sampling.
     ///
-    /// See `LCG.nextIntInRange` for a full explanation of rejection sampling.
+    /// See `LCG.nextIntInRange`.
     public mutating func nextIntInRange(min: Int64, max: Int64) -> Int64 {
         precondition(min <= max, "nextIntInRange requires min <= max")
-        let rangeSize = UInt64(bitPattern: max - min + 1)
-        let threshold = (0 &- rangeSize) % rangeSize
-        while true {
-            let r = UInt64(nextU32())
-            if r >= threshold {
-                return min + Int64(bitPattern: r % rangeSize)
-            }
-        }
+        return intInRange(&self, min, max)!
+    }
+
+    /// See `LCG.tryIntInRange`.
+    public mutating func tryIntInRange(min: Int64, max: Int64) -> Int64? {
+        intInRange(&self, min, max)
     }
 }
 
@@ -297,7 +279,7 @@ public struct Xorshift64 {
 ///   var g = PCG32(seed: 1)
 ///   print(g.nextU32())  // 1412771199
 ///   print(g.nextU32())  // 1791099446
-public struct PCG32 {
+public struct PCG32: U32Source {
     var state: UInt64
     let increment: UInt64
 
@@ -365,16 +347,65 @@ public struct PCG32 {
 
     /// Return a uniform random Int64 in [min, max] using rejection sampling.
     ///
-    /// See `LCG.nextIntInRange` for a full explanation of rejection sampling.
+    /// See `LCG.nextIntInRange`.
     public mutating func nextIntInRange(min: Int64, max: Int64) -> Int64 {
         precondition(min <= max, "nextIntInRange requires min <= max")
-        let rangeSize = UInt64(bitPattern: max - min + 1)
-        let threshold = (0 &- rangeSize) % rangeSize
-        while true {
-            let r = UInt64(nextU32())
-            if r >= threshold {
-                return min + Int64(bitPattern: r % rangeSize)
-            }
-        }
+        return intInRange(&self, min, max)!
     }
+
+    /// See `LCG.tryIntInRange`.
+    public mutating func tryIntInRange(min: Int64, max: Int64) -> Int64? {
+        intInRange(&self, min, max)
+    }
+}
+
+// ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ────────────────────
+
+/// Anything that yields 32-bit outputs; the three generators conform.
+public protocol U32Source {
+    mutating func nextU32() -> UInt32
+}
+
+/// A uniform integer in [min, max], drawn from `g`, identically in every
+/// language of the repository; `nil`, with nothing drawn, if `min > max`.
+///
+/// span = max − min + 1 lies between 1 and 2^64. Taking r % span of a raw
+/// draw over-samples small offsets whenever the number of possible draws is
+/// not a multiple of span; rejecting the `threshold` lowest draws removes
+/// exactly the excess. Three regimes, chosen by span alone:
+///
+///     span <= 2^32    draw 32 bits,  threshold = (2^32 − span) mod span
+///     span <  2^64    draw 64 bits,  threshold = (2^64 − span) mod span
+///     span == 2^64    the whole Int64 domain: every UInt64 is a valid offset
+///
+/// Example, span = 3: 2^32 = 3 × 1431655765 + 1, so threshold = 1. Rejecting
+/// r = 0 leaves 2^32 − 1 draws, an exact multiple of 3.
+///
+/// v1 computed `max - min + 1` with Swift's checked arithmetic, which trapped
+/// for any range wider than half the domain, and took the threshold modulo
+/// 2^64 while drawing 32 bits, so for spans such as 2^63 + 1 every draw was
+/// rejected and it never returned. Everything here uses wrapping UInt64
+/// arithmetic (`&+`, `&-`), which cannot trap.
+func intInRange<G: U32Source>(_ g: inout G, _ min: Int64, _ max: Int64) -> Int64? {
+    guard min <= max else { return nil }
+    func next64() -> UInt64 {
+        let hi = UInt64(g.nextU32())
+        return hi << 32 | UInt64(g.nextU32())
+    }
+    // max − min + 1 in UInt64: exact, except that 2^64 wraps to 0.
+    let span = UInt64(bitPattern: max) &- UInt64(bitPattern: min) &+ 1
+    var r: UInt64
+    if span == 0 {
+        r = next64()
+    } else if span <= 1 << 32 {
+        let threshold = ((1 << 32) - span) % span
+        repeat { r = UInt64(g.nextU32()) } while r < threshold
+        r %= span
+    } else {
+        let threshold = (0 &- span) % span  // (2^64 − span) mod span
+        repeat { r = next64() } while r < threshold
+        r %= span
+    }
+    // min + r lies in [min, max], so the wrapping sum converts back exactly.
+    return Int64(bitPattern: UInt64(bitPattern: min) &+ r)
 }
