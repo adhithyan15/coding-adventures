@@ -427,6 +427,90 @@ let test_evaluate_undeclared_and_declared () =
     "declared" true
     (evaluate ~dir:"." ~manifest:declared ~detections ~banned |> passed)
 
+let nondeterminism_manifest category action =
+  Printf.sprintf
+    {|{
+      "version": 1,
+      "package": "ocaml/example",
+      "capabilities": [{
+        "category": %S,
+        "action": %S,
+        "target": "*",
+        "justification": "Exercises one D21 nondeterminism pair."
+      }],
+      "justification": "Exercises one D21 nondeterminism pair."
+    }|}
+    category action
+
+let test_manifest_nondeterminism_pairs () =
+  [
+    ("rand", "read");
+    ("thread", "spawn");
+    ("thread", "message");
+    ("ui", "read");
+    ("ui", "write");
+    ("ui", "event");
+  ]
+  |> List.iter (fun (category, action) ->
+         match parse_manifest (nondeterminism_manifest category action) with
+         | Ok manifest ->
+             Alcotest.(check int)
+               (category ^ ":" ^ action)
+               1
+               (List.length manifest.capabilities)
+         | Error message ->
+             Alcotest.failf "%s:%s rejected: %s" category action message);
+  [
+    ("proc", "spawn");
+    ("rand", "write");
+    ("thread", "fork");
+    ("ui", "message");
+    ("stdout", "event");
+    ("all", "read");
+    ("thread", "all");
+  ]
+  |> List.iter (fun (category, action) ->
+         match parse_manifest (nondeterminism_manifest category action) with
+         | Error _ -> ()
+         | Ok _ -> Alcotest.failf "%s:%s was accepted" category action)
+
+let test_evaluate_nondeterminism () =
+  let detections, banned =
+    unwrap
+      (analyze_source ~filename:"workers.ml" Implementation
+         "let () = Random.self_init ()
+let start f = Domain.spawn f
+")
+  in
+  let empty = unwrap (parse_manifest pure_manifest) in
+  let denied = evaluate ~dir:"." ~manifest:empty ~detections ~banned in
+  Alcotest.(check (list string))
+    "both undeclared" [ "CAP001"; "CAP001" ]
+    (List.map (fun violation -> violation.code) denied.violations);
+  let only_rand =
+    unwrap (parse_manifest (nondeterminism_manifest "rand" "read"))
+  in
+  Alcotest.(check int)
+    "thread still undeclared" 1
+    (List.length
+       (evaluate ~dir:"." ~manifest:only_rand ~detections ~banned).violations);
+  let both =
+    unwrap
+      (parse_manifest
+         {|{
+           "version": 1,
+           "package": "ocaml/example",
+           "capabilities": [
+             {"category": "rand", "action": "read", "target": "*", "justification": "Seeds a shuffle from ambient entropy."},
+             {"category": "thread", "action": "spawn", "target": "workers", "justification": "Runs jobs on worker domains."}
+           ],
+           "justification": "A job runner with a shuffled queue."
+         }|})
+  in
+  Alcotest.(check bool)
+    "declared" true
+    (evaluate ~dir:"." ~manifest:both ~detections ~banned |> passed)
+
 let test_ffi_dual_opt_in () =
   let external_detections, external_banned =
     unwrap
@@ -1169,6 +1253,8 @@ let () =
           Alcotest.test_case "zero profile" `Quick test_manifest_zero_profile;
           Alcotest.test_case "closed taxonomy" `Quick
             test_manifest_closed_taxonomy;
+          Alcotest.test_case "nondeterminism pairs" `Quick
+            test_manifest_nondeterminism_pairs;
           Alcotest.test_case "shape errors" `Quick test_manifest_shape_errors;
           Alcotest.test_case "schema boundaries" `Quick
             test_manifest_schema_boundaries;
@@ -1181,6 +1267,8 @@ let () =
         [
           Alcotest.test_case "declared capabilities" `Quick
             test_evaluate_undeclared_and_declared;
+          Alcotest.test_case "nondeterminism capabilities" `Quick
+            test_evaluate_nondeterminism;
           Alcotest.test_case "FFI dual opt-in" `Quick test_ffi_dual_opt_in;
           Alcotest.test_case "policy hint boundaries" `Quick
             test_policy_hint_boundaries;
