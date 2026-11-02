@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-11-01
+
+- Rewrote `resolution/rust-field-aware` for the corrected Cargo contract.
+  Seven edges now each prove one rule: an inline `package` rename, an inline
+  version-plus-path entry with a trailing comment, `[build-dependencies]`,
+  `[target.'cfg(any(unix, windows))'.dependencies]` (dots, commas and
+  parentheses inside the quoted cfg), a bare-triple
+  `[target.x86_64-unknown-linux-gnu.build-dependencies]`, a
+  `[dependencies.kappa]` sub-table, and a renamed target sub-table under a
+  quoted dotted triple. Distinct decoys add no edge: a registry entry with a
+  `"path"` feature string, a commented-out entry, `[dev-dependencies]`,
+  `[target.'cfg(unix)'.dev-dependencies]`, a sub-table with only `version`,
+  and `[patch.crates-io]`. A `[dev-dependencies.<name>]` sub-table is left out
+  on purpose: the Go reference tool's strict test-trigger reader refuses that
+  shape, so the case would fail there rather than prove an absent edge. Go now reads the case alongside
+  Haskell. The corpus stays at 179 cases.
+
 ## 2026-10-07
 
 - Added a process-free CI-gate selection case with 21 cross-gate pattern
