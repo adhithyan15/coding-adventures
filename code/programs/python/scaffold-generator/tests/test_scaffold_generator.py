@@ -404,6 +404,35 @@ class TestGenerateHaskell:
                 content = f.read()
             assert "test-suite spec" in content
 
+    def test_build_selects_darwin_clt_linker(self) -> None:
+        # The exact shape build-tool --validate-build-files accepts: the
+        # two-line explanation, then the Darwin-only DEVELOPER_DIR export in
+        # front of the unchanged `cabal test all`.
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_haskell(tmp, "test-pkg", "A test", "", [], [])
+            with open(os.path.join(tmp, "BUILD")) as f:
+                build = f.read()
+            assert build == (
+                "# The Darwin GHC bindist links CLT SDK stubs: "
+                "use the matching CLT linker.\n"
+                "# Scope the selection to Cabal and its children, "
+                "keeping other packages intact.\n"
+                'if [ "$(uname -s)" = Darwin ]; then export '
+                "DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; "
+                "cabal test all\n"
+            )
+
+    def test_build_windows_keeps_plain_command(self) -> None:
+        # cmd /C cannot parse the POSIX prefix, so Windows gets the plain
+        # command it ran before the prefix existed.
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_haskell(tmp, "test-pkg", "A test", "", [], [])
+            with open(os.path.join(tmp, "BUILD_windows")) as f:
+                build_windows = f.read()
+            assert build_windows == "cabal test all\n"
+            assert "uname" not in build_windows
+            assert "DEVELOPER_DIR" not in build_windows
+
 
 class TestCommonFiles:
     """Verify README and CHANGELOG generation."""
