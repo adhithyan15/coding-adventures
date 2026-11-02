@@ -103,12 +103,13 @@ fn run_raw(module: &Module, tag: &str) -> Option<std::process::Output> {
         return None;
     }
     let artifact = compile(module).expect("module should compile to Rust source");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_rs_div_{tag}_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_rs_div_{tag}_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");

@@ -58,6 +58,7 @@ use std::process::Command;
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use semantic_ir::{BackendErrorKind, Module};
+use sir_test_scratch::{go_command, write_new, Scratch};
 
 pub mod oracle;
 
@@ -312,8 +313,14 @@ fn normalise(s: &str) -> String {
     s.replace("\r\n", "\n").trim_end_matches('\n').to_string()
 }
 
-/// A path in the system temp directory for one run's emitted source or
-/// binary, unique to this call.
+/// A path in `scratch` -- one run's private directory -- for that run's
+/// emitted source or binary, unique to this call.
+///
+/// The directory is the real protection (see [`Scratch`]): it is created
+/// fresh with a random name and mode `0700`, so no other process can
+/// create, replace or link a file in it, and it is removed with everything
+/// in it when the run ends.  The file name is still unique within the
+/// process, so even two files of one run never meet.
 ///
 /// The name is `sir_conf_<program>_<target>_<pid>_<n><ext>`:
 ///
@@ -331,16 +338,14 @@ fn normalise(s: &str) -> String {
 /// [`TEMP_COUNTER`] is a process-wide atomic, so no two calls, on any
 /// thread, ever see the same `<n>`.  (A caller that asks for the source and
 /// the binary of one run gets two numbers; they differ in extension anyway.)
-fn temp_path(name: &str, target: Target, ext: &str) -> PathBuf {
+fn temp_path(scratch: &Scratch, name: &str, target: Target, ext: &str) -> PathBuf {
     let n = TEMP_COUNTER.fetch_add(1, Ordering::Relaxed);
-    let mut p = std::env::temp_dir();
-    p.push(format!(
+    scratch.join(&format!(
         "sir_conf_{}_{}_{}_{n}{ext}",
         name,
         target.tag(),
         std::process::id()
-    ));
-    p
+    ))
 }
 
 /// The per-process counter behind [`temp_path`].  `Relaxed` is enough: the
@@ -362,9 +367,9 @@ static TEMP_COUNTER: AtomicU64 = AtomicU64::new(0);
 struct TempFile(PathBuf);
 
 impl TempFile {
-    /// A guard for a fresh [`temp_path`].
-    fn new(name: &str, target: Target, ext: &str) -> Self {
-        TempFile(temp_path(name, target, ext))
+    /// A guard for a fresh [`temp_path`] in `scratch`.
+    fn new(scratch: &Scratch, name: &str, target: Target, ext: &str) -> Self {
+        TempFile(temp_path(scratch, name, target, ext))
     }
 
     fn path(&self) -> &std::path::Path {
@@ -419,8 +424,9 @@ fn run_python(name: &str, module: &Module) -> RunOutcome {
     let Some(pythonpath) = python_runtime_path() else {
         return RunOutcome::Skipped("sir-runtime-* python packages not found".into());
     };
-    let file = TempFile::new(name, Target::Python, ".py");
-    if fs::write(file.path(), &artifact.source).is_err() {
+    let scratch = Scratch::new("sir_conf_");
+    let file = TempFile::new(&scratch, name, Target::Python, ".py");
+    if write_new(file.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .py".into());
     }
     let out = Command::new("python3")
@@ -437,8 +443,9 @@ fn run_javascript(name: &str, module: &Module) -> RunOutcome {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("javascript emit failed: {e:?}")),
     };
-    let file = TempFile::new(name, Target::JavaScript, ".js");
-    if fs::write(file.path(), &artifact.source).is_err() {
+    let scratch = Scratch::new("sir_conf_");
+    let file = TempFile::new(&scratch, name, Target::JavaScript, ".js");
+    if write_new(file.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .js".into());
     }
     let out = Command::new("node").arg(file.path()).output();
@@ -452,11 +459,15 @@ fn run_go(name: &str, module: &Module) -> RunOutcome {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("go emit failed: {e:?}")),
     };
-    let file = TempFile::new(name, Target::Go, ".go");
-    if fs::write(file.path(), &artifact.source).is_err() {
+    let scratch = Scratch::new("sir_conf_");
+    let file = TempFile::new(&scratch, name, Target::Go, ".go");
+    if write_new(file.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .go".into());
     }
-    let out = Command::new("go").arg("run").arg(file.path()).output();
+    // The build cache is this checkout's own (see `go_command`): a
+    // `go clean -cache` elsewhere deleted entries mid-build and turned
+    // into a spurious "# command-line-arguments" compile error.
+    let out = go_command().arg("run").arg(file.path()).output();
     finish(out, &artifact.source, "go")
 }
 
@@ -472,9 +483,10 @@ fn run_rust(name: &str, module: &Module) -> RunOutcome {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("rust emit failed: {e:?}")),
     };
-    let src = TempFile::new(name, Target::Rust, ".rs");
-    let bin = TempFile::new(name, Target::Rust, if cfg!(windows) { ".exe" } else { "" });
-    if fs::write(src.path(), &artifact.source).is_err() {
+    let scratch = Scratch::new("sir_conf_");
+    let src = TempFile::new(&scratch, name, Target::Rust, ".rs");
+    let bin = TempFile::new(&scratch, name, Target::Rust, if cfg!(windows) { ".exe" } else { "" });
+    if write_new(src.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .rs".into());
     }
     let mut cmd = Command::new("rustc");
@@ -532,9 +544,10 @@ fn run_c(name: &str, module: &Module) -> RunOutcome {
     let Some(cc) = c_compiler() else {
         return RunOutcome::Skipped("no C compiler (set SIR_CC or install cc/clang/gcc)".into());
     };
-    let src = TempFile::new(name, Target::C, ".c");
-    let bin = TempFile::new(name, Target::C, if cfg!(windows) { ".exe" } else { "" });
-    if fs::write(src.path(), &artifact.source).is_err() {
+    let scratch = Scratch::new("sir_conf_");
+    let src = TempFile::new(&scratch, name, Target::C, ".c");
+    let bin = TempFile::new(&scratch, name, Target::C, if cfg!(windows) { ".exe" } else { "" });
+    if write_new(src.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .c".into());
     }
     let compiled = Command::new(&cc)
@@ -585,8 +598,9 @@ fn run_ruby(name: &str, module: &Module) -> RunOutcome {
         }
         Err(e) => return RunOutcome::Failed(format!("ruby emit failed: {e:?}")),
     };
-    let file = TempFile::new(name, Target::Ruby, ".rb");
-    if fs::write(file.path(), &artifact.source).is_err() {
+    let scratch = Scratch::new("sir_conf_");
+    let file = TempFile::new(&scratch, name, Target::Ruby, ".rb");
+    if write_new(file.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .rb".into());
     }
     let out = Command::new("ruby").arg(file.path()).output();
@@ -627,9 +641,23 @@ mod tests {
     /// files mid-run.
     #[test]
     fn temp_paths_are_unique_within_one_process() {
-        let a = temp_path("same_program", Target::Rust, ".rs");
-        let b = temp_path("same_program", Target::Rust, ".rs");
+        let scratch = Scratch::new("sir_conf_test_");
+        let a = temp_path(&scratch, "same_program", Target::Rust, ".rs");
+        let b = temp_path(&scratch, "same_program", Target::Rust, ".rs");
         assert_ne!(a, b);
+    }
+
+    /// A run's files live in its own private directory, not in the shared
+    /// system temp directory, and that directory goes away with the run.
+    #[test]
+    fn temp_paths_live_in_the_runs_private_directory() {
+        let scratch = Scratch::new("sir_conf_test_");
+        let p = temp_path(&scratch, "prog", Target::Go, ".go");
+        assert_eq!(p.parent(), Some(scratch.path()));
+        assert_ne!(p.parent(), Some(std::env::temp_dir().as_path()));
+        let dir = scratch.path().to_path_buf();
+        drop(scratch);
+        assert!(!dir.exists());
     }
 
     /// A [`TempFile`] removes its file however its owner returns, and a
@@ -637,14 +665,15 @@ mod tests {
     /// `run_python`'s skip path used to leave its `.py` behind).
     #[test]
     fn a_temp_file_guard_removes_its_file_on_every_path() {
-        let file = TempFile::new("guard_probe", Target::Python, ".py");
-        fs::write(file.path(), "print(1)\n").expect("write the probe");
+        let scratch = Scratch::new("sir_conf_test_");
+        let file = TempFile::new(&scratch, "guard_probe", Target::Python, ".py");
+        write_new(file.path(), "print(1)\n").expect("write the probe");
         let path = file.path().to_path_buf();
         assert!(path.exists());
         drop(file);
         assert!(!path.exists(), "left behind: {path:?}");
 
-        let unwritten = TempFile::new("guard_probe", Target::C, "");
+        let unwritten = TempFile::new(&scratch, "guard_probe", Target::C, "");
         let path = unwritten.path().to_path_buf();
         drop(unwritten);
         assert!(!path.exists());
@@ -654,11 +683,13 @@ mod tests {
     /// receive a path another thread was also given.
     #[test]
     fn temp_paths_are_unique_across_threads() {
+        let scratch = std::sync::Arc::new(Scratch::new("sir_conf_test_"));
         let handles: Vec<_> = (0..8)
             .map(|_| {
-                std::thread::spawn(|| {
+                let scratch = std::sync::Arc::clone(&scratch);
+                std::thread::spawn(move || {
                     (0..64)
-                        .map(|_| temp_path("same_program", Target::C, ".c"))
+                        .map(|_| temp_path(&scratch, "same_program", Target::C, ".c"))
                         .collect::<Vec<_>>()
                 })
             })

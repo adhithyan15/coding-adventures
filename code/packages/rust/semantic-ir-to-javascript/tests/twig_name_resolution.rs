@@ -45,9 +45,10 @@ fn run(src: &str, tag: &str) -> Option<String> {
         eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
         return None;
     }
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_twig_shadow_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(
