@@ -1,4 +1,43 @@
-"""Constant-time comparison helpers for byte strings and unsigned counters."""
+"""Constant-time comparison helpers for byte strings and unsigned counters.
+
+This is the Python lane of CT01 (``code/specs/CT01-constant-time-compare.md``).
+The helpers compare and select *secret* bytes without an early exit, so the
+work they do depends only on public lengths, not on the secret contents.
+
+Why validation comes first
+--------------------------
+A constant-time comparison is only as strong as the bytes it compares. The
+first version of this lane converted every input with ``bytes(value)``, and
+``bytes`` has a trap: given an integer ``n`` it does not make the one-byte
+value ``n``, it makes ``n`` *zero bytes*::
+
+    bytes(3) == b"\\x00\\x00\\x00"
+
+So ``ct_eq(3, b"\\0\\0\\0")`` returned ``True``: two unrelated inputs compared
+equal. Every input is now checked before use:
+
+=====================  ==========================================
+Input                  Result
+=====================  ==========================================
+``bytes``              used as is
+``bytearray``          copied to ``bytes``
+``memoryview``         copied to ``bytes`` (byte-format views only)
+list/tuple of ints     each must be an ``int`` (not ``bool``) 0-255
+anything else          ``TypeError``
+=====================  ==========================================
+
+The checks look at the *type* and *range* of each element, never at whether
+two inputs match, so they reveal nothing about secret contents for valid
+inputs.
+
+Why the selection mask is computed arithmetically
+-------------------------------------------------
+CT01 forbids a branch on the secret ``choice`` bit, so the mask that picks
+``left`` or ``right`` is ``-int(choice) & 0xFF`` (``0x00`` for ``False``,
+``0xFF`` for ``True``) rather than ``0xFF if choice else 0x00``. CPython may
+still execute this however it likes; CT01 does not promise that an
+interpreter preserves the source's shape, and neither does this lane.
+"""
 
 from collections.abc import Sequence
 
@@ -6,19 +45,33 @@ ByteInput = bytes | bytearray | memoryview | Sequence[int]
 _U64_MAX = (1 << 64) - 1
 
 
-def _as_bytes(value: ByteInput) -> bytes:
+def _as_bytes(value: ByteInput, name: str) -> bytes:
     if isinstance(value, bytes):
         return value
-    if isinstance(value, bytearray | memoryview):
+    if isinstance(value, bytearray):
         return bytes(value)
-    return bytes(value)
+    if isinstance(value, memoryview):
+        # A view of 32-bit integers, say, is not a byte string; refuse it
+        # rather than reinterpret its memory.
+        if value.format not in ("B", "b", "c"):
+            raise TypeError(f"{name} must be a byte-format memoryview")
+        return value.tobytes()
+    if isinstance(value, list | tuple):
+        for index, element in enumerate(value):
+            # bool is a subclass of int, so True would otherwise pass as 1.
+            if type(element) is not int or not 0 <= element <= 255:
+                raise ValueError(f"{name}[{index}] must be an integer from 0 to 255")
+        return bytes(value)
+    raise TypeError(
+        f"{name} must be bytes, bytearray, memoryview, or a list of byte values"
+    )
 
 
 def ct_eq(left: ByteInput, right: ByteInput) -> bool:
     """Return whether two byte sequences are equal without early exit."""
 
-    left_bytes = _as_bytes(left)
-    right_bytes = _as_bytes(right)
+    left_bytes = _as_bytes(left, "left")
+    right_bytes = _as_bytes(right, "right")
     if len(left_bytes) != len(right_bytes):
         return False
 
@@ -37,12 +90,16 @@ def ct_eq_fixed(left: ByteInput, right: ByteInput) -> bool:
 def ct_select_bytes(left: ByteInput, right: ByteInput, choice: bool) -> bytes:
     """Select ``left`` when ``choice`` is true, otherwise ``right``."""
 
-    left_bytes = _as_bytes(left)
-    right_bytes = _as_bytes(right)
+    left_bytes = _as_bytes(left, "left")
+    right_bytes = _as_bytes(right, "right")
     if len(left_bytes) != len(right_bytes):
         raise ValueError("ct_select_bytes requires equal-length byte sequences")
+    # Truthiness would make 0, "" and [] select `right` and "0" select `left`.
+    # Only a real bool is a valid choice; checking its type reveals nothing.
+    if type(choice) is not bool:
+        raise TypeError("ct_select_bytes requires a bool choice")
 
-    mask = 0xFF if choice else 0x00
+    mask = -int(choice) & 0xFF
     return bytes(
         right_bytes[index] ^ ((left_bytes[index] ^ right_bytes[index]) & mask)
         for index in range(len(left_bytes))
@@ -60,7 +117,8 @@ def ct_eq_u64(left: int, right: int) -> bool:
 
 
 def _validate_u64(value: int, name: str) -> None:
-    if not isinstance(value, int) or value < 0 or value > _U64_MAX:
+    # bool is a subclass of int; True is not an unsigned 64-bit counter.
+    if type(value) is not int or value < 0 or value > _U64_MAX:
         raise ValueError(f"{name} must be an unsigned 64-bit integer")
 
 

@@ -38,6 +38,52 @@ def test_ct_select_bytes_chooses_without_mutating_inputs() -> None:
         ct_select_bytes(b"abc", b"abcd", True)
 
 
+def test_bare_integer_is_rejected_not_turned_into_zero_bytes() -> None:
+    # Regression: bytes(3) is three zero bytes, so ct_eq(3, b"\0\0\0") was True.
+    with pytest.raises(TypeError):
+        ct_eq(3, b"\0\0\0")  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        ct_select_bytes(2, b"\0\0", True)  # type: ignore[arg-type]
+
+
+def test_non_byte_inputs_are_rejected() -> None:
+    with pytest.raises(TypeError):
+        ct_eq("abc", "abc")  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        ct_eq(None, b"")  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        ct_eq(memoryview(bytes(8)).cast("I"), bytes(8))
+    with pytest.raises(ValueError, match="0 to 255"):
+        ct_eq([256], [0])
+    with pytest.raises(ValueError, match="0 to 255"):
+        ct_eq([True], [1])
+    with pytest.raises(ValueError, match="0 to 255"):
+        ct_eq((1.0,), (1,))  # type: ignore[arg-type]
+
+
+def test_legitimate_byte_shapes_still_work() -> None:
+    assert ct_eq((0, 127, 255), b"\x00\x7f\xff")
+    assert ct_eq(memoryview(bytearray(b"ab")), [97, 98])
+
+
+def test_ct_select_bytes_requires_a_real_bool_choice() -> None:
+    for not_a_bool in (1, 0, "0", "", None, [1]):
+        with pytest.raises(TypeError):
+            ct_select_bytes(b"a", b"b", not_a_bool)  # type: ignore[arg-type]
+
+
+def test_ct_select_bytes_returns_a_fresh_copy() -> None:
+    left = bytearray(b"abc")
+    picked = ct_select_bytes(left, b"xyz", True)
+    left[0] = 0
+    assert picked == b"abc"
+
+
+def test_ct_eq_u64_rejects_bool() -> None:
+    with pytest.raises(ValueError):
+        ct_eq_u64(True, 1)
+
+
 def test_ct_eq_u64_handles_edges_and_rejects_out_of_range() -> None:
     assert ct_eq_u64(0, 0)
     assert ct_eq_u64((1 << 64) - 1, (1 << 64) - 1)

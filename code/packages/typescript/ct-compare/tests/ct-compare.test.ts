@@ -41,6 +41,55 @@ describe("ctSelectBytes", () => {
   });
 });
 
+describe("input validation (regression: coercion made unequal inputs equal)", () => {
+  // Each pair below used to compare equal, because Uint8Array.from rewrote
+  // the bad elements to the same bytes. They must now be rejected outright.
+  const call = (left: unknown, right: unknown) => ctEq(left as never, right as never);
+
+  it("rejects array elements outside 0..255", () => {
+    expect(() => call([256], [0])).toThrow(RangeError);
+    expect(() => call([-1], [255])).toThrow(RangeError);
+  });
+
+  it("rejects non-integer and non-number elements", () => {
+    expect(() => call([1.5], [1])).toThrow(RangeError);
+    expect(() => call([Number.NaN], [0])).toThrow(RangeError);
+    expect(() => call(["a"], [0])).toThrow(RangeError);
+    // A sparse array has holes that read as undefined.
+    expect(() => call(new Array(2), [0, 0])).toThrow(RangeError);
+  });
+
+  it("rejects strings and other non-byte containers", () => {
+    expect(() => call("abc", "xyz")).toThrow(TypeError);
+    expect(() => call(new Uint16Array([1]), new Uint16Array([1]))).toThrow(TypeError);
+    expect(() => call(new Set([1]), new Set([1]))).toThrow(TypeError);
+    expect(() => call(null, [])).toThrow(TypeError);
+  });
+
+  it("validates both inputs of ctSelectBytes and requires a boolean choice", () => {
+    expect(() => ctSelectBytes([256] as never, [0], true)).toThrow(RangeError);
+    expect(() => ctSelectBytes([1], [2], "0" as never)).toThrow(TypeError);
+    expect(() => ctSelectBytes([1], [2], 1 as never)).toThrow(TypeError);
+  });
+
+  it("still accepts every legitimate byte shape", () => {
+    const bytes = Uint8Array.from([0, 127, 255]);
+    expect(ctEq(bytes, bytes.buffer)).toBe(true);
+    expect(ctEq(bytes, [0, 127, 255])).toBe(true);
+  });
+});
+
+describe("ctSelectBytes output ownership", () => {
+  it("returns a fresh copy that later input mutation does not change", () => {
+    const left = Uint8Array.from([1, 2, 3]);
+    const right = Uint8Array.from([4, 5, 6]);
+    const picked = ctSelectBytes(left, right, true);
+    expect(picked).not.toBe(left);
+    left[0] = 99;
+    expect([...picked]).toEqual([1, 2, 3]);
+  });
+});
+
 describe("ctEqU64", () => {
   it("handles equality, bit flips, and range validation", () => {
     expect(ctEqU64(0, 0)).toBe(true);
