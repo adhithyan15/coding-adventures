@@ -1,6 +1,8 @@
 module ScaffoldGenerator
     ( ParsedArgs(..)
     , ScaffoldConfig(..)
+    , buildFileContents
+    , buildWindowsFileContents
     , capabilityManifestContents
     , defaultConfig
     , isKebabCase
@@ -347,7 +349,7 @@ generatePackage repoRoot cfg pkgName deps targetDir = do
     writeFile (targetDir </> "README.md") (readmeContents cfg pkgName descriptionText dependencyNames)
     writeFile (targetDir </> "CHANGELOG.md") "# Changelog\n\n## 0.1.0\n\n- Initial scaffold.\n"
     writeFile (targetDir </> "BUILD") buildFileContents
-    writeFile (targetDir </> "BUILD_windows") "echo \"haskell support not enabled in windows CI yet -- skipping\"\n"
+    writeFile (targetDir </> "BUILD_windows") buildWindowsFileContents
     writeFile
         (targetDir </> "required_capabilities.json")
         (capabilityManifestContents (configPackageType cfg) pkgName)
@@ -511,9 +513,46 @@ cabalProjectContents relativeDeps =
         [ "packages: ." ]
             ++ map ("          " ++) relativeDeps
 
+-- | The generated @BUILD@: select the Command Line Tools linker on macOS.
+--
+-- GHC 9.4.8's macOS bindist hardcodes a Command Line Tools (CLT) SDK sysroot.
+-- On a runner whose default developer directory is an /older/ Xcode, that
+-- Xcode's linker is handed CLT SDK stubs it cannot parse (@arm64e.x1@) and
+-- every link fails. Exporting @DEVELOPER_DIR@ selects the matching CLT linker:
+--
+-- > uname -s   effect of the prefix               then
+-- > Darwin     export DEVELOPER_DIR=<CLT path>    run the cabal guard
+-- > Linux      nothing                            run the cabal guard
+--
+-- The build tool runs every BUILD line as its own @sh -c@, so the export lives
+-- only as long as that line's process tree, and the Cabal guard runs last, so
+-- its exit status is the line's. Cabal builds the whole local project inside
+-- that one process, so the package root itself must carry the selection.
+-- @build-tool --validate-build-files@ rejects a Haskell BUILD without it (see
+-- @lessons.d/ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md@).
+-- The command after the prefix is unchanged: run @cabal test all@ when Cabal
+-- is installed, otherwise say so and succeed.
 buildFileContents :: String
 buildFileContents =
-    "if command -v cabal >/dev/null 2>&1; then cabal test all; else echo 'cabal not found -- skipping'; fi\n"
+    unlines
+        [ "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker."
+        , "# Scope the selection to Cabal and its children, keeping other packages intact."
+        , haskellDarwinCltPrefix
+            ++ "if command -v cabal >/dev/null 2>&1; then cabal test all; else echo 'cabal not found -- skipping'; fi"
+        ]
+
+-- | The Darwin-only @DEVELOPER_DIR@ selection, in the exact prefix shape that
+-- @build-tool --validate-build-files@ accepts.
+haskellDarwinCltPrefix :: String
+haskellDarwinCltPrefix =
+    "if [ \"$(uname -s)\" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; "
+
+-- | The generated @BUILD_windows@: the existing Windows skip record. Windows
+-- runs BUILD lines under @cmd /C@, which cannot parse the POSIX prefix above,
+-- so this file must never carry it.
+buildWindowsFileContents :: String
+buildWindowsFileContents =
+    "echo \"haskell support not enabled in windows CI yet -- skipping\"\n"
 
 capabilityManifestContents :: String -> String -> String
 capabilityManifestContents packageType pkgName =

@@ -114,6 +114,7 @@ use interpreter_ir::module::IIRModule;
 ///     exports: vec![],
 ///     imports: vec![],
 ///     release: None,
+///     str_max_bytes: None,
 /// };
 ///
 /// lower_closure_builtins(&mut module);
@@ -391,6 +392,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 

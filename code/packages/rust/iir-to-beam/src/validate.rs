@@ -203,6 +203,7 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///     exports: vec![],
 ///     imports: vec![],
 ///     release: None,
+///     str_max_bytes: None,
 /// };
 /// assert!(validate_for_beam(&module).is_empty());
 /// ```
@@ -729,6 +730,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -742,6 +744,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let errs = validate_for_beam(&module);
         assert!(!errs.is_empty(), "should reject empty module");

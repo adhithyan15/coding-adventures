@@ -5,6 +5,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — LANG83 PR5a — trapping string ops survive DCE
+
+- `CIRInstr::is_pure` treats `str_index`, `str_slice` and `str_concat` as impure: the first two may trap `Trap.Bounds` and the third `Trap.Overflow`, so `CIROptimizer`'s dead-code elimination (which `aot-core` runs at opt levels 1 and 2) keeps them when their result is unused. New test `dce_keeps_unused_trapping_string_ops`. The generic JIT still refuses every string op (`INTERPRETER_TIER_ONLY`) until LANG83 PR5d.
+
 ## Unreleased — #18470 re-review — a builtin sees a boolean as a `Bool`
 
 - `CALL_BUILTIN` passed every argument register as `Value::Int`, so a boolean

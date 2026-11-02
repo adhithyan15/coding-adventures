@@ -1140,6 +1140,7 @@ impl Compiler {
             exports,
             imports: Vec::new(),
             release: None,
+            str_max_bytes: None,
         })
     }
 
