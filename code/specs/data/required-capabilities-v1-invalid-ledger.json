@@ -534,7 +534,6 @@
     "code/packages/typescript/forme-interactivity-ir/required_capabilities.json": "289d4e1b098678ff4e0ca163483e0dc3b97a3f9892e91866e25a5e3e74f282d5",
     "code/packages/typescript/forme-load-assets-fs/required_capabilities.json": "59841ea6c500dcbca1911ad6a30ba339f433dc2d8c723902fe7011c07e752e89",
     "code/packages/typescript/forme-resolve-asset-refs-fs/required_capabilities.json": "03dc42fed370e6be2f68d6dc1395f39af68638971abc02ec8725cbe2eb5591c7",
-    "code/packages/typescript/forme-sandbox-core/required_capabilities.json": "5469cbd76a48ec0bb847a42208cfe197ab2d83a37bc1985885b2b23b5bbdcbc7",
     "code/packages/typescript/forme-source-fs/required_capabilities.json": "98bf7f737352ac5a39cdc09ae06d7e24df4f99f625736a4c8085c8e6d90ca0b4",
     "code/packages/typescript/forme-style-cli/required_capabilities.json": "7616a01a2fdddde0be50951933889b35db6fb7ec31c6d6b445e1a0d8dd7d862e",
     "code/packages/typescript/forme-theme-classless/required_capabilities.json": "c1b67cab6a13f03122f0cb87204e35f5ec10995fffa777233fb36aaf2f0258ee",
