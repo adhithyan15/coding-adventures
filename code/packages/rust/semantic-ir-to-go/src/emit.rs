@@ -1823,6 +1823,26 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str(" } }()");
         return;
     }
+    // #18798 — `not` is SIR's boolean negation: Ruby `!x`, `not x`, and
+    // every `unless c` / `until c` (lowered as `if not(c)` / `while
+    // not(c)`).  It had no arm here and no entry in the runtime's
+    // by-name dispatch, so EVERY Ruby `unless` panicked with "unknown
+    // builtin: not".  The result is a real `bool` (Ruby's `!x` is `true`
+    // or `false`, never the operand), taken with SIR truthiness: only
+    // `nil` and `false` are falsy, so `!0` is `false`.
+    //
+    // | x                       | not(x) |
+    // |-------------------------|--------|
+    // | nil                     | true   |
+    // | false                   | true   |
+    // | true                    | false  |
+    // | anything else (0, "", …) | false  |
+    if name == "not" && args.len() == 1 {
+        out.push_str("Value(!_sir_truthy(");
+        emit_expr(out, &args[0], indent);
+        out.push_str("))");
+        return;
+    }
     // All variadic-ish builtins in the Go runtime take []Value and
     // return Value.  Same calling shape for fixed-arity ones to keep
     // the emitter simple.
@@ -2804,6 +2824,31 @@ mod tests {
             "func() Value { __l := Value(false); if _sir_truthy(__l) { return __l } else { return Value(int64(7)) } }()"
         );
         assert!(!or.contains("_sir_call_builtin_by_name"));
+    }
+
+    #[test]
+    fn emit_not_builtin_negates_by_truthiness() {
+        // #18798 — every Ruby `unless` lowers to `if not(c)`; `not` had no
+        // arm here, fell to `_sir_call_builtin_by_name` (which had no entry
+        // either), and panicked "unknown builtin: not" at runtime.
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "not".into(),
+                args: vec![Expr::IntLit {
+                    value: 0,
+                    span: s(),
+                }],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "Value(!_sir_truthy(Value(int64(0))))");
+        // The runtime's by-name dispatch knows it too, for a first-class
+        // reference to the builtin.
+        assert!(crate::runtime::RUNTIME.contains("case \"not\":"));
     }
 
     #[test]

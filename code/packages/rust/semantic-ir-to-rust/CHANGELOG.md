@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — `not` is a builtin; stores inside `begin`/`rescue` (#18798)
+
+- **`not`.**  Every Ruby `unless`, `until` and `!x` lowers to
+  `BuiltinCall("not", [x])`, which panicked `unknown builtin: not`.  The
+  emitter now inlines `__sir::Value::Bool(!__sir::truthy(&(x)))` and
+  `call_builtin_by_name` has a `"not"` arm.  Test
+  `emit_not_builtin_negates_by_truthiness`.
+- **A store into an outer local inside a `TryCatch`.**
+  `collect_assigned_locals` skipped `TryCatch` bodies (its comment said the
+  node was refused by the capability check, which stopped being true), so
+  `x = 0; begin; x = 1; rescue; end` declared `x` with a plain `let` and
+  rustc failed: `cannot assign twice to immutable variable`.  It now walks
+  the body, every `rescue` clause and the `ensure` body.  End-to-end check:
+  `sir-conformance`'s `rb_store_into_an_outer_local_inside_begin`.
+
 ## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
 
 The execution tests named their temp files from the process id alone, or (in
