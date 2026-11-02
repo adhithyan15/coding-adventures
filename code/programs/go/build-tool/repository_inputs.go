@@ -159,6 +159,36 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 	},
+	{
+		name:     "ruby/rng",
+		language: "ruby",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "elixir/rng",
+		language: "elixir",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "lua/rng",
+		language: "lua",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "perl/rng",
+		language: "perl",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "haskell/rng",
+		language: "haskell",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
 }
 
 // isRngCorpus reports whether a changed path is in the shared rng corpus,
