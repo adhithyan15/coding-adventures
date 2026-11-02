@@ -23,6 +23,7 @@ module BuildTool
     , parseArgs
     , renderMetadataEncodingError
     , resolveDependencies
+    , rustDependencyTokens
     , runWithArgs
     , trackedArtifactUnicodeVersion
     , validateOrphanCrateSnapshot
@@ -1843,44 +1844,249 @@ readRustDependencyTokens pkg = do
             contents <- readFileStrict cargoPath
             pure (rustDependencyTokens contents)
 
+-- | The Cargo package names a @Cargo.toml@ declares as path dependencies in
+-- the tables Cargo compiles into the crate, lowercased and de-duplicated.
+--
+-- This is the Rust paragraph of @code/specs/build-tool-conformance.md@,
+-- pinned by the shared @resolution/rust-field-aware@ case:
+--
+-- > table                                edge?  why
+-- > -----------------------------------  -----  ------------------------------
+-- > [dependencies]                       yes    linked into the library
+-- > [build-dependencies]                 yes    compiled into build.rs
+-- > [build_dependencies]                 yes    legacy spelling of the above
+-- > [target.<cfg>.<one of the above>]    yes    union over every cfg: CI
+-- >                                             builds on several hosts
+-- > [dev-dependencies] (every form)      no     tests only; Cargo allows dev
+-- >                                             cycles
+-- > [patch], [replace], [workspace], ..  no     not a dependency of the crate
+--
+-- Both spellings of an entry are read:
+--
+-- > [dependencies]
+-- > gates = { package = "logic-gates", path = "../logic-gates" }   -- inline
+-- >
+-- > [dependencies.logic-gates]                                     -- sub-table
+-- > path = "../logic-gates"
+--
+-- The reader is one pass over comment-stripped, trimmed lines with a
+-- three-state machine ('CargoLinkTable'). Every header line ends the current
+-- table (that is when a sub-table's entry is complete, since its @path@ and
+-- @package@ keys may come in either order), and an inline value whose
+-- brackets are still open at the end of its line swallows the following
+-- lines until they close — TOML 1.0 lets an array inside an inline table
+-- span lines, and the repository relies on it.
 rustDependencyTokens :: String -> [String]
-rustDependencyTokens = nub . collect False . lines
+rustDependencyTokens contents =
+    nub (scan CargoIgnoredTable (map cleanCargoLine (lines (dropByteOrderMark contents))))
   where
-    collect _ [] = []
-    collect inDependencies (rawLine : rest) =
-        let stripped = trim (stripTomlComment rawLine)
-         in case tomlSectionName stripped of
-                Just sectionName -> collect (sectionName == "dependencies") rest
-                Nothing ->
-                    if inDependencies
-                        then maybeToList (rustDependencyToken stripped) ++ collect True rest
-                        else collect False rest
+    dropByteOrderMark ('\xFEFF' : rest) = rest
+    dropByteOrderMark text = text
 
-rustDependencyToken :: String -> Maybe String
-rustDependencyToken stripped =
-    let (dependencyKey, assignment) = break (== '=') stripped
-        dependencyValue = drop 1 assignment
-        normalizedKey = map toLower (trim dependencyKey)
-        resolvedKey =
-            map toLower
-                (fromMaybe normalizedKey (cargoInlineStringValue "package" dependencyValue))
-     in if null assignment
-            || null normalizedKey
-            || not (hasCargoPathAssignment dependencyValue)
-            then Nothing
-            else Just resolvedKey
+    scan table [] = finishCargoTable table
+    scan table (line : rest)
+        | isCargoHeaderLine line = finishCargoTable table ++ scan (classifyCargoLinkHeader line) rest
+    scan CargoIgnoredTable (_ : rest) = scan CargoIgnoredTable rest
+    scan CargoInlineTable (line : rest) =
+        case breakTomlOutsideStrings '=' line of
+            Just (key, rawValue)
+                | let value = trimSpacesAndTabs rawValue
+                , "{" `isPrefixOf` value ->
+                    case joinCargoContinuation value rest of
+                        Nothing -> [] -- the file ended inside the value
+                        Just (fullValue, remaining) ->
+                            maybeToList (cargoPathDependencyName key fullValue)
+                                ++ scan CargoInlineTable remaining
+            _ -> scan CargoInlineTable rest
+    scan table@(CargoSubTable key path package) (line : rest) =
+        case breakTomlOutsideStrings '=' line of
+            Just (field, rawValue)
+                | Just value <- tomlSingleString rawValue ->
+                    case trimSpacesAndTabs field of
+                        -- The first occurrence of each key wins.
+                        "path" -> scan (CargoSubTable key (firstJust path value) package) rest
+                        "package" -> scan (CargoSubTable key path (firstJust package value)) rest
+                        _ -> scan table rest
+            _ -> scan table rest
 
-cargoInlineStringValue :: String -> String -> Maybe String
-cargoInlineStringValue fieldName value =
-    listToMaybe
-        [ quotedValue
-        | field <- splitCargoInlineFields value
-        , let withoutOpeningBrace = dropWhile (`elem` [' ', '\t', '{']) field
-        , let (key, assignment) = break (== '=') withoutOpeningBrace
-        , map toLower (trim key) == fieldName
-        , not (null assignment)
-        , quotedValue <- take 1 (extractQuotedValues (drop 1 assignment))
-        ]
+    firstJust existing value = maybe (Just value) Just existing
+
+    joinCargoContinuation value rest
+        | tomlOpenBracketDepth value <= 0 = Just (value, rest)
+        | otherwise =
+            case rest of
+                [] -> Nothing
+                next : remaining -> joinCargoContinuation (value ++ " " ++ next) remaining
+
+-- | How the lines under the current header are read.
+data CargoLinkTable
+    = CargoIgnoredTable
+      -- ^ not a link table; its lines are skipped
+    | CargoInlineTable
+      -- ^ @[D]@ or @[target.C.D]@: one inline entry per line
+    | CargoSubTable String (Maybe String) (Maybe String)
+      -- ^ @[D.N]@ or @[target.C.D.N]@: the key N, and @path@ / @package@ so far
+
+finishCargoTable :: CargoLinkTable -> [String]
+finishCargoTable (CargoSubTable key (Just _) package) = [map toLower (fromMaybe key package)]
+finishCargoTable _ = []
+
+-- | Step 1 of the contract: drop one trailing CR, remove the comment (the
+-- first @#@ outside a string), trim spaces and tabs.
+cleanCargoLine :: String -> String
+cleanCargoLine rawLine =
+    let withoutCarriageReturn
+            | not (null rawLine) && last rawLine == '\r' = init rawLine
+            | otherwise = rawLine
+     in trimSpacesAndTabs (stripTomlComment withoutCarriageReturn)
+
+isCargoHeaderLine :: String -> Bool
+isCargoHeaderLine line = "[" `isPrefixOf` line && "]" `isSuffixOfString` line
+  where
+    isSuffixOfString suffix text = reverse suffix `isPrefixOf` reverse text
+
+-- | Classify a header line. It is split into dotted-key segments at every
+-- @.@ outside a string and each segment is decoded, so a quoted cfg stays one
+-- segment however much punctuation it holds:
+--
+-- > [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+-- >  target  C (one quoted segment)                    D
+--
+-- Exactly @[D]@, @[D.N]@, @[target.C.D]@ and @[target.C.D.N]@ are read;
+-- arrays of tables, malformed headers and every other segment list are not.
+classifyCargoLinkHeader :: String -> CargoLinkTable
+classifyCargoLinkHeader line
+    | "[[" `isPrefixOf` line = CargoIgnoredTable
+    | otherwise =
+        case mapM tomlKeySegment (splitTomlOutsideStrings '.' False (init (drop 1 line))) of
+            Nothing -> CargoIgnoredTable
+            Just segments ->
+                case withoutTarget segments of
+                    [table] | isCargoLinkTableName table -> CargoInlineTable
+                    [table, key] | isCargoLinkTableName table -> CargoSubTable key Nothing Nothing
+                    _ -> CargoIgnoredTable
+  where
+    withoutTarget ("target" : _cfg : rest@(_ : _)) = rest
+    withoutTarget segments = segments
+
+-- | Compared exactly: TOML keys are case-sensitive.
+isCargoLinkTableName :: String -> Bool
+isCargoLinkTableName name = name `elem` ["dependencies", "build-dependencies", "build_dependencies"]
+
+-- | The crate a complete inline entry @key = { ... }@ names, if it is a path
+-- dependency. Fields are split at commas outside strings and outside nested
+-- @[...]@ / @{...}@, so a @features@ array cannot leak a fake field and a
+-- nested table's @path@ is not the entry's. Field keys must be exactly
+-- @path@ and @package@ (Cargo ignores @Package@).
+--
+-- > logic-gates = { path = "../logic-gates" }                    -> logic-gates
+-- > gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+-- > x = { version = "1", features = ["path"] }                   -> none
+cargoPathDependencyName :: String -> String -> Maybe String
+cargoPathDependencyName rawKey rawValue = do
+    key <- tomlKeySegment rawKey
+    let value = trimSpacesAndTabs rawValue
+    if length value >= 2 && head value == '{' && last value == '}'
+        then Just ()
+        else Nothing
+    let fields =
+            [ (trimSpacesAndTabs fieldKey, fieldValue)
+            | field <- splitTomlOutsideStrings ',' True (init (drop 1 value))
+            , Just (fieldKey, rawFieldValue) <- [breakTomlOutsideStrings '=' field]
+            , Just fieldValue <- [tomlSingleString rawFieldValue]
+            ]
+    _ <- lookup "path" fields
+    pure (map toLower (fromMaybe key (lookup "package" fields)))
+
+-- | Split a string token off the front of the text: @Just (token, rest)@
+-- when the text starts with a closed @"..."@ or @'...'@ string. In a basic
+-- string a backslash makes the next character part of it, so @\\"@ does not
+-- end it; literal strings have no escapes.
+takeTomlString :: String -> Maybe (String, String)
+takeTomlString (quote : body)
+    | quote == '"' || quote == '\'' = go [quote] body
+  where
+    go accumulated ('\\' : escaped : rest)
+        | quote == '"' = go (escaped : '\\' : accumulated) rest
+    go accumulated (character : rest)
+        | character == quote = Just (reverse (character : accumulated), rest)
+        | otherwise = go (character : accumulated) rest
+    go _ [] = Nothing
+takeTomlString _ = Nothing
+
+-- | Break at the first target character outside strings.
+breakTomlOutsideStrings :: Char -> String -> Maybe (String, String)
+breakTomlOutsideStrings target = go []
+  where
+    go _ [] = Nothing
+    go accumulated text@(character : rest)
+        | character == '"' || character == '\'' =
+            case takeTomlString text of
+                Just (token, remaining) -> go (reverse token ++ accumulated) remaining
+                Nothing -> Nothing
+        | character == target = Just (reverse accumulated, rest)
+        | otherwise = go (character : accumulated) rest
+
+-- | Split at every separator outside strings; with @nested@, also only at
+-- bracket depth zero. An unclosed string runs to the end of the last part.
+splitTomlOutsideStrings :: Char -> Bool -> String -> [String]
+splitTomlOutsideStrings separator nested = go (0 :: Int) []
+  where
+    go _ accumulated [] = [reverse accumulated]
+    go depth accumulated text@(character : rest)
+        | character == '"' || character == '\'' =
+            case takeTomlString text of
+                Just (token, remaining) -> go depth (reverse token ++ accumulated) remaining
+                Nothing -> [reverse accumulated ++ text]
+        | nested && (character == '[' || character == '{') = go (depth + 1) (character : accumulated) rest
+        | nested && (character == ']' || character == '}') = go (depth - 1) (character : accumulated) rest
+        | character == separator && depth == 0 = reverse accumulated : go depth [] rest
+        | otherwise = go depth (character : accumulated) rest
+
+-- | The number of @{@ and @[@ outside strings not closed again. Zero means
+-- an inline value is complete.
+tomlOpenBracketDepth :: String -> Int
+tomlOpenBracketDepth = go 0
+  where
+    go depth [] = depth
+    go depth text@(character : rest)
+        | character == '"' || character == '\'' =
+            maybe depth (go depth . snd) (takeTomlString text)
+        | character == '{' || character == '[' = go (depth + 1) rest
+        | character == '}' || character == ']' = go (depth - 1) rest
+        | otherwise = go depth rest
+
+-- | One key or header segment: a bare key (ASCII letters, digits, @_@, @-@)
+-- or exactly one closed string, whose value is the text between its quotes,
+-- verbatim (escapes are not decoded).
+tomlKeySegment :: String -> Maybe String
+tomlKeySegment raw =
+    case trimSpacesAndTabs raw of
+        [] -> Nothing
+        segment@(first : _)
+            | first == '"' || first == '\'' ->
+                case takeTomlString segment of
+                    Just (token, []) -> Just (init (drop 1 token))
+                    _ -> Nothing
+            | all isBareKeyCharacter segment -> Just segment
+            | otherwise -> Nothing
+  where
+    isBareKeyCharacter character =
+        isAsciiLower character || isAsciiUpper character
+            || (character >= '0' && character <= '9')
+            || character == '_' || character == '-'
+
+-- | The content of a value that is exactly one closed, non-empty string.
+tomlSingleString :: String -> Maybe String
+tomlSingleString raw =
+    case takeTomlString (trimSpacesAndTabs raw) of
+        Just (token, []) | length token > 2 -> Just (init (drop 1 token))
+        _ -> Nothing
+
+trimSpacesAndTabs :: String -> String
+trimSpacesAndTabs = dropWhileEnd isSpaceOrTab . dropWhile isSpaceOrTab
+  where
+    isSpaceOrTab character = character == ' ' || character == '\t'
 
 splitCargoInlineFields :: String -> [String]
 splitCargoInlineFields = go Nothing []
@@ -1895,37 +2101,6 @@ splitCargoInlineFields = go Nothing []
     go (Just quote) current (character : rest)
         | character == quote = go Nothing (character : current) rest
         | otherwise = go (Just quote) (character : current) rest
-
-hasCargoPathAssignment :: String -> Bool
-hasCargoPathAssignment = scan Nothing . map toLower . hideTomlStringContents
-  where
-    scan _ [] = False
-    scan previous remaining@(character : rest)
-        | isCargoPathFieldStart previous remaining = True
-        | otherwise = scan (Just character) rest
-
-    isCargoPathFieldStart previous remaining =
-        "path" `isPrefixOf` remaining
-            && maybe True (not . isCargoKeyCharacter) previous
-            && case dropWhile (`elem` [' ', '\t']) (drop 4 remaining) of
-                '=' : _ -> True
-                _ -> False
-
-isCargoKeyCharacter :: Char -> Bool
-isCargoKeyCharacter character = isAlphaNum character || character `elem` ['_', '-']
-
-hideTomlStringContents :: String -> String
-hideTomlStringContents = go Nothing
-  where
-    go _ [] = []
-    go Nothing (character : rest)
-        | character `elem` ['"', '\''] = ' ' : go (Just character) rest
-        | otherwise = character : go Nothing rest
-    go (Just quote) ('\\' : _escaped : rest)
-        | quote == '"' = ' ' : ' ' : go (Just quote) rest
-    go (Just quote) (character : rest)
-        | character == quote = ' ' : go Nothing rest
-        | otherwise = ' ' : go (Just quote) rest
 
 readRubyDependencyTokens :: Package -> IO [String]
 readRubyDependencyTokens pkg = do
