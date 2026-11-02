@@ -2,7 +2,7 @@
 package: */ct-compare
 lane: go java kotlin ruby elixir
 rung: E5
-status: mitigated
+status: open
 ---
 
 # Five languages cannot turn a boolean into a mask without a branch
@@ -14,7 +14,7 @@ those languages therefore cannot become a mask without a branch. Ruby's
 validation `[true, false].include?(choice)` also did one comparison for `true`
 and two for `false`.
 
-**Handled:** CT01 now lets such lanes take an integer bit (exactly 0 or 1, as
+**Fix in progress** (adhithyan15/coding-adventures#18782): CT01 lets such lanes take an integer bit (exactly 0 or 1, as
 Go's `crypto/subtle` does), validated by testing `choice & ~1`, which takes the
 same path for both valid values. Callers must also produce the bit without a
 branch; bit-returning equality variants are a follow-up.

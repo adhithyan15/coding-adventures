@@ -62,15 +62,19 @@ a language, a toolchain, an existing package, a CI runner. Its frontmatter is
 required and closed:
 
     ---
-    package: rust/ct-compare      # or *
-    lane: rust                    # or *
-    rung: E4                      # E0-E6, bench, report or infra
-    status: open                  # open, mitigated or accepted
+    package: rust/ct-compare
+    lane: rust
+    rung: E4
+    status: open
     ---
+
+`package` and `lane` may be `*`; `rung` is one of E0-E6, bench, report or
+infra; `status` is open, mitigated or accepted. Values are taken verbatim (no
+inline comments), and a repeated key is an error.
 
 A quirk must never carry an untriaged counterexample, failing seed or crashing
 input (VER00 section 7.3), so `validate` also rejects `seed:`/`tape:`/
-`counterexample:`/`reproducer:` lines and long hexadecimal runs. Quirks are
+`counterexample:`/`reproducer:` lines and long hexadecimal or decimal runs. Quirks are
 validated by the same `validate` call that CI already runs for lessons.
 """
 
@@ -156,10 +160,19 @@ QUIRK_STATUSES = frozenset({"open", "mitigated", "accepted"})
 # Material that could reproduce an untriaged failure. A hex run of 24 or more
 # characters is long enough to be a seed, a tape or a hash-addressed input; a
 # commit or PR is referenced by number instead.
+# A keyword line, tolerating list bullets and Markdown emphasis around the
+# keyword, followed by `:`, `=`, `-` or whitespace and a digit. `[ \t]` rather
+# than `\s` keeps the pattern from scanning across lines, which made it
+# quadratic on long runs of blank lines.
 QUIRK_SECRET_LINE = re.compile(
-    r"^\s*(?:[-*]\s*)?(seed|tape|counterexample|reproducer)\s*[:=]", re.IGNORECASE | re.MULTILINE
+    r"^[ \t]*(?:[-*][ \t]*)?[`*_]*(seed|tape|counterexample|reproducer)[`*_]*"
+    r"[ \t]*(?:[:=-]|[ \t]\d)",
+    re.IGNORECASE | re.MULTILINE,
 )
-QUIRK_HEX_RUN = re.compile(r"\b[0-9a-fA-F]{24,}\b")
+# Long hexadecimal (with or without a 0x prefix, optionally split by - or _ as
+# in a UUID) and long decimal runs: the usual shapes of a seed or input hash.
+QUIRK_HEX_RUN = re.compile(r"(?:\b|0x)(?:[0-9a-fA-F][-_]?){24,}\b")
+QUIRK_DECIMAL_RUN = re.compile(r"\b\d{12,}\b")
 QUIRK_PLACEHOLDER = (
     "TODO: what the tools met, how it shows up, and how it is handled. "
     "Replace this line."
@@ -323,9 +336,14 @@ def read_frontmatter(path: Path) -> dict[str, str]:
     fields: dict[str, str] = {}
     for line in raw[4:end].splitlines():
         key, _, value = line.partition(":")
-        if key.strip():
-            # An inline `# comment` is allowed after the value.
-            fields[key.strip()] = value.split(" #", 1)[0].strip()
+        key = key.strip()
+        if not key:
+            continue
+        # A repeated key would otherwise let the last value silently win, so
+        # `status: bogus` followed by `status: open` would pass.
+        if key in fields:
+            raise ValueError(f"{path.name}: duplicate frontmatter key {key!r}")
+        fields[key] = value.strip()
     return fields
 
 
@@ -357,7 +375,11 @@ def cmd_validate_quirks(quirks_dir: Path) -> int:
         elif QUIRK_PLACEHOLDER.split(".")[0] in quirk.body:
             problems.append(f"{path.name}: still holds the `lessons.py new-quirk` placeholder")
         text = path.read_text(encoding="utf-8")
-        if QUIRK_SECRET_LINE.search(text) or QUIRK_HEX_RUN.search(text):
+        if (
+            QUIRK_SECRET_LINE.search(text)
+            or QUIRK_HEX_RUN.search(text)
+            or QUIRK_DECIMAL_RUN.search(text)
+        ):
             problems.append(
                 f"{path.name}: looks like it carries a seed, tape or reproducing "
                 "input; quirks must not (VER00 section 7.3)"
@@ -390,11 +412,12 @@ def cmd_new_quirk(
     if path.exists() or path.is_symlink():
         print(f"quirks: {path.name} already exists -- edit it instead", file=sys.stderr)
         return 1
-    path.write_text(
-        f"---\npackage: {package}\nlane: {lane}\nrung: {rung}\nstatus: {status}\n---\n\n"
-        f"# {title}\n\n{QUIRK_PLACEHOLDER}\n",
-        encoding="utf-8",
-    )
+    # Exclusive create: never follow a symlink planted after the check above.
+    with path.open("x", encoding="utf-8") as handle:
+        handle.write(
+            f"---\npackage: {package}\nlane: {lane}\nrung: {rung}\nstatus: {status}\n---\n\n"
+            f"# {title}\n\n{QUIRK_PLACEHOLDER}\n"
+        )
     print(path)
     return 0
 

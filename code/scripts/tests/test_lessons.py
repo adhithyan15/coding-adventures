@@ -479,11 +479,30 @@ class QuirkValidationTests(unittest.TestCase):
             "Counterexample: left=00 right=01",
             "reproducer: see attached",
             "The failing input was 00112233445566778899aabbccddeeff.",
+            "seed 0x00112233445566778899aabbccddeeff00112233",
+            "id 0011-2233-4455-6677-8899-aabb-ccdd",
+            "The run used 1234567890123456 as its seed.",
+            "`seed`: 1",
+            "**Seed** - 7",
+            "tape 3 4 5",
         ):
             with self.subTest(leak=leak):
                 code, _, err = self.validate(GOOD_QUIRK + "\n" + leak + "\n")
                 self.assertEqual(code, 1)
                 self.assertIn("reproducing input", err)
+
+    def test_a_duplicate_frontmatter_key_is_rejected(self):
+        text = GOOD_QUIRK.replace("status: open", "status: bogus\nstatus: open")
+        code, _, err = self.validate(text)
+        self.assertEqual(code, 1)
+        self.assertIn("duplicate frontmatter key 'status'", err)
+
+    def test_the_keyword_pattern_is_linear_on_blank_lines(self):
+        import time
+
+        start = time.perf_counter()
+        lessons.QUIRK_SECRET_LINE.search("\n" * 20000 + "x")
+        self.assertLess(time.perf_counter() - start, 0.5)
 
     def test_the_new_quirk_placeholder_must_be_replaced(self):
         with tempfile.TemporaryDirectory() as tmp:
