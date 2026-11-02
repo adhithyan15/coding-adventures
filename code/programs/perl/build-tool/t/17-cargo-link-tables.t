@@ -497,7 +497,10 @@ my @SELF_EDGES = (
 for my $self_edge (@SELF_EDGES) {
     my ($label, $entry) = @$self_edge;
     subtest "self-edge by $label is a diagnostic" => sub {
-        my $root = tempdir(CLEANUP => 1);
+        # The checkout itself sits under code/packages/checkout/: the
+        # diagnostic must cut at the LAST code/packages pair and never print
+        # the checkout's own directory.
+        my $root = tempdir(CLEANUP => 1) . '/code/packages/checkout';
         my $app = "$root/code/packages/rust/app-dir";
         make_path($app);
         write_file("$app/Cargo.toml", "[package]\nname = \"app-crate\"\n\n$entry");

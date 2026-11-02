@@ -42,6 +42,11 @@
 
 ### Fixed
 
+- `DEPENDENCY_SELF_EDGE` diagnostics cut the manifest path at the **last**
+  `code/packages/` or `code/programs/` pair (security review, round 2).
+  Cutting at the first `/code/` printed the checkout's own directory for the
+  common `~/code/<repo>` layout; the self-edge tests now place the checkout
+  under `code/packages/checkout/` to pin it.
 - Cargo link-table security fixes. Inline values continuing onto later lines
   are joined in linear time: `toml_bracket_scan` carries the bracket depth,
   the open string's delimiter and a pending escape from line to line (so a

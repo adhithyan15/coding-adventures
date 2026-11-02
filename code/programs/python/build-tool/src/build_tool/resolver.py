@@ -1077,10 +1077,14 @@ def _parse_rust_deps(package: Package, known_names: dict[str, str]) -> list[str]
         return []
 
     text = cargo_toml.read_text(encoding="utf-8")
+    # The list keeps manifest order; the set makes each membership test O(1),
+    # so a manifest naming many crates costs time linear in its size.
     internal_deps: list[str] = []
+    seen: set[str] = set()
     for crate_name in _cargo_link_dependency_names(text):
         package_name = known_names.get(crate_name)
-        if package_name is not None and package_name not in internal_deps:
+        if package_name is not None and package_name not in seen:
+            seen.add(package_name)
             internal_deps.append(package_name)
     return internal_deps
 

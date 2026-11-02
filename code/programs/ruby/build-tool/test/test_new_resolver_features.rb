@@ -673,7 +673,9 @@ class TestCargoLinkDependencyNames < Minitest::Test
   SELF_EDGE_ENTRIES.each do |label, entry|
     define_method("test_self_edge_is_a_diagnostic_#{label.gsub(/[^a-z0-9]+/i, "_")}") do
       dir = create_temp_dir
-      app = dir / "code" / "packages" / "rust" / "app-dir"
+      # The checkout itself sits under code/packages/checkout/: the diagnostic
+      # must cut at the LAST code/packages pair and never print the checkout.
+      app = dir / "code" / "packages" / "checkout" / "code" / "packages" / "rust" / "app-dir"
       write_file(app / "Cargo.toml", "[package]\nname = \"app-crate\"\n\n#{entry}")
       packages = [BuildTool::Package.new(name: "rust/app-dir", path: app, build_commands: [], language: "rust")]
 

@@ -138,15 +138,33 @@ local function normalize_path(path)
     return joined
 end
 
+-- The repository-relative spelling of a manifest path, for diagnostics. It
+-- cuts at the LAST `code/packages/` or `code/programs/` pair, as the Go, Python,
+-- TypeScript, Elixir and C# fronts do: cutting at the first `/code/` would
+-- print the checkout's own directory when the repository lives under a
+-- directory named `code` (`~/code/<repo>/code/packages/...`). With no such
+-- pair, only the file name is shown, so the checkout root is never disclosed.
 local function repository_relative_manifest(path)
     local normalized = normalize_path(path)
-    if normalized:sub(1, 5) == "code/" then
-        return normalized
+    local start
+    for _, marker in ipairs({ "code/packages/", "code/programs/" }) do
+        if normalized:sub(1, #marker) == marker and not start then
+            start = 1
+        end
+        local from = 1
+        while true do
+            local found = normalized:find("/" .. marker, from, true)
+            if not found then
+                break
+            end
+            if not start or found + 1 > start then
+                start = found + 1
+            end
+            from = found + 1
+        end
     end
-
-    local marker = normalized:find("/code/", 1, true)
-    if marker then
-        return normalized:sub(marker + 1)
+    if start then
+        return normalized:sub(start)
     end
 
     return normalized:match("([^/]+)$") or normalized

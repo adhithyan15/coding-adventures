@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Rust dependency names are deduplicated with a set rather than a list scan,
+  so a manifest naming many crates costs time linear in its size (security
+  review, round 2).
 - Source hashing now consumes an installed, byte-identical projection of the
   checked 23-language source-input registry. All seven selector roles apply
   with exact package/site scoping and declared-source precedence; unknown

@@ -411,7 +411,10 @@ describe("Rust link-table resolution contract", function()
     }
     for _, case in ipairs(self_edges) do
         it("rejects a self-edge by " .. case[1], function()
-            local root = new_temporary_root()
+            -- The checkout itself sits under code/packages/checkout/: the
+            -- diagnostic must cut at the LAST code/packages pair and never
+            -- print the checkout's own directory.
+            local root = new_temporary_root() .. "/code/packages/checkout"
             local app = root .. "/code/packages/rust/app-dir"
             ensure_directory(app)
             write_file(app .. "/Cargo.toml", "[package]\nname = \"app-crate\"\n\n" .. case[2])

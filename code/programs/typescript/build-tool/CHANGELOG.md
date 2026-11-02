@@ -6,6 +6,9 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Changed
 
+- Rust dependency names are deduplicated with a set rather than a list scan,
+  so a manifest naming many crates costs time linear in its size (security
+  review, round 2).
 - Replace the nine-language hard-coded source suffix/metadata allowlists with
   the complete checked 23-language, seven-role package-data registry. Production
   selection now honors root-only manifests and capability metadata, scoped

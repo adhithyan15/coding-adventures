@@ -478,7 +478,9 @@ module BuildTool
 
     def repository_relative_manifest(path)
       normalized = Pathname(path).cleanpath.to_s.tr("\\", "/")
-      match = normalized.match(%r{(?:\A|/)(code/(?:packages|programs)/.+)\z})
+      # The greedy prefix makes this the LAST code/packages|programs pair, so a
+      # checkout under a directory that itself holds one is never printed.
+      match = normalized.match(%r{\A(?:.*/)?(code/(?:packages|programs)/.+)\z})
       return match[1] if match
 
       Pathname(normalized).basename.to_s

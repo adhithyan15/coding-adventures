@@ -1262,7 +1262,9 @@ sub _repository_relative_manifest {
     my ($path) = @_;
     my $normalized = File::Spec->canonpath($path);
     $normalized =~ s{\\}{/}g;
-    return $1 if $normalized =~ m{(?:^|/)(code/(?:packages|programs)/.+)\z};
+    # The greedy prefix makes this the LAST code/packages|programs pair, so a
+    # checkout under a directory that itself holds one is never printed.
+    return $1 if $normalized =~ m{\A(?:.*/)?(code/(?:packages|programs)/.+)\z}s;
     return File::Basename::basename($normalized);
 }
 

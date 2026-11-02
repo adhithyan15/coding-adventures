@@ -70,6 +70,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
+- `DEPENDENCY_SELF_EDGE` diagnostics cut the manifest path at the **last**
+  `code/packages/` or `code/programs/` pair (security review, round 2). The
+  first match printed the checkout's own directory when the repository sits
+  under a directory that itself holds such a pair; the self-edge tests now
+  place the checkout under `code/packages/checkout/` to pin it.
 - Cargo link-table security fixes. Inline values continuing onto later lines
   are joined in linear time: `_toml_bracket_scan` carries the bracket depth,
   the open string's delimiter and a pending escape from line to line (so a

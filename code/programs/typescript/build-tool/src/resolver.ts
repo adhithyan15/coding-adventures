@@ -1111,14 +1111,17 @@ function parseRustDeps(
   }
 
   const text = fs.readFileSync(cargoTomlPath, "utf-8");
-  const internalDeps: string[] = [];
+  // A Set, not Array.includes: each membership test is O(1), so a manifest
+  // naming many crates costs time linear in its size. Insertion order is
+  // manifest order.
+  const internalDeps = new Set<string>();
   for (const crateName of cargoLinkDependencyNames(text)) {
     const pkgName = knownNames.get(crateName);
-    if (pkgName && !internalDeps.includes(pkgName)) {
-      internalDeps.push(pkgName);
+    if (pkgName) {
+      internalDeps.add(pkgName);
     }
   }
-  return internalDeps;
+  return [...internalDeps];
 }
 
 // ===========================================================================
