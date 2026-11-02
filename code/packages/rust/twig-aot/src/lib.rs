@@ -6788,7 +6788,7 @@ mod tests {
             ],
         );
         assert!(collect_runtime_str_vars_for_aot(&f).contains("s"), "a param is an entry def");
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         let loads = f
             .instructions
             .iter()
