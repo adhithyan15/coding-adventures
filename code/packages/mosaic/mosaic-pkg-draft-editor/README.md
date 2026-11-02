@@ -1,8 +1,9 @@
 # mosaic-pkg-draft-editor
 
 One plain editing surface: an optional one-line **title**, a multi-line
-**body**, and labelled **actions**. Journal's entry editor is its one consumer
-today; Trestle's notes and Engram's focused note field are planned to adopt it
+**body**, and labelled **actions**. Journal's entry editor uses it, and so does
+Engram's focused note field: `NoteEditor` 0.2.0 mounts it body-only, with no
+title and no actions. Trestle's notes are planned to adopt it
 ([`mosaic-editor-convergence-audit-v1.md`](../../../specs/mosaic-editor-convergence-audit-v1.md),
 E3 and E4). J3b of
 [#14416](https://github.com/adhithyan15/coding-adventures/issues/14416); design

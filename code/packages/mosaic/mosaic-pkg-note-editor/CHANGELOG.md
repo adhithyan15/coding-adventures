@@ -2,6 +2,62 @@
 
 ## Unreleased
 
+### Changed — 0.2.0: the focused field is a body-only DraftEditor (E4)
+
+E4 of `mosaic-editor-convergence-audit-v1.md` (probe B; decisions in §8).
+
+- **The focused field is `pkg::mosaic-pkg-draft-editor::DraftEditor`**,
+  mounted with `title-label`, `save-label`, `delete-label` and
+  `cancel-label` all `""`, so it draws no title and no buttons. `body-label`
+  is `selected-field-label`, `body-value` is `selected-field-value`, and
+  `body-placeholder` is `selected-field-placeholder`. NoteEditor's own
+  pickers, tags field and Save note / Delete / Cancel row are unchanged.
+- **Behaviour changes.** The field is multi-line: Enter is a line break
+  (it did nothing before). Ctrl+Enter (Cmd+Enter on macOS) raises
+  `onSaveNote`, through DraftEditor's `onSave`.
+- **Accessible names.** The focused field is named by its visible label
+  (DraftEditor binds the body's `a11y-label` to `body-label`). `tags-input`
+  gains `a11y-label : slot: tags-label`. Neither field had a name before
+  beyond its placeholder. A host must never send `selected-field-label: ""`.
+- **No slot or event change.** All 25 slots and 8 events are as in 0.1.0, so
+  a consumer's call site does not change. Parts removed:
+  `selected-field-label` and `selected-field-input` (now DraftEditor's
+  `draft-editor-body-label` and `draft-editor-body`), with their styles in
+  both themes.
+- **Declared dependency:** `mosaic-pkg-draft-editor = "0.2.0"`, the first
+  with `body-placeholder`. The manifest and the smoke crate's `Cargo.toml`
+  are both 0.2.0 (the crate said 0.1.0).
+
+### Changed — the native gate pins by part, per theme, and counts
+
+- Pins are `(backend, property, part)`, as in `mosaic-pkg-notes`' E2 gate.
+  The inverse ratchet runs per theme, and a new test keeps the pin list free
+  of duplicates, so its length is the exact per-theme drop count.
+- **Measured 1 → 4 per theme**, identical in dark and light. Kept: Flutter
+  `font-weight` on `editor-title`. Added by the nested mount (audit R2):
+  SwiftUI `gap` on `draft-editor-title-group` (a reporter artifact: the
+  part is folded away at compile time), and Qt and Flutter `min-height` on
+  `draft-editor-body` (DraftEditor's own pinned gap). Flutter `width: 100%`
+  on `draft-editor-body`, under this package's Row, also dropped until
+  #18467 bounded such children with `Expanded`; it now lowers. Capability
+  degradations stay at zero.
+- Mutation-tested: moving the SwiftUI `gap` pin to another part fails the
+  forward test (the real drop is unpinned) and the inverse test (the pin
+  matches nothing), in both themes.
+
+### Changed — tests and stories
+
+- `package_compiles.rs` asserts the body-only mount and that the parts it
+  replaced are gone, the declared dependency and version, the multi-line
+  field with its Ctrl/Cmd+Enter save and its placeholder (on a React build,
+  where the mount is inlined), both accessible names, and that the layout's
+  only literals are the `""` that switch DraftEditor's parts off.
+- Four populated stories replace the one empty `Default`: adding a note,
+  editing a multi-line field, confirming a delete, and an empty collection
+  with no field to select. A test checks that each story sets exactly the
+  declared slots, that none leaves the field unnamed, and that the empty
+  field's placeholder and a multi-line value are both shown.
+
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 
 ### Fixed — 6 stale style-drop pins removed (X-7)

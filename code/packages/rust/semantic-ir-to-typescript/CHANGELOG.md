@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — `ForRange` counts with a hidden counter (#18482 review)
+
+The loop used its own variable as the counter, so a body that assigned it
+changed the number of iterations (`for i in range(3): i += 10` ran once).
+It now counts with `__sir_i_<id>` and binds the variable from it at the top
+of each iteration (`let i: __Sir.Val = __sir_i_<id>;`), as the JavaScript,
+C, Go, Rust and Ruby backends do.  The `lib.rs` ForRange test pins the new
+shape.
+
 ## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
 
 - **`sanitize_ident` escapes the names the emitter binds around user code**:

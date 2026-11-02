@@ -200,6 +200,10 @@ The mounted Mosaic note editor uses the same reducer path through
 selection and new-note edits from the shared draft opened by `onAddNote`.
 Mounted editor delete actions use shared two-click confirmation props before
 removing persisted notes or note types; unsaved note drafts discard immediately.
+`note-editor-selected-field-label` is never empty: it is the selected field's
+name, or "Field" when no field can be selected. NoteEditor 0.2.0 uses it as
+the focused field's accessible name, and its multi-line field raises
+`onNoteEditorSaveNote` on Ctrl/Cmd+Enter as well as from the Save note button.
 The mounted Mosaic note-type editor follows the same pattern through
 `onNoteTypeEditorSelectNoteType`, `onNoteTypeEditorNameChange`,
 `onNoteTypeEditorStylesheetChange`, `onNoteTypeEditorNewNoteType`,

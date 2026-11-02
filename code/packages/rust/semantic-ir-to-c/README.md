@@ -80,6 +80,12 @@ The emitter is **thin**; the semantics live in an inlined C runtime
   closure calling convention; an indirect call is `_sir_apply(...)`. The
   set of functions needing a thunk comes from the shared `semantic_ir::Visitor`
   walk, so a closure anywhere (an `IndirectCall` target, a loop body) gets one.
+- **Left-to-right evaluation** — C leaves the order of a call's arguments
+  unspecified.  When two operands of a call, dispatch, list, map, string or
+  closure could run code or read mutable state (`operands_simple`), every
+  operand is hoisted into a temporary in order first.  An indirect call's
+  callee is evaluated before its arguments, and a dispatch call's class and
+  method names stay C literals (`emit_dispatch`).
 - **Strict closures** — SIR10's `lambda` marker becomes
   `_sir_strict_arity(<closure>, N)`; `_sir_apply` then raises
   `ArgumentError: arity mismatch: …` for any other argument count, where a

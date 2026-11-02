@@ -90,6 +90,20 @@ never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
   is unchanged; only its implementation moved. See `code/specs/AOT00-T1-precise-gc.md`
   and `code/specs/LANG16-gc-core.md`.
 
+- **Stack maps and dynamic parameters** — each compiled function registers a GC
+  stack map naming the frame slots that may hold heap words. The backends decide
+  that from the types they are handed, and treat `i64` as "never a reference".
+  A Twig parameter is declared `any`: arithmetic reads it as `i64` (signed
+  comparisons), but it is as often a pair or a closure. So the specialiser gets a
+  copy of the function with those params typed `i64` (`specialisation_view`),
+  while the backend gets the declared `any` and keeps the parameter's slot in
+  every stack map. Before #18492 the param was retyped in place, and a compacting
+  collection inside the callee left the parameter pointing at the freed old copy
+  of its argument. The same goes for local copies (`let` bindings, `if` joins,
+  copy chains): `root_heap_word_copies` keeps every `mov` that may copy a heap
+  word typed `any` for the stack map while its mnemonic stays `mov_i64`.
+  `tests/gc_param_roots.rs` reproduces each case end to end.
+
 LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
 `call_builtin "print_string"`, so source-level BASIC `PRINT "HELLO"` runs through

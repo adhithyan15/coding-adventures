@@ -1,5 +1,70 @@
 # Changelog
 
+## Unreleased — Call operands run left to right (#18482 review)
+
+C leaves the order in which a call's arguments are evaluated unspecified,
+and gcc on x86-64 evaluates them right to left.  `is_simple` treated a call
+whose operands were all simple as one inline C expression, so nested calls
+ran in gcc's order.  Python's `self.n += self.bump()` (where `bump` sets
+`self.n`) printed 105 instead of 6, and Ruby's `[@n, bump, @n]` read the
+ivar after `bump` had changed it.
+
+- New `is_atom`: a literal, a local / parameter / capture / builtin
+  reference, `__self__()`, or a list / map / string / closure built only
+  from atoms.  Evaluating one runs no code and reads no state a call can
+  change.
+- New `operands_simple`: a call's (or sequence / map / string literal's,
+  or closure's) operands render inline only when each is simple and **at
+  most one is not an atom**.  Otherwise the expression is not simple and
+  the existing hoist paths put every operand in a temporary, in order.
+  `f(g(x), 1)` and `_sir_plus(_sir_times(a, b), c)` are unchanged.
+- `tests/compile_and_run.rs` gains `operands_left_to_right` (Ruby source),
+  which printed `105` / `100001` before and prints `6` / `1100` now.
+
+**Dispatch calls get a compound emit path (fixes #18768).**  The first
+version of this change exempted the OOP dispatch builtins, which had no
+hoisted emit path.  A security re-review found that this broke valid
+programs: once `a.get() + b.get()` was correctly not simple, a dispatch
+call taking it as an argument had nowhere to go.  `P(a.get() + b.get())`
+emitted `_sir_unknown_builtin("__new__")` and exited 1 at runtime, and
+`a.add(a.get() + b.get())` was refused at compile time.  Both had worked.
+
+- New `emit_dispatch` renders every dispatch builtin (`__new__`,
+  `__method__`, `__def_method__`, `__def_class_method__`,
+  `__class_method__`, `__super__`, `__include__`, `__extend__`) with a
+  callback for each *value* argument.  `dispatch_literal_positions` lists
+  the class / method name positions, which are always written as quoted C
+  literals and never evaluated.
+- The simple path passes `emit_expr`.  `emit_compound_call` now handles a
+  non-simple dispatch call by hoisting its value arguments into
+  temporaries, left to right, and passing their names.  Dispatch calls
+  follow `operands_simple` like every other call, so two code-running
+  arguments of one dispatch call (`c.pair(c.n, c.bump)`) also run left to
+  right now.
+- The scan's old refusal of a non-simple dispatch call is now a backstop:
+  it refuses one only when a name position is not a `StrLit`, and it
+  covers `__new__` too.
+
+**An indirect call evaluates its callee first.**  `make()(side())` rendered
+as `_sir_apply(sir_fn_make(), 1, sir_fn_side())`, which ran `side()`
+first.  The callee now counts as an operand.  When the call is compound,
+the callee is hoisted into its own temporary before the arguments.
+
+**A compound `MakeClosure` no longer panics.**  A closure with two
+code-running capture values was not simple and fell through to
+`emit_compound_call`, which panicked (`call_args(...).expect`).
+`emit_assign` now has a `MakeClosure` arm that hoists the capture values
+in order.  The call hoister emits a runtime error, never a panic, for any
+non-call expression that reaches it.
+
+Tests: `tests/emit.rs` gains
+`dispatch_with_a_compound_argument_hoists_its_values`,
+`dispatch_arguments_are_hoisted_left_to_right`,
+`indirect_call_hoists_the_callee_before_the_arguments` and
+`make_closure_with_two_code_running_captures_is_hoisted`.
+`tests/compile_and_run.rs` gains `dispatch_operands_left_to_right`, which
+prints `1005 / 5 / 7` (the first value was `101005` before).
+
 ## Unreleased — User names kept apart from libc and the runtime; `lambda` arity (issue #18466)
 
 - **Every user function is `sir_fn_<name>`.**  A C function shares the

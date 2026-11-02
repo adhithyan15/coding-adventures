@@ -149,21 +149,6 @@ style NoteEditor {
     padding : 2 ;
   }
 
-  part selected-field-label {
-    color       : "#86efac" ;
-    font-size   : 11 ;
-    font-weight : 700 ;
-  }
-
-  part selected-field-input {
-    background    : "#0f172a" ;
-    border-width  : 1 ;
-    border-color  : "#334155" ;
-    border-radius : 6 ;
-    color         : "#f8fafc" ;
-    padding       : 8 ;
-  }
-
   part tags-label {
     color       : "#fde68a" ;
     font-size   : 11 ;

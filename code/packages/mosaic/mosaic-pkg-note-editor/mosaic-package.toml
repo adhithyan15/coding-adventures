@@ -1,11 +1,32 @@
+# mosaic-package.toml — manifest for mosaic-pkg-note-editor.
+#
+# Engram's Add/Edit note form: note-type, deck and field pickers, one focused
+# field, tags, and Save note / Delete / Cancel.
+#
+# v0.1.0 — the focused field was NoteEditor's own single-line HostInput.
+#
+# v0.2.0 — the focused field is a body-only DraftEditor (E4 of
+# code/specs/mosaic-editor-convergence-audit-v1.md, probe B): multi-line,
+# with Ctrl/Cmd+Enter raising `onSaveNote`, and the field's label as its
+# accessible name. The slot and event sets are unchanged, but the field's
+# behaviour and part names change (`selected-field-input` and
+# `selected-field-label` are now DraftEditor's `draft-editor-body` and
+# `draft-editor-body-label`), and the host must never send an empty
+# `selected-field-label`. Hence a minor bump while pre-1.0.
+
 [package]
 name = "mosaic-pkg-note-editor"
-version = "0.1.0"
-description = "Reusable focused note editor component for Engram-style note fields and tags"
+version = "0.2.0"
+description = "Reusable focused note editor component for Engram-style note fields and tags, its focused field a body-only DraftEditor"
 license = "MIT OR Apache-2.0"
 
 [components]
 exports = ["NoteEditor"]
+
+[dependencies]
+# DraftEditor 0.2.0 is the first with `body-placeholder`, which NoteEditor
+# binds to the focused field's placeholder.
+mosaic-pkg-draft-editor = "0.2.0"
 
 [kernel]
 version = "1"
