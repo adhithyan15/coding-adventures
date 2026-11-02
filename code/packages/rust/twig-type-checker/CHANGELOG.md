@@ -13,7 +13,7 @@
 - **Diagnostics were unbounded.** Every diagnostic (unresolved name, arity,
   refinement, exhaustiveness) now goes through
   `type_checker_protocol::bounded::push_bounded`: at most 256 kept, 4 KiB
-  each, 1 MiB in all, then one truncation note.
+  each, 512 KiB in all, then one truncation note.
 
 ### Tests
 
@@ -21,7 +21,7 @@
   summarised; exactly 256 diagnostics are kept and 257 add one note, for
   exhaustiveness and for unresolved names, through both `check_program`
   and `type_check_source`'s grammar checker; 20,000 variants × 5,000
-  matches stay within 1 MiB.
+  matches stay within the 512 KiB byte cap.
 
 ## Unreleased — #18474 security review: generated-name budget before Pass 1
 

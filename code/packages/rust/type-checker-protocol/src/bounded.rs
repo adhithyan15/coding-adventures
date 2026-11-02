@@ -14,7 +14,7 @@
 //! |-------|-------|-----|
 //! | [`MAX_DIAGNOSTICS`] | 256 | no one reads past the first screens of errors; GCC's `-fmax-errors` and many IDEs stop much earlier |
 //! | [`MAX_DIAGNOSTIC_MESSAGE_BYTES`] | 4 KiB | a message names at most a few identifiers (each capped at 256 bytes by the Twig parser) plus [`MAX_LISTED_NAMES`] list items |
-//! | [`MAX_DIAGNOSTIC_BYTES`] | 1 MiB | all messages together: 256 × 4 KiB, enforced on its own so no message length can break it |
+//! | [`MAX_DIAGNOSTIC_BYTES`] | 512 KiB | all messages together: half of 256 × 4 KiB, so this cap is reachable on its own (128 maximum-length messages trip it before the count cap does) |
 //!
 //! When a diagnostic does not fit, it is dropped and a single
 //! [`DIAGNOSTICS_TRUNCATED`] note is appended (once), so the result still
@@ -35,7 +35,7 @@ pub const MAX_DIAGNOSTICS: usize = 256;
 pub const MAX_DIAGNOSTIC_MESSAGE_BYTES: usize = 4096;
 
 /// Bytes of all diagnostic messages a checker keeps per program.
-pub const MAX_DIAGNOSTIC_BYTES: usize = 1 << 20;
+pub const MAX_DIAGNOSTIC_BYTES: usize = 1 << 19;
 
 /// Names a message lists before summarising the rest.
 pub const MAX_LISTED_NAMES: usize = 8;
@@ -68,6 +68,10 @@ pub fn diagnostics_closed(errors: &[TypeErrorDiagnostic]) -> bool {
 /// the dropped diagnostic's position.  The total is re-summed on each push,
 /// at most [`MAX_DIAGNOSTICS`] messages.
 pub fn push_bounded(errors: &mut Vec<TypeErrorDiagnostic>, mut diagnostic: TypeErrorDiagnostic) -> bool {
+    // Once the note is present nothing more is kept: skip the re-sum.
+    if diagnostics_closed(errors) {
+        return false;
+    }
     truncate_message(&mut diagnostic.message);
     let bytes: usize = errors.iter().map(|d| d.message.len()).sum();
     if diagnostics_full(errors) || bytes + diagnostic.message.len() > MAX_DIAGNOSTIC_BYTES {
@@ -175,9 +179,12 @@ mod tests {
         let mut errors = Vec::new();
         let big = "a".repeat(MAX_DIAGNOSTIC_MESSAGE_BYTES);
         let fit = MAX_DIAGNOSTIC_BYTES / MAX_DIAGNOSTIC_MESSAGE_BYTES;
+        // The byte cap must be the one that trips, not the count cap.
+        assert!(fit < MAX_DIAGNOSTICS, "byte cap unreachable: {fit} messages fill it");
         for _ in 0..fit {
             assert!(push_bounded(&mut errors, diag(&big)));
         }
+        assert!(!diagnostics_full(&errors), "count cap not reached");
         assert!(!push_bounded(&mut errors, diag("x")), "one byte over the total");
         assert_eq!(errors.last().unwrap().message, DIAGNOSTICS_TRUNCATED);
     }

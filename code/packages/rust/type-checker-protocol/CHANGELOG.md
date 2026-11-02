@@ -3,7 +3,7 @@
 ## Unreleased — #18474 security review: bounded diagnostics
 
 - New `bounded` module. `push_bounded` keeps at most `MAX_DIAGNOSTICS`
-  (256) diagnostics and `MAX_DIAGNOSTIC_BYTES` (1 MiB) of messages, cuts a
+  (256) diagnostics and `MAX_DIAGNOSTIC_BYTES` (512 KiB, so the byte cap can trip before the count cap) of messages, cuts a
   message at `MAX_DIAGNOSTIC_MESSAGE_BYTES` (4 KiB), and appends the
   `DIAGNOSTICS_TRUNCATED` note once when one is dropped.
   `diagnostics_closed` lets a checker skip work whose only product would be

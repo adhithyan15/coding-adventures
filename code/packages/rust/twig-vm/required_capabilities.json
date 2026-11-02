@@ -10,6 +10,12 @@
       "justification": "The `print` builtin inherited from lispy-runtime writes program output to stdout."
     },
     {
+      "category": "stdin",
+      "action": "read",
+      "target": "*",
+      "justification": "The `read_byte` and `read_line` builtins read the process's standard input."
+    },
+    {
       "category": "fs",
       "action": "read",
       "target": "*",
@@ -22,5 +28,5 @@
       "justification": "`twig-vm --debug-port N` binds a loopback TCP listener and accepts one DAP adapter connection."
     }
   ],
-  "justification": "A Twig interpreter and its CLI: it writes program output, reads the source files it is asked to run, and in debug mode listens on loopback for one debugger."
+  "justification": "A Twig interpreter and its CLI: it writes program output, reads standard input when a program asks, reads the source files it is asked to run, and in debug mode listens on loopback for one debugger."
 }
