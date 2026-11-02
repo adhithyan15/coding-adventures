@@ -1,5 +1,20 @@
 # Changelog — `twig-aot`
 
+## Unreleased — review follow-ups to #18785: arrays of strings, string parameters, global-root registration
+
+- **Bug: native arrays of strings were not traced.** The native backends allocated every `alloc_array` with `__twig_alloc_bytes`, a no-reference blob kind. In a BASIC `DIM A$(n)` array, a string reachable only through the array was therefore freed by any collection while the array still held its handle. A program that stores 16 strings only in an `array<str>`, collects, and reuses the cells read the wrong lengths, and memcheck reported invalid reads.
+- **Fix.** New `select_ref_array_allocator` (run from `pre_lower_aot_builtins`, so on every native path) rewrites an `alloc_array` whose `array<T>` element is a reference to the new op `alloc_ref_array`. The reference set is `str`, `any`, `ref<any>`, `symbol` and `ref<Lispy…>`, the same as iir-to-llvm's `elem_is_gc_reference`. Both native backends lower `alloc_ref_array` to `__twig_alloc_ref_array_bytes`, whose kind traces every element word. The element type has to be read from the IIR because the specialiser erases `array<T>` to `any`. `alloc_ref_array` counts as a GC allocation for `root_heap_word_copies`.
+- **Bug: a parameter overwritten by a literal in one branch kept the literal.** `collect_runtime_str_vars_for_aot` counted only instruction definitions, and `str_const` (plus the literal-fold paths of `str_concat` / `str_slice`) registered a fact without checking for a second definition. So in `f(s, c)` with `if c then s := "hello"`, `length(s)` folded to 5 and `print s` used a length register only the `c` arm defines, even when `c` was false and `s` was the argument.
+- **Fix.** Parameters count as definitions in the entry block, and no literal is registered for a destination with more than one definition. Behaviour change: a string reassigned straight-line in one block now reads its length at run time (`straight_line_reassignment_keeps_static_length` became `straight_line_reassignment_reads_length_at_runtime`). This is correct but no longer folded, and it matches the integer table's rule.
+- **Global-root registration cannot fail silently.**
+  - A module with more globals than `gc_core_capi::MAX_GLOBAL_ROOT_SLOTS` (2²⁴) is refused at compile time (`check_global_root_capacity`). x86-64 had no limit of its own, and the runtime would have rejected the block.
+  - The generated `__gc_init_stackmaps` now traps if `__gc_register_global_roots` returns anything but the count: `cmp`/`b.eq`/`udf #0xdead` on AArch64, `cmp`/`je`/`ud2` on x86-64 SysV and Win64.
+- **Tests.**
+  - New `tests/native_ref_arrays_and_string_params.rs` (Linux): the string array under precise and compacting collections with reuse; the same under memcheck; and the parameter program with `c = 0` (prints "ab", exits 2) and `c = 1`. All three fail on the #18785 head.
+  - New unit tests: `a_parameter_overwritten_in_one_branch_keeps_no_literal`, `more_globals_than_the_runtime_roots_is_a_compile_error`, and trap assertions in the init-sequence tests.
+  - New `global_survives_an_incremental_cycle` drives `start` / `step` / `finish` from compiled code; `finish` is now a stack-walking trampoline in gc-core-capi.
+- Spec: `AOT00-T7-array-reference-tracing.md` §3a (native), `AOT00-T1-stackmap-emission.md` §4.2 (incremental re-scan, every public collect entry, registration failure).
+
 ## Unreleased — a branch-joined string's length is read at run time; `linux_x86_64_smoke` back in CI
 
 - **Bug (silent miscompile).** In `lower_string_literals_for_aot`, a `mov` copied its source's compile-time literal into the destination even when the destination has more than one definition; the integer table beside it was already guarded. Twig writes `(if c "hello!!" "x")` as one literal register per arm and a `mov` into the join in each arm, so the arm emitted last won, and `(string-length s)` folded to 1 on every path (exit 1 instead of 7 when the first arm is taken).
