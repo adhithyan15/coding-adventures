@@ -1,7 +1,7 @@
 # VER00 — The Verified Shipping Program
 
 **Status:** Draft umbrella spec. Nothing here is implemented. Child specs
-(VER01–VER24, listed in §11) are written one at a time before their code.
+(VER01–VER25, listed in §11) are written one at a time before their code.
 
 **Layer:** Repository-wide policy and tooling.
 
@@ -558,7 +558,7 @@ are proved under assumptions exactly as §7.5 describes:
 | Bound | Means | Why it matters |
 |---|---|---|
 | `terminates` | Every call returns | A hang is a denial of service |
-| `steps <= f(n)` | Abstract operations, counted in the SIR cost model | The basis of every timing guarantee below |
+| `steps <= f(n)` | Abstract operations, counted in WIR's cost model | The basis of every timing guarantee below |
 | `heap <= f(n)` | Bytes allocated | Memory exhaustion (CWE-400, CWE-770) |
 | `depth <= k` | Recursion or stack depth | Stack overflow on hostile nesting |
 | `output <= f(n)` | Size of what is produced | Decompression bombs (CWE-409) |
@@ -566,7 +566,7 @@ are proved under assumptions exactly as §7.5 describes:
 
 How they are proved:
 
-1. **A cost semantics for SIR.** Every SIR operation is assigned an abstract
+1. **A cost semantics for WIR.** Every WIR operation is assigned an abstract
    cost. Symbolic execution (§7.6.2) carries a cost counter alongside the
    values, so a bound becomes one more formula for the solver.
 2. **Loops and recursion** need a *ranking function*: a quantity that
@@ -607,10 +607,10 @@ How they are proved:
    Opting out is an approved exemption.
 
    **The cost model is not the machine.** On a third-party runtime, a
-   SIR-level constant-time proof says nothing about real timing: JIT
+   WIR-level constant-time proof says nothing about real timing: JIT
    compilers, data-dependent bignum arithmetic, caches and branch
-   prediction all sit between SIR steps and the clock. Using the proof
-   there would require a catalogue assumption that "SIR step count
+   prediction all sit between WIR steps and the clock. Using the proof
+   there would require a catalogue assumption that "WIR step count
    determines timing", and **the catalogue holds no such entry** for JIT or
    managed runtimes (V8, the JVM, .NET, CPython, BEAM). On those runtimes
    the timing-side-channel weakness row is therefore `not-yet-provable` and
@@ -632,13 +632,13 @@ everything else:
 
 ```
    proved:     steps(decode, n)  <=  64n + 512
-   assumed:    one SIR step      <=  t_step ns   on platform P  (measured, §7.4.3)
+   assumed:    one WIR step      <=  t_step ns   on platform P  (measured, §7.4.3)
    guarantee:  time(decode, n)   <=  (64n + 512) * t_step ns    on P
 ```
 
 On the repository's own stack the assumption disappears, by §7.5.6. Our
 gate-level CPUs are cycle-accurate: they model the pipeline, and caches
-too where a model has them. So a step bound proved at the SIR level can be
+too where a model has them. So a step bound proved at the WIR level can be
 carried down through our compiler to **an exact worst-case cycle count**,
 proved against the netlist itself. That is worst-case execution time (WCET)
 analysis, normally done with approximate hardware models; here the hardware
@@ -814,17 +814,53 @@ genuinely needs a construct outside the subset is not provable. It ships
 with tests and fuzzing, labelled `not-yet-provable` (§7.6.5) until the
 catalogue grows to cover it.
 
-#### 7.5.5 The model of our logic
+#### 7.5.5 The model of our logic: the Warrant IR (WIR) — VER25
 
 To prove anything, the code must be translated into a precise model. That
-model is `semantic-ir` (§7.6.2). Front ends already lower Python,
-JavaScript, Ruby, Java, C and Twig into it, and SIR21 pins its integer
-semantics. A front end is our code too, so it is checked like our code:
-the property engine continuously runs the SIR model and the real
-implementation side by side on the same generated inputs, and any
-divergence is a bug in the front end.
+model is the **Warrant IR (WIR)**. It is a small intermediate language that
+this program owns and designs **for proofs and nothing else**, in the
+tradition of intermediate verification languages such as Boogie, Why3 and
+Viper, but built in-house.
 
-Languages without a SIR front end get one, in the order packages in that
+**Why not reuse an existing IR.** The repository already has `semantic-ir`
+(SIR10), a narrow-waist IR for *translating* between languages. Its design
+fits that job and not this one. Its types are optional, it "does not infer
+or verify types", and it has target-tagged opaque intrinsics as an escape
+hatch. Each of those is a hole in a proof. Verification also must not move
+whenever code generation needs a new feature. So **no part of this program
+depends on `semantic-ir`**. The two may share language *parsers*, which
+are just parsers, but never an IR.
+
+**What WIR is:**
+
+- **Exact semantics, written once.** WIR has a formal semantics stated in
+  the proof kernel's logic (§7.5), and a small reference interpreter that
+  is checked against it. Nothing in WIR is implementation-defined.
+- **Mandatory types.** Every value has a type, fixed-width integers say
+  their width and overflow behaviour, and the WIR type checker is part of
+  the trust root (§9.4).
+- **No escape hatches.** There are no opaque intrinsics. A construct WIR
+  cannot express is not lowered, and the code using it is labelled
+  `not-yet-provable` (§7.5.4).
+- **Effects only through capability calls.** The only way WIR code touches
+  the world is a call to a generated capability function (§8.6.1). The
+  prover treats each one as a function with a stated contract (§8.6.7).
+- **Built for the proofs that use it.** WIR carries:
+  - an explicit **cost** per operation, for bounds (§7.4.1);
+  - **labels** for taint and information flow (§8.6.6);
+  - explicit control flow for exceptions, panics and early exits;
+  - structured loops with slots for invariants and ranking functions;
+  - **implicit calls made explicit**: operator methods, getters and
+    finalizers become ordinary call sites (§8.6.5).
+
+**One lowering per language.** Each language lane gets a front end that
+lowers its confined subset (§7.5.4, §8.6.2) into WIR, built on the
+repository's own parser for that language. A front end is our code, so it
+is checked like our code. The property engine continuously runs the WIR
+reference interpreter and the real implementation side by side, on the
+same generated inputs, and any divergence is a bug in the front end.
+
+Languages without a WIR front end get one, in the order packages in that
 language want to ship (VER14). Until a language has one, its packages are
 labelled `not-yet-provable`.
 
@@ -931,18 +967,15 @@ The 31 existing gate-level vs functional differential tests become the
 fallback and the cross-check. This is the most complete proof available
 anywhere in the program, which makes it the first target.
 
-#### 7.6.2 Code that lowers to semantic-ir: bounded and complete proofs — VER19
+#### 7.6.2 Code lowered to WIR: bounded and complete proofs — VER19
 
-`semantic-ir` (SIR10) is the repository's narrow-waist IR. Front ends
-already lower Python, JavaScript, Ruby, Java, C and Twig into it, and SIR21
-pins its integer semantics. That gives code in those languages a formal
-meaning: the model of our logic, under the package's stated platform
-assumptions (§7.5.5).
+Code in any language with a WIR front end (§7.5.5) has a formal meaning:
+the model of our logic, under the package's stated platform assumptions.
 
 The pipeline:
 
-1. **Symbolic execution of SIR.** Run the function on symbolic inputs instead
-   of concrete ones, collecting every path as a formula.
+1. **Symbolic execution of WIR.** Run the function on symbolic inputs
+   instead of concrete ones, collecting every path as a formula.
 2. **Bit-blasting.** Fixed-width integer operations become circuits, so
    arithmetic, comparisons and overflow are exact rather than approximated.
 3. **Loops.** A loop with a Warrant invariant is proved by induction
@@ -952,10 +985,13 @@ The pipeline:
 
 Two further uses come cheaply:
 
-- **Translation validation of the SIR back ends.** Lower SIR to C, read the C
-  back through `c-to-semantic-ir`, and prove the two SIR modules equivalent.
-  Every generated C file is then checked, not just the generator in general.
-- **Trust in the front ends** comes from differential testing: SIR
+- **Translation validation of the repository's code generators.** Lower
+  both a generator's input and its output into WIR, and prove the two
+  equivalent. Every generated file is then checked, not just the generator
+  in general. This applies to any of the repository's compilers and code
+  generators, including `semantic-ir`'s back ends; that is a use of WIR,
+  not a dependency on SIR.
+- **Trust in the front ends** comes from differential testing: WIR
   interpretation versus the real language runtime on the same inputs, run
   continuously by the property engine.
 
@@ -1010,7 +1046,7 @@ list of assumptions it used. The gate never rounds a weaker label up:
 | `proved-to-<layer>` | As `proved`, with platform assumptions discharged by our own layers down to `<layer>` (§7.5.6) |
 | `proved-per-run` | Translation validation: this artifact, not the tool in general |
 | `bounded(k)` | No counterexample within `k` cycles, unrollings or steps |
-| `proved-over-model` | Proved about the Warrant model only; no SIR front end links the implementation yet |
+| `proved-over-model` | Proved about the Warrant model only; no WIR front end links the implementation yet |
 | `not-yet-provable` | The code uses constructs outside the assumed subset, or its language has no front end yet. It ships on tests and fuzzing, and the report says so. |
 
 #### 7.6.6 The solver work this needs
@@ -1084,7 +1120,7 @@ repository writes. Each entry records:
 | Field | Example (CWE-416, use after free) |
 |---|---|
 | Class and description | Memory is used after it was freed. |
-| Applies to | C, C++, Rust `unsafe`, any FFI boundary. Not safe Rust, Python, Ruby, TS, JVM, .NET (without `unsafe`), BEAM. Go only conditionally: even without `unsafe`/cgo, a data race on a multi-word value (an interface, slice or string) can corrupt memory. So Go's exclusion holds only once race freedom is discharged. Goroutines are a language construct, not a D21 capability call, so the simulated host's scheduler cannot control them, and §8.4 alone does not apply. VER15 specifies a Go-specific discharge, such as a race-freedom analysis over SIR or a restricted concurrency subset, plus `-race` on all tests. |
+| Applies to | C, C++, Rust `unsafe`, any FFI boundary. Not safe Rust, Python, Ruby, TS, JVM, .NET (without `unsafe`), BEAM. Go only conditionally: even without `unsafe`/cgo, a data race on a multi-word value (an interface, slice or string) can corrupt memory. So Go's exclusion holds only once race freedom is discharged. Goroutines are a language construct, not a D21 capability call, so the simulated host's scheduler cannot control them, and §8.4 alone does not apply. VER15 specifies a Go-specific discharge, such as a race-freedom analysis over WIR or a restricted concurrency subset, plus `-race` on all tests. |
 | Why it cannot occur elsewhere | The language has no manual deallocation. The analyzer must prove no `unsafe`, `ffi` or `cgo` is reachable. |
 | Attack patterns | Free then read, free then write, double free, dangling pointer escaping a scope, use after `realloc`. |
 | Required evidence | Attack corpus in the native harness (§8.3), fuzzing with the checked allocator, and a memory-safety proof obligation (E5). |
@@ -1135,7 +1171,7 @@ Built in-house:
    This is the technique of AddressSanitizer and electric-fence, written
    here and linked into every native test and fuzz build.
 2. **A checked interpreter for C.** The repo already has `c-lexer`,
-   `c-parser` and `c-to-semantic-ir`. An interpreter over that IR that
+   `c-parser`. An interpreter over C's lowering into WIR (§7.5.5) that
    tracks the provenance and bounds of every pointer can catch any
    undefined behaviour at the moment it happens: out-of-bounds access,
    use-after-free, uninitialized reads, signed overflow, misaligned access.
@@ -2013,15 +2049,19 @@ of code runs without any API call:
 - `.init_array` and `#[ctor]` functions;
 - exit hooks, finalizers, `__del__` and `Drop`;
 - handlers registered with the runtime;
-- start-up hooks that are not modules: Python `.pth` files and
-  `sitecustomize`, Java `ServiceLoader` entries and agent manifests,
-  and plugins discovered through entry points.
+- start-up hooks that are not modules: Python `.pth` files,
+  `sitecustomize` and `usercustomize`; Java `ServiceLoader` entries and
+  agent manifests; RubyGems' auto-loaded `rubygems_plugin.rb`; Erlang and
+  Elixir `-on_load` functions and application callback modules; and
+  plugins discovered through entry points.
 
 Further implicit calls that VER24 must account for include JavaScript
 Proxy traps and `then` on objects awaited as promises; Python
 descriptors, `__getattribute__`, a metaclass's `__call__`,
 `__init_subclass__` and `__set_name__`; and closures called through
-mutable state, which have no name to over-approximate by.
+mutable state, which have no name to over-approximate by. For those, the
+sound fallback is every closure of a compatible type that escapes into
+reachable mutable state.
 
 A `sum` package that reads a wallet when it is imported must not receive
 a valid "no effects" certificate. So the claim is about the whole package,
@@ -2037,12 +2077,16 @@ false *rejection*, never a false "no effects".** What remains trusted:
 - the reviewed allowlists;
 - the small checker;
 - **type facts used to narrow dispatch** must be sound against runtime
-  types. A TypeScript `as any` or a Python annotation can lie, and a lie
-  there would yield a false "no effects". Where the type facts are not
-  sound, the checker falls back to the name-based over-approximation;
+  types. A TypeScript `as any`, a lying `.d.ts` file or Python stub, Java's
+  erasure and heap pollution, or a Go interface forged through a data
+  race can all yield a false "no effects". So whether a language
+  fragment's type facts count as sound is a reviewed entry on a
+  per-language allowlist, and **the default is unsound**: the checker then
+  falls back to the name-based over-approximation;
 - **the front end that produces the expanded form the checker reads**:
-  the parser, the macro expander, the lowering to HIR, MIR or SIR, and
-  the type inference used for taming. Like every SIR front end (§7.5.5),
+  the parser, the macro expander, the lowering to WIR (via HIR or MIR
+  where a language has them), and
+  the type inference used for taming. Like every WIR front end (§7.5.5),
   it is checked differentially against the real runtime;
 - for JavaScript, the SES lockdown and builtin-replacement runtime
   (§8.6.2), which the checker's treatment of computed access relies on.
@@ -2074,8 +2118,14 @@ two kinds:
   - no data the attacker controls may make the program skip the
     sanitizer.
 
-  There is no release bound for sanitization, because sanitization
-  happens once per request.
+  - the sanitizer is the **last** operation before the sink, or the
+    sink's context is checked again on arrival. Otherwise decoding,
+    slicing or concatenating after the sanitizer (`url_decode(escape(x))`,
+    CWE-174) would reach the sink still marked as trusted.
+
+  There is no release bound for sanitization. The reason is that
+  endorsing data releases no information, not that it happens once per
+  request.
 
 **What an attacker observes.** A flow claim compares what an attacker can
 see, so "what can be seen" is defined precisely. It is the full trace of
@@ -2142,10 +2192,15 @@ So each approved release is an **expression**, in the style known as
 
 - the released value *equals* the approved expression applied to the
   original, unmodified secret;
-- the number of releases is bounded **per principal and per time
-  window**. A bound per run is impossible for a long-running server, and
-  a bound per request leaves an online guessing oracle open across
-  requests;
+- the number of releases is bounded **per time window**, both per
+  requesting principal and per protected secret or its owner. A bound
+  per run is impossible for a long-running server. A bound per request
+  leaves an online guessing oracle open across requests. A bound per
+  requester alone can be multiplied by an attacker with many accounts;
+- the approval assesses the **worst-case leakage per release**, assuming
+  every operand that is not the secret is chosen by the attacker. A
+  comparison like `secret > guess` with attacker-chosen `guess` turns any
+  bound into binary search over time;
 - the decision to release does not depend on data the attacker
   controls. This is closest to *qualified robustness* (Myers, Sabelfeld
   and Zdancewic). It is weaker than full robustness, which also forbids
@@ -2153,7 +2208,25 @@ So each approved release is an **expression**, in the style known as
 
 A source can carry a **principal label**, so data that flows back to the
 principal it came from, such as a peer's own input echoed to that same
-peer, is not a confidentiality flow. It remains an integrity flow.
+peer, is not a confidentiality flow. It remains an integrity flow. This
+carve-out is only safe under three conditions, because otherwise it lets
+the whole cross-tenant class through: data labelled with tenant A sent to
+an attacker who merely *claims* to be A (CWE-639, CWE-284).
+
+- **The binding is authenticated.** The principal of both source and
+  sink is set only by trusted code, from an authenticated channel, and
+  has high integrity: it is never derived from data the attacker
+  controls, such as a session id, tenant header or user-id parameter.
+- **Labels combine.** A value's principal label is the combination of
+  every principal that contributed to it, including through control
+  flow. Only a label naming a single principal that matches the sink
+  qualifies for the carve-out.
+- **Principal assignment is trusted, and says so.** The code that assigns
+  principals is reviewed policy, and it is listed among what remains
+  trusted below.
+
+"Principal" means the authenticated party a request acts for, and VER24
+defines it per kind of program.
 
 Approving one is an exemption (§9.1). Two examples:
 
@@ -2178,7 +2251,7 @@ the required claim impossible to dodge:
   expression. Anything less fails the gate or needs an approved
   exemption. That includes a `bounded(k)` proof, a claim about a narrower
   target than the grant, a `not-yet-provable` claim, or a package in a
-  language with no SIR front end yet (§7.5.5).
+  language with no WIR front end yet (§7.5.5).
 
 **Libraries that receive capabilities are covered too.** An
 object-capability library (§8.6.4) holds no capabilities of its own: it
@@ -2190,12 +2263,21 @@ program exists to check. So:
 
 - a package's effective closure includes the **capability types it
   accepts** and the **values it returns** to callers;
-- each library carries a **flow signature**, polymorphic over labels in
-  the same way its effects are. For each accepted source parameter and
-  each accepted sink parameter or return value, the signature states
-  noninterference or an approved release;
-- the signature is proved in the library's certificate, and is
-  instantiated and checked again whenever packages are composed.
+- each library carries a **flow signature**: a sound dependency relation,
+  polymorphic over labels in the same way its effects are, from every
+  input to every output.
+  - The inputs are capability and data parameters, values returned by
+    callbacks, and ambient readable state.
+  - The outputs are sink parameters, return values, arguments passed to
+    callbacks, mutated arguments, exceptions and progress.
+
+  The signature *describes* the flows. It does not by itself demand
+  noninterference, so a config parser that returns what it read, or a
+  `copy(src, dst)` function, is legitimate;
+- the signature is proved in the library's certificate. When packages
+  are composed, it is instantiated with concrete labels, and that is the
+  point at which every resulting (source, sink) flow must be
+  noninterference or an approved release.
 
 The weakness registry (§8.2) carries these as their own classes:
 
@@ -2203,19 +2285,23 @@ The weakness registry (§8.2) carries these as their own classes:
 - sensitive data in log files (CWE-532);
 - cleartext storage or exposure of sensitive data (CWE-312, CWE-359);
 - error messages that disclose information (CWE-209), and observable
-  discrepancies that act as oracles (CWE-204, CWE-208);
+  response discrepancies that act as oracles (CWE-204). *Timing*
+  discrepancies (CWE-208) are outside this observation model, which
+  excludes time, so they are covered by the constant-time `steps` proofs
+  of §7.4.1 instead. A flow claim is never read as timing coverage;
 - cleartext transmission (CWE-319);
 - weak password hashing (CWE-916, CWE-759);
 - command and argument injection (CWE-78, CWE-88).
 
 **What remains trusted.** A SAT certificate (§7.6.6) shows that a formula
 is unsatisfiable, not that the formula correctly encodes the flow claim.
-So the following are trusted, as they are for every SIR proof (§7.6.2):
+So the following are trusted, as they are for every WIR proof (§7.6.2):
 
 - the symbolic execution;
 - the product-program construction;
 - the taint encoding;
-- the SIR front end.
+- the WIR front end, and WIR's own semantics and type checker;
+- the code that assigns principals (above).
 
 The usual limits apply. A flow claim covers the package's logic, under
 §7.5.1's assumptions. It does not cover covert channels below the
@@ -2646,7 +2732,7 @@ them needs a paid or enterprise plan.
    CODEOWNERS, plus **the entire in-repo transitive closure** of every tool
    they run. Listing the tools by name is not enough: the analyzers'
    parsers, the Ed25519 and SHA-2 packages under the signature verifier,
-   `constraint-engine` and `semantic-ir` are all part of it, because
+   `constraint-engine`, WIR and its front ends are all part of it, because
    weakening any of them weakens the gate. That closure is computed the
    same way as a shipped closure (§9.2, step 1), so:
    - CODEOWNERS and ruleset coverage for the trust root are **generated
@@ -2858,17 +2944,17 @@ ends with its rung **live and blocking**.
 | 2 | Test tiers, purity and speed enforcement, simulated host, taxonomy extension, chaos injection | E1 purity, E2 | VER02, VER03, VER17 |
 | 2b | Checked allocator, checked C interpreter, native attack corpora | E0 for native code | VER16 |
 | 2c | Locked-box capability check: Linux appliers and the base deny, race-free enforcement, recorded denials, closed system-call mapping, broker log, exact-target baseline, D/S/O cross-check. Live with baseline charging only; attribution is research. Gets most of its reach once phases 3–4 drive the harness. | E0 dynamic (Linux guests) | VER22 |
-| 2d | Effect certificates and checker (needs 1b and Warrant claims from phase 3); information-flow claims and noninterference proofs (needs S4, and SIR front ends, which reach Rust and Go only in phase 7) | E0 capability and flow claims, labelled `proved` (§7.6.5) | VER24 |
+| 2d | Effect certificates and checker (needs 1b and Warrant claims from phase 3); information-flow claims and noninterference proofs (needs S4, and WIR front ends, which reach most languages only in phase 7) | E0 capability and flow claims, labelled `proved` (§7.6.5) | VER24 |
 | 3 | Warrant v0 (examples, claims, models) with TypeScript and Rust backends; property engine | E3 | VER04, VER05 |
 | 4 | Fuzz engine; `input` blocks | E4 | VER06 |
 | 5 | Microbench harness in every lane; `budget` blocks; timing calibration | (budgets only) | VER07 |
 | S1 | CDCL, DRAT checker, Tseitin/AIG encodings, bit-blaster, incremental solving | — | VER09–VER11 |
 | S2 | Hardware equivalence checking, synthesis translation validation, CPU k-induction | E5 for hardware | VER18 |
 | S3 | Vacuity, consistency and model proofs; solver-generated inputs (needs Warrant v0) | `proved-over-model` (below the E5 floor; spec-level only) | VER04, VER05 |
-| S4 | SIR symbolic execution, bounded and inductive proofs, back-end translation validation | E5 `proved` / `bounded(k)` under assumptions | VER19 |
-| S5 | SIR cost semantics, ranking functions, `bound` proofs, constant-time self-composition; gate-level WCET | E5 bounds | VER20 |
+| S4 | WIR (VER25) with its first front ends; symbolic execution, bounded and inductive proofs, translation validation of code generators | E5 `proved` / `bounded(k)` under assumptions | VER19 |
+| S5 | WIR cost semantics, ranking functions, `bound` proofs, constant-time self-composition; gate-level WCET | E5 bounds | VER20 |
 | 6 | SMT theories, VC generation | E5 widening | VER10, VER12 |
-| 7 | Assumption catalogue and conformance tests per lane; subset enforcement; SIR front ends for remaining languages | E5 everywhere, under assumptions | VER13, VER14 |
+| 7 | Assumption catalogue and conformance tests per lane; subset enforcement; WIR front ends for remaining languages | E5 everywhere, under assumptions | VER13, VER14 |
 | 8 | Discharging catalogue entries with proofs of our own VMs, compilers and CPUs | `proved-to-<layer>` | per layer |
 | — | Native/UI lanes per platform, when each app ships | E6 | per platform |
 
@@ -2900,17 +2986,18 @@ S4 for S1.
 | VER11 | Proof certificates and the trusted kernel |
 | VER12 | Verification-condition generation from Warrant |
 | VER13 | Platform assumption catalogue, per-language conformance tests, subset enforcement |
-| VER14 | SIR front ends for the remaining languages, with differential front-end checking |
+| VER14 | WIR front ends for the remaining languages, with differential front-end checking |
 | VER15 | Weakness registry (CWE inventory) and per-package weakness matrix |
 | VER16 | Native attack harness: checked allocator, checked C interpreter, attack corpora |
 | VER17 | Chaos injection on the real host |
 | VER18 | Hardware equivalence checking, synthesis translation validation, k-induction |
-| VER19 | SIR symbolic execution and bit-precise proofs |
+| VER19 | Symbolic execution of WIR and bit-precise proofs |
 | VER20 | Resource-bound and timing proofs: cost semantics, ranking functions, constant time, gate-level WCET |
 | VER21 | Hardware-key release approval: phone approval app, SSHSIG `-sk` verification, P-256, in-house USB HID and CTAP2, `release-approve`, root-key ceremony (shared with VLT-PM51) |
 | VER22 | Locked-box capability check: `capability-os-sandbox` enforce and observe modes, seccomp user-notification supervisor, VM isolation, attribution, D/S/O cross-check |
 | VER23 | Generated capability modules: exact per-package effect modules, enforced targets, deny-by-default allowlists with core and transitional lists, native shim and binary checks, object-capability passing |
-| VER24 | Capability proof certificates and information flow: effect-type certificates and their small checker; taint tracking and noninterference proofs over SIR; declassification; required flow claims for dangerous capability combinations |
+| VER24 | Capability proof certificates and information flow: effect-type certificates and their small checker; taint tracking and noninterference proofs over WIR; declassification; required flow claims for dangerous capability combinations |
+| VER25 | The Warrant IR (WIR): formal semantics, mandatory types, cost and label annotations, explicit implicit calls, reference interpreter, and the first language front ends |
 
 ## 12. Open decisions
 
