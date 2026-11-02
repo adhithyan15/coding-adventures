@@ -131,6 +131,24 @@ describe("input validation (regression: forged, subclassed and proxied inputs)",
     expect(ctEq(Buffer.from("a"), Buffer.from("b"))).toBe(false);
   });
 
+  it("rejects a view that fell out of bounds of a shrunken resizable buffer", () => {
+    const resizable = new ArrayBuffer(4, { maxByteLength: 8 });
+    const view = new Uint8Array(resizable, 0, 4);
+    resizable.resize(2);
+    expect(() => call(view, new Uint8Array())).toThrow(TypeError);
+  });
+
+  it("rejects a Proxy array whose length is not a non-negative integer", () => {
+    for (const badLength of [1.5, "2", Number.NaN, -1, { valueOf: () => 1 }]) {
+      const lying = new Proxy([1, 2], {
+        get(target, key, receiver) {
+          return key === "length" ? badLength : Reflect.get(target, key, receiver);
+        },
+      });
+      expect(() => call(lying, [1])).toThrow(TypeError);
+    }
+  });
+
   it("rejects a SharedArrayBuffer passed directly", () => {
     expect(() => call(new SharedArrayBuffer(1), new SharedArrayBuffer(1))).toThrow(TypeError);
   });

@@ -12,5 +12,7 @@
 - Regression tests for every rejected input shape and for fresh-copy output.
 - Genuine `Uint8Array`s and `ArrayBuffer`s are recognised with the engine's
   intrinsic getters instead of `instanceof`, so forged prototypes, subclasses
-  with an overridden `length`, and proxies cannot misreport their bytes; an
-  array's `length` is read exactly once.
+  with an overridden `length`, and proxies over typed arrays cannot misreport
+  their bytes. Typed arrays are copied, and detached or out-of-bounds views
+  throw. A plain array's `length` must be a non-negative integer and is read
+  once, and each element is read once.

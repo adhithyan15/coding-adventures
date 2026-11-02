@@ -120,22 +120,22 @@ export function ctEqU64(left: bigint | number, right: bigint | number): boolean 
  * - `%TypedArray%.prototype[Symbol.toStringTag]` returns `"Uint8Array"` only
  *   for a real `Uint8Array` (including Node's `Buffer` and arrays from another
  *   realm), and `undefined` for fakes and proxies;
- * - `%TypedArray%.prototype.buffer/byteOffset/byteLength` read the internal
- *   slots, so a subclass's overridden `length` getter is never consulted;
+ * - the `Uint8Array` copy constructor reads the internal slots, so a
+ *   subclass's overridden `length` getter is never consulted;
  * - `ArrayBuffer.prototype.byteLength` throws for anything that is not a real
  *   `ArrayBuffer`.
  *
- * Every accepted input is then read through a *fresh* view built from those
- * internal slots.
+ * Every accepted typed array is copied, so the comparison works on a snapshot.
+ *
+ * A plain `Array` (or a `Proxy` or subclass of one, which `Array.isArray`
+ * also accepts) is read one element at a time: its `length` is read once and
+ * must be a non-negative integer, and each element is read once and validated.
  */
 const TypedArrayPrototype = Object.getPrototypeOf(Uint8Array.prototype) as object;
 // Every conforming engine defines these accessors, so the descriptors exist.
 const intrinsicGetter = (target: object, key: PropertyKey): ((this: unknown) => unknown) =>
   Object.getOwnPropertyDescriptor(target, key)!.get!;
 const typedArrayTag = intrinsicGetter(TypedArrayPrototype, Symbol.toStringTag);
-const typedArrayBuffer = intrinsicGetter(TypedArrayPrototype, "buffer");
-const typedArrayByteOffset = intrinsicGetter(TypedArrayPrototype, "byteOffset");
-const typedArrayByteLength = intrinsicGetter(TypedArrayPrototype, "byteLength");
 const arrayBufferByteLength = intrinsicGetter(ArrayBuffer.prototype, "byteLength");
 
 function isRealArrayBuffer(value: unknown): value is ArrayBuffer {
@@ -159,11 +159,10 @@ function isRealArrayBuffer(value: unknown): value is ArrayBuffer {
  */
 function toBytes(value: ByteInput, name: string): Uint8Array {
   if (typedArrayTag.call(value) === "Uint8Array") {
-    return new Uint8Array(
-      typedArrayBuffer.call(value) as ArrayBuffer,
-      typedArrayByteOffset.call(value) as number,
-      typedArrayByteLength.call(value) as number,
-    );
+    // The copy constructor reads only internal slots (never a subclass's
+    // `length`), and throws for a detached view or one that has fallen out of
+    // bounds of a shrunken resizable buffer, rather than reading it as empty.
+    return new Uint8Array(value as Uint8Array);
   }
   if (isRealArrayBuffer(value)) {
     return new Uint8Array(value);
@@ -173,7 +172,10 @@ function toBytes(value: ByteInput, name: string): Uint8Array {
   }
   // Read the length exactly once. A getter on an element could otherwise
   // shrink or grow the array while it is being copied.
-  const length: number = value.length;
+  const length: unknown = value.length;
+  if (typeof length !== "number" || !Number.isInteger(length) || length < 0 || length > 0xffff_ffff) {
+    throw new TypeError(`${name}.length must be a non-negative integer`);
+  }
   const bytes = new Uint8Array(length);
   for (let index = 0; index < length; index += 1) {
     const element: unknown = value[index];
