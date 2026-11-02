@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 189,
+  "title": "Walls and Doorways",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:23a059c61fcdec8a",
+  "lessons": [
+    {
+      "id": "MW-C189-thabho",
+      "sequence": 12180,
+      "title": "थांभो (thā̃bho) — a pillar",
+      "headword": "थांभो",
+      "romanization": "thā̃bho",
+      "gloss": "a pillar",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:056717edd9fa6501",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a hut, then the Marwadi for a thatched shelter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थांभो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थांभो — thā̃bho — \"a pillar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थांभो लांबो है। thā̃bho lā̃bo hai. The pillar is tall."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थांभो (thā̃bho) is inherited from Sanskrit stambha, \"a pillar, a post\"; CDIAL lists Old Marwari thāma, \"a pillar\" (CDIAL 13682)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thā̃bho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thā̃bho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thā̃bho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thā̃bho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thā̃bho lā̃bo hai. — The pillar is tall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thā̃bho lā̃bo hai.* — The pillar is tall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a hut, then the Marwadi for a thatched shelter, then say thā̃bho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a hut, then the Marwadi for a thatched shelter, then say *thā̃bho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does थांभो (thā̃bho) mean? (\"A pillar\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C189-thabho-type",
+              "prompt": "Say the Marwadi for 'a pillar'.",
+              "assesses": [
+                "MW-LEX-C189-THANBHO189-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "थांभो",
+                "thā̃bho"
+              ],
+              "feedback": {
+                "correct": "Right: थांभो (thā̃bho) is 'a pillar'.",
+                "incorrect": "'a pillar' is थांभो (thā̃bho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C189-it",
+      "sequence": 12190,
+      "title": "ईंट (ī̃ṭ) — a brick",
+      "headword": "ईंट",
+      "romanization": "ī̃ṭ",
+      "gloss": "a brick",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb23bba03a111150",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a thatched shelter, then the Marwadi for a pillar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ईंट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ईंट — ī̃ṭ — \"a brick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ईंट लाल है। ī̃ṭ lāl hai. The brick is red."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ईंट (ī̃ṭ) is inherited from Sanskrit iṣṭakā, \"a brick\"; CDIAL lists Hindi ī̃ṭ (CDIAL 1600). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī̃ṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī̃ṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī̃ṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī̃ṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī̃ṭ lāl hai. — The brick is red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī̃ṭ lāl hai.* — The brick is red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a thatched shelter, then the Marwadi for a pillar, then say ī̃ṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a thatched shelter, then the Marwadi for a pillar, then say *ī̃ṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ईंट (ī̃ṭ) mean? (\"A brick\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C189-it-type",
+              "prompt": "Say the Marwadi for 'a brick'.",
+              "assesses": [
+                "MW-LEX-C189-THANBHO189-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ईंट",
+                "ī̃ṭ"
+              ],
+              "feedback": {
+                "correct": "Right: ईंट (ī̃ṭ) is 'a brick'.",
+                "incorrect": "'a brick' is ईंट (ī̃ṭ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C189-chuno",
+      "sequence": 12200,
+      "title": "चूनो (chūno) — lime (for whitewash)",
+      "headword": "चूनो",
+      "romanization": "chūno",
+      "gloss": "lime (for whitewash)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bd22211ce8918b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a pillar, then the Marwadi for a brick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चूनो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूनो — chūno — \"lime (for whitewash)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भींत माथै नुवो चूनो है। bhī̃t māthai nuvo chūno hai. There's fresh whitewash on the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूनो (chūno) is inherited from Sanskrit cūrṇa, \"powder\"; CDIAL lists Hindi cūnā, \"lime\", and an Old Marwari form meaning \"flour\" (CDIAL 4889)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhī̃t māthai nuvo chūno hai. — There's fresh whitewash on the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhī̃t māthai nuvo chūno hai.* — There's fresh whitewash on the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a pillar, then the Marwadi for a brick, then say chūno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a pillar, then the Marwadi for a brick, then say *chūno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चूनो (chūno) mean? (\"Lime (for whitewash)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C189-chuno-type",
+              "prompt": "Say the Marwadi for 'whitewash'.",
+              "assesses": [
+                "MW-LEX-C189-THANBHO189-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चूनो",
+                "chūno"
+              ],
+              "feedback": {
+                "correct": "Right: चूनो (chūno) is 'lime (for whitewash)'.",
+                "incorrect": "'whitewash' is चूनो (chūno)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C189-dehli",
+      "sequence": 12210,
+      "title": "देहळी (dehḷī) — a threshold",
+      "headword": "देहळी",
+      "romanization": "dehḷī",
+      "gloss": "a threshold",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a4197b078f21603",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a brick, then the Marwadi for whitewash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: देहळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "देहळी — dehḷī — \"a threshold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरो देहळी माथै बैठै है। chhoro dehḷī māthai baiṭhai hai. The boy sits on the threshold."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "देहळी (dehḷī) is inherited from Sanskrit dehalī, \"a threshold\"; CDIAL lists Hindi dehlī (CDIAL 6559). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dehḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dehḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dehḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dehḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoro dehḷī māthai baiṭhai hai. — The boy sits on the threshold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoro dehḷī māthai baiṭhai hai.* — The boy sits on the threshold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a brick, then the Marwadi for whitewash, then say dehḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a brick, then the Marwadi for whitewash, then say *dehḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does देहळी (dehḷī) mean? (\"A threshold\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C189-dehli-type",
+              "prompt": "Say the Marwadi for 'a threshold'.",
+              "assesses": [
+                "MW-LEX-C189-THANBHO189-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "देहळी",
+                "dehḷī"
+              ],
+              "feedback": {
+                "correct": "Right: देहळी (dehḷī) is 'a threshold'.",
+                "incorrect": "'a threshold' is देहळी (dehḷī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C189-chaubaro",
+      "sequence": 12220,
+      "title": "चौबारो (chaubāro) — an open-sided room; a room open on all sides",
+      "headword": "चौबारो",
+      "romanization": "chaubāro",
+      "gloss": "an open-sided room; a room open on all sides",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df043dd92e1a80f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for whitewash, then the Marwadi for a threshold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चौबारो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौबारो — chaubāro — \"an open-sided room; a room open on all sides\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चौबारो बड़ो है। chaubāro baṛo hai. The open room is big."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौबारो (chaubāro) is built from Sanskrit catur, \"four\", and dvāra, \"door\"; CDIAL lists Hindi caubārā and Sindhi caubāro, a room or house open on four sides (CDIAL 4611). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaubāro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaubāro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaubāro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaubāro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaubāro baṛo hai. — The open room is big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaubāro baṛo hai.* — The open room is big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for whitewash, then the Marwadi for a threshold, then say chaubāro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for whitewash, then the Marwadi for a threshold, then say *chaubāro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चौबारो (chaubāro) mean? (\"An open-sided room; a room open on all sides\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C189-chaubaro-type",
+              "prompt": "Say the Marwadi for 'an open-sided room'.",
+              "assesses": [
+                "MW-LEX-C189-THANBHO189-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चौबारो",
+                "chaubāro"
+              ],
+              "feedback": {
+                "correct": "Right: चौबारो (chaubāro) is 'an open-sided room; a room open on all sides'.",
+                "incorrect": "'an open-sided room' is चौबारो (chaubāro)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

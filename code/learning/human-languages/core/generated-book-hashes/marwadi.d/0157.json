@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:55e15979971e5256",
+  "lessonIds": [
+    "MW-C157-koni",
+    "MW-C157-mat",
+    "MW-C157-samajhno",
+    "MW-W47-jha",
+    "MW-R157-not-today"
+  ],
+  "tex": "marwadi/book/chapters/ch157-not-today.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C219-haphto",
+    "language": "marwadi",
+    "chapter": 219,
+    "sequence": 15170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8cb0c7cd6972ac4"
+  },
+  "findings": []
+}

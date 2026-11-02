@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Sand Hills",
+  "label": "ch:mw-sand-hills",
+  "canDo": "I can describe the sand hills and the empty land.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C226-ujar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can describe the sand hills and the empty land.",
+    "assesses": [
+      "MW-LEX-C226-DUNE226-03",
+      "MW-LEX-C226-DUNE226-04",
+      "MW-LEX-C226-DUNE226-05"
+    ]
+  }
+}

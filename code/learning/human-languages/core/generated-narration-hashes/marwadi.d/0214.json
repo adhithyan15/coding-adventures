@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:3f861a3ab5d30759",
+  "lessonIds": [
+    "MW-C214-pherno",
+    "MW-C214-sarikho",
+    "MW-C214-thaili",
+    "MW-C214-palatno",
+    "MW-C214-ladhno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch214.txt",
+  "json": "marwadi/narration/ch214.json",
+  "textHash": "fnv1a64:4c3c44969d86a86a",
+  "jsonHash": "fnv1a64:2900edc6c5d106a3",
+  "findings": []
+}

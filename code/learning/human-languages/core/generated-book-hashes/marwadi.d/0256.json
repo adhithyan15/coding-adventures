@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:9f789eac619412d2",
+  "lessonIds": [
+    "MW-C256-darno",
+    "MW-C256-dukh",
+    "MW-C256-sukh",
+    "MW-C256-anand",
+    "MW-C256-umang"
+  ],
+  "tex": "marwadi/book/chapters/ch256-fear-and-joy.tex"
+}

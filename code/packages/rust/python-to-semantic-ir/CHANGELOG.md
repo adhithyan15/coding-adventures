@@ -7,6 +7,118 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.13.0 — Every assignment form is lowered or refused; statements are no longer dropped (#18482)
+
+Valid Python used to compile to SIR that silently computed something else.
+All of these are fixed in `src/lower.rs`.
+
+**Assignment forms.** `assign_stmt = expression_list [ assign_suffix |
+augmented_assign | annotation ]`, and `lower_assign_stmt` looked only for
+`assign_suffix`:
+
+- **Augmented assignment** (`x += 2`) was lowered as the bare expression
+  `x`, so `x = 1; x += 2; print(x)` printed 1.  It now lowers to
+  `Assign x = BuiltinCall(op, [x, e])`, where `op` comes from the new
+  `arith_builtin` table that the binary operators also use, so `x /= 2`
+  true-divides exactly like `x / 2`.  `+= -= *= /= %=` are lowered; `//=
+  **= &= |= ^= <<= >>= @=` are refused at the operator, as their binary
+  forms are.  Targets: a bound name, or `self.attr` in a method.  A
+  subscript target, any other attribute, and a name not bound in the
+  current scope (Python's `UnboundLocalError`) are refused.
+- **Annotated assignment** (`x: int = 5`) was dropped the same way.  It
+  lowers as `x = 5`; the annotation is ignored, and its names no longer
+  count as free names for capture analysis.  `x: int` alone binds nothing.
+- **Chained assignment** (`a = b = 0`) lowered as `a = b`:
+  `expect_single_kind` (now removed) took only the first
+  `expression_list` of the suffix.  The value is now evaluated once into a
+  fresh temporary and stored into every target, left to right.
+- One routine, `classify_target` + `store_target`, now stores into a
+  name, `self.attr` or a subscript for all three forms.  The bound-name
+  scan (`walk_for_targets`) collects chained, augmented and annotated
+  targets too.
+- **Known divergence, documented:** for a list, Python's `+=` extends in
+  place; the lowering builds a new list.  Numbers and strings are exact.
+
+**Parameters assigned in the body.** The first store to a parameter
+declared a new local that shadowed it until the end of its block, so
+`while n > 0: n -= 1` (or `n = n - 1`) never changed the `n` the condition
+reads, and looped forever on every backend.  A parameter the body assigns
+is now copied into a fresh local (`__param_<name>_N`) by a prologue
+(`param_copy_prologue`), and `FunctionCtx::aliases` sends every read and
+store to it.  Storing into the parameter directly is refused by the Rust
+backend, and a same-named copy by JavaScript, Go and C.
+
+**A user `def main`** clashed with the synthesised module body and the
+validator refused the module.  User function names are now escaped one to
+one where they are written into the IR (`sir_function_name`): `main` →
+`__py_main`, `__py_x` → `__py___py_x`, everything else unchanged.
+
+**Other statements that were silently dropped or mis-lowered:**
+
+- A **one-line suite** (`def f(x): return x + 1`, `if c: y = 1`) is a bare
+  `simple_stmt` in the grammar, and the suite lowerers kept only
+  `statement` children: the whole body was dropped.  New
+  `suite_statements` returns both kinds.
+- An **expression statement just before a tail `return`** (a call, a
+  `print`, an `if`) became the block's value, which the `return` then
+  replaced: it was dropped.  New `statements_only` keeps it.
+- A function that **falls off its end** returned its last expression
+  statement (`def f(x): x + 1` returned `x + 1`; a docstring-only body
+  returned the docstring; a trailing nested `def` returned the closure).
+  It now returns `None`, as the SIR17 spec already said.
+- A **trailing-comma tuple** (`x = 1,`, `return y,`, `for x, in rows:`,
+  `xs[i,]`) lowered as its single element.  Refused, like every tuple.
+- A **`for` over an already-bound variable** declared a fresh loop-scoped
+  one, so `i = 10; for i in range(3): …; print(i)` printed 10 on five of
+  six backends.  The loop now binds a temporary and stores it into `i`.
+- A loop's **`else:` clause** was dropped (only the first suite was
+  lowered).  Refused.
+- **`self = …` in a method** stored into a local that no read could see
+  (`self` always reads the receiver).  Refused.
+
+**Security-review fixes (same release):**
+
+- **`pass` is lowered** (to no statement).  It was refused everywhere; a
+  one-line `def f(): pass` had compiled only because one-line suites were
+  dropped, so the suite fix above had turned it into a refusal.
+- **A loop body has no value.**  A loop body's trailing expression
+  statement became the body block's value, which the C and Ruby backends
+  never emit: `for i in range(3): print(i)` printed nothing there, and
+  neither did a trailing `if`.  New `loop_body` moves it into the
+  statements.
+- **`for self in …` inside a method is refused**, like `self = …`: `self`
+  always reads the receiver there.
+- **Variables spelled with the escape marker are escaped too**
+  (`sir_var_name`): a local `__py_main` became `__py___py_main`, so it no
+  longer shadows the escaped `def main` (`__py_main`) in the backends'
+  shared namespace.  Applied to locals, parameters, captures, loop
+  variables and keyword-argument names alike.
+- Doc comments: `lower_augmented` now says which backends order the read
+  before the right-hand side and how (C needed a fix in
+  `semantic-ir-to-c`, see its changelog); `lower_annotated` spells out the module-level divergence
+  (CPython evaluates a module-level annotation, with its side effects and
+  `NameError`s; this frontend never does).
+- Backend fixes found by the new end-to-end programs: JavaScript and
+  TypeScript `ForRange` counted with the loop variable itself (now a hidden
+  counter); Rust bound an assigned loop variable immutably (now `mut`); C
+  evaluated call operands in unspecified order (now hoisted in order when
+  it matters).
+
+**Security re-review fix:** synthesised function names (`__lambda_N`, and a
+hoisted method's `{Class}__{method}`) now skip every name spelled in the
+source (`function_name_taken`, `hoisted_method_name`).  A local spelled
+`__lambda_0` used to shadow the synthesised lambda of that name in the
+backends' shared namespace: JavaScript failed with `TypeError: __lambda_0
+is not a function`.  A clash takes the next free `__lambda_N`, or appends
+`_N` to the hoisted method name.  This also separates two methods that
+used to hoist to the same name (`A.b__c` and `A__b.c`).
+
+**Tests.** New `tests/statement_forms.rs` (42 tests).  The first 35 fail
+against 0.12.0, the next 5 against the first commit of this release, and
+the last 2 against the security-review commit.  `sir-conformance`'s
+`python_statement_forms.rs` runs the programs on all six backends against
+CPython's output.
+
 ## 0.12.0 — A closure that names itself or a sibling keeps its captures (#18468)
 
 **The bug.** A nested `def` that captures a variable got a zero-capture

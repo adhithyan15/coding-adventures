@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-158-ASK",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask a yes-or-no question, answer it politely, ask when, and say that I recognise something.",
+  "prerequisites": [
+    "MW-EXT-157-NEGATE"
+  ]
+}

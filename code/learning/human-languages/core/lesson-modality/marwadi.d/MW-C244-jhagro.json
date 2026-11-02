@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C244-jhagro",
+    "language": "marwadi",
+    "chapter": 244,
+    "sequence": 17150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82d6c6c8da25cc88"
+  },
+  "findings": []
+}

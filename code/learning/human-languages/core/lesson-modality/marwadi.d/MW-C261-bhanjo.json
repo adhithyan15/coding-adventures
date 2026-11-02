@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C261-bhanjo",
+    "language": "marwadi",
+    "chapter": 261,
+    "sequence": 18050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6b7acc11544d818"
+  },
+  "findings": []
+}

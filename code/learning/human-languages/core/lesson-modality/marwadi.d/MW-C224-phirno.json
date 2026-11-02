@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C224-phirno",
+    "language": "marwadi",
+    "chapter": 224,
+    "sequence": 15410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0db0a070dd9073d"
+  },
+  "findings": []
+}

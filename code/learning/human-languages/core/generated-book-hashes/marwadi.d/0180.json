@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:2df88d26b1bceb54",
+  "lessonIds": [
+    "MW-C180-dharno",
+    "MW-C180-ghalno",
+    "MW-C180-nakhno",
+    "MW-C180-chhiko",
+    "MW-C180-chhabri"
+  ],
+  "tex": "marwadi/book/chapters/ch180-putting-things-away.tex"
+}

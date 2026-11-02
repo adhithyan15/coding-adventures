@@ -1,0 +1,14 @@
+{
+  "language": "marwadi",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:de9a9bfdb2c2f951",
+  "lessonIds": [
+    "MW-C222-adhi",
+    "MW-C222-bhijno",
+    "MW-C222-os",
+    "MW-C222-dhujno",
+    "MW-C222-dhuvar",
+    "MW-R222-review-216-222"
+  ],
+  "tex": "marwadi/book/chapters/ch222-wind-wet-and-cold.tex"
+}

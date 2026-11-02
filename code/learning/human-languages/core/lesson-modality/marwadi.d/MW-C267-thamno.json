@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C267-thamno",
+    "language": "marwadi",
+    "chapter": 267,
+    "sequence": 19090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c8fb8e6f1190eed"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:49941e7e66adbff1",
+  "lessonIds": [
+    "MW-C155-jau-javai",
+    "MW-C155-khau-pivai",
+    "MW-C155-dudh",
+    "MW-W46-dha",
+    "MW-R155-eat-drink-go-come"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch155.txt",
+  "json": "marwadi/narration/ch155.json",
+  "textHash": "fnv1a64:2816398529eba6f9",
+  "jsonHash": "fnv1a64:7f2e0aa7f1c04ae0",
+  "findings": []
+}

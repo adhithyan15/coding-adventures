@@ -62,9 +62,10 @@ fn manifest_declares_app_package_boundary() {
         package.dependencies.get("mosaic-pkg-deck-stats"),
         Some(&"0.1.0".to_string())
     );
+    // 0.2.0: the focused field is a body-only DraftEditor (E4).
     assert_eq!(
         package.dependencies.get("mosaic-pkg-note-editor"),
-        Some(&"0.1.0".to_string())
+        Some(&"0.2.0".to_string())
     );
     assert_eq!(
         package.dependencies.get("mosaic-pkg-note-type-editor"),
@@ -748,6 +749,11 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-click=\"onNoteEditorSelectDeck\"");
     assert_contains(&html, "data-on-click=\"onNoteEditorSelectField\"");
     assert_contains(&html, "data-on-change=\"onNoteEditorFieldValueChange\"");
+    // NoteEditor 0.2.0 (E4): the focused field is DraftEditor's multi-line
+    // body, and Ctrl/Cmd+Enter in it saves the note, as Anki's Add dialog
+    // does. The body is named by the field's own label.
+    assert_contains(&html, "data-on-commit=\"onNoteEditorSaveNote\"");
+    assert_contains(&html, "<textarea");
     assert_contains(&html, "data-on-change=\"onNoteEditorTagsChange\"");
     assert_contains(&html, "data-on-click=\"onNoteEditorSaveNote\"");
     assert_contains(&html, "data-on-click=\"onNoteEditorDeleteNote\"");

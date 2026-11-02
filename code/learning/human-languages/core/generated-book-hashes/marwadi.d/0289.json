@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:df5853950d683082",
+  "lessonIds": [
+    "MW-C289-masin",
+    "MW-C289-chalavno",
+    "MW-C289-ghisno",
+    "MW-C289-rando",
+    "MW-C289-chitarno"
+  ],
+  "tex": "marwadi/book/chapters/ch289-tools-and-machines.tex"
+}

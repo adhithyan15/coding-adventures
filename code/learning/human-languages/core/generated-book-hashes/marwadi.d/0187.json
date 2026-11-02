@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:8b0f9632edd6dbfc",
+  "lessonIds": [
+    "MW-C187-kotho",
+    "MW-C187-alo",
+    "MW-C187-bari",
+    "MW-C187-khuno",
+    "MW-C187-maliyo"
+  ],
+  "tex": "marwadi/book/chapters/ch187-rooms-and-corners.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:48ad9edf317512d3",
+  "lessonIds": [
+    "MW-C233-palan",
+    "MW-C233-nakel",
+    "MW-C233-saj",
+    "MW-C233-kasno",
+    "MW-C233-ghughro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch233.txt",
+  "json": "marwadi/narration/ch233.json",
+  "textHash": "fnv1a64:f14b36702fe09612",
+  "jsonHash": "fnv1a64:6e3093d465afdd62",
+  "findings": []
+}

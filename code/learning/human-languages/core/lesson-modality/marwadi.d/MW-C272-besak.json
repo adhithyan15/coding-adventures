@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C272-besak",
+    "language": "marwadi",
+    "chapter": 272,
+    "sequence": 19330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b5293b64c9875d0"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:cbeb5c5c94078671",
+  "lessonIds": [
+    "MW-C225-gathri",
+    "MW-C225-jholi",
+    "MW-C225-masak",
+    "MW-C225-bistar",
+    "MW-C225-kamli"
+  ],
+  "tex": "marwadi/book/chapters/ch225-packing-for-the-road.tex"
+}

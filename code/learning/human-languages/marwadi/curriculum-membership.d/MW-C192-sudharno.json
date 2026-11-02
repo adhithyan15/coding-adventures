@@ -1,0 +1,11 @@
+{
+  "id": "MW-C192-sudharno",
+  "pathSegment": "MW-PATH-192-BOARD192",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-192-BOARD192",
+      "order": 4
+    }
+  ]
+}

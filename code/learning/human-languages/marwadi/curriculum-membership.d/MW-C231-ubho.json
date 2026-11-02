@@ -1,0 +1,11 @@
+{
+  "id": "MW-C231-ubho",
+  "pathSegment": "MW-PATH-231-SHAPE231",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-231-SHAPE231",
+      "order": 2
+    }
+  ]
+}

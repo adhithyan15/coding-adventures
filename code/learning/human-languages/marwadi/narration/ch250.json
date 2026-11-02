@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 250,
+  "title": "Lamps and Festive Dishes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:14ceef930fe2df45",
+  "lessons": [
+    {
+      "id": "MW-C250-manavno",
+      "sequence": 17460,
+      "title": "मनावणो (manāvṇo) — to celebrate (a festival); to coax",
+      "headword": "मनावणो",
+      "romanization": "manāvṇo",
+      "gloss": "to celebrate (a festival); to coax",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b30f44bea63dd7c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Diwali, then the Marwadi for worship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मनावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनावणो — manāvṇo — \"to celebrate (a festival); to coax\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हैं दिवाळी घरै मनाई। mhaĩ divāḷī gharai manāī. I celebrated Diwali at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं होळी मनाई, mhaĩ hoḷī manāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनावणो (manāvṇo) is inherited from Sanskrit manyate, \"thinks, honours\"; CDIAL lists Old Marwari manāvaï, \"persuades\", under it. \"To celebrate\" a feast is probably \"to honour\" it (CDIAL 9857)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaĩ divāḷī gharai manāī. — I celebrated Diwali at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhaĩ divāḷī gharai manāī.* — I celebrated Diwali at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Diwali, then the Marwadi for worship, then say manāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Diwali, then the Marwadi for worship, then say *manāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मनावणो (manāvṇo) mean? (\"To celebrate (a festival); to coax\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C250-manavno-type",
+              "prompt": "Say the Marwadi for 'to celebrate'.",
+              "assesses": [
+                "MW-LEX-C250-UCHHAV250-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मनावणो",
+                "manāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: मनावणो (manāvṇo) is 'to celebrate (a festival); to coax'.",
+                "incorrect": "'to celebrate' is मनावणो (manāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C250-pakvan",
+      "sequence": 17470,
+      "title": "पकवान (pakvān) — festive dishes; fried delicacies",
+      "headword": "पकवान",
+      "romanization": "pakvān",
+      "gloss": "festive dishes; fried delicacies",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ea6cd6548d1a4c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for worship, then the Marwadi for to celebrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पकवान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पकवान — pakvān — \"festive dishes; fried delicacies\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज मां पकवान बणावै है। āj mā̃ pakvān baṇāvai hai. Today my mother is making festive dishes."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पकवान (pakvān) goes back to Sanskrit pakvānna, \"cooked or dressed food\" (Monier-Williams), built from pakva, \"cooked\", and anna, \"food\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakvān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakvān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakvān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakvān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj mā̃ pakvān baṇāvai hai. — Today my mother is making festive dishes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj mā̃ pakvān baṇāvai hai.* — Today my mother is making festive dishes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for worship, then the Marwadi for to celebrate, then say pakvān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for worship, then the Marwadi for to celebrate, then say *pakvān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पकवान (pakvān) mean? (\"Festive dishes; fried delicacies\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C250-pakvan-type",
+              "prompt": "Say the Marwadi for 'festive dishes'.",
+              "assesses": [
+                "MW-LEX-C250-UCHHAV250-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पकवान",
+                "pakvān"
+              ],
+              "feedback": {
+                "correct": "Right: पकवान (pakvān) is 'festive dishes; fried delicacies'.",
+                "incorrect": "'festive dishes' is पकवान (pakvān)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C250-uchhav",
+      "sequence": 17480,
+      "title": "उछाव (uchhāv) — festive joy; a celebration",
+      "headword": "उछाव",
+      "romanization": "uchhāv",
+      "gloss": "festive joy; a celebration",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30ac446548e12ce6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to celebrate, then the Marwadi for festive dishes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उछाव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उछाव — uchhāv — \"festive joy; a celebration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गांव मांय घणो उछाव है। gā̃v mā̃y ghaṇo uchhāv hai. There is great festive joy in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उछाव (uchhāv) is inherited from Sanskrit utsāha, \"power, joy\"; CDIAL lists Old Marwari uchāha, \"merriment, festival\", under it (CDIAL 1882)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchhāv",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchhāv*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchhāv, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchhāv*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃v mā̃y ghaṇo uchhāv hai. — There is great festive joy in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃v mā̃y ghaṇo uchhāv hai.* — There is great festive joy in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to celebrate, then the Marwadi for festive dishes, then say uchhāv again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to celebrate, then the Marwadi for festive dishes, then say *uchhāv* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उछाव (uchhāv) mean? (\"Festive joy; a celebration\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C250-uchhav-type",
+              "prompt": "Say the Marwadi for 'festive joy'.",
+              "assesses": [
+                "MW-LEX-C250-UCHHAV250-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उछाव",
+                "uchhāv"
+              ],
+              "feedback": {
+                "correct": "Right: उछाव (uchhāv) is 'festive joy; a celebration'.",
+                "incorrect": "'festive joy' is उछाव (uchhāv)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C250-arti",
+      "sequence": 17490,
+      "title": "आरती (ārtī) — the waving of a lamp in worship",
+      "headword": "आरती",
+      "romanization": "ārtī",
+      "gloss": "the waving of a lamp in worship",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64322506916f4231",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for festive dishes, then the Marwadi for festive joy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आरती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आरती — ārtī — \"the waving of a lamp in worship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां आथण आरती करै है। mā̃ āthaṇ ārtī karai hai. Mother waves the lamp in worship in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आरती (ārtī) is inherited from Sanskrit ārātrika, the waving of a lamp before an image at night. CDIAL gives no Marwari form in this entry; it lists Hindi and Gujarati ārtī (CDIAL 1315)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārtī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārtī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārtī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārtī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ āthaṇ ārtī karai hai. — Mother waves the lamp in worship in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ āthaṇ ārtī karai hai.* — Mother waves the lamp in worship in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for festive dishes, then the Marwadi for festive joy, then say ārtī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for festive dishes, then the Marwadi for festive joy, then say *ārtī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आरती (ārtī) mean? (\"The waving of a lamp in worship\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C250-arti-type",
+              "prompt": "Say the Marwadi for 'the waving of a lamp in worship'.",
+              "assesses": [
+                "MW-LEX-C250-UCHHAV250-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "आरती",
+                "ārtī"
+              ],
+              "feedback": {
+                "correct": "Right: आरती (ārtī) is 'the waving of a lamp in worship'.",
+                "incorrect": "'the waving of a lamp in worship' is आरती (ārtī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C250-rolo",
+      "sequence": 17500,
+      "title": "रोळो (roḷo) — an uproar; a din",
+      "headword": "रोळो",
+      "romanization": "roḷo",
+      "gloss": "an uproar; a din",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3f29de2e3b27f83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for festive joy, then the Marwadi for the waving of a lamp in worship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रोळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोळो — roḷo — \"an uproar; a din\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गळी मांय घणो रोळो है। gaḷī mā̃y ghaṇo roḷo hai. There is a great din in the lane."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोळो (roḷo) is inherited from Sanskrit rava, \"a roar, a cry\"; CDIAL lists Marwari roḷo, \"tumult\", under it (CDIAL 10641)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḷī mā̃y ghaṇo roḷo hai. — There is a great din in the lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḷī mā̃y ghaṇo roḷo hai.* — There is a great din in the lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for festive joy, then the Marwadi for the waving of a lamp in worship, then say roḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for festive joy, then the Marwadi for the waving of a lamp in worship, then say *roḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रोळो (roḷo) mean? (\"An uproar; a din\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C250-rolo-type",
+              "prompt": "Say the Marwadi for 'an uproar'.",
+              "assesses": [
+                "MW-LEX-C250-UCHHAV250-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रोळो",
+                "roḷo"
+              ],
+              "feedback": {
+                "correct": "Right: रोळो (roḷo) is 'an uproar; a din'.",
+                "incorrect": "'an uproar' is रोळो (roḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

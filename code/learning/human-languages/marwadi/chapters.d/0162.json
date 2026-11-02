@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Tomorrow",
+  "label": "ch:mw-a2-tomorrow",
+  "canDo": "I can say what I will and will not do, and tell yesterday from tomorrow by the verb.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-R162-tomorrow",
+    "kind": "production",
+    "summary": "Complete MW-R162-tomorrow: say what you will and won't do, and use काल for yesterday and tomorrow.",
+    "assesses": [
+      "MW-GRAMMAR-C162-FUT-1SG-01",
+      "MW-GRAMMAR-C162-FUT-NEG-01",
+      "MW-GRAMMAR-C162-KAL-TENSE-01"
+    ]
+  }
+}

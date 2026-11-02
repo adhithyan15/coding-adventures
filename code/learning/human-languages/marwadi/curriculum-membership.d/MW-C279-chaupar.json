@@ -1,0 +1,11 @@
+{
+  "id": "MW-C279-chaupar",
+  "pathSegment": "MW-PATH-279-GOTHIYO279",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-279-GOTHIYO279",
+      "order": 1
+    }
+  ]
+}

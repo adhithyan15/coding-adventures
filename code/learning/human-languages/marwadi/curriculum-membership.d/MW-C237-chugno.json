@@ -1,0 +1,11 @@
+{
+  "id": "MW-C237-chugno",
+  "pathSegment": "MW-PATH-237-FIELD237",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-237-FIELD237",
+      "order": 2
+    }
+  ]
+}

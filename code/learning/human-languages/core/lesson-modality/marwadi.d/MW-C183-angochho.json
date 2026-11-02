@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C183-angochho",
+    "language": "marwadi",
+    "chapter": 183,
+    "sequence": 11890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef69e3f7634be696"
+  },
+  "findings": []
+}

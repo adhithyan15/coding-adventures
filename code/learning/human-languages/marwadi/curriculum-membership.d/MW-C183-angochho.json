@@ -1,0 +1,11 @@
+{
+  "id": "MW-C183-angochho",
+  "pathSegment": "MW-PATH-183-HATH183",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-183-HATH183",
+      "order": 2
+    }
+  ]
+}

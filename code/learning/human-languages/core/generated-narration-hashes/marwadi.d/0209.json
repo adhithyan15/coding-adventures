@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:2c9064c30108bf36",
+  "lessonIds": [
+    "MW-C209-baniyo",
+    "MW-C209-gahak",
+    "MW-C209-seth",
+    "MW-C209-saudo",
+    "MW-C209-mangavno",
+    "MW-R209-review-204-209"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch209.txt",
+  "json": "marwadi/narration/ch209.json",
+  "textHash": "fnv1a64:d2f773b68e8e7456",
+  "jsonHash": "fnv1a64:5a824c97a0e49e19",
+  "findings": []
+}

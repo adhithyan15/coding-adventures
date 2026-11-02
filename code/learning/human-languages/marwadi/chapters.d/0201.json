@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Around the Old Town",
+  "label": "ch:mw-around-the-old-town",
+  "canDo": "I can ask where a place in town is.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-C201-ghusno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can ask where a place in town is.",
+    "assesses": [
+      "MW-LEX-C201-TOWN201-03",
+      "MW-LEX-C201-TOWN201-04",
+      "MW-LEX-C201-TOWN201-05"
+    ]
+  }
+}

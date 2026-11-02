@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "MW-W48-o",
+    "language": "marwadi",
+    "chapter": 158,
+    "sequence": 9800,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7bd29b175f808918",
+    "detachableSegments": [
+      "Script you'll notice: ओ",
+      "Writing: ओ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

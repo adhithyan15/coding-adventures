@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:406304b680622841",
+  "lessonIds": [
+    "MW-C205-tikat",
+    "MW-C205-chukno",
+    "MW-C205-bharo",
+    "MW-C205-atakno",
+    "MW-C205-kandaktar"
+  ],
+  "tex": "marwadi/book/chapters/ch205-missing-the-bus.tex"
+}

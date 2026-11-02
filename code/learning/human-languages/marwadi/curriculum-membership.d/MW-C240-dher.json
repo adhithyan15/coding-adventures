@@ -1,0 +1,11 @@
+{
+  "id": "MW-C240-dher",
+  "pathSegment": "MW-PATH-240-HARV240",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-240-HARV240",
+      "order": 4
+    }
+  ]
+}

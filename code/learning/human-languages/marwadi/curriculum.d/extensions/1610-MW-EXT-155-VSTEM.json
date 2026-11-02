@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-155-VSTEM",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I and others eat, drink, and where we go and come from, every day, and write the letter ध from दूध.",
+  "prerequisites": [
+    "MW-EXT-154-PRESENT"
+  ]
+}

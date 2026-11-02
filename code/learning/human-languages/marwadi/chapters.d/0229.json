@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Light and White",
+  "label": "ch:mw-light-and-white",
+  "canDo": "I can describe daylight, bright moonlight and the colour white.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C229-chamakno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can describe daylight, bright moonlight and the colour white.",
+    "assesses": [
+      "MW-LEX-C229-LIGHT229-03",
+      "MW-LEX-C229-LIGHT229-04",
+      "MW-LEX-C229-LIGHT229-05"
+    ]
+  }
+}

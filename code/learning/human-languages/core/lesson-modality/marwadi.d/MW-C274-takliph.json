@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C274-takliph",
+    "language": "marwadi",
+    "chapter": 274,
+    "sequence": 19410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d6d43f1f9e0023d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Small Creatures of the Field",
+  "label": "ch:mw-small-creatures-of-the-field",
+  "canDo": "I can name a partridge, a frog, wings and eggs.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C237-midko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can name a partridge, a frog, wings and eggs.",
+    "assesses": [
+      "MW-LEX-C237-FIELD237-03",
+      "MW-LEX-C237-FIELD237-04",
+      "MW-LEX-C237-FIELD237-05"
+    ]
+  }
+}

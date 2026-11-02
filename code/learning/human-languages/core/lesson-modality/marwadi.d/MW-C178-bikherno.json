@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C178-bikherno",
+    "language": "marwadi",
+    "chapter": 178,
+    "sequence": 11640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ebc5b5b52242019"
+  },
+  "findings": []
+}

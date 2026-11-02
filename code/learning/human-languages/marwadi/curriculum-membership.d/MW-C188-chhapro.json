@@ -1,0 +1,11 @@
+{
+  "id": "MW-C188-chhapro",
+  "pathSegment": "MW-PATH-188-PHUL188",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-188-PHUL188",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:45c7726423f1d3c9",
+  "lessonIds": [
+    "MW-C195-baink",
+    "MW-C195-khato",
+    "MW-C195-karaj",
+    "MW-C195-baki",
+    "MW-C195-bachno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch195.txt",
+  "json": "marwadi/narration/ch195.json",
+  "textHash": "fnv1a64:7a569922e7efc099",
+  "jsonHash": "fnv1a64:6386c45613aab82e",
+  "findings": []
+}

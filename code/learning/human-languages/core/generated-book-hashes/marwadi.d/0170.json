@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:6d6363deabb2b602",
+  "lessonIds": [
+    "MW-C170-dhono",
+    "MW-C170-nichovno",
+    "MW-C170-pasarno",
+    "MW-C170-sukavno",
+    "MW-C170-sametno"
+  ],
+  "tex": "marwadi/book/chapters/ch170-wash-day.tex"
+}

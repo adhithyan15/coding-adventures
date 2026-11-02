@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Neck, Chest and Shoulders",
+  "label": "ch:mw-neck-chest-and-shoulders",
+  "canDo": "I can name more parts of the body.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C251-kamar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can name more parts of the body.",
+    "assesses": [
+      "MW-LEX-C251-KANDHO251-03",
+      "MW-LEX-C251-KANDHO251-04",
+      "MW-LEX-C251-KANDHO251-05"
+    ]
+  }
+}

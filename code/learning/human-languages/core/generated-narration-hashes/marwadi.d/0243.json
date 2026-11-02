@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:6e20bfbf58f28d00",
+  "lessonIds": [
+    "MW-C243-chori",
+    "MW-C243-lutno",
+    "MW-C243-khosno",
+    "MW-C243-gamno",
+    "MW-C243-thagno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch243.txt",
+  "json": "marwadi/narration/ch243.json",
+  "textHash": "fnv1a64:abcf5fc62a4e8f49",
+  "jsonHash": "fnv1a64:fbe0ce3c1f175603",
+  "findings": []
+}

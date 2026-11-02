@@ -1,0 +1,946 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 228,
+  "title": "Summer Sun",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f6ee51205734a127",
+  "lessons": [
+    {
+      "id": "MW-C228-lukho",
+      "sequence": 15610,
+      "title": "लूखो (lūkho) — parched; dry and rough",
+      "headword": "लूखो",
+      "romanization": "lūkho",
+      "gloss": "parched; dry and rough",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c5563efe079a550",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a Persian wheel, then the Marwadi for a drought."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लूखो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लूखो — lūkho — \"parched; dry and rough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज हवा लूखी है। āj havā lūkhī hai. The air is parched today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लूखो (lūkho) is inherited from Sanskrit rūkṣa, \"dry, rough\"; CDIAL lists Hindi lūkhā, \"dry, not greasy\", and a Gujarati cousin. CDIAL gives no Marwari form in this entry (CDIAL 10799)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lūkho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lūkho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lūkho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lūkho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj havā lūkhī hai. — The air is parched today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj havā lūkhī hai.* — The air is parched today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a Persian wheel, then the Marwadi for a drought, then say lūkho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a Persian wheel, then the Marwadi for a drought, then say *lūkho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लूखो (lūkho) mean? (\"Parched; dry and rough\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C228-lukho-type",
+              "prompt": "Say the Marwadi for 'parched'.",
+              "assesses": [
+                "MW-LEX-C228-HEAT228-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लूखो",
+                "lūkho"
+              ],
+              "feedback": {
+                "correct": "Right: लूखो (lūkho) is 'parched; dry and rough'.",
+                "incorrect": "'parched' is लूखो (lūkho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C228-tapno",
+      "sequence": 15620,
+      "title": "तपणो (tapṇo) — to blaze; to be hot (of the sun)",
+      "headword": "तपणो",
+      "romanization": "tapṇo",
+      "gloss": "to blaze; to be hot (of the sun)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:803b1286d05d69d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a drought, then the Marwadi for parched."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तपणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तपणो — tapṇo — \"to blaze; to be hot (of the sun)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जेठ मांय सूरज घणो तपै है। jeṭh mā̃y sūraj ghaṇo tapai hai. In early summer the sun blazes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो सूरज तप्यो, vo sūraj tapyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तपणो (tapṇo) is inherited from Sanskrit tapati, \"is hot, heats\"; CDIAL lists Hindi and Gujarati verbs for being heated under it, and Marwadi tapṇo keeps the old p. CDIAL gives no Marwari form in this entry (CDIAL 5671)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭh mā̃y sūraj ghaṇo tapai hai. — In early summer the sun blazes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭh mā̃y sūraj ghaṇo tapai hai.* — In early summer the sun blazes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a drought, then the Marwadi for parched, then say tapṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a drought, then the Marwadi for parched, then say *tapṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तपणो (tapṇo) mean? (\"To blaze; to be hot (of the sun)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C228-tapno-type",
+              "prompt": "Say the Marwadi for 'to blaze'.",
+              "assesses": [
+                "MW-LEX-C228-HEAT228-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तपणो",
+                "tapṇo"
+              ],
+              "feedback": {
+                "correct": "Right: तपणो (tapṇo) is 'to blaze; to be hot (of the sun)'.",
+                "incorrect": "'to blaze' is तपणो (tapṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C228-pasino",
+      "sequence": 15630,
+      "title": "पसीनो (pasīno) — sweat",
+      "headword": "पसीनो",
+      "romanization": "pasīno",
+      "gloss": "sweat",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c10d60f4b9cb87c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for parched, then the Marwadi for to blaze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पसीनो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पसीनो — pasīno — \"sweat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जेठ मांय पसीनो आवै है। jeṭh mā̃y pasīno āvai hai. You sweat in early summer."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पसीनो (pasīno) is inherited from Sanskrit prasvinna, \"sweated\"; CDIAL lists Hindi pasīnā and a Gujarati word for sweat. CDIAL gives no Marwari form in this entry (CDIAL 8897)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasīno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasīno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasīno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasīno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭh mā̃y pasīno āvai hai. — You sweat in early summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭh mā̃y pasīno āvai hai.* — You sweat in early summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for parched, then the Marwadi for to blaze, then say pasīno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for parched, then the Marwadi for to blaze, then say *pasīno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पसीनो (pasīno) mean? (\"Sweat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C228-pasino-type",
+              "prompt": "Say the Marwadi for 'sweat'.",
+              "assesses": [
+                "MW-LEX-C228-HEAT228-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पसीनो",
+                "pasīno"
+              ],
+              "feedback": {
+                "correct": "Right: पसीनो (pasīno) is 'sweat'.",
+                "incorrect": "'sweat' is पसीनो (pasīno)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C228-silo",
+      "sequence": 15640,
+      "title": "सीळो (sīḷo) — cool; pleasantly cold",
+      "headword": "सीळो",
+      "romanization": "sīḷo",
+      "gloss": "cool; pleasantly cold",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9f326e25deecd3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to blaze, then the Marwadi for sweat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सीळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सीळो — sīḷo — \"cool; pleasantly cold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आथण हवा सीळी है। āthaṇ havā sīḷī hai. In the evening the breeze is cool."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सीळो (sīḷo) is inherited from Sanskrit śītala, \"cold\"; CDIAL lists Hindi sīlā, \"cool, moist\", and a Gujarati cousin. CDIAL gives no Marwari form in this entry (CDIAL 12487)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āthaṇ havā sīḷī hai. — In the evening the breeze is cool.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āthaṇ havā sīḷī hai.* — In the evening the breeze is cool.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to blaze, then the Marwadi for sweat, then say sīḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to blaze, then the Marwadi for sweat, then say *sīḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सीळो (sīḷo) mean? (\"Cool; pleasantly cold\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C228-silo-type",
+              "prompt": "Say the Marwadi for 'cool'.",
+              "assesses": [
+                "MW-LEX-C228-HEAT228-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सीळो",
+                "sīḷo"
+              ],
+              "feedback": {
+                "correct": "Right: सीळो (sīḷo) is 'cool; pleasantly cold'.",
+                "incorrect": "'cool' is सीळो (sīḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C228-sukno",
+      "sequence": 15650,
+      "title": "सूकणो (sūkṇo) — to dry up; to wither",
+      "headword": "सूकणो",
+      "romanization": "sūkṇo",
+      "gloss": "to dry up; to wither",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcf2b89d119428d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for sweat, then the Marwadi for cool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सूकणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूकणो — sūkṇo — \"to dry up; to wither\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जेठ मांय खेत सूकै है। jeṭh mā̃y khet sūkai hai. The field dries up in early summer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो खेत सूक्यो, vo khet sūkyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूकणो (sūkṇo) is inherited from a reconstructed śuṣkati, \"becomes dry\"; CDIAL lists the Old Marwari verb sūkaï, \"dries up\" (CDIAL 12552). सूको, dry, is its relative."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūkṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūkṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūkṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūkṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭh mā̃y khet sūkai hai. — The field dries up in early summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭh mā̃y khet sūkai hai.* — The field dries up in early summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for sweat, then the Marwadi for cool, then say sūkṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for sweat, then the Marwadi for cool, then say *sūkṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सूकणो (sūkṇo) mean? (\"To dry up; to wither\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C228-sukno-type",
+              "prompt": "Say the Marwadi for 'to dry up'.",
+              "assesses": [
+                "MW-LEX-C228-HEAT228-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सूकणो",
+                "sūkṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सूकणो (sūkṇo) is 'to dry up; to wither'.",
+                "incorrect": "'to dry up' is सूकणो (sūkṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R228-review-223-228",
+      "sequence": 15660,
+      "title": "Looking back: from Off to the Fair to Summer Sun",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Off to the Fair to Summer Sun",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:043d9f299ffa2289",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for to swing and a big swing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to swing, a big swing, a big drum, a flag, a show",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to swing, a big swing, a big drum, a flag, a show]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wander about, a puppet, a laddu, to leap up, a kettledrum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wander about, a puppet, a laddu, to leap up, a kettledrum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bundle, a cloth bag, a water-skin, bedding, a woollen blanket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bundle, a cloth bag, a water-skin, bedding, a woollen blanket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sand hill, high, lonely, dry land, laid waste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sand hill, high, lonely, dry land, laid waste]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a well, deep down, thirsty, a Persian wheel, a drought",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a well, deep down, thirsty, a Persian wheel, a drought]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parched, to blaze, sweat, cool, to dry up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: parched, to blaze, sweat, cool, to dry up]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To swing? (झूलणो, jhūlṇo.) A big swing? (हिंडोळो, hiṇḍoḷo.) A big drum? (ढोल, ḍhol.) A flag? (झंडो, jhaṇḍo.) A show? (तमासो, tamāso.) To wander about? (फिरणो, phirṇo.) A puppet? (कठपूतळी, kaṭhpūtḷī.) A laddu? (लाडू, lāḍū.) To leap up? (उछळणो, uchhaḷṇo.) A kettledrum? (नगाड़ो, nagāṛo.) A bundle? (गठड़ी, gaṭhṛī.) A cloth bag? (झोळी, jhoḷī.) A water-skin? (मसक, masak.) Bedding? (बिस्तर, bistar.) A woollen blanket? (कामळी, kāmḷī.) A sand hill? (टीबो, ṭībo.) High? (ऊंचो, ū̃cho.) Lonely? (सूनो, sūno.) Dry land? (थळ, thaḷ.) Laid waste? (उजाड़, ujāṛ.) A well? (कूवो, kūvo.) Deep down? (ऊंडो, ū̃ḍo.) Thirsty? (तिसायो, tisāyo.) A Persian wheel? (रहट, rahaṭ.) A drought? (दुकाळ, dukāḷ.) Parched? (लूखो, lūkho.) To blaze? (तपणो, tapṇo.) Sweat? (पसीनो, pasīno.) Cool? (सीळो, sīḷo.) To dry up? (सूकणो, sūkṇo.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R228-review-223-228-type",
+              "prompt": "Say the Marwadi for 'to swing'.",
+              "assesses": [
+                "MW-LEX-C223-FAIR223-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "झूलणो",
+                "jhūlṇo"
+              ],
+              "feedback": {
+                "correct": "Right: झूलणो (jhūlṇo) is 'to swing'.",
+                "incorrect": "'to swing' is झूलणो (jhūlṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

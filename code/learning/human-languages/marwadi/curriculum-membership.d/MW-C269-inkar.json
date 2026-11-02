@@ -1,0 +1,11 @@
+{
+  "id": "MW-C269-inkar",
+  "pathSegment": "MW-PATH-269-BAHANO269",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-269-BAHANO269",
+      "order": 1
+    }
+  ]
+}

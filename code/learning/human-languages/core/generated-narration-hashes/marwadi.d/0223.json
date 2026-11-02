@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:794679a075818bba",
+  "lessonIds": [
+    "MW-C223-jhulno",
+    "MW-C223-hindolo",
+    "MW-C223-dhol",
+    "MW-C223-jhando",
+    "MW-C223-tamaso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch223.txt",
+  "json": "marwadi/narration/ch223.json",
+  "textHash": "fnv1a64:e5302ca50c5af665",
+  "jsonHash": "fnv1a64:18469ef7d2e623b8",
+  "findings": []
+}

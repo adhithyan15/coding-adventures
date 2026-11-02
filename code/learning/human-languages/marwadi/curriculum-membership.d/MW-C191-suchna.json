@@ -1,0 +1,11 @@
+{
+  "id": "MW-C191-suchna",
+  "pathSegment": "MW-PATH-191-NOTICE191",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-191-NOTICE191",
+      "order": 0
+    }
+  ]
+}

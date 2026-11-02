@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:1d29cebec1bd1a47",
+  "lessonIds": [
+    "MW-C247-byav",
+    "MW-C247-tiko",
+    "MW-C247-paranno",
+    "MW-C247-ladi",
+    "MW-C247-madvo",
+    "MW-R247-review-241-247"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch247.txt",
+  "json": "marwadi/narration/ch247.json",
+  "textHash": "fnv1a64:cd0d54386a84d10e",
+  "jsonHash": "fnv1a64:f7840c1d84ea11aa",
+  "findings": []
+}

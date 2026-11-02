@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-179-PISO179",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how grain is cleaned and ground and spice pounded.",
+  "prerequisites": []
+}

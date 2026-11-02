@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C230-balno-scorch",
+    "language": "marwadi",
+    "chapter": 230,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9c4e0c63cf8cba6"
+  },
+  "findings": []
+}

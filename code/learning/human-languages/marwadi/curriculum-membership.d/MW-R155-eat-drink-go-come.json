@@ -1,0 +1,11 @@
+{
+  "id": "MW-R155-eat-drink-go-come",
+  "pathSegment": "MW-PATH-155-VSTEM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-155-VSTEM",
+      "order": 4
+    }
+  ]
+}

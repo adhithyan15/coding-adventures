@@ -2,14 +2,14 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "coding_adventures_ct_compare"
-  spec.version       = "0.1.0"
+  spec.version       = "0.2.0"
   spec.authors       = ["Adhithya Rajasekaran"]
   spec.summary       = "Constant-time comparison helpers for byte strings and unsigned counters"
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
 
-  spec.files         = Dir["lib/**/*.rb", "README.md", "CHANGELOG.md"]
+  spec.files         = Dir["lib/**/*.rb", "README.md", "CHANGELOG.d/*.md"]
   spec.require_paths = ["lib"]
 
   spec.metadata = {

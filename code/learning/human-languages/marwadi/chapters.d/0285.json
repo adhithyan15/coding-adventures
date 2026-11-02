@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Learning by Heart",
+  "label": "ch:mw-learning-by-heart",
+  "canDo": "I can say how I learn a lesson.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C285-ucharno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say how I learn a lesson.",
+    "assesses": [
+      "MW-LEX-C285-AKHAR285-03",
+      "MW-LEX-C285-AKHAR285-04",
+      "MW-LEX-C285-AKHAR285-05"
+    ]
+  }
+}

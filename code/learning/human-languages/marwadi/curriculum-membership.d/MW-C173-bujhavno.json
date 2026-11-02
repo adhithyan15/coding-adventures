@@ -1,0 +1,11 @@
+{
+  "id": "MW-C173-bujhavno",
+  "pathSegment": "MW-PATH-173-CHULHO173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-173-CHULHO173",
+      "order": 3
+    }
+  ]
+}

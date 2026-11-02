@@ -1,0 +1,21 @@
+{
+  "chapter": 190,
+  "title": "Clothes and Jewels",
+  "label": "ch:mw-clothes-and-jewels",
+  "canDo": "I can name the clothes and jewellery people wear.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-R190-review-final-190",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can name the clothes and jewellery people wear.",
+    "assesses": [
+      "MW-LEX-C190-DHOTI190-01",
+      "MW-LEX-C190-DHOTI190-02",
+      "MW-LEX-C190-DHOTI190-03",
+      "MW-LEX-C190-DHOTI190-04",
+      "MW-LEX-C190-DHOTI190-05"
+    ]
+  }
+}

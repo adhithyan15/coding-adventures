@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:ba265ecc95b47baa",
+  "lessonIds": [
+    "MW-C208-aspatal",
+    "MW-C208-tahsil",
+    "MW-C208-karkhano",
+    "MW-C208-adalat",
+    "MW-C208-khulno"
+  ],
+  "tex": "marwadi/book/chapters/ch208-offices-in-town.tex"
+}

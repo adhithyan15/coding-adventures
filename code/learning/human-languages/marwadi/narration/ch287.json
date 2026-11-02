@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 287,
+  "title": "Teachers and Pupils",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:73651847d0063270",
+  "lessons": [
+    {
+      "id": "MW-C287-sikhavno",
+      "sequence": 20080,
+      "title": "सिखावणो (sikhāvṇo) — to teach a skill",
+      "headword": "सिखावणो",
+      "romanization": "sikhāvṇo",
+      "gloss": "to teach a skill",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:becb14c1aaa21438",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a class at school, then the Marwadi for to mark schoolwork."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सिखावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिखावणो — sikhāvṇo — \"to teach a skill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी सीवणो सिखावै है। dādī sīvṇo sikhāvai hai. Grandmother teaches sewing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं गीत सिखायो, mhaĩ gīt sikhāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिखावणो (sikhāvṇo) is built on सीखणो, to learn, as its causative: \"to make learn\". CDIAL gives no Marwari form in this entry, but lists Hindi sikhānā, \"teaches\", under Sanskrit śikṣate (CDIAL 12430)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sikhāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sikhāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sikhāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sikhāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī sīvṇo sikhāvai hai. — Grandmother teaches sewing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī sīvṇo sikhāvai hai.* — Grandmother teaches sewing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a class at school, then the Marwadi for to mark schoolwork, then say sikhāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a class at school, then the Marwadi for to mark schoolwork, then say *sikhāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सिखावणो (sikhāvṇo) mean? (\"To teach a skill\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C287-sikhavno-type",
+              "prompt": "Say the Marwadi for 'to teach a skill'.",
+              "assesses": [
+                "MW-LEX-C287-GURU287-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सिखावणो",
+                "sikhāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सिखावणो (sikhāvṇo) is 'to teach a skill'.",
+                "incorrect": "'to teach a skill' is सिखावणो (sikhāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C287-bhanavno",
+      "sequence": 20090,
+      "title": "भणावणो (bhaṇāvṇo) — to teach lessons",
+      "headword": "भणावणो",
+      "romanization": "bhaṇāvṇo",
+      "gloss": "to teach lessons",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e261c188cccc7f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to mark schoolwork, then the Marwadi for to teach a skill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भणावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भणावणो — bhaṇāvṇo — \"to teach lessons\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मास्टर भासा भणावै है। māsṭar bhāsā bhaṇāvai hai. The teacher teaches language."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं पाठ भणायो, mhaĩ pāṭh bhaṇāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भणावणो (bhaṇāvṇo) is built on भणणो, to study, as its causative: \"to make study\". CDIAL lists Old Marwari bhaṇaï, \"recites\" (CDIAL 9383)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṇāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṇāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṇāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṇāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsṭar bhāsā bhaṇāvai hai. — The teacher teaches language.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsṭar bhāsā bhaṇāvai hai.* — The teacher teaches language.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to mark schoolwork, then the Marwadi for to teach a skill, then say bhaṇāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to mark schoolwork, then the Marwadi for to teach a skill, then say *bhaṇāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भणावणो (bhaṇāvṇo) mean? (\"To teach lessons\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C287-bhanavno-type",
+              "prompt": "Say the Marwadi for 'to teach lessons'.",
+              "assesses": [
+                "MW-LEX-C287-GURU287-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भणावणो",
+                "bhaṇāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: भणावणो (bhaṇāvṇo) is 'to teach lessons'.",
+                "incorrect": "'to teach lessons' is भणावणो (bhaṇāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C287-guru",
+      "sequence": 20100,
+      "title": "गुरु (guru) — a guru; a master teacher",
+      "headword": "गुरु",
+      "romanization": "guru",
+      "gloss": "a guru; a master teacher",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1b6e62d3535395a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to teach a skill, then the Marwadi for to teach lessons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गुरु",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुरु — guru — \"a guru; a master teacher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गुरु संगीत सिखावै है। guru saṅgīt sikhāvai hai. The guru teaches music."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुरु (guru) is a tatsama, taken from Sanskrit guru, \"heavy\", and so \"venerable\"; Monier-Williams also gives it as a teacher (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guru saṅgīt sikhāvai hai. — The guru teaches music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guru saṅgīt sikhāvai hai.* — The guru teaches music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to teach a skill, then the Marwadi for to teach lessons, then say guru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to teach a skill, then the Marwadi for to teach lessons, then say *guru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गुरु mean? (\"A guru; a master teacher\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C287-guru-type",
+              "prompt": "Say the Marwadi for 'a guru'.",
+              "assesses": [
+                "MW-LEX-C287-GURU287-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गुरु",
+                "guru"
+              ],
+              "feedback": {
+                "correct": "Right: गुरु (guru) is 'a guru; a master teacher'.",
+                "incorrect": "'a guru' is गुरु (guru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C287-chelo",
+      "sequence": 20110,
+      "title": "चेलो (chelo) — a pupil",
+      "headword": "चेलो",
+      "romanization": "chelo",
+      "gloss": "a pupil",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e2f2351649e7857",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to teach lessons, then the Marwadi for a guru."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चेलो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चेलो — chelo — \"a pupil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो म्हारो चेलो है। yo mhāro chelo hai. This is my pupil."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चेलो (chelo) is inherited from a reconstructed cēlla, \"boy\"; CDIAL gives no Marwari form in this entry, but lists Hindi celā, \"pupil, apprentice\", Gujarati celo, \"pupil\", and Sindhi celo, \"disciple\" (CDIAL 4911)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chelo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chelo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chelo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chelo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo mhāro chelo hai. — This is my pupil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo mhāro chelo hai.* — This is my pupil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to teach lessons, then the Marwadi for a guru, then say chelo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to teach lessons, then the Marwadi for a guru, then say *chelo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चेलो (chelo) mean? (\"A pupil\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C287-chelo-type",
+              "prompt": "Say the Marwadi for 'a pupil'.",
+              "assesses": [
+                "MW-LEX-C287-GURU287-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चेलो",
+                "chelo"
+              ],
+              "feedback": {
+                "correct": "Right: चेलो (chelo) is 'a pupil'.",
+                "incorrect": "'a pupil' is चेलो (chelo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C287-akharo",
+      "sequence": 20120,
+      "title": "अखाड़ो (akhāṛo) — a wrestling ground; a training ground",
+      "headword": "अखाड़ो",
+      "romanization": "akhāṛo",
+      "gloss": "a wrestling ground; a training ground",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db8a3c78889fcce2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a guru, then the Marwadi for a pupil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अखाड़ो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अखाड़ो — akhāṛo — \"a wrestling ground; a training ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गांव मांय एक अखाड़ो है। gā̃v mā̃y ek akhāṛo hai. There's a wrestling ground in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अखाड़ो (akhāṛo) is inherited from Sanskrit akṣavāṭa, \"a wrestling ground\"; CDIAL gives no Marwari form in this entry, but lists Hindi akhāṛā, \"wrestling ground\", and Gujarati akhāṛo, \"wrestling place\" (CDIAL 39)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhāṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhāṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhāṛo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhāṛo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃v mā̃y ek akhāṛo hai. — There's a wrestling ground in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃v mā̃y ek akhāṛo hai.* — There's a wrestling ground in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a guru, then the Marwadi for a pupil, then say akhāṛo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a guru, then the Marwadi for a pupil, then say *akhāṛo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अखाड़ो (akhāṛo) mean? (\"A wrestling ground; a training ground\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C287-akharo-type",
+              "prompt": "Say the Marwadi for 'a wrestling ground'.",
+              "assesses": [
+                "MW-LEX-C287-GURU287-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अखाड़ो",
+                "akhāṛo"
+              ],
+              "feedback": {
+                "correct": "Right: अखाड़ो (akhāṛo) is 'a wrestling ground; a training ground'.",
+                "incorrect": "'a wrestling ground' is अखाड़ो (akhāṛo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C284-davat",
+  "pathSegment": "MW-PATH-284-BASTO284",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-284-BASTO284",
+      "order": 3
+    }
+  ]
+}

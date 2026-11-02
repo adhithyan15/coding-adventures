@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-156-POSTP",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say whose a thing is, where it is, and where someone comes from.",
+  "prerequisites": [
+    "MW-EXT-155-VSTEM"
+  ]
+}

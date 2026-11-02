@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Holi and Diwali",
+  "label": "ch:mw-holi-and-diwali",
+  "canDo": "I can say which festival comes when.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-C249-puja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say which festival comes when.",
+    "assesses": [
+      "MW-LEX-C249-HOLI249-03",
+      "MW-LEX-C249-HOLI249-04",
+      "MW-LEX-C249-HOLI249-05"
+    ]
+  }
+}

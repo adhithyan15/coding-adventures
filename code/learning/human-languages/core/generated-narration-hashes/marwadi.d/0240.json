@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:58279cec30fe6d7c",
+  "lessonIds": [
+    "MW-C240-pakno",
+    "MW-C240-lunno",
+    "MW-C240-khalo",
+    "MW-C240-bali",
+    "MW-C240-dher",
+    "MW-R240-review-235-240",
+    "MW-R240-review-final-240"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch240.txt",
+  "json": "marwadi/narration/ch240.json",
+  "textHash": "fnv1a64:1d1de6d3b9b32c55",
+  "jsonHash": "fnv1a64:91675c789fd6ecae",
+  "findings": []
+}

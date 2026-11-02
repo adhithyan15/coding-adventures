@@ -1,0 +1,11 @@
+{
+  "id": "MW-C169-belno",
+  "pathSegment": "MW-PATH-169-ROTI169",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-169-ROTI169",
+      "order": 1
+    }
+  ]
+}

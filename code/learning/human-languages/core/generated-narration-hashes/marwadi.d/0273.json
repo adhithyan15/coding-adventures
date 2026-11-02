@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:b858bb8ee5f0a81f",
+  "lessonIds": [
+    "MW-C273-chup",
+    "MW-C273-isaro",
+    "MW-C273-bhed",
+    "MW-C273-chhipavno",
+    "MW-C273-vachan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch273.txt",
+  "json": "marwadi/narration/ch273.json",
+  "textHash": "fnv1a64:fe392f5d8d65ef3c",
+  "jsonHash": "fnv1a64:8ffe882f4edef43c",
+  "findings": []
+}

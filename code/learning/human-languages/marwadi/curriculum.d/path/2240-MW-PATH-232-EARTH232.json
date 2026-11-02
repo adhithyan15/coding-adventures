@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-232-EARTH232",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "MW-EXT-232-EARTH232"
+  ],
+  "after": []
+}

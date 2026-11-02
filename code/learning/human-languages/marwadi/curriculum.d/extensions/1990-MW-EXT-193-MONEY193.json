@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-193-MONEY193",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count out rupees and coins and pay.",
+  "prerequisites": []
+}

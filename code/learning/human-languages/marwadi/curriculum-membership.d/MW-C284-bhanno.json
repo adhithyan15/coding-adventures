@@ -1,0 +1,11 @@
+{
+  "id": "MW-C284-bhanno",
+  "pathSegment": "MW-PATH-284-BASTO284",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-284-BASTO284",
+      "order": 4
+    }
+  ]
+}

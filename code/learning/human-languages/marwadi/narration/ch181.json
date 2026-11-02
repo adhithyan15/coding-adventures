@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 181,
+  "title": "Curd and Butter",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d7009b5dbc346e8b",
+  "lessons": [
+    {
+      "id": "MW-C181-jamavno",
+      "sequence": 11770,
+      "title": "जमावणो (jamāvṇo) — to set curd",
+      "headword": "जमावणो",
+      "romanization": "jamāvṇo",
+      "gloss": "to set curd",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f94206b2216f02d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a hanging net, then the Marwadi for a flat basket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जमावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जमावणो — jamāvṇo — \"to set curd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां रात मांय दही जमावै है। mā̃ rāt mā̃y dahī jamāvai hai. Mother sets the curd at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दही जमायो, mhaĩ dahī jamāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जमावणो (jamāvṇo) is built on Sanskrit yamyate, \"is held fast\"; CDIAL lists Old Marwari jamaï, \"is collected\", and Hindi jamānā (CDIAL 10428). Milk that sets holds fast as curd."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ rāt mā̃y dahī jamāvai hai. — Mother sets the curd at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ rāt mā̃y dahī jamāvai hai.* — Mother sets the curd at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a hanging net, then the Marwadi for a flat basket, then say jamāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a hanging net, then the Marwadi for a flat basket, then say *jamāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जमावणो (jamāvṇo) mean? (\"To set curd\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C181-jamavno-type",
+              "prompt": "Say the Marwadi for 'to set curd'.",
+              "assesses": [
+                "MW-LEX-C181-BILOVO181-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जमावणो",
+                "jamāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: जमावणो (jamāvṇo) is 'to set curd'.",
+                "incorrect": "'to set curd' is जमावणो (jamāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C181-bilovno",
+      "sequence": 11780,
+      "title": "बिलोवणो (bilovṇo) — to churn",
+      "headword": "बिलोवणो",
+      "romanization": "bilovṇo",
+      "gloss": "to churn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b1c838df26dc96d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a flat basket, then the Marwadi for to set curd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बिलोवणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिलोवणो — bilovṇo — \"to churn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी दिनूगै दही बिलोवै है। dādī dinūgai dahī bilovai hai. Grandmother churns the curd early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दही बिलोयो, mhaĩ dahī biloyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिलोवणो (bilovṇo) is inherited from Sanskrit vilobhayati, \"perplexes, stirs up\"; CDIAL lists Old Marwari bilovaṇā, \"churnings\" (CDIAL 11913a)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bilovṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bilovṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bilovṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bilovṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī dinūgai dahī bilovai hai. — Grandmother churns the curd early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī dinūgai dahī bilovai hai.* — Grandmother churns the curd early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a flat basket, then the Marwadi for to set curd, then say bilovṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a flat basket, then the Marwadi for to set curd, then say *bilovṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बिलोवणो (bilovṇo) mean? (\"To churn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C181-bilovno-type",
+              "prompt": "Say the Marwadi for 'to churn'.",
+              "assesses": [
+                "MW-LEX-C181-BILOVO181-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बिलोवणो",
+                "bilovṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बिलोवणो (bilovṇo) is 'to churn'.",
+                "incorrect": "'to churn' is बिलोवणो (bilovṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C181-mathani",
+      "sequence": 11790,
+      "title": "मथाणी (mathāṇī) — a churning stick",
+      "headword": "मथाणी",
+      "romanization": "mathāṇī",
+      "gloss": "a churning stick",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d1258ca2080aa28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to set curd, then the Marwadi for to churn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मथाणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मथाणी — mathāṇī — \"a churning stick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मथाणी दही मांय है। mathāṇī dahī mā̃y hai. The churning stick is in the curd."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मथाणी (mathāṇī) is inherited from Sanskrit manthāna, \"a churning stick\"; CDIAL lists Old Marwari mathāṇī (CDIAL 9842)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mathāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mathāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mathāṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mathāṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mathāṇī dahī mā̃y hai. — The churning stick is in the curd.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mathāṇī dahī mā̃y hai.* — The churning stick is in the curd.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to set curd, then the Marwadi for to churn, then say mathāṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to set curd, then the Marwadi for to churn, then say *mathāṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मथाणी (mathāṇī) mean? (\"A churning stick\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C181-mathani-type",
+              "prompt": "Say the Marwadi for 'a churning stick'.",
+              "assesses": [
+                "MW-LEX-C181-BILOVO181-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मथाणी",
+                "mathāṇī"
+              ],
+              "feedback": {
+                "correct": "Right: मथाणी (mathāṇī) is 'a churning stick'.",
+                "incorrect": "'a churning stick' is मथाणी (mathāṇī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C181-galno",
+      "sequence": 11800,
+      "title": "गाळणो (gāḷṇo) — to strain",
+      "headword": "गाळणो",
+      "romanization": "gāḷṇo",
+      "gloss": "to strain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd3dd1ab88979b1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to churn, then the Marwadi for a churning stick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गाळणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाळणो — gāḷṇo — \"to strain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां दूध गाळै है। mā̃ dūdh gāḷai hai. Mother strains the milk."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं पाणी गाळ्यो, mhaĩ pāṇī gāḷyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाळणो (gāḷṇo) is inherited from Sanskrit gālayati, \"filters, strains\"; CDIAL lists Gujarati gāḷvũ and Hindi gārnā (CDIAL 4144). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḷṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḷṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ dūdh gāḷai hai. — Mother strains the milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ dūdh gāḷai hai.* — Mother strains the milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to churn, then the Marwadi for a churning stick, then say gāḷṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to churn, then the Marwadi for a churning stick, then say *gāḷṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गाळणो (gāḷṇo) mean? (\"To strain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C181-galno-type",
+              "prompt": "Say the Marwadi for 'to strain'.",
+              "assesses": [
+                "MW-LEX-C181-BILOVO181-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गाळणो",
+                "gāḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: गाळणो (gāḷṇo) is 'to strain'.",
+                "incorrect": "'to strain' is गाळणो (gāḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C181-khir",
+      "sequence": 11810,
+      "title": "खीर (khīr) — rice pudding",
+      "headword": "खीर",
+      "romanization": "khīr",
+      "gloss": "rice pudding",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:814c90ae79157aea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a churning stick, then the Marwadi for to strain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खीर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खीर — khīr — \"rice pudding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज मां खीर बणावै है। āj mā̃ khīr baṇāvai hai. Mother makes rice pudding today."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खीर (khīr) is inherited from Sanskrit kṣīrī, \"a dish made with milk\"; CDIAL lists Hindi and Gujarati khīr, rice boiled in milk (CDIAL 3705). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj mā̃ khīr baṇāvai hai. — Mother makes rice pudding today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj mā̃ khīr baṇāvai hai.* — Mother makes rice pudding today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a churning stick, then the Marwadi for to strain, then say khīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a churning stick, then the Marwadi for to strain, then say *khīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खीर (khīr) mean? (\"Rice pudding\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C181-khir-type",
+              "prompt": "Say the Marwadi for 'rice pudding'.",
+              "assesses": [
+                "MW-LEX-C181-BILOVO181-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खीर",
+                "khīr"
+              ],
+              "feedback": {
+                "correct": "Right: खीर (khīr) is 'rice pudding'.",
+                "incorrect": "'rice pudding' is खीर (khīr)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

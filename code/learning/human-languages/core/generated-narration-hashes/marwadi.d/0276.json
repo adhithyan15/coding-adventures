@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:d3c487e4be5ac18a",
+  "lessonIds": [
+    "MW-C276-basli",
+    "MW-C276-bajavno",
+    "MW-C276-sur",
+    "MW-C276-tali",
+    "MW-C276-gujno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch276.txt",
+  "json": "marwadi/narration/ch276.json",
+  "textHash": "fnv1a64:631b160579001e5b",
+  "jsonHash": "fnv1a64:24b536dde436c29b",
+  "findings": []
+}

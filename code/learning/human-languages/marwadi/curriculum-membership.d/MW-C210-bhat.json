@@ -1,0 +1,11 @@
+{
+  "id": "MW-C210-bhat",
+  "pathSegment": "MW-PATH-210-CHOOSE210",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-210-CHOOSE210",
+      "order": 1
+    }
+  ]
+}

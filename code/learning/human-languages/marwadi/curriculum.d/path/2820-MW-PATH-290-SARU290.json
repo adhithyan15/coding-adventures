@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-290-SARU290",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-290-SARU290"
+  ],
+  "after": []
+}

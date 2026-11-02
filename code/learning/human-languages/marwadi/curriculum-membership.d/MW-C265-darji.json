@@ -1,0 +1,11 @@
+{
+  "id": "MW-C265-darji",
+  "pathSegment": "MW-PATH-265-MOCHI265",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-265-MOCHI265",
+      "order": 3
+    }
+  ]
+}

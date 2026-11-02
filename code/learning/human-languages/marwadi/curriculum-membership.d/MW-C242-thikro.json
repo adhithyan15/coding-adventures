@@ -1,0 +1,11 @@
+{
+  "id": "MW-C242-thikro",
+  "pathSegment": "MW-PATH-242-FIRE242",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-242-FIRE242",
+      "order": 3
+    }
+  ]
+}

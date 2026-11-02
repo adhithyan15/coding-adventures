@@ -39,6 +39,33 @@ type CtCompareTests() =
         Assert.Throws<ArgumentException>(fun () -> CtCompare.ctSelectBytes [| 1uy |] [| 1uy; 2uy |] true |> ignore) |> ignore
 
     [<Fact>]
+    member _.``ctSelectBytes treats any non-zero stored bool as true``() =
+        // Unsafe code can store a non-0/1 byte in a bool; it still means true.
+        let mutable stored = 2uy
+        let oddTrue = System.Runtime.CompilerServices.Unsafe.As<byte, bool>(&stored)
+        Assert.Equal<byte array>([| 7uy |], CtCompare.ctSelectBytes [| 7uy |] [| 8uy |] oddTrue)
+
+    [<Fact>]
+    member _.``null arrays are rejected, never treated as empty``() =
+        let missing: byte array = null
+        Assert.Throws<ArgumentNullException>(fun () -> CtCompare.ctEq missing [||] |> ignore) |> ignore
+        Assert.Throws<ArgumentNullException>(fun () -> CtCompare.ctEq [||] missing |> ignore) |> ignore
+        Assert.Throws<ArgumentNullException>(fun () -> CtCompare.ctSelectBytes missing [||] true |> ignore) |> ignore
+        Assert.Throws<ArgumentNullException>(fun () -> CtCompare.ctSelectBytes [||] missing false |> ignore) |> ignore
+
+    [<Fact>]
+    member _.``ctEq returns false on a length mismatch``() =
+        Assert.False(CtCompare.ctEq [| 1uy |] [| 1uy; 2uy |])
+
+    [<Fact>]
+    member _.``ctSelectBytes returns a fresh copy``() =
+        let left = [| 1uy; 2uy; 3uy |]
+        let picked = CtCompare.ctSelectBytes left [| 4uy; 5uy; 6uy |] true
+        Assert.NotSame(left, picked)
+        left[0] <- 99uy
+        Assert.Equal<byte array>([| 1uy; 2uy; 3uy |], picked)
+
+    [<Fact>]
     member _.``ctEqUInt64 handles edges``() =
         Assert.True(CtCompare.ctEqUInt64 0UL 0UL)
         Assert.True(CtCompare.ctEqUInt64 UInt64.MaxValue UInt64.MaxValue)
