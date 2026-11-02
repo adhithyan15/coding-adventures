@@ -642,6 +642,12 @@ enum CargoLinkTable {
 /// So while the entry's value still has an unclosed `{` or `[`, the next
 /// lines are joined onto it with one space (and are not looked at as headers
 /// or entries). If the file ends first, the entry contributes nothing.
+///
+/// The brackets are counted over the joined value, but it is never
+/// rescanned: a [`TomlBracketScanner`] keeps its count (and whether it is
+/// inside a string) from one piece to the next, and each piece is appended
+/// once. Rescanning the growing value for every appended line, as this
+/// function first did, is quadratic in a long entry.
 fn cargo_link_dependency_names(text: &str) -> Vec<String> {
     let text = text.strip_prefix('\u{feff}').unwrap_or(text);
     // Step 1 of the contract: split at LF, then drop ONE trailing CR.
@@ -689,14 +695,21 @@ fn cargo_link_dependency_names(text: &str) -> Vec<String> {
             CargoLinkTable::Inline => {
                 let mut value = trim_toml_blank(&line[equals + 1..]).to_string();
                 let mut complete = true;
-                while value.starts_with('{') && toml_open_bracket_depth(&value) > 0 {
-                    if index >= lines.len() {
-                        complete = false; // the file ended inside the value
-                        break;
+                if value.starts_with('{') {
+                    let mut scanner = TomlBracketScanner::default();
+                    scanner.feed(&value);
+                    while scanner.depth > 0 {
+                        if index >= lines.len() {
+                            complete = false; // the file ended inside the value
+                            break;
+                        }
+                        let next = clean_line(lines[index]);
+                        index += 1;
+                        scanner.feed(" ");
+                        scanner.feed(&next);
+                        value.push(' ');
+                        value.push_str(&next);
                     }
-                    value.push(' ');
-                    value.push_str(&clean_line(lines[index]));
-                    index += 1;
                 }
                 if complete {
                     if let Some(name) = cargo_path_dependency_name(&line[..equals], &value) {
@@ -705,15 +718,16 @@ fn cargo_link_dependency_names(text: &str) -> Vec<String> {
                 }
             }
             CargoLinkTable::Sub(_) => {
-                // Only the two bare, lowercase keys matter; the first
-                // occurrence of each wins. `version`, `features`, `optional`
-                // ... are ignored.
+                // Only the keys `path` and `package` matter, bare or quoted
+                // (`"path" = ...` is the same key); the first occurrence of
+                // each wins. `version`, `features`, `optional` ... are
+                // ignored, and so is `Path`: TOML keys are case-sensitive.
                 let Some(value) = toml_single_string(&line[equals + 1..]) else {
                     continue;
                 };
-                let slot = match trim_toml_blank(&line[..equals]) {
-                    "path" => &mut sub_path,
-                    "package" => &mut sub_package,
+                let slot = match toml_key_segment(&line[..equals]) {
+                    Some("path") => &mut sub_path,
+                    Some("package") => &mut sub_package,
                     _ => continue,
                 };
                 if slot.is_none() {
@@ -784,8 +798,16 @@ fn classify_cargo_link_header(line: &str) -> CargoLinkTable {
 ///
 /// Fields are split at commas outside strings AND outside nested `[...]` or
 /// `{...}`, so a `features` array cannot leak a fake field and a nested
-/// table's `path` is not the entry's. Field keys must be exactly `path` and
-/// `package` (Cargo ignores `Package`, so it must not count as a rename).
+/// table's `path` is not the entry's. A field key is decoded like an entry
+/// key, so `"path"` and `'path'` are the key `path` (TOML, and so Cargo, read
+/// them that way); the decoded key must then be exactly `path` or `package`
+/// (Cargo ignores `Package`, so it must not count as a rename):
+///
+/// ```text
+/// a = { "path" = "../a" }                                      -> a
+/// x = { 'package' = "a", path = "../a" }                       -> a
+/// a = { "Path" = "../a" }                                      -> not a path dep
+/// ```
 fn cargo_path_dependency_name(key: &str, value: &str) -> Option<String> {
     let crate_name = toml_key_segment(key)?;
     let value = trim_toml_blank(value);
@@ -801,10 +823,10 @@ fn cargo_path_dependency_name(key: &str, value: &str) -> Option<String> {
         let Some(field_value) = toml_single_string(&field[equals + 1..]) else {
             continue;
         };
-        let slot = match trim_toml_blank(&field[..equals]) {
-            "path" => &mut path,
-            "package" => &mut package_name,
-            _ => continue,
+        let slot = match toml_key_segment(&field[..equals]) {
+            Some("path") => &mut path,
+            Some("package") => &mut package_name,
+            _ => continue, // another key, or a dotted or malformed one
         };
         if slot.is_none() {
             *slot = Some(field_value);
@@ -875,29 +897,51 @@ fn index_toml_outside_strings(s: &str, target: u8) -> Option<usize> {
     None
 }
 
-/// Counts the `{` and `[` outside strings in `s` that are not closed again
-/// within `s`. Zero (or less) means the value is complete; an unclosed
-/// string stops the count where it opens.
-fn toml_open_bracket_depth(s: &str) -> i64 {
-    let bytes = s.as_bytes();
-    let mut depth = 0;
-    let mut index = 0;
-    while index < bytes.len() {
-        match bytes[index] {
-            b'"' | b'\'' => match toml_string_end(bytes, index) {
-                Some(end) => {
-                    index = end;
-                    continue;
+/// Counts the `{` and `[` outside strings that are not closed again, over
+/// text fed to it in pieces. Feeding `"ab"` and then `"cd"` leaves exactly
+/// the state feeding `"abcd"` would, because the scanner keeps what a
+/// rescan would have to rediscover: whether it is inside a string (and which
+/// delimiter closes it), and whether the last byte was a backslash escaping
+/// the next one in a basic string. So a string still open at the end of one
+/// line continues after the joining space, as it does in the joined value:
+///
+/// ```text
+/// feed(`{ x = "q\`)   depth 1, inside "...", escape pending
+/// feed(" ")            the space is escaped: still inside the string
+/// feed(`", p = 1 }`)   the string closes, `}` closes the table: depth 0
+/// ```
+///
+/// A depth of zero (or less) means the value is complete.
+#[derive(Debug, Default)]
+struct TomlBracketScanner {
+    depth: i64,
+    /// The delimiter of the string being scanned, if any.
+    quote: Option<u8>,
+    /// The previous byte was a backslash inside a basic string.
+    escape: bool,
+}
+
+impl TomlBracketScanner {
+    fn feed(&mut self, text: &str) {
+        for &byte in text.as_bytes() {
+            if self.escape {
+                self.escape = false;
+            } else if let Some(quote) = self.quote {
+                if quote == b'"' && byte == b'\\' {
+                    self.escape = true;
+                } else if byte == quote {
+                    self.quote = None;
                 }
-                None => return depth,
-            },
-            b'{' | b'[' => depth += 1,
-            b'}' | b']' => depth -= 1,
-            _ => {}
+            } else {
+                match byte {
+                    b'"' | b'\'' => self.quote = Some(byte),
+                    b'{' | b'[' => self.depth += 1,
+                    b'}' | b']' => self.depth -= 1,
+                    _ => {}
+                }
+            }
         }
-        index += 1;
     }
-    depth
 }
 
 /// Splits `s` at every `separator` outside strings. With `nested` set, a
@@ -1835,14 +1879,129 @@ mod tests {
                 "[dependencies]\na = { path = \"../a\" }\n[build-dependencies]\na = { path = \"../a\" }\n",
                 &["a", "a"],
             ),
+            (
+                "quoted inline path key",
+                "[dependencies]\na = { \"path\" = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "literal-quoted inline path key",
+                "[dependencies]\na = { 'path' = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "quoted inline package key renames",
+                "[dependencies]\nx = { \"package\" = \"a\", path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "quoted capitalised inline Path key",
+                "[dependencies]\na = { \"Path\" = \"../a\" }\n",
+                &[],
+            ),
+            (
+                "escaped inline path key is compared verbatim",
+                "[dependencies]\na = { \"pa\\u0074h\" = \"../a\" }\n",
+                &[],
+            ),
+            (
+                "dotted inline field key",
+                "[dependencies]\na = { path.x = \"../a\" }\n",
+                &[],
+            ),
+            (
+                "quoted sub-table path key",
+                "[dependencies.a]\n\"path\" = \"../a\"\n",
+                &["a"],
+            ),
+            (
+                "quoted sub-table package key",
+                "[dependencies.x]\n'package' = \"a\"\npath = \"../a\"\n",
+                &["a"],
+            ),
+            (
+                "quoted capitalised sub-table Path key",
+                "[dependencies.a]\n\"Path\" = \"../a\"\n",
+                &[],
+            ),
+            (
+                "open string continues across the join",
+                "[dependencies]\na = { path = \"../a\", x = \"q [\n\" }\n",
+                &["a"],
+            ),
+            (
+                "line-final backslash escapes the joining space",
+                "[dependencies]\na = { x = \"q\\\n\", path = \"../a\" }\n",
+                &["a"],
+            ),
         ];
-        assert_eq!(cases.len(), 46);
+        assert_eq!(cases.len(), 57);
         for (name, manifest, want) in cases {
             assert_eq!(
                 cargo_link_dependency_names(manifest),
                 want.to_vec(),
                 "case {name:?}: {manifest:?}"
             );
+        }
+    }
+
+    /// Rescanning the growing value for every appended line is quadratic: a
+    /// 20 000-line continuation (about 500 KB) took tens of seconds. The
+    /// scanner state is carried from line to line instead, so this takes
+    /// milliseconds even in a debug build.
+    #[test]
+    fn test_cargo_link_dependency_names_is_linear() {
+        let mut manifest = String::from("[dependencies]\na = { path = \"../a\", features = [\n");
+        for _ in 0..20_000 {
+            manifest.push_str("  \"feature-name-padding\",\n");
+        }
+        manifest.push_str("] }\n");
+        let start = std::time::Instant::now();
+        assert_eq!(cargo_link_dependency_names(&manifest), vec!["a"]);
+        let elapsed = start.elapsed();
+        assert!(
+            elapsed < std::time::Duration::from_secs(5),
+            "a 20000-line continuation took {elapsed:?}; the join must be linear"
+        );
+    }
+
+    /// A Cargo path entry that resolves to the package itself — by its
+    /// directory alias or its `[package]` name, in any link table — is the
+    /// contract's `DEPENDENCY_SELF_EDGE`, with a repository-relative
+    /// manifest.
+    #[test]
+    fn test_rust_self_edge_is_rejected() {
+        for (case, entry) in [
+            ("alias", "[dependencies]\napp-dir = { path = \".\" }\n"),
+            (
+                "name",
+                "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n",
+            ),
+            (
+                "target",
+                "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n",
+            ),
+        ] {
+            let manifest = format!("[package]\nname = \"app-crate\"\n\n{entry}");
+            let root = write_rust_fixture(
+                &format!("self_edge_{case}"),
+                &[("code/packages/rust/app-dir/Cargo.toml", &manifest)],
+            );
+            let packages = vec![rust_package(
+                "rust/app-dir",
+                root.join("code/packages/rust/app-dir"),
+            )];
+            let error = match resolve_dependencies(&packages) {
+                Ok(_) => panic!("case {case}: a self-edge resolved"),
+                Err(error) => error,
+            };
+            assert_eq!(
+                error.to_string(),
+                "DEPENDENCY_SELF_EDGE: package=rust/app-dir \
+                 manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir",
+                "case {case}"
+            );
+            let _ = fs::remove_dir_all(root);
         }
     }
 

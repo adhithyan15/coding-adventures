@@ -209,7 +209,9 @@ into the crate: `[dependencies]`, `[build-dependencies]` (and the legacy
 cfg, quoted or a bare triple, as a union over all targets. Entries count both
 as inline tables (`name = { path = "..." }`, whose arrays may continue onto
 later lines) and as `[dependencies.name]` sub-tables with a `path = "..."`
-key. A `package = "..."` rename is authoritative. The crate name is matched,
+key. A `package = "..."` rename is authoritative, field and sub-table keys
+may be bare or quoted (`"path" = "..."`), and continuation lines are joined
+in linear time. The crate name is matched,
 ASCII-lowercased, against each Rust package's directory name and declared
 `[package]` `name` (a WASM wrapper only by its declared name). Dev-dependencies
 in every form, `[patch]`, `[replace]`, `[workspace]`, package metadata,

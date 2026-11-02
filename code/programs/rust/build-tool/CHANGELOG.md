@@ -23,6 +23,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: a `TomlBracketScanner` carries the bracket
+  depth, open-string delimiter and pending escape from line to line instead
+  of rescanning the growing value, which was quadratic. Quoted field and
+  sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`) are read as
+  the bare key, per the amended contract. Tests: 11 new one-shape cases (57),
+  a 20 000-line continuation, and Cargo self-edges (already rejected as
+  `DEPENDENCY_SELF_EDGE`) by alias, by name and from a target table.
+
 - Rust resolution now reads path dependencies from `[build-dependencies]`,
   `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
   tables, not just the top-level `[dependencies]`, and reads the
