@@ -57,6 +57,26 @@ module BuildTool
     end
   end
 
+  # DependencySelfEdgeError -- A package whose manifest resolves itself.
+  #
+  # The conformance contract rejects this as DEPENDENCY_SELF_EDGE: a self-edge
+  # is neither dropped nor drawn (a drawn self-loop would surface later as a
+  # cycle, far from its cause). A Cargo manifest can do it with nothing more
+  # than a path entry named after its own directory or [package] name. The
+  # manifest is repository-relative, so the message never discloses the
+  # checkout root.
+  class DependencySelfEdgeError < StandardError
+    attr_reader :code, :package, :manifest, :dependency
+
+    def initialize(package:, manifest:, dependency:)
+      @code = "DEPENDENCY_SELF_EDGE"
+      @package = package
+      @manifest = manifest
+      @dependency = dependency
+      super("#{code}: package=#{package} manifest=#{manifest} dependency=#{dependency}")
+    end
+  end
+
   # --------------------------------------------------------------------------
   # DirectedGraph -- A minimal directed graph for dependency resolution.
   #
@@ -609,7 +629,12 @@ module BuildTool
     #
     # So while the value still has an unclosed `{` or `[`, the next lines
     # are joined onto it with one space (and are not looked at as headers or
-    # entries). If the file ends first, the entry contributes nothing.
+    # entries). If the file ends first, the entry contributes nothing. The
+    # brackets are counted over the joined value as one text -- a string left
+    # open at the end of one line continues after the joining space -- but
+    # the joined value is never rescanned: a TomlBracketScanner carries its
+    # state from line to line and the pieces are joined once, so the join is
+    # linear in the entry's length.
     def cargo_link_dependency_names(text)
       text = text.b
       text = text.byteslice(UTF8_BOM.bytesize..) if text.start_with?(UTF8_BOM)
@@ -650,24 +675,38 @@ module BuildTool
         case kind
         when :inline
           # Step 3: inline entries, continued while a bracket is open.
+          # The pieces are collected and joined once, and the scanner carries
+          # its state from piece to piece, so the join is linear.
           value = trim_spaces_and_tabs(line.byteslice((equals + 1)..))
-          while value&.start_with?("{") && toml_open_bracket_depth(value) > 0
-            if index >= lines.length
-              value = nil # the file ended inside the value: no entry
-              break
+          if value.start_with?("{")
+            scanner = TomlBracketScanner.new
+            scanner.feed(value)
+            if scanner.depth > 0
+              pieces = [value]
+              closed = false
+              while !closed && index < lines.length
+                piece = clean.call(lines[index])
+                index += 1
+                scanner.feed(" ")
+                scanner.feed(piece)
+                pieces << piece
+                closed = scanner.depth <= 0
+              end
+              # If the file ended inside the value, there is no entry.
+              value = closed ? pieces.join(" ") : nil
             end
-            value = "#{value} #{clean.call(lines[index])}"
-            index += 1
           end
           crate_name = value && cargo_path_dependency_name(line.byteslice(0, equals), value)
           names << crate_name if crate_name
         when :sub
-          # Step 4: only the two bare, lower-case keys matter; first wins.
-          # `version`, `features`, `optional` ... are ignored.
+          # Step 4: only the keys `path` and `package` matter, bare or quoted
+          # (`"path" = ...` is the same key); first wins. `version`,
+          # `features`, `optional` ... are ignored, and so is `Path`: TOML
+          # keys are case-sensitive.
           field_value = toml_single_string(line.byteslice((equals + 1)..))
           next unless field_value
 
-          case trim_spaces_and_tabs(line.byteslice(0, equals))
+          case toml_key_segment(line.byteslice(0, equals))
           when "path" then sub_path ||= field_value
           when "package" then sub_package ||= field_value
           end
@@ -728,8 +767,16 @@ module BuildTool
     #
     # Fields are split at commas outside strings AND outside nested `[...]`
     # or `{...}`, so a `features` array cannot leak a fake field and a nested
-    # table's `path` is not the entry's. Field keys must be exactly `path`
-    # and `package` (Cargo ignores `Package`). The first usable field wins.
+    # table's `path` is not the entry's. A field key is decoded like an entry
+    # key, so `"path"` and `'path'` are the key `path` (TOML, and so Cargo,
+    # read them that way); the decoded key must then be exactly `path` or
+    # `package` (Cargo ignores `Package`; escapes are not decoded). The first
+    # usable field wins:
+    #
+    #   a = { "path" = "../a" }                 -> a
+    #   x = { 'package' = "a", path = "../a" }  -> a
+    #   a = { "Path" = "../a" }                 -> nil (keys are case-sensitive)
+    #   a = { path.x = "../a" }                 -> nil (dotted field key)
     def cargo_path_dependency_name(key, value)
       crate_name = toml_key_segment(key)
       return nil unless crate_name
@@ -746,7 +793,8 @@ module BuildTool
         field_value = toml_single_string(field.byteslice((equals + 1)..))
         next unless field_value
 
-        case trim_spaces_and_tabs(field.byteslice(0, equals))
+        # A dotted or malformed field key is no key at all (nil).
+        case toml_key_segment(field.byteslice(0, equals))
         when "path" then path ||= field_value
         when "package" then package_name ||= field_value
         end
@@ -821,27 +869,57 @@ module BuildTool
       nil
     end
 
-    # toml_open_bracket_depth -- How many `{`/`[` outside strings stay open.
+    # TomlBracketScanner -- Count the `{`/`[` outside strings left unclosed,
+    # over text fed in pieces.
+    #
+    # Feeding "ab" and then "cd" leaves exactly the state feeding "abcd"
+    # would, because the scanner keeps what a rescan of the joined text would
+    # have to rediscover: whether it is inside a string (and which delimiter
+    # closes it), and whether the previous byte was a backslash escaping the
+    # next one in a basic string. So a string still open at the end of one
+    # line continues after the joining space, as it does in the joined value:
+    #
+    #   feed('{ x = "q\\')   depth 1, inside "...", escape pending
+    #   feed(" ")             the space is escaped: still inside the string
+    #   feed('", p = 1 }')    the string closes, `}` closes the table: 0
+    #
+    # Zero (or less) means the inline value is complete:
     #
     #   { path = "../a", features = [   -> 2
     #   { path = "../a" }               -> 0 (complete)
-    def toml_open_bracket_depth(text)
-      depth = 0
-      index = 0
-      while index < text.bytesize
-        if toml_quote_at?(text, index)
-          index = toml_string_end(text, index)
-          return depth unless index
+    #
+    # Carrying this state is what keeps the continuation join linear: the
+    # reader used to rescan the whole growing value for every appended line,
+    # which is quadratic in a long entry.
+    class TomlBracketScanner
+      attr_reader :depth
 
-          next
-        end
-        case text.getbyte(index)
-        when 0x7B, 0x5B then depth += 1 # { [
-        when 0x7D, 0x5D then depth -= 1 # } ]
-        end
-        index += 1
+      def initialize
+        @depth = 0
+        @quote = nil # the delimiter byte of the string being scanned, or nil
+        @escape = false # the previous byte was a backslash inside "..."
       end
-      depth
+
+      def feed(text)
+        text.each_byte do |byte|
+          if @escape
+            @escape = false
+          elsif @quote
+            if @quote == 0x22 && byte == 0x5C # a backslash inside "..."
+              @escape = true
+            elsif byte == @quote
+              @quote = nil
+            end
+          elsif byte == 0x22 || byte == 0x27 # " '
+            @quote = byte
+          elsif byte == 0x7B || byte == 0x5B # { [
+            @depth += 1
+          elsif byte == 0x7D || byte == 0x5D # } ]
+            @depth -= 1
+          end
+        end
+        self
+      end
     end
 
     # split_toml_outside_strings -- Split at every separator outside strings.
@@ -904,8 +982,16 @@ module BuildTool
     end
 
     # Trim only spaces and tabs (String#strip also eats NUL, \v, \f ...).
+    #
+    # An index scan from each end, not `sub(/[ \t]+\z/, "")`: that regex
+    # retries from every byte of an interior run of spaces and fails at
+    # each, which is quadratic in a long run between two other characters.
     def trim_spaces_and_tabs(text)
-      text.sub(/\A[ \t]+/, "").sub(/[ \t]+\z/, "")
+      start = 0
+      finish = text.bytesize
+      start += 1 while start < finish && [0x20, 0x09].include?(text.getbyte(start))
+      finish -= 1 while finish > start && [0x20, 0x09].include?(text.getbyte(finish - 1))
+      text.byteslice(start, finish - start)
     end
 
     # Lower-case only A-Z, then present the name as UTF-8 so it can be
@@ -1113,11 +1199,16 @@ module BuildTool
       end
     end
 
+    CARGO_PACKAGE_NAME = /^[ \t]*name[ \t]*=[ \t]*"([^"\n]+)"/
+
     def read_cargo_package_name(pkg)
       cargo_toml = pkg.path / "Cargo.toml"
       return nil unless cargo_toml.exist?
 
-      match = cargo_toml.read.match(/^\s*name\s*=\s*"([^"]+)"/)
+      # `[ \t]*`, not `\s*`: Ruby's `^` matches at every line start, and a
+      # `\s*` there runs across all following blank lines and backtracks,
+      # which is quadratic in a run of blank lines. Names never span lines.
+      match = cargo_toml.read.match(CARGO_PACKAGE_NAME)
       match && match[1].strip.downcase
     end
 
@@ -1245,6 +1336,8 @@ module BuildTool
     #
     # @param packages [Array<Package>]
     # @return [DirectedGraph]
+    # @raise [MetadataEncodingError] a rockspec is not valid UTF-8.
+    # @raise [DependencySelfEdgeError] a Cargo manifest resolves its own crate.
     def resolve_dependencies(packages)
       graph = DirectedGraph.new
 
@@ -1276,6 +1369,16 @@ module BuildTool
                when "csharp", "fsharp", "dotnet" then parse_dotnet_deps(pkg, known_names)
                else []
                end
+        # Step 5 of the Rust contract: a Cargo candidate resolving to the
+        # crate itself (by directory alias or [package] name) is rejected,
+        # neither dropped nor drawn.
+        if %w[rust wasm].include?(pkg.language) && deps.include?(pkg.name)
+          raise DependencySelfEdgeError.new(
+            package: pkg.name,
+            manifest: repository_relative_manifest(pkg.path / "Cargo.toml"),
+            dependency: pkg.name
+          )
+        end
         deps = (deps + parse_build_tool_deps(pkg, known_package_names)).uniq.sort
 
         deps.each do |dep_name|

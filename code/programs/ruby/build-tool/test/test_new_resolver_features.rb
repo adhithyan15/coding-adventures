@@ -516,12 +516,180 @@ class TestCargoLinkDependencyNames < Minitest::Test
       "[build-dependencies]\n" \
       "a = { path = \"../a\" }\n",
       ["a", "a"]
+    ],
+    [
+      "quoted inline path key",
+      "[dependencies]\n" \
+      "a = { \"path\" = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "literal-quoted inline path key",
+      "[dependencies]\n" \
+      "a = { 'path' = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "quoted inline package key renames",
+      "[dependencies]\n" \
+      "x = { \"package\" = \"a\", path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "quoted capitalised inline Path key",
+      "[dependencies]\n" \
+      "a = { \"Path\" = \"../a\" }\n",
+      []
+    ],
+    [
+      "escaped inline path key is compared verbatim",
+      "[dependencies]\n" \
+      "a = { \"pa\\u0074h\" = \"../a\" }\n",
+      []
+    ],
+    [
+      "dotted inline field key",
+      "[dependencies]\n" \
+      "a = { path.x = \"../a\" }\n",
+      []
+    ],
+    [
+      "quoted sub-table path key",
+      "[dependencies.a]\n" \
+      "\"path\" = \"../a\"\n",
+      ["a"]
+    ],
+    [
+      "quoted sub-table package key",
+      "[dependencies.x]\n" \
+      "'package' = \"a\"\n" \
+      "path = \"../a\"\n",
+      ["a"]
+    ],
+    [
+      "quoted capitalised sub-table Path key",
+      "[dependencies.a]\n" \
+      "\"Path\" = \"../a\"\n",
+      []
+    ],
+    [
+      "open string continues across the join",
+      "[dependencies]\n" \
+      "a = { path = \"../a\", x = \"q [\n" \
+      "\" }\n",
+      ["a"]
+    ],
+    [
+      "line-final backslash escapes the joining space",
+      "[dependencies]\n" \
+      "a = { x = \"q\\\n" \
+      "\", path = \"../a\" }\n",
+      ["a"]
     ]
   ].freeze
 
   CASES.each_with_index do |(name, manifest, expected), index|
     define_method("test_cargo_shape_%02d_%s" % [index, name.gsub(/[^a-z0-9]+/i, "_")]) do
       assert_equal expected, BuildTool::Resolver.cargo_link_dependency_names(manifest), name
+    end
+  end
+
+  # The table is the Go reference's, row for row: a row added there and not
+  # here (or the reverse) must fail loudly.
+  def test_shape_table_matches_the_go_reference_row_count
+    assert_equal 57, CASES.length
+  end
+
+  # Rescanning the whole joined value for every appended line is quadratic:
+  # a 20,000-line continuation (about 500 KB) took tens of seconds. Carrying
+  # the scanner state makes it one pass; the bound is generous so a loaded CI
+  # machine cannot flake it.
+  def test_continuation_join_is_linear
+    manifest = "[dependencies]\na = { path = \"../a\", features = [\n" +
+      ("  \"feature-name-padding\",\n" * 20_000) + "] }\n"
+
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    names = BuildTool::Resolver.cargo_link_dependency_names(manifest)
+    elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+    assert_equal ["a"], names
+    assert_operator elapsed, :<, 10, "a 20,000-line continuation took #{elapsed}s"
+  end
+
+  # `sub(/[ \t]+\z/, "")` retries from every byte of an interior run of
+  # spaces: quadratic in a long run between two other characters.
+  def test_trim_is_linear_in_an_interior_run_of_spaces
+    line = "a#{" " * 100_000}b"
+
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    trimmed = BuildTool::Resolver.trim_spaces_and_tabs(" \t#{line}\t ")
+    names = BuildTool::Resolver.cargo_link_dependency_names("[dependencies]\n#{line}\n")
+    elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+    assert_equal line, trimmed
+    assert_equal [], names
+    assert_operator elapsed, :<, 5, "a 100 KB run of spaces took #{elapsed}s"
+  end
+
+  # `^\s*name` runs `\s*` across every following blank line from each line
+  # start (Ruby's `^` is always multi-line): quadratic in a run of them.
+  def test_package_name_reader_is_linear_in_blank_lines
+    dir = create_temp_dir
+    pkg = BuildTool::Package.new(name: "rust/late", path: dir, build_commands: [], language: "rust")
+    write_file(dir / "Cargo.toml", ("\n" * 100_000) + "name =\n\"unterminated\n")
+
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    name = BuildTool::Resolver.read_cargo_package_name(pkg)
+    elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+    assert_nil name
+    assert_operator elapsed, :<, 5, "100,000 blank lines took #{elapsed}s"
+
+    write_file(dir / "Cargo.toml", ("\n" * 100_000) + "[package]\nname = \"Late-Crate\"\n")
+    assert_equal "late-crate", BuildTool::Resolver.read_cargo_package_name(pkg)
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_package_name_does_not_span_lines
+    dir = create_temp_dir
+    write_file(dir / "Cargo.toml", "[package]\nname =\n\"split\"\nname = \"app\"\n")
+    pkg = BuildTool::Package.new(name: "rust/app", path: dir, build_commands: [], language: "rust")
+
+    assert_equal "app", BuildTool::Resolver.read_cargo_package_name(pkg)
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  # Step 5: a candidate resolving to the crate itself -- by its directory
+  # alias, by its [package] name through a renamed sub-table, or from a
+  # target table -- is DEPENDENCY_SELF_EDGE, neither dropped nor drawn.
+  SELF_EDGE_ENTRIES = {
+    "directory alias" => "[dependencies]\napp-dir = { path = \".\" }\n",
+    "cargo name via a renamed sub-table" => "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n",
+    "target table" => "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n"
+  }.freeze
+
+  SELF_EDGE_ENTRIES.each do |label, entry|
+    define_method("test_self_edge_is_a_diagnostic_#{label.gsub(/[^a-z0-9]+/i, "_")}") do
+      dir = create_temp_dir
+      app = dir / "code" / "packages" / "rust" / "app-dir"
+      write_file(app / "Cargo.toml", "[package]\nname = \"app-crate\"\n\n#{entry}")
+      packages = [BuildTool::Package.new(name: "rust/app-dir", path: app, build_commands: [], language: "rust")]
+
+      error = assert_raises(BuildTool::DependencySelfEdgeError) do
+        BuildTool::Resolver.resolve_dependencies(packages)
+      end
+
+      assert_equal "DEPENDENCY_SELF_EDGE", error.code
+      assert_equal "rust/app-dir", error.package
+      assert_equal "code/packages/rust/app-dir/Cargo.toml", error.manifest
+      assert_equal "rust/app-dir", error.dependency
+      assert_equal "DEPENDENCY_SELF_EDGE: package=rust/app-dir " \
+        "manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir", error.message
+      refute_includes error.message, dir.to_s
+    ensure
+      FileUtils.rm_rf(dir)
     end
   end
 

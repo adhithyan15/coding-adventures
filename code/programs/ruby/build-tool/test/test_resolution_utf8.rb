@@ -70,6 +70,24 @@ class TestResolutionUtf8 < Minitest::Test
     FileUtils.rm_rf(workspace)
   end
 
+  def test_real_cli_returns_exit_two_for_cargo_self_edge
+    workspace = create_temp_dir
+    app = workspace / "code" / "packages" / "rust" / "app"
+    write_file(app / "BUILD", "echo build app\n")
+    write_file(app / "Cargo.toml", "[package]\nname = \"app\"\n\n[dependencies]\napp = { path = \".\" }\n")
+
+    _stdout, stderr, status = Open3.capture3(
+      RbConfig.ruby, BUILD_TOOL.to_s, "--root", workspace.to_s, "--force", "--dry-run"
+    )
+
+    assert_equal 2, status.exitstatus
+    assert_includes stderr, "DEPENDENCY_SELF_EDGE: package=rust/app " \
+      "manifest=code/packages/rust/app/Cargo.toml dependency=rust/app\n"
+    refute_includes stderr, workspace.to_s
+  ensure
+    FileUtils.rm_rf(workspace)
+  end
+
   def test_rejects_representative_malformed_utf8_classes
     INVALID_SEQUENCES.each do |name, sequence|
       workspace = create_temp_dir
