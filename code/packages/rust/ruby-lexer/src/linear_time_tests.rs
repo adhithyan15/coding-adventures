@@ -236,3 +236,28 @@ fn many_heredocs_on_one_line_lex_in_linear_time() {
         "a tag survived"
     );
 }
+
+/// #18814 re-review — a long heredoc tag over many body lines: the body
+/// loop cloned the tag once per line, costing tag-length × lines (a 250 KB
+/// tag over 548k empty lines took ~3.7 s in release). It now borrows the
+/// tag. 200 KB tag + 400k empty body lines stays inside the 1 MiB budget.
+#[test]
+fn long_heredoc_tag_over_many_lines_lexes_in_linear_time() {
+    const TAG_LEN: usize = 200_000;
+    const LINES: usize = 400_000;
+    let tag = "T".repeat(TAG_LEN);
+    let source = format!("x = <<{tag}\n{}{tag}\n", "\n".repeat(LINES));
+    assert!(source.len() <= super::MAX_SOURCE_BYTES);
+    let mut lexer = RubyLexer::new("3.3").unwrap();
+    let start = Instant::now();
+    lexer.push(&source).unwrap();
+    lexer.finish().unwrap();
+    let tokens = lexer.drain_tokens();
+    let elapsed = start.elapsed();
+    eprintln!("#18814 {TAG_LEN}-byte tag over {LINES} lines: lexing took {elapsed:?}");
+    assert!(
+        elapsed < BOUND,
+        "#18814: long heredoc tag took {elapsed:?} (bound {BOUND:?}); the body loop has gone quadratic again"
+    );
+    assert!(tokens.iter().any(|t| t.type_ == TokenType::String && t.value.starts_with("<<T")));
+}

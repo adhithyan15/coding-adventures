@@ -489,14 +489,19 @@ impl RubyLexer {
             //   Plain (`<<EOF`):    exact line == tag.
             //   DashIndent (`<<-`): line stripped of leading ws == tag.
             //   TildeIndent (`<<~`): line stripped of leading ws == tag.
-            let front = self.pending_heredocs.front().unwrap();
-            let front_tag = front.tag.clone();
-            let front_variant = front.variant;
-            let trimmed_line = line.trim_start();
-            let is_terminator = match front_variant {
-                HeredocVariant::Plain => line == front_tag,
-                HeredocVariant::DashIndent | HeredocVariant::TildeIndent => {
-                    trimmed_line == front_tag
+            //
+            // Borrow the tag rather than cloning it: a clone per body line
+            // cost tag-length × body-lines, quadratic inside the 1 MiB
+            // budget (a 250 KB tag over 548k empty lines took ~3.7 s; #18814
+            // re-review). `str` equality checks lengths first, so a
+            // non-matching line of a different length costs O(1).
+            let is_terminator = {
+                let front = self.pending_heredocs.front().unwrap();
+                match front.variant {
+                    HeredocVariant::Plain => line == front.tag,
+                    HeredocVariant::DashIndent | HeredocVariant::TildeIndent => {
+                        line.trim_start() == front.tag
+                    }
                 }
             };
             if is_terminator {
