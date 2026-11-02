@@ -81,6 +81,24 @@ HASKELL_ROOTS = (ROOT / "code/packages/haskell", ROOT / "code/programs/haskell")
 # BUILD_linux can never run on Darwin, so they are out of scope.
 DARWIN_REACHABLE_FRONTS = ("BUILD_mac", "BUILD_mac_and_linux", "BUILD")
 
+# Fronts deliberately left WITHOUT the guard, each with the reason.
+#
+# barcode-layout-1d's package tree is pinned by the barcode-layout-1d-v1
+# conformance registry (code/specs/fixtures/barcode-layout-1d-v1/targets.json)
+# at a verified revision.  Any non-lockfile change to the package must repoint
+# that revision "at the durable merge commit", which a squash-merged PR cannot
+# name; doing it the only way available today turned main red for 2.5 hours
+# after #18527.  So the guard waits for #18824 to change that contract.
+#
+# Each entry is checked by test_registry_pinned_exceptions_are_still_needed:
+# the moment the front gains the guard, that test fails and the entry must go.
+REGISTRY_PINNED_FRONTS = {
+    "code/packages/haskell/barcode-layout-1d/BUILD": (
+        "code/specs/fixtures/barcode-layout-1d-v1/targets.json",
+        "#18824",
+    ),
+}
+
 CLT = "/Library/Developer/CommandLineTools"
 INHERITED = "/original/developer"
 
@@ -110,6 +128,8 @@ def cabal_fronts() -> list[Path]:
     for root in HASKELL_ROOTS:
         for name in DARWIN_REACHABLE_FRONTS:
             for front in sorted(root.glob(f"*/{name}")):
+                if front.relative_to(ROOT).as_posix() in REGISTRY_PINNED_FRONTS:
+                    continue
                 if invokes_cabal(front.read_text(encoding="utf-8")):
                     fronts.append(front)
     return fronts
@@ -201,6 +221,26 @@ class HaskellDarwinCabalLinkerTests(unittest.TestCase):
             f"DEVELOPER_DIR={CLT} on Darwin; copy the guard from "
             "code/packages/haskell/trig/BUILD",
         )
+
+    def test_registry_pinned_exceptions_are_still_needed(self) -> None:
+        # An exception is only honest while (a) the front still runs cabal,
+        # (b) it still lacks the guard, and (c) a registry still pins its
+        # package root.  Any of those changing means the entry must go.
+        for relative, (registry, issue) in REGISTRY_PINNED_FRONTS.items():
+            with self.subTest(front=relative):
+                text = (ROOT / relative).read_text(encoding="utf-8")
+                self.assertTrue(invokes_cabal(text), f"{relative} no longer runs cabal")
+                self.assertNotIn(
+                    f"DEVELOPER_DIR={CLT}",
+                    text,
+                    f"{relative} has the guard now; drop its {issue} exception",
+                )
+                package_root = Path(relative).parent.as_posix()
+                self.assertIn(
+                    f'"package_root": "{package_root}"',
+                    (ROOT / registry).read_text(encoding="utf-8"),
+                    f"{registry} no longer pins {package_root}; drop the exception",
+                )
 
     def test_helper_scripts_that_run_cabal_name_the_command_line_tools(self) -> None:
         # Some fronts delegate to `sh tools/*.sh` (conduit, conduit-hello), so
