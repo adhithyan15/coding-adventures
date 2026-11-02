@@ -829,16 +829,45 @@ or verify types", and it has target-tagged opaque intrinsics as an escape
 hatch. Each of those is a hole in a proof. Verification also must not move
 whenever code generation needs a new feature. So **no part of this program
 depends on `semantic-ir`**. The two may share language *parsers*, which
-are just parsers, but never an IR.
+are just parsers, but never an IR. A shared parser is in the trust root's
+computed closure (§9.4), so a parser change made for code generation
+still needs human review before it can move the verifier.
 
 **What WIR is:**
 
-- **Exact semantics, written once.** WIR has a formal semantics stated in
-  the proof kernel's logic (§7.5), and a small reference interpreter that
-  is checked against it. Nothing in WIR is implementation-defined.
-- **Mandatory types.** Every value has a type, fixed-width integers say
-  their width and overflow behaviour, and the WIR type checker is part of
-  the trust root (§9.4).
+- **Exact semantics.** WIR has a formal semantics stated in the proof
+  kernel's logic (§7.5). It also has a small reference interpreter and a
+  symbolic executor, and those are separate implementations. The kernel
+  checks UNSAT certificates, not formulas against the semantics, so the
+  semantics constrains the proofs only through two continuous
+  differential checks:
+  - the reference interpreter against the real runtime (below);
+  - the symbolic executor against the reference interpreter, by making
+    path formulas concrete on the same generated inputs and comparing
+    results, including cost and labels.
+
+  Nothing in WIR is implementation-defined.
+- **Mandatory types, but never invented ones.** Every value has a type,
+  fixed-width integers say their width and overflow behaviour, and the WIR
+  type checker is part of the trust root (§9.4). A front end may take a
+  type from the source *only* if that language fragment's type facts are
+  on the reviewed soundness allowlist of §8.6.5, which defaults to
+  unsound. Otherwise the value is lowered to a **dynamic, tagged type**,
+  with explicit runtime type tests and full implicit dispatch. A Python
+  hint `x: int` or a TypeScript `as any` must never become a WIR `i64`
+  that silently skips an `__add__` or `valueOf` call. Hostile inputs are
+  always lowered as dynamic values.
+- **A memory model and undefined behaviour.** For C, C++ and Rust `unsafe`
+  code, WIR has a memory model with pointer provenance and bounds, and an
+  explicit **undefined-behaviour (stuck)** outcome. Every operation that
+  can be undefined is lowered to a checked operation whose undefined
+  branch is a proof obligation, never silently given a wrapping or other
+  defined meaning that optimising compilers do not honour. This is the
+  pointer model §8.3 relies on.
+- **Concurrency is explicit or absent.** Concurrency semantics, needed for
+  the race-freedom analysis of §8.2, are part of WIR only as VER25 defines
+  them. Until then, concurrent constructs are not lowered, and code using
+  them is `not-yet-provable`.
 - **No escape hatches.** There are no opaque intrinsics. A construct WIR
   cannot express is not lowered, and the code using it is labelled
   `not-yet-provable` (§7.5.4).
@@ -850,15 +879,20 @@ are just parsers, but never an IR.
   - **labels** for taint and information flow (§8.6.6);
   - explicit control flow for exceptions, panics and early exits;
   - structured loops with slots for invariants and ranking functions;
-  - **implicit calls made explicit**: operator methods, getters and
-    finalizers become ordinary call sites (§8.6.5).
+  - **implicit calls made explicit**: every implicit call and entry-point
+    root of §8.6.5 becomes an ordinary call site. That includes operator
+    methods, getters, finalizers, `toString`, `valueOf`, Proxy traps,
+    `then` and descriptors.
 
 **One lowering per language.** Each language lane gets a front end that
 lowers its confined subset (§7.5.4, §8.6.2) into WIR, built on the
 repository's own parser for that language. A front end is our code, so it
 is checked like our code. The property engine continuously runs the WIR
 reference interpreter and the real implementation side by side, on the
-same generated inputs, and any divergence is a bug in the front end.
+same generated inputs, and any divergence is a bug in the front end. The
+generated inputs include values whose types **violate** the source's
+annotations, because a generator that only ever produces well-typed
+values would never expose a front end that trusted an annotation.
 
 Languages without a WIR front end get one, in the order packages in that
 language want to ship (VER14). Until a language has one, its packages are
@@ -986,11 +1020,13 @@ The pipeline:
 Two further uses come cheaply:
 
 - **Translation validation of the repository's code generators.** Lower
-  both a generator's input and its output into WIR, and prove the two
-  equivalent. Every generated file is then checked, not just the generator
-  in general. This applies to any of the repository's compilers and code
-  generators, including `semantic-ir`'s back ends; that is a use of WIR,
-  not a dependency on SIR.
+  a generator's *source-language input* through that language's own WIR
+  front end, lower its output through the target language's front end,
+  and prove the two equivalent. Every generated file is then checked, not
+  just the generator in general. This works for any of the repository's
+  compilers and code generators, including those built on `semantic-ir`,
+  validated end to end. No SIR-to-WIR front end ever exists, and the gate
+  asserts that `semantic-ir` is not in its trust-root closure (§9.4).
 - **Trust in the front ends** comes from differential testing: WIR
   interpretation versus the real language runtime on the same inputs, run
   continuously by the property engine.
@@ -2052,8 +2088,9 @@ of code runs without any API call:
 - start-up hooks that are not modules: Python `.pth` files,
   `sitecustomize` and `usercustomize`; Java `ServiceLoader` entries and
   agent manifests; RubyGems' auto-loaded `rubygems_plugin.rb`; Erlang and
-  Elixir `-on_load` functions and application callback modules; and
-  plugins discovered through entry points.
+  Elixir `-on_load` functions and application callback modules; .NET
+  `[ModuleInitializer]` methods and static constructors; and plugins
+  discovered through entry points.
 
 Further implicit calls that VER24 must account for include JavaScript
 Proxy traps and `then` on objects awaited as promises; Python
@@ -2061,7 +2098,8 @@ descriptors, `__getattribute__`, a metaclass's `__call__`,
 `__init_subclass__` and `__set_name__`; and closures called through
 mutable state, which have no name to over-approximate by. For those, the
 sound fallback is every closure of a compatible type that escapes into
-reachable mutable state.
+reachable mutable state. Where type facts are unsound (§8.6.5), that
+means every escaping closure, of any type.
 
 A `sum` package that reads a wallet when it is imported must not receive
 a valid "no effects" certificate. So the claim is about the whole package,
@@ -2200,7 +2238,12 @@ So each approved release is an **expression**, in the style known as
 - the approval assesses the **worst-case leakage per release**, assuming
   every operand that is not the secret is chosen by the attacker. A
   comparison like `secret > guess` with attacker-chosen `guess` turns any
-  bound into binary search over time;
+  bound into binary search over time. So the approver must also check the
+  **total**: worst-case leakage summed over the secret's whole rotation
+  lifetime, across all windows and all replicas, must stay below a stated
+  margin of the secret's entropy. Otherwise the per-secret counter must
+  lock out or force rotation. Counters persist across restarts and are
+  shared across replicas, or the bound is quietly multiplied;
 - the decision to release does not depend on data the attacker
   controls. This is closest to *qualified robustness* (Myers, Sabelfeld
   and Zdancewic). It is weaker than full robustness, which also forbids
@@ -2215,8 +2258,11 @@ an attacker who merely *claims* to be A (CWE-639, CWE-284).
 
 - **The binding is authenticated.** The principal of both source and
   sink is set only by trusted code, from an authenticated channel, and
-  has high integrity: it is never derived from data the attacker
-  controls, such as a session id, tenant header or user-id parameter.
+  has high integrity. It is derived only by trusted authentication code
+  that verifies a credential, such as a session token checked against
+  server state or an mTLS certificate. It is never taken from an
+  unverified, *claimed* identifier, such as a tenant header or a user-id
+  parameter.
 - **Labels combine.** A value's principal label is the combination of
   every principal that contributed to it, including through control
   flow. Only a label naming a single principal that matches the sink
@@ -2269,7 +2315,12 @@ program exists to check. So:
   - The inputs are capability and data parameters, values returned by
     callbacks, and ambient readable state.
   - The outputs are sink parameters, return values, arguments passed to
-    callbacks, mutated arguments, exceptions and progress.
+    callbacks, mutated arguments, exceptions, progress, and **writes to
+    ambient or shared mutable state** (module globals, statics,
+    singletons, caches). Under the storage rule above, a later read
+    carries the combined label of every write that could reach it.
+  - Dependence means *may* depend, including implicit dependence through
+    control flow.
 
   The signature *describes* the flows. It does not by itself demand
   noninterference, so a config parser that returns what it read, or a
@@ -2295,7 +2346,8 @@ The weakness registry (§8.2) carries these as their own classes:
 
 **What remains trusted.** A SAT certificate (§7.6.6) shows that a formula
 is unsatisfiable, not that the formula correctly encodes the flow claim.
-So the following are trusted, as they are for every WIR proof (§7.6.2):
+So the following are trusted, as they are for every WIR proof (§7.5.5
+lists WIR's trusted parts):
 
 - the symbolic execution;
 - the product-program construction;
@@ -2942,7 +2994,7 @@ ends with its rung **live and blocking**.
 | 1 | Capability analyzers for all languages, capability diff, weakness registry v1 (exclusions) | E0 | VER08, VER15 |
 | 1b | Generated capability modules, deny-by-default name allowlists with a per-language core list, transitional standard-library lists trending to zero: Go and Rust first, extending the existing generators, then every lane; native shim and binary checks | E0 language-level | VER23 |
 | 2 | Test tiers, purity and speed enforcement, simulated host, taxonomy extension, chaos injection | E1 purity, E2 | VER02, VER03, VER17 |
-| 2b | Checked allocator, checked C interpreter, native attack corpora | E0 for native code | VER16 |
+| 2b | Checked allocator, checked C interpreter (needs VER25's C front end, from S4), native attack corpora | E0 for native code | VER16 |
 | 2c | Locked-box capability check: Linux appliers and the base deny, race-free enforcement, recorded denials, closed system-call mapping, broker log, exact-target baseline, D/S/O cross-check. Live with baseline charging only; attribution is research. Gets most of its reach once phases 3–4 drive the harness. | E0 dynamic (Linux guests) | VER22 |
 | 2d | Effect certificates and checker (needs 1b and Warrant claims from phase 3); information-flow claims and noninterference proofs (needs S4, and WIR front ends, which reach most languages only in phase 7) | E0 capability and flow claims, labelled `proved` (§7.6.5) | VER24 |
 | 3 | Warrant v0 (examples, claims, models) with TypeScript and Rust backends; property engine | E3 | VER04, VER05 |
