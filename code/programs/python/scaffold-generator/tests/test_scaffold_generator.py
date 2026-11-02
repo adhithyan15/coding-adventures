@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import tempfile
+from pathlib import Path
 
 import pytest
 
@@ -199,28 +200,41 @@ class TestDependencyResolution:
 
 
 class TestRepoRootDetection:
-    """Worktrees expose ``.git`` as a file, not a directory."""
+    """Worktrees expose ``.git`` as a file, not a directory.
 
-    def test_find_repo_root_accepts_a_git_directory(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            os.mkdir(os.path.join(tmp, ".git"))
-            nested = os.path.join(tmp, "code", "packages")
-            os.makedirs(nested)
+    These tests change the working directory into the fake repository, so
+    they use pytest's ``tmp_path`` rather than ``tempfile.TemporaryDirectory``.
+    A ``with TemporaryDirectory()`` block deletes its directory when the block
+    ends, but ``monkeypatch.chdir`` only restores the old working directory at
+    test teardown, which is later. Linux and macOS let a process delete the
+    directory it is standing in; Windows refuses (``WinError 32``: "being used
+    by another process"), so the cleanup failed there. ``tmp_path`` is removed
+    by pytest long after teardown has restored the working directory.
+    """
 
-            monkeypatch.chdir(nested)
+    def test_find_repo_root_accepts_a_git_directory(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        (tmp_path / ".git").mkdir()
+        nested = tmp_path / "code" / "packages"
+        nested.mkdir(parents=True)
 
-            assert os.path.realpath(find_repo_root()) == os.path.realpath(tmp)
+        monkeypatch.chdir(nested)
 
-    def test_find_repo_root_accepts_a_git_file(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            with open(os.path.join(tmp, ".git"), "w", encoding="utf-8") as handle:
-                handle.write("gitdir: /tmp/example-worktree\n")
-            nested = os.path.join(tmp, "code", "packages")
-            os.makedirs(nested)
+        assert os.path.realpath(find_repo_root()) == os.path.realpath(tmp_path)
 
-            monkeypatch.chdir(nested)
+    def test_find_repo_root_accepts_a_git_file(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        (tmp_path / ".git").write_text(
+            "gitdir: /tmp/example-worktree\n", encoding="utf-8"
+        )
+        nested = tmp_path / "code" / "packages"
+        nested.mkdir(parents=True)
 
-            assert os.path.realpath(find_repo_root()) == os.path.realpath(tmp)
+        monkeypatch.chdir(nested)
+
+        assert os.path.realpath(find_repo_root()) == os.path.realpath(tmp_path)
 
 
 # =========================================================================
