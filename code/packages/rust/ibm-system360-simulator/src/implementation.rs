@@ -5,6 +5,7 @@
 //! gate-level crate owns physical structure and timing.
 
 use std::error::Error;
+use std::fmt::Write as _;
 use std::fmt::{self, Display, Formatter};
 
 pub const MEMORY_BYTES: usize = 1 << 20;
@@ -41,6 +42,15 @@ pub struct ExecutionResult {
     pub traces: Vec<StepTrace>,
 }
 
+/// Fallible allocation boundaries used by an embedding gate oracle.
+#[doc(hidden)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum GateAllocationSite {
+    RawInstruction,
+    Mnemonic,
+    Description,
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum System360Error {
     EmptyProgram,
@@ -59,6 +69,7 @@ pub enum System360Error {
     FixedPointDivide,
     FloatingExponent,
     FloatingDivide,
+    AllocationFailed,
     Halted,
     MaxStepsExceeded { max_steps: usize },
 }
@@ -107,6 +118,7 @@ impl Display for System360Error {
             Self::FixedPointDivide => write!(f, "System/360 fixed-point divide exception"),
             Self::FloatingExponent => write!(f, "System/360 floating-point exponent exception"),
             Self::FloatingDivide => write!(f, "System/360 floating-point divide exception"),
+            Self::AllocationFailed => write!(f, "System/360 allocation failed"),
             Self::Halted => write!(f, "System/360 CPU is halted"),
             Self::MaxStepsExceeded { max_steps } => {
                 write!(f, "execution exceeded {max_steps} steps")
@@ -152,6 +164,32 @@ impl System360Simulator {
     }
 
     pub fn restore(&mut self, state: System360State) -> Result<(), System360Error> {
+        Self::validate_state_legacy(&state)?;
+        self.state = state;
+        Ok(())
+    }
+
+    /// Construct an oracle by moving an already-owned state, without allocating.
+    #[doc(hidden)]
+    pub fn from_state_for_gate(state: System360State) -> Result<Self, System360Error> {
+        Self::validate_state_legacy(&state)?;
+        Ok(Self { state })
+    }
+
+    /// Execute one oracle transition without an infallible rollback clone.
+    #[doc(hidden)]
+    pub fn try_step_for_gate(
+        mut self,
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(StepTrace, System360State), System360Error> {
+        if self.state.halted {
+            return Err(System360Error::Halted);
+        }
+        let trace = self.step_inner_checked(checkpoint)?;
+        Ok((trace, self.state))
+    }
+
+    fn validate_state_legacy(state: &System360State) -> Result<(), System360Error> {
         if state.memory.len() != MEMORY_BYTES {
             return Err(System360Error::InvalidState {
                 reason: "memory has the wrong installed size",
@@ -173,7 +211,6 @@ impl System360Simulator {
                 reason: "installed program range is invalid",
             });
         }
-        self.state = state;
         Ok(())
     }
 
@@ -318,7 +355,10 @@ impl System360Simulator {
         Ok(())
     }
 
-    fn fetch(&self) -> Result<Vec<u8>, System360Error> {
+    fn fetch_checked(
+        &self,
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<Vec<u8>, System360Error> {
         let pc = self.state.pc;
         if !pc.is_multiple_of(2) {
             return Err(System360Error::InvalidState {
@@ -337,7 +377,13 @@ impl System360Simulator {
         if start + width > hi {
             return Err(System360Error::TruncatedInstruction { pc, needed: width });
         }
-        Ok(self.state.memory[start..start + width].to_vec())
+        checkpoint(GateAllocationSite::RawInstruction)
+            .map_err(|()| System360Error::AllocationFailed)?;
+        let mut raw = Vec::new();
+        raw.try_reserve_exact(width)
+            .map_err(|_| System360Error::AllocationFailed)?;
+        raw.extend_from_slice(&self.state.memory[start..start + width]);
+        Ok(raw)
     }
 
     pub fn step(&mut self) -> Result<StepTrace, System360Error> {
@@ -345,7 +391,7 @@ impl System360Simulator {
             return Err(System360Error::Halted);
         }
         let before = self.state.clone();
-        match self.step_inner() {
+        match self.step_inner_checked(&mut |_| Ok(())) {
             Ok(trace) => Ok(trace),
             Err(error) => {
                 self.state = before;
@@ -353,15 +399,18 @@ impl System360Simulator {
             }
         }
     }
-    fn step_inner(&mut self) -> Result<StepTrace, System360Error> {
-        let raw = self.fetch()?;
+    fn step_inner_checked(
+        &mut self,
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<StepTrace, System360Error> {
+        let raw = self.fetch_checked(checkpoint)?;
         let pc_before = self.state.pc;
         let width = raw.len() as u8;
         self.state.pc = self.state.pc.wrapping_add(u32::from(width)) & ADDRESS_MASK;
         let (mnemonic, description) = match raw.len() {
-            2 => self.exec_rr(&raw)?,
-            4 => self.exec_four(&raw)?,
-            6 => self.exec_ss(&raw)?,
+            2 => self.exec_rr(&raw, checkpoint)?,
+            4 => self.exec_four(&raw, checkpoint)?,
+            6 => self.exec_ss(&raw, checkpoint)?,
             _ => unreachable!(),
         };
         Ok(StepTrace {
@@ -369,7 +418,11 @@ impl System360Simulator {
             pc_after: self.state.pc,
             raw,
             width,
-            mnemonic: mnemonic.into(),
+            mnemonic: checked_text(
+                format_args!("{mnemonic}"),
+                GateAllocationSite::Mnemonic,
+                checkpoint,
+            )?,
             description,
         })
     }
@@ -530,6 +583,20 @@ fn ord(value: std::cmp::Ordering) -> u8 {
         std::cmp::Ordering::Greater => 2,
     }
 }
+
+fn checked_text(
+    arguments: fmt::Arguments<'_>,
+    site: GateAllocationSite,
+    checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+) -> Result<String, System360Error> {
+    checkpoint(site).map_err(|()| System360Error::AllocationFailed)?;
+    let mut text = String::new();
+    text.try_reserve_exact(64)
+        .map_err(|_| System360Error::AllocationFailed)?;
+    text.write_fmt(arguments)
+        .expect("writing to reserved String cannot fail");
+    Ok(text)
+}
 fn span(first: usize, last: usize) -> usize {
     if last >= first {
         last - first + 1
@@ -547,7 +614,11 @@ fn instruction_width(op: u8) -> Option<u8> {
 }
 
 impl System360Simulator {
-    fn exec_rr(&mut self, raw: &[u8]) -> Result<(&'static str, String), System360Error> {
+    fn exec_rr(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System360Error> {
         let op = raw[0];
         let r1 = usize::from(raw[1] >> 4);
         let r2 = usize::from(raw[1] & 15);
@@ -665,7 +736,7 @@ impl System360Simulator {
                 }
                 "BCTR"
             }
-            0x20..=0x3f => return self.exec_float_rr(op, r1, r2),
+            0x20..=0x3f => return self.exec_float_rr(op, r1, r2, checkpoint),
             _ => {
                 return Err(System360Error::UnknownOpcode {
                     opcode: op,
@@ -673,18 +744,33 @@ impl System360Simulator {
                 })
             }
         };
-        Ok((name, format!("{name} R{r1},R{r2}")))
+        Ok((
+            name,
+            checked_text(
+                format_args!("{name} R{r1},R{r2}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
-    fn exec_four(&mut self, raw: &[u8]) -> Result<(&'static str, String), System360Error> {
+    fn exec_four(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System360Error> {
         match raw[0] {
-            0x91..=0x97 => self.exec_si(raw),
-            0x86..=0x90 | 0x98 => self.exec_rs(raw),
-            _ => self.exec_rx(raw),
+            0x91..=0x97 => self.exec_si(raw, checkpoint),
+            0x86..=0x90 | 0x98 => self.exec_rs(raw, checkpoint),
+            _ => self.exec_rx(raw, checkpoint),
         }
     }
 
-    fn exec_rx(&mut self, raw: &[u8]) -> Result<(&'static str, String), System360Error> {
+    fn exec_rx(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System360Error> {
         let op = raw[0];
         let r = usize::from(raw[1] >> 4);
         let ea = self.ea_rx(raw);
@@ -814,7 +900,7 @@ impl System360Simulator {
                 }
                 "BCT"
             }
-            0x60..=0x7f => return self.exec_float_rx(op, r, ea),
+            0x60..=0x7f => return self.exec_float_rx(op, r, ea, checkpoint),
             _ => {
                 return Err(System360Error::UnknownOpcode {
                     opcode: op,
@@ -822,10 +908,21 @@ impl System360Simulator {
                 })
             }
         };
-        Ok((name, format!("{name} R{r},{ea:#08x}")))
+        Ok((
+            name,
+            checked_text(
+                format_args!("{name} R{r},{ea:#08x}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
-    fn exec_rs(&mut self, raw: &[u8]) -> Result<(&'static str, String), System360Error> {
+    fn exec_rs(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System360Error> {
         let op = raw[0];
         let r1 = usize::from(raw[1] >> 4);
         let r3 = usize::from(raw[1] & 15);
@@ -949,10 +1046,21 @@ impl System360Simulator {
                 })
             }
         };
-        Ok((name, format!("{name} R{r1},{ea:#08x}")))
+        Ok((
+            name,
+            checked_text(
+                format_args!("{name} R{r1},{ea:#08x}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
-    fn exec_si(&mut self, raw: &[u8]) -> Result<(&'static str, String), System360Error> {
+    fn exec_si(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System360Error> {
         let op = raw[0];
         let imm = raw[1];
         let ea = Self::ea_base(raw, 2, &self.state.gprs);
@@ -1003,10 +1111,21 @@ impl System360Simulator {
                 })
             }
         };
-        Ok((name, format!("{name} {ea:#08x},{imm:#04x}")))
+        Ok((
+            name,
+            checked_text(
+                format_args!("{name} {ea:#08x},{imm:#04x}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
-    fn exec_ss(&mut self, raw: &[u8]) -> Result<(&'static str, String), System360Error> {
+    fn exec_ss(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System360Error> {
         let op = raw[0];
         let n = usize::from(raw[1]) + 1;
         let a = Self::ea_base(raw, 2, &self.state.gprs);
@@ -1056,7 +1175,14 @@ impl System360Simulator {
                 })
             }
         };
-        Ok((name, format!("{name} {a:#08x},{b:#08x},{n}")))
+        Ok((
+            name,
+            checked_text(
+                format_args!("{name} {a:#08x},{b:#08x},{n}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 }
 
@@ -1243,6 +1369,7 @@ impl System360Simulator {
         op: u8,
         r1: usize,
         r2: usize,
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
     ) -> Result<(&'static str, String), System360Error> {
         let s1 = Self::fpr_slot(r1)?;
         let s2 = Self::fpr_slot(r2)?;
@@ -1360,13 +1487,21 @@ impl System360Simulator {
                 })
             }
         };
-        Ok((name, format!("{name} F{r1},F{r2}")))
+        Ok((
+            name,
+            checked_text(
+                format_args!("{name} F{r1},F{r2}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
     fn exec_float_rx(
         &mut self,
         op: u8,
         r: usize,
         ea: u32,
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
     ) -> Result<(&'static str, String), System360Error> {
         let slot = Self::fpr_slot(r)?;
         let long = op < 0x70;
@@ -1448,6 +1583,13 @@ impl System360Simulator {
                 })
             }
         };
-        Ok((name, format!("{name} F{r},{ea:#08x}")))
+        Ok((
+            name,
+            checked_text(
+                format_args!("{name} F{r},{ea:#08x}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 }

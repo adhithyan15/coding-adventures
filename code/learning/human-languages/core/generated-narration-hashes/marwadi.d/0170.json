@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:ba8eb6d222f40d92",
+  "lessonIds": [
+    "MW-C170-dhono",
+    "MW-C170-nichovno",
+    "MW-C170-pasarno",
+    "MW-C170-sukavno",
+    "MW-C170-sametno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch170.txt",
+  "json": "marwadi/narration/ch170.json",
+  "textHash": "fnv1a64:9f60a3a54074f637",
+  "jsonHash": "fnv1a64:e4a3cd8a4fcb926b",
+  "findings": []
+}

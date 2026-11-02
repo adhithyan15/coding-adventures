@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Lamps and Festive Dishes",
+  "label": "ch:mw-lamps-and-festive-dishes",
+  "canDo": "I can say how I celebrated a festival.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-C250-rolo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say how I celebrated a festival.",
+    "assesses": [
+      "MW-LEX-C250-UCHHAV250-03",
+      "MW-LEX-C250-UCHHAV250-04",
+      "MW-LEX-C250-UCHHAV250-05"
+    ]
+  }
+}

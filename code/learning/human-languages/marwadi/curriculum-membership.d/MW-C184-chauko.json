@@ -1,0 +1,11 @@
+{
+  "id": "MW-C184-chauko",
+  "pathSegment": "MW-PATH-184-OKHLI184",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-184-OKHLI184",
+      "order": 1
+    }
+  ]
+}

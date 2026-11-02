@@ -1,0 +1,11 @@
+{
+  "id": "MW-C171-kachro",
+  "pathSegment": "MW-PATH-171-BASAN171",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-171-BASAN171",
+      "order": 4
+    }
+  ]
+}

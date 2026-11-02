@@ -1,0 +1,11 @@
+{
+  "id": "MW-C258-chinta",
+  "pathSegment": "MW-PATH-258-CHINTA258",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-258-CHINTA258",
+      "order": 0
+    }
+  ]
+}

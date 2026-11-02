@@ -66,6 +66,9 @@ versions of this frontend may accept a version parameter.
 | `"hello"`, `'world'`                   | `StrLit { value }`                                          |
 | `name` (reference)                     | `VarRef { name, scope }` with resolved scope                |
 | `x = 1`                                | `LetStarBinding` (first time) or `Assign` (subsequent)      |
+| `x += e` (`-=`, `*=`, `/=`, `%=`)       | `Assign x = BuiltinCall(op, [x, e])` (op as for `x op e`)   |
+| `a = b = e`                            | `let* tmp = e`, then each target `= tmp`, left to right     |
+| `x: T = e` / `x: T`                    | as `x = e` / nothing (annotation ignored)                   |
 | `x + y`, `x - y`, `x * y`, `x / y`     | `BuiltinCall("+" / "-" / "*" / "/", [...])`                 |
 | `x % y`                                | `BuiltinCall("%", [x, y])`                                  |
 | `-x`                                   | `BuiltinCall("neg", [x])`                                   |
@@ -111,6 +114,9 @@ params, body }` row for `def` carries `captures: []` for a top-level
 `def` and a non-empty capture list for a lifted nested `def`/`lambda`.
 A bare reference to a function name yields a `MakeClosure` (re-threading
 the function's captures from the currently visible enclosing values).
+A call by name to a function that **has captures** lowers to
+`IndirectCall(MakeClosure(f, captures), args)` rather than `DirectCall`,
+which cannot pass captures (see §Closures).
 `MutualRecursion` is declared when two top-level functions transitively
 call each other (a self-recursive 1-cycle does not count).
 
@@ -167,6 +173,64 @@ the default is re-evaluated per call.  This is a deliberate, documented v0
 choice.  Keyword-only parameters, `*args` / `**kwargs`, and keyword
 arguments at call sites remain deferred.
 
+## Assignment statements (#18482)
+
+The grammar spells every assignment form with one rule:
+
+```text
+assign_stmt = expression_list [ assign_suffix | augmented_assign | annotation ] ;
+```
+
+The frontend matches the optional tail explicitly.  (It once checked only
+for `assign_suffix` and lowered any other tail as the bare left-hand
+expression, silently dropping `x += 2` and `x: int = 5`.)
+
+- **Targets.**  A bare name, `self.attr` inside a method, or a subscript
+  (`xs[i]`, `m[a][b]`).  Any other target is a positioned error, and so
+  is a tuple target or value.  A trailing comma makes a tuple too
+  (`x = 1,`, `return y,`, `for x, in rows:`, `xs[i,]`), so it is refused
+  rather than lowered as the lone element.
+- **Augmented** `t op= e` reads `t`, applies the builtin the binary
+  operator `op` lowers to (one shared table, so `/=` is `div_true`), and
+  stores the result.  `+= -= *= /= %=` are lowered.  `//= **= &= |= ^=
+  <<= >>= @=` are refused, as their binary forms are.  A subscript target
+  is refused (its base and index would need evaluating once).  A name not
+  bound in the current scope is refused: Python makes an augmented target
+  local, so reading it first raises `UnboundLocalError`.  *Divergence:*
+  Python's `+=` on a list extends it in place; the lowering rebinds to a
+  new list.  This is documented, not refused, because the frontend has no
+  types and no runtime has an in-place helper yet.
+- **Chained** `t1 = … = tn = e` evaluates `e` once into a fresh local,
+  then stores it into `t1` … `tn` in order, so `a = b = []` shares one
+  list.
+- **Annotated** `t: T = e` lowers as `t = e`.  `T` is never evaluated, and
+  its names are not free names for capture analysis.  `t: T` with no value
+  binds nothing; only a bare-name target is accepted there.
+
+**Invented names come from one pool.**  The frontend invents four kinds of
+name, and the backends keep a function's locals and the module's functions
+in one namespace, so all four must differ from each other and from the
+source:
+
+| invented name          | kind     | for                              |
+|------------------------|----------|----------------------------------|
+| `__param_<name>_N`     | local    | the copy of an assigned parameter |
+| `__chain_N`, `__for_N` | local    | a chained assignment, a `for` over a bound variable |
+| `__lambda_N`           | function | a `lambda`                       |
+| `<Class>__<method>`    | function | a hoisted method (`_N` appended if taken) |
+
+Each is the first candidate that is not spelled anywhere in the source, not
+a user `def` or `class`, and not invented earlier, and it is claimed the
+moment it is chosen.  A hoisted method's name is claimed before its body is
+lowered.
+
+> **Revision (#18771).** Temporaries used to skip only source names, and
+> synthesised functions source names and other functions.  So the copy of
+> parameter `a__b` and the method `b_0` of a class `__param_a` were both
+> `__param_a__b_0`, and inside the function holding both, the copy shadowed
+> the method (`TypeError: __param_a__b_0 is not a function` on
+> JavaScript).  Only the `__param_` copies could collide this way.
+
 ## Return statement
 
 Python's `return` is a statement in the AST.  The SIR doesn't have a
@@ -176,6 +240,22 @@ expression IS the return value.  Lowering:
 - A function with a single `return expr` at the end: `body.value = expr`.
 - A function ending with statements that don't return: synthesize
   `body.value = NilLit` (matches Python's implicit `None` return).
+  This holds whatever the last statement is: an expression statement, a
+  docstring or a nested `def` is lowered as a statement, never as the
+  return value.  (Before #18482 the implementation made a trailing
+  expression statement the return value, diverging from this rule.)
+- Every statement before the tail `return` is kept as a statement.
+  (Before #18482 an expression statement just before a tail `return`
+  became the block's value and was then replaced by the `return`'s
+  value, so a call or `print` there was dropped.)
+- A suite written on its header's line (`def f(x): return x`) is a bare
+  `simple_stmt` in the grammar, with no `statement` wrapper, and is
+  lowered exactly like an indented suite.  (Before #18482 it was dropped.)
+- `pass` lowers to no statement.
+- A loop body (`while`, `for`) is a block of statements whose value is
+  always `NilLit`: a trailing expression statement stays a statement.
+  Backends need not emit a loop body's value, and the C and Ruby
+  backends do not.
 - A function with early returns: this requires lifting to a control-
   flow shape the IR can express.  For the v0 MVP, **early returns
   are not supported** — frontends reject programs with non-tail
@@ -223,6 +303,23 @@ RHS is lowered before the name is added to the declared set, so a
 self-referential first binding (`x = x`) correctly reports `x` as
 unresolved.
 
+**Implementation note (#18482 — assigned parameters):** a parameter the
+body assigns (by any assignment form or as a `for` variable) is copied
+into a fresh local `__param_<name>_N` at the top of the function, and
+every later read and store of the name uses that local.  Declaring a new
+local at the first store (the earlier behaviour) shadowed the parameter
+only until the end of its block, so `while n > 0: n -= 1` never ended.
+The copy has a fresh name because JavaScript, Go and C refuse to
+redeclare a parameter in the function's own scope, and the Rust backend
+refuses `Assign { scope: Param }`.
+
+**Implementation note (#18482 — `for` over a bound variable):** when the
+loop variable is already a local in scope, the IR loop binds a fresh
+temporary and the body starts with `Assign var = temp`, so the variable
+keeps the last item after the loop (Python's rule) and a zero-trip loop
+leaves it unchanged.  A fresh loop variable is still scoped to the body.
+A loop's `else:` clause is refused.
+
 `global x` and `nonlocal x` declarations are **out of scope** in v0
 — the frontend rejects them.
 
@@ -231,6 +328,70 @@ unresolved.
 `lambda` and nested `def` become fresh top-level synthesised
 `Function`s with computed captures, matching SIR11's approach.  Free
 variables not in scope at the call site become `Capture`s.
+
+**Invariant.**  Every `MakeClosure { fn_name: f, captures }` the frontend
+emits threads exactly `f`'s declared `captures` (same names, same count).
+No `DirectCall` targets a function whose `captures` is non-empty.
+
+**Capture rule.**  A closure for `f` captures:
+
+1. every free name of `f`'s body that is a local, param or capture of
+   the enclosing function; and
+2. the captures of every capturing function that `f`'s body names
+   (calls or uses as a value), since `f` must build that function's
+   closure.
+
+**When the list is decided** (#18468).  A function's capture list is
+fixed *before* its body is lowered, so a body that names its own
+function (`h = go`, or a recursive `go(x - 1)`) threads the full list.
+Rule 2 can be circular: mutually-recursive siblings, or a function naming
+itself.  So it is solved as a fixpoint over a *group*: the function plus
+every not-yet-lowered sibling `def` (written directly in the same body)
+that the group names.  A sibling first named before its own `def` has its
+list fixed at that earlier point.  If its body reads a name bound only
+after that point, the program is rejected as deferred: the earlier
+sibling could not have threaded it.  To make this possible, the first
+(name-collecting) pass also records each `def`'s free names and its
+parent body.
+
+**Calls through closures.**  A call by name to a function with captures
+is `IndirectCall(MakeClosure(f, captures), args)`.  Backends apply a
+closure leniently: no default filling, no keyword matching, and a missing
+argument reads as nil.  So the frontend accepts such a call only when `f`
+has plain positional parameters and the call passes exactly that many
+positional arguments.  Anything else is a positioned error.
+
+**Same variable.**  A capture value threaded at a closure-building site
+must denote the variable the function captured.  In the function's
+defining body, any binding of that name qualifies.  Anywhere else, only
+a `Capture` qualifies.  A function that binds a name itself (a param or
+a local) cannot inherit that name through rule 2.  Such programs are
+rejected as deferred.
+
+**Checked, and budgeted.**  The frontend walks the finished module and
+rejects any `MakeClosure` whose capture names (in order) differ from its
+target's, and any `DirectCall` to a capturing function.  This catches
+closures built before their target's list was decided, such as from a
+method body or a default value.
+
+**Budget.**  A function may carry at most 256 captures.  This is
+deliberate: rule 2 spreads captures along chains of functions, and
+without a bound a chain of M functions, the last reading V outer names,
+emits M·V capture slots.  The bound applies to every function, including
+a top-level `def` reading module-level variables (which are `main`
+locals, hence captures).  There is no bound on how many capture-free
+functions name each other.
+
+**Known limitation.**  A function that binds `n` itself is refused if it
+names a function capturing an enclosing `n`, even when the call comes
+before the binding.  Supporting it requires renaming one of the two.
+
+Synthesised `__lambda_<N>` names are not resolvable from source, and
+every `def` name must be unique, since all `def`s share one namespace.
+
+*Divergence note:* the M4 text above described only the bare-reference
+`MakeClosure`; calls to capturing functions were `DirectCall`s that no
+backend could run.  This section was added with the #18468 fix.
 
 ## Top-level
 
@@ -241,6 +402,19 @@ frontend runs **all top-level statements inline as part of `main`**
 becomes a `LetStarBinding` local of `main`).  A module-level `def`
 becomes a top-level `Function` entry (lifted out of `main`'s body);
 `main` holds the remaining top-level statements.
+
+A user function named `main` would collide with it, so user function
+names are escaped one to one where they are written into the IR
+(`Function.name`, `DirectCall.fn_name`, `MakeClosure.fn_name`): `main`
+becomes `__py_main`, a name starting with `__py_` gains another `__py_`
+prefix, and every other name is unchanged.  No source name maps to
+`main`, and no two map to the same name.  (#18482)
+
+Variables share that namespace in every backend, so a variable whose name
+starts with `__py_` (local, parameter, capture, loop variable, keyword
+argument name) gets the same extra prefix; `main` as a variable is left
+alone.  So a local spelled `__py_main` becomes `__py___py_main` and cannot
+shadow the escaped `def main`.
 
 ```text
 SIR Module {
@@ -272,7 +446,12 @@ Errors:
 - Early `return` (not at function tail)
 - `global` / `nonlocal` declaration encountered
 - Unsupported syntax (classes, exceptions, generators, comprehensions,
-  decorators, multi-assign, slicing, `with`, async)
+  decorators, tuple / unpacking assignment, slicing, `with`, async)
+- Augmented assignment with an operator whose binary form is not lowered,
+  to a subscript, or to a name not bound in the current scope
+- An annotation with no value on a target other than a bare name
+- A loop `else:` clause; assignment to `self` (or `for self in …`) inside
+  a method
 - Mismatched arity on builtins (`range` with > 3 args, `len` with > 1 arg)
 
 ## Manifest computation
@@ -316,7 +495,8 @@ Coverage target ≥ 90%.
 - `async def` / `await`
 - Comprehensions
 - Decorators
-- Multi-target assignment / unpacking
+- Tuple / unpacking assignment (`a, b = …`; chained `a = b = …` is
+  supported, see "Assignment statements")
 - Slicing
 - Keyword arguments, keyword-only parameters, `*args` / `**kwargs`
   (positional default parameters `def f(a=1)` ARE supported — P8)

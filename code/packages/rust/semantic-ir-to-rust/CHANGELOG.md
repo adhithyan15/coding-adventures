@@ -1,5 +1,79 @@
 # Changelog
 
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 25 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
+## Unreleased — A variable never shadows a function of the same name (#18485)
+
+SIR keeps functions and variables in separate namespaces, and Ruby relies on
+it: `def f; 40; end; f = 2; puts f() + f` prints 42. This backend emitted
+the local as `f` next to the function `f`, so the local shadowed the
+function and the call did not compile (`error[E0618]: expected function`). A
+*variable* (local, parameter, capture, loop variable, `rescue` binding)
+whose SIR name is also a function's name is now emitted through `var_ident`
+as `__sir_esc_l` + `sanitize_ident(name)`; every other variable, and every
+function, keeps its spelling. This is the rule the JavaScript, TypeScript
+and Python backends need (callers append code that calls their emitted
+functions by name), so all five backends share it. The new `l` tag sits
+beside `sanitize_ident`'s `v` and `e`, so the renamed form can equal no
+other identifier. New unit tests
+`a_local_named_like_a_function_is_renamed_and_the_function_is_not` and
+`var_ident_renames_exactly_the_names_of_functions`; `sir-conformance`'s
+`tests/local_shadows_function.rs` runs the end-to-end proof (a keyword's
+raw-identifier `r#` is dropped after the prefix, as the `__cap_` temporaries
+already do).
+
+## Unreleased — A loop variable the body assigns is bound `mut` (#18482 review)
+
+`ForRange` bound its variable with `let`, and `ForEach` with a plain
+`for x in`, even when the body assigned it.  rustc then refused the program
+(`cannot assign twice to immutable variable`).  Python's `for i in
+range(3): i += 10` lowers to exactly that.  Both now consult
+`MUTABLE_NAMES`, like `LetBinding` does (`let mut i` / `for mut x in`).  The
+hidden counter still decides the next value.  New unit test
+`a_loop_variable_the_body_assigns_is_bound_mut`.
+
+## Unreleased — Generated names reserved (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds**: `__sir…` (the
+  runtime module, `__sir_user_main`, loop temporaries), the capture
+  temporaries `__cap_…`, the closure adapter's `__args`/`__it`, `__l`,
+  `__r`, `__payload`, `__exc`, and the prelude variants `Some`, `None`,
+  `Ok`, `Err` that the emitted `match` arms name.  `(define
+  (__sir_user_main) 42)` was a duplicate definition, and `(define (f A
+  __cap_A) (lambda () (+ A __cap_A)))` printed 2 instead of 11: the second
+  capture read the temporary bound for the first.  (`__sir_block__`, the
+  frontends' shared block-parameter name, keeps its spelling.)
+- **A keyword capture's temporary is one identifier**: `__cap_fn`, not the
+  invalid `__cap_r#fn`.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
+Security-review follow-up: `sanitize_ident` also reserves `_`, Rust's
+wildcard, which binds nothing — `(define (f _) _)` did not compile.
+
+## Unreleased — Strict closures; readable uncaught raises (issue #18461)
+
+- The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`)
+  lowers to `__sir::strict_arity(<closure>, N)`, which raises a catchable
+  `ArgumentError` ("arity mismatch: closure expects N argument(s), got M")
+  on any other count.  A plain closure drains its arguments with
+  `unwrap_or(Nil)`, so a missing one became `nil` and an extra one was
+  dropped.
+- `__sir::raise` in a module with no exception handling (no
+  `install_panic_hook`, so nothing can catch it) now reports
+  `Class: message` and exits 1, as `report_uncaught` does, instead of
+  unwinding to Rust's opaque `panicked at …: Box<dyn Any>`.
+- `tests/twig_pairs_and_closures.rs` builds and runs the #18460/#18461
+  Twig programs with `rustc`.
+
 ## 0.44.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

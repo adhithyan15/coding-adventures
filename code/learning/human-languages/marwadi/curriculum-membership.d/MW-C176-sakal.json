@@ -1,0 +1,11 @@
+{
+  "id": "MW-C176-sakal",
+  "pathSegment": "MW-PATH-176-GANTH176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-176-GANTH176",
+      "order": 3
+    }
+  ]
+}

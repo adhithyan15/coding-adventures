@@ -2,8 +2,249 @@ package sha512
 
 import (
 	"encoding/hex"
+	"errors"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"regexp"
+	"strconv"
+	"strings"
 	"testing"
+	"unicode/utf8"
 )
+
+var fixtureID = regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
+var fixtureEvenHex = regexp.MustCompile(`^(?:[0-9a-f]{2})*$`)
+var fixtureDigest = regexp.MustCompile(`^[0-9a-f]{128}$`)
+var fixtureWord = regexp.MustCompile(`^[0-9a-f]{16}$`)
+var fixtureLength = regexp.MustCompile(`^[0-9a-f]{32}$`)
+var fixtureChunks = regexp.MustCompile(`^[1-9][0-9]*(?:,[1-9][0-9]*)*$`)
+
+func parseFixture(data []byte) ([]string, error) {
+	if len(data) == 0 || len(data) > 4096 || !utf8.Valid(data) {
+		return nil, fmt.Errorf("fixture bytes outside bounds")
+	}
+	var lines []string
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSuffix(line, "\r")
+		if line != "" && !strings.HasPrefix(line, "#") {
+			lines = append(lines, line)
+		}
+	}
+	if len(lines) == 0 || len(lines) > 64 {
+		return nil, fmt.Errorf("fixture row count outside bounds")
+	}
+	for _, line := range lines {
+		fields := strings.Split(line, "|")
+		if len(fields) != 5 || !fixtureID.MatchString(fields[1]) {
+			return nil, fmt.Errorf("malformed fixture row %q", line)
+		}
+		switch fields[0] {
+		case "V":
+			if len(fields[2]) > 8192 || !fixtureEvenHex.MatchString(fields[2]) || !fixtureDigest.MatchString(fields[4]) {
+				return nil, fmt.Errorf("malformed vector row %q", line)
+			}
+			byteCount := len(fields[2]) / 2
+			if byteCount > 4096 || (byteCount == 0) != (fields[3] == "") {
+				return nil, fmt.Errorf("malformed vector size")
+			}
+			sum, count := 0, 0
+			if fields[3] != "" {
+				if !fixtureChunks.MatchString(fields[3]) {
+					return nil, fmt.Errorf("malformed chunks")
+				}
+				for _, raw := range strings.Split(fields[3], ",") {
+					size, err := strconv.Atoi(raw)
+					if err != nil || size > 4096 {
+						return nil, fmt.Errorf("malformed chunk")
+					}
+					sum += size
+					count++
+				}
+			}
+			if count > 64 || sum != byteCount {
+				return nil, fmt.Errorf("malformed chunks")
+			}
+		case "L":
+			if !fixtureWord.MatchString(fields[2]) || !fixtureWord.MatchString(fields[3]) ||
+				(fields[4] != "ERROR" && !fixtureLength.MatchString(fields[4])) {
+				return nil, fmt.Errorf("malformed length row")
+			}
+		default:
+			return nil, fmt.Errorf("unknown fixture row tag")
+		}
+	}
+	return lines, nil
+}
+
+func loadFixture(path string) ([]string, error) {
+	handle, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer handle.Close()
+	data, err := io.ReadAll(io.LimitReader(handle, 4097))
+	if err != nil {
+		return nil, err
+	}
+	return parseFixture(data)
+}
+
+func fixtureLines(t *testing.T) []string {
+	t.Helper()
+	lines, err := loadFixture("../../../specs/fixtures/sha512-v1/cases.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	vectors, lengths := 0, 0
+	for _, line := range lines {
+		if strings.HasPrefix(line, "V|") {
+			vectors++
+		} else {
+			lengths++
+		}
+	}
+	if vectors != 9 || lengths != 6 {
+		t.Fatalf("fixture counts = %d V, %d L", vectors, lengths)
+	}
+	return lines
+}
+
+func TestFixtureReaderRejectsOversizedFile(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "oversized.txt")
+	if err := os.WriteFile(path, make([]byte, 4097), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := loadFixture(path); err == nil {
+		t.Fatal("accepted oversized fixture")
+	}
+}
+
+func TestFixtureReaderRejectsMalformedRows(t *testing.T) {
+	digest := strings.Repeat("0", 128)
+	for _, row := range []string{"X|id|||", "V|UPPER|00|1|" + digest, "V|bad|0|1|" + digest,
+		"V|bad|00|2|" + digest, "L|bad|000000000000000G|0000000000000000|ERROR",
+		"L|bad|0000000000000000|0000000000000000|ABC"} {
+		if _, err := parseFixture([]byte(row)); err == nil {
+			t.Fatalf("accepted malformed row %q", row)
+		}
+	}
+}
+
+func TestPortableCorpus(t *testing.T) {
+	for _, line := range fixtureLines(t) {
+		if !strings.HasPrefix(line, "V|") {
+			continue
+		}
+		fields := strings.Split(line, "|")
+		if len(fields) != 5 || len(fields[2]) > 8192 || len(fields[4]) != 128 {
+			t.Fatalf("malformed vector row %q", line)
+		}
+		data, err := hex.DecodeString(fields[2])
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(data) > 4096 {
+			t.Fatal("decoded input exceeds bound")
+		}
+		if got := HexString(data); got != fields[4] {
+			t.Fatalf("%s one-shot: %s", fields[1], got)
+		}
+		d := New()
+		offset := 0
+		if fields[3] != "" {
+			chunks := strings.Split(fields[3], ",")
+			if len(chunks) > 64 {
+				t.Fatal("too many chunks")
+			}
+			for _, raw := range chunks {
+				size, err := strconv.Atoi(raw)
+				if err != nil || size <= 0 || offset+size > len(data) {
+					t.Fatalf("invalid chunk %q", raw)
+				}
+				if _, err := d.Write(data[offset : offset+size]); err != nil {
+					t.Fatal(err)
+				}
+				offset += size
+			}
+		}
+		if offset != len(data) {
+			t.Fatalf("%s chunks cover %d of %d bytes", fields[1], offset, len(data))
+		}
+		if got := d.HexDigest(); got != fields[4] {
+			t.Fatalf("%s streaming: %s", fields[1], got)
+		}
+	}
+}
+
+func TestPortableLengthCorpus(t *testing.T) {
+	for _, line := range fixtureLines(t) {
+		if !strings.HasPrefix(line, "L|") {
+			continue
+		}
+		fields := strings.Split(line, "|")
+		hi, err := strconv.ParseUint(fields[2], 16, 64)
+		if err != nil {
+			t.Fatal(err)
+		}
+		lo, err := strconv.ParseUint(fields[3], 16, 64)
+		if err != nil {
+			t.Fatal(err)
+		}
+		encoded, err := encodeBitLength(hi, lo)
+		if fields[4] == "ERROR" {
+			if !errors.Is(err, ErrMessageTooLong) {
+				t.Fatalf("%s: %v", fields[1], err)
+			}
+			continue
+		}
+		if err != nil || hex.EncodeToString(encoded[:]) != fields[4] {
+			t.Fatalf("%s length encoding", fields[1])
+		}
+	}
+}
+
+func TestWriteConsumesInputWithoutAliasing(t *testing.T) {
+	input := []byte("abc")
+	d := New()
+	if _, err := d.Write(input); err != nil {
+		t.Fatal(err)
+	}
+	input[0] = 'z'
+	if d.Sum512() != Sum512([]byte("abc")) {
+		t.Fatal("digest changed after caller mutation")
+	}
+}
+
+func TestWriteCanContinueAfterSnapshot(t *testing.T) {
+	d := New()
+	if _, err := d.Write([]byte("ab")); err != nil {
+		t.Fatal(err)
+	}
+	snapshot := d.Sum512()
+	if snapshot != Sum512([]byte("ab")) {
+		t.Fatal("snapshot mismatch")
+	}
+	if _, err := d.Write([]byte("c")); err != nil {
+		t.Fatal(err)
+	}
+	if d.Sum512() != Sum512([]byte("abc")) {
+		t.Fatal("continuation after snapshot mismatch")
+	}
+}
+
+func TestLengthOverflowWriteIsAtomic(t *testing.T) {
+	d := New()
+	d.byteCountHigh, d.byteCountLow = 0x1fffffffffffffff, 0xffffffffffffffff
+	beforeState, beforeBuf := d.state, append([]byte(nil), d.buf...)
+	if n, err := d.Write([]byte{1}); n != 0 || !errors.Is(err, ErrMessageTooLong) {
+		t.Fatalf("Write overflow = %d, %v", n, err)
+	}
+	if d.state != beforeState || string(d.buf) != string(beforeBuf) {
+		t.Fatal("overflowing Write mutated digest state")
+	}
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FIPS 180-4 Test Vectors

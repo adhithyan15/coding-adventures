@@ -769,4 +769,20 @@ final class NodeTests: XCTestCase {
         XCTAssertTrue(table.children[0].isHeader)
         XCTAssertFalse(table.children[1].isHeader)
     }
+
+    func testFencedBlockPreservesNameFullInfoAndValue() {
+        let fence = FencedBlockNode(
+            name: "typescript",
+            info: "typescript linenos",
+            value: "const x = 1 < 2;\n"
+        )
+        let node: BlockNode = .fencedBlock(fence)
+
+        guard case .fencedBlock(let actual) = node else {
+            return XCTFail("Expected .fencedBlock case")
+        }
+        XCTAssertEqual(actual.name, "typescript")
+        XCTAssertEqual(actual.info, "typescript linenos")
+        XCTAssertEqual(actual.value, "const x = 1 < 2;\n")
+    }
 }

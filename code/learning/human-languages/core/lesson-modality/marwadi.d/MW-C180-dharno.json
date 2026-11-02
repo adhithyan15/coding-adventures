@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C180-dharno",
+    "language": "marwadi",
+    "chapter": 180,
+    "sequence": 11720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:023ad9fd4f78cbc8"
+  },
+  "findings": []
+}

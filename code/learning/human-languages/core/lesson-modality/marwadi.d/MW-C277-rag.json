@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C277-rag",
+    "language": "marwadi",
+    "chapter": 277,
+    "sequence": 19570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eae97d18d468459"
+  },
+  "findings": []
+}

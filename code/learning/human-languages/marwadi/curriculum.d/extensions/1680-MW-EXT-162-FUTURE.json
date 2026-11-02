@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-162-FUTURE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I will and will not do, and tell yesterday from tomorrow by the verb.",
+  "prerequisites": [
+    "MW-EXT-161-DID"
+  ]
+}

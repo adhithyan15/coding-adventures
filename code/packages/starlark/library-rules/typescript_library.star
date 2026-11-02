@@ -10,10 +10,10 @@
 #       index.ts          # entry point (main in package.json points here)
 #       implementation.ts  # actual code
 #     tests/
-#       implementation.test.ts  # Vitest test files
+#       implementation.test.ts  # test files
 #     package.json        # npm metadata and dependencies
 #     tsconfig.json       # TypeScript compiler configuration
-#     vitest.config.ts    # test runner configuration
+#     vitest.config.ts    # optional Vitest configuration
 #
 # TYPESCRIPT DEPENDENCY MANAGEMENT
 # --------------------------------
@@ -23,13 +23,13 @@
 #     "@coding-adventures/transistors": "file:../transistors"
 #   }
 #
-# When npm install runs, it creates a symlink from node_modules/@coding-
+# When npm ci runs, it creates a symlink from node_modules/@coding-
 # adventures/transistors to ../transistors. Vitest can then resolve and
 # transform the TypeScript source directly (no compilation step needed).
 #
 # CRITICAL LESSONS LEARNED (see lessons.md):
 #   - package.json "main" must be "src/index.ts" (NOT "dist/index.js")
-#     because Vitest transforms TS on the fly — there's no compile step
+#     when Vitest transforms TypeScript source directly
 #   - ALL transitive file: deps must be listed as direct deps in package.json
 #   - Use "npm ci --quiet" in BUILD files, not chained cd/install patterns
 #   - Include @vitest/coverage-v8 in devDependencies for coverage
@@ -50,10 +50,9 @@
 def ts_library(name, srcs = [], deps = [], test_runner = "vitest"):
     # Register a TypeScript library target for the build system.
     #
-    # TypeScript libraries use npm for package management and Vitest for testing.
-    # The build tool will run:
-    #     npm ci --quiet          — install dependencies from lockfile
-    #     npx vitest run --coverage — run tests with coverage
+    # TypeScript libraries use npm's lockfile mode for dependency installation.
+    # Test execution is delegated to package scripts so a package can use the
+    # platform-provided Node test runner without adding a test framework.
     #
     # Args:
     #     name: The package name, matching the directory under
@@ -92,18 +91,23 @@ def ts_library(name, srcs = [], deps = [], test_runner = "vitest"):
     #           "vitest"  — (default) Vite-native test framework. Fast, with
     #                       built-in TypeScript support (no tsc step needed),
     #                       Jest-compatible API, and native ESM support.
-    #                       Runs via: npx vitest run --coverage
+    #                       Runs the lockfile-local Vitest binary offline.
     #
-    #           "jest"    — The traditional JavaScript test framework. Requires
-    #                       ts-jest or babel for TypeScript support.
-    #                       Runs via: npx jest --coverage
+    #           "node"    — Node's built-in test runner. The build tool first
+    #                       compiles the package, then runs test:coverage.
     #
-    #           All packages in this monorepo use Vitest.
+    install_cmd = {"type": "cmd", "program": "npm", "args": ["ci", "--quiet"]}
+    build_cmd = {"type": "cmd", "program": "npm", "args": ["run", "build", "--silent"]}
+    vitest_cmd = {"type": "cmd", "program": "npm", "args": ["exec", "--offline", "--", "vitest", "run", "--coverage"]}
+    test_cmd = {"type": "cmd", "program": "npm", "args": ["run", "test:coverage", "--silent"]}
+    commands = [install_cmd, vitest_cmd]
+    if test_runner == "node":
+        commands = [install_cmd, build_cmd, test_cmd]
+
     return {
         # "ts_library" triggers TypeScript-specific build logic:
         #   - npm ci for reproducible dependency installation
-        #   - vitest or jest for testing
-        #   - Coverage via @vitest/coverage-v8
+        #   - offline local runner or package-owned Node test scripts
         # Note: there's no separate lint step here because TypeScript
         # type-checking (tsc --noEmit) serves as the lint step.
         "rule": "ts_library",
@@ -111,8 +115,5 @@ def ts_library(name, srcs = [], deps = [], test_runner = "vitest"):
         "srcs": srcs,
         "deps": deps,
         "test_runner": test_runner,
-        "commands": [
-            {"type": "cmd", "program": "npm", "args": ["install", "--silent"]},
-            {"type": "cmd", "program": "npx", "args": ["vitest", "run", "--coverage"]},
-        ],
+        "commands": commands,
     }

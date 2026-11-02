@@ -205,6 +205,7 @@ fn the_emitted_swiftui_host_answers_effects() {
         "the app is left taking environment changes",
         "a macOS app starts with a fine, hovering pointer",
         "an earlier quarantine is never replaced",
+        "a directory at a quarantine name is skipped",
         "a rejected file moves to the first free name",
         "a file moved aside leaves saving on",
         "fresh state is saved once the rejected file is aside",

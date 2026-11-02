@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:72387d3ebfd8034d",
+  "lessonIds": [
+    "MW-C290-bahi",
+    "MW-C290-rojgar",
+    "MW-C290-saru",
+    "MW-C290-khatam",
+    "MW-C290-abhyas",
+    "MW-R290-review-285-290",
+    "MW-R290-review-final-290"
+  ],
+  "tex": "marwadi/book/chapters/ch290-starting-and-finishing.tex"
+}

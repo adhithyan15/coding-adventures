@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "ecosystem": "go",
+  "allowed_dependency_names": [
+    "golang.org/x/sys",
+    "golang.org/x/text"
+  ]
+}

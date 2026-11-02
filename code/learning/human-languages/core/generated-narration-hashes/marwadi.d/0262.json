@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:1cfac75ee22c9214",
+  "lessonIds": [
+    "MW-C262-jano",
+    "MW-C262-banjaro",
+    "MW-C262-saheli",
+    "MW-C262-chaudhri",
+    "MW-C262-karigar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch262.txt",
+  "json": "marwadi/narration/ch262.json",
+  "textHash": "fnv1a64:2a40d5d700bc3b38",
+  "jsonHash": "fnv1a64:63d78cdf97ba1f35",
+  "findings": []
+}

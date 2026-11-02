@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Farm Animals",
+  "label": "ch:mw-farm-animals",
+  "canDo": "I can name a donkey and a rooster, and wool, horns and hooves.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C236-khur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can name a donkey and a rooster, and wool, horns and hooves.",
+    "assesses": [
+      "MW-LEX-C236-BEAST236-03",
+      "MW-LEX-C236-BEAST236-04",
+      "MW-LEX-C236-BEAST236-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:032591ebbb8d6db0",
+  "lessonIds": [
+    "MW-C262-jano",
+    "MW-C262-banjaro",
+    "MW-C262-saheli",
+    "MW-C262-chaudhri",
+    "MW-C262-karigar"
+  ],
+  "tex": "marwadi/book/chapters/ch262-people-of-the-village.tex"
+}

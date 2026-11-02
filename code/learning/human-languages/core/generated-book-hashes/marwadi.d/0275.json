@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:d15096988fd590eb",
+  "lessonIds": [
+    "MW-C275-saravno",
+    "MW-C275-sabas",
+    "MW-C275-inam",
+    "MW-C275-jas",
+    "MW-C275-ray"
+  ],
+  "tex": "marwadi/book/chapters/ch275-well-done.tex"
+}

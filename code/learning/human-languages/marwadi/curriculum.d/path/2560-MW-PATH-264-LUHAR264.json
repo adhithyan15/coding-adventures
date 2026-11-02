@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-264-LUHAR264",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "MW-EXT-264-LUHAR264"
+  ],
+  "after": []
+}

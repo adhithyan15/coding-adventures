@@ -1,5 +1,57 @@
 # Changelog
 
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 1 test file now carries a per-call
+`unique_suffix()` (process id plus a per-file atomic counter), the scheme
+`sir-conformance`'s `temp_path` uses. Test-only; no emitted code changes.
+
+## Unreleased — User functions and the closure wrapper in the `sir_` namespace (issue #18466)
+
+- **Every user function is `sir_fn_<name>`.**  A top-level Ruby `def` is a
+  private method on `Object`, found ahead of `Kernel`, and the runtime calls
+  `Kernel` methods by bare name — so `(define (raise a b) 0)` turned every
+  runtime error, a strict closure's arity error included, into a quiet `0`.
+  `main` and `_init` stay `sir_user_main` and `sir_user_init`.
+- **The closure wrapper's argument list is `sir_args`**, inside the
+  reserved `sir_` namespace.  It was `__sir_args`, which a user could
+  spell: the captured values are evaluated inside the wrapper, so
+  `(define (f __sir_args) (lambda (x) (* x __sir_args)))` read the
+  argument array.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
+Security-review follow-up: **`raise` is always a parenthesised call,
+`raise()` / `raise(args)`.**  Ruby reads a bare `raise` as a local variable
+whenever one of that name is in scope, so a bare re-raise inside a `rescue`
+in a function with a parameter `raise` read the parameter and the error
+vanished.  A parenthesised name is always a method call.
+`BuiltinCall("raise")` is always the raise operation in SIR (a frontend
+lowers a source local named `raise` to a `VarRef`), so it is emitted that
+way unconditionally; `raise()` re-raises `$!` exactly as the bare form
+does.  (An intermediate fix emitted `::Kernel.raise`, which a user `module
+Kernel` — installed with `Object.const_set(:Kernel, …)` — broke: every
+raise became a `NoMethodError`.)
+
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) was
+refused as an unsupported builtin, so no Twig closure — and no Ruby
+`lambda { … }` — reached this backend.  It now lowers to
+
+```ruby
+->(*__sir_args) { sir_check_arity(__sir_args, 2); __lambda_0(*__sir_args) }
+```
+
+`sir_check_arity` raises `ArgumentError` ("arity mismatch: closure expects
+N argument(s), got M") counting the closure's own parameters; without it
+the forwarding call's native error counted the captured values too.
+`tests/twig_pairs_and_closures.rs` runs the #18460/#18461 Twig programs
+with `ruby`.
+
 ## 0.27.2 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

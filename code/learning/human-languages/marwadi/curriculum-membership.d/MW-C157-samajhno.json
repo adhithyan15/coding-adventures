@@ -1,0 +1,11 @@
+{
+  "id": "MW-C157-samajhno",
+  "pathSegment": "MW-PATH-157-NEGATE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-157-NEGATE",
+      "order": 2
+    }
+  ]
+}

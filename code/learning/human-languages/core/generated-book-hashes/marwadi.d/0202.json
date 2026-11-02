@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:2dcf27b88c687416",
+  "lessonIds": [
+    "MW-C202-murno",
+    "MW-C202-pachho",
+    "MW-C202-ulto",
+    "MW-C202-ado",
+    "MW-C202-tirchho"
+  ],
+  "tex": "marwadi/book/chapters/ch202-turn-and-go-back.tex"
+}

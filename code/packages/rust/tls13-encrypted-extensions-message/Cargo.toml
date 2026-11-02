@@ -1,0 +1,8 @@
+[package]
+name = "tls13-encrypted-extensions-message"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 EncryptedExtensions message decoding"
+
+[dependencies]
+tls13-extension-block = { path = "../tls13-extension-block" }

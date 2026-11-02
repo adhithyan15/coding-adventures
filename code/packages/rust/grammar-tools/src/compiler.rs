@@ -533,6 +533,19 @@ fn element_src(element: &GrammarElement, indent: &str) -> String {
                 predicate.variant_name()
             )
         }
+        // F11 automatic insertion: the inserted token and the closers, as
+        // plain string literals (no new `use` needed).
+        GrammarElement::AutoInsert { token, closers } => {
+            let closers: Vec<String> = closers
+                .iter()
+                .map(|c| format!("{}.to_string()", rust_string_lit(c)))
+                .collect();
+            format!(
+                "GrammarElement::AutoInsert {{ token: {}.to_string(), closers: vec![{}] }}",
+                rust_string_lit(token),
+                closers.join(", ")
+            )
+        }
     }
 }
 
@@ -979,5 +992,28 @@ transitions:
         let g = parse_parser_grammar("r = NAME { COMMA NAME } [ \"x\" ] !SEMI ;").unwrap();
         let code = compile_parser_grammar(&g, "plain.grammar");
         assert!(!code.contains("AdjacencyPredicate"));
+        assert!(!code.contains("AutoInsert"));
+    }
+
+    // --- F11 automatic insertion -------------------------------------------
+
+    #[test]
+    fn parser_grammar_auto_insert_emits_token_and_closers() {
+        let g = parse_parser_grammar(
+            "end = SEMI | @asi(SEMI, RBRACE, RPAREN) ;\nlast = @asi(SEMI) ;",
+        )
+        .unwrap();
+        let code = compile_parser_grammar(&g, "asi.grammar");
+        assert!(code.contains(
+            "GrammarElement::AutoInsert { token: r#\"SEMI\"#.to_string(), closers: \
+             vec![r#\"RBRACE\"#.to_string(), r#\"RPAREN\"#.to_string()] }"
+        ));
+        assert!(code.contains(
+            "GrammarElement::AutoInsert { token: r#\"SEMI\"#.to_string(), closers: vec![] }"
+        ));
+        // Same `use` line as a grammar without the element.
+        assert!(code.contains(
+            "use grammar_tools::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};"
+        ));
     }
 }

@@ -17,6 +17,14 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Added
 
+- Add pure bounded graph and diff-selection operations that dynamically consume
+  the exact eight graph and twelve diff-selection neutral fixtures. The new
+  boundary preserves canonical levels and closures, strict portable globs,
+  exact shared-input fanout, a 50,000,000-unit preflight ceiling, ancestor-safe
+  Unicode root identity, stable no-partial failures, and bounded alias-resistant
+  repository-boundary digest validation without adding host authority.
+- Make the generic BUILD front install the exact lockfile with `npm ci`, avoiding
+  host npm metadata rewrites before typechecking and coverage.
 - Add an atomic snapshot sync/check command and native tests comparing every
   registry field and domain-separated digest to the checked neutral fixture.
   All seven package-local source-collection cases run through the production

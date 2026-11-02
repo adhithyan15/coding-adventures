@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C223-jhando",
+    "language": "marwadi",
+    "chapter": 223,
+    "sequence": 15390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44aa8aac3e07704c"
+  },
+  "findings": []
+}

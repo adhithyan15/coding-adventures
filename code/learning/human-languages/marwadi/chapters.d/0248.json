@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Henna and Wedding Finery",
+  "label": "ch:mw-henna-and-wedding-finery",
+  "canDo": "I can say what happened at a wedding.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-C248-sehro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say what happened at a wedding.",
+    "assesses": [
+      "MW-LEX-C248-MEHDI248-03",
+      "MW-LEX-C248-MEHDI248-04",
+      "MW-LEX-C248-MEHDI248-05"
+    ]
+  }
+}

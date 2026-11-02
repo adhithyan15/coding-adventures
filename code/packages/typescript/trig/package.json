@@ -4,16 +4,12 @@
   "description": "Trigonometric functions from first principles using Taylor series",
   "main": "src/trig.ts",
   "scripts": {
-    "build": "tsc",
-    "test": "jest"
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/*.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-lines=80 --test-coverage-include=dist-test/src/** --test dist-test/tests/*.test.js"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "jest": "^29.0.0",
-    "ts-jest": "^29.0.0",
-    "@types/jest": "^29.0.0"
-  },
-  "overrides": {
-    "js-yaml": "^3.15.1"
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
   }
 }

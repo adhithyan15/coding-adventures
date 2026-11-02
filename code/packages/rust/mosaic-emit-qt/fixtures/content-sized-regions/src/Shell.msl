@@ -1,0 +1,39 @@
+// `region` is the rule 6 shape: painted and padded, no width or height.
+// Its padding is written as longhands on purpose. The `padding` shorthand
+// also becomes a styled cell's text inset, which reaches every Text under
+// the box as `anchors.fill` -- a separate problem, kept out of this check.
+// The If body sits in `content`, a Column with a gap, so rule 7 makes it a
+// ColumnLayout with the same spacing.
+style Shell {
+  part app-shell {
+    padding : 24 ;
+    background : #f8fafc ;
+    gap : 18 ;
+  }
+  part content-scroll {
+    flex-grow : 1 ;
+  }
+  part content {
+    gap : 8 ;
+  }
+  part region {
+    padding-left : 16 ;
+    padding-top : 16 ;
+    padding-right : 16 ;
+    padding-bottom : 16 ;
+    background : #ffffff ;
+    border-width : 1 ;
+    border-color : #cbd5e1 ;
+  }
+  part region-body {
+    gap : 8 ;
+  }
+  part region-block {
+    height : 400 ;
+    background : #e2e8f0 ;
+  }
+  part details-block {
+    height : 400 ;
+    background : #cbd5e1 ;
+  }
+}

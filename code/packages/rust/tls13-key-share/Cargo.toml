@@ -1,0 +1,9 @@
+[package]
+name = "tls13-key-share"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 key-share extension framing and selection"
+license = "MIT"
+
+[dependencies]
+tls13-named-group-policy = { path = "../tls13-named-group-policy" }

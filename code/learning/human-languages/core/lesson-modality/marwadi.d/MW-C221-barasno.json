@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C221-barasno",
+    "language": "marwadi",
+    "chapter": 221,
+    "sequence": 15260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e14c44c9e42006c1"
+  },
+  "findings": []
+}

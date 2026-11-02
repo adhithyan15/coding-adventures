@@ -1,0 +1,2 @@
+@where swift >nul 2>nul || (echo Swift is required to validate swift/in-memory-data-store-protocol & exit /b 1)
+@swift test --enable-code-coverage --verbose && swift build -c release

@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 249,
+  "title": "Holi and Diwali",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3a233d8b6c894dcc",
+  "lessons": [
+    {
+      "id": "MW-C249-holi",
+      "sequence": 17410,
+      "title": "होळी (hoḷī) — the spring festival of colours, Holi",
+      "headword": "होळी",
+      "romanization": "hoḷī",
+      "gloss": "the spring festival of colours, Holi",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9f86fbcd8d40f35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to dress up, then the Marwadi for a bridegroom's garland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: होळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "होळी — hoḷī — \"the spring festival of colours, Holi\"."
+            },
+            {
+              "kind": "speech",
+              "text": "होळी बसंत मांय आवै है। hoḷī basant mā̃y āvai hai. Holi comes in spring."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "होळी (hoḷī) is inherited from Sanskrit holā, \"the spring festival\". CDIAL gives no Marwari form in this entry; it lists Hindi holī and Gujarati hoḷī, with this book's ळ (CDIAL 14182)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoḷī basant mā̃y āvai hai. — Holi comes in spring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoḷī basant mā̃y āvai hai.* — Holi comes in spring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to dress up, then the Marwadi for a bridegroom's garland, then say hoḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to dress up, then the Marwadi for a bridegroom's garland, then say *hoḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does होळी (hoḷī) mean? (\"The spring festival of colours, Holi\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C249-holi-type",
+              "prompt": "Say the Marwadi for 'Holi'.",
+              "assesses": [
+                "MW-LEX-C249-HOLI249-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "होळी",
+                "hoḷī"
+              ],
+              "feedback": {
+                "correct": "Right: होळी (hoḷī) is 'the spring festival of colours, Holi'.",
+                "incorrect": "'Holi' is होळी (hoḷī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C249-gulal",
+      "sequence": 17420,
+      "title": "गुलाल (gulāl) — coloured powder for Holi",
+      "headword": "गुलाल",
+      "romanization": "gulāl",
+      "gloss": "coloured powder for Holi",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6e7d259be718a9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a bridegroom's garland, then the Marwadi for Holi."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गुलाल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुलाल — gulāl — \"coloured powder for Holi\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गुलाल लाल अर गुलाबी है। gulāl lāl ar gulābī hai. The Holi powder is red and pink."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुलाल (gulāl) is usually traced to Persian gulāl, a red powder; no dictionary we can open gives an older Indian form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gulāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gulāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gulāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gulāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gulāl lāl ar gulābī hai. — The Holi powder is red and pink.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gulāl lāl ar gulābī hai.* — The Holi powder is red and pink.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a bridegroom's garland, then the Marwadi for Holi, then say gulāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a bridegroom's garland, then the Marwadi for Holi, then say *gulāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गुलाल (gulāl) mean? (\"Coloured powder for Holi\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C249-gulal-type",
+              "prompt": "Say the Marwadi for 'coloured powder for Holi'.",
+              "assesses": [
+                "MW-LEX-C249-HOLI249-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गुलाल",
+                "gulāl"
+              ],
+              "feedback": {
+                "correct": "Right: गुलाल (gulāl) is 'coloured powder for Holi'.",
+                "incorrect": "'coloured powder for Holi' is गुलाल (gulāl)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C249-sugan",
+      "sequence": 17430,
+      "title": "सुगन (sugan) — a good omen; an auspicious sign",
+      "headword": "सुगन",
+      "romanization": "sugan",
+      "gloss": "a good omen; an auspicious sign",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d626146ef206aeb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Holi, then the Marwadi for coloured powder for Holi."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुगन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुगन — sugan — \"a good omen; an auspicious sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज घणो आछो सुगन है। āj ghaṇo āchho sugan hai. Today there is a very good omen."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुगन (sugan) is probably a later borrowing of Sanskrit śakuna, \"a bird\", and so \"an omen\" read from birds. CDIAL gives no Marwari form in this entry; it lists Hindi saun, \"good omen\", a more worn-down shape of the same word (CDIAL 12245)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj ghaṇo āchho sugan hai. — Today there is a very good omen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj ghaṇo āchho sugan hai.* — Today there is a very good omen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Holi, then the Marwadi for coloured powder for Holi, then say sugan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Holi, then the Marwadi for coloured powder for Holi, then say *sugan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुगन (sugan) mean? (\"A good omen; an auspicious sign\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C249-sugan-type",
+              "prompt": "Say the Marwadi for 'a good omen'.",
+              "assesses": [
+                "MW-LEX-C249-HOLI249-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सुगन",
+                "sugan"
+              ],
+              "feedback": {
+                "correct": "Right: सुगन (sugan) is 'a good omen; an auspicious sign'.",
+                "incorrect": "'a good omen' is सुगन (sugan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C249-divali",
+      "sequence": 17440,
+      "title": "दिवाळी (divāḷī) — the festival of lamps, Diwali",
+      "headword": "दिवाळी",
+      "romanization": "divāḷī",
+      "gloss": "the festival of lamps, Diwali",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:486bf15aee678634",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for coloured powder for Holi, then the Marwadi for a good omen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दिवाळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिवाळी — divāḷī — \"the festival of lamps, Diwali\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दिवाळी घणी चोखी लागै है। divāḷī ghaṇī chokhī lāgai hai. Diwali feels wonderful."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिवाळी (divāḷī) is inherited from Sanskrit dīpāvali, \"a row of lamps\". CDIAL gives no Marwari form in this entry; it lists Gujarati divāḷī (CDIAL 6358)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷī ghaṇī chokhī lāgai hai. — Diwali feels wonderful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷī ghaṇī chokhī lāgai hai.* — Diwali feels wonderful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for coloured powder for Holi, then the Marwadi for a good omen, then say divāḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for coloured powder for Holi, then the Marwadi for a good omen, then say *divāḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दिवाळी (divāḷī) mean? (\"The festival of lamps, Diwali\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C249-divali-type",
+              "prompt": "Say the Marwadi for 'Diwali'.",
+              "assesses": [
+                "MW-LEX-C249-HOLI249-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दिवाळी",
+                "divāḷī"
+              ],
+              "feedback": {
+                "correct": "Right: दिवाळी (divāḷī) is 'the festival of lamps, Diwali'.",
+                "incorrect": "'Diwali' is दिवाळी (divāḷī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C249-puja",
+      "sequence": 17450,
+      "title": "पूजा (pūjā) — worship; a prayer ceremony",
+      "headword": "पूजा",
+      "romanization": "pūjā",
+      "gloss": "worship; a prayer ceremony",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:723cf5004611b266",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a good omen, then the Marwadi for Diwali."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पूजा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पूजा — pūjā — \"worship; a prayer ceremony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां रोज पूजा करै है। mā̃ roj pūjā karai hai. Mother does the worship every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पूजा (pūjā) is a tatsama, the Sanskrit word pūjā, \"honour, worship\", taken over unchanged (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūjā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūjā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūjā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūjā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ roj pūjā karai hai. — Mother does the worship every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ roj pūjā karai hai.* — Mother does the worship every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a good omen, then the Marwadi for Diwali, then say pūjā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a good omen, then the Marwadi for Diwali, then say *pūjā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पूजा (pūjā) mean? (\"Worship; a prayer ceremony\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C249-puja-type",
+              "prompt": "Say the Marwadi for 'worship'.",
+              "assesses": [
+                "MW-LEX-C249-HOLI249-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पूजा",
+                "pūjā"
+              ],
+              "feedback": {
+                "correct": "Right: पूजा (pūjā) is 'worship; a prayer ceremony'.",
+                "incorrect": "'worship' is पूजा (pūjā)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

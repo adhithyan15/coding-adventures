@@ -18,7 +18,7 @@ fn arithmetic_emits_variadic_helpers() {
     let m = lower_twig("(print (+ 2 (* 3 4)))");
     let src = compile(&m).unwrap().source;
     assert!(src.contains("int main(void)"), "has a C entry point");
-    assert!(src.contains("SirValue user_main(void)"), "renames SIR main");
+    assert!(src.contains("SirValue sir_user_main(void)"), "renames SIR main");
     // Variadic-shaped builtin calls carry an argument count.
     assert!(
         src.contains("_sir_times(2, _sir_int(3LL), _sir_int(4LL))"),
@@ -507,4 +507,123 @@ fn sanitize_ident_is_injective_across_the_underscore_delimiter_reuse_this_backen
     // both produce the identical escaped body. The fix (see
     // `escape_body`'s own doc comment) escapes every underscore too.
     assert_ne!(sanitize_ident("_u007e_~"), sanitize_ident("~~"));
+}
+
+/// Every user function lives in the `sir_fn_` namespace and every name the
+/// runtime or the C library may define is escaped (#18466).
+#[test]
+fn user_names_are_kept_apart_from_libc_and_the_runtime() {
+    let src = compile(&lower_twig("(define (free x) x) (print (free 3))")).unwrap().source;
+    assert!(src.contains("SirValue sir_fn_free(SirValue x)"), "\n{src}");
+    assert!(!src.contains("SirValue free("), "\n{src}");
+    for name in [
+        "_sir_apply", "SirValue", "SIR_INT", "sir_fn_free", "sir_user_main", "main", "EOF",
+        "NAN", "N", "__lambda_0", "_Bool2", "errno", "stdout", "math_errhandling",
+        // Header typedefs and `<setjmp.h>`/`<stdarg.h>` names (security
+        // review of #18466).
+        "int64_t", "size_t", "uint8_t", "setjmp", "longjmp", "jmp_buf", "va_list",
+    ] {
+        assert_eq!(sanitize_ident(name), format!("sir_esc_v{name}"), "{name}");
+    }
+    // `user_main` is no longer generated, so it is an ordinary name again.
+    for name in ["x", "free", "user_main", "eof", "Nx", "_x", "siblings", "is_sir"] {
+        assert_eq!(sanitize_ident(name), name, "{name}");
+    }
+}
+
+// ── evaluation order and compound operands (#18482 review, #18768) ─────
+
+/// The index of `needle` in `src`, or a panic that shows the source.
+fn pos(src: &str, needle: &str) -> usize {
+    src.find(needle)
+        .unwrap_or_else(|| panic!("`{needle}` not in:\n{src}"))
+}
+
+/// A dispatch call (`P.new(…)`, `a.add(…)`) whose argument is compound used
+/// to have no emit path: `__new__` emitted `_sir_unknown_builtin("__new__")`
+/// and `__method__` was refused.  Its value arguments are now hoisted into
+/// temporaries and the class / method names stay literals.
+#[test]
+fn dispatch_with_a_compound_argument_hoists_its_values() {
+    let m = lower_ruby(
+        "class P\n  def initialize(v)\n    @v = v\n  end\n  def get\n    @v\n  end\n  def add(k)\n    @v + k\n  end\nend\na = P.new(2)\nb = P.new(3)\nc = P.new(a.get + b.get)\nputs(c.get)\nputs(a.add(a.get + b.get))",
+    );
+    let src = compile(&m).expect("compiles").source;
+    assert!(
+        !src.contains("_sir_unknown_builtin(\"__new__\")"),
+        "\n{src}"
+    );
+    assert!(
+        !src.contains("_sir_unknown_builtin(\"__method__\")"),
+        "\n{src}"
+    );
+    assert!(src.contains("_sir_call_new(\"P\", 1, _sir_a"), "\n{src}");
+    assert!(src.contains("_sir_call_method(_sir_a"), "\n{src}");
+}
+
+/// Two code-running arguments of ONE dispatch call run left to right
+/// (#18768): `c.pair(c.n, c.bump)` hoists `c.n` before `c.bump`.
+#[test]
+fn dispatch_arguments_are_hoisted_left_to_right() {
+    let m = lower_ruby(
+        "class C\n  def initialize\n    @n = 1\n  end\n  def n\n    @n\n  end\n  def bump\n    @n = @n + 100\n    5\n  end\n  def pair(a, b)\n    a * 1000 + b\n  end\nend\nc = C.new\nputs(c.pair(c.n, c.bump))",
+    );
+    let src = compile(&m).expect("compiles").source;
+    let read_n = pos(&src, "_sir_call_method(c, \"n\", 0)");
+    let bump = pos(&src, "_sir_call_method(c, \"bump\", 0)");
+    assert!(
+        read_n < bump,
+        "`c.n` must be evaluated before `c.bump`:\n{src}"
+    );
+    assert!(src.contains("\"pair\", 2, _sir_a"), "\n{src}");
+}
+
+/// An indirect call evaluates its callee before its arguments.
+/// `((make) (side))` used to emit `_sir_apply(sir_fn_make(), 1,
+/// sir_fn_side())`, which gcc runs right to left.
+#[test]
+fn indirect_call_hoists_the_callee_before_the_arguments() {
+    let m = lower_twig("(define (make) (lambda (x) x)) (define (side) 1) (print ((make) (side)))");
+    let src = compile(&m).expect("compiles").source;
+    let make = pos(&src, "sir_fn_make()");
+    let side = pos(&src, "sir_fn_side()");
+    assert!(make < side, "the callee must be evaluated first:\n{src}");
+    assert!(!src.contains("_sir_apply(sir_fn_make()"), "\n{src}");
+}
+
+/// A closure whose two capture values both run code is compound.  It used to
+/// fall through to the call hoister and panic ("emit_compound_call on a
+/// non-call expr"); its captures are now hoisted in order.
+#[test]
+fn make_closure_with_two_code_running_captures_is_hoisted() {
+    use semantic_ir::{EffectSet, Expr};
+    let mut m = lower_twig(
+        "(define (one) 1) (define (mk a b) (lambda (x) (+ x a b))) (print ((mk 1 2) 3))",
+    );
+    let mk = m
+        .functions
+        .iter_mut()
+        .find(|f| f.name == "mk")
+        .expect("mk exists");
+    // Twig wraps the closure in its strict-arity `lambda` marker.
+    let closure = match &mut mk.body.value {
+        Expr::BuiltinCall { name, args, .. } if name == "lambda" => &mut args[0],
+        other => other,
+    };
+    let Expr::MakeClosure { captures, span, .. } = closure else {
+        panic!("mk's body is the closure: {closure:?}");
+    };
+    assert_eq!(captures.len(), 2);
+    for c in captures.iter_mut() {
+        c.value = Expr::DirectCall {
+            fn_name: "one".into(),
+            args: vec![],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+    }
+    let src = compile(&m).expect("compiles, does not panic").source;
+    let closure = pos(&src, "= _sir_make_closure(");
+    assert!(pos(&src, "sir_fn_one()") < closure, "\n{src}");
+    assert_eq!(src.matches("sir_fn_one()").count(), 2, "\n{src}");
 }

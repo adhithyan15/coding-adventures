@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C204-kinaro",
+    "language": "marwadi",
+    "chapter": 204,
+    "sequence": 13700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b882fa671412b5a7"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:a35985d873e88c6b",
+  "lessonIds": [
+    "MW-C251-gardan",
+    "MW-C251-kadho",
+    "MW-C251-chhati",
+    "MW-C251-kohni",
+    "MW-C251-kamar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch251.txt",
+  "json": "marwadi/narration/ch251.json",
+  "textHash": "fnv1a64:32ad1237dafaeab2",
+  "jsonHash": "fnv1a64:bf02c0a972b3fa8e",
+  "findings": []
+}

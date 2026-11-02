@@ -2,6 +2,112 @@
 
 ## [Unreleased]
 
+- **Content inside a bounded `HostScroll` has a height (UI21 §2.2, rules 6
+  and 7).** With the viewport bounded (below), Engram's screens and
+  TaskApp's main view still did not scroll: two lowerings published
+  `0 x 0`, so the content measured almost nothing.
+  - *A styled `Box` sizes itself from its content plus its padding* (6d13).
+    A `Box [part]` lowers to a `Rectangle`, which had a size only from an
+    authored `width` / `height` or a table's column-width thread. Each open
+    axis is now `implicitWidth: <child>.implicitWidth + left + right` (the
+    `Math.max` of several children, which share the box's origin), read by
+    id from each direct child. An id the child already has is reused;
+    otherwise it gets `mosaicBoxChild<N>` from its own counter, so no
+    existing numbered id moves. Children are found by brace depth, so an
+    elevation wrapper's element is not mistaken for a sibling. Implicit
+    sizes rather than `childrenRect`, because a cell's content anchors to
+    the box. A child that does not anchor is inset by `x: left` /
+    `y: top`, and the per-edge padding is read, so its longhands leave the
+    drop report. A `For` child (a `Repeater`) is neither measured nor
+    inset.
+  - *A multi-child `If` / `Else` body is a layout* (6d14). It was a bare
+    `Item`: `0 x 0`, with its children piled on its origin. It now copies
+    the parent's axis and spacing (`RowLayout` / `ColumnLayout`), is a
+    `ColumnLayout` with `spacing: 0` outside a layout, stays an `Item` in a
+    `Stack`, and takes `spacing: 0` when its only child is an `If` /
+    `Else` pair. An inactive `Loader` still takes a layout spacing slot
+    (measured: 20 + 14 + 0 + 14 + 10 = 58px). No `Layout.fill*` reaches
+    through the `Loader`, so a `flex-grow` inside a branch stays reported,
+    as it does in a single-child body. The body's descendants stop
+    inheriting a styled cell's `anchors.fill` text geometry, because a
+    layout child must not anchor.
+  - Measured headless with PySide6 6.12: TaskApp's main `ScrollView`
+    content 82 → 4609px in a 561px viewport; Engram's Options screen (with
+    #18477) 104 → 1314px in 659px. No binding loops before or after.
+    `qmllint` findings are identical across all 203 emitted files (87
+    package and theme emits), and loading every file as a window root and embedded in a layout gives no
+    new errors or warnings; the toolkit `Alert` / `Badge` and Grid `Cell`
+    roots now report a non-zero implicit size.
+  - New fixture `fixtures/content-sized-regions`, measured in CI by the
+    shared `qt-column-shell-scroll-render-check.qml`: 894px of content in
+    519px. #18481's emitter gives 16px; reverting only the box sizing
+    gives 439px, only the branch body 471px, and both fail.
+  - Output changes: Engram, Journal, TaskApp, VisiCalc, Photo Picker and
+    the Card, Checklist, CollectionActions, DeckStats, Dialog, Grid,
+    NoteEditor, ReviewCard, ReviewHistory, SessionProgress, Sheet and
+    toolkit packages. Qt drop reports: Engram 38 → 22, Journal 7 → 3,
+    Card 3 → 1, Dialog 1 → 0; TaskApp's Qt contract is unchanged.
+  - Tests: 14 new `content_sizing_tests`; the multi-child `If` test now
+    pins the `ColumnLayout` body.
+- Lower the static column-flex/gap trio on minimum-height HostDropTargets to
+  their existing ColumnLayout spacing (#18563). Unsupported values and state
+  overrides remain reported; targets without min-height remain unchanged.
+
+- **A vertical `HostScroll` scrolls under a plain `Column` shell (UI21 §2.2,
+  the EN-6 follow-up to #18477).** Engram's screens scrolled on SwiftUI,
+  Compose, Flutter and XAML but not on Qt. Measured with the real Qt runtime
+  (offscreen, 900x600), the generated `ScrollView` was 0 px wide and exactly
+  as tall as its content (1646 px), so there was nothing to scroll. Four
+  changes fix it:
+  - *The layout root binds to the window.* A `Column` / `Row` root gets
+    `id: mosaicLayoutRoot`. A `Column` anchors its width always, and its
+    height only when a direct child fills it. Without a filler, Qt would
+    spread the spare height *between* the children (measured y = 50, 174
+    and 314 in a 400 px column). A `Row` binds its width only when a child
+    grows, and never its height, because `RowLayout` centres children
+    vertically. A padded / painted root binds both its wrapper `Rectangle`
+    and its content layout, and the padding becomes anchor margins.
+    Authored sizes and elevated roots are left alone.
+  - *The root `Item` reads `mosaicLayoutRoot.implicitWidth` / `Height`,*
+    not `childrenRect`. A component embedded in a consumer's layout
+    therefore cannot form a binding loop through the anchors. The
+    `childrenRect` / `x` / `y` wrapper shape is unchanged everywhere else.
+  - *`flex-grow` lowers* on a direct child of a `Row` / `Column` to
+    `Layout.fillWidth` / `Layout.fillHeight`. A value of `0` is consumed.
+    Negative values, values inside `If` / `For`, and unequal ratios between
+    siblings stay reported. A child that already fills that axis is not
+    given the line a second time.
+  - *An axis-pinned `HostScroll` fills its parent's cross axis* (a vertical
+    one in a `Column` gets `Layout.fillWidth`). Pinning
+    `contentWidth: availableWidth` had left it no implicit width.
+- **The drop report lists a lost `flex-grow` on a part nothing else asked
+  about.** Every emitted node now marks its part as reached.
+  `content-scroll { flex-grow: 1 }` on a `HostScroll` under a non-layout
+  parent used to be skipped whole. That marker is used only for the
+  parent-owned `flex-grow` for now. Used for every property, it would
+  surface about seventy real but uncounted drops (a `HostLink`'s whole
+  part, for example).
+- Visible output changes: every `Row` / `Column`-rooted component gets the
+  root id and binding (toolkit, the Engram-family packages, Calendar,
+  VisiCalc, Venture, PhotoPicker, Engram). Lowered `flex-grow` lines appear
+  in TaskApp (`content-scroll`, `task-name`, `calendar-cell-drop`), in
+  Calendar (`calendar-cell-drop`), in Engram and DeckStats
+  (`deck-option-button`), and in Venture (seven parts, including
+  `content-surface`, so Venture's root now fills the window).
+- Drop reports: TaskApp 79 → 80 (`flex-grow` −1, `gap` +1, `width` +1,
+  because `calendar-cell-drop` is now reached), Calendar 2 → 4, Engram
+  40 → 38, DeckStats 2 → 1, Venture 15 → 8.
+- New `fixtures/host-scroll-column-shell` and
+  `code/scripts/qt-column-shell-scroll-render-check.qml`. CI emits the
+  fixture and measures it with `qml`. The check passes on this emitter
+  (519 px viewport over 1646 px of content) and fails 4 of its 5
+  assertions on the previous one.
+- Preserve finite nonnegative static `min-height` on the outer HostDropTarget
+  Item so empty landing zones retain their layout floor (#18559). Skip state
+  overrides; drag acceptance and callback routing are unchanged.
+  The first style read also exposes existing unsupported declarations on that
+  part; targets without authored min-height remain untouched (#18563).
+
 - `Text ( content: row )` inside `For ( each: slot: rows, as: row )` is
   `text: row`, the delegate's `property var row: modelData` (backlog 6f1f).
   `build_text_attribute` quoted a bare NAME as `text: "row"`, so every row
@@ -14,6 +120,12 @@
   slot arm beside it does.
 - Visible change: CollectionActions' missing-media and unused-media lists (and
   EngramApp, which inlines them) now show each filename and asset id.
+
+## 2026-10-26 (Fixed control width floors)
+
+- Preserve static scalar host-control widths paired with exact flex-shrink: 0
+  (#18394). Fill widths, conflicting constraints, and state geometry remain
+  excluded; unsupported-flex diagnostics remain unchanged.
 
 ## 2026-10-25 (Fixed text width floors)
 

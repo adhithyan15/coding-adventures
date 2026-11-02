@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:8d9b8dbd7876933a",
+  "lessonIds": [
+    "MW-C171-basan",
+    "MW-C171-chithro",
+    "MW-C171-majno",
+    "MW-C171-saph",
+    "MW-C171-kachro"
+  ],
+  "tex": "marwadi/book/chapters/ch171-washing-up.tex"
+}

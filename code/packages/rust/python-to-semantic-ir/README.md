@@ -86,6 +86,11 @@ becomes a negative literal.
 | `x` (not bound)              | error: `unresolved name `x``              | —                  |
 | `x = 1` (first occurrence)   | `LetStarBinding { name, value }`          | —                  |
 | `x = 2` (already declared)   | `Assign { name, scope: Local, value }`    | `MutableBindings`  |
+| `x += e` (also `-= *= /= %=`)| `Assign x = BuiltinCall("+", [x, e])`     | `MutableBindings`  |
+| `self.n += e` (in a method)  | `Assign @n (Instance) = @n + e`           | `InstanceVars`     |
+| `a = b = e`                  | `__chain_N = e; a = __chain_N; b = …`     | —                  |
+| `x: int = 5`                 | as `x = 5` (annotation ignored)           | —                  |
+| `x: int`                     | nothing (binds no value)                  | —                  |
 
 Assignment uses **first-occurrence detection** (per scope): the first
 `x = …` declares the name, later ones re-bind it.  The frontend emits
@@ -93,6 +98,52 @@ Assignment uses **first-occurrence detection** (per scope): the first
 RHS can see an earlier binding — `x = 1` then `y = x + 1` resolves `x`
 correctly.  The RHS is lowered before the name is declared, so `x = x`
 reports `x` as unresolved (matching Python's `NameError`).
+
+**Every `assign_stmt` form is lowered or refused (#18482).**  The grammar
+spells five statement forms with one rule, `expression_list [
+assign_suffix | augmented_assign | annotation ]`.  The lowerer used to
+check only for `assign_suffix`, so `x += 2` and `x: int = 5` compiled to
+the bare expression `x` and stored nothing, and `a = b = 0` compiled to
+`a = b`.  Now:
+
+- **augmented** `x op= e` reads `x`, applies *the same builtin as the
+  binary operator* (`/=` is `div_true`, like `/`), and stores the result.
+  `//=`, `**=`, `&=`, `|=`, `^=`, `<<=`, `>>=` and `@=` are refused, as
+  their binary operators are.  The target may be a bound name or
+  `self.attr`; a subscript target (`xs[i] += 1`), any other attribute,
+  and a name not bound in the current scope (Python's
+  `UnboundLocalError`) are refused.
+- **chained** `a = b = e` evaluates `e` once into a fresh temporary, then
+  stores it into each target left to right, so `a = b = []` gives both
+  names one shared list, as in Python.
+- **annotated** `x: T = e` is `x = e`; the annotation is never evaluated.
+  `x: T` alone binds nothing.
+
+*Known divergence:* for a list, Python's `xs += ys` extends the list in
+place, so other references to it see the change; the lowering builds a
+new list (`xs = xs + ys`).  Numbers and strings are exact.
+
+**Assigning a parameter.**  A parameter the body assigns is copied into
+a fresh local (`__param_n_N`) at the top of the function, and every read
+and store of the name uses the copy.  Before, the first store declared a
+new local that shadowed the parameter only until the end of its block,
+so `while n > 0: n -= 1` looped forever.  The copy has a fresh name
+because JavaScript, Go and C refuse to redeclare a parameter in the
+function's own scope, and the Rust backend refuses to assign one.
+
+**Invented names** come from one pool.  Temporaries (`__chain_N`,
+`__for_N`, `__param_<name>_N`) and synthesised functions (`__lambda_N`, a
+hoisted method's `{Class}__{method}`) never take a name spelled anywhere in
+the source file, and never take a name invented before them, of either
+kind: the backends keep functions and variables in one namespace, so a
+local spelled `__lambda_0` would otherwise shadow the lambda, and the copy
+of a parameter `a__b` (`__param_a__b_0`) would shadow the method `b_0` of a
+class `__param_a` (#18771).  Each invented name is claimed the moment it is
+made, so the order in which they are invented does not matter.
+
+**Tuples.**  A trailing comma makes a tuple (`x = 1,`, `return y,`,
+`for x, in rows:`, `xs[i,]`).  These used to lower as the bare element;
+like every tuple, they are refused.
 
 ### Operators (M2)
 
@@ -143,6 +194,19 @@ its arity mapped to `(start, stop, step)`; `range` with zero or more
 than three arguments is rejected ("range with wrong arity").  Any other
 iterable becomes a `ForEach`.
 
+**A loop over an already-bound variable** (`i = 10; for i in range(3):
+…`) stores each item into that variable, which keeps the last item after
+the loop, as in Python: the IR loop binds a temporary `__for_N`, and the
+body starts with `Assign i = __for_N`.  A **loop `else:`** clause is
+refused (it used to be dropped).  A **one-line body** (`if c: x = 1`,
+`while c: n -= 1`) is lowered like an indented one; it is a bare
+`simple_stmt` in the grammar, and used to be dropped whole.  `pass`
+lowers to no statement.  A loop body has no value: a trailing expression
+statement in it (a `print`, an `if`) is kept as a statement, since the C
+and Ruby backends never emit a loop body's value and used to drop it.
+Inside a method, `for self in …` is refused, like `self = …`, since a
+bare `self` always reads the receiver there.
+
 **Scoping.**  The loop variable (`i` / `x`) is a `Scope::Local` bound
 **inside the body only**, and a name first bound inside a loop or
 `if`-branch body does **not** leak past the block — the lowerer's
@@ -166,6 +230,7 @@ nesting into a clean error rather than a native stack overflow.
 | `lambda a: expr`                       | `MakeClosure { fn_name __lambda_N, captures }`        | `Closures`             |
 | nested `def` (returned / referenced)   | lifted `Function` + `MakeClosure` with captures       | `Closures`             |
 | `f(args)` — `f` a known function       | `DirectCall { fn_name f, args }`                      | —                      |
+| `f(args)` — `f` a function with captures | `IndirectCall { target MakeClosure(f, captures), args }` | `Closures`           |
 | `f(args)` — `f` a closure value        | `IndirectCall { target VarRef, args }`                | `Closures`             |
 | `print(x)`                             | SIR28 §2 `__sys_write__(stdout, "once", false, x)`    | `ConsoleIO`, `Strings` |
 | `len(x)`                               | `SeqLen { seq: x }`                                   | `Sequences`            |
@@ -175,14 +240,29 @@ nesting into a clean error rather than a native stack overflow.
 † a `def`/`lambda` with parameters declares `DynamicTyping` (the subset
 has no parameter annotations).
 
+**A user `def main`** is renamed, since the module body is the SIR
+function `main`.  The escape is one-to-one: `main` becomes `__py_main`, a
+name that already starts with `__py_` gains another `__py_`, and every
+other name is unchanged.  It applies where a name is written into the IR
+(`Function.name`, `DirectCall`, `MakeClosure`), so `main()` and `h = main`
+in the source still resolve.  A *variable* whose name starts with `__py_`
+gets the same extra prefix (`__py_main` → `__py___py_main`), because the
+backends keep functions and variables in one namespace: otherwise a local
+spelled `__py_main` would shadow the escaped `main`.
+
 **Two-pass design.**  A first pass collects **every** function name
 (top-level and nested) into a flat table, so a call to a function defined
 *later* in the file — and **mutual recursion** — resolve to `DirectCall`.
-The second pass lowers each body.
+The first pass also records, for each `def`, its parent body, its free
+names and its parameter shape.  The second pass lowers each body.
 
 **`return` is tail-only.**  A SIR function body is a `Block` whose `value`
 IS the return value, so a tail `return expr` sets that value (and a bare
-tail `return` / falling off the end yields `NilLit`).  A tail `if` whose
+tail `return` / falling off the end yields `NilLit`).  Falling off the end
+returns `None` whatever the last statement is: an expression statement, a
+docstring or a nested `def` used to become the return value.  Every
+statement before the tail `return` is kept as a statement; an expression
+statement there (a call, a `print`, an `if`) used to be dropped (#18482).  A tail `if` whose
 branches each `return` (`if c: return a else: return b`) lowers with each
 branch in function-tail position, becoming an `Expr::If`.  A **non-tail**
 `return` (followed by more statements, or nested in a loop / non-tail
@@ -199,6 +279,53 @@ capture.  A bare reference to a function name yields a `MakeClosure`
 (re-threading its captures), so closures can be returned or passed.
 Capture order is deterministic (alphabetical).  Closure bodies reuse the
 `MAX_BLOCK_DEPTH` / `MAX_EXPR_DEPTH` guards, so recursion stays bounded.
+
+**Capture lists are decided before bodies are lowered.**  Every closure
+built for a function must thread exactly the captures that function
+declares.  So the list is fixed before the function's body is lowered,
+and a body that names its own function (`h = go`, or `go(x - 1)`) builds
+a complete closure (#18468).  A function that *names* a capturing
+function also captures that function's captures, because it has to build
+that closure.  For example, when `inner` calls its uncle `go`, which
+captures `n`, both `inner` and `mid` capture `n`.  The planner runs this
+rule to a fixpoint over a function plus every not-yet-lowered sibling
+`def` it names.  So mutually-recursive sibling nested `def`s work even
+when one is called before its `def` is reached.  A sibling planned early
+cannot read a name bound only after the sibling that used it; such a
+program gets a positioned error.
+
+**Calling a function that has captures.**  A `DirectCall` passes only the
+arguments, so a call by name to a function with captures goes through its
+closure instead: `go(x - 1)` lowers to
+`IndirectCall(MakeClosure(go, [n]), [x - 1])`.  Backends apply closures
+leniently (no defaults, no keyword matching, a missing argument reads as
+nil).  So such a call must pass exactly the callee's plain positional
+parameters.  Defaults, keyword-only params, keyword arguments and a wrong
+argument count are positioned errors.
+
+**The closure invariant is checked.**  The finished module is walked
+once, parameter defaults included.  Every `MakeClosure` must thread
+exactly its target's captures, and no `DirectCall` may target a function
+with captures.  A closure built before its target's list was known (from
+a method body, a default value, or `main` naming a later `def`) is
+refused rather than emitted short.  Three more rules are enforced:
+
+- A capture value must be the *same variable* the function captured.
+  That means any binding in the function's own defining body, and only a
+  capture anywhere else.  So a function that binds its own `n` cannot
+  pass on an enclosing `n`, and such a program is refused.
+- A function may carry at most 256 captures (`MAX_CAPTURES`).  This is
+  a deliberate budget: it bounds both the emitted closure slots and the
+  planner's work.  It applies to every function, so a top-level `def`
+  that reads more than 256 module-level variables is refused even when
+  it is only used as a value.  (Top-level statements are `main`'s body,
+  so those variables are captures.)  There is no limit on how many
+  capture-free functions name each other.  A 300-function call chain, or
+  a dispatcher calling 300 helpers, compiles as before.
+- Known limitation: a function that binds `n` itself is refused if it
+  names a function that captures an enclosing `n`, even when the call
+  comes before the binding (`r = g(); n = 1`), which is valid Python.
+- The synthesised `__lambda_<N>` names cannot be named from source.
 
 **Default parameters (P8).**  A positional default `def f(a, b=10)` lowers
 the `param_with_default` node's `= <expr>` into `Param.default = Some(expr)`
@@ -360,9 +487,10 @@ Everything past M5 / C2 / the OOP surface above returns a clear positioned
   parameters** (`def f(a=1)`, P8) and **keyword parameters / arguments**
   (`def f(*, x)`, `f(x=1)`, KW8) are now supported; only the variadic
   rest forms remain deferred
-- tuple / multi-target `for` (`for k, v in …`), multi-target / chained
-  assignment, non-`self` attribute targets, bitwise operators, the power
-  operator (`**`)
+- tuple / multi-target `for` (`for k, v in …`), tuple / unpacking
+  assignment (`a, b = …`, `x = 1,`), non-`self` attribute targets, augmented
+  assignment to a subscript, bitwise operators, the power operator (`**`),
+  floor division (`//`) and their augmented forms, loop `else:` clauses
 - `@classmethod`/class methods, class variables, `super()` calls, mixins
   (`include`/`extend`), exceptions, generators, non-class decorators,
   `with` / `try`, `async`, imports, `global` / `nonlocal`, f-strings.
@@ -373,7 +501,16 @@ Everything past M5 / C2 / the OOP surface above returns a clear positioned
 cargo test -p python-to-semantic-ir
 ```
 
-The suite (82 tests) covers M1–M3 (literals; operators with
+`tests/statement_forms.rs` covers the #18482 statement fixes: augmented
+assignment (each operator against its binary form, the refused operators
+and targets), annotated and chained assignment, parameters assigned in a
+body, the `main` escape, trailing-comma tuples, `for` over a bound
+variable, falling off a function's end, the statement before a tail
+`return`, one-line suites and loop `else:`.  `sir-conformance`'s
+`python_statement_forms.rs` runs the same forms on all six backends
+against CPython's output.
+
+The unit suite covers M1–M3 (literals; operators with
 left-associativity / precedence; variable resolution and first-occurrence
 assignment; short-circuit nodes; `if` / `elif` / `else`, `while`,
 `for`-range / `for`-each with block scoping) plus the M4 surface:
@@ -389,6 +526,13 @@ assignment; short-circuit nodes; `if` / `elif` / `else`, `while`,
 - **closures** — `lambda` → `MakeClosure` + synthesised function; capture
   of an enclosing local; non-capture of globals / functions; nested-`def`
   capture of an enclosing param with a returned closure;
+- **closures that name themselves or a sibling** (#18468) — a nested `def`
+  naming itself as a value and recursively, sibling mutual recursion, a
+  sibling passing on a capture it does not read, the uncle chain, a
+  top-level `def` reading a `main` local, and the rejection paths.  A
+  shared helper checks that every `MakeClosure` threads exactly its
+  target's capture count and that no `DirectCall` targets a capturing
+  function;
 - **mutual recursion** detected (and self-recursion correctly *not*
   flagged);
 - a `validate` round-trip across the M4 programs, and

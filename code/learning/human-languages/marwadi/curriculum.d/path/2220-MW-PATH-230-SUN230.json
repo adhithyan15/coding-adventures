@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-230-SUN230",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "MW-EXT-230-SUN230"
+  ],
+  "after": []
+}

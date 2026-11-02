@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 207,
+  "title": "A Garden and a Tank",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:93cd37a2de757b0c",
+  "lessons": [
+    {
+      "id": "MW-C207-bagicho",
+      "sequence": 13820,
+      "title": "बगीचो (bagīcho) — a garden",
+      "headword": "बगीचो",
+      "romanization": "bagīcho",
+      "gloss": "a garden",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8c59c2cf72fd217",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for on the other side, then the Marwadi for separate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बगीचो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बगीचो — bagīcho — \"a garden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बगीचो कोट कनै है। bagīcho koṭ kanai hai. The garden is near the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बगीचो (bagīcho) is usually traced to Persian bāghcha, \"a small garden\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bagīcho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bagīcho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bagīcho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bagīcho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bagīcho koṭ kanai hai. — The garden is near the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bagīcho koṭ kanai hai.* — The garden is near the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for on the other side, then the Marwadi for separate, then say bagīcho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for on the other side, then the Marwadi for separate, then say *bagīcho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बगीचो (bagīcho) mean? (\"A garden\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C207-bagicho-type",
+              "prompt": "Say the Marwadi for 'a garden'.",
+              "assesses": [
+                "MW-LEX-C207-GARDEN207-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बगीचो",
+                "bagīcho"
+              ],
+              "feedback": {
+                "correct": "Right: बगीचो (bagīcho) is 'a garden'.",
+                "incorrect": "'a garden' is बगीचो (bagīcho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C207-kund",
+      "sequence": 13830,
+      "title": "कुंड (kuṇḍ) — a water tank",
+      "headword": "कुंड",
+      "romanization": "kuṇḍ",
+      "gloss": "a water tank",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52be4a907fd8fdba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for separate, then the Marwadi for a garden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कुंड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुंड — kuṇḍ — \"a water tank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कुंड मांय पाणी कोनी। kuṇḍ mā̃y pāṇī konī. There's no water in the tank."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुंड (kuṇḍ) is inherited from Sanskrit kuṇḍa, \"bowl, basin of water\". CDIAL gives no Marwari form in this entry, but lists Hindi kū̃ḍ, \"tub\", and Gujarati kũḍ, \"basin\" (CDIAL 3264)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṇḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṇḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṇḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṇḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṇḍ mā̃y pāṇī konī. — There's no water in the tank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṇḍ mā̃y pāṇī konī.* — There's no water in the tank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for separate, then the Marwadi for a garden, then say kuṇḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for separate, then the Marwadi for a garden, then say *kuṇḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कुंड (kuṇḍ) mean? (\"A water tank\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C207-kund-type",
+              "prompt": "Say the Marwadi for 'a water tank'.",
+              "assesses": [
+                "MW-LEX-C207-GARDEN207-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कुंड",
+                "kuṇḍ"
+              ],
+              "feedback": {
+                "correct": "Right: कुंड (kuṇḍ) is 'a water tank'.",
+                "incorrect": "'a water tank' is कुंड (kuṇḍ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C207-nako",
+      "sequence": 13840,
+      "title": "नाको (nāko) — a checkpoint; the mouth of a road",
+      "headword": "नाको",
+      "romanization": "nāko",
+      "gloss": "a checkpoint; the mouth of a road",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1288b00880b02e82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a garden, then the Marwadi for a water tank."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाको",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाको — nāko — \"a checkpoint; the mouth of a road\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नाको अठै सूं नजीक है। nāko aṭhai sū̃ najīk hai. The checkpoint is close to here."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाको (nāko) is inherited from a reconstructed nākka, \"like a nose, projecting\". CDIAL gives no Marwari form in this entry, but lists Hindi nākā, \"end of road, passage\", and Sindhi nāko, \"entrance, pass\" (CDIAL 7037)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāko aṭhai sū̃ najīk hai. — The checkpoint is close to here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāko aṭhai sū̃ najīk hai.* — The checkpoint is close to here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a garden, then the Marwadi for a water tank, then say nāko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a garden, then the Marwadi for a water tank, then say *nāko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाको (nāko) mean? (\"A checkpoint; the mouth of a road\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C207-nako-type",
+              "prompt": "Say the Marwadi for 'a checkpoint'.",
+              "assesses": [
+                "MW-LEX-C207-GARDEN207-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नाको",
+                "nāko"
+              ],
+              "feedback": {
+                "correct": "Right: नाको (nāko) is 'a checkpoint; the mouth of a road'.",
+                "incorrect": "'a checkpoint' is नाको (nāko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C207-phatak",
+      "sequence": 13850,
+      "title": "फाटक (phāṭak) — a big gate; a railway crossing",
+      "headword": "फाटक",
+      "romanization": "phāṭak",
+      "gloss": "a big gate; a railway crossing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f6441d7e1575015",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a water tank, then the Marwadi for a checkpoint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फाटक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फाटक — phāṭak — \"a big gate; a railway crossing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फाटक बंद है, धीरे चालो। phāṭak band hai, dhīre chālo. The gate is shut, go slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फाटक (phāṭak) is inherited from a reconstructed phāṭṭakka, \"gate, door\". CDIAL gives no Marwari form in this entry, but lists Hindi phāṭak, \"gate\" (CDIAL 9069)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phāṭak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phāṭak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phāṭak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phāṭak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phāṭak band hai, dhīre chālo. — The gate is shut, go slowly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phāṭak band hai, dhīre chālo.* — The gate is shut, go slowly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a water tank, then the Marwadi for a checkpoint, then say phāṭak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a water tank, then the Marwadi for a checkpoint, then say *phāṭak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फाटक (phāṭak) mean? (\"A big gate; a railway crossing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C207-phatak-type",
+              "prompt": "Say the Marwadi for 'a big gate'.",
+              "assesses": [
+                "MW-LEX-C207-GARDEN207-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फाटक",
+                "phāṭak"
+              ],
+              "feedback": {
+                "correct": "Right: फाटक (phāṭak) is 'a big gate; a railway crossing'.",
+                "incorrect": "'a big gate' is फाटक (phāṭak)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C207-buraj",
+      "sequence": 13860,
+      "title": "बुरज (buraj) — a tower (of a fort)",
+      "headword": "बुरज",
+      "romanization": "buraj",
+      "gloss": "a tower (of a fort)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:399188db2991c50b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a checkpoint, then the Marwadi for a big gate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुरज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुरज — buraj — \"a tower (of a fort)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बुरज घणो जूनो है। buraj ghaṇo jūno hai. The tower is very old."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुरज (buraj) is usually traced, through Persian, to Arabic burj, \"a tower\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buraj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buraj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buraj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buraj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buraj ghaṇo jūno hai. — The tower is very old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buraj ghaṇo jūno hai.* — The tower is very old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a checkpoint, then the Marwadi for a big gate, then say buraj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a checkpoint, then the Marwadi for a big gate, then say *buraj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुरज (buraj) mean? (\"A tower (of a fort)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C207-buraj-type",
+              "prompt": "Say the Marwadi for 'a tower'.",
+              "assesses": [
+                "MW-LEX-C207-GARDEN207-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बुरज",
+                "buraj"
+              ],
+              "feedback": {
+                "correct": "Right: बुरज (buraj) is 'a tower (of a fort)'.",
+                "incorrect": "'a tower' is बुरज (buraj)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

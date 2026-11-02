@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:04fe7440d8e27580",
+  "lessonIds": [
+    "MW-C182-jhatakno",
+    "MW-C182-gholno",
+    "MW-C182-milavno",
+    "MW-C182-bagharno",
+    "MW-C182-purasno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch182.txt",
+  "json": "marwadi/narration/ch182.json",
+  "textHash": "fnv1a64:236516b8e5d6837d",
+  "jsonHash": "fnv1a64:2a7fb560e9bbf11f",
+  "findings": []
+}

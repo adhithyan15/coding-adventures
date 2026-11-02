@@ -2,7 +2,8 @@
  * Tests for irc-framing — Framer class.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import assert from "node:assert/strict";
+import { beforeEach, describe, it } from "node:test";
 import { Framer } from "../src/index.js";
 
 describe("Framer", () => {
@@ -13,54 +14,54 @@ describe("Framer", () => {
   });
 
   it("starts with an empty buffer", () => {
-    expect(framer.bufferSize).toBe(0);
-    expect(framer.frames()).toEqual([]);
+    assert.equal(framer.bufferSize, 0);
+    assert.deepEqual(framer.frames(), []);
   });
 
   it("returns no frames when no newline yet", () => {
     framer.feed(Buffer.from("NICK ali"));
-    expect(framer.frames()).toEqual([]);
-    expect(framer.bufferSize).toBe(8);
+    assert.deepEqual(framer.frames(), []);
+    assert.equal(framer.bufferSize, 8);
   });
 
   it("returns one frame on CRLF-terminated message", () => {
     framer.feed(Buffer.from("NICK alice\r\n"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
-    expect(frames[0].toString("utf-8")).toBe("NICK alice");
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString("utf-8"), "NICK alice");
   });
 
   it("returns one frame on LF-only-terminated message", () => {
     framer.feed(Buffer.from("NICK alice\n"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
-    expect(frames[0].toString("utf-8")).toBe("NICK alice");
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString("utf-8"), "NICK alice");
   });
 
   it("handles partial message followed by completion", () => {
     framer.feed(Buffer.from("NICK ali"));
-    expect(framer.frames()).toEqual([]);
+    assert.deepEqual(framer.frames(), []);
     framer.feed(Buffer.from("ce\r\n"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
-    expect(frames[0].toString("utf-8")).toBe("NICK alice");
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString("utf-8"), "NICK alice");
   });
 
   it("handles multiple messages in one feed", () => {
     framer.feed(Buffer.from("NICK alice\r\nJOIN #general\r\n"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(2);
-    expect(frames[0].toString("utf-8")).toBe("NICK alice");
-    expect(frames[1].toString("utf-8")).toBe("JOIN #general");
+    assert.equal(frames.length, 2);
+    assert.equal(frames[0].toString("utf-8"), "NICK alice");
+    assert.equal(frames[1].toString("utf-8"), "JOIN #general");
   });
 
   it("handles three messages in one feed", () => {
     framer.feed(Buffer.from("A\r\nB\r\nC\r\n"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(3);
-    expect(frames[0].toString("utf-8")).toBe("A");
-    expect(frames[1].toString("utf-8")).toBe("B");
-    expect(frames[2].toString("utf-8")).toBe("C");
+    assert.equal(frames.length, 3);
+    assert.equal(frames[0].toString("utf-8"), "A");
+    assert.equal(frames[1].toString("utf-8"), "B");
+    assert.equal(frames[2].toString("utf-8"), "C");
   });
 
   it("accumulates partial messages across multiple feeds", () => {
@@ -68,15 +69,15 @@ describe("Framer", () => {
     framer.feed(Buffer.from("MSG #c"));
     framer.feed(Buffer.from("han :hello\r\n"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
-    expect(frames[0].toString("utf-8")).toBe("PRIVMSG #chan :hello");
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString("utf-8"), "PRIVMSG #chan :hello");
   });
 
   it("leaves partial data in buffer after extracting complete frames", () => {
     framer.feed(Buffer.from("NICK alice\r\nJOIN #g"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
-    expect(framer.bufferSize).toBe("JOIN #g".length);
+    assert.equal(frames.length, 1);
+    assert.equal(framer.bufferSize, "JOIN #g".length);
   });
 
   it("discards overlong lines (>510 bytes)", () => {
@@ -85,7 +86,7 @@ describe("Framer", () => {
     const msg = Buffer.concat([longLine, Buffer.from("\r\n")]);
     framer.feed(msg);
     const frames = framer.frames();
-    expect(frames).toHaveLength(0);
+    assert.equal(frames.length, 0);
   });
 
   it("accepts exactly 510-byte line (boundary)", () => {
@@ -93,8 +94,8 @@ describe("Framer", () => {
     const msg = Buffer.concat([line510, Buffer.from("\r\n")]);
     framer.feed(msg);
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
-    expect(frames[0].length).toBe(510);
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].length, 510);
   });
 
   it("discards overlong line but continues processing subsequent lines", () => {
@@ -107,16 +108,16 @@ describe("Framer", () => {
     framer.feed(msg);
     const frames = framer.frames();
     // The overlong line is discarded; the short line is yielded.
-    expect(frames).toHaveLength(1);
-    expect(frames[0].toString("utf-8")).toBe("NICK alice");
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString("utf-8"), "NICK alice");
   });
 
   it("reset() clears all buffered data", () => {
     framer.feed(Buffer.from("partial data without newline"));
-    expect(framer.bufferSize).toBeGreaterThan(0);
+    assert.ok(framer.bufferSize > 0);
     framer.reset();
-    expect(framer.bufferSize).toBe(0);
-    expect(framer.frames()).toEqual([]);
+    assert.equal(framer.bufferSize, 0);
+    assert.deepEqual(framer.frames(), []);
   });
 
   it("reset() prevents stale data from bleeding into new session", () => {
@@ -125,23 +126,23 @@ describe("Framer", () => {
     framer.reset();  // simulate connection close
     framer.feed(Buffer.from("USER bob 0 * :Bob\r\n"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
-    expect(frames[0].toString("utf-8")).toBe("USER bob 0 * :Bob");
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString("utf-8"), "USER bob 0 * :Bob");
   });
 
   it("handles empty feed call gracefully", () => {
     framer.feed(Buffer.alloc(0));
-    expect(framer.bufferSize).toBe(0);
-    expect(framer.frames()).toEqual([]);
+    assert.equal(framer.bufferSize, 0);
+    assert.deepEqual(framer.frames(), []);
   });
 
   it("handles message split exactly on CR/LF boundary", () => {
     framer.feed(Buffer.from("NICK alice\r"));
-    expect(framer.frames()).toHaveLength(0);
+    assert.equal(framer.frames().length, 0);
     framer.feed(Buffer.from("\n"));
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
-    expect(frames[0].toString("utf-8")).toBe("NICK alice");
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString("utf-8"), "NICK alice");
   });
 
   it("handles LF as first byte (empty line)", () => {
@@ -149,38 +150,38 @@ describe("Framer", () => {
     const frames = framer.frames();
     // An empty line (zero content bytes) is under the 510-byte limit, so
     // it is yielded as an empty buffer.
-    expect(frames).toHaveLength(1);
-    expect(frames[0].length).toBe(0);
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].length, 0);
   });
 
   it("handles binary data with embedded nulls in content", () => {
     const data = Buffer.from("CMD \x00arg\r\n");
     framer.feed(data);
     const frames = framer.frames();
-    expect(frames).toHaveLength(1);
+    assert.equal(frames.length, 1);
     // The null byte is preserved — framing is byte-level, not text-level.
-    expect(frames[0][4]).toBe(0x00);
+    assert.equal(frames[0][4], 0x00);
   });
 
   it("bufferSize reflects accumulated bytes", () => {
     framer.feed(Buffer.from("ABC"));
-    expect(framer.bufferSize).toBe(3);
+    assert.equal(framer.bufferSize, 3);
     framer.feed(Buffer.from("DEF"));
-    expect(framer.bufferSize).toBe(6);
+    assert.equal(framer.bufferSize, 6);
     framer.feed(Buffer.from("\r\n"));
     framer.frames(); // drain
-    expect(framer.bufferSize).toBe(0);
+    assert.equal(framer.bufferSize, 0);
   });
 
   it("returns frames as Buffer instances, not strings", () => {
     framer.feed(Buffer.from("NICK alice\r\n"));
     const frames = framer.frames();
-    expect(Buffer.isBuffer(frames[0])).toBe(true);
+    assert.equal(Buffer.isBuffer(frames[0]), true);
   });
 
   it("handles a PRIVMSG with spaces in trailing param", () => {
     framer.feed(Buffer.from("PRIVMSG #chan :hello world\r\n"));
     const frames = framer.frames();
-    expect(frames[0].toString("utf-8")).toBe("PRIVMSG #chan :hello world");
+    assert.equal(frames[0].toString("utf-8"), "PRIVMSG #chan :hello world");
   });
 });

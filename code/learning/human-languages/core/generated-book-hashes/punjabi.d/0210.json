@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:2e0fb0d9346a9fcb",
+  "lessonIds": [
+    "PA-C210-perfective-return",
+    "PA-C210-ne",
+    "PA-C210-ne-review",
+    "PA-C210-aman-did-work",
+    "PA-C210-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch210-aman-did-the-work.tex"
+}

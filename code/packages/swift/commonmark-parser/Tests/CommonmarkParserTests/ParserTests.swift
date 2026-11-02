@@ -192,39 +192,62 @@ final class ParserTests: XCTestCase {
     func testFencedCodeBlockNoLang() {
         let blocks = children("```\ncode here\n```")
         XCTAssertEqual(blocks.count, 1)
-        if case .codeBlock(let cb) = blocks[0] {
-            XCTAssertNil(cb.language)
-            XCTAssertEqual(cb.value, "code here\n")
-        } else { XCTFail("Expected codeBlock") }
+        if case .fencedBlock(let fence) = blocks[0] {
+            XCTAssertNil(fence.name)
+            XCTAssertNil(fence.info)
+            XCTAssertEqual(fence.value, "code here\n")
+        } else { XCTFail("Expected fencedBlock") }
     }
 
     func testFencedCodeBlockWithLang() {
         let blocks = children("```swift\nlet x = 1\n```")
-        if case .codeBlock(let cb) = blocks[0] {
-            XCTAssertEqual(cb.language, "swift")
-            XCTAssertEqual(cb.value, "let x = 1\n")
+        if case .fencedBlock(let fence) = blocks[0] {
+            XCTAssertEqual(fence.name, "swift")
+            XCTAssertEqual(fence.info, "swift")
+            XCTAssertEqual(fence.value, "let x = 1\n")
         } else { XCTFail() }
     }
 
     func testFencedCodeBlockTildes() {
         let blocks = children("~~~python\nprint('hi')\n~~~")
-        if case .codeBlock(let cb) = blocks[0] {
-            XCTAssertEqual(cb.language, "python")
+        if case .fencedBlock(let fence) = blocks[0] {
+            XCTAssertEqual(fence.name, "python")
+            XCTAssertEqual(fence.info, "python")
         } else { XCTFail() }
     }
 
     func testFencedCodeBlockMultiLine() {
         let blocks = children("```\nline1\nline2\nline3\n```")
-        if case .codeBlock(let cb) = blocks[0] {
-            XCTAssertEqual(cb.value, "line1\nline2\nline3\n")
+        if case .fencedBlock(let fence) = blocks[0] {
+            XCTAssertEqual(fence.value, "line1\nline2\nline3\n")
         } else { XCTFail() }
     }
 
     func testFencedCodeBlockEmpty() {
         let blocks = children("```\n```")
-        if case .codeBlock(let cb) = blocks[0] {
-            XCTAssertEqual(cb.value, "")
+        if case .fencedBlock(let fence) = blocks[0] {
+            XCTAssertNil(fence.name)
+            XCTAssertNil(fence.info)
+            XCTAssertEqual(fence.value, "")
         } else { XCTFail() }
+    }
+
+    func testFencedCodeBlockPreservesCompleteInfoString() {
+        let blocks = children("```typescript linenos\nconst x = 1 < 2;\n```")
+        if case .fencedBlock(let fence) = blocks[0] {
+            XCTAssertEqual(fence.name, "typescript")
+            XCTAssertEqual(fence.info, "typescript linenos")
+            XCTAssertEqual(fence.value, "const x = 1 < 2;\n")
+        } else { XCTFail("Expected fencedBlock") }
+    }
+
+    func testFencedCodeBlockKeepsDiagramMetadataInert() {
+        let blocks = children("```mermaid theme=dark\nA --> B & C\n```")
+        if case .fencedBlock(let fence) = blocks[0] {
+            XCTAssertEqual(fence.name, "mermaid")
+            XCTAssertEqual(fence.info, "mermaid theme=dark")
+            XCTAssertEqual(fence.value, "A --> B & C\n")
+        } else { XCTFail("Expected fencedBlock") }
     }
 
     // ── Indented Code Blocks ──────────────────────────────────────────────

@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 204,
+  "title": "Out and About",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0782b36f67f8d954",
+  "lessons": [
+    {
+      "id": "MW-C204-ghumno",
+      "sequence": 13670,
+      "title": "घूमणो (ghūmṇo) — to stroll; to go round",
+      "headword": "घूमणो",
+      "romanization": "ghūmṇo",
+      "gloss": "to stroll; to go round",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5016ff372e900881",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to lose one's way, then the Marwadi for to be visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घूमणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घूमणो — ghūmṇo — \"to stroll; to go round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आथण हूं बाजार मांय घूमूं हूं। āthaṇ hū̃ bājār mā̃y ghūmū̃ hū̃. In the evening I stroll round the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): हूं सहर मांय घूम्यो, hū̃ sahar mā̃y ghūmyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घूमणो (ghūmṇo) is inherited from a reconstructed ghummati, \"revolves\". CDIAL gives no Marwari form in this entry, but lists Hindi ghūmnā, \"to revolve, wander\" (CDIAL 4485)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūmṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūmṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūmṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūmṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āthaṇ hū̃ bājār mā̃y ghūmū̃ hū̃. — In the evening I stroll round the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āthaṇ hū̃ bājār mā̃y ghūmū̃ hū̃.* — In the evening I stroll round the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to lose one's way, then the Marwadi for to be visible, then say ghūmṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to lose one's way, then the Marwadi for to be visible, then say *ghūmṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घूमणो (ghūmṇo) mean? (\"To stroll; to go round\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C204-ghumno-type",
+              "prompt": "Say the Marwadi for 'to stroll'.",
+              "assesses": [
+                "MW-LEX-C204-OUT204-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "घूमणो",
+                "ghūmṇo"
+              ],
+              "feedback": {
+                "correct": "Right: घूमणो (ghūmṇo) is 'to stroll; to go round'.",
+                "incorrect": "'to stroll' is घूमणो (ghūmṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C204-bhir",
+      "sequence": 13680,
+      "title": "भीड़ (bhīṛ) — a crowd",
+      "headword": "भीड़",
+      "romanization": "bhīṛ",
+      "gloss": "a crowd",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6df5bf6264bd7381",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to be visible, then the Marwadi for to stroll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भीड़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीड़ — bhīṛ — \"a crowd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज बाजार मांय घणी भीड़ है। āj bājār mā̃y ghaṇī bhīṛ hai. The market is very crowded today."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीड़ (bhīṛ) is inherited from a reconstructed bhiṭ, \"meet, throng\"; CDIAL lists Old Marwari bheṭi, \"meeting\", and Hindi bhīṛ, \"crowd\", under it (CDIAL 9490)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīṛ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīṛ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj bājār mā̃y ghaṇī bhīṛ hai. — The market is very crowded today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj bājār mā̃y ghaṇī bhīṛ hai.* — The market is very crowded today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to be visible, then the Marwadi for to stroll, then say bhīṛ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to be visible, then the Marwadi for to stroll, then say *bhīṛ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भीड़ (bhīṛ) mean? (\"A crowd\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C204-bhir-type",
+              "prompt": "Say the Marwadi for 'a crowd'.",
+              "assesses": [
+                "MW-LEX-C204-OUT204-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भीड़",
+                "bhīṛ"
+              ],
+              "feedback": {
+                "correct": "Right: भीड़ (bhīṛ) is 'a crowd'.",
+                "incorrect": "'a crowd' is भीड़ (bhīṛ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C204-maidan",
+      "sequence": 13690,
+      "title": "मैदान (maidān) — an open ground",
+      "headword": "मैदान",
+      "romanization": "maidān",
+      "gloss": "an open ground",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8219de13a26503e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to stroll, then the Marwadi for a crowd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मैदान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैदान — maidān — \"an open ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मैदान स्कूल कनै है। maidān skūl kanai hai. The open ground is near the school."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैदान (maidān) is usually traced to Persian maidān, \"an open plain\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maidān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maidān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maidān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maidān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maidān skūl kanai hai. — The open ground is near the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maidān skūl kanai hai.* — The open ground is near the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to stroll, then the Marwadi for a crowd, then say maidān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to stroll, then the Marwadi for a crowd, then say *maidān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मैदान (maidān) mean? (\"An open ground\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C204-maidan-type",
+              "prompt": "Say the Marwadi for 'an open ground'.",
+              "assesses": [
+                "MW-LEX-C204-OUT204-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मैदान",
+                "maidān"
+              ],
+              "feedback": {
+                "correct": "Right: मैदान (maidān) is 'an open ground'.",
+                "incorrect": "'an open ground' is मैदान (maidān)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C204-kinaro",
+      "sequence": 13700,
+      "title": "किनारो (kināro) — an edge; a shore",
+      "headword": "किनारो",
+      "romanization": "kināro",
+      "gloss": "an edge; a shore",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b882fa671412b5a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a crowd, then the Marwadi for an open ground."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किनारो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किनारो — kināro — \"an edge; a shore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "किनारो अठै सूं दूर कोनी। kināro aṭhai sū̃ dūr konī. The shore isn't far from here."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किनारो (kināro) is usually traced to Persian kinār, \"edge, shore\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kināro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kināro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kināro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kināro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kināro aṭhai sū̃ dūr konī. — The shore isn't far from here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kināro aṭhai sū̃ dūr konī.* — The shore isn't far from here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a crowd, then the Marwadi for an open ground, then say kināro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a crowd, then the Marwadi for an open ground, then say *kināro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किनारो (kināro) mean? (\"An edge; a shore\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C204-kinaro-type",
+              "prompt": "Say the Marwadi for 'an edge'.",
+              "assesses": [
+                "MW-LEX-C204-OUT204-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "किनारो",
+                "kināro"
+              ],
+              "feedback": {
+                "correct": "Right: किनारो (kināro) is 'an edge; a shore'.",
+                "incorrect": "'an edge' is किनारो (kināro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C204-nakso",
+      "sequence": 13710,
+      "title": "नक्सो (nakso) — a map",
+      "headword": "नक्सो",
+      "romanization": "nakso",
+      "gloss": "a map",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b24d11d2ebadda8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an open ground, then the Marwadi for an edge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नक्सो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नक्सो — nakso — \"a map\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नक्सो जेब मांय है। nakso jeb mā̃y hai. The map is in my pocket."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नक्सो (nakso) is usually traced, through Persian, to Arabic naqsh, \"a drawing, an engraving\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakso jeb mā̃y hai. — The map is in my pocket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakso jeb mā̃y hai.* — The map is in my pocket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an open ground, then the Marwadi for an edge, then say nakso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an open ground, then the Marwadi for an edge, then say *nakso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नक्सो (nakso) mean? (\"A map\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C204-nakso-type",
+              "prompt": "Say the Marwadi for 'a map'.",
+              "assesses": [
+                "MW-LEX-C204-OUT204-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नक्सो",
+                "nakso"
+              ],
+              "feedback": {
+                "correct": "Right: नक्सो (nakso) is 'a map'.",
+                "incorrect": "'a map' is नक्सो (nakso)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

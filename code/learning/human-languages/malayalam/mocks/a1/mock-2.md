@@ -5,6 +5,7 @@ minutes, listening 18, writing 20, speaking 10 with 5 minutes preparation.
 
 ## Reading — 20 minutes
 
+<!-- mock-part:a1-reading-signs-and-forms -->
 1. **പുറത്തേക്കുള്ള വഴി** — A entrance / B exit / C upstairs
 2. **നാളെ തുറക്കും** — A open tomorrow / B closed tomorrow / C open today
 3. **ഇവിടെ ഇരിക്കരുത്** — A sit here / B do not sit here / C wait here
@@ -12,6 +13,8 @@ minutes, listening 18, writing 20, speaking 10 with 5 minutes preparation.
 5. Form **പേര്: കവിത** — A name Kavita / B city Kavita / C language Kavita
 6. Form **നഗരം: ലഖ്നൗ** — A time Lucknow / B city Lucknow / C name Lucknow
 7. Form **സമയം: ഏഴ് മണി** — A at 6 / B at 7 / C at 8
+<!-- /mock-part:a1-reading-signs-and-forms -->
+<!-- mock-part:a1-reading-short-messages -->
 8. **ഞാൻ ഇന്ന് വൈകി വരും.** A I will be late today. / B I arrived early. / C I leave tomorrow.
 9. **ദയവായി വാതിൽ അടയ്ക്കൂ.** A close the door / B open the window / C bring water
 10. **നമുക്ക് സ്റ്റേഷനിൽ കാണാം.** A meet at the station / B leave the station / C live near school
@@ -19,7 +22,9 @@ minutes, listening 18, writing 20, speaking 10 with 5 minutes preparation.
 12. **ഭക്ഷണം എട്ടു മണിക്ക് തയ്യാറാകും.** A food ready at 8 / B class at 8 / C eat for 8 minutes
 13. **ഞാൻ ബസിൽ അല്ല, ട്രെയിനിൽ പോകും.** A travel by train, not bus / B take bus and train / C no travel
 14. **നിങ്ങൾക്ക് നാളെ വരാമോ?** A Can you come tomorrow? / B Where are you today? / C Did you come yesterday?
+<!-- /mock-part:a1-reading-short-messages -->
 
+<!-- mock-part:a1-reading-personal-descriptions -->
 Profiles:
 
 - **കവിത ലഖ്നൗവിൽ താമസിക്കുന്നു. അവൾ സ്കൂളിൽ ജോലി ചെയ്യുന്നു; രാവിലെ ചായ കുടിക്കുന്നു.**
@@ -32,24 +37,30 @@ Profiles:
 18. Who travels by train? A Kavita / B Imran / C Neha
 19. Who drinks tea in the morning? A Kavita / B Imran / C Neha
 20. Who speaks two languages? A Kavita / B Imran / C Neha
+<!-- /mock-part:a1-reading-personal-descriptions -->
 
 ## Listening — 18 minutes
 
 Read each item twice at 90–110 words per minute.
 
+<!-- mock-part:a1-listening-announcements -->
 1. **ട്രെയിൻ പത്തു മിനിറ്റ് വൈകി വരും.** A train 10 minutes late / B bus at 10 / C train early
 2. **ഇന്ന് ക്ലാസ് പുറത്തായിരിക്കും.** A class outside / B class closed / C water outside
 3. **കട ആറു മണിക്ക് അടയ്ക്കും.** A shop closes at 6 / B opens at 6 / C six shops
 4. **ദയവായി നിങ്ങളുടെ പേര് എഴുതൂ.** A write your name / B say your city / C read Malayalam
 5. **ഭക്ഷണം തയ്യാറാണ്.** A food ready / B tea cold / C bus ready
 6. **ബസ് സ്റ്റേഷന്റെ മുന്നിലാണ്.** A bus in front of station / B bus behind school / C station closed
+<!-- /mock-part:a1-listening-announcements -->
+<!-- mock-part:a1-listening-short-exchanges -->
 7. A: **നിങ്ങൾ എവിടെ താമസിക്കുന്നു?** B: **ഞാൻ ഡൽഹിയിൽ താമസിക്കുന്നു.** A asks about: A residence / B name / C job
 8. A: **നിങ്ങൾ എപ്പോൾ വരും?** B: **നാലു മണിക്ക്.** B will come at: A 4 / B 5 / C 8
 9. A: **കാപ്പി വേണോ?** B: **ഇല്ല, ചായ തരൂ.** B wants: A coffee / B tea / C water
 10. A: **നിങ്ങളുടെ ജോലി എന്താണ്?** B: **ഞാൻ അധ്യാപകനാണ്.** B is: A student / B teacher / C driver
 11. A: **സ്റ്റേഷൻ ദൂരെയാണോ?** B: **ഇല്ല, അടുത്താണ്.** Station is: A far / B near / C closed
 12. A: **ഇന്ന് കാണാമോ?** B: **ഇല്ല, നാളെ കാണാം.** They meet: A today / B tomorrow / C never
+<!-- /mock-part:a1-listening-short-exchanges -->
 
+<!-- mock-part:a1-listening-personal-account -->
 Account for items 13–17:
 
 **ഞാൻ രോഹൻ ആണ്; സൂറത്തിൽ താമസിക്കുന്നു. തിങ്കൾ മുതൽ വെള്ളി വരെ ഒമ്പതു
@@ -61,6 +72,7 @@ Account for items 13–17:
 15. He travels by: A bus / B bicycle / C train
 16. Lunch comes from: A home / B café / C market
 17. On Saturday he goes to: A school / B market / C work
+<!-- /mock-part:a1-listening-personal-account -->
 
 ## Writing — 20 minutes
 
@@ -68,16 +80,26 @@ Use one continuous 20-minute clock: spend 7 minutes on the practical form and
 13 minutes on the named-reader message. Move on when the first 7 minutes end;
 stop when the full 20 minutes end. Review the attempt later, outside this paper.
 
+<!-- mock-part:a1-writing-practical-form -->
 1. Complete in Malayalam script: **പേര്**, **നഗരം**, **ജോലി അല്ലെങ്കിൽ പഠനം**,
    **യാത്രാസാധനം**, **ഇഷ്ടപ്പെട്ട ഭക്ഷണം**, **കാണുന്ന സമയം**.
+<!-- /mock-part:a1-writing-practical-form -->
+<!-- mock-part:a1-writing-reader-purpose-message -->
 2. Write 30–40 Malayalam words to a friend named **മോഹൻ**. Say why you cannot
    meet today, propose a new day, time, and place, and close politely. The reader
    and purpose must be clear.
+<!-- /mock-part:a1-writing-reader-purpose-message -->
 
 ## Speaking — 10 minutes
 
+<!-- mock-part:a1-speaking-personal-interview -->
 1. Interview: answer five questions about residence, work or study, transport,
    food, and weekend plans.
+<!-- /mock-part:a1-speaking-personal-interview -->
+<!-- mock-part:a1-speaking-prepared-description -->
 2. Prepare, then describe a familiar daily routine for one minute.
+<!-- /mock-part:a1-speaking-prepared-description -->
+<!-- mock-part:a1-speaking-transactional-role-play -->
 3. Role-play: at a station, ask when a train leaves, ask which platform,
    confirm the information, and thank the clerk.
+<!-- /mock-part:a1-speaking-transactional-role-play -->

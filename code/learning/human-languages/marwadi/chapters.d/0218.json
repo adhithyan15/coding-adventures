@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Bus and Train",
+  "label": "ch:mw-bus-and-train",
+  "canDo": "I can say I will take the train and when the bus leaves.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C218-pugavno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say I will take the train and when the bus leaves.",
+    "assesses": [
+      "MW-LEX-C218-RAIL218-03",
+      "MW-LEX-C218-RAIL218-04",
+      "MW-LEX-C218-RAIL218-05"
+    ]
+  }
+}

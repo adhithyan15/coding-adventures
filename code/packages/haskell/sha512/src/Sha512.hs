@@ -2,6 +2,7 @@ module Sha512
     ( description
     , sha512
     , sha512Hex
+    , encodeBitLength
     ) where
 
 import Data.Bits
@@ -68,13 +69,18 @@ sha512Hex =
 
 pad :: [Word8] -> [Word8]
 pad inputBytes =
-    inputBytes ++ [0x80] ++ replicate paddingLength 0 ++ integerToBytes16 bitLength
+    inputBytes ++ [0x80] ++ replicate paddingLength 0 ++ encodedLength
   where
-    bitLength :: Integer
-    bitLength = fromIntegral (length inputBytes) * 8
+    encodedLength = either error id (encodeBitLength (fromIntegral (length inputBytes)))
     paddingLength =
         let remainder = (length inputBytes + 1 + 16) `mod` 128
          in if remainder == 0 then 0 else 128 - remainder
+
+encodeBitLength :: Integer -> Either String [Word8]
+encodeBitLength byteCount
+    | byteCount < 0 || byteCount >= 2 ^ (125 :: Int) =
+        Left "sha512: message length must be less than 2^128 bits"
+    | otherwise = Right (integerToBytes16 (byteCount * 8))
 
 compress :: [Word64] -> [Word8] -> [Word64]
 compress state block =

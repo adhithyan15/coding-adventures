@@ -82,9 +82,25 @@ fn literal_projection_and_invalid_authoring() {
         .unwrap()
         .output
         .contains("font-size: 22.5px"));
-    for bad in ["0", "\"18px\"", "(textSize)", "auto"] {
+    for bad in ["0", "\"18px\"", "(textSize)"] {
         assert!(fixture(bad, "number").is_err(), "{bad}");
     }
+    // A bare `auto` is a name reference that no `For` and no slot binds, so
+    // the layout compiler rejects it (`UnboundName`, UI29 §3.4) before the
+    // emitter's own font-size check is reached.
+    let model =
+        mosmodel_compiler::compile("component Typography { slot text-size : number ; }").unwrap();
+    let errors = moslayout_compiler::compile(
+        r#"layout Typography { Text ( content: "Title" , font-size: auto ) }"#,
+        Some(&model.descriptor_json),
+    )
+    .expect_err("auto");
+    assert!(
+        errors
+            .iter()
+            .any(|e| e.kind == moslayout_compiler::ErrorKind::UnboundName),
+        "{errors:?}"
+    );
     assert!(fixture("slot: text-size", "text").is_err());
 }
 

@@ -1,5 +1,88 @@
 # Changelog
 
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 4 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
+## Unreleased — A variable never shadows a function of the same name (#18485)
+
+SIR keeps functions and variables in separate namespaces, and Ruby relies on
+it: `def f; 40; end; f = 2; puts f() + f` prints 42. This backend emitted
+the local as `f` next to the function `f`, so the local shadowed the
+function and the call failed with `TypeError: f is not a function`. A
+*variable* (local, parameter, capture, loop variable, `rescue` binding)
+whose SIR name is also a function's name is now emitted through `var_ident`
+as `_$sir_esc_l` + `sanitize_ident(name)`; every other variable, and every
+function, keeps its spelling, because callers append code that calls the
+emitted functions by name. The new `l` tag sits beside `sanitize_ident`'s
+`v` and `e`, so the renamed form can equal no other identifier. New unit
+tests `a_local_named_like_a_function_is_renamed_and_the_function_is_not` and
+`var_ident_renames_exactly_the_names_of_functions`;
+`tests/twig_generated_names.rs` adds
+`a_variable_named_like_a_function_does_not_shadow_it`, which runs the
+TypeScript output under `node` (this backend is not one of
+`sir-conformance`'s targets). A keyword parameter destructures as `key:
+local` when the two spellings differ. Module globals keep their spelling
+(`scoped_ident`): they are module-level bindings like the functions, and a
+`Global` reference is how a hand-built module reaches a function's handle
+(`run_with_node.rs`'s `runtime_rejects_constructor_gadget`).
+
+## Unreleased — `ForRange` counts with a hidden counter (#18482 review)
+
+The loop used its own variable as the counter, so a body that assigned it
+changed the number of iterations (`for i in range(3): i += 10` ran once).
+It now counts with `__sir_i_<id>` and binds the variable from it at the top
+of each iteration (`let i: __Sir.Val = __sir_i_<id>;`), as the JavaScript,
+C, Go, Rust and Ruby backends do.  The `lib.rs` ForRange test pins the new
+shape.
+
+## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds around user code**:
+  `__sir…` in any case (the `__Sir*` imports, `__sir_result`, loop
+  temporaries), `_a` (a closure wrapper's argument array), `__l`, `__kw`,
+  `__exc`, and the globals the emitted code calls inline (`Map`, `Object`,
+  `Error`).  The closure wrapper evaluates its captured values inside
+  `(..._a) => …`, so a captured `_a` read the argument array.
+  (`__sir_block__` keeps its spelling.)
+- **A strict closure's arity error is `ArgumentError`.**  When the module
+  imports the exception runtime it is raised with
+  `__SirExc.raiseError("ArgumentError", …)`, so `rescue ArgumentError`
+  catches it (a native `TypeError` was a plain `StandardError` to
+  `rescueMatches`); otherwise nothing can catch it, and an `Error` named
+  `ArgumentError` keeps the uncaught report the same without adding a
+  runtime import to every program with a lambda.
+- `tests/twig_generated_names.rs` runs the cross-backend table, with an
+  inline stub of `sir-runtime-exceptions` beside the existing ones.
+
+Security-review follow-up:
+
+- `await` and `implements` are reserved words.  Every emitted file is an
+  ES module in strict mode, where both are reserved.
+- **Non-finite float literals** are `1e999`, `(-1e999)` and `(0 / 0)`.
+  They were Rust's `{:?}` spelling — `inf` and `-inf` are not JavaScript,
+  and `NaN` is a global name a user declaration could shadow.
+
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) used to
+emit its inner closure unchanged, so a Ruby lambda or Twig closure called
+with the wrong number of arguments silently got `undefined` (or dropped the
+extra one) — the "strict-lambda enforcement" cut-line in
+`code/specs/sir-runtime.md`.  The closure now carries an inline check that
+throws `TypeError("arity mismatch: closure expects N argument(s), got M")`,
+identical to the JavaScript backend's.  It is inline rather than in
+`@coding-adventures/sir-runtime-core`, so it holds with any published
+runtime version.  `tests/twig_pairs_and_closures.rs` runs the #18460/#18461
+Twig programs under `node` against an inline runtime stub.
+
 ## 0.15.0 — Accept `Feature::LoopControl` (task #63)
 
 Second backend (after `semantic-ir-to-javascript`, task #62) to accept

@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 168,
+  "title": "Sun and Shade",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4dcec789cbee328c",
+  "lessons": [
+    {
+      "id": "MW-C168-ugno",
+      "sequence": 11100,
+      "title": "ऊगणो (ūgṇo) — to rise (of the sun)",
+      "headword": "ऊगणो",
+      "romanization": "ūgṇo",
+      "gloss": "to rise (of the sun)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cfab132c6c0db47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for last, then the Marwadi for at once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऊगणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊगणो — ūgṇo — \"to rise (of the sun)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सूरज दिनूगै ऊगै है। sūraj dinūgai ūgai hai. The sun rises early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो सूरज ऊग्यो, vo sūraj ūgyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊगणो (ūgṇo) is inherited from a reconstructed udgāti, \"rises, comes forth\"; CDIAL lists Old Marwari ūgaï, \"rises, appears\" (CDIAL 1954)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūgṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūgṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūgṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūgṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūraj dinūgai ūgai hai. — The sun rises early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūraj dinūgai ūgai hai.* — The sun rises early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for last, then the Marwadi for at once, then say ūgṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for last, then the Marwadi for at once, then say *ūgṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ऊगणो (ūgṇo) mean? (\"To rise (of the sun)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C168-ugno-type",
+              "prompt": "Say the Marwadi for 'to rise'.",
+              "assesses": [
+                "MW-LEX-C168-SURAJ168-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ऊगणो",
+                "ūgṇo"
+              ],
+              "feedback": {
+                "correct": "Right: ऊगणो (ūgṇo) is 'to rise (of the sun)'.",
+                "incorrect": "'to rise' is ऊगणो (ūgṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C168-dhup",
+      "sequence": 11110,
+      "title": "धूप (dhūp) — sunshine",
+      "headword": "धूप",
+      "romanization": "dhūp",
+      "gloss": "sunshine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b3a55e8e8ddfdc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for at once, then the Marwadi for to rise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धूप",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धूप — dhūp — \"sunshine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज धूप घणी तेज है। āj dhūp ghaṇī tej hai. The sun is very strong today."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धूप (dhūp) comes from a reconstructed dhuppā, \"sunshine\"; CDIAL lists Hindi and Gujarati dhūp (CDIAL 6825). CDIAL gives no Marwari form in this entry. It is feminine: धूप घणी तेज है."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj dhūp ghaṇī tej hai. — The sun is very strong today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj dhūp ghaṇī tej hai.* — The sun is very strong today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for at once, then the Marwadi for to rise, then say dhūp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for at once, then the Marwadi for to rise, then say *dhūp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धूप (dhūp) mean? (\"Sunshine\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C168-dhup-type",
+              "prompt": "Say the Marwadi for 'sunshine'.",
+              "assesses": [
+                "MW-LEX-C168-SURAJ168-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धूप",
+                "dhūp"
+              ],
+              "feedback": {
+                "correct": "Right: धूप (dhūp) is 'sunshine'.",
+                "incorrect": "'sunshine' is धूप (dhūp)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C168-chhav",
+      "sequence": 11120,
+      "title": "छांव (chhā̃v) — shade",
+      "headword": "छांव",
+      "romanization": "chhā̃v",
+      "gloss": "shade",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7172429367b7e4d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to rise, then the Marwadi for sunshine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छांव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छांव — chhā̃v — \"shade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाय छांव मांय बैठै है। gāy chhā̃v mā̃y baiṭhai hai. The cow sits in the shade."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छांव (chhā̃v) is inherited from Sanskrit chāyā, \"shade, shadow\"; CDIAL lists Old Marwari chāvalī, \"shade\" (CDIAL 5027)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhā̃v",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhā̃v*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhā̃v, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhā̃v*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāy chhā̃v mā̃y baiṭhai hai. — The cow sits in the shade.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāy chhā̃v mā̃y baiṭhai hai.* — The cow sits in the shade.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to rise, then the Marwadi for sunshine, then say chhā̃v again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to rise, then the Marwadi for sunshine, then say *chhā̃v* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छांव (chhā̃v) mean? (\"Shade\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C168-chhav-type",
+              "prompt": "Say the Marwadi for 'shade'.",
+              "assesses": [
+                "MW-LEX-C168-SURAJ168-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छांव",
+                "chhā̃v"
+              ],
+              "feedback": {
+                "correct": "Right: छांव (chhā̃v) is 'shade'.",
+                "incorrect": "'shade' is छांव (chhā̃v)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C168-tulsi",
+      "sequence": 11130,
+      "title": "तुळसी (tuḷsī) — holy basil",
+      "headword": "तुळसी",
+      "romanization": "tuḷsī",
+      "gloss": "holy basil",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9bade1ec6c13505",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for sunshine, then the Marwadi for shade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तुळसी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुळसी — tuḷsī — \"holy basil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी तुळसी हरी अर सुंदर है। mhārī tuḷsī harī ar sundar hai. My holy basil is green and beautiful."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुळसी (tuḷsī) is inherited from Sanskrit tulasī, \"the sacred basil plant\"; CDIAL lists Gujarati tuḷsī and Hindi tulsī (CDIAL 5885). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuḷsī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuḷsī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuḷsī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuḷsī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī tuḷsī harī ar sundar hai. — My holy basil is green and beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī tuḷsī harī ar sundar hai.* — My holy basil is green and beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for sunshine, then the Marwadi for shade, then say tuḷsī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for sunshine, then the Marwadi for shade, then say *tuḷsī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तुळसी (tuḷsī) mean? (\"Holy basil\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C168-tulsi-type",
+              "prompt": "Say the Marwadi for 'holy basil'.",
+              "assesses": [
+                "MW-LEX-C168-SURAJ168-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तुळसी",
+                "tuḷsī"
+              ],
+              "feedback": {
+                "correct": "Right: तुळसी (tuḷsī) is 'holy basil'.",
+                "incorrect": "'holy basil' is तुळसी (tuḷsī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C168-sichno",
+      "sequence": 11140,
+      "title": "सींचणो (sī̃chṇo) — to water plants",
+      "headword": "सींचणो",
+      "romanization": "sī̃chṇo",
+      "gloss": "to water plants",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4162ad957c881d83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for shade, then the Marwadi for holy basil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सींचणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सींचणो — sī̃chṇo — \"to water plants\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं रोज तुळसी सींचूं हूं। hū̃ roj tuḷsī sī̃chū̃ hū̃. I water the holy basil every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं तुळसी सींची, mhaĩ tuḷsī sī̃chī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सींचणो (sī̃chṇo) is inherited from Sanskrit siñcati, \"pours out, sprinkles\"; CDIAL lists Hindi sī̃cnā and Gujarati sĩcvũ (CDIAL 13394). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sī̃chṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sī̃chṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sī̃chṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sī̃chṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ roj tuḷsī sī̃chū̃ hū̃. — I water the holy basil every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ roj tuḷsī sī̃chū̃ hū̃.* — I water the holy basil every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for shade, then the Marwadi for holy basil, then say sī̃chṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for shade, then the Marwadi for holy basil, then say *sī̃chṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सींचणो (sī̃chṇo) mean? (\"To water plants\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C168-sichno-type",
+              "prompt": "Say the Marwadi for 'to water plants'.",
+              "assesses": [
+                "MW-LEX-C168-SURAJ168-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सींचणो",
+                "sī̃chṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सींचणो (sī̃chṇo) is 'to water plants'.",
+                "incorrect": "'to water plants' is सींचणो (sī̃chṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-284-BASTO284",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-284-BASTO284"
+  ],
+  "after": []
+}

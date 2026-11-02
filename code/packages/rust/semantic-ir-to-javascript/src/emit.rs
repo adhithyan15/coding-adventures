@@ -79,7 +79,8 @@
 //! defence-in-depth that fire only on a backend bug (the accept-set
 //! drifting out of sync with what `emit` handles), never on user input.
 
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -91,10 +92,22 @@ use crate::runtime::RUNTIME;
 
 thread_local! {
     /// Monotonic counter for synthesised loop temporaries (the
-    /// once-evaluated `__sir_stop`/`__sir_step` bounds of a `ForRange`).
+    /// hidden `__sir_i` counter and once-evaluated `__sir_stop`/`__sir_step` bounds of a `ForRange`).
     /// Reset at the start of every `emit_module` so output stays
     /// deterministic regardless of how many modules a process compiles.
     static LOOP_COUNTER: Cell<usize> = const { Cell::new(0) };
+
+    /// Function name → [`Function::exact_arity`] for every function a
+    /// strict closure can check (see [`emit_strict_closure`]).  Filled at
+    /// the start of every `emit_module`, because `emit_expr` sees one
+    /// expression at a time and has no handle on the module.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+
+    /// The SIR name of every function in the module being emitted.  A
+    /// *variable* spelled like one of them is renamed by [`var_ident`] so
+    /// it cannot shadow the function (#18485).  Filled at the start of
+    /// every `emit_module`, for the same reason as [`STRICT_ARITY`].
+    static FUNCTION_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 fn fresh_loop_id() -> usize {
@@ -110,6 +123,16 @@ fn fresh_loop_id() -> usize {
 /// the module is valid and uses only accepted features.
 pub fn emit_module(m: &Module) -> String {
     LOOP_COUNTER.with(|c| c.set(0));
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
+    FUNCTION_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().map(|f| f.name.clone()));
+    });
     let mut out = String::new();
     emit_banner(&mut out, m);
     // Strict mode goes first (after the banner comment) so the whole
@@ -358,7 +381,7 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        out.push_str(&sanitize_ident(&c.name));
+        out.push_str(&var_ident(&c.name));
     }
     // JavaScript has no native keyword-argument call form, so `Keyword`
     // params (`def f(a:)` / `def f(a: 1)`) are lowered — exactly as the
@@ -387,7 +410,7 @@ fn emit_function(out: &mut String, f: &Function) {
                 }
                 first = false;
                 out.push_str("...");
-                out.push_str(&sanitize_ident(&p.name));
+                out.push_str(&var_ident(&p.name));
             }
             // `**opts` has no native JS form (no keyword-argument call);
             // v0 binds it as a trailing ordinary parameter — but this
@@ -398,7 +421,7 @@ fn emit_function(out: &mut String, f: &Function) {
                     out.push_str(", ");
                 }
                 first = false;
-                out.push_str(&sanitize_ident(&p.name));
+                out.push_str(&var_ident(&p.name));
                 // P2d: a defaulted param (`Param { default: Some(e) }`)
                 // becomes a native JS default parameter `name = <e>`.
                 //
@@ -450,7 +473,7 @@ fn emit_function(out: &mut String, f: &Function) {
 ///   works when the caller passes no options object at all (`f(1)`).
 ///
 /// The **object key** is the raw source `name` (it must match the key the
-/// call site writes); the **bound local** is `sanitize_ident(name)`.  When
+/// call site writes); the **bound local** is `var_ident(name)`.  When
 /// they differ we emit the explicit `{ key: local }` rename form.
 fn emit_keyword_prologue(out: &mut String, params: &[Param], indent: usize) {
     let pad = " ".repeat(indent);
@@ -461,7 +484,7 @@ fn emit_keyword_prologue(out: &mut String, params: &[Param], indent: usize) {
             out.push_str(", ");
         }
         first = false;
-        let local = sanitize_ident(&p.name);
+        let local = var_ident(&p.name);
         if local == p.name {
             // Shorthand `{ name }` / `{ name = default }` — key and binding
             // coincide because the source name is already a valid JS ident.
@@ -510,7 +533,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // without any const→let pre-pass — JS `let` is reassignable, so
         // unlike the Rust/TypeScript backends this backend needs none.
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
-            let _ = write!(out, "{}let {} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}let {} = ", pad, var_ident(name));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -630,11 +653,11 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // backend does not accept, so they fall through to the panic guard.
         Stmt::Assign {
             name,
-            scope: Scope::Local | Scope::Param | Scope::Capture | Scope::Global,
+            scope: scope @ (Scope::Local | Scope::Param | Scope::Capture | Scope::Global),
             value,
             ..
         } => {
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, scoped_ident(name, *scope));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -679,12 +702,27 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_block_as_stmts(out, body, indent + 2);
             let _ = writeln!(out, "{pad}}}");
         }
-        // `for (var = start; …; var += step) { body }` — half-open
-        // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
-        // block-scoped temporaries (matching Python's `range`), and the
-        // loop condition is direction-aware so a negative `step` counts
-        // down correctly.  JS has one numeric type, so no casts are
-        // needed (unlike the TypeScript backend's `as number`).
+        // A half-open (`stop` exclusive) counting loop.  `start`/`stop`/
+        // `step` are evaluated ONCE into block-scoped temporaries (matching
+        // Python's `range`), and the loop condition is direction-aware so a
+        // negative `step` counts down correctly.  JS has one numeric type,
+        // so no casts are needed (unlike the TypeScript backend's `as
+        // number`).
+        //
+        // The loop counts with a **hidden counter** `__sir_i_<id>`, and each
+        // iteration binds `var` afresh from it:
+        //
+        //   { let __sir_i_7 = start; const __sir_stop_7 = …, __sir_step_7 = …;
+        //     while (…__sir_i_7 < __sir_stop_7…) {
+        //       let var = __sir_i_7;  body;  __sir_i_7 = __sir_i_7 + __sir_step_7;
+        //     } }
+        //
+        // Counting with `var` itself (as this backend used to) let the body
+        // change the number of iterations: `for i in range(3): i += 10`
+        // ran once instead of three times, and an inner loop that stored
+        // into an outer loop's variable cut the outer loop short.  SIR, like
+        // Python's `range` and the C/Go/Rust/Ruby backends, takes the next
+        // value from the range whatever the body did to `var` (#18482).
         Stmt::ForRange {
             var,
             start,
@@ -694,12 +732,13 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let id = fresh_loop_id();
-            let v = sanitize_ident(var);
+            let v = var_ident(var);
             let inner = indent + 2;
             let inner_pad = " ".repeat(inner);
+            let body_pad = " ".repeat(inner + 2);
             // Open a block so the temporaries don't leak.
             let _ = writeln!(out, "{pad}{{");
-            let _ = write!(out, "{inner_pad}let {v} = ");
+            let _ = write!(out, "{inner_pad}let __sir_i_{id} = ");
             emit_expr(out, start, inner);
             out.push_str(";\n");
             let _ = write!(out, "{inner_pad}const __sir_stop_{id} = ");
@@ -710,10 +749,14 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str(";\n");
             let _ = writeln!(
                 out,
-                "{inner_pad}while (__sir_step_{id} >= 0 ? {v} < __sir_stop_{id} : {v} > __sir_stop_{id}) {{"
+                "{inner_pad}while (__sir_step_{id} >= 0 ? __sir_i_{id} < __sir_stop_{id} : __sir_i_{id} > __sir_stop_{id}) {{"
             );
+            let _ = writeln!(out, "{body_pad}let {v} = __sir_i_{id};");
             emit_block_as_stmts(out, body, inner + 2);
-            let _ = writeln!(out, "{}{v} = {v} + __sir_step_{id};", " ".repeat(inner + 2));
+            let _ = writeln!(
+                out,
+                "{body_pad}__sir_i_{id} = __sir_i_{id} + __sir_step_{id};"
+            );
             let _ = writeln!(out, "{inner_pad}}}");
             let _ = writeln!(out, "{pad}}}");
         }
@@ -722,7 +765,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::ForEach {
             var, iter, body, ..
         } => {
-            let _ = write!(out, "{}for (let {} of ", pad, sanitize_ident(var));
+            let _ = write!(out, "{}for (let {} of ", pad, var_ident(var));
             emit_expr(out, iter, indent);
             out.push_str(") {\n");
             emit_block_as_stmts(out, body, indent + 2);
@@ -810,7 +853,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                     let _ = writeln!(out, "{ipad}{kw} (__Sir.rescueMatches(__exc, {types})) {{");
                     // `rescue Foo => e` binds the caught value as a local.
                     if let Some(bind) = &r.binding {
-                        let _ = writeln!(out, "{ipad}  const {} = __exc;", sanitize_ident(bind));
+                        let _ = writeln!(out, "{ipad}  const {} = __exc;", var_ident(bind));
                     }
                     for st in &r.body {
                         emit_stmt(out, st, inner + 2);
@@ -1453,7 +1496,7 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
         // Local, Param, Capture, and Global all resolve to a bare
         // identifier (globals are module-level `let`s).
         Scope::Local | Scope::Param | Scope::Capture | Scope::Global => {
-            out.push_str(&sanitize_ident(name));
+            out.push_str(&scoped_ident(name, scope));
         }
         // A builtin referenced as a *value* (not called) → a closure
         // wrapping the dispatch-table entry.
@@ -1613,7 +1656,59 @@ fn emit_oop_name_arg(out: &mut String, e: &Expr) {
     }
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* — as a closure that refuses a call with the
+/// wrong number of arguments:
+///
+/// ```text
+/// (lambda (x y) (+ x y))   →   new __Sir.Closure((..._a) => {
+///                                if (_a.length !== 2) { __Sir.raiseError("ArgumentError",
+///                                  "arity mismatch: closure expects 2 argument(s), got " + _a.length); }
+///                                return __lambda_0(..._a); })
+/// ```
+///
+/// A plain JS function would quietly bind a missing argument to
+/// `undefined` (Twig's `(g 4)` on a two-parameter lambda printed `NaN`) and
+/// drop an extra one; the check makes this backend agree with every other
+/// one (issue #18461).  The check sits *inside* the closure's own function,
+/// so it holds however the closure is reached — `applyClosure`, or a
+/// runtime helper that unwraps `.fn`.
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`Function::exact_arity`] is `None`: defaults, `*rest`, …), the
+/// inner expression is emitted unchanged and keeps its lenient behaviour.
+fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
+    let Expr::MakeClosure { fn_name, captures, .. } = inner else {
+        emit_expr(out, inner, indent);
+        return;
+    };
+    let Some(n) = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied()) else {
+        emit_expr(out, inner, indent);
+        return;
+    };
+    // The error is SIR's `ArgumentError` (SIR10, "Strict closures"), raised
+    // through the runtime so a `rescue ArgumentError` catches it — a native
+    // `TypeError` is classed as a plain `StandardError` by `rescueMatches`,
+    // so it escaped that rescue on this backend alone (issue #18466).
+    let _ = write!(
+        out,
+        "new __Sir.Closure((..._a) => {{ if (_a.length !== {n}) {{ __Sir.raiseError(\"ArgumentError\", \
+         \"arity mismatch: closure expects {n} argument(s), got \" + _a.length); }} return {}(",
+        sanitize_ident(fn_name)
+    );
+    for c in captures {
+        emit_expr(out, &c.value, indent);
+        out.push_str(", ");
+    }
+    out.push_str("..._a); })");
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // The strict-closure marker (SIR10 "Strict closures").
+    if name == "lambda" && args.len() == 1 {
+        emit_strict_closure(out, &args[0], indent);
+        return;
+    }
     // Method dispatch (`recv.meth(args…)` → `BuiltinCall("__method__",
     // [recv, StrLit("meth"), args…])`, produced by the Ruby/JS frontends)
     // routes to the runtime's `callMethod(recv, name, args…)`, which applies
@@ -2021,6 +2116,73 @@ const TAG_VERBATIM: &str = "v";
 /// sentinel.
 const TAG_ESCAPED: &str = "e";
 
+/// Tag immediately following [`ESCAPE_MARKER`] for a *variable* renamed
+/// because a function of the module has the same SIR name (see
+/// [`var_ident`]).  Distinct from [`TAG_VERBATIM`] and [`TAG_ESCAPED`], so a
+/// renamed variable can never equal any output of [`sanitize_ident`].
+const TAG_LOCAL: &str = "l";
+
+/// The JavaScript identifier for the SIR *variable* `name`: a local,
+/// parameter, capture, loop variable or `rescue` binding (a global keeps
+/// its spelling; see [`scoped_ident`]).
+///
+/// ## Why variables and functions need different spellings (#18485)
+///
+/// SIR keeps two namespaces.  A function is named only by `DirectCall` and
+/// `MakeClosure`; a variable only by `VarRef`, `Assign` and the binding
+/// forms.  So a module may hold a function `f` *and* a variable `f`, and a
+/// source language may rely on it -- Ruby does:
+///
+/// ```ruby
+/// def f; 40; end
+/// f = 2
+/// puts f() + f      # 42: `f()` is the method, bare `f` the local
+/// ```
+///
+/// JavaScript has one namespace.  Emitting both as `f` made the local
+/// shadow the function, and `f()` failed with `TypeError: f is not a
+/// function`.  The functions cannot move: they are top-level declarations
+/// that callers append code to call by name.  So the *variable* moves, and
+/// only when it collides:
+///
+/// | SIR variable | module has a function of that name? | JavaScript        |
+/// |--------------|-------------------------------------|-------------------|
+/// | `x`          | no                                  | `x`               |
+/// | `f`          | yes                                 | `_$sir_esc_lf`    |
+/// | `class`      | yes                                 | `_$sir_esc_l_$sir_esc_eclass` |
+///
+/// The renamed form is [`ESCAPE_MARKER`], then [`TAG_LOCAL`], then
+/// `sanitize_ident(name)`.  It is one-to-one because `sanitize_ident` is,
+/// and it never equals a function's spelling or an unrenamed variable's,
+/// because every `sanitize_ident` output either lacks the marker or follows
+/// it with a different tag.  The choice depends only on the name, so every
+/// binding and every use of one variable agree.
+fn var_ident(name: &str) -> String {
+    if FUNCTION_NAMES.with(|t| t.borrow().contains(name)) {
+        format!("{ESCAPE_MARKER}{TAG_LOCAL}{}", sanitize_ident(name))
+    } else {
+        sanitize_ident(name)
+    }
+}
+
+
+/// The identifier for the variable `name` of `scope`: a module global keeps
+/// its [`sanitize_ident`] spelling, and a function's variable goes through
+/// [`var_ident`].
+///
+/// Globals are left alone because they are module-level bindings, like the
+/// functions, and code reaches a function through a `Global` reference in
+/// this backend (a hand-built module may name a function `id` as
+/// `VarRef { scope: Global }` to get its handle).  A *local* is what can
+/// shadow a function, inside the function that binds it (#18485).
+fn scoped_ident(name: &str, scope: Scope) -> String {
+    if scope == Scope::Global {
+        sanitize_ident(name)
+    } else {
+        var_ident(name)
+    }
+}
+
 /// Sanitize a SIR identifier for JavaScript.
 ///
 /// JavaScript identifiers match `[A-Za-z_$][A-Za-z0-9_$]*` and must not
@@ -2075,11 +2237,27 @@ const TAG_ESCAPED: &str = "e";
 /// python::escape_body`'s own doc comment for the full argument. `$`
 /// needed no such change: it plays no role in the escape token's own
 /// shape, so it stays a safe, ordinary pass-through character.
+///
+/// # Generated names are reserved too (#18466)
+///
+/// The emitter binds a few names of its own around the user's code — see
+/// [`is_generated_name`].  A user name spelled the same way used to pass
+/// straight through and be *shadowed* by the generated one.  The closure
+/// wrapper `(..._a) => __lambda_0(<captures>, ..._a)` evaluates its
+/// captured values inside the arrow, so `(define (f _a) (lambda (x) (* x
+/// _a)))` read the wrapper's argument array instead of the user's `_a`.
+/// A reserved name now takes the marker branch:
+///
+/// ```text
+/// _a       ->  _$sir_esc_v_a
+/// __Sir    ->  _$sir_esc_v__Sir
+/// Map      ->  _$sir_esc_vMap
+/// ```
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
-    if is_valid_js_ident(s) && !s.starts_with(ESCAPE_MARKER) {
+    if is_valid_js_ident(s) && !s.starts_with(ESCAPE_MARKER) && !is_generated_name(s) {
         return s.to_string();
     }
     if is_valid_js_ident(s) {
@@ -2111,6 +2289,63 @@ fn sanitize_comment(s: &str) -> String {
     }
     out
 }
+
+/// Names the emitted JavaScript binds or reads around the user's code that a
+/// user name must never spell (#18466).  [`sanitize_ident`] escapes every one
+/// of them.
+///
+/// | reserved               | where the emitter writes it                                  |
+/// |------------------------|--------------------------------------------------------------|
+/// | `__sir…` (any case)    | the runtime object `__Sir`, loop temporaries `__sir_i_N`/`__sir_stop_N`/`__sir_step_N`, the display placeholders `__SIR_DISPLAY_*__` |
+/// | `_a`                   | a closure wrapper's argument array, `(..._a) => …`; the captured values are evaluated inside it |
+/// | `__l`                  | the arrow that evaluates a short-circuit `and`/`or` operand once, `((__l) => …)(lhs)`; the right operand is evaluated inside it |
+/// | `__kw`                 | a function's keyword-argument options object                 |
+/// | `__exc`                | the caught value in a `try`/`catch` lowering                 |
+/// | the globals in [`JS_GLOBALS`] | the inlined runtime and the emitted code reach JavaScript's and Node's globals by name (`new Map(…)`, `Math.floor`, `console.log`, `process.stdout`) |
+///
+/// The globals need reserving because the user's functions are emitted as
+/// top-level function *declarations*, which are hoisted over the whole
+/// file: `(define (Map x) x)` replaced `Map` for the runtime too, before a
+/// line of it ran.  (Wrapping the program in a block would scope the
+/// declarations instead, but callers append code that calls the emitted
+/// functions by name — e.g. `java-to-semantic-ir`'s `console.log(probe())`
+/// epilogue — so the declarations stay at top level.)
+///
+/// `__sir_block__` is the one exception to the `__sir` family: it is not
+/// generated here but is the SIR-level name the Ruby frontend gives a
+/// method's block parameter, shared by every frontend and backend, so it
+/// keeps its spelling.
+fn is_generated_name(s: &str) -> bool {
+    (s.get(..5).is_some_and(|p| p.eq_ignore_ascii_case("__sir")) && s != "__sir_block__")
+        || matches!(s, "_a" | "__l" | "__kw" | "__exc")
+        || JS_GLOBALS.contains(&s)
+}
+
+/// The global bindings of ECMAScript (ES2024's global object) and of Node,
+/// which the inlined runtime and the emitted code may name.  A user function
+/// or global of one of these names would shadow it for the whole file, so
+/// [`sanitize_ident`] escapes them all.  The unit test
+/// `every_global_the_runtime_names_is_reserved` asks `node` for its real
+/// global object and fails if the runtime names one missing from this list.
+const JS_GLOBALS: &[&str] = &[
+    // ECMAScript value, function and constructor properties.
+    "globalThis", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN",
+    "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI",
+    "encodeURIComponent", "escape", "unescape", "AggregateError", "Array",
+    "ArrayBuffer", "Atomics", "BigInt", "BigInt64Array", "BigUint64Array", "Boolean",
+    "DataView", "Date", "Error", "EvalError", "FinalizationRegistry", "Float32Array",
+    "Float64Array", "Function", "Int8Array", "Int16Array", "Int32Array", "Intl", "Iterator",
+    "JSON", "Map", "Math", "Number", "Object", "Promise", "Proxy", "RangeError",
+    "ReferenceError", "Reflect", "RegExp", "Set", "SharedArrayBuffer", "String", "Symbol",
+    "SyntaxError", "TypeError", "Uint8Array", "Uint8ClampedArray", "Uint16Array",
+    "Uint32Array", "URIError", "WeakMap", "WeakRef", "WeakSet",
+    // Node's globals and CommonJS module bindings.
+    "console", "process", "Buffer", "require", "module", "exports", "__dirname",
+    "__filename", "global", "setTimeout", "setInterval", "setImmediate", "clearTimeout",
+    "clearInterval", "clearImmediate", "queueMicrotask", "structuredClone",
+    "TextEncoder", "TextDecoder", "URL", "URLSearchParams", "performance", "crypto",
+    "fetch", "AbortController", "AbortSignal", "Event", "EventTarget", "atob", "btoa",
+];
 
 fn is_valid_js_ident(s: &str) -> bool {
     let mut chars = s.chars();
@@ -2309,6 +2544,57 @@ mod tests {
             sanitize_ident(verbatim_side),
             "_$sir_esc_v_$sir_esc_null_u003f_"
         );
+    }
+
+    /// The names the emitter binds around user code, and the JS/Node
+    /// globals, are escaped; ordinary names are not (#18466).
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in ["_a", "__l", "__kw", "__exc", "__Sir", "__sir_stop_0", "Map", "console"] {
+            assert_eq!(sanitize_ident(name), format!("_$sir_esc_v{name}"), "{name}");
+        }
+        for name in ["a", "_b", "__lambda_0", "__sir_block__", "map", "consoles"] {
+            assert_eq!(sanitize_ident(name), name, "{name}");
+        }
+    }
+
+    /// Every JavaScript/Node global the inlined runtime names is reserved, so
+    /// a hoisted user `function` can never replace it (#18466).  Asks `node`
+    /// for its real global object; skipped without Node.
+    #[test]
+    fn every_global_the_runtime_names_is_reserved() {
+        // A script file, not `node -e`: `-e` also exposes the core modules
+        // (`path`, `vm`, …) as globals, which an emitted program never sees.
+        let script = std::env::temp_dir().join(format!(
+            "sir_js_globals_{}.js",
+            unique_suffix()
+        ));
+        std::fs::write(
+            &script,
+            "console.log(Object.getOwnPropertyNames(globalThis).join('\\n'));\n",
+        )
+        .expect("write probe script");
+        let out = std::process::Command::new("node").arg(&script).output();
+        let _ = std::fs::remove_file(&script);
+        let Ok(out) = out else {
+            eprintln!("note: `node` unavailable — skipping");
+            return;
+        };
+        if !out.status.success() {
+            eprintln!("note: `node` failed — skipping");
+            return;
+        }
+        let globals: std::collections::HashSet<String> =
+            String::from_utf8_lossy(&out.stdout).lines().map(str::to_string).collect();
+        assert!(globals.contains("Map"), "unexpected `node` output: {globals:?}");
+        let mut spellable: Vec<String> = crate::runtime::RUNTIME
+            .split(|c: char| !(c.is_ascii_alphanumeric() || c == '_' || c == '$'))
+            .filter(|w| globals.contains(*w) && sanitize_ident(w) == *w)
+            .map(str::to_string)
+            .collect();
+        spellable.sort();
+        spellable.dedup();
+        assert!(spellable.is_empty(), "globals a user function could replace: {spellable:?}");
     }
 
     #[test]
@@ -3395,15 +3681,59 @@ mod tests {
             span: s(),
         };
         let out = emit_s(&st);
-        assert!(out.contains("let i = 0;"), "got {out}");
+        assert!(out.contains("let __sir_i_0 = 0;"), "got {out}");
         assert!(out.contains("const __sir_stop_0 = 5;"), "got {out}");
         assert!(out.contains("const __sir_step_0 = 1;"), "got {out}");
         assert!(
-            out.contains("while (__sir_step_0 >= 0 ? i < __sir_stop_0 : i > __sir_stop_0) {"),
+            out.contains(
+                "while (__sir_step_0 >= 0 ? __sir_i_0 < __sir_stop_0 : __sir_i_0 > __sir_stop_0) {"
+            ),
             "got {out}"
         );
+        assert!(out.contains("let i = __sir_i_0;"), "got {out}");
         assert!(out.contains(r#"__Sir.write("stdout", "once", false, i);"#), "got {out}");
-        assert!(out.contains("i = i + __sir_step_0;"), "got {out}");
+        assert!(
+            out.contains("__sir_i_0 = __sir_i_0 + __sir_step_0;"),
+            "got {out}"
+        );
+    }
+
+    /// The loop counts with a hidden counter, so a body that assigns the
+    /// loop variable cannot change how many times it runs (#18482): the
+    /// increment reads `__sir_i_N`, never the variable.
+    #[test]
+    fn emit_for_range_counts_with_a_hidden_counter() {
+        LOOP_COUNTER.with(|c| c.set(0));
+        let st = Stmt::ForRange {
+            var: "i".into(),
+            start: int(0),
+            stop: int(3),
+            step: int(1),
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "i".into(),
+                    scope: Scope::Local,
+                    value: int(10),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let out = emit_s(&st);
+        assert!(
+            !out.contains("i = i +"),
+            "the variable must not be the counter: {out}"
+        );
+        let bind = out
+            .find("let i = __sir_i_0;")
+            .expect("binds i from the counter");
+        let store = out.find("i = 10;").expect("the body's store");
+        let step = out
+            .find("__sir_i_0 = __sir_i_0 + __sir_step_0;")
+            .expect("steps the counter");
+        assert!(bind < store && store < step, "got {out}");
     }
 
     #[test]
@@ -4043,5 +4373,114 @@ mod tests {
         // `__Sir.registerAncestry({` marks a real registration — and that
         // must be absent for a module with no inheriting classes.
         assert!(!emit_module(&m).contains("__Sir.registerAncestry({"));
+    }
+
+    // ── a variable never shadows a function (#18485) ─────────────────
+
+    /// `def f; 40; end` and a `main` whose local is also named `f`:
+    /// `let f = 2; f() + f`, which a source language with separate
+    /// namespaces (Ruby) evaluates to 42.
+    fn local_named_like_a_function() -> Module {
+        let sp = Span::synthetic;
+        let func = |name: &str, body: semantic_ir::Block| semantic_ir::Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let f = func(
+            "f",
+            semantic_ir::Block {
+                stmts: vec![],
+                value: Expr::IntLit { value: 40, span: sp() },
+                span: sp(),
+            },
+        );
+        let main = func(
+            "main",
+            semantic_ir::Block {
+                stmts: vec![Stmt::LetStarBinding {
+                    name: "f".to_string(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![
+                        Expr::DirectCall {
+                            fn_name: "f".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                        Expr::VarRef {
+                            name: "f".to_string(),
+                            scope: Scope::Local,
+                            span: sp(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+        );
+        Module {
+            name: "shadow".to_string(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    #[test]
+    fn a_local_named_like_a_function_is_renamed_and_the_function_is_not() {
+        let out = emit_module(&local_named_like_a_function());
+        // The function keeps its own spelling.  Everything from its
+        // definition on is the user's code (the inlined runtime comes
+        // first, and binds names of its own).
+        let at = out.find("function f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let out = &out[at..];
+        // The local is bound, and read, under its renamed spelling...
+        assert!(out.contains("let _$sir_esc_lf = "), "{out}");
+        assert!(out.contains("_$sir_esc_lf"), "{out}");
+        // ...never under the function's own spelling, which the call keeps.
+        assert!(!out.contains("let f = "), "{out}");
+        assert!(out.contains("f()"), "{out}");
+    }
+
+    #[test]
+    fn var_ident_renames_exactly_the_names_of_functions() {
+        FUNCTION_NAMES.with(|t| {
+            let mut t = t.borrow_mut();
+            t.clear();
+            t.insert("f".to_string());
+        });
+        assert_eq!(var_ident("f"), "_$sir_esc_lf");
+        assert_eq!(var_ident("x"), sanitize_ident("x"));
+        // A user variable spelled like the renamed form takes the verbatim
+        // escape, so the two stay apart.
+        assert_ne!(var_ident("_$sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
+    }
+
+    /// A per-call unique part for this file's temp-file names.  The process id
+    /// keeps parallel test binaries apart, and the counter keeps apart the tests
+    /// of this binary, which run on parallel threads under one process id
+    /// (#18485).  A name built from the process id alone, or from it and a hash
+    /// of the source, let two tests that compile the same program share a file.
+    fn unique_suffix() -> String {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static NEXT: AtomicU64 = AtomicU64::new(0);
+        format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
     }
 }

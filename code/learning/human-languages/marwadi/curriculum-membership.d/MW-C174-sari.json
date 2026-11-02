@@ -1,0 +1,11 @@
+{
+  "id": "MW-C174-sari",
+  "pathSegment": "MW-PATH-174-ODHNI174",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-174-ODHNI174",
+      "order": 2
+    }
+  ]
+}

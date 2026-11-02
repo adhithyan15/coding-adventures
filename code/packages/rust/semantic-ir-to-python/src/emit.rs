@@ -8,7 +8,7 @@
 //! nested `def __block_<n>():` functions invoked at the source site.
 
 use std::cell::RefCell;
-use std::collections::{BTreeSet, HashMap};
+use std::collections::{BTreeSet, HashMap, HashSet};
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -565,12 +565,22 @@ fn index_arg_uses_builtin(ix: &IndexArg, name: &str) -> bool {
 pub fn emit_module(m: &Module) -> String {
     BLOCK_COUNTER.with(|c| *c.borrow_mut() = 0);
     HOIST.with(|h| h.borrow_mut().clear());
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     FN_ARITY.with(|t| {
         let mut t = t.borrow_mut();
         t.clear();
         for f in &m.functions {
             t.insert(f.name.clone(), f.params.len());
         }
+    });
+    FUNCTION_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().map(|f| f.name.clone()));
     });
 
     let mut out = String::new();
@@ -662,6 +672,7 @@ pub fn emit_module(m: &Module) -> String {
     BLOCK_COUNTER.with(|c| *c.borrow_mut() = 0);
     HOIST.with(|h| h.borrow_mut().clear());
     FN_ARITY.with(|t| t.borrow_mut().clear());
+    STRICT_ARITY.with(|t| t.borrow_mut().clear());
 
     out
 }
@@ -670,9 +681,9 @@ pub fn emit_module(m: &Module) -> String {
 ///
 /// Python has no multi-statement lambda, so a block that contains a
 /// loop and appears in *expression* position cannot be inlined.  Such a
-/// block is lifted to a nested `def __block_N(): …` (see
+/// block is lifted to a nested `def _sir_block_N(): …` (see
 /// [`emit_block_as_expr`]) whose source is queued here, and the call
-/// site emits `__block_N()`.  The queued defs must be written out
+/// site emits `_sir_block_N()`.  The queued defs must be written out
 /// *before* the statement whose value-expression referenced them — every
 /// statement-emitting path renders to a scratch buffer, calls this, then
 /// appends the scratch buffer, so the defs land in the right place.
@@ -739,7 +750,7 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        out.push_str(&sanitize_ident(&c.name));
+        out.push_str(&var_ident(&c.name));
     }
     // KW2 keyword-only `*` separator.  A `Keyword` param is Python-native as a
     // *keyword-only* parameter — one that sits AFTER a `*` in the signature and
@@ -787,7 +798,7 @@ fn emit_function(out: &mut String, f: &Function) {
             ParamKind::KwRest => out.push_str("**"),
             ParamKind::Required | ParamKind::Keyword => {}
         }
-        out.push_str(&sanitize_ident(&p.name));
+        out.push_str(&var_ident(&p.name));
         // Default parameters (positional P2c *and* KW2 optional keyword params).
         // A defaulted param gets the *sentinel* as its native Python default —
         // `name=_SIR_MISSING` — so callers may omit the trailing/keyword
@@ -818,7 +829,7 @@ fn emit_function(out: &mut String, f: &Function) {
     let pad = indent_str(1);
     for p in &f.params {
         if p.kind == ParamKind::Rest {
-            let name = sanitize_ident(&p.name);
+            let name = var_ident(&p.name);
             let _ = writeln!(out, "{pad}{name} = list({name})");
         }
     }
@@ -839,7 +850,7 @@ fn emit_function(out: &mut String, f: &Function) {
     let inner_pad = indent_str(2);
     for p in &f.params {
         let Some(default) = &p.default else { continue };
-        let name = sanitize_ident(&p.name);
+        let name = var_ident(&p.name);
         let mut tmp = String::new();
         let _ = writeln!(tmp, "{pad}if {name} is _SIR_MISSING:");
         let _ = write!(tmp, "{inner_pad}{name} = ");
@@ -895,19 +906,28 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
     let pad = indent_str(indent);
     match s {
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, var_ident(name));
             emit_expr(out, value, indent, env);
             out.push('\n');
         }
         Stmt::ExprStmt { expr, .. } => {
             // Recognise the synthesised _init global_set pattern and
-            // emit a direct _globals[...] = ... assignment for
-            // readable output.  Otherwise emit an expression
-            // statement.
+            // emit a direct `_sir_global_set("x", …)` call for readable
+            // output.  Otherwise emit an expression statement.
+            //
+            // Issue #18461: this used to emit `_globals["x"] = …`.  The
+            // store lives in the imported runtime package
+            // (`coding_adventures_sir_runtime_core._globals`), and a
+            // `from … import (…)` never binds a name the list does not
+            // spell — so every value define died with `NameError: name
+            // '_globals' is not defined` the moment `_init` ran, and the
+            // reads (`_sir_global_get_static`) could never have seen the
+            // write anyway.  Writing through the runtime's own setter puts
+            // the value where the reads look.
             if let Some((global, value)) = pick_global_set(expr) {
-                let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(global));
+                let _ = write!(out, "{}_sir_global_set({}, ", pad, quote_py_string(global));
                 emit_expr(out, value, indent, env);
-                out.push('\n');
+                out.push_str(")\n");
             } else if let Expr::If {
                 cond,
                 then_branch,
@@ -955,8 +975,8 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
         // ── SIR16 mutation ──────────────────────────────────────────
         // `Assign` re-binds an already-declared name.  Local/Param/
         // Capture all resolve to a bare identifier; Global writes the
-        // module-level `_globals` dict (matching how `_init` and
-        // `VarRef::Global` reads are rendered).  Instance/ClassVar/Const
+        // runtime's global store through `_sir_global_set` (matching how
+        // `_init` writes and `VarRef::Global` reads are rendered).  Instance/ClassVar/Const
         // belong to features this backend does not accept yet, so they
         // fall through to the panic guard below.
         Stmt::Assign {
@@ -965,7 +985,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
             value,
             ..
         } => {
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, var_ident(name));
             emit_expr(out, value, indent, env);
             out.push('\n');
         }
@@ -975,9 +995,9 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
             value,
             ..
         } => {
-            let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(name));
+            let _ = write!(out, "{}_sir_global_set({}, ", pad, quote_py_string(name));
             emit_expr(out, value, indent, env);
-            out.push('\n');
+            out.push_str(")\n");
         }
         // `seq[index] = value`
         Stmt::SeqSet {
@@ -1024,7 +1044,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
             body,
             ..
         } => {
-            let _ = write!(out, "{}for {} in range(", pad, sanitize_ident(var));
+            let _ = write!(out, "{}for {} in range(", pad, var_ident(var));
             emit_expr(out, start, indent, env);
             out.push_str(", ");
             emit_expr(out, stop, indent, env);
@@ -1037,7 +1057,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
         Stmt::ForEach {
             var, iter, body, ..
         } => {
-            let _ = write!(out, "{}for {} in ", pad, sanitize_ident(var));
+            let _ = write!(out, "{}for {} in ", pad, var_ident(var));
             emit_expr(out, iter, indent, env);
             out.push_str(":\n");
             emit_block_as_stmts(out, body, indent + 1, env);
@@ -1177,7 +1197,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
                     // `rescue Foo => e` binds the caught value as a local.
                     if let Some(bind) = &r.binding {
                         let bpad = indent_str(indent + 2);
-                        let _ = writeln!(out, "{}{} = __exc", bpad, sanitize_ident(bind));
+                        let _ = writeln!(out, "{}{} = __exc", bpad, var_ident(bind));
                         emit_stmt_list_allow_only_value(out, &r.body, indent + 2, false, env);
                     } else {
                         emit_stmt_list(out, &r.body, indent + 2, env);
@@ -1434,11 +1454,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
             );
         }
         // ── SIR16 expression kinds — native Python ──────────────────
-        Expr::FloatLit { value, .. } => {
-            // `{:?}` keeps a decimal point (e.g. `3.0`, `3.14`) so the
-            // literal stays a float, not an int.
-            let _ = write!(out, "{:?}", value);
-        }
+        Expr::FloatLit { value, .. } => out.push_str(&py_float_literal(*value)),
         Expr::SeqLit { items, .. } => {
             out.push('[');
             emit_args(out, items, indent, env);
@@ -1517,7 +1533,9 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
         // not a string literal — so it is emitted through `sanitize_ident`,
         // and the value lowers through the ordinary expression emitter.
         Expr::KeywordArg { name, value, .. } => {
-            out.push_str(&sanitize_ident(name));
+            // The callee's parameter is bound under `var_ident(name)`, so
+            // the keyword must be spelled the same way (#18485).
+            out.push_str(&var_ident(name));
             out.push('=');
             emit_expr(out, value, indent, env);
         }
@@ -1813,7 +1831,7 @@ fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv
             // (`{:?}` keeps a decimal point, e.g. `3.0`, matching
             // `Expr::FloatLit`'s own emit arm above) rather than routing
             // through `emit_expr`.
-            let _ = write!(out, "_sir_sym_float({:?})", value);
+            let _ = write!(out, "_sir_sym_float({})", py_float_literal(*value));
         }
         Expr::StrLit { .. } => {
             out.push_str("_sir_sym_string(");
@@ -1827,7 +1845,7 @@ fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv
 fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
     match scope {
         Scope::Local | Scope::Param | Scope::Capture => {
-            out.push_str(&sanitize_ident(name));
+            out.push_str(&var_ident(name));
         }
         Scope::Global => {
             let _ = write!(out, "_sir_global_get_static({})", quote_py_string(name));
@@ -2157,11 +2175,30 @@ fn emit_builtin_call(
     // Proc-vs-lambda arity (Q10g): a `MakeClosure` is proc-lenient by default
     // (`apply` adjusts a block's arguments to its arity), but a Ruby lambda is
     // **strict**.  Wrap the closure in `_sir_as_lambda(...)`, which flips its
-    // strict flag so `apply` passes arguments through unadjusted (a mismatch
-    // then raises, the analogue of Ruby's `ArgumentError`).
+    // strict flag so `apply` passes arguments through unadjusted.
+    //
+    // When the closure's function has one exact arity (SIR10 "Strict
+    // closures", `Function::exact_arity`) the count is passed too —
+    // `_sir_as_lambda(c, 2)` — and `apply` raises `ArityError` (SIR's
+    // `ArgumentError`) for any other count.  A function with no single arity
+    // (`->(a, b = 10) { … }`: a defaulted, `*rest` or keyword parameter) gets
+    // no count, exactly as every other backend leaves such a closure without
+    // a check: Python's own call then binds the defaults.  (The first
+    // version of #18466's fix counted every positional parameter, defaults
+    // included, so `->(a, b = 10) { a + b }.call(1)` raised instead of
+    // returning 11.)
     if name == "lambda" && args.len() == 1 {
         out.push_str("_sir_as_lambda(");
         emit_expr(out, &args[0], indent, env);
+        let exact = match &args[0] {
+            Expr::MakeClosure { fn_name, .. } => {
+                STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+            }
+            _ => None,
+        };
+        if let Some(n) = exact {
+            let _ = write!(out, ", {n}");
+        }
         out.push(')');
         return;
     }
@@ -2316,7 +2353,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
     // A block holding a loop in expression position cannot be expressed
     // as a walrus tuple (Python has no multi-statement expression), so
     // it is lifted to a nested `def` (queued in the hoist buffer) and
-    // the call site emits `__block_N()`.
+    // the call site emits `_sir_block_N()`.
     if block_has_loop(b) {
         emit_block_as_lifted_def(out, b, indent, env);
         return;
@@ -2353,7 +2390,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                 value,
                 ..
             } => {
-                let _ = write!(out, "({} := ", sanitize_ident(name));
+                let _ = write!(out, "({} := ", var_ident(name));
                 emit_expr(out, value, indent, env);
                 out.push_str("), ");
                 env.declare(name, sir_type.clone());
@@ -2364,7 +2401,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                 value,
                 ..
             } => {
-                let _ = write!(out, "({} := ", sanitize_ident(name));
+                let _ = write!(out, "({} := ", var_ident(name));
                 emit_expr(out, value, indent, env);
                 out.push_str("), ");
             }
@@ -2374,7 +2411,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                 value,
                 ..
             } => {
-                let _ = write!(out, "(_globals.__setitem__({}, ", quote_py_string(name));
+                let _ = write!(out, "(_sir_global_set({}, ", quote_py_string(name));
                 emit_expr(out, value, indent, env);
                 out.push_str(")), ");
             }
@@ -2535,8 +2572,8 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
     out.push_str(")[-1]");
 }
 
-/// Lift a statement-bearing block to a nested `def __block_N(): …` whose
-/// source is queued in the hoist buffer; emit `__block_N()` at the call
+/// Lift a statement-bearing block to a nested `def _sir_block_N(): …` whose
+/// source is queued in the hoist buffer; emit `_sir_block_N()` at the call
 /// site.  Used for expression-position blocks containing a loop, which
 /// cannot be inlined as a Python expression.
 fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize, env: &mut TypeEnv) {
@@ -2552,7 +2589,7 @@ fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize, env: &mu
     let inner = indent + 1;
     let inner_pad = indent_str(inner);
     for n in &nonlocals {
-        let _ = writeln!(def, "{}nonlocal {}", inner_pad, sanitize_ident(n));
+        let _ = writeln!(def, "{}nonlocal {}", inner_pad, var_ident(n));
     }
     // This `def` opens a *new* Python function scope, so clone `env`
     // before recursing: any bindings introduced inside the lifted block
@@ -2715,9 +2752,19 @@ fn collect_nonlocals_block(
 thread_local! {
     static BLOCK_COUNTER: RefCell<usize> = const { RefCell::new(0) };
     static FN_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+    /// Function name → [`Function::exact_arity`], for the strict-closure
+    /// count check (see the `lambda` arm of `emit_builtin_call`).  Filled at
+    /// the top of every `emit_module`; a function with no single arity (a
+    /// defaulted, `*rest`, keyword or block parameter) is absent.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
     /// Pending nested-`def` sources, awaiting flush before the current
     /// statement (see [`flush_hoist`]).
     static HOIST: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
+    /// The SIR name of every function in the module being emitted.  A
+    /// *variable* spelled like one of them is renamed by [`var_ident`] so
+    /// it cannot shadow the function (#18485).  Filled at the top of every
+    /// `emit_module`, like `STRICT_ARITY`.
+    static FUNCTION_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 fn fresh_block_name() -> String {
@@ -2725,7 +2772,11 @@ fn fresh_block_name() -> String {
         let mut c = c.borrow_mut();
         let n = *c;
         *c += 1;
-        format!("__block_{}", n)
+        // `_sir_block_N`, inside the reserved `_sir` namespace (#18466).  It
+        // used to be `__block_N` — the very name the Ruby frontend gives its
+        // hoisted block *functions* — so a Ruby method holding both a block
+        // and a looping expression could define `__block_0` twice.
+        format!("_sir_block_{}", n)
     })
 }
 
@@ -2735,6 +2786,43 @@ fn fresh_block_name() -> String {
 
 fn indent_str(level: usize) -> String {
     "    ".repeat(level)
+}
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a *variable* renamed
+/// because a function of the module has the same SIR name (see
+/// [`var_ident`]).  Distinct from [`TAG_VERBATIM`] and [`TAG_ESCAPED`], so a
+/// renamed variable can never equal any output of [`sanitize_ident`].
+const TAG_LOCAL: &str = "l";
+
+/// The Python identifier for the SIR *variable* `name`: a local,
+/// parameter, capture, loop variable, `rescue` binding, or the name of a
+/// keyword argument (which must match the callee's parameter).  Globals
+/// live in the runtime's store, keyed by their SIR name, so they never
+/// reach here.
+///
+/// SIR keeps functions and variables in two namespaces, and a source
+/// language may use both spellings at once (Ruby: `def f; 40; end; f = 2;
+/// f() + f` is 42).  Python has one: an assignment `f = 2` anywhere in a
+/// `def` makes `f` local to the whole body, so `f()` called the integer
+/// (`TypeError: 'int' object is not callable`, #18485).  A variable that
+/// collides with a function is renamed:
+///
+/// | SIR variable | module has a function of that name? | Python        |
+/// |--------------|-------------------------------------|---------------|
+/// | `x`          | no                                  | `x`           |
+/// | `f`          | yes                                 | `sir_esc_lf`  |
+///
+/// The renamed form is [`ESCAPE_MARKER`], [`TAG_LOCAL`], then
+/// `sanitize_ident(name)`: one-to-one because `sanitize_ident` is, and
+/// disjoint from every `sanitize_ident` output, which either lacks the
+/// marker or follows it with another tag.  It depends only on the name, so
+/// a variable's binding and every use of it agree.
+fn var_ident(name: &str) -> String {
+    if FUNCTION_NAMES.with(|t| t.borrow().contains(name)) {
+        format!("{ESCAPE_MARKER}{TAG_LOCAL}{}", sanitize_ident(name))
+    } else {
+        sanitize_ident(name)
+    }
 }
 
 /// Sanitize a SIR identifier for Python.
@@ -2804,18 +2892,34 @@ const TAG_ESCAPED: &str = "e";
 /// empty body (`escape_body("")` is itself `""`, and no *non-empty*
 /// invalid name can ever produce an empty `escape_body` output, so this
 /// stays unambiguous too).
+///
+/// # Generated names are reserved too (#18466)
+///
+/// The emitter writes names of its own into the same Python module as the
+/// user's code — see [`is_generated_name`].  Python resolves a name at call
+/// time, so a user `def` spelled like one of them silently *replaces* it:
+/// `(define (_sir_global_set k v) 0)` took over every global write, and
+/// `(define (_sir_user_main) 42)` was overwritten by the renamed SIR `main`,
+/// which then called itself until `RecursionError`.  A reserved name now
+/// takes the marker branch exactly like a keyword:
+///
+/// ```text
+/// _sir_global_set  ->  sir_esc_v_sir_global_set
+/// _sir_user_main   ->  sir_esc_v_sir_user_main
+/// len              ->  sir_esc_vlen
+/// ```
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
-    if is_valid_py_ident(s) && !is_python_keyword(s) && !s.starts_with(ESCAPE_MARKER) {
+    if is_valid_py_ident(s) && !is_python_keyword(s) && !is_generated_name(s) {
         return s.to_string();
     }
     if is_valid_py_ident(s) {
-        // A real Python keyword, or a valid-but-marker-prefixed name —
-        // either way every character is already legal, so no further
-        // per-character escaping is needed; the marker + tag alone
-        // disambiguates.
+        // A real Python keyword, a name the emitter generates, or a
+        // valid-but-marker-prefixed name — either way every character is
+        // already legal, so no further per-character escaping is needed;
+        // the marker + tag alone disambiguates.
         return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
     }
     format!("{ESCAPE_MARKER}{TAG_ESCAPED}{}", escape_body(s))
@@ -2877,6 +2981,50 @@ pub fn escape_body(s: &str) -> String {
         }
     }
     out
+}
+
+/// Names the emitted module binds or reads that a user name must never spell
+/// (#18466).  [`sanitize_ident`] escapes every one of them.
+///
+/// | reserved          | where the emitter writes it                                   |
+/// |-------------------|---------------------------------------------------------------|
+/// | `_sir…`, `_SIR…` (any case) | every runtime helper alias (`_sir_plus`, `_sir_global_set`, …), `_SIR_MISSING`, `_sir_user_main` (SIR's `main`), the nested `def _sir_block_N` a looping block in expression position is lifted to ([`fresh_block_name`]) |
+/// | `sir_esc_…`       | [`ESCAPE_MARKER`], this function's own escaped outputs        |
+/// | `__l`             | the `lambda __l: …` that evaluates a short-circuit `and`/`or` operand once |
+/// | `__exc`           | the caught exception in a `try`/`except` lowering             |
+/// | `Exception`, `len`, `list`, `range` | builtins the emitted code names bare (`except Exception`, `len(seq)`, `list(rest)`, `for … in range(…)`); a module-level `def len` would shadow the builtin for the whole module |
+/// | `__debug__`       | a name Python refuses to bind at all (`SyntaxError: cannot assign to __debug__`) |
+///
+/// The `_sir` prefix is matched case-insensitively so every alias the
+/// runtime imports, present or future, is covered by one rule.
+fn is_generated_name(s: &str) -> bool {
+    s.get(..4).is_some_and(|p| p.eq_ignore_ascii_case("_sir"))
+        || s.starts_with(ESCAPE_MARKER)
+        || matches!(s, "__l" | "__exc" | "Exception" | "len" | "list" | "range" | "__debug__")
+}
+
+/// A Python expression for the `f64` `v` that names nothing.
+///
+/// A finite value is its shortest round-tripping decimal (`{:?}` keeps the
+/// decimal point of `3.0`, so the literal stays a `float`).  `{:?}` spells
+/// the non-finite values `inf`, `-inf` and `NaN`, which Python reads as
+/// (undefined) *names*; `float("inf")` would name the builtin `float`, which
+/// a user `def float` could replace.  Literal arithmetic names nothing
+/// (security review of #18466):
+///
+/// ```text
+/// f64::INFINITY      ->  1e999            (overflows to inf)
+/// f64::NEG_INFINITY  ->  (-1e999)
+/// f64::NAN           ->  (1e999 - 1e999)
+/// ```
+fn py_float_literal(v: f64) -> String {
+    if v.is_nan() {
+        "(1e999 - 1e999)".to_string()
+    } else if v.is_infinite() {
+        if v > 0.0 { "1e999" } else { "(-1e999)" }.to_string()
+    } else {
+        format!("{v:?}")
+    }
 }
 
 fn is_valid_py_ident(s: &str) -> bool {
@@ -2990,6 +3138,32 @@ mod tests {
 
     fn s() -> Span {
         Span::synthetic()
+    }
+
+    /// The names the emitted module binds or reads are escaped; ordinary
+    /// names — the Ruby frontend's `__block_N` functions included — are not
+    /// (#18466).
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in [
+            "_sir_user_main", "_sir_global_set", "_SIR_MISSING", "_Sir_x", "_sir_block_0",
+            "__l", "__exc", "Exception", "len", "list", "range", "__debug__",
+        ] {
+            assert_eq!(sanitize_ident(name), format!("sir_esc_v{name}"), "{name}");
+        }
+        for name in ["x", "_si", "sir", "__block_0", "__lambda_0", "length", "lists"] {
+            assert_eq!(sanitize_ident(name), name, "{name}");
+        }
+    }
+
+    /// A non-finite float is literal arithmetic that names nothing, not
+    /// Rust's `inf`/`NaN` spelling (security review of #18466).
+    #[test]
+    fn non_finite_floats_are_literal_arithmetic() {
+        assert_eq!(py_float_literal(f64::INFINITY), "1e999");
+        assert_eq!(py_float_literal(f64::NEG_INFINITY), "(-1e999)");
+        assert_eq!(py_float_literal(f64::NAN), "(1e999 - 1e999)");
+        assert_eq!(py_float_literal(3.0), "3.0");
     }
 
     #[test]
@@ -3870,5 +4044,103 @@ mod tests {
         assert!(out.contains("else:\n"), "got {out}");
         assert!(!out.contains(":="), "must not route through the walrus-tuple path: {out}");
         assert!(!out.contains("def "), "must not route through a lifted nested def: {out}");
+    }
+
+    // ── a variable never shadows a function (#18485) ─────────────────
+
+    /// `def f; 40; end` and a `main` whose local is also named `f`:
+    /// `let f = 2; f() + f`, which a source language with separate
+    /// namespaces (Ruby) evaluates to 42.
+    fn local_named_like_a_function() -> Module {
+        let sp = Span::synthetic;
+        let func = |name: &str, body: semantic_ir::Block| semantic_ir::Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let f = func(
+            "f",
+            semantic_ir::Block {
+                stmts: vec![],
+                value: Expr::IntLit { value: 40, span: sp() },
+                span: sp(),
+            },
+        );
+        let main = func(
+            "main",
+            semantic_ir::Block {
+                stmts: vec![Stmt::LetStarBinding {
+                    name: "f".to_string(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![
+                        Expr::DirectCall {
+                            fn_name: "f".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                        Expr::VarRef {
+                            name: "f".to_string(),
+                            scope: Scope::Local,
+                            span: sp(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+        );
+        Module {
+            name: "shadow".to_string(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    #[test]
+    fn a_local_named_like_a_function_is_renamed_and_the_function_is_not() {
+        let out = emit_module(&local_named_like_a_function());
+        // The function keeps its own spelling.  Everything from its
+        // definition on is the user's code (the inlined runtime comes
+        // first, and binds names of its own).
+        let at = out.find("def f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let out = &out[at..];
+        // The local is bound, and read, under its renamed spelling...
+        assert!(out.contains("sir_esc_lf = "), "{out}");
+        assert!(out.contains("sir_esc_lf"), "{out}");
+        // ...never under the function's own spelling, which the call keeps.
+        assert!(!out.contains("    f = "), "{out}");
+        assert!(out.contains("f()"), "{out}");
+    }
+
+    #[test]
+    fn var_ident_renames_exactly_the_names_of_functions() {
+        FUNCTION_NAMES.with(|t| {
+            let mut t = t.borrow_mut();
+            t.clear();
+            t.insert("f".to_string());
+        });
+        assert_eq!(var_ident("f"), "sir_esc_lf");
+        assert_eq!(var_ident("x"), sanitize_ident("x"));
+        // A user variable spelled like the renamed form takes the verbatim
+        // escape, so the two stay apart.
+        assert_ne!(var_ident("sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
 }

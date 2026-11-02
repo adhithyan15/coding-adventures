@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-209-A2-NILI",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use one bounded feminine singular adjective form.",
+  "prerequisites": [
+    "PA-EXT-208-A2-PIA"
+  ]
+}

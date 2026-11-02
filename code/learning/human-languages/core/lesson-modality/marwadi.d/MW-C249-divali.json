@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C249-divali",
+    "language": "marwadi",
+    "chapter": 249,
+    "sequence": 17440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:486bf15aee678634"
+  },
+  "findings": []
+}

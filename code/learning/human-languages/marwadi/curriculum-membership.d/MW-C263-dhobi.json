@@ -1,0 +1,11 @@
+{
+  "id": "MW-C263-dhobi",
+  "pathSegment": "MW-PATH-263-TELI263",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-263-TELI263",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:09d3412b49a08e95",
+  "lessonIds": [
+    "MW-C164-khulo",
+    "MW-C164-band",
+    "MW-C164-tai",
+    "MW-C164-dairy-notice",
+    "MW-R164-dairy"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch164.txt",
+  "json": "marwadi/narration/ch164.json",
+  "textHash": "fnv1a64:26ada0431060e9a9",
+  "jsonHash": "fnv1a64:66359d0b7ceb2468",
+  "findings": []
+}

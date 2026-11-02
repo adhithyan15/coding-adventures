@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-280-MAIDAN280",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "before": [],
+  "inline": [
+    "MW-EXT-280-MAIDAN280"
+  ],
+  "after": []
+}

@@ -2,6 +2,44 @@
 
 ## [Unreleased]
 
+### Added — `UnboundName`: a bare name must be bound (UI29 §3.4, backlog 6f1p)
+
+A bare NAME prop value in a name-reference position (`Text ( content:
+hello )`) is a `name_ref`, and every backend lowers it to a variable read.
+One that nothing bound passed the validator and then failed late and
+differently per backend: `tsc`, `swiftc`, `kotlinc` and `dart analyze`
+errors, or a runtime `ReferenceError` that blanked the whole Web Component.
+
+- `validate` now rejects it with the new `ErrorKind::UnboundName`, one
+  error per occurrence (at most 100 per layout, then one count of the rest;
+  layout text in the message is cut to 64 characters, so a malformed
+  dependency cannot produce unbounded error output), naming the component, the bare name, the prop and
+  the node path, and suggesting the fixes:
+
+  ```text
+  UnboundName: `Greeting` layout: bare name `hello` in `Text ( content: hello )`
+  at Column[root] > Text#1 is not bound — no enclosing `For` binds it and
+  Greeting.mil declares no slot `hello`. Declare `slot hello : …` in
+  Greeting.mil, bind it with `For ( …, as: hello )`, or quote it as a string
+  literal "hello"
+  ```
+
+- Bound means an enclosing `For`'s `as:`/`index:` (matched as written,
+  nested loops included) or one of the component's slots in kebab-case or
+  camelCase: the same lookups as the package resolver's
+  `check_callee_scope`.
+- Exempt, exactly as the resolver exempts them: `true`/`false`,
+  `KEYWORD_LITERAL_PROPS` positions, and the props of `For`/`If`/`Else`
+  (which have their own rules). Component call sites (any tag that is not a
+  kernel primitive) are also skipped, because a bare value there may be one
+  of the callee's `one-of` values; the artifact builder's post-inlining
+  validate pass checks them once they sit in the callee's primitives.
+- Skipped without an interface (`validate(def, None)`), like `UnknownSlot`.
+- Expressions remain opaque to the validator; their free names are not
+  covered by this rule.
+- Also collapses a pre-existing `if` inside the `SlotRef` match arm into a
+  match guard, which current clippy rejects under `-D warnings`.
+
 ### Added — `KEYWORD_LITERAL_PROPS` and `is_keyword_literal` (E6 F1)
 
 A bare NAME prop value parses as `LayoutPropValue::Keyword`. Nothing in the

@@ -269,7 +269,7 @@ fn go_available() -> bool {
 
 fn run_go(source: &str, tag: &str) -> std::process::Output {
     let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_coll_{tag}_{nonce}.go"));
     std::fs::write(&src_path, source).expect("write temp source");
     let out = Command::new("go")
@@ -576,4 +576,15 @@ fn take_drop_values_at_compile_and_run() {
         ],
         "unexpected stdout:\n{stdout}"
     );
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Torn and Mended",
+  "label": "ch:mw-torn-and-mended",
+  "canDo": "I can say that something tore and how it was mended.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C177-pallo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say that something tore and how it was mended.",
+    "assesses": [
+      "MW-LEX-C177-PHAD177-03",
+      "MW-LEX-C177-PHAD177-04",
+      "MW-LEX-C177-PHAD177-05"
+    ]
+  }
+}

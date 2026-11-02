@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Burning Sand, Setting Sun",
+  "label": "ch:mw-burning-sand-setting-sun",
+  "canDo": "I can describe the scorching ground and the sun going down.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C230-kato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can describe the scorching ground and the sun going down.",
+    "assesses": [
+      "MW-LEX-C230-SUN230-03",
+      "MW-LEX-C230-SUN230-04",
+      "MW-LEX-C230-SUN230-05"
+    ]
+  }
+}

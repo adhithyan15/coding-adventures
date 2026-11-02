@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C212-adhai",
+    "language": "marwadi",
+    "chapter": 212,
+    "sequence": 14100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7268801f8e1527c8"
+  },
+  "findings": []
+}

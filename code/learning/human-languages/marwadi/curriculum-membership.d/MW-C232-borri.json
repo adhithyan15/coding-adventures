@@ -1,0 +1,11 @@
+{
+  "id": "MW-C232-borri",
+  "pathSegment": "MW-PATH-232-EARTH232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-232-EARTH232",
+      "order": 4
+    }
+  ]
+}

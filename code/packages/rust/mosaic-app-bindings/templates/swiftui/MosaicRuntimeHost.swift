@@ -17,6 +17,20 @@ private let mosaicStateFileName = "mosaic-state.v1.json"
 /// begins this way: an app error begins "Mosaic application error".
 private let mosaicInvalidEnvironment = "__MOSAIC_INVALID_ENVIRONMENT__"
 
+/// Claim a quarantine name by creating an empty file there, exclusively
+/// (`O_CREAT | O_EXCL`): the open fails rather than touch anything already at
+/// the name, a file, a directory, or a symbolic link, even a dangling one.
+/// Nil once the name is ours; otherwise the `errno` of the refusal.
+///
+/// At file scope because `MosaicRuntimeHost` has a `close()` of its own, which
+/// would shadow the C function inside the class.
+private func mosaicClaimQuarantineName(_ path: String) -> Int32? {
+  let descriptor = open(path, O_WRONLY | O_CREAT | O_EXCL, 0o600)
+  guard descriptor >= 0 else { return errno }
+  close(descriptor)
+  return nil
+}
+
 private enum MosaicRuntimeError: LocalizedError {
   case unavailable(String)
   case protocolFailure(mosaic_binding_status, String)
@@ -768,29 +782,45 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   /// Move `url` to its first free quarantine name: nil when it moved,
   /// otherwise why it did not.
   ///
-  /// A name is skipped when anything is there. `attributesOfItem` does not
-  /// follow a final symbolic link, so it sees a file, a directory, and a link,
-  /// even a dangling one, where `fileExists` would follow the link and report
-  /// nothing. `moveItem` fails rather than replace an item already at its
-  /// destination. Foundation checks and then renames, so an item another
-  /// process creates at the same name in that instant could still be replaced
-  /// (by another rejected file, never truncated). That race needs a second
-  /// instance quarantining at the same moment, and is accepted.
+  /// `FileManager.moveItem` is NOT used for the move. It refuses an item
+  /// already at its destination only by checking first and then calling
+  /// rename(2), which replaces whatever another process put at the name in
+  /// between. So, as the Qt and Flutter hosts do, the name is claimed first
+  /// and the file is moved onto the claim:
+  ///
+  ///   1. skip a name if anything is there. `attributesOfItem` does not
+  ///      follow a final symbolic link, so it sees a file, a directory, and a
+  ///      link, even a dangling one, where `fileExists` would follow the link
+  ///      and report nothing. This check is only advisory; step 2 refuses;
+  ///   2. `mosaicClaimQuarantineName` creates an empty file there with
+  ///      `O_CREAT | O_EXCL`, failing if anything got there first. If it fails
+  ///      and the name is now taken, move on (decided by looking again, not
+  ///      from `errno`). Any other failure stops here;
+  ///   3. rename(2) moves the rejected file onto that placeholder, an atomic
+  ///      replace whose only victim is the empty file this host just made.
+  ///      The rejected bytes are never copied, so they cannot arrive
+  ///      truncated.
+  ///
+  /// If step 3 fails the rejected file has not moved; the placeholder, still
+  /// empty, is removed so it does not use up a name.
   private static func moveStateAside(_ url: URL) -> String? {
     let manager = FileManager.default
+    func taken(_ candidate: URL) -> Bool {
+      (try? manager.attributesOfItem(atPath: candidate.path)) != nil
+    }
     for index in 0..<maxQuarantinedStates {
       let name = url.lastPathComponent + (index == 0 ? ".corrupt" : ".corrupt.\(index)")
       let candidate = url.deletingLastPathComponent().appendingPathComponent(name)
-      if (try? manager.attributesOfItem(atPath: candidate.path)) != nil { continue }
-      do {
-        try manager.moveItem(at: url, to: candidate)
-        return nil
-      } catch {
-        // Without its full stop: the warning adds its own after this.
-        let reason = error.localizedDescription
-        let trimmed = reason.hasSuffix(".") ? String(reason.dropLast()) : reason
-        return "Could not move it aside to \(candidate.path): \(trimmed)"
+      if taken(candidate) { continue }
+      if let refused = mosaicClaimQuarantineName(candidate.path) {
+        if taken(candidate) { continue }
+        return "Could not move it aside to \(candidate.path): \(String(cString: strerror(refused)))"
       }
+      if rename(url.path, candidate.path) == 0 { return nil }
+      let failure = String(cString: strerror(errno))
+      let size = (try? manager.attributesOfItem(atPath: candidate.path))?[.size] as? NSNumber
+      if size?.intValue == 0 { try? manager.removeItem(at: candidate) }
+      return "Could not move it aside to \(candidate.path): \(failure)"
     }
     return "All \(maxQuarantinedStates) quarantine names beside it are taken; move them away to save again"
   }

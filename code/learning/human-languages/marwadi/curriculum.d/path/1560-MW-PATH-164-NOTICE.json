@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-164-NOTICE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "MW-EXT-164-NOTICE"
+  ],
+  "after": []
+}

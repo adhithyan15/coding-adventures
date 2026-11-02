@@ -375,7 +375,7 @@ rel_expr    ::= unary    (('<' | '<=' | '>' | '>=') unary)?
 unary       ::= '!' unary | primary
 primary     ::= literal | slot_ref | name_ref | field_access | index_access | paren
 slot_ref    ::= 'slot:' NAME
-name_ref    ::= NAME                          // For-bound name
+name_ref    ::= NAME                          // For-bound name or own slot (§3.4)
 field_access::= primary '.' NAME              // col.key, row.cells
 index_access::= primary '[' expr ']'          // row[c], grid[r][c]
 paren       ::= '(' expr ')'
@@ -398,11 +398,96 @@ type system.
   immediate body. Nested `For`s shadow.
 - `If when:`'s expression sees the surrounding scope but does not bind
   new names.
+- **A bare name resolves lexically, innermost scope first** (backlog
+  6f1m). A bare NAME — a `name_ref` in an expression, or a bare prop
+  value such as `Text ( content: title )` — means, in this order:
+  1. the `as:` or `index:` binding of the nearest enclosing `For` that
+     binds it, matched exactly as written. A loop binding therefore
+     shadows a slot of the same name inside the loop body, and only
+     there;
+  2. otherwise, a slot of the component whose layout contains it, in
+     its declared kebab-case spelling or its camelCase form
+     (`display-name` / `displayName`). This is the same reference as
+     `slot: title`: when the component is a package component that a
+     consumer mounts, the inliner substitutes the call site's binding
+     (or the slot's default) for it exactly as it does for
+     `slot: title`, so no backend ever sees the callee's slot name.
+  An own slot shadows nothing outside its component: after inlining,
+  the callee's slot names are gone, and the consumer's names mean what
+  they mean in the consumer.
+
+  Inlining is **hygienic**. A value the consumer binds at a call site
+  (`pkg::lib::Card ( title: row )`, inside the consumer's own
+  `For ( …, as: row )`) and the children the consumer passes into a
+  child mount are resolved in the *consumer's* scope, and a `For`
+  inside the callee never captures them. When a callee `For` binding
+  has the same name as a consumer name that inlining would place in
+  its body, the inliner renames that callee binding, and every use of
+  it in the loop body, to a fresh name (`row` → `row-in1`). A loop
+  binding that captures nothing keeps its authored name, so output
+  changes only where it was previously wrong.
+
+  Positions where a bare NAME is a literal, not a name, are never
+  resolved or rewritten: `true` / `false`; an enum value in a
+  `moslayout_compiler::KEYWORD_LITERAL_PROPS` position (`tone: calm`
+  where the prop is an enum, `axis: horizontal`, `a11y-role: heading`);
+  a `For`'s `as:` / `index:` binder itself; and, at a component call
+  site, a declared value of the mounted component's `one-of` slot
+  (UI34 §5 "Callee scope").
 - Slot references (`slot: foo`) always resolve to the host component's
   slot, never to a `For`-bound name.
 - A `For`-bound name and a slot of the same name is a **shadow
   warning** in the compiler. (Slots win? `For` wins? — picked by the
-  spec PR that lands the resolver.)
+  spec PR that lands the resolver.) **Resolved: `For` wins.** Inside
+  the loop body the bare name is the loop variable, on every backend
+  (UI34 §5 "Bindings"; each emitter's lexical scoping gives the same
+  answer). No warning is emitted yet.
+- **A bare name must be bound** (backlog 6f1p). A bare NAME prop value
+  (`Text ( content: hello )`, a `LayoutPropValue::Keyword`) in a
+  name-reference position is a `name_ref`, and every backend lowers it
+  to a variable read (React `{hello}`, SwiftUI `_mosaicText(hello)`,
+  Web Components `this.hello`, …). So the layout validator requires it
+  to name one of:
+  1. an `as:` or `index:` binding of an enclosing `For` in the same
+     layout (nested `For`s included; matched exactly as written), or
+  2. a slot of the component's own `.mil`, in its declared kebab-case
+     spelling or its camelCase form (`display-name` / `displayName`).
+
+  Anything else is the compile error `UnboundName`, naming the
+  component, the bare name, the prop and the node path
+  (`Column[root] > For#2 > Text[cell]`), and suggesting the three fixes:
+  declare `slot hello : …` in `<Component>.mil`, bind it with
+  `For ( …, as: hello )`, or quote it as the string literal `"hello"`.
+  Before this rule the validator accepted such a name and each backend
+  failed late and differently: `tsc`/`swiftc`/`kotlinc`/`dart analyze`
+  errors, or a runtime `ReferenceError` that blanked the whole Web
+  Component.
+
+  Positions that are **not** name references are exempt, exactly the
+  ones the package resolver's `check_callee_scope` exempts (UI34 §5
+  "Callee scope"), so the two never disagree:
+  - `true` / `false`, anywhere;
+  - a `moslayout_compiler::KEYWORD_LITERAL_PROPS` position (enum props
+    such as `HostScroll ( axis: both )`, `Text ( a11y-role: heading )`);
+  - the props of `For` (`as:`/`index:` are binders; a bare `each:` is
+    already checked against the loop scope by the `For` rule), `If`
+    (`when:` rejects a bare name outright) and `Else`;
+  - the props of a component call site (any tag that is not a kernel
+    primitive, `pkg::P::C` or a local component). A bare value there
+    may be one of a callee `one-of` slot's declared values, which only
+    the callee's interface can tell; the layout validator never sees
+    that interface. A package call site is still covered: the
+    artifact builder re-runs this validator on the inlined tree against
+    the consumer's interface, where a value that was not a declared
+    `one-of` value sits in the callee's primitives as a bare name of
+    the consumer's scope; inside a package layout the resolver checks
+    call-site values against the mounted component's slots.
+
+  When the layout is compiled without an interface (`validate(def,
+  None)`), slots are unknown and the rule is skipped, as `UnknownSlot`
+  is. Free names inside an *expression* (`If ( when: ( hint > 0 ) )`)
+  are not covered by this rule; the validator still treats an
+  expression as opaque text.
 
 ### 3.5 Grammar fits the existing parser
 

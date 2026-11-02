@@ -1,0 +1,21 @@
+{
+  "chapter": 284,
+  "title": "My School Bag",
+  "label": "ch:mw-my-school-bag",
+  "canDo": "I can say what is in my school bag and what I study.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-R284-review-279-284",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say what is in my school bag and what I study.",
+    "assesses": [
+      "MW-LEX-C284-BASTO284-01",
+      "MW-LEX-C284-BASTO284-02",
+      "MW-LEX-C284-BASTO284-03",
+      "MW-LEX-C284-BASTO284-04",
+      "MW-LEX-C284-BASTO284-05"
+    ]
+  }
+}

@@ -44,10 +44,10 @@ class CtCompareTest {
             right[i] = (byte) (255 - i);
         }
 
-        assertArrayEquals(left, CtCompare.ctSelectBytes(left, right, true));
-        assertArrayEquals(right, CtCompare.ctSelectBytes(left, right, false));
-        assertArrayEquals(new byte[0], CtCompare.ctSelectBytes(new byte[0], new byte[0], true));
-        assertThrows(IllegalArgumentException.class, () -> CtCompare.ctSelectBytes(new byte[1], new byte[2], true));
+        assertArrayEquals(left, CtCompare.ctSelectBytes(left, right, 1));
+        assertArrayEquals(right, CtCompare.ctSelectBytes(left, right, 0));
+        assertArrayEquals(new byte[0], CtCompare.ctSelectBytes(new byte[0], new byte[0], 1));
+        assertThrows(IllegalArgumentException.class, () -> CtCompare.ctSelectBytes(new byte[1], new byte[2], 1));
     }
 
     @Test
@@ -60,5 +60,21 @@ class CtCompareTest {
         for (int bit = 0; bit < 64; bit++) {
             assertFalse(CtCompare.ctEqU64(baseline, baseline ^ (1L << bit)));
         }
+    }
+
+    @Test
+    void ctSelectBytesRejectsChoiceOtherThanZeroOrOne() {
+        for (int bad : new int[] {2, -1, 3, 255, Integer.MIN_VALUE}) {
+            assertThrows(IllegalArgumentException.class,
+                () -> CtCompare.ctSelectBytes(new byte[] {1}, new byte[] {2}, bad));
+        }
+    }
+
+    @Test
+    void ctSelectBytesReturnsAFreshCopy() {
+        byte[] left = {1, 2, 3};
+        byte[] picked = CtCompare.ctSelectBytes(left, new byte[] {4, 5, 6}, 1);
+        left[0] = 99;
+        assertArrayEquals(new byte[] {1, 2, 3}, picked);
     }
 }

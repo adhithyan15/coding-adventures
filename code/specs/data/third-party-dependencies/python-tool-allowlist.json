@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "ecosystem": "python-tools",
+  "allowed_dependency_names": [
+    "build",
+    "fonttools",
+    "jsonschema",
+    "mypy",
+    "pytest",
+    "pytest-cov",
+    "ruff"
+  ]
+}

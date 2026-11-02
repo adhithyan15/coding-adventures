@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C290-bahi",
+    "language": "marwadi",
+    "chapter": 290,
+    "sequence": 20230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0186aa2c9e42c197"
+  },
+  "findings": []
+}

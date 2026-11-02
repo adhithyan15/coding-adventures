@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:ad27e32e9addcf9c",
+  "lessonIds": [
+    "MW-C266-hajar",
+    "MW-C266-madad",
+    "MW-C266-meharbani",
+    "MW-C266-araj",
+    "MW-C266-asis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch266.txt",
+  "json": "marwadi/narration/ch266.json",
+  "textHash": "fnv1a64:02c3939ad4de4bc0",
+  "jsonHash": "fnv1a64:82f9c88c123833c1",
+  "findings": []
+}

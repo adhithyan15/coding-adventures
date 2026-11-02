@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-223-FAIR223",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "MW-EXT-223-FAIR223"
+  ],
+  "after": []
+}

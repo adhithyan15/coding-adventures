@@ -2,6 +2,10 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - Unreleased
+
+- Consume the bounded HF04 corpus and use exact BigInt streaming length accounting with stable overflow errors.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

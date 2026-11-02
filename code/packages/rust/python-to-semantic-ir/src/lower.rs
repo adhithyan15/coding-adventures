@@ -83,7 +83,10 @@
 //! - **calls** `f(args)` — `f` a known function name → [`Expr::DirectCall`];
 //!   `f` a builtin (`print`/`len`/`range`) → [`Expr::BuiltinCall`]; `f`
 //!   a local/param/captured value (a closure handle) → an
-//!   [`Expr::IndirectCall`] through that `VarRef`.
+//!   [`Expr::IndirectCall`] through that `VarRef`.  A known function that
+//!   *has captures* is called through its re-threaded closure instead:
+//!   `IndirectCall(MakeClosure(f, captures), args)`.  A `DirectCall`
+//!   passes only the arguments, never the captures.
 //!
 //! The manifest declares `Closures` when any `MakeClosure` / capture /
 //! `IndirectCall` is emitted, and `MutualRecursion` when two top-level
@@ -146,6 +149,54 @@
 //! `lst.sort(key=lambda x: -x)`) is just another argument and lowers
 //! through the ordinary call-arg path (a lambda → `MakeClosure`).
 //!
+//! ## Assignment statements (#18482)
+//!
+//! Python's grammar folds five statement forms into one rule,
+//! `assign_stmt = expression_list [ assign_suffix | augmented_assign |
+//! annotation ]`.  The frontend once looked only for `assign_suffix` and
+//! lowered *anything else* as the bare expression on the left, so
+//! `x += 2` and `x: int = 5` compiled to the statement `x` and changed
+//! nothing.  Every form is now lowered or refused:
+//!
+//! ```text
+//!   x = e              store e into x
+//!   a = b = e          tmp = e; a = tmp; b = tmp      (e evaluated once,
+//!                                                     targets left to right)
+//!   x += e             x = x + e      (same builtin as the binary `+`)
+//!   x: T = e           x = e          (the annotation T is ignored)
+//!   x: T               nothing        (a declaration with no value)
+//!   e                  an expression statement
+//! ```
+//!
+//! An augmented assignment uses *exactly* the builtin its binary operator
+//! lowers to (see [`arith_builtin`]), so `x /= 2` true-divides like
+//! `x / 2`.  An operator whose binary form is not lowered (`//=`, `**=`,
+//! the bitwise ones, `@=`) is refused, and so is a subscript target
+//! (`xs[i] += 1`), which would have to evaluate `xs` and `i` once.
+//!
+//! **One known divergence:** for a *list*, Python's `xs += ys` extends the
+//! list in place (`list.__iadd__`), so every other reference to that list
+//! sees the new items.  `xs = xs + ys` builds a new list instead.  The
+//! frontend cannot tell a list from a number without types, and no SIR
+//! runtime has an in-place `+=` helper yet, so this case is documented, not
+//! refused.  `x += 1` on numbers and strings is exact.
+//!
+//! Two scoping rules make assignment inside a loop work:
+//!
+//! - a **parameter** the body assigns is copied into a fresh local when
+//!   the function starts, and every later read and store of the name
+//!   goes to that local.
+//!   Assigning a parameter used to declare a new local that shadowed it
+//!   only until the end of the enclosing block, so
+//!   `while n > 0: n -= 1` never changed the `n` the condition read and
+//!   looped forever;
+//! - a `for` whose variable is **already bound** (`i = 10; for i in …`)
+//!   stores each item into that variable, as Python does, instead of
+//!   declaring a fresh loop-scoped one.
+//!
+//! A user `def main` is renamed, because the synthesised module body is
+//! the SIR function `main`.  See [`sir_function_name`].
+//!
 //! ## Still deferred (later milestones / runtime-library work)
 //!
 //! - list/dict **comprehensions** (`[x for x in xs]`)            → deferred
@@ -168,6 +219,18 @@
 //! `MakeClosure` site).  Names that resolve to a global / top-level
 //! function / builtin need no capture — they are reachable directly
 //! from the synthesised body.  This mirrors the Twig and Ruby frontends.
+//!
+//! One more rule: a body that *names* a capturing function `g` (calls
+//! it, or uses it as a value) builds `g`'s closure, so it must also
+//! capture `g`'s captures to pass them on.
+//!
+//! The capture list is decided **before** the body is lowered, and
+//! recorded where every closure-building site can read it.  This matters
+//! because the body itself may name the function, or a sibling defined
+//! later.  [`Lowerer::plan_captures`] has the algorithm (a fixpoint over
+//! mutually-referencing siblings).  Recording the list only after the
+//! body was lowered gave a self-reference a closure with zero captures
+//! (#18468).
 //!
 //! ## Still deferred (later milestones)
 //!
@@ -282,6 +345,140 @@ impl std::error::Error for PythonLowerError {}
 /// original path).
 const FILE: &str = "<python>";
 
+/// Most captures one function may carry: a deliberate budget.
+///
+/// Each capture is a slot in every closure built for the function, and (on
+/// the C backend) a leading C parameter.  [`Lowerer::plan_captures`]
+/// spreads captures along chains of functions that name each other.
+/// Without a cap, a chain of M functions naming each other, the last
+/// reading V outer names, emits M·V capture slots: quadratic output from
+/// linear input.  The cap also bounds the planner's work to
+/// (edges × `MAX_CAPTURES`).
+///
+/// Note it applies to *every* function.  Top-level statements are `main`'s
+/// body, so a top-level `def` that reads more than 256 module-level
+/// variables is refused even if it is only ever used as a value.
+///
+/// There is deliberately no cap on how many functions one planning group
+/// holds.  A group of capture-free functions (a long call chain, a
+/// dispatcher calling hundreds of helpers) costs only its edges, and a
+/// group cap refused such ordinary programs.
+const MAX_CAPTURES: usize = 256;
+
+/// The [`FunctionCtx::owner`] / [`DefFacts::parent`] key of the module
+/// body (`main`).  A top-level `def`'s parent is this key.  It cannot
+/// collide with a real `def` name because `<` is not an identifier
+/// character.
+const MODULE_OWNER: &str = "<module>";
+
+/// The owner key of a context that must never plan a sibling's captures
+/// (a method body, a method's default values).  No `def` records it as
+/// its parent.
+const DETACHED_OWNER: &str = "<detached>";
+
+/// The prefix that marks an **escaped** user function name.
+///
+/// ## Why user function names need escaping
+///
+/// The module body runs as the synthesised SIR function `main`, and every
+/// `def` is lifted into the same module-level function table.  So the
+/// everyday idiom
+///
+/// ```python
+/// def main():
+///     print(42)
+///
+/// main()
+/// ```
+///
+/// produced two functions named `main`, and the validator refused the
+/// module.  Renaming the user's `main` to some fixed name like `user_main`
+/// would only move the clash, since a program can define `user_main`
+/// too.  The rename has to be **one-to-one**: no two source names may map
+/// to the same SIR name, and no source name may map to `main`.
+///
+/// ## The escape
+///
+/// [`sir_function_name`] prefixes this marker to the two kinds of name
+/// that could collide, and leaves every other name alone:
+///
+/// | source name        | SIR name             | why                        |
+/// |--------------------|----------------------|----------------------------|
+/// | `main`             | `__py_main`          | `main` is taken            |
+/// | `__py_x`           | `__py___py_x`        | it starts with the marker  |
+/// | anything else, `f` | `f`                  | unchanged                  |
+///
+/// It is one-to-one because the output starts with the marker exactly
+/// when the input was escaped, and stripping the marker recovers the
+/// input.  `main` itself is never an output: an unescaped output is not
+/// `main` by the first row, and an escaped one starts with the marker.
+///
+/// The escape is applied only where a function name is *written into the
+/// IR*: [`Function::name`], `DirectCall`, and `MakeClosure`.  Inside the
+/// lowerer, every table (`function_names`, `fn_captures`, `def_facts`) stays
+/// keyed by the source spelling, so `main()` in the source still resolves.
+const FN_ESCAPE_PREFIX: &str = "__py_";
+
+/// The SIR name of the user function spelled `name` in the source (see
+/// [`FN_ESCAPE_PREFIX`] for the one-to-one escape).  Synthesised names
+/// (`__lambda_<N>`, `Class__method`) pass through unchanged unless they
+/// happen to start with the marker, in which case they are escaped like
+/// any other name, consistently at every site.
+fn sir_function_name(name: &str) -> String {
+    if name == "main" || name.starts_with(FN_ESCAPE_PREFIX) {
+        format!("{FN_ESCAPE_PREFIX}{name}")
+    } else {
+        name.to_string()
+    }
+}
+
+/// The SIR name of the *variable* (local, parameter, capture, loop
+/// variable, keyword-argument name) spelled `name` in the source.
+///
+/// ## Why variables are escaped too
+///
+/// Every backend puts a module's functions and a function's variables in
+/// one namespace.  [`sir_function_name`] maps the user's `def main` to
+/// `__py_main`; a variable *spelled* `__py_main` would then shadow it:
+///
+/// ```python
+/// def main(): return 1
+/// def g():
+///     __py_main = 5
+///     return main()     # the backend called the local 5
+/// ```
+///
+/// So a variable that starts with the marker gets the same extra prefix a
+/// function would (`__py_main` → `__py___py_main`).  Unlike a function,
+/// a variable named `main` is left alone: no variable is ever called
+/// `main` in the IR's function sense, and leaving it keeps the two maps
+/// apart.
+///
+/// | source name | as a function   | as a variable     |
+/// |-------------|-----------------|-------------------|
+/// | `main`      | `__py_main`     | `main`            |
+/// | `__py_main` | `__py___py_main`| `__py___py_main`  |
+/// | `f`         | `f`             | `f`               |
+///
+/// For any two source names `a` and `b`, the function name of `a` equals
+/// the variable name of `b` only when `a == b`: the same Python name, which
+/// Python itself keeps in one namespace, so the lowerer's own resolution
+/// (a local shadows a function) already decides between them.  The proof
+/// is the table: an output starts with the marker exactly when it was
+/// escaped, and stripping the marker gives back the input, except for
+/// `main`, whose function name `__py_main` no variable name can equal
+/// (an escaped variable name starts with the marker *twice*).
+///
+/// Temporaries the lowerer invents (`__chain_N`, `__for_N`,
+/// `__param_<name>_N`) do not start with the marker, so they pass through.
+fn sir_var_name(name: &str) -> String {
+    if name.starts_with(FN_ESCAPE_PREFIX) {
+        format!("{FN_ESCAPE_PREFIX}{name}")
+    } else {
+        name.to_string()
+    }
+}
+
 /// Lower a parsed Python CST into a SIR module (M4: literals, variable
 /// references, assignment, operators, control flow, functions, calls,
 /// and closures).
@@ -335,6 +532,77 @@ enum SuffixKind {
     Attr(String),
 }
 
+/// What the left-hand side of an assignment denotes, worked out
+/// *before* anything is stored (see [`Lowerer::classify_target`]).
+///
+/// Classifying first lets every assignment form share one store routine
+/// ([`Lowerer::store_target`]): a plain `x = e`, each target of a chain
+/// `a = b = e`, an annotated `x: T = e`, and the write half of an
+/// augmented `x += e`.
+enum Target<'a> {
+    /// A bare name: `x = …`.
+    Name(String),
+    /// An instance variable inside a method: `self.attr = …`.  Carries
+    /// the attribute name.
+    Instance(String),
+    /// A subscript: `base[index] = …`.  `atom` and the `leading`
+    /// suffixes build the base value (`xs`, or `m[a]` for `m[a][b]`);
+    /// `last` is the final subscript suffix being stored into.
+    Subscript {
+        atom: &'a GrammarASTNode,
+        leading: Vec<&'a GrammarASTNode>,
+        last: &'a GrammarASTNode,
+    },
+}
+
+/// Facts about one `def`, gathered by the first pass
+/// ([`Lowerer::collect_function_names`]) **before any body is lowered**.
+///
+/// ## Why the first pass needs them
+///
+/// A closure's capture list must be known *wherever its name is used*,
+/// and a name can be used before its `def` has been lowered:
+///
+/// ```python
+/// def outer(n):
+///     def ev(x):            # ev's body is lowered first ...
+///         if x == 0:
+///             return n
+///         else:
+///             return od(x - 1)   # ... and already needs od's captures
+///     def od(x):
+///         if x == 0:
+///             return 0 - n
+///         else:
+///             return ev(x - 1)
+///     return ev(4)
+/// ```
+///
+/// To build `od`'s closure inside `ev`, the lowerer needs to know what
+/// `od` captures, and `ev` must capture it too so it can pass it on.
+/// Free-name analysis reads only the CST, so pass 1 records each `def`'s
+/// free names up front.  [`Lowerer::plan_captures`] then works out a
+/// whole group of mutually-referencing siblings at once.
+struct DefFacts {
+    /// The owner key of the body this `def` is written directly inside:
+    /// the enclosing `def`'s name, or [`MODULE_OWNER`] at top level.
+    parent: String,
+    /// Free names of the `def`'s body: every bare name it (or a `def` /
+    /// `lambda` nested in it) reads that is not bound inside it.  The
+    /// order is first-seen and has no duplicates.
+    free: Vec<String>,
+    /// Names the body binds itself: its params, and every name it
+    /// assigns, `for`-binds or `def`s.  Such a name can never also be a
+    /// capture (see [`Lowerer::plan_captures`], rule 2).
+    bound: HashSet<String>,
+    /// The number of parameters.
+    arity: usize,
+    /// True when no parameter has a default value or is keyword-only.
+    /// Only such a `def` can be called through a closure handle with
+    /// its argument count checked here.
+    plain_params: bool,
+}
+
 /// Per-function name-resolution context (M4).
 ///
 /// `main` and every user / synthesised `def`/`lambda` get their own
@@ -354,6 +622,14 @@ struct FunctionCtx {
     params: HashSet<String>,
     captures: HashSet<String>,
     locals: Vec<String>,
+    /// The *owner* key of this context: the name of the `def` whose body
+    /// it lowers ([`MODULE_OWNER`] for `main`, a sentinel for a method
+    /// body or a throwaway default-value context).  It is compared with
+    /// [`DefFacts::parent`] to tell which not-yet-lowered `def`s are
+    /// **siblings** written directly in this same body — the only `def`s
+    /// whose captures may be planned from here (see
+    /// [`Lowerer::plan_captures`]).
+    owner: String,
     /// True only for a method body hoisted from a `class` statement's
     /// `def` (OOP surface).  A method's first parameter (`self`, by Python
     /// convention) is *not* added to `params` — it is not an ordinary
@@ -362,16 +638,26 @@ struct FunctionCtx {
     /// method body is distinguished from an (otherwise unresolved) bare
     /// name of the same spelling anywhere else.
     in_method: bool,
+    /// Locals whose IR name differs from their source name.  A parameter
+    /// the body assigns is copied into a fresh local when the function
+    /// starts (see [`Lowerer::param_copy_prologue`]); from then on the
+    /// source name `n` means that local, `__param_n_<N>`.  Every read
+    /// ([`Lowerer::resolve_var_in`]) and store ([`Lowerer::store_target`])
+    /// of a local goes through [`Self::ir_local`].
+    aliases: std::collections::HashMap<String, String>,
 }
 
 impl FunctionCtx {
-    /// A context for a function with the given params and captures.
-    fn new(params: HashSet<String>, captures: HashSet<String>) -> Self {
+    /// A context for a function with the given params and captures,
+    /// owned by the function named `owner`.
+    fn new(params: HashSet<String>, captures: HashSet<String>, owner: &str) -> Self {
         Self {
             params,
             captures,
             locals: Vec::new(),
+            owner: owner.to_string(),
             in_method: false,
+            aliases: std::collections::HashMap::new(),
         }
     }
 
@@ -384,18 +670,38 @@ impl FunctionCtx {
             params,
             captures: HashSet::new(),
             locals: Vec::new(),
+            // No `def` records this sentinel as its parent, so nothing is
+            // ever planned from inside a method body (see `DefFacts`).
+            owner: DETACHED_OWNER.to_string(),
             in_method: true,
+            aliases: std::collections::HashMap::new(),
         }
     }
 
     /// The top-level / `main` context: no params, no captures.
     fn top_level() -> Self {
-        Self::new(HashSet::new(), HashSet::new())
+        Self::new(HashSet::new(), HashSet::new(), MODULE_OWNER)
+    }
+
+    /// A throwaway context that sees only module-level names, and from
+    /// which no sibling `def` is ever planned (its owner matches no
+    /// `def`'s parent).  Used to lower a method's default values.
+    fn detached() -> Self {
+        Self::new(HashSet::new(), HashSet::new(), DETACHED_OWNER)
     }
 
     /// Is `name` an enclosing-scope value (local / param / capture) of
     /// *this* function?  Such a name, when read inside a nested
     /// `lambda`/`def`, must be **captured**.
+    /// The IR name of the local spelled `name` in the source: its alias
+    /// if it has one, else `name` itself.
+    fn ir_local(&self, name: &str) -> String {
+        self.aliases
+            .get(name)
+            .cloned()
+            .unwrap_or_else(|| sir_var_name(name))
+    }
+
     fn is_enclosing_value(&self, name: &str) -> bool {
         self.locals.iter().any(|n| n == name)
             || self.params.contains(name)
@@ -425,18 +731,62 @@ struct Lowerer {
     functions: Vec<Function>,
     /// Counter for `__lambda_<N>` gensym names.
     lambda_counter: usize,
-    /// For each *lifted* function (nested `def` / lambda) that carries
-    /// captures, its ordered capture-name list.  When a **bare reference**
-    /// to such a function name appears (constructing a closure handle
-    /// without calling it), the `MakeClosure` must re-thread those
-    /// captures from the *currently visible* enclosing values — this map
-    /// records what to thread.  A function with no captures is absent
-    /// (its bare reference is a zero-capture `MakeClosure`).
+    /// For each named function whose capture list is already decided,
+    /// that ordered capture-name list (empty for a function that
+    /// captures nothing).  When a **bare reference** to such a function
+    /// name appears (constructing a closure handle without calling it),
+    /// or a **call** to one that captures something, the `MakeClosure`
+    /// must re-thread those captures from the *currently visible*
+    /// enclosing values — this map records what to thread.
+    ///
+    /// An entry is written **before** the function's body is lowered
+    /// (by [`Self::lower_callable`]), or even before its `def` is
+    /// reached, when an earlier sibling refers to it (by
+    /// [`Self::plan_captures`]).  So a body that names its own function,
+    /// or a sibling defined later, sees the full list.  Writing the
+    /// entry only after the body was lowered let a self-reference build a
+    /// zero-capture closure for a function that declares captures (#18468).
     fn_captures: std::collections::HashMap<String, Vec<String>>,
+    /// Pass-1 facts about every `def`, keyed by name (see [`DefFacts`]).
+    def_facts: std::collections::HashMap<String, DefFacts>,
+    /// Every function name already taken in the module's single
+    /// function namespace: a `def` is added when its lowering *starts*
+    /// (so a nested `def` reusing its enclosing `def`'s name is caught),
+    /// and every other pushed function (lambda, hoisted method) when it
+    /// is pushed.
+    claimed_names: HashSet<String>,
     /// Call graph among *top-level* functions: `caller → callees` by
     /// name.  Used after lowering to detect [`Feature::MutualRecursion`]
     /// (a cycle of length ≥ 2 — two functions that call each other).
     call_graph: Vec<(String, HashSet<String>)>,
+    /// Every name that is spoken for: every `NAME` token spelled anywhere
+    /// in the source file (seeded once by [`Self::lower_file`]), plus every
+    /// name the lowerer has **invented** so far, added the moment it is
+    /// invented (see [`Self::try_claim_name`]).
+    ///
+    /// The lowerer invents four kinds of name, and every backend puts a
+    /// function's locals and the module's functions in one namespace, so
+    /// all four must be distinct from each other and from the source:
+    ///
+    /// | invented name            | kind      | made by                       |
+    /// |--------------------------|-----------|-------------------------------|
+    /// | `__param_<p>_<N>`        | local     | [`Self::param_copy_prologue`] |
+    /// | `__chain_<N>`, `__for_<N>` | local   | chained assignment, `for`     |
+    /// | `__lambda_<N>`           | function  | [`Self::fresh_lambda_name`]   |
+    /// | `<Class>__<method>`      | function  | [`Self::hoisted_method_name`] |
+    ///
+    /// They used to be drawn from separate pools: temporaries skipped only
+    /// source names, and synthesised functions skipped source names and
+    /// other functions.  So a temporary and a function could coincide
+    /// (#18771): the copy of parameter `a__b` is `__param_a__b_0`, and so is
+    /// method `b_0` of a class `__param_a`.  Inside the function that held
+    /// both, the local shadowed the method, and JavaScript failed with
+    /// `TypeError: __param_a__b_0 is not a function`.  One shared set makes
+    /// that impossible whatever order the names are invented in.
+    used_names: HashSet<String>,
+    /// Counter for temporaries' names (`__chain_<N>`, `__for_<N>`,
+    /// `__param_<p>_<N>`).
+    temp_counter: usize,
 }
 
 impl Lowerer {
@@ -449,7 +799,11 @@ impl Lowerer {
             functions: Vec::new(),
             lambda_counter: 0,
             fn_captures: std::collections::HashMap::new(),
+            def_facts: std::collections::HashMap::new(),
+            claimed_names: HashSet::new(),
             call_graph: Vec::new(),
+            used_names: HashSet::new(),
+            temp_counter: 0,
         }
     }
 
@@ -495,9 +849,10 @@ impl Lowerer {
         }
 
         // ── Pass 1: collect all function names (top-level + nested). ──
+        self.used_names = collect_source_names(file);
         for child in &file.children {
             if let ASTNodeOrToken::Node(stmt) = child {
-                self.collect_function_names(stmt, 0)?;
+                self.collect_function_names(stmt, MODULE_OWNER, 0)?;
             }
         }
 
@@ -532,6 +887,10 @@ impl Lowerer {
         let mut functions = std::mem::take(&mut self.functions);
         functions.push(main);
 
+        // The closure invariant, checked over the finished module.  See
+        // `check_closure_invariant`.
+        check_closure_invariant(&functions)?;
+
         // Detect mutual recursion among top-level functions.
         if self.has_mutual_recursion() {
             self.observed.add(Feature::MutualRecursion);
@@ -565,19 +924,8 @@ impl Lowerer {
             },
             _ => Expr::NilLit { span: span.clone() },
         };
-        let stmts: Vec<Stmt> = items
-            .into_iter()
-            .flat_map(|item| match item {
-                Lowered::Stmt(s) => vec![*s],
-                Lowered::Stmts(v) => v,
-                Lowered::Expr(expr) => {
-                    let s = expr.span().clone();
-                    vec![Stmt::ExprStmt { expr, span: s }]
-                }
-            })
-            .collect();
         Block {
-            stmts,
+            stmts: Self::statements_only(items),
             value,
             span: span.clone(),
         }
@@ -603,9 +951,14 @@ impl Lowerer {
     /// nested `def`s (or compounds) would otherwise overflow the native
     /// (uncatchable) stack here.  Past [`MAX_BLOCK_DEPTH`] we return a
     /// clean positioned `PythonLowerError`, mirroring the lowering guard.
+    ///
+    /// `parent` is the owner key of the body `stmt` sits in (the
+    /// enclosing `def`'s name, or [`MODULE_OWNER`]).  Each `def` found
+    /// also gets its [`DefFacts`] recorded.
     fn collect_function_names(
         &mut self,
         stmt: &GrammarASTNode,
+        parent: &str,
         depth: usize,
     ) -> Result<(), PythonLowerError> {
         if depth > MAX_BLOCK_DEPTH {
@@ -617,13 +970,31 @@ impl Lowerer {
         // Only `statement` nodes carry defs; recurse structurally.
         if let Some(def) = self.as_def_stmt(stmt) {
             let name = self.def_name(def)?;
-            self.function_names.insert(name);
-            // Descend into the def's suite for nested defs.
+            // Every `def`, nested or not, is lifted into one module-level
+            // namespace, and `DefFacts` / `fn_captures` are keyed by name.
+            // A second `def` of the same name would overwrite the first
+            // one's facts, so refuse it here, before anything relies on
+            // them.  (The SIR validator rejects duplicate function names
+            // too.)
+            if !self.function_names.insert(name.clone()) {
+                return Err(self.err_at(
+                    def,
+                    format!(
+                        "unsupported: a second function named `{name}` (every `def`, \
+                         nested or not, shares one module-level namespace) (deferred)"
+                    ),
+                ));
+            }
+            if let Some(facts) = self.def_facts_of(def, parent) {
+                self.def_facts.insert(name.clone(), facts);
+            }
+            // Descend into the def's suite for nested defs, whose parent
+            // is this def.
             if let Some(suite) = self.first_child_named(def, "suite") {
                 for child in &suite.children {
                     if let ASTNodeOrToken::Node(inner) = child {
                         if inner.rule_name == "statement" {
-                            self.collect_function_names(inner, depth + 1)?;
+                            self.collect_function_names(inner, &name, depth + 1)?;
                         }
                     }
                 }
@@ -647,13 +1018,48 @@ impl Lowerer {
                 for child in &suite.children {
                     if let ASTNodeOrToken::Node(inner) = child {
                         if inner.rule_name == "statement" {
-                            self.collect_function_names(inner, depth + 1)?;
+                            // An `if`/loop body is not a new scope in
+                            // Python: a `def` under it has the same parent.
+                            self.collect_function_names(inner, parent, depth + 1)?;
                         }
                     }
                 }
             }
         }
         Ok(())
+    }
+
+    /// Gather the [`DefFacts`] of one `def_stmt` written directly in the
+    /// body owned by `parent`.
+    ///
+    /// The free-name scan here is the same one [`Self::lower_callable`]
+    /// runs when it lowers the `def`: parameters plus every name the body
+    /// assigns are bound, and everything else the body reads is free.
+    ///
+    /// Any error (an unsupported parameter form, a too-deep expression) is
+    /// swallowed and yields `None`: the lowering pass reaches the same
+    /// `def` later and reports that error at its usual point, so pass 1
+    /// does not change which error a bad program reports.
+    fn def_facts_of(&self, def: &GrammarASTNode, parent: &str) -> Option<DefFacts> {
+        let specs = self.def_param_specs(def).ok()?;
+        let suite = self.first_child_named(def, "suite")?;
+        let arity = specs.len();
+        let plain_params = specs
+            .iter()
+            .all(|(_, kind, default)| *kind == ParamKind::Required && default.is_none());
+        let mut bound: HashSet<String> = specs.into_iter().map(|(n, _, _)| n).collect();
+        self.collect_suite_bound_names(suite, &mut bound).ok()?;
+        let mut free = Vec::new();
+        let mut seen = HashSet::new();
+        self.collect_free_names(suite, &bound, &mut free, &mut seen, 0)
+            .ok()?;
+        Some(DefFacts {
+            parent: parent.to_string(),
+            free,
+            bound,
+            arity,
+            plain_params,
+        })
     }
 
     /// If `stmt` is a `statement` wrapping a `compound_stmt` wrapping a
@@ -734,7 +1140,10 @@ impl Lowerer {
                 }
             }
         }
-        Err(self.err_at(class_stmt, "malformed class: missing class name".to_string()))
+        Err(self.err_at(
+            class_stmt,
+            "malformed class: missing class name".to_string(),
+        ))
     }
 
     /// Extract a `class_stmt`'s optional single base class
@@ -834,6 +1243,11 @@ impl Lowerer {
                 format!("control-flow nesting too deep (exceeds {MAX_BLOCK_DEPTH} levels)"),
             ));
         }
+        // A one-line suite (`if c: x = 1`) holds a bare `simple_stmt`,
+        // with no `statement` wrapper (see `suite_statements`).
+        if stmt.rule_name == "simple_stmt" {
+            return self.lower_simple_stmt(stmt, ctx);
+        }
         if stmt.rule_name != "statement" {
             return Err(self.err_at(
                 stmt,
@@ -883,6 +1297,13 @@ impl Lowerer {
         };
         match inner.rule_name.as_str() {
             "assign_stmt" => self.lower_assign_stmt(inner, ctx),
+            // `pass` does nothing, so it lowers to no statement at all.  A
+            // body that is only `pass` then has no statements and the value
+            // `None`, which is what Python returns from `def f(): pass`.
+            // (It used to be refused here.  A one-line `def f(): pass` was
+            // accepted only by accident, because one-line suites were
+            // dropped whole; fixing that turned it into a refusal.)
+            "pass_stmt" => Ok(Lowered::Stmts(vec![])),
             "return_stmt" => {
                 // A `return` reaching the *general* statement lowerer is
                 // an early (non-tail) return — rejected per spec.  Tail
@@ -900,34 +1321,91 @@ impl Lowerer {
         }
     }
 
-    /// Lower an `assign_stmt` — `expression_list (assign_suffix)?`.  With
-    /// an `assign_suffix` (`= rhs`) present it is a real assignment;
-    /// otherwise it is a bare expression statement.
+    /// Lower an `assign_stmt`:
+    ///
+    /// ```text
+    ///   assign_stmt = expression_list
+    ///                 [ assign_suffix | augmented_assign | annotation ] ;
+    /// ```
+    ///
+    /// The optional tail picks the statement form, so it is matched
+    /// explicitly.  Any other shape is refused: an earlier version looked
+    /// only for `assign_suffix` and lowered `x += 2` and `x: int = 5` as
+    /// the bare expression `x`, silently dropping the store (#18482).
+    ///
+    /// | tail               | form                     | lowered by                  |
+    /// |--------------------|--------------------------|-----------------------------|
+    /// | none               | expression statement `e` | [`Self::lower_expr`]        |
+    /// | `assign_suffix`    | `x = e`, `a = b = e`     | [`Self::lower_assignment`]  |
+    /// | `augmented_assign` | `x += e`, …              | [`Self::lower_augmented`]   |
+    /// | `annotation`       | `x: T = e`, `x: T`       | [`Self::lower_annotated`]   |
     fn lower_assign_stmt(
         &mut self,
         assign: &GrammarASTNode,
         ctx: &mut FunctionCtx,
     ) -> Result<Lowered, PythonLowerError> {
-        let node_children: Vec<&GrammarASTNode> = child_nodes(assign);
-        let suffix = node_children
-            .iter()
-            .find(|n| n.rule_name == "assign_suffix")
-            .copied();
+        let kids: Vec<&GrammarASTNode> = child_nodes(assign);
+        let (lhs_list, tail) = match kids.as_slice() {
+            [lhs] => (*lhs, None),
+            [lhs, tail] => (*lhs, Some(*tail)),
+            _ => {
+                return Err(self.err_at(
+                    assign,
+                    "unsupported: assignment statement shape (deferred)".to_string(),
+                ))
+            }
+        };
+        if lhs_list.rule_name != "expression_list" {
+            return Err(self.err_at(
+                lhs_list,
+                format!(
+                    "expected an `expression_list`, got `{}`",
+                    lhs_list.rule_name
+                ),
+            ));
+        }
 
-        let lhs_list = self.expect_single_kind(assign, "expression_list")?;
-
-        match suffix {
+        match tail.map(|t| (t, t.rule_name.as_str())) {
             None => {
                 let expr = self.lower_expr(self.single_expr(lhs_list)?, ctx)?;
                 Ok(Lowered::Expr(expr))
             }
-            Some(suffix) => self.lower_assignment(assign, lhs_list, suffix, ctx),
+            Some((suffix, "assign_suffix")) => self.lower_assignment(assign, lhs_list, suffix, ctx),
+            Some((aug, "augmented_assign")) => self.lower_augmented(assign, lhs_list, aug, ctx),
+            Some((ann, "annotation")) => self.lower_annotated(assign, lhs_list, ann, ctx),
+            Some((other, name)) => Err(self.err_at(
+                other,
+                format!("unsupported: assignment form `{name}` (deferred)"),
+            )),
         }
     }
 
-    /// Lower `target = rhs`.  First-occurrence detection: the first
-    /// assignment to a name emits a `LetStarBinding`; a later assignment
-    /// to an already-declared name emits an `Assign`.
+    /// Lower `target = rhs`, or a **chained** assignment
+    /// `t1 = t2 = … = rhs`.
+    ///
+    /// The `assign_suffix` holds every `= expression_list` after the first
+    /// target; the *last* list is the value, the others are more targets:
+    ///
+    /// ```text
+    ///   a = b = 0
+    ///   assign_stmt
+    ///     expression_list  (a)          ← target 1
+    ///     assign_suffix
+    ///       "="  expression_list (b)    ← target 2
+    ///       "="  expression_list (0)    ← the value
+    /// ```
+    ///
+    /// Python evaluates the value **once**, then stores it into each
+    /// target **left to right**.  Evaluating `[]` once per target would
+    /// give each target its own list, where Python gives them one shared
+    /// list.  So a chain stores the value into a fresh temporary first:
+    ///
+    /// ```text
+    ///   a = b = []    ⇒   __chain_0 = []; a = __chain_0; b = __chain_0
+    /// ```
+    ///
+    /// An earlier version took only the first `expression_list` of the
+    /// suffix, so `a = b = 0` compiled to `a = b` (#18482).
     fn lower_assignment(
         &mut self,
         assign: &GrammarASTNode,
@@ -935,183 +1413,528 @@ impl Lowerer {
         suffix: &GrammarASTNode,
         ctx: &mut FunctionCtx,
     ) -> Result<Lowered, PythonLowerError> {
-        let rhs_list = self.expect_single_kind(suffix, "expression_list")?;
-
-        let target_node = self.single_expr(lhs_list)?;
-        let rhs_node = self.single_expr(rhs_list)?;
-
-        let name = match self.target_name(target_node)? {
-            Some(name) => name,
-            None => {
-                // An instance-variable target (`self.x = v`, OOP surface)?
-                if let Some(stmt) = self.try_attr_assign(assign, target_node, rhs_node, ctx)? {
-                    return Ok(Lowered::Stmt(Box::new(stmt)));
-                }
-                // M5: a *subscript* target (`xs[i] = v` / `d[k] = v`)?
-                // Everything else (tuple-unpack, chained attrs, …) is deferred.
-                if let Some(stmt) = self.try_subscript_assign(assign, target_node, rhs_node, ctx)? {
-                    return Ok(Lowered::Stmt(Box::new(stmt)));
-                }
+        let mut lists: Vec<&GrammarASTNode> = vec![lhs_list];
+        for n in child_nodes(suffix) {
+            if n.rule_name != "expression_list" {
                 return Err(self.err_at(
-                    target_node,
-                    "unsupported: assignment target is not a bare name (deferred)".to_string(),
+                    n,
+                    format!("expected an `expression_list`, got `{}`", n.rule_name),
                 ));
             }
+            lists.push(n);
+        }
+        let Some((value_list, target_lists)) = lists.split_last() else {
+            unreachable!("lists starts with the left-hand side");
         };
-
-        // Lower the RHS *before* declaring the name so a self-referential
-        // first binding (`x = x`) correctly sees `x` as still-unbound.
-        let value = self.lower_expr(rhs_node, ctx)?;
+        if target_lists.is_empty() {
+            return Err(self.err_at(suffix, "malformed assignment".to_string()));
+        }
         let span = self.span_of(assign);
 
-        if ctx.locals.iter().any(|n| n == &name) {
-            self.observed.add(Feature::MutableBindings);
-            Ok(Lowered::Stmt(Box::new(Stmt::Assign {
-                name,
-                scope: Scope::Local,
-                value,
-                span,
-            })))
-        } else {
-            ctx.locals.push(name.clone());
-            Ok(Lowered::Stmt(Box::new(Stmt::LetStarBinding {
-                name,
-                sir_type: None,
-                value,
-                span,
-            })))
-        }
-    }
+        // Lower the value *before* any target is declared, so a first
+        // binding that reads its own name (`x = x`) still sees `x` as
+        // unbound, matching Python's `NameError`.
+        let value = self.lower_expr(self.single_expr(value_list)?, ctx)?;
 
-    /// Lower an **instance-variable assignment** `self.x = rhs` (OOP
-    /// surface, SIR25 §2) into [`Stmt::Assign`] with `Scope::Instance`.
-    /// Returns `Ok(None)` when the LHS is not this shape — a bare-name
-    /// `self.x` attribute target where the receiver peels to *exactly*
-    /// `self` — so the caller falls through to the subscript check and
-    /// then the generic deferral (a chained target like `self.x.y = v`
-    /// or an attribute assignment on any receiver other than `self`
-    /// stays deferred, matching the read side's restriction in
-    /// `try_primary_suffixes`).
-    fn try_attr_assign(
-        &mut self,
-        assign: &GrammarASTNode,
-        target_node: &GrammarASTNode,
-        rhs_node: &GrammarASTNode,
-        ctx: &mut FunctionCtx,
-    ) -> Result<Option<Stmt>, PythonLowerError> {
-        let primary = match self.peel_to_primary(target_node) {
-            Some(p) => p,
-            None => return Ok(None),
-        };
-        let kids = child_nodes(primary);
-        let (atom, suffixes) = match kids.split_first() {
-            Some((atom, rest)) if !rest.is_empty() && rest[0].rule_name == "suffix" => {
-                (*atom, rest)
-            }
-            _ => return Ok(None),
-        };
-        // Only the single-suffix shape `self.x = v` is ours; a chained
-        // target (`self.x.y = v`) is left for the caller's next check
-        // (which will also decline, and the target ultimately defers).
-        if suffixes.len() != 1 {
-            return Ok(None);
+        if let [only] = target_lists {
+            let target = self.classify_target(self.single_expr(only)?, ctx)?;
+            let stmt = self.store_target(target, value, ctx, span)?;
+            return Ok(Lowered::Stmt(Box::new(stmt)));
         }
-        let attr_name = match self.suffix_kind(suffixes[0])? {
-            SuffixKind::Attr(name) => name,
-            _ => return Ok(None),
-        };
-        let receiver = self.lower_expr(atom, ctx)?;
-        if !is_self_ref(&receiver) {
-            return Ok(None);
-        }
-        let value = self.lower_expr(rhs_node, ctx)?;
-        let span = self.span_of(assign);
-        // Stmt::Assign unconditionally observes MutableBindings (any
-        // scope) in the validator, alongside the Instance-scope-specific
-        // InstanceVars — declare both so the manifest matches exactly.
-        self.observed.add(Feature::MutableBindings);
-        self.observed.add(Feature::InstanceVars);
-        Ok(Some(Stmt::Assign {
-            name: format!("@{attr_name}"),
-            scope: Scope::Instance,
+
+        // A chain: evaluate once into a temporary, then store it into
+        // each target left to right.
+        let tmp = self.fresh_temp_name("chain");
+        let mut stmts = vec![Stmt::LetStarBinding {
+            name: tmp.clone(),
+            sir_type: None,
             value,
-            span,
-        }))
+            span: span.clone(),
+        }];
+        ctx.locals.push(tmp.clone());
+        for list in target_lists {
+            let target = self.classify_target(self.single_expr(list)?, ctx)?;
+            let read_tmp = Expr::VarRef {
+                name: tmp.clone(),
+                scope: Scope::Local,
+                span: span.clone(),
+            };
+            stmts.push(self.store_target(target, read_tmp, ctx, span.clone())?);
+        }
+        Ok(Lowered::Stmts(stmts))
     }
 
-    /// M5: lower a **subscript assignment** `base[index] = rhs` into
-    /// [`Stmt::SeqSet`] (list) or [`Stmt::MapSet`] (map), mirroring the
-    /// read-side disambiguation (string-literal index → map).  Returns
-    /// `Ok(None)` when the LHS is *not* a subscript target (so the caller
-    /// reports the generic "not a bare name" deferral).
+    /// Lower an **augmented assignment** `target op= rhs` (#18482).
     ///
-    /// The `base` is everything left of the final subscript: for
-    /// `xs[i] = v` it is `xs`; for a chained `m[a][b] = v` it is `m[a]`
-    /// (itself lowered as a `SeqIndex`/`MapGet` value).  The base is
-    /// lowered as an ordinary expression (it must resolve to a value in
-    /// scope), the final index/key and the RHS likewise.
-    fn try_subscript_assign(
+    /// Python reads the target, applies the operator, and writes the result
+    /// back.  So `x += e` lowers to `x = x + e`, using exactly the builtin
+    /// the binary operator lowers to ([`arith_builtin`]):
+    ///
+    /// ```text
+    ///   x += e      ⇒   Assign x = BuiltinCall("+",        [x, e])
+    ///   x /= e      ⇒   Assign x = BuiltinCall("div_true", [x, e])
+    ///   self.n -= 1 ⇒   Assign @n (Instance) = BuiltinCall("-", [@n, 1])
+    /// ```
+    ///
+    /// ## Evaluation order
+    ///
+    /// Python reads the target *before* it evaluates `e`, and that is
+    /// observable when `e` changes the target:
+    ///
+    /// ```python
+    /// self.n = 1
+    /// self.n += self.bump()     # bump sets self.n = 100, returns 5
+    /// # CPython: 1 + 5 = 6, not 100 + 5
+    /// ```
+    ///
+    /// The IR puts the read first (`args: [x, e]`).  Whether it *runs*
+    /// first is up to each backend's argument-evaluation order: the
+    /// Python, JavaScript, Go, Rust and Ruby backends evaluate a call's
+    /// arguments left to right; the C backend hoists them into temporaries
+    /// in order whenever more than one could run code or read mutable
+    /// state (C itself leaves argument order unspecified).  The
+    /// `sir-conformance` program `py_aug_reads_target_first` pins this on
+    /// all six.
+    ///
+    /// Refused, each with a positioned error:
+    ///
+    /// - `//=`, `**=`, `&=`, `|=`, `^=`, `<<=`, `>>=`, `@=`: their binary
+    ///   operators are not lowered either;
+    /// - a subscript target (`xs[i] += 1`): `xs` and `i` would have to be
+    ///   evaluated once and used twice, which needs temporaries the
+    ///   subscript path does not make yet;
+    /// - a name not bound in this scope.  Python makes an augmented
+    ///   target local to its function, so reading it first raises
+    ///   `UnboundLocalError` (or `NameError` at module level);
+    /// - a tuple value (`x += 1, 2`), like every tuple.
+    ///
+    /// For a *list*, Python's `+=` extends the list in place; this lowering
+    /// builds a new one (see the module docs, "Assignment statements").
+    fn lower_augmented(
         &mut self,
         assign: &GrammarASTNode,
-        target_node: &GrammarASTNode,
-        rhs_node: &GrammarASTNode,
+        lhs_list: &GrammarASTNode,
+        aug: &GrammarASTNode,
         ctx: &mut FunctionCtx,
-    ) -> Result<Option<Stmt>, PythonLowerError> {
-        // Peel the target expression to its `primary` (the rule that
-        // carries `atom suffix*`); a non-subscript target peels to a bare
-        // atom (no suffix) and is not ours.
-        let primary = match self.peel_to_primary(target_node) {
-            Some(p) => p,
-            None => return Ok(None),
+    ) -> Result<Lowered, PythonLowerError> {
+        let op_node = self
+            .first_child_named(aug, "augmented_assign_op")
+            .ok_or_else(|| self.err_at(aug, "malformed augmented assignment".to_string()))?;
+        let op_text = op_node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) => Some(t.value.clone()),
+                ASTNodeOrToken::Node(_) => None,
+            })
+            .ok_or_else(|| self.err_at(op_node, "malformed augmented operator".to_string()))?;
+        // `+=` → `+`: the augmented spelling is the binary one plus `=`.
+        let binary = op_text.strip_suffix('=').unwrap_or(&op_text);
+        let Some(builtin) = arith_builtin(binary) else {
+            return Err(self.err_at(
+                op_node,
+                format!(
+                    "unsupported: augmented assignment `{op_text}` (the `{binary}` operator \
+                     is not lowered yet) (deferred)"
+                ),
+            ));
         };
+        let value_list = self
+            .first_child_named(aug, "expression_list")
+            .ok_or_else(|| self.err_at(aug, "malformed augmented assignment".to_string()))?;
+        let target_node = self.single_expr(lhs_list)?;
+        let span = self.span_of(assign);
+
+        let target = self.classify_target(target_node, ctx)?;
+        let current = match &target {
+            Target::Name(name) => {
+                let unbound = || {
+                    self.err_at(
+                        target_node,
+                        format!(
+                            "unsupported: augmented assignment to `{name}`, which is not \
+                             bound in this scope (Python raises UnboundLocalError)"
+                        ),
+                    )
+                };
+                if !ctx.is_enclosing_value(name) {
+                    return Err(unbound());
+                }
+                let read = self.resolve_var_in(ctx, name, span.clone())?;
+                if matches!(
+                    read,
+                    Expr::VarRef {
+                        scope: Scope::Capture,
+                        ..
+                    }
+                ) {
+                    // Unreachable through the bound-name analysis (an
+                    // augmented target is bound in its function, so it is
+                    // never captured), but a store into a capture would
+                    // only change this closure's copy.  Refuse it.
+                    return Err(unbound());
+                }
+                read
+            }
+            Target::Instance(attr) => {
+                self.observed.add(Feature::InstanceVars);
+                Expr::VarRef {
+                    name: format!("@{attr}"),
+                    scope: Scope::Instance,
+                    span: span.clone(),
+                }
+            }
+            Target::Subscript { .. } => {
+                return Err(self.err_at(
+                    target_node,
+                    format!(
+                        "unsupported: augmented assignment `{op_text}` to a subscript \
+                         (deferred)"
+                    ),
+                ))
+            }
+        };
+        let rhs = self.lower_expr(self.single_expr(value_list)?, ctx)?;
+        let value = Expr::BuiltinCall {
+            name: builtin.to_string(),
+            args: vec![current, rhs],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+        let stmt = self.store_target(target, value, ctx, span)?;
+        Ok(Lowered::Stmt(Box::new(stmt)))
+    }
+
+    /// Lower an **annotated assignment** (PEP 526, #18482):
+    ///
+    /// ```text
+    ///   annotation = ":" expression [ "=" expression_list ] ;
+    ///
+    ///   x: int = 5    ⇒   x = 5      (the annotation is ignored)
+    ///   x: int        ⇒   nothing    (a declaration with no value)
+    /// ```
+    ///
+    /// The annotation is never evaluated or checked.
+    ///
+    /// - **Inside a function** this matches CPython, which never evaluates
+    ///   a local variable's annotation.
+    /// - **At module level** (and in a class body, which this frontend
+    ///   refuses anyway) CPython 3.10 *does* evaluate it, once, when the
+    ///   statement runs, and stores the result in `__annotations__` (unless
+    ///   the module has `from __future__ import annotations`, which imports
+    ///   do not reach here).  So a module-level annotation with a side
+    ///   effect, `x: print("hi") = 1`, prints in CPython and not here, and
+    ///   one that names an unbound variable, `x: Undefined = 1`, raises
+    ///   `NameError` in CPython and not here.  This is a known divergence:
+    ///   annotations are almost always plain type names, and
+    ///   `__annotations__` is not modelled.
+    ///
+    /// A declaration with no value binds nothing, so a later read of the
+    /// name is still an unresolved-name error, matching Python's
+    /// `NameError`.  It is accepted only for a bare name: for any other
+    /// target Python would evaluate part of it (`obj` in `obj.x: int`),
+    /// and those are refused.
+    fn lower_annotated(
+        &mut self,
+        assign: &GrammarASTNode,
+        lhs_list: &GrammarASTNode,
+        ann: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+    ) -> Result<Lowered, PythonLowerError> {
+        let target_node = self.single_expr(lhs_list)?;
+        let span = self.span_of(assign);
+        match self.first_child_named(ann, "expression_list") {
+            Some(value_list) => {
+                let value = self.lower_expr(self.single_expr(value_list)?, ctx)?;
+                let target = self.classify_target(target_node, ctx)?;
+                let stmt = self.store_target(target, value, ctx, span)?;
+                Ok(Lowered::Stmt(Box::new(stmt)))
+            }
+            None => match self.target_name(target_node)? {
+                Some(_) => Ok(Lowered::Stmts(vec![])),
+                None => Err(self.err_at(
+                    target_node,
+                    "unsupported: annotation without a value on a target that is not a \
+                     bare name (deferred)"
+                        .to_string(),
+                )),
+            },
+        }
+    }
+
+    /// Work out what an assignment target denotes (see [`Target`]),
+    /// without lowering or storing anything yet.
+    ///
+    /// | target           | result               |
+    /// |------------------|----------------------|
+    /// | `x`              | `Name("x")`          |
+    /// | `self.x` (method)| `Instance("x")`      |
+    /// | `xs[i]`, `m[a][b]` | `Subscript { … }`  |
+    /// | anything else    | positioned error     |
+    ///
+    /// "Anything else" covers a tuple target (`a, b = …`, refused by
+    /// [`Self::single_expr`] before this is reached), an attribute of
+    /// anything but `self` (`obj.x = …`, `self.x.y = …`), and a call
+    /// (`f() = …`).
+    fn classify_target<'a>(
+        &self,
+        target_node: &'a GrammarASTNode,
+        ctx: &FunctionCtx,
+    ) -> Result<Target<'a>, PythonLowerError> {
+        if let Some(name) = self.target_name(target_node)? {
+            // Inside a method a bare `self` always reads the implicit
+            // receiver (`resolve_var`), so a store into it would be
+            // invisible to every later read.  Refuse it.
+            if ctx.in_method && name == "self" {
+                return Err(self.err_at(
+                    target_node,
+                    "unsupported: assignment to `self` inside a method (deferred)".to_string(),
+                ));
+            }
+            return Ok(Target::Name(name));
+        }
+        let not_supported = || {
+            self.err_at(
+                target_node,
+                "unsupported: assignment target is not a bare name, `self.x` or a \
+                 subscript (deferred)"
+                    .to_string(),
+            )
+        };
+        let primary = self
+            .peel_to_primary(target_node)
+            .ok_or_else(not_supported)?;
         let kids = child_nodes(primary);
         let (atom, suffixes) = match kids.split_first() {
-            Some((atom, rest)) if !rest.is_empty() && rest[0].rule_name == "suffix" => {
+            Some((atom, rest))
+                if !rest.is_empty() && rest.iter().all(|n| n.rule_name == "suffix") =>
+            {
                 (*atom, rest)
             }
-            _ => return Ok(None),
+            _ => return Err(not_supported()),
         };
-        // The *final* suffix must be the subscript being assigned.  Earlier
-        // suffixes (if any) form the base value `m[a]` / `g()`.
-        let (last, leading) = suffixes.split_last().expect("split_first left ≥ 1 suffix");
-        if !matches!(self.suffix_kind(last)?, SuffixKind::Subscript) {
-            // `f(x) = v` is not a valid assignment target.
-            return Err(self.err_at(
+        let (last, leading) = suffixes.split_last().expect("checked non-empty");
+        match self.suffix_kind(last)? {
+            SuffixKind::Subscript => Ok(Target::Subscript {
+                atom,
+                leading: leading.to_vec(),
+                last,
+            }),
+            // `self.x = v` inside a method: the receiver is the bare name
+            // `self`, which `resolve_var` turns into the implicit receiver
+            // only inside a method body.  Checked on the source, so nothing
+            // is lowered just to classify.
+            SuffixKind::Attr(attr)
+                if leading.is_empty()
+                    && ctx.in_method
+                    && self.target_name(atom)?.as_deref() == Some("self") =>
+            {
+                Ok(Target::Instance(attr))
+            }
+            SuffixKind::Attr(_) => Err(self.err_at(
+                target_node,
+                "unsupported: assignment to an attribute of anything but `self` \
+                 (deferred)"
+                    .to_string(),
+            )),
+            SuffixKind::Call => Err(self.err_at(
                 primary,
                 "unsupported: assignment to a call result (deferred)".to_string(),
-            ));
+            )),
         }
+    }
 
-        // Build the base value: the atom, with every leading suffix
-        // applied (calls / subscripts).  No leading suffix → the base is
-        // just the atom (`xs`).
-        let span = self.span_of(assign);
-        let mut base = self.lower_expr(atom, ctx)?;
-        for suffix in leading {
-            base = self.apply_value_suffix(base, suffix, ctx, 0, &span)?;
+    /// Store an already-lowered `value` into `target`, returning the one
+    /// IR statement that does it.
+    ///
+    /// ## A bare name: declare, or store
+    ///
+    /// | `x` is currently …          | statement                           |
+    /// |-----------------------------|-------------------------------------|
+    /// | a local in scope            | `Assign { scope: Local }`           |
+    /// | not bound                   | `LetStarBinding` (declares `x`)     |
+    ///
+    /// A parameter the body assigns is already a local here, under an
+    /// alias: the function prologue copies it into one (see
+    /// [`Self::param_copy_prologue`]).
+    ///
+    /// ## `self.x` and subscripts
+    ///
+    /// `self.x` becomes `Assign { name: "@x", scope: Instance }` (OOP
+    /// surface, SIR25 §2).  `base[index]` becomes [`Stmt::SeqSet`], or
+    /// [`Stmt::MapSet`] for a string-literal index (the M5 subscript
+    /// heuristic, mirrored from the read side).
+    fn store_target(
+        &mut self,
+        target: Target<'_>,
+        value: Expr,
+        ctx: &mut FunctionCtx,
+        span: Span,
+    ) -> Result<Stmt, PythonLowerError> {
+        match target {
+            Target::Name(name) => {
+                if ctx.locals.iter().any(|n| n == &name) {
+                    self.observed.add(Feature::MutableBindings);
+                    Ok(Stmt::Assign {
+                        name: ctx.ir_local(&name),
+                        scope: Scope::Local,
+                        value,
+                        span,
+                    })
+                } else {
+                    ctx.locals.push(name.clone());
+                    Ok(Stmt::LetStarBinding {
+                        name: ctx.ir_local(&name),
+                        sir_type: None,
+                        value,
+                        span,
+                    })
+                }
+            }
+            Target::Instance(attr) => {
+                // `Stmt::Assign` observes `MutableBindings` for any scope
+                // in the validator, alongside the Instance-scope
+                // `InstanceVars`, so declare both and the manifest matches.
+                self.observed.add(Feature::MutableBindings);
+                self.observed.add(Feature::InstanceVars);
+                Ok(Stmt::Assign {
+                    name: format!("@{attr}"),
+                    scope: Scope::Instance,
+                    value,
+                    span,
+                })
+            }
+            Target::Subscript {
+                atom,
+                leading,
+                last,
+            } => {
+                // Build the base value: the atom, with every leading
+                // suffix applied (`m[a]` for `m[a][b] = v`).
+                let mut base = self.lower_expr(atom, ctx)?;
+                for suffix in leading {
+                    base = self.apply_value_suffix(base, suffix, ctx, 0, &span)?;
+                }
+                let index_node = self.subscript_index(last)?;
+                let index = self.lower_expr(index_node, ctx)?;
+                if is_str_lit(&index) {
+                    self.observed.add(Feature::Maps);
+                    Ok(Stmt::MapSet {
+                        map: base,
+                        key: index,
+                        value,
+                        span,
+                    })
+                } else {
+                    self.observed.add(Feature::Sequences);
+                    Ok(Stmt::SeqSet {
+                        seq: base,
+                        index,
+                        value,
+                        span,
+                    })
+                }
+            }
         }
+    }
 
-        let index_node = self.subscript_index(last)?;
-        let index = self.lower_expr(index_node, ctx)?;
-        let value = self.lower_expr(rhs_node, ctx)?;
-
-        if is_str_lit(&index) {
-            self.observed.add(Feature::Maps);
-            Ok(Some(Stmt::MapSet {
-                map: base,
-                key: index,
-                value,
-                span,
-            }))
-        } else {
-            self.observed.add(Feature::Sequences);
-            Ok(Some(Stmt::SeqSet {
-                seq: base,
-                index,
-                value,
-                span,
-            }))
+    /// The statements that start a function body by copying each
+    /// parameter the body **assigns** into a fresh local, and the matching
+    /// alias in `ctx` (see [`FunctionCtx::aliases`]).
+    ///
+    /// ```text
+    ///   def countdown(n):        countdown(n):
+    ///       while n > 0:    ⇒        let* __param_n_0 = n (Param)    ← prologue
+    ///           n -= 1               while __param_n_0 > 0:
+    ///       return n                     __param_n_0 = __param_n_0 - 1
+    ///                                __param_n_0
+    /// ```
+    ///
+    /// ## Why
+    ///
+    /// Python has one `n`: the parameter.  Before this prologue,
+    /// `n -= 1` declared a *new* local `n`.  Inside a loop body that local
+    /// ended with the body, so the condition kept reading the unchanged
+    /// parameter and the loop never ended.  The two direct fixes both fail
+    /// on some backend:
+    ///
+    /// - store into the parameter (`Assign { scope: Param }`): valid SIR,
+    ///   but the Rust backend emits parameters as immutable bindings, so
+    ///   the program does not compile;
+    /// - copy into a local *of the same name*: JavaScript, Go and C refuse
+    ///   to redeclare a parameter in the function's own scope
+    ///   (`let n = n;` is a `SyntaxError`).
+    ///
+    /// A copy under a fresh name works everywhere: every later read and
+    /// store of `n` is an ordinary local read or store of the copy.  The
+    /// parameter keeps its name, so keyword calls (`countdown(n=3)`) still
+    /// match it, and the copy reads it after the backend has filled in any
+    /// default value.  Parameters the body never assigns are left alone.
+    ///
+    /// "Assigns" is the bound-name scan used for captures
+    /// ([`Self::collect_suite_bound_names`]): plain, chained, augmented and
+    /// annotated targets, and `for` variables, anywhere in the body.
+    fn param_copy_prologue(
+        &mut self,
+        suite: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        span: &Span,
+    ) -> Result<Vec<Stmt>, PythonLowerError> {
+        let mut assigned = HashSet::new();
+        self.collect_suite_bound_names(suite, &mut assigned)?;
+        let mut copied: Vec<String> = assigned
+            .into_iter()
+            .filter(|n| ctx.params.contains(n))
+            .collect();
+        // Deterministic output: a `HashSet` has no stable order.
+        copied.sort();
+        let mut stmts = Vec::with_capacity(copied.len());
+        for name in copied {
+            let alias = self.fresh_temp_name(&format!("param_{name}"));
+            stmts.push(Stmt::LetStarBinding {
+                name: alias.clone(),
+                sir_type: None,
+                value: Expr::VarRef {
+                    name: sir_var_name(&name),
+                    scope: Scope::Param,
+                    span: span.clone(),
+                },
+                span: span.clone(),
+            });
+            ctx.locals.push(name.clone());
+            ctx.aliases.insert(name, alias);
         }
+        Ok(stmts)
+    }
+
+    /// A fresh name for a temporary local, `__<stem>_<N>`.
+    ///
+    /// It is taken from the shared pool (see [`Self::used_names`]), so it
+    /// is never spelled in the source, never equals another temporary, and
+    /// never equals a function the lowerer synthesised before or after it.
+    fn fresh_temp_name(&mut self, stem: &str) -> String {
+        loop {
+            let name = format!("__{stem}_{}", self.temp_counter);
+            self.temp_counter += 1;
+            if self.try_claim_name(&name) {
+                return name;
+            }
+        }
+    }
+
+    /// Claim `name` for something the lowerer invents, if it is free.
+    ///
+    /// Free means: not in [`Self::used_names`] (no source name and no name
+    /// invented earlier), not a user `def` or `class`, and not a function
+    /// already pushed (see [`Self::name_taken`]).  A claimed name joins
+    /// `used_names` at once, so nothing invented later -- temporary or
+    /// function -- can take it.  Every invented name passes through here.
+    fn try_claim_name(&mut self, name: &str) -> bool {
+        if self.name_taken(name) {
+            return false;
+        }
+        self.used_names.insert(name.to_string());
+        true
     }
 
     /// If `node` is an expression that is *just* a bare `Name` atom,
@@ -1311,9 +2134,11 @@ impl Lowerer {
         // *written* inside, which for a method is the class body — itself
         // not an expression-evaluating scope a default could meaningfully
         // reference beyond enclosing module-level names already reachable
-        // from `top_level()`. This mirrors `lower_def`'s own def-time
-        // evaluation model one level up.
-        let mut default_ctx = FunctionCtx::top_level();
+        // from an empty context. This mirrors `lower_def`'s own def-time
+        // evaluation model one level up.  The context is `detached`, not
+        // `top_level`, so a lambda default never plans a top-level `def`'s
+        // captures from here, where `main`'s locals are not visible.
+        let mut default_ctx = FunctionCtx::detached();
         for (pname, kind, default_node) in specs_iter {
             let default = match default_node {
                 Some(node) => Some(self.lower_expr_in(node, &mut default_ctx, depth + 1)?),
@@ -1331,10 +2156,12 @@ impl Lowerer {
         let suite = self
             .first_child_named(def, "suite")
             .ok_or_else(|| self.err_at(def, "malformed def: missing body".to_string()))?;
-        let hoisted_name = format!("{class_name}__{py_name}");
+        let hoisted_name = self.hoisted_method_name(class_name, &py_name);
         let mut inner = FunctionCtx::for_method(params.iter().map(|(n, ..)| n.clone()).collect());
-        let body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
         let span = self.span_of(def);
+        let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
+        let mut body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
+        body.stmts.splice(0..0, prologue);
         self.push_function(&hoisted_name, &params, &[], body, span.clone());
 
         // `__def_method__("Class", "method", MakeClosure(hoisted_name))` —
@@ -1346,7 +2173,7 @@ impl Lowerer {
         self.observed.add(Feature::Closures);
         self.observed.add(Feature::Strings);
         let closure = Expr::MakeClosure {
-            fn_name: hoisted_name,
+            fn_name: sir_function_name(&hoisted_name),
             captures: vec![],
             span: span.clone(),
         };
@@ -1461,15 +2288,40 @@ impl Lowerer {
         let suite = self
             .first_child_named(while_stmt, "suite")
             .ok_or_else(|| self.err_at(while_stmt, "malformed while: no body".to_string()))?;
+        self.refuse_loop_else(while_stmt, "while")?;
 
         let cond = self.lower_expr(cond_node, ctx)?;
-        let body = self.lower_suite(suite, ctx, depth + 1)?;
+        let body = loop_body(self.lower_suite(suite, ctx, depth + 1)?);
         self.observed.add(Feature::Loops);
         Ok(Stmt::While {
             cond,
             body,
             span: self.span_of(while_stmt),
         })
+    }
+
+    /// Refuse a loop's `else:` clause.
+    ///
+    /// `while c: … else: …` and `for x in xs: … else: …` run the `else`
+    /// suite when the loop ends without `break`.  The loop lowerers took
+    /// only the *first* suite, so the `else` suite was silently dropped
+    /// (#18482).  It is refused until it is lowered.
+    fn refuse_loop_else(
+        &self,
+        loop_stmt: &GrammarASTNode,
+        keyword: &str,
+    ) -> Result<(), PythonLowerError> {
+        let suites = child_nodes(loop_stmt)
+            .into_iter()
+            .filter(|n| n.rule_name == "suite")
+            .count();
+        if suites > 1 {
+            return Err(self.err_at(
+                loop_stmt,
+                format!("unsupported: `{keyword} … else:` (deferred)"),
+            ));
+        }
+        Ok(())
     }
 
     /// Lower a `for_stmt` into [`Stmt::ForRange`] (literal `range(...)`
@@ -1489,9 +2341,18 @@ impl Lowerer {
         let suite = self
             .first_child_named(for_stmt, "suite")
             .ok_or_else(|| self.err_at(for_stmt, "malformed for: no body".to_string()))?;
+        self.refuse_loop_else(for_stmt, "for")?;
 
         let targets = child_nodes(target_list);
         let var = match targets.as_slice() {
+            // `for x, in rows:` unpacks each row into `x`; it is a tuple
+            // target, not the plain `for x in rows:`.
+            [_] if has_comma_token(target_list) => {
+                return Err(self.err_at(
+                    target_list,
+                    "unsupported: tuple for-loop target (deferred)".to_string(),
+                ))
+            }
             [one] => match self.target_name(one)? {
                 Some(name) => name,
                 None => {
@@ -1508,42 +2369,103 @@ impl Lowerer {
                 ))
             }
         };
+        // Inside a method a bare `self` always reads the implicit receiver
+        // (`resolve_var`), so `for self in xs:` would bind a variable no
+        // read can see: the body would print the receiver every time.
+        // Refused, like `self = …` (see `classify_target`).
+        if ctx.in_method && var == "self" {
+            return Err(self.err_at(
+                targets[0],
+                "unsupported: `for self in …` inside a method (deferred)".to_string(),
+            ));
+        }
 
         let iter_expr_node = self.single_expr(iter_list)?;
         let span = self.span_of(for_stmt);
 
         let range = self.try_range_call(iter_expr_node, ctx)?;
+        let iter = match range {
+            Some(_) => None,
+            None => Some(self.lower_expr(iter_expr_node, ctx)?),
+        };
         self.observed.add(Feature::Loops);
 
-        match range {
-            Some((start, stop, step)) => {
-                let mark = Self::scope_mark(ctx);
-                ctx.locals.push(var.clone());
-                let body = self.lower_suite_no_mark(suite, ctx, depth + 1)?;
-                Self::scope_rewind(ctx, mark);
-                Ok(Stmt::ForRange {
-                    var,
-                    start,
-                    stop,
-                    step,
-                    body,
-                    span,
-                })
-            }
-            None => {
-                let iter = self.lower_expr(iter_expr_node, ctx)?;
-                let mark = Self::scope_mark(ctx);
-                ctx.locals.push(var.clone());
-                let body = self.lower_suite_no_mark(suite, ctx, depth + 1)?;
-                Self::scope_rewind(ctx, mark);
-                Ok(Stmt::ForEach {
-                    var,
-                    iter,
-                    body,
-                    span,
-                })
-            }
+        let mark = Self::scope_mark(ctx);
+        let (loop_var, body) = self.lower_for_body(&var, suite, ctx, depth, &span)?;
+        Self::scope_rewind(ctx, mark);
+
+        match (range, iter) {
+            (Some((start, stop, step)), _) => Ok(Stmt::ForRange {
+                var: sir_var_name(&loop_var),
+                start,
+                stop,
+                step,
+                body,
+                span,
+            }),
+            (None, Some(iter)) => Ok(Stmt::ForEach {
+                var: sir_var_name(&loop_var),
+                iter,
+                body,
+                span,
+            }),
+            (None, None) => unreachable!("a non-range loop always lowers its iterable"),
         }
+    }
+
+    /// Lower a `for` body, binding the loop variable `var`.  Returns the
+    /// name the IR loop should bind, and the body.
+    ///
+    /// SIR's `ForRange` / `ForEach` declare their variable fresh, scoped to
+    /// the body.  That matches Python only when `var` is not bound yet.
+    /// When it **is** (a local or parameter in scope), Python's loop
+    /// stores each item into *that* variable, and the variable keeps the
+    /// last item after the loop:
+    ///
+    /// ```python
+    /// i = 10
+    /// for i in range(3):
+    ///     pass
+    /// print(i)          # 2
+    /// ```
+    ///
+    /// Declaring a fresh, body-scoped `i` printed 10 on five of the six
+    /// backends.  So in that case the IR loop binds a temporary, and the
+    /// body starts by storing it into the real variable:
+    ///
+    /// ```text
+    ///   ForRange { var: __for_0, …, body: [ Assign i = __for_0, …body ] }
+    /// ```
+    ///
+    /// A loop that runs zero times leaves `i` untouched, as in Python.
+    fn lower_for_body(
+        &mut self,
+        var: &str,
+        suite: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+        span: &Span,
+    ) -> Result<(String, Block), PythonLowerError> {
+        // A parameter used as a loop variable is a local by now (the
+        // function prologue copies it, see `param_copy_prologue`).
+        let already_bound = ctx.locals.iter().any(|n| n == var);
+        if !already_bound {
+            ctx.locals.push(var.to_string());
+            let body = loop_body(self.lower_suite_no_mark(suite, ctx, depth + 1)?);
+            return Ok((var.to_string(), body));
+        }
+        let tmp = self.fresh_temp_name("for");
+        ctx.locals.push(tmp.clone());
+        let read_tmp = Expr::VarRef {
+            name: tmp.clone(),
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let store =
+            self.store_target(Target::Name(var.to_string()), read_tmp, ctx, span.clone())?;
+        let mut body = loop_body(self.lower_suite_no_mark(suite, ctx, depth + 1)?);
+        body.stmts.insert(0, store);
+        Ok((tmp, body))
     }
 
     /// Recognise a literal `range(...)` call inside a `for` header and
@@ -1943,10 +2865,14 @@ impl Lowerer {
         let mut seen = HashSet::new();
         self.collect_free_names(body_expr, &bound, &mut free, &mut seen, 0)?;
 
-        let (captures, capture_values) = self.resolve_captures(&free, enclosing, &span)?;
+        // A lambda has no name, so nothing can refer to it before it is
+        // built; its plan only has to cover the named functions it uses.
+        let captures = self.plan_captures(None, &free, &bound, enclosing, &span)?;
+        let capture_values = self.capture_values(&captures, enclosing, &span)?;
 
         // Lower the body in the synthesised function's own context.
-        let mut inner = FunctionCtx::new(bound.clone(), captures.iter().cloned().collect());
+        let mut inner =
+            FunctionCtx::new(bound.clone(), captures.iter().cloned().collect(), &fn_name);
         let value = self.lower_expr_in(body_expr, &mut inner, depth + 1)?;
         let body = Block {
             stmts: vec![],
@@ -2028,14 +2954,69 @@ impl Lowerer {
         let mut seen = HashSet::new();
         self.collect_free_names(suite, &bound, &mut free, &mut seen, 0)?;
 
-        let (captures, capture_values) = self.resolve_captures(&free, enclosing, &span)?;
+        // Every `def` is lifted into one module-level namespace, and
+        // `fn_captures` is keyed by name.  A second `def` with a name
+        // already taken (two functions that each nest an `inner`, or a
+        // nested `def f` inside `def f`) would collide there: its closures
+        // would get the other one's capture list.  The SIR validator also
+        // rejects duplicate function names, so refuse it here, where the
+        // position is known.  The name is claimed *before* the body is
+        // lowered, so a nested `def` reusing it is caught too.
+        if !self.claimed_names.insert(name.to_string()) {
+            return Err(PythonLowerError {
+                message: format!(
+                    "unsupported: a second function named `{name}` (every `def`, \
+                     nested or not, shares one module-level namespace) (deferred)"
+                ),
+                line: span.start_line,
+                column: span.start_col,
+            });
+        }
+
+        // ── Decide the capture list BEFORE lowering the body. ──
+        //
+        // The body may name this very function: as a value (`h = go`) or
+        // in a recursive call (`go(x - 1)`).  Either one builds a closure
+        // for `go` that threads `go`'s captures, so the list has to be in
+        // `fn_captures` before the first statement of the body is
+        // lowered.  (Recording it only after the body, as an earlier
+        // version did, gave such a reference zero captures: a NULL
+        // `caps[0]` read in the C backend, #18468.)
+        let mut captures = self.plan_captures(Some(name), &free, &bound, enclosing, &span)?;
+        if let Some(planned) = self.fn_captures.get(name) {
+            // An earlier sibling already used this function and fixed its
+            // capture list then (see `plan_captures`).  Closures built
+            // there carry that list, so it is the one this function must
+            // declare.  It can only fall short when this `def` reads a
+            // name bound *between* that sibling and here: the earlier
+            // sibling could not have threaded it.
+            let planned_set: HashSet<&String> = planned.iter().collect();
+            if let Some(missing) = captures.iter().find(|c| !planned_set.contains(c)) {
+                return Err(PythonLowerError {
+                    message: format!(
+                        "unsupported: `{name}` is used by a function defined before it, \
+                         but captures `{missing}`, which is bound only after that \
+                         function (deferred)"
+                    ),
+                    line: span.start_line,
+                    column: span.start_col,
+                });
+            }
+            captures = planned.clone();
+        } else {
+            self.fn_captures.insert(name.to_string(), captures.clone());
+        }
+        let capture_values = self.capture_values(&captures, enclosing, &span)?;
 
         // ── Lower the body in the function's own context. ──
         let mut inner = FunctionCtx::new(
             params.iter().map(|(n, _, _)| n.clone()).collect(),
             captures.iter().cloned().collect(),
+            name,
         );
-        let body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
+        let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
+        let mut body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
+        body.stmts.splice(0..0, prologue);
 
         self.push_function(name, params, &captures, body, span.clone());
 
@@ -2052,6 +3033,9 @@ impl Lowerer {
         body: Block,
         span: Span,
     ) {
+        // A lambda or hoisted method takes its name here; a `def` already
+        // claimed it in `lower_callable`, so the insert is a no-op then.
+        self.claimed_names.insert(name.to_string());
         // Any param with no annotation → DynamicTyping (Python has no
         // parameter type annotations in our subset).
         if !params.is_empty() {
@@ -2059,19 +3043,20 @@ impl Lowerer {
         }
         // A function that carries captures is a closure body — the
         // validator declares `Closures` for it, so we must too.
+        //
+        // (The capture list itself was put in `fn_captures` *before* the
+        // body was lowered — see `lower_callable` — not here.)
         if !captures.is_empty() {
             self.observed.add(Feature::Closures);
-            // Record the capture list so a *bare reference* to this
-            // function name re-threads the captures (a nested closure
-            // returned/passed by name).
-            self.fn_captures.insert(name.to_string(), captures.to_vec());
         }
         let f = Function {
-            name: name.to_string(),
+            // The SIR spelling: a user `main` must not collide with the
+            // synthesised module body (see `FN_ESCAPE_PREFIX`).
+            name: sir_function_name(name),
             params: params
                 .iter()
                 .map(|(pname, kind, default)| Param {
-                    name: pname.clone(),
+                    name: sir_var_name(pname),
                     sir_type: None,
                     // The `kind` is decided by the parameter's position
                     // relative to the keyword-only `*` boundary: `Required`
@@ -2089,7 +3074,7 @@ impl Lowerer {
             captures: captures
                 .iter()
                 .map(|n| Capture {
-                    name: n.clone(),
+                    name: sir_var_name(n),
                     sir_type: None,
                 })
                 .collect(),
@@ -2102,7 +3087,8 @@ impl Lowerer {
         // graph) for mutual-recursion detection.
         let mut callees = HashSet::new();
         collect_direct_callees(&f.body, &mut callees);
-        self.call_graph.push((name.to_string(), callees));
+        // Keyed by the SIR spelling, like the `DirectCall` callees above.
+        self.call_graph.push((sir_function_name(name), callees));
         self.functions.push(f);
     }
 
@@ -2123,51 +3109,331 @@ impl Lowerer {
         span: Span,
     ) -> Expr {
         Expr::MakeClosure {
-            fn_name,
+            fn_name: sir_function_name(&fn_name),
             captures: captures
                 .into_iter()
                 .zip(capture_values)
-                .map(|(name, value)| CaptureValue { name, value })
+                .map(|(name, value)| CaptureValue {
+                    name: sir_var_name(&name),
+                    value,
+                })
                 .collect(),
             span,
         }
     }
 
-    /// Resolve the free names of a closure body against the `enclosing`
-    /// context, partitioning them into *captures* (names that are an
-    /// enclosing local/param/capture — these must be threaded through the
-    /// closure handle) and non-captures (globals / top-level functions /
-    /// builtins, reachable directly from the synthesised body).  Returns
-    /// `(capture_names, capture_value_exprs)` in deterministic
-    /// (alphabetical) order.
-    fn resolve_captures(
+    /// Decide the capture list of a closure body, given its free names
+    /// and the `enclosing` context it is defined in.
+    ///
+    /// `name` is the function's own name (`None` for a lambda); `free` is
+    /// the body's free names (see [`Self::collect_free_names`]).
+    ///
+    /// ## The rule
+    ///
+    /// A closure for `f` captures:
+    ///
+    /// 1. every free name of `f` that is a local, param or capture of
+    ///    the enclosing function (a value only reachable through the
+    ///    closure); and
+    /// 2. the captures of every capturing function `g` that `f` names.
+    ///    Naming `g` (calling it, or using it as a value) builds a
+    ///    closure for `g` *inside* `f`, and that needs `g`'s captured
+    ///    values, so `f` must carry them in.
+    ///
+    /// Names that are globals, builtins or top-level functions with no
+    /// captures need nothing: the body reaches them directly.
+    ///
+    /// Rule 2 is recursive: `f` names `g`, `g` names `h`, ...  And it can
+    /// loop: `ev` names `od` and `od` names `ev`, or `go` names itself.
+    /// So we gather the whole **group**: `f` plus every not-yet-lowered
+    /// `def` written directly in the same body that the group names,
+    /// transitively.  Each member starts from rule 1 (plus rule 2 for
+    /// functions already decided).  Then rule 2 is applied within the
+    /// group until no set grows: a *fixpoint*.  A worklist carries only
+    /// the names a member has just gained, so each name crosses each
+    /// "names" edge once.  The sets only grow, and are capped at
+    /// [`MAX_CAPTURES`], so the work is bounded by
+    /// (edges × [`MAX_CAPTURES`]): it ends quickly, or fails with a
+    /// positioned budget error.  Gathering is cheap too: a `def` joins at
+    /// most one group, because once planned it is decided.
+    ///
+    /// Rule 2 must not hand a member a name it binds itself.  If `f` has
+    /// its own `n` and calls `g`, which captures the enclosing `n`, then
+    /// inside `f` the name `n` means `f`'s own variable, and `f` cannot
+    /// pass `g` the right one.  That is refused (deferred).  `bound` is
+    /// the set of names `f` binds (its params and body assignments).
+    ///
+    /// ```text
+    ///   def outer(n):               rule 1        after rule 2
+    ///       def ev(x): ... od ...   ev: {n}       ev: {n}
+    ///       def od(x): ... ev ...   od: {n}       od: {n}
+    ///       def go(x): ... go ...   go: {n}       go: {n}   (self: no-op)
+    /// ```
+    ///
+    /// Every other group member's list is written to `fn_captures` now
+    /// (it is *planned*): `f`'s body is about to build closures for them.
+    /// When a planned `def` is reached later, [`Self::lower_callable`]
+    /// adopts the planned list.  `f`'s own list is returned for the
+    /// caller to record.
+    ///
+    /// A member defined later is planned against the context *here*
+    /// (the earliest point its closure is built).  That is the only
+    /// context whose values `f` can thread.
+    ///
+    /// Each list is sorted alphabetically, so the order is deterministic.
+    fn plan_captures(
         &mut self,
+        name: Option<&str>,
         free: &[String],
-        enclosing: &mut FunctionCtx,
+        bound: &HashSet<String>,
+        enclosing: &FunctionCtx,
         span: &Span,
-    ) -> Result<(Vec<String>, Vec<Expr>), PythonLowerError> {
-        let mut names: Vec<String> = free
-            .iter()
-            .filter(|n| enclosing.is_enclosing_value(n))
-            .cloned()
-            .collect();
-        names.sort();
-        names.dedup();
+    ) -> Result<Vec<String>, PythonLowerError> {
+        use std::collections::{BTreeSet, HashMap, VecDeque};
 
-        let mut values = Vec::with_capacity(names.len());
-        for n in &names {
-            // The capture *value* is the enclosing reference, resolved in
-            // the enclosing context.
-            values.push(self.resolve_var_in(enclosing, n, span.clone())?);
+        let err = |message: String| PythonLowerError {
+            message,
+            line: span.start_line,
+            column: span.start_col,
+        };
+
+        // A name refers to a *function* here unless an enclosing value of
+        // the same spelling shadows it — the same rule calls and bare
+        // references use (`resolve_var`, `lower_call_suffix`).
+        let names_function = |this: &Self, n: &str| {
+            this.function_names.contains(n) && !enclosing.is_enclosing_value(n)
+        };
+
+        // ── Gather the group. ──
+        // Member 0 is `f` itself.  `index` maps a member's name to its
+        // position, so membership is a hash lookup, not a scan.
+        struct Member {
+            name: Option<String>,
+            free: Vec<String>,
+            bound: HashSet<String>,
         }
-        Ok((names, values))
+        let mut members = vec![Member {
+            name: name.map(str::to_string),
+            free: free.to_vec(),
+            bound: bound.clone(),
+        }];
+        let mut index: HashMap<String, usize> = HashMap::new();
+        if let Some(n) = name {
+            index.insert(n.to_string(), 0);
+        }
+        let mut i = 0;
+        while i < members.len() {
+            for k in 0..members[i].free.len() {
+                let y = members[i].free[k].clone();
+                let y = &y;
+                // In the group already, or already decided (lowered or
+                // planned): rule 2 reads its list below.  Not re-planned.
+                if !names_function(self, y)
+                    || index.contains_key(y)
+                    || self.fn_captures.contains_key(y)
+                {
+                    continue;
+                }
+                // Only a sibling written directly in this same body can be
+                // planned from here.  Any other function either is already
+                // decided or captures nothing reachable from here.
+                let Some(facts) = self.def_facts.get(y) else {
+                    continue;
+                };
+                if facts.parent != enclosing.owner {
+                    continue;
+                }
+                let member = Member {
+                    name: Some(y.clone()),
+                    free: facts.free.clone(),
+                    bound: facts.bound.clone(),
+                };
+                index.insert(y.clone(), members.len());
+                members.push(member);
+            }
+            i += 1;
+        }
+
+        // `who` names a member in error messages.
+        let who = |m: &Member| m.name.clone().unwrap_or_else(|| "this lambda".to_string());
+        let too_many = |m: &Member, n: usize| {
+            err(format!(
+                "`{}` would capture {n} variables, more than the limit of {MAX_CAPTURES}",
+                who(m)
+            ))
+        };
+
+        // ── Rule 1, plus rule 2 from functions already decided. ──
+        // `edges[j]` lists the members that name member `j`: when `j`'s
+        // set grows, theirs must too.
+        let mut caps: Vec<BTreeSet<String>> = Vec::with_capacity(members.len());
+        let mut edges: Vec<Vec<usize>> = vec![Vec::new(); members.len()];
+        for (i, m) in members.iter().enumerate() {
+            let mut set: BTreeSet<String> = m
+                .free
+                .iter()
+                .filter(|n| enclosing.is_enclosing_value(n))
+                .cloned()
+                .collect();
+            for y in m.free.iter().filter(|y| names_function(self, y)) {
+                if let Some(&j) = index.get(y) {
+                    if j != i {
+                        edges[j].push(i);
+                    }
+                } else if let Some(decided) = self.fn_captures.get(y) {
+                    set.extend(decided.iter().cloned());
+                }
+            }
+            if set.len() > MAX_CAPTURES {
+                return Err(too_many(m, set.len()));
+            }
+            caps.push(set);
+        }
+
+        // ── Rule 2 within the group: propagate to a fixpoint. ──
+        // A worklist of *new* names only: each name enters a member's set
+        // at most once and then crosses each edge once, so the work is
+        // bounded by (edges × MAX_CAPTURES), not by repeated full passes.
+        let mut pending: Vec<Vec<String>> =
+            caps.iter().map(|c| c.iter().cloned().collect()).collect();
+        let mut queue: VecDeque<usize> = (0..members.len()).collect();
+        while let Some(j) = queue.pop_front() {
+            let delta = std::mem::take(&mut pending[j]);
+            if delta.is_empty() {
+                continue;
+            }
+            for &i in &edges[j] {
+                let mut grew = false;
+                for c in &delta {
+                    if caps[i].insert(c.clone()) {
+                        pending[i].push(c.clone());
+                        grew = true;
+                    }
+                }
+                if caps[i].len() > MAX_CAPTURES {
+                    return Err(too_many(&members[i], caps[i].len()));
+                }
+                if grew {
+                    queue.push_back(i);
+                }
+            }
+        }
+
+        // ── Check every list before recording any. ──
+        for (m, set) in members.iter().zip(&caps) {
+            for c in set {
+                // A capture must be a value here, or the `MakeClosure` for
+                // the member could not be built at this point.  Rule 1
+                // guarantees this; rule 2 can break it when a named
+                // function captures something this context cannot see.
+                if !enclosing.is_enclosing_value(c) {
+                    return Err(err(format!(
+                        "unsupported: `{}` needs `{c}` to build a closure it uses, \
+                         but `{c}` is not in scope where `{}` is defined (deferred)",
+                        who(m),
+                        who(m)
+                    )));
+                }
+                // Rule 1 never yields a name the member binds itself (such a
+                // name is not free).  Rule 2 can: `f` assigns its own `n` and
+                // calls `g`, which captures the *outer* `n`.  Inside `f` the
+                // name `n` means `f`'s local, so `f` could not hand `g` the
+                // outer one.
+                //
+                // Known limitation: this refuses even when `f` calls `g`
+                // *before* binding `n` (`r = g(); n = 1`), which is valid
+                // Python.  Accepting it needs `f` to hold the inherited
+                // capture and its own local under two SIR names (a rename),
+                // since a capture and a local of one name collide in several
+                // backends.
+                if m.bound.contains(c) {
+                    return Err(err(format!(
+                        "unsupported: `{}` binds its own `{c}`, but needs the \
+                         enclosing `{c}` to build a closure it uses (deferred)",
+                        who(m)
+                    )));
+                }
+            }
+        }
+
+        // Record the planned siblings (members 1..), return `f`'s list.
+        let mut lists = caps
+            .into_iter()
+            .map(|set| set.into_iter().collect::<Vec<_>>());
+        let own = lists.next().unwrap_or_default();
+        for (m, list) in members.iter().skip(1).zip(lists) {
+            if let Some(n) = &m.name {
+                self.fn_captures.insert(n.clone(), list);
+            }
+        }
+        Ok(own)
+    }
+
+    /// The value of each capture in `names`, read in the `enclosing`
+    /// context where the closure is built.
+    fn capture_values(
+        &self,
+        names: &[String],
+        enclosing: &FunctionCtx,
+        span: &Span,
+    ) -> Result<Vec<Expr>, PythonLowerError> {
+        names
+            .iter()
+            .map(|n| self.resolve_var_in(enclosing, n, span.clone()))
+            .collect()
+    }
+
+    /// A fresh `__lambda_<N>` name for a lambda's synthesised function.
+    ///
+    /// The name is deliberately **not** added to `function_names`: Python
+    /// source cannot name a lambda, so `__lambda_0` written in source must
+    /// stay unresolved.  (It once resolved, and a bare reference built a
+    /// zero-capture closure for a lambda that declares captures.)  `N`
+    /// also skips any name a user `def` or class already uses, so the
+    /// synthesised function never collides with one.
+    /// Is `name` unavailable for a name the lowerer invents?
+    ///
+    /// Taken means: **any name spelled in the source** or invented earlier
+    /// ([`Self::used_names`]), a user `def` or `class` name, or a function
+    /// already pushed.  Source names matter because every backend keeps
+    /// functions and variables in one namespace: a local spelled
+    /// `__lambda_0` used to shadow the synthesised lambda of that name, and
+    /// JavaScript then failed with `TypeError: __lambda_0 is not a
+    /// function` (#18482 review).  Invented names matter for the same
+    /// reason (#18771; see [`Self::used_names`]).
+    fn name_taken(&self, name: &str) -> bool {
+        self.used_names.contains(name)
+            || self.function_names.contains(name)
+            || self.class_names.contains(name)
+            || self.claimed_names.contains(name)
+    }
+
+    /// The name of the function hoisted from method `method` of class
+    /// `class`: `{class}__{method}`, or, if that is taken (see
+    /// [`Self::name_taken`]: `class C: def m` next to a variable or `def`
+    /// spelled `C__m`, or a temporary that already holds the name), the
+    /// first free `{class}__{method}_{N}`.  The name is claimed here, before
+    /// the method body is lowered, so no temporary inside the body can take
+    /// it either.
+    fn hoisted_method_name(&mut self, class: &str, method: &str) -> String {
+        let base = format!("{class}__{method}");
+        if self.try_claim_name(&base) {
+            return base;
+        }
+        (1..)
+            .map(|n| format!("{base}_{n}"))
+            .find(|n| self.try_claim_name(n))
+            .expect("an unbounded range always yields a free name")
     }
 
     fn fresh_lambda_name(&mut self) -> String {
-        let name = format!("__lambda_{}", self.lambda_counter);
-        self.lambda_counter += 1;
-        self.function_names.insert(name.clone());
-        name
+        loop {
+            let name = format!("__lambda_{}", self.lambda_counter);
+            self.lambda_counter += 1;
+            if self.try_claim_name(&name) {
+                return name;
+            }
+        }
     }
 
     /// Collect every name *bound* (assigned) inside a suite into `bound`,
@@ -2242,18 +3508,26 @@ impl Lowerer {
         }
         match node.rule_name.as_str() {
             "assign_stmt" => {
-                // First expression_list is the LHS; if there's an
-                // assign_suffix it's a real assignment target.
-                let has_suffix = child_nodes(node)
-                    .iter()
-                    .any(|n| n.rule_name == "assign_suffix");
-                if has_suffix {
-                    if let Some(list) = self.first_child_named(node, "expression_list") {
-                        if let Ok(Some(name)) =
-                            self.single_expr(list).and_then(|e| self.target_name(e))
-                        {
-                            out.push(name);
+                // The first expression_list is a target whenever a tail
+                // follows it: `x = …`, `x += …` and `x: T [= …]` all make
+                // `x` local to the function in Python, even a bare
+                // annotation.  A chain `a = b = …` has more targets: every
+                // expression_list of the `assign_suffix` but the last.
+                let kids = child_nodes(node);
+                let mut target_lists: Vec<&GrammarASTNode> = Vec::new();
+                if let [lhs, tail] = kids.as_slice() {
+                    target_lists.push(lhs);
+                    if tail.rule_name == "assign_suffix" {
+                        let more = child_nodes(tail);
+                        if let Some((_value, rest)) = more.split_last() {
+                            target_lists.extend(rest.iter().copied());
                         }
+                    }
+                }
+                for list in target_lists {
+                    if let Ok(Some(name)) = self.single_expr(list).and_then(|e| self.target_name(e))
+                    {
+                        out.push(name);
                     }
                 }
             }
@@ -2348,6 +3622,16 @@ impl Lowerer {
             return Ok(());
         }
 
+        // An annotation (`x: T = e`) is never evaluated (see
+        // `lower_annotated`), so the names in `T` are not references: only
+        // the value `e` can read a variable.
+        if node.rule_name == "annotation" {
+            if let Some(value) = self.first_child_named(node, "expression_list") {
+                self.collect_free_names(value, bound, free, seen, depth + 1)?;
+            }
+            return Ok(());
+        }
+
         // A bare `Name` token (no type_name) is a reference.
         if let Some(tok) = node.token() {
             if matches!(tok.type_, lexer::token::TokenType::Name) && tok.type_name.is_none() {
@@ -2390,14 +3674,7 @@ impl Lowerer {
                 format!("expected `suite`, got `{}`", suite.rule_name),
             ));
         }
-        let stmt_nodes: Vec<&GrammarASTNode> = suite
-            .children
-            .iter()
-            .filter_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
-                _ => None,
-            })
-            .collect();
+        let stmt_nodes = suite_statements(suite);
 
         let span = self.span_of(suite);
         if stmt_nodes.is_empty() {
@@ -2418,43 +3695,67 @@ impl Lowerer {
             items.push(self.lower_statement(stmt, ctx, depth)?);
         }
 
+        // Every statement before the last is run for its effect, so each
+        // becomes a statement, *including an expression statement*.
+        // (`assemble_block` would make a trailing expression the block's
+        // value, and the tail `return` below then replaced that value: the
+        // statement just before a tail `return` was silently dropped.  In
+        //
+        //     def clamp(n):
+        //         if n > 10:
+        //             n = 10
+        //         return n
+        //
+        // the whole `if` vanished, and so did a `print(…)` or
+        // `xs.append(…)` written just before a `return`.)
+        let mut stmts = Self::statements_only(items);
+
         // The last statement may be a tail `return`.
         let last = stmt_nodes[stmt_nodes.len() - 1];
-        if let Some(ret) = self.as_return_stmt(last) {
-            let value = self.lower_return_value(ret, ctx)?;
-            let block = Self::assemble_block(items, &span);
-            Self::scope_rewind(ctx, mark);
-            return Ok(Block {
-                stmts: block.stmts,
-                value,
-                span,
-            });
-        }
-
-        // The last statement may be a tail `if` whose branches end in
-        // `return`s — the canonical `if cond: return a else: return b`
-        // shape.  Each branch is itself in *function-tail* position, so we
-        // lower it as a function suite (its tail `return` becomes the
-        // branch's block value) and fold into an `if`-expression.  This is
-        // how an early-looking `return` inside a *tail* `if` is accepted
-        // (it is not actually early — control reaches the function end).
-        if let Some(if_stmt) = self.as_if_stmt(last) {
-            let value = self.lower_if_tail(if_stmt, ctx, depth)?;
-            let block = Self::assemble_block(items, &span);
-            Self::scope_rewind(ctx, mark);
-            return Ok(Block {
-                stmts: block.stmts,
-                value,
-                span,
-            });
-        }
-
-        // No tail return: the last statement lowers normally (its
-        // trailing-expr value, if any, becomes the body value; else nil).
-        items.push(self.lower_statement(last, ctx, depth)?);
-        let block = Self::assemble_block(items, &span);
+        let value = if let Some(ret) = self.as_return_stmt(last) {
+            self.lower_return_value(ret, ctx)?
+        } else if let Some(if_stmt) = self.as_if_stmt(last) {
+            // The last statement may be a tail `if` whose branches end in
+            // `return`s — the canonical `if cond: return a else: return b`
+            // shape.  Each branch is itself in *function-tail* position, so
+            // we lower it as a function suite (its tail `return` becomes
+            // the branch's block value) and fold into an `if`-expression.
+            // This is how an early-looking `return` inside a *tail* `if` is
+            // accepted (it is not actually early — control reaches the
+            // function end).
+            self.lower_if_tail(if_stmt, ctx, depth)?
+        } else {
+            // No tail return: the function falls off its end and returns
+            // `None`.  The last statement is lowered as a *statement*, even
+            // an expression statement.  Making a trailing expression the
+            // block's value (as `assemble_block` does) meant `def f(x):
+            // x + 1` returned `x + 1`, a docstring-only body returned the
+            // docstring, and a body ending in a nested `def` returned the
+            // closure.  Python returns `None` from all three.
+            let tail = self.lower_statement(last, ctx, depth)?;
+            stmts.extend(Self::statements_only(vec![tail]));
+            Expr::NilLit { span: span.clone() }
+        };
         Self::scope_rewind(ctx, mark);
-        Ok(block)
+        Ok(Block { stmts, value, span })
+    }
+
+    /// Turn lowered items into statements, every one of them: a bare
+    /// expression becomes an `ExprStmt`, never a block value.  (Compare
+    /// [`Self::assemble_block`], which makes a trailing expression the
+    /// value.)
+    fn statements_only(items: Vec<Lowered>) -> Vec<Stmt> {
+        items
+            .into_iter()
+            .flat_map(|item| match item {
+                Lowered::Stmt(s) => vec![*s],
+                Lowered::Stmts(v) => v,
+                Lowered::Expr(expr) => {
+                    let span = expr.span().clone();
+                    vec![Stmt::ExprStmt { expr, span }]
+                }
+            })
+            .collect()
     }
 
     /// If `stmt` is a `statement → compound_stmt → if_stmt`, return the
@@ -2551,12 +3852,7 @@ impl Lowerer {
     /// If `stmt` is a `statement → simple_stmt → small_stmt → return_stmt`,
     /// return the `return_stmt` node.
     fn as_return_stmt<'a>(&self, stmt: &'a GrammarASTNode) -> Option<&'a GrammarASTNode> {
-        if stmt.rule_name != "statement" {
-            return None;
-        }
-        let simple = child_nodes(stmt)
-            .into_iter()
-            .find(|n| n.rule_name == "simple_stmt")?;
+        let simple = simple_stmt_of(stmt)?;
         let small = child_nodes(simple)
             .into_iter()
             .find(|n| n.rule_name == "small_stmt")?;
@@ -2615,12 +3911,8 @@ impl Lowerer {
         }
 
         let mut items: Vec<Lowered> = Vec::new();
-        for child in &suite.children {
-            if let ASTNodeOrToken::Node(stmt) = child {
-                if stmt.rule_name == "statement" {
-                    items.push(self.lower_statement(stmt, ctx, depth)?);
-                }
-            }
+        for stmt in suite_statements(suite) {
+            items.push(self.lower_statement(stmt, ctx, depth)?);
         }
         let span = self.span_of(suite);
         Ok(Self::assemble_block(items, &span))
@@ -3040,8 +4332,10 @@ impl Lowerer {
     /// Lower a call `suffix` applied to a bare-name `callee` atom, with
     /// full name semantics: a builtin (`print`/`range`) → `BuiltinCall`;
     /// `len(x)` → the dedicated [`Expr::SeqLen`] node (SIR17 prefers it
-    /// over `BuiltinCall("len")`); a known function → `DirectCall`; a
-    /// local/param/capture value → `IndirectCall`.
+    /// over `BuiltinCall("len")`); a known function → `DirectCall` (or,
+    /// when it has captures, an `IndirectCall` through its closure — see
+    /// [`Self::lower_closure_call`]); a local/param/capture value →
+    /// `IndirectCall`.
     fn lower_call_suffix(
         &mut self,
         callee: &GrammarASTNode,
@@ -3151,8 +4445,22 @@ impl Lowerer {
         // only if it is *not* shadowed by an enclosing value of the same
         // name (a local/param/capture closure handle wins).
         if self.function_names.contains(&name) && !ctx.is_enclosing_value(&name) {
+            // A function that captures something cannot be called
+            // directly: every backend gives a closure body its captures
+            // as leading parameters, and a `DirectCall` passes only the
+            // arguments.  So build the closure (as a bare reference
+            // would) and call through it:
+            //
+            //   go(x - 1)   ⇒   IndirectCall(MakeClosure(go, [n ← n]), [x - 1])
+            //
+            // This is what makes a capturing nested `def` callable by
+            // name, recursively, or from a sibling.
+            let captures = self.fn_captures.get(&name).is_some_and(|c| !c.is_empty());
+            if captures {
+                return self.lower_closure_call(&name, args, ctx, span);
+            }
             return Ok(Expr::DirectCall {
-                fn_name: name,
+                fn_name: sir_function_name(&name),
                 args,
                 effects: EffectSet::PURE,
                 span: span.clone(),
@@ -3161,6 +4469,67 @@ impl Lowerer {
         // Otherwise the name must be a value (closure handle) — resolve
         // it and emit an IndirectCall.
         let target = self.resolve_var_in(ctx, &name, span.clone())?;
+        self.observed.add(Feature::Closures);
+        Ok(Expr::IndirectCall {
+            target: Box::new(target),
+            args,
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        })
+    }
+
+    /// Lower a call by name to a function that captures something: an
+    /// [`Expr::IndirectCall`] through the function's re-threaded closure
+    /// (see [`Self::named_closure`]).
+    ///
+    /// A `DirectCall` gets its arity checked by the validator, and
+    /// default values filled in by the backend.  An `IndirectCall` gets
+    /// neither (backends apply closures leniently: a missing argument
+    /// reads as nil).  So this path accepts only what it can check here:
+    /// a callee with plain positional parameters, called with exactly
+    /// that many positional arguments.  Anything else is a positioned
+    /// error, never a silently different call.
+    fn lower_closure_call(
+        &mut self,
+        name: &str,
+        args: Vec<Expr>,
+        ctx: &FunctionCtx,
+        span: &Span,
+    ) -> Result<Expr, PythonLowerError> {
+        let err = |message: String| PythonLowerError {
+            message,
+            line: span.start_line,
+            column: span.start_col,
+        };
+        if args.iter().any(|a| matches!(a, Expr::KeywordArg { .. })) {
+            return Err(err(format!(
+                "unsupported: keyword argument in a call to `{name}`, which captures \
+                 variables (deferred)"
+            )));
+        }
+        // Every capturing named function is a `def` (a lambda has no name
+        // to call), so pass 1 normally recorded its parameters.  Without
+        // them the call cannot be checked, so it is refused, not guessed.
+        let Some(facts) = self.def_facts.get(name) else {
+            return Err(err(format!(
+                "unsupported: call to `{name}`, which captures variables, but \
+                 its parameters are not known here (deferred)"
+            )));
+        };
+        if !facts.plain_params {
+            return Err(err(format!(
+                "unsupported: call to `{name}`, which captures variables and has \
+                 default or keyword-only parameters (deferred)"
+            )));
+        }
+        if args.len() != facts.arity {
+            return Err(err(format!(
+                "call to `{name}` passes {} argument(s) but it takes {}",
+                args.len(),
+                facts.arity
+            )));
+        }
+        let target = self.named_closure(name, ctx, span.clone())?;
         self.observed.add(Feature::Closures);
         Ok(Expr::IndirectCall {
             target: Box::new(target),
@@ -3219,7 +4588,8 @@ impl Lowerer {
                     let span = self.span_of(a);
                     self.observed.add(Feature::KeywordParams);
                     args.push(Expr::KeywordArg {
-                        name: kw_name,
+                        // Matches the escaped `Param.name` it binds.
+                        name: sir_var_name(&kw_name),
                         value: Box::new(value),
                         span,
                     });
@@ -3324,6 +4694,13 @@ impl Lowerer {
             .filter(|n| n.rule_name == "subscript_item")
             .collect();
         let item = match items.as_slice() {
+            // `xs[i,]` indexes with the tuple `(i,)`, not with `i`.
+            [_] if has_comma_token(subscript) => {
+                return Err(self.err_at(
+                    subscript,
+                    "unsupported: tuple subscript (deferred)".to_string(),
+                ))
+            }
             [only] => *only,
             _ => {
                 return Err(self.err_at(
@@ -3643,10 +5020,13 @@ impl Lowerer {
                             // (no `Integer#/`-style floor — that's `//`,
                             // not lowered here), so it maps to `div_true`,
                             // not the operator-spelling passthrough `+`/
-                            // `-`/`*`/`%` use.
-                            let name = if op == "/" { "div_true".to_string() } else { op };
+                            // `-`/`*`/`%` use.  `arith_builtin` is the one
+                            // table shared with augmented assignment.
+                            let name = arith_builtin(&op).ok_or_else(|| {
+                                self.err_at(node, format!("unsupported operator `{op}`"))
+                            })?;
                             Expr::BuiltinCall {
-                                name,
+                                name: name.to_string(),
                                 args: vec![lhs, operand],
                                 effects: EffectSet::PURE,
                                 span,
@@ -3806,14 +5186,80 @@ impl Lowerer {
         // zero-capture closure handle.
         if self.function_names.contains(name) {
             self.observed.add(Feature::Closures);
-            let cap_names = self.fn_captures.get(name).cloned().unwrap_or_default();
-            let mut capture_values = Vec::with_capacity(cap_names.len());
-            for cn in &cap_names {
-                capture_values.push(self.resolve_var_in(ctx, cn, span.clone())?);
-            }
-            return Ok(self.make_closure(name.to_string(), cap_names, capture_values, span));
+            return self.named_closure(name, ctx, span);
         }
         Err(self.err_at(node, format!("unresolved name `{name}`")))
+    }
+
+    /// Build a closure value for the named function `name`, threading its
+    /// captures (as recorded in `fn_captures`) from their values in
+    /// `ctx`.  A function with no recorded captures yields a
+    /// zero-capture `MakeClosure`.
+    ///
+    /// Used for a bare reference to a function name and for a call to a
+    /// function that captures something.  Inside the function's own body
+    /// the captures resolve as `Scope::Capture`: `go` rebuilds itself
+    /// from the values it was itself built with.
+    ///
+    /// ## Which variable a capture name means
+    ///
+    /// A capture name has to mean the *same variable* here as where the
+    /// function was defined.  Two places guarantee that:
+    ///
+    /// - the body that defines the function (`ctx.owner` is the
+    ///   function's parent): any local, param or capture of that name is
+    ///   the very variable the function captured;
+    /// - anywhere else, only a **capture** of `ctx` will do.  Captures
+    ///   reach here through [`Self::plan_captures`], which threads the
+    ///   defining body's variable down and refuses a member that rebinds
+    ///   the name.  A *local or param* of the same spelling is a different
+    ///   variable.  For example, a method `def m(self, x): return g()`
+    ///   must not hand `g` its own `x` in place of the `main` local `x`
+    ///   that `g` captured.
+    ///
+    /// Anything else is a positioned error.
+    ///
+    /// A function whose list is not decided yet gets a zero-capture
+    /// closure here.  If it later gains captures, the module-level
+    /// [`check_closure_invariant`] refuses the program.
+    fn named_closure(
+        &mut self,
+        name: &str,
+        ctx: &FunctionCtx,
+        span: Span,
+    ) -> Result<Expr, PythonLowerError> {
+        let cap_names = self.fn_captures.get(name).cloned().unwrap_or_default();
+        let in_defining_body = self
+            .def_facts
+            .get(name)
+            .is_some_and(|facts| facts.parent == ctx.owner);
+        let mut capture_values = Vec::with_capacity(cap_names.len());
+        for cn in &cap_names {
+            let not_in_scope = || PythonLowerError {
+                message: format!(
+                    "unsupported: `{name}` captures `{cn}`, which is not in scope here \
+                     (deferred)"
+                ),
+                line: span.start_line,
+                column: span.start_col,
+            };
+            let value = self
+                .resolve_var_in(ctx, cn, span.clone())
+                .map_err(|_| not_in_scope())?;
+            let is_capture = matches!(
+                value,
+                Expr::VarRef {
+                    scope: Scope::Capture,
+                    ..
+                }
+            );
+            let same_variable = in_defining_body || is_capture;
+            if !same_variable {
+                return Err(not_in_scope());
+            }
+            capture_values.push(value);
+        }
+        Ok(self.make_closure(name.to_string(), cap_names, capture_values, span))
     }
 
     /// Resolve a name that is *expected* to be in scope as a value
@@ -3827,21 +5273,21 @@ impl Lowerer {
     ) -> Result<Expr, PythonLowerError> {
         if ctx.locals.iter().rev().any(|n| n == name) {
             return Ok(Expr::VarRef {
-                name: name.to_string(),
+                name: ctx.ir_local(name),
                 scope: Scope::Local,
                 span,
             });
         }
         if ctx.params.contains(name) {
             return Ok(Expr::VarRef {
-                name: name.to_string(),
+                name: sir_var_name(name),
                 scope: Scope::Param,
                 span,
             });
         }
         if ctx.captures.contains(name) {
             return Ok(Expr::VarRef {
-                name: name.to_string(),
+                name: sir_var_name(name),
                 scope: Scope::Capture,
                 span,
             });
@@ -3915,21 +5361,23 @@ impl Lowerer {
         }
     }
 
-    fn expect_single_kind<'a>(
-        &self,
-        node: &'a GrammarASTNode,
-        kind: &str,
-    ) -> Result<&'a GrammarASTNode, PythonLowerError> {
-        child_nodes(node)
-            .into_iter()
-            .find(|n| n.rule_name == kind)
-            .ok_or_else(|| self.err_at(node, format!("expected a `{kind}` child")))
-    }
-
+    /// The one expression of an `expression_list`.  Refuses a tuple,
+    /// whether it has several elements or one with a trailing comma.
     fn single_expr<'a>(
         &self,
         list: &'a GrammarASTNode,
     ) -> Result<&'a GrammarASTNode, PythonLowerError> {
+        // A trailing comma makes a one-element tuple: `x = 1,` binds
+        // `(1,)` and `return y,` returns one.  Taking the lone element
+        // would silently drop the tuple, so it is refused like any tuple.
+        if has_comma_token(list) {
+            return Err(self.err_at(
+                list,
+                "unsupported: tuple (a comma-separated or trailing-comma expression \
+                 list) (deferred)"
+                    .to_string(),
+            ));
+        }
         let exprs = child_nodes(list);
         match exprs.as_slice() {
             [only] => Ok(only),
@@ -3961,6 +5409,68 @@ impl Lowerer {
 // Free helpers
 // ---------------------------------------------------------------------------
 
+/// Every `NAME` token's spelling anywhere under `root`.
+///
+/// The walk keeps its own stack instead of recursing, so a deeply nested
+/// tree (which the parser accepts up to its own depth cap) cannot
+/// overflow the native stack here.  It runs once per file.
+fn collect_source_names(root: &GrammarASTNode) -> HashSet<String> {
+    let mut names = HashSet::new();
+    let mut stack: Vec<&GrammarASTNode> = vec![root];
+    while let Some(node) = stack.pop() {
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => stack.push(n),
+                ASTNodeOrToken::Token(t) => {
+                    if matches!(t.type_, lexer::token::TokenType::Name) {
+                        names.insert(t.value.clone());
+                    }
+                }
+            }
+        }
+    }
+    names
+}
+
+/// The SIR builtin a Python binary arithmetic operator lowers to, or
+/// `None` for an operator the frontend does not lower.
+///
+/// This is the **single** table for both the binary form (`a + b`, in
+/// [`Lowerer::try_binary_arith`]) and the augmented form (`a += b`, in
+/// [`Lowerer::lower_augmented`]), so the two cannot drift apart:
+///
+/// | Python | SIR builtin | note                                         |
+/// |--------|-------------|----------------------------------------------|
+/// | `+`    | `+`         | numbers add, strings and lists concatenate   |
+/// | `-`    | `-`         |                                              |
+/// | `*`    | `*`         |                                              |
+/// | `/`    | `div_true`  | Python's `/` always true-divides (SIR21 T3b-2) |
+/// | `%`    | `%`         |                                              |
+///
+/// `//`, `**`, `@` and the bitwise operators are not lowered yet.
+fn arith_builtin(op: &str) -> Option<&'static str> {
+    match op {
+        "+" => Some("+"),
+        "-" => Some("-"),
+        "*" => Some("*"),
+        "/" => Some("div_true"),
+        "%" => Some("%"),
+        _ => None,
+    }
+}
+
+/// Does `node` have a `,` token among its *direct* children?  In an
+/// `expression_list`, `target_list` or `subscript`, a comma makes a
+/// **tuple**: `x = 1,` binds the tuple `(1,)`, and `for x, in rows:`
+/// unpacks each row.  Tuples are not lowered yet, so a caller that wants
+/// one value refuses such a node rather than silently taking its only
+/// element.
+fn has_comma_token(node: &GrammarASTNode) -> bool {
+    node.children
+        .iter()
+        .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Comma))
+}
+
 /// Collect the *node* children of `node` (dropping tokens).
 fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     node.children
@@ -3972,30 +5482,59 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
         .collect()
 }
 
-/// The direct `statement` children of a `class_stmt`'s `suite` — same
-/// extraction as `lower_function_suite`'s `stmt_nodes`, factored out as a
-/// free function since `lower_class` needs it before any lowering (it
-/// walks the body once to build `__def_method__` registrations, with no
-/// tail-position special-casing — a class body has no "return value").
-fn class_body_statements(suite: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+/// The statements of a `suite`, in order.
+///
+/// ```text
+///   suite = simple_stmt | NEWLINE INDENT { statement } DEDENT ;
+/// ```
+///
+/// An indented body is a run of `statement` nodes.  A body written on the
+/// header's own line (`def f(x): return x`, `if c: y = 1`) is a single
+/// bare `simple_stmt` with no `statement` wrapper.  The suite lowerers
+/// once kept only `statement` children, so a one-line body was dropped
+/// whole: `def f(x): return x + 1` returned `None` (#18482).  Every caller
+/// that walks a suite's statements goes through here, and
+/// [`Lowerer::lower_statement`] accepts either kind of node.
+fn suite_statements(suite: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     suite
         .children
         .iter()
         .filter_map(|c| match c {
-            ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+            ASTNodeOrToken::Node(n)
+                if n.rule_name == "statement" || n.rule_name == "simple_stmt" =>
+            {
+                Some(n)
+            }
             _ => None,
         })
         .collect()
 }
 
-/// Is `stmt` (a `statement` node) Python's `pass` — the no-op placeholder
+/// The `simple_stmt` of a suite statement: the node itself for a
+/// one-line suite's bare `simple_stmt`, or the child of a `statement`.
+fn simple_stmt_of(stmt: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    match stmt.rule_name.as_str() {
+        "simple_stmt" => Some(stmt),
+        "statement" => child_nodes(stmt)
+            .into_iter()
+            .find(|n| n.rule_name == "simple_stmt"),
+        _ => None,
+    }
+}
+
+/// The statements of a `class_stmt`'s `suite` (see [`suite_statements`];
+/// a one-line `class C: pass` is a bare `simple_stmt`).  `lower_class`
+/// walks them once to build `__def_method__` registrations, with no
+/// tail-position special-casing — a class body has no "return value".
+fn class_body_statements(suite: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    suite_statements(suite)
+}
+
+/// Is `stmt` (a suite statement) Python's `pass` — the no-op placeholder
 /// used for an otherwise-empty suite (`class Foo:\n    pass\n`)? Structure:
-/// `statement -> simple_stmt -> small_stmt -> pass_stmt`.
+/// `[statement ->] simple_stmt -> small_stmt -> pass_stmt`.
 fn is_pass_stmt(stmt: &GrammarASTNode) -> bool {
-    let Some(simple) = child_nodes(stmt)
-        .into_iter()
-        .find(|n| n.rule_name == "simple_stmt")
-    else {
+    let Some(simple) = simple_stmt_of(stmt) else {
         return false;
     };
     let Some(small) = child_nodes(simple)
@@ -4004,7 +5543,9 @@ fn is_pass_stmt(stmt: &GrammarASTNode) -> bool {
     else {
         return false;
     };
-    child_nodes(small).iter().any(|n| n.rule_name == "pass_stmt")
+    child_nodes(small)
+        .iter()
+        .any(|n| n.rule_name == "pass_stmt")
 }
 
 /// Is `expr` the SIR receiver value for the current method's implicit
@@ -4020,7 +5561,7 @@ fn is_self_ref(expr: &Expr) -> bool {
 /// Is `value` one of the binary arithmetic operator spellings the lowerer
 /// recognises under `arith` (`+`/`-`) and `term` (`*`/`/`/`%`)?
 fn is_arith_op(value: &str) -> bool {
-    matches!(value, "+" | "-" | "*" | "/" | "%")
+    arith_builtin(value).is_some()
 }
 
 /// Is a lowered index expression a string literal?  This is the M5
@@ -4041,12 +5582,151 @@ fn has_colon_token(node: &GrammarASTNode) -> bool {
         .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Colon))
 }
 
+/// A loop body as **statements only**: its trailing value, if any, becomes
+/// an `ExprStmt`, and the block's value is `NilLit`.
+///
+/// A suite's last expression statement becomes its block's *value*
+/// ([`Lowerer::assemble_block`]).  That is right for an `if` used as an
+/// expression, but a loop body's value is never used, and the C and Ruby
+/// backends emit only a loop body's statements.  So the last statement of a
+/// loop body, when it was an expression statement, was silently dropped
+/// there: `for i in range(3): print(i)` printed nothing on C and Ruby, and
+/// neither did a trailing `if` or call (#18482 review).
+fn loop_body(mut body: Block) -> Block {
+    if !matches!(body.value, Expr::NilLit { .. }) {
+        let span = body.value.span().clone();
+        let value = std::mem::replace(&mut body.value, Expr::NilLit { span: span.clone() });
+        body.stmts.push(Stmt::ExprStmt { expr: value, span });
+    }
+    body
+}
+
 /// An empty `Block` whose value is `NilLit`.
 fn empty_block(span: Span) -> Block {
     Block {
         stmts: vec![],
         value: Expr::NilLit { span: span.clone() },
         span,
+    }
+}
+
+/// Check the **closure invariant** over a finished module:
+///
+/// 1. every `MakeClosure { fn_name: f, captures }` threads exactly `f`'s
+///    declared captures: the same names, in the same order; and
+/// 2. no `DirectCall` targets a function that has captures (it would pass
+///    the arguments but not the captures).
+///
+/// The lowering is built to keep both.  This walk is the safety net for
+/// what it could not see coming: a closure or call built before its
+/// target's capture list was decided.  One example is a method body
+/// (which plans nothing) naming a later top-level `def` that then
+/// captures a `main` local.  Every backend reads a closure's captures by
+/// position, so a short `MakeClosure` is an out-of-bounds read (a NULL
+/// `caps[0]` in C).  So the program is refused, pointing at the offending
+/// node.
+///
+/// The walk uses the shared SIR [`Visitor`](semantic_ir::Visitor), so it
+/// also reaches parameter default values.  The visitor stops silently at
+/// [`semantic_ir::MAX_IR_DEPTH`]; a tree that deep is refused here rather
+/// than left partly checked.
+fn check_closure_invariant(functions: &[Function]) -> Result<(), PythonLowerError> {
+    use semantic_ir::Visitor;
+    use std::collections::HashMap;
+
+    const TOO_DEEP: &str = "program nests too deeply to check its closures";
+
+    struct Check<'a> {
+        declared: HashMap<&'a str, &'a [Capture]>,
+        error: Option<PythonLowerError>,
+    }
+    impl Check<'_> {
+        fn refuse(&mut self, message: String, span: &Span) {
+            if self.error.is_none() {
+                self.error = Some(PythonLowerError {
+                    message,
+                    line: span.start_line,
+                    column: span.start_col,
+                });
+            }
+        }
+    }
+    impl Visitor for Check<'_> {
+        fn visit_block(&mut self, b: &Block, depth: usize) {
+            if depth >= semantic_ir::MAX_IR_DEPTH {
+                self.refuse(TOO_DEEP.into(), &b.span);
+                return;
+            }
+            semantic_ir::walker::walk_block_default(self, b, depth);
+        }
+        fn visit_stmt(&mut self, st: &Stmt, depth: usize) {
+            if depth >= semantic_ir::MAX_IR_DEPTH {
+                self.refuse(TOO_DEEP.into(), st.span());
+                return;
+            }
+            semantic_ir::walker::walk_stmt_default(self, st, depth);
+        }
+        fn visit_expr(&mut self, e: &Expr, depth: usize) {
+            if self.error.is_some() {
+                return;
+            }
+            if depth >= semantic_ir::MAX_IR_DEPTH {
+                self.refuse(TOO_DEEP.into(), e.span());
+                return;
+            }
+            match e {
+                Expr::MakeClosure {
+                    fn_name,
+                    captures,
+                    span,
+                } => {
+                    if let Some(declared) = self.declared.get(fn_name.as_str()) {
+                        let agrees = declared.len() == captures.len()
+                            && declared.iter().zip(captures).all(|(d, c)| d.name == c.name);
+                        if !agrees {
+                            self.refuse(
+                                format!(
+                                    "unsupported: a closure for `{fn_name}` is built before \
+                                     `{fn_name}`'s captured variables are known (deferred)"
+                                ),
+                                span,
+                            );
+                        }
+                    }
+                }
+                Expr::DirectCall { fn_name, span, .. }
+                    if self
+                        .declared
+                        .get(fn_name.as_str())
+                        .is_some_and(|d| !d.is_empty()) =>
+                {
+                    self.refuse(
+                        format!(
+                            "unsupported: `{fn_name}` is called before `{fn_name}`'s \
+                             captured variables are known (deferred)"
+                        ),
+                        span,
+                    );
+                }
+                _ => {}
+            }
+            semantic_ir::walker::walk_expr_default(self, e, depth);
+        }
+    }
+
+    let mut check = Check {
+        declared: functions
+            .iter()
+            .map(|f| (f.name.as_str(), f.captures.as_slice()))
+            .collect(),
+        error: None,
+    };
+    for f in functions {
+        check.visit_function(f);
+    }
+    match check.error {
+        Some(e) => Err(e),
+        None => Ok(()),
     }
 }
 

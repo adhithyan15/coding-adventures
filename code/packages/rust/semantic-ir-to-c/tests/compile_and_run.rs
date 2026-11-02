@@ -168,6 +168,31 @@ const CORPUS: &[Case] = &[
         source: "puts(-7)\nputs(-7 / 2)\nputs(-(3 * 2))",
         expected: "-7\n-4\n-6\n",
     },
+    // Operands run LEFT TO RIGHT, even when one of them changes what
+    // another reads.  `bump` sets `@n` to 100 and returns 5.  `@n + bump`
+    // must read `@n` (1) first: 6.  `[@n, bump, @n]` must be [1, 5, 100].
+    // C leaves the order of a call's arguments unspecified (gcc goes right
+    // to left), and both used to render inline as C call arguments, printing
+    // 105 and 100001.  Now the operands are hoisted into temporaries, in
+    // order, whenever two of them could run code or read mutable state
+    // (`operands_simple`, #18482 review).
+    Case {
+        name: "operands_left_to_right",
+        lang: "ruby",
+        source: "class K\n  def initialize\n    @n = 1\n  end\n  def bump\n    @n = 100\n    5\n  end\n  def sum\n    @n + self.bump\n  end\n  def list\n    @n = 1\n    [@n, self.bump, @n]\n  end\nend\nk = K.new\nputs(k.sum)\nys = k.list\nputs(ys[0] * 1000 + ys[2])",
+        expected: "6\n1100\n",
+    },
+    // The same rule for the arguments of ONE dispatch call (#18768):
+    // `c.pair(c.n, c.bump)` reads `c.n` (1) before `bump` adds 100, so 1005.
+    // And a dispatch call with a compound argument (`P.new(a.get + b.get)`,
+    // `a.add(a.get + b.get)`) has an emit path again: after the ordering fix
+    // it emitted `_sir_unknown_builtin("__new__")` (exit 1) or was refused.
+    Case {
+        name: "dispatch_operands_left_to_right",
+        lang: "ruby",
+        source: "class C\n  def initialize\n    @n = 1\n  end\n  def n\n    @n\n  end\n  def bump\n    @n = @n + 100\n    5\n  end\n  def pair(a, b)\n    a * 1000 + b\n  end\nend\nc = C.new\nputs(c.pair(c.n, c.bump))\nclass P\n  def initialize(v)\n    @v = v\n  end\n  def get\n    @v\n  end\n  def add(k)\n    @v + k\n  end\nend\na = P.new(2)\nb = P.new(3)\nd = P.new(a.get + b.get)\nputs(d.get)\nputs(a.add(a.get + b.get))",
+        expected: "1005\n5\n7\n",
+    },
 ];
 
 fn lower(case: &Case) -> semantic_ir::Module {

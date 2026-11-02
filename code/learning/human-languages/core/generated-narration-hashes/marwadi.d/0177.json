@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:1e0e62108b3123bf",
+  "lessonIds": [
+    "MW-C177-pharno",
+    "MW-C177-batan",
+    "MW-C177-takno",
+    "MW-C177-theglo",
+    "MW-C177-pallo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch177.txt",
+  "json": "marwadi/narration/ch177.json",
+  "textHash": "fnv1a64:44c4c18bf065f9af",
+  "jsonHash": "fnv1a64:b255ebad802e8a1e",
+  "findings": []
+}

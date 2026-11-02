@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-239-CROP239",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the crops of the desert farm and say they grow.",
+  "prerequisites": []
+}

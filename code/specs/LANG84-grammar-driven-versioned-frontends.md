@@ -233,6 +233,7 @@ validated at generation time. Every frontend MUST enforce a
 | Compiler traversal depth | ≤ parser depth cap; iterative where unbounded by the grammar | IIR compiler |
 | Flat operator spine | 512 | before any allocation that folds a repetition (lesson: *check flat operator spines…*) |
 | IIR instructions | 1,000,000 | IIR compiler |
+| Registers per lowered function | the target VM's frame limit: vm-core's `VMFrame::MAX_FRAME_REGISTERS` (65,536), referenced, not restated; counted as the VM counts them (parameters + distinct non-parameter `dest`s) | IIR compiler, as it emits (Python and Ruby release paths since #18419) |
 | Lexer group/pair stack (E2) | 256 frames | lexer |
 | Captured slot length (E4) | 256 bytes | lexer |
 | Pending deferred bodies (E5) | 64 per line, 4,096 total | lexer |
@@ -240,7 +241,22 @@ validated at generation time. Every frontend MUST enforce a
 | Binding log (E7) | ≤ token count; scope depth ≤ parser depth cap | parser |
 
 A budget breach is a typed `Budget { which, limit }` error. It MUST NOT be a
-panic, an abort or a stack overflow. Every frontend MUST carry hostile-input
+panic, an abort or a stack overflow.
+
+The register budget exists because the source and token budgets do not bound
+it: Python's and Ruby's trusted budgets (1 MiB, 256 Ki tokens) admit a `main`
+of well over 65,536 registers, which used to compile and then fail at VM load
+(#18419). A frontend whose other budgets can reach the target VM's frame limit
+MUST refuse such a function itself (the JavaScript pilot's fixed 16,384-node
+budget keeps it at about 36,900 registers, measured with
+`console.log(x,x,x);` repeated, and Perl's 16,384-item budget at most one
+register per item), and its
+`Budget` names the function and the 1-based start of the statement
+that went over. Registers the compiler emits after the last statement (the
+`ret 0` epilogue) are reserved while statements are lowered, so the refusal
+always points at source, and the check is exact: a function of exactly the
+limit compiles and runs. The finished module is then put through the VM's own
+load-time check (`VMFrame::check_register_limit`) as a backstop. Every frontend MUST carry hostile-input
 probes run in a child process, so that an abort is distinguishable from an
 error. The probes cover deep nesting, long flat operator chains, unterminated
 constructs, and every new lexer extension's stack or queue.
@@ -919,9 +935,9 @@ command_arg      = @space_before !@space_after_next MINUS primary ;
 completes it so that every fact has both polarities: `@space_before`,
 `@no_space_before`, `@newline_before`, `@no_newline_before`,
 `@space_after_next` and `@no_space_after_next` (`!@p` is equivalent to the
-`no_` form). `@asi(...)` is still to come; until it lands it is rejected with
-a "not implemented yet" error. No shipped `.grammar` uses the predicates yet:
-JavaScript (phase 6b) and Ruby (R6) adopt them in their own PRs. The non-Rust
+`no_` form). `@asi(T, C…)` followed on 2026-10-25, specified in F11
+"Automatic insertion". The details are below. No shipped `.grammar` uses
+either yet: JavaScript (phase 6b) and Ruby (R6) adopt them in their own PRs. The non-Rust
 ports already reject `@` with an "unexpected character" error; F11 lists the
 parity follow-ups.
 
@@ -939,8 +955,12 @@ inside a multi-line comment, as ECMAScript requires.
   - the parser is at end of input
 
   On success it adds a **synthetic leaf token** of type `T` with a new
-  `TOKEN_SYNTHETIC` flag, zero width, positioned at the next token. The CST
-  shape is then the same whether or not the semicolon was written.
+  `TOKEN_SYNTHETIC` flag (`8`). The token has zero width (`value` is `""`)
+  and takes the position of the next token. The CST shape is then the same
+  whether or not the semicolon was written. CST spans skip synthetic tokens,
+  so a statement ends at its last written token. F11 gives the exact rules:
+  `T` and `C` are token names, `T` is not `NEWLINE`/`EOF`, closers do not
+  repeat, and a failure records no expectation.
 
 PEG greediness supplies ECMAScript's "offending token" condition: `@asi` is
 tried only after the statement's expression has stopped consuming, so
@@ -962,7 +982,9 @@ packrat-memo-safe.
 grammar construct.
 
 **Security and budget.** Constant-time predicates. Synthetic tokens are capped
-at one per real token.
+at one per input token, `EOF` included. The cap is checked on the finished
+tree, and a parse that exceeds it fails with an "automatic insertion budget
+exceeded" error.
 
 ### E7. Goal-directed lexing (parser→lexer feedback) and binding predicates
 
@@ -2990,10 +3012,10 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.8 | E6 adjacency predicates and ASI | ~800 lines |
 | | 3.9 | E7 goal-directed lexing and binding predicates (largest; may split into lattice and bindings) | ~2,500 lines over 2–3 PRs |
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
-| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c done:** `pl-int-print` corpus, `ReleaseProfile`s, release sweep (3 IIR-identity classes), `Prog.release`/`case`, I and B for all 118 checked releases. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
-| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b slice 1 done:** lang-aot release selection (`--lang ruby@<release>`, `IIRModule.release`). **5b slice 2 done:** release sweep (one IIR-identity class, representative 3.3.5), matrix rows on it, B for 3.3.5 and 3.3.7 | ~1,200 lines over 2 PRs |
-| 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0; 6a, the F10 table in es2015–es2024 replacing the `REGEX` deletion, done in `javascript-iir-compiler` 0.4.0) | ~3,000 lines over 5 PRs |
-| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c slice 1 done:** Python 2 (`py2-int-print`: print statement, classic `/`) on 2.2 and 2.7.18, B for both. **7c slice 2 done:** Python 2 octal, hex and long literals; releases 2.4, 2.6, 3.5.10 and 3.6.0 (four classes, representatives 3.0a1, 3.6.0, 2.2 and 2.6), B for all eleven. **7c slice 3 done:** `py-float-print` (IEEE floats, true `/`, `repr` output) on the six `py3` releases, I and B; 3.0a1 moves to profile `py30`. **7c rest:** more releases, multi-item `print` (needs catchable traps), float `//`/`%`, and floats on 3.0a1 and Python 2 (a `%.12g` writer) | ~2,000 lines over 3 PRs |
+| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c done:** `pl-int-print` corpus, `ReleaseProfile`s, release sweep (3 IIR-identity classes), `Prog.release`/`case`, I and B for all 118 checked releases. Fastest win, because Perl is already compliant. **4d planned:** `pl-str-print` (non-interpolating `'…'`/`"…"`, `.`, `length`, `print` of strings), the first string subset, on LANG83 PR5a–PR5c; needs `STRING` tokens in the 5.38 pairs and `i64_to_str` for `.` on integers; see [LANG83 "PR5 — runtime strings"](LANG83-iir-standard-operation-registry.md#pr5--runtime-strings) | ~1,500 lines over 3 PRs |
+| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b slice 1 done:** lang-aot release selection (`--lang ruby@<release>`, `IIRModule.release`). **5b slice 2 done:** release sweep (one IIR-identity class, representative 3.3.5), matrix rows on it, B for 3.3.5 and 3.3.7. **5c planned:** `rb-str-puts` (`puts` of strings with Ruby's trailing-newline rule, `+`, `.length`, then `#{…}`) on LANG83 PR5a–PR5c, last of the four string subsets: blocked on R1a (parked until R4 and R6) and R2 for interpolation; needs `i64_to_str`; see [LANG83 "PR5 — runtime strings"](LANG83-iir-standard-operation-registry.md#pr5--runtime-strings) | ~1,200 lines over 2 PRs |
+| 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0; 6a, the F10 table in es2015–es2024 replacing the `REGEX` deletion, done in `javascript-iir-compiler` 0.4.0). **6f planned:** `es-string-log` (string literals, `+` concatenation, `.length` in UTF-16 units, `console.log` of strings) on LANG83 PR5a–PR5c; needs a string-building `__js_number_to_string` (PR7c-js's layout over `i64_to_str`) for `"n=" + 1.5`; see [LANG83 "PR5 — runtime strings"](LANG83-iir-standard-operation-registry.md#pr5--runtime-strings) | ~3,000 lines over 5 PRs |
+| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c slice 1 done:** Python 2 (`py2-int-print`: print statement, classic `/`) on 2.2 and 2.7.18, B for both. **7c slice 2 done:** Python 2 octal, hex and long literals; releases 2.4, 2.6, 3.5.10 and 3.6.0 (four classes, representatives 3.0a1, 3.6.0, 2.2 and 2.6), B for all eleven. **7c slice 3 done:** `py-float-print` (IEEE floats, true `/`, `repr` output) on the six `py3` releases, I and B; 3.0a1 moves to profile `py30`. **7c rest:** more releases, multi-item `print` (needs catchable traps), float `//`/`%`, and floats on 3.0a1 and Python 2 (a `%.12g` writer). **7d planned:** `py-str-print` on LANG83 PR5a–PR5c: 7d-1 string literals, `+`, `len` (code points), `str(int)` (`i64_to_str`); 7d-2 f-strings, which need `FSTRING_*` tokens in the 3.6+ pairs and a string-building `__py_float_to_str` (PR7c-py's layout); see [LANG83 "PR5 — runtime strings"](LANG83-iir-standard-operation-registry.md#pr5--runtime-strings) | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 

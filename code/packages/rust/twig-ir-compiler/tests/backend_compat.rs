@@ -926,15 +926,15 @@ fn twig_typed_match_wildcard_accepted_by_every_backend() {
     let m = compile_source("(match 1 (_ 42))", "compat")
         .expect("Twig must compile");
 
-    // The match result should propagate the wildcard arm body's type.
-    // (Note: the match initialises `result` to nil via `make_nil`,
-    // which the typed-mov inherits as `any` — so the overall match
-    // result_type stays "any" until increment 6 adds consensus
-    // typing across arms.  But the IR is now structurally valid for
-    // the backends because there are no more `call_builtin "_move"`
-    // instructions — they're all typed `mov` (with type_hint "any"
-    // for the make_nil chain, which the backends accept for `mov`).)
-    let _main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    // The match result is a join temporary whose type is the consensus
+    // of all its writers (#18448): the `nil` initialiser
+    // (`ref<LispyPair>`, the value when no arm matches) and the wildcard
+    // arm (`i64`).  They disagree, so the result is untyped and `main`
+    // returns `any` — the IR is still structurally valid for the
+    // backends because there are no `call_builtin "_move"` instructions,
+    // only typed `mov`s, which every backend accepts.
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "any", "nil and i64 writers disagree");
 
     // The IR must contain `mov` instructions and NO `call_builtin "_move"`.
     let movs = m.functions.iter().flat_map(|f| f.instructions.iter())

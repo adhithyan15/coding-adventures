@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:e1f2177f32fbbeb1",
+  "lessonIds": [
+    "MW-C206-tijo",
+    "MW-C206-chautho",
+    "MW-C206-upar",
+    "MW-C206-par",
+    "MW-C206-algo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch206.txt",
+  "json": "marwadi/narration/ch206.json",
+  "textHash": "fnv1a64:3c191a7edb356589",
+  "jsonHash": "fnv1a64:b7cd03959a9a3ed5",
+  "findings": []
+}

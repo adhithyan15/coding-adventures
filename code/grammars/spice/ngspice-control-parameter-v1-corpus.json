@@ -1,0 +1,20 @@
+{
+  "suite": "ngspice-control-parameter-v1",
+  "version": 1,
+  "cases": [
+    {
+      "id": "foreach-alterparam-reset-run-op",
+      "deck": "* ngspice foreach parameter run\nV1 in 0 DC 10\n.param RLOAD=1k\nR1 in out {RLOAD}\nR2 out 0 1k\n.op\n.control\nforeach load 1k 3k\n  alterparam RLOAD=$load\n  reset\n  run\nend\n.endc\n.end\n",
+      "expected": {
+        "stepCards": [
+          { "parameter": "rload", "values": [1000.0, 3000.0] }
+        ],
+        "stepValues": [
+          { "rload": 1000.0 },
+          { "rload": 3000.0 }
+        ],
+        "out": [5.0, 2.5]
+      }
+    }
+  ]
+}

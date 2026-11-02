@@ -1,0 +1,21 @@
+{
+  "chapter": 209,
+  "title": "Shopkeeper and Customer",
+  "label": "ch:mw-shopkeeper-and-customer",
+  "canDo": "I can say who sells, who buys and what I order.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "MW-R209-review-204-209",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say who sells, who buys and what I order.",
+    "assesses": [
+      "MW-LEX-C209-SHOP209-01",
+      "MW-LEX-C209-SHOP209-02",
+      "MW-LEX-C209-SHOP209-03",
+      "MW-LEX-C209-SHOP209-04",
+      "MW-LEX-C209-SHOP209-05"
+    ]
+  }
+}

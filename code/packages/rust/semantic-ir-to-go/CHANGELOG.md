@@ -1,5 +1,72 @@
 # Changelog
 
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 25 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
+## Unreleased — A variable never shadows a function of the same name (#18485)
+
+SIR keeps functions and variables in separate namespaces, and Ruby relies on
+it: `def f; 40; end; f = 2; puts f() + f` prints 42. This backend emitted
+the local as `f` next to the function `f`, so the local shadowed the
+function and the call did not compile (`invalid operation: cannot call
+non-function f`). A *variable* (local, parameter, capture, loop variable,
+`rescue` binding) whose SIR name is also a function's name is now emitted
+through `var_ident` as `sir_esc_l` + `sanitize_ident(name)`; every other
+variable, and every function, keeps its spelling. This is the rule the
+JavaScript, TypeScript and Python backends need (callers append code that
+calls their emitted functions by name), so all five backends share it. The
+new `l` tag sits beside `sanitize_ident`'s `v` and `e`, so the renamed form
+can equal no other identifier. New unit tests
+`a_local_named_like_a_function_is_renamed_and_the_function_is_not` and
+`var_ident_renames_exactly_the_names_of_functions`; `sir-conformance`'s
+`tests/local_shadows_function.rs` runs the end-to-end proof.
+
+## Unreleased — The runtime's and imports' names are reserved (issue #18466)
+
+The emitted file is one `package main`: the inlined runtime, its imports
+and the user's functions share one package scope, and a user's locals
+shadow all of them.  `sanitize_ident` now escapes every name the file
+declares or binds — `sir…`/`_sir…`/`__sir…` in any case (every runtime
+function and `Sir*`/`sir*` type, `_sir_user_main`, loop temporaries),
+`Value`, `Symbol`, `Pair`, `Closure`, `Seq`, `Map`, `MapEntry`, `NDArray`,
+`_missingMarker`, the imports `fmt`/`math`/`os`/`sort`/`strconv`/`strings`,
+`main`, `init`, the blank identifier `_`, and the temporaries `__l`,
+`__args`, `__lam`.  Before, `(define (_sir_user_main) 42)` redeclared the
+renamed SIR `main`, `(define (fmt x) x)` clashed with the import,
+`(define (init x) x)` was "func init must have no arguments", and a
+parameter named `_sir_plus` shadowed the runtime's `+`.  The unit test
+`every_runtime_declaration_is_reserved` scans the runtime source, so a new
+runtime type cannot be left spellable.  `tests/twig_generated_names.rs`
+runs the cross-backend table.
+
+Security-review follow-up:
+
+- **The recovered panic is `__sir_r`, not `r`.**  Every rescue clause runs
+  inside `if r := recover(); r != nil { … }`, so a user variable `r` read
+  the panic payload inside a rescue body, and writes to it were lost.
+- `sanitize_ident` also reserves the identifiers Go predeclared in 1.18 and
+  1.21 — `any` (the runtime declares `func _sir_exc_value(r any)`, so a
+  user function `any` broke the build), `comparable`, `clear`, `min`, `max`.
+
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) lowers
+to `_sir_strict_arity(<closure>, N)`, a runtime wrapper that panics with a
+catchable `ArgumentError` ("arity mismatch: closure expects N argument(s),
+got M") on any other count.  A plain closure's adapter indexes
+`__args[i]` directly, so a missing argument died with Go's own `index out
+of range` and an extra one was silently dropped.
+`tests/twig_pairs_and_closures.rs` runs the #18460/#18461 Twig programs
+with `go run`.
+
 ## 0.43.0 — Accept `Feature::LoopControl` (task #63)
 
 Third backend (after `semantic-ir-to-javascript` task #62 and

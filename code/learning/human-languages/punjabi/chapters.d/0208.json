@@ -1,0 +1,18 @@
+{
+  "chapter": 208,
+  "title": "I Had to Go",
+  "label": "ch:pa-a2-pia",
+  "canDo": "I can recognise and use one bounded masculine singular past-necessity form.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C208-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce one bounded I-had-to-go frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-FORM-PIA-208"
+    ],
+    "note": "This thirty-first Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

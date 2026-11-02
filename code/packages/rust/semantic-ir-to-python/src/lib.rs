@@ -946,7 +946,10 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("def __lambda_0("));
         assert!(a.source.contains("_sir_make_closure"));
-        assert!(a.source.contains("_globals[\"add5\"]"));
+        assert!(a.source.contains("_sir_global_set(\"add5\", "));
+        // The emitted module never names the runtime's private store (#18461:
+        // it is not imported, so naming it raised `NameError`).
+        assert!(!a.source.contains("_globals"), "got:\n{}", a.source);
     }
 
     #[test]
@@ -1396,19 +1399,20 @@ mod tests {
             &[Feature::Loops, Feature::MutableBindings],
         );
         let a = compile(&m).expect("compile");
-        assert!(a.source.contains("def __block_0():"), "expected lifted def; got:\n{}", a.source);
+        assert!(a.source.contains("def _sir_block_0():"), "expected lifted def; got:\n{}", a.source);
         assert!(a.source.contains("nonlocal k"), "got:\n{}", a.source);
         assert!(a.source.contains("nonlocal total"), "got:\n{}", a.source);
         // The def is called from the ternary, and the loop lives inside it.
-        assert!(a.source.contains("__block_0() if _sir_truthy(True)"), "got:\n{}", a.source);
+        assert!(a.source.contains("_sir_block_0() if _sir_truthy(True)"), "got:\n{}", a.source);
         assert!(a.source.contains("while _sir_truthy(_sir_lt(k, 2)):"), "got:\n{}", a.source);
     }
 
     #[test]
-    fn global_assign_writes_globals_dict() {
+    fn global_assign_writes_the_runtime_global_store() {
         use semantic_ir::{Global, Scope, Stmt};
-        // A `Global`-scoped reassignment writes the module-level
-        // `_globals` dict (the same shape `_init`/`global_set` use).
+        // A `Global`-scoped reassignment writes the runtime's global store
+        // through `_sir_global_set` (the same call `_init` uses, and the store
+        // `_sir_global_get_static` reads).
         // The global must be declared in `module.globals` to satisfy
         // the validator's scope check.
         let m = Module {
@@ -1447,7 +1451,8 @@ mod tests {
             span: s(),
         };
         let a = compile(&m).expect("compile");
-        assert!(a.source.contains("_globals[\"counter\"] = 5"), "got:\n{}", a.source);
+        assert!(a.source.contains("_sir_global_set(\"counter\", 5)"), "got:\n{}", a.source);
+        assert!(!a.source.contains("_globals"), "got:\n{}", a.source);
     }
 
     // ── SIR17 OOP & scopes: Ruby / direct SIR → native Python + oop ──
@@ -1793,7 +1798,7 @@ mod tests {
             ])
             .expect("join PYTHONPATH");
             let file = std::env::temp_dir()
-                .join(format!("sir_e2_nomatch_{}.py", std::process::id()));
+                .join(format!("sir_e2_nomatch_{}.py", unique_suffix()));
             std::fs::write(&file, &a.source).expect("write temp python");
             let out = std::process::Command::new(exe)
                 .arg(&file)
@@ -3034,5 +3039,16 @@ mod tests {
                 "[{op}] expected 'SirError: divided by 0' on stderr, got:\n{err}"
             );
         }
+    }
+
+    /// A per-call unique part for this file's temp-file names.  The process id
+    /// keeps parallel test binaries apart, and the counter keeps apart the tests
+    /// of this binary, which run on parallel threads under one process id
+    /// (#18485).  A name built from the process id alone, or from it and a hash
+    /// of the source, let two tests that compile the same program share a file.
+    fn unique_suffix() -> String {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static NEXT: AtomicU64 = AtomicU64::new(0);
+        format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
     }
 }

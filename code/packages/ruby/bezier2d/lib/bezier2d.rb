@@ -28,6 +28,86 @@ require_relative "../../point2d/lib/point2d"
 module Bezier2D
   include Point2D
 
+  MAX_FLATTENING_DEPTH = 32
+  MAX_FLATTENING_SUBDIVISIONS = 65_535
+
+  module_function
+
+  def finite(value)
+    raise RuntimeError, "Bezier subdivision produced nonfinite geometry" unless value.finite?
+
+    value
+  end
+
+  def scaled_distance(left, right)
+    dx = finite(left.x - right.x)
+    dy = finite(left.y - right.y)
+    scale = [dx.abs, dy.abs].max
+    return 0.0 if scale.zero?
+
+    nx = dx.fdiv(scale)
+    ny = dy.fdiv(scale)
+    finite(scale * Math.sqrt(finite(nx * nx + ny * ny)))
+  end
+
+  def distance_to_segment(point, start_point, end_point)
+    dx = finite(end_point.x - start_point.x)
+    dy = finite(end_point.y - start_point.y)
+    scale = [dx.abs, dy.abs].max
+    return scaled_distance(point, start_point) if scale.zero?
+
+    nx = dx.fdiv(scale)
+    ny = dy.fdiv(scale)
+    denominator = finite(nx * nx + ny * ny)
+    ox = finite(point.x - start_point.x)
+    oy = finite(point.y - start_point.y)
+    nox = finite(ox.fdiv(scale))
+    noy = finite(oy.fdiv(scale))
+    projection = finite(finite(nox * nx + noy * ny) / denominator).clamp(0.0, 1.0)
+    nearest = Point2D::Point.new(
+      finite(start_point.x + projection * dx),
+      finite(start_point.y + projection * dy)
+    )
+    scaled_distance(point, nearest)
+  end
+
+  def flatten(curve, tolerance, control_points)
+    unless tolerance.finite? && tolerance.positive?
+      raise ArgumentError, "tolerance must be finite and positive"
+    end
+    unless control_points.all? { |point| point.x.finite? && point.y.finite? }
+      raise ArgumentError, "control points must be finite"
+    end
+
+    points = [control_points.first]
+    pending = [[curve, 0]]
+    subdivisions = 0
+    until pending.empty?
+      current, depth = pending.pop
+      if current.is_a?(QuadraticBezier)
+        endpoint = current.p2
+        off_curve = [current.p1]
+      else
+        endpoint = current.p3
+        off_curve = [current.p1, current.p2]
+      end
+      error = off_curve.map { |point| distance_to_segment(point, current.p0, endpoint) }.max
+      if error <= tolerance
+        points << endpoint
+        next
+      end
+      if depth >= MAX_FLATTENING_DEPTH || subdivisions >= MAX_FLATTENING_SUBDIVISIONS
+        raise RuntimeError, "Bezier flattening exceeded the depth or subdivision budget"
+      end
+
+      subdivisions += 1
+      left, right = current.split(0.5)
+      pending << [right, depth + 1]
+      pending << [left, depth + 1]
+    end
+    points
+  end
+
   # ===========================================================================
   # QuadraticBezier
   # ===========================================================================
@@ -58,19 +138,10 @@ module Bezier2D
     end
 
     # polyline adaptively subdivides the curve to within tolerance.
-    # If the midpoint of the chord (straight line) is close to the actual
-    # curve midpoint, the segment is flat enough to represent as a line.
+    # Every control point must be within tolerance of the finite chord segment;
+    # depth and total subdivisions are bounded so failure is deterministic.
     def polyline(tolerance)
-      chord_mid = p0.lerp(p2, 0.5)
-      curve_mid = eval(0.5)
-      if chord_mid.distance(curve_mid) <= tolerance
-        [p0, p2]
-      else
-        left, right = split(0.5)
-        lpts = left.polyline(tolerance)
-        rpts = right.polyline(tolerance)
-        lpts + rpts[1..]
-      end
+      Bezier2D.flatten(self, tolerance, [p0, p1, p2])
     end
 
     # bbox returns the tight axis-aligned bounding box.
@@ -162,16 +233,7 @@ module Bezier2D
 
     # polyline adaptively subdivides to within tolerance.
     def polyline(tolerance)
-      chord_mid = p0.lerp(p3, 0.5)
-      curve_mid = eval(0.5)
-      if chord_mid.distance(curve_mid) <= tolerance
-        [p0, p3]
-      else
-        left, right = split(0.5)
-        lpts = left.polyline(tolerance)
-        rpts = right.polyline(tolerance)
-        lpts + rpts[1..]
-      end
+      Bezier2D.flatten(self, tolerance, [p0, p1, p2, p3])
     end
 
     # bbox returns the tight axis-aligned bounding box.

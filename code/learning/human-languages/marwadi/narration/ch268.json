@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 268,
+  "title": "Telling and Explaining",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c07b22bf2b502559",
+  "lessons": [
+    {
+      "id": "MW-C268-kaivno",
+      "sequence": 19100,
+      "title": "कैवणो (kaivṇo) — to say",
+      "headword": "कैवणो",
+      "romanization": "kaivṇo",
+      "gloss": "to say",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e60edfe6a46de091",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for waiting, then the Marwadi for to hold on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कैवणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कैवणो — kaivṇo — \"to say\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वो साची बात कैवै है। vo sāchī bāt kaivai hai. He tells the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं एक सबद कोनी कैयो, mhaĩ ek sabad konī kaiyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कैवणो (kaivṇo) is inherited from Sanskrit kathayati, \"converses with, describes\"; CDIAL lists the Old Marwari forms kahaï and kai under it (CDIAL 2703)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaivṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaivṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaivṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaivṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vo sāchī bāt kaivai hai. — He tells the truth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vo sāchī bāt kaivai hai.* — He tells the truth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for waiting, then the Marwadi for to hold on, then say kaivṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for waiting, then the Marwadi for to hold on, then say *kaivṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कैवणो (kaivṇo) mean? (\"To say\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C268-kaivno-type",
+              "prompt": "Say the Marwadi for 'to say'.",
+              "assesses": [
+                "MW-LEX-C268-KAIVNO268-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कैवणो",
+                "kaivṇo"
+              ],
+              "feedback": {
+                "correct": "Right: कैवणो (kaivṇo) is 'to say'.",
+                "incorrect": "'to say' is कैवणो (kaivṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C268-sunavno",
+      "sequence": 19110,
+      "title": "सुणावणो (suṇāvṇo) — to recite; to tell (a story)",
+      "headword": "सुणावणो",
+      "romanization": "suṇāvṇo",
+      "gloss": "to recite; to tell (a story)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cf5cc1c04902def",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to hold on, then the Marwadi for to say."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुणावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुणावणो — suṇāvṇo — \"to recite; to tell (a story)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी गीत सुणावै है। dādī gīt suṇāvai hai. Grandmother recites a song."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं गीत सुणायो, mhaĩ gīt suṇāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुणावणो (suṇāvṇo) is built on सुणणो, to hear, as its causative: \"to make someone hear\". CDIAL lists Marwari suṇṇo, \"hears\", under Sanskrit śṛṇoti (CDIAL 12598)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṇāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṇāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṇāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṇāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī gīt suṇāvai hai. — Grandmother recites a song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī gīt suṇāvai hai.* — Grandmother recites a song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to hold on, then the Marwadi for to say, then say suṇāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to hold on, then the Marwadi for to say, then say *suṇāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुणावणो (suṇāvṇo) mean? (\"To recite; to tell (a story)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C268-sunavno-type",
+              "prompt": "Say the Marwadi for 'to recite'.",
+              "assesses": [
+                "MW-LEX-C268-KAIVNO268-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सुणावणो",
+                "suṇāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सुणावणो (suṇāvṇo) is 'to recite; to tell (a story)'.",
+                "incorrect": "'to recite' is सुणावणो (suṇāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C268-salah",
+      "sequence": 19120,
+      "title": "सलाह (salāh) — counsel; advice",
+      "headword": "सलाह",
+      "romanization": "salāh",
+      "gloss": "counsel; advice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e7b67168a28a8c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to say, then the Marwadi for to recite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सलाह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सलाह — salāh — \"counsel; advice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी चोखी सलाह देवै है। dādī chokhī salāh devai hai. Grandmother gives good advice."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सलाह (salāh) is usually traced, through Persian salāh, to Arabic ṣalāḥ, \"counsel\". It is feminine: चोखी सलाह, good advice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *salāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *salāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī chokhī salāh devai hai. — Grandmother gives good advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī chokhī salāh devai hai.* — Grandmother gives good advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to say, then the Marwadi for to recite, then say salāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to say, then the Marwadi for to recite, then say *salāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सलाह (salāh) mean? (\"Counsel; advice\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C268-salah-type",
+              "prompt": "Say the Marwadi for 'counsel'.",
+              "assesses": [
+                "MW-LEX-C268-KAIVNO268-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सलाह",
+                "salāh"
+              ],
+              "feedback": {
+                "correct": "Right: सलाह (salāh) is 'counsel; advice'.",
+                "incorrect": "'counsel' is सलाह (salāh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C268-matlab",
+      "sequence": 19130,
+      "title": "मतलब (matlab) — a meaning; what someone means",
+      "headword": "मतलब",
+      "romanization": "matlab",
+      "gloss": "a meaning; what someone means",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e221a05cf89f7150",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to recite, then the Marwadi for counsel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मतलब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मतलब — matlab — \"a meaning; what someone means\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थारो मतलब कांई है? thāro matlab kāĩ hai? What do you mean?"
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मतलब (matlab) is usually traced, through Persian matlab, to Arabic maṭlab, \"something sought, an aim\"; the sense \"what someone means\" is the one the word has in everyday use. It is masculine: थारो मतलब, what you mean."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matlab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matlab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matlab, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matlab*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāro matlab kāĩ hai? — What do you mean?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāro matlab kāĩ hai?* — What do you mean?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to recite, then the Marwadi for counsel, then say matlab again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to recite, then the Marwadi for counsel, then say *matlab* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मतलब (matlab) mean? (\"A meaning; what someone means\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C268-matlab-type",
+              "prompt": "Say the Marwadi for 'a meaning'.",
+              "assesses": [
+                "MW-LEX-C268-KAIVNO268-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मतलब",
+                "matlab"
+              ],
+              "feedback": {
+                "correct": "Right: मतलब (matlab) is 'a meaning; what someone means'.",
+                "incorrect": "'a meaning' is मतलब (matlab)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C268-sipharas",
+      "sequence": 19140,
+      "title": "सिफारस (siphāras) — a good word for someone; a recommendation",
+      "headword": "सिफारस",
+      "romanization": "siphāras",
+      "gloss": "a good word for someone; a recommendation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efc2d4ba519eb299",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for counsel, then the Marwadi for a meaning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सिफारस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिफारस — siphāras — \"a good word for someone; a recommendation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भाई म्हारी सिफारस करै है। bhāī mhārī siphāras karai hai. My brother puts in a good word for me."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिफारस (siphāras) is usually traced to Persian sifārish, \"a recommendation\". It is feminine: म्हारी सिफारस, a good word for me."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siphāras",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siphāras*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siphāras, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siphāras*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāī mhārī siphāras karai hai. — My brother puts in a good word for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāī mhārī siphāras karai hai.* — My brother puts in a good word for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for counsel, then the Marwadi for a meaning, then say siphāras again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for counsel, then the Marwadi for a meaning, then say *siphāras* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सिफारस (siphāras) mean? (\"A good word for someone; a recommendation\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C268-sipharas-type",
+              "prompt": "Say the Marwadi for 'a good word for someone'.",
+              "assesses": [
+                "MW-LEX-C268-KAIVNO268-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सिफारस",
+                "siphāras"
+              ],
+              "feedback": {
+                "correct": "Right: सिफारस (siphāras) is 'a good word for someone; a recommendation'.",
+                "incorrect": "'a good word for someone' is सिफारस (siphāras)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

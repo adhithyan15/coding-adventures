@@ -65,6 +65,23 @@ surface the emitter lowers today. JavaScript supports every SIR16 feature
 natively (arrays, `Map`, `while`/`for`, reassignable `let`), so each
 lowering is direct.
 
+A *strict* closure (SIR10's `lambda` marker — a Ruby lambda, every Twig
+closure) carries an inline check that raises SIR's `ArgumentError`
+(`__Sir.raiseError("ArgumentError", "arity mismatch: …")`, so `rescue
+ArgumentError` catches it) on a wrong argument count, where a plain JS
+function would bind `undefined`.
+
+`sanitize_ident` escapes every name the emitter binds around user code —
+`__Sir`, the closure wrapper's `_a`, `__l`, `__kw`, `__exc` — and the
+JavaScript/Node globals the runtime uses (`Map`, `Math`, `console`, …),
+which a hoisted user `function` would otherwise replace for the whole file
+(SIR10 "Generated names", issue #18466).
+A *variable* whose SIR name is also the name of one of the module's
+functions is emitted as `_$sir_esc_l<sanitize_ident(name)>` (`var_ident`),
+so it cannot shadow the function: SIR keeps the two namespaces apart, and
+Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485). Functions keep
+their names, because callers append code that calls them.
+
 | Accepted (v0 + SIR16 + E1 + O3 + MX4) | Rejected (deferred / unsupported)  |
 |---------------------------------|------------------------------------------|
 | `Closures`                      | `StringInterpolation` (`StrConcat`, SIR18) |

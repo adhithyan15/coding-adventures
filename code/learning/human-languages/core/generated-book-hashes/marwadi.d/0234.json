@@ -1,0 +1,14 @@
+{
+  "language": "marwadi",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:b9d36167d3b70c7e",
+  "lessonIds": [
+    "MW-C234-evaliyo",
+    "MW-C234-lathi",
+    "MW-C234-charno",
+    "MW-C234-hakno",
+    "MW-C234-sambhalno",
+    "MW-R234-review-229-234"
+  ],
+  "tex": "marwadi/book/chapters/ch234-the-herd.tex"
+}

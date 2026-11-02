@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:132732c31c69290b",
+  "lessonIds": [
+    "MW-C206-tijo",
+    "MW-C206-chautho",
+    "MW-C206-upar",
+    "MW-C206-par",
+    "MW-C206-algo"
+  ],
+  "tex": "marwadi/book/chapters/ch206-the-third-house-upstairs.tex"
+}

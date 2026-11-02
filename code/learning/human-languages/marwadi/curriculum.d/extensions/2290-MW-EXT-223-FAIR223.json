@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-223-FAIR223",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I will go to the fair, ride the swings and hear the drum.",
+  "prerequisites": []
+}

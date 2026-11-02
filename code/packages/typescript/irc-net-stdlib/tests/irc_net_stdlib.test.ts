@@ -10,7 +10,8 @@
  * The actual port is read from `loop.listenPort` after the server starts.
  */
 
-import { describe, it, expect, afterEach } from "vitest";
+import assert from "node:assert/strict";
+import { afterEach, describe, it } from "node:test";
 import * as net from "node:net";
 import { EventLoop, ConnId, Handler } from "../src/index.js";
 
@@ -117,7 +118,7 @@ describe("EventLoop", () => {
     const client = await connectClient(port);
 
     await waitFor(() => connectCalled);
-    expect(connectCalled).toBe(true);
+    assert.equal(connectCalled, true);
     client.destroy();
   });
 
@@ -134,7 +135,7 @@ describe("EventLoop", () => {
     const c2 = await connectClient(port);
 
     await waitFor(() => connIds.length >= 2);
-    expect(connIds[0]).not.toBe(connIds[1]);
+    assert.notEqual(connIds[0], connIds[1]);
     c1.destroy();
     c2.destroy();
   });
@@ -152,7 +153,7 @@ describe("EventLoop", () => {
     client.write("NICK alice\r\n");
 
     await waitFor(() => receivedData !== null);
-    expect(receivedData!.toString("utf-8")).toContain("NICK alice");
+    assert.match(receivedData!.toString("utf-8"), /NICK alice/);
     client.destroy();
   });
 
@@ -169,7 +170,7 @@ describe("EventLoop", () => {
     client.destroy();
 
     await waitFor(() => disconnected);
-    expect(disconnected).toBe(true);
+    assert.equal(disconnected, true);
   });
 
   it("sendTo delivers data to the correct client", async () => {
@@ -193,7 +194,7 @@ describe("EventLoop", () => {
     loop.sendTo(serverConnId!, Buffer.from(":irc.local 001 alice :Welcome\r\n"));
 
     const received = await dataPromise;
-    expect(received.toString("utf-8")).toContain("001");
+    assert.match(received.toString("utf-8"), /001/);
     client.destroy();
   });
 
@@ -208,9 +209,9 @@ describe("EventLoop", () => {
     });
 
     // Should not throw.
-    expect(() => {
+    assert.doesNotThrow(() => {
       loop.sendTo(999 as ConnId, Buffer.from("hello\r\n"));
-    }).not.toThrow();
+    });
     loop.stop();
   });
 
@@ -228,12 +229,12 @@ describe("EventLoop", () => {
     loop.stop();
 
     await runPromise;
-    expect(resolved).toBe(true);
+    assert.equal(resolved, true);
   });
 
   it("listenPort returns null before run() and after stop()", async () => {
     const loop = new EventLoop();
-    expect(loop.listenPort).toBeNull();
+    assert.equal(loop.listenPort, null);
 
     loop.run("127.0.0.1", 0, {
       onConnect() {},
@@ -242,11 +243,11 @@ describe("EventLoop", () => {
     });
 
     await waitFor(() => loop.listenPort !== null);
-    expect(loop.listenPort).toBeGreaterThan(0);
+    assert.ok(loop.listenPort! > 0);
 
     loop.stop();
     // After stop(), listenPort should be null.
-    expect(loop.listenPort).toBeNull();
+    assert.equal(loop.listenPort, null);
   });
 
   it("multiple clients can connect simultaneously", async () => {
@@ -265,7 +266,7 @@ describe("EventLoop", () => {
     ]);
 
     await waitFor(() => connectCount.value >= 3);
-    expect(connectCount.value).toBe(3);
+    assert.equal(connectCount.value, 3);
 
     for (const c of clients) c.destroy();
   });

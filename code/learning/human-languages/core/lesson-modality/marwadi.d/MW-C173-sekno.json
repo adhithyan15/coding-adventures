@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C173-sekno",
+    "language": "marwadi",
+    "chapter": 173,
+    "sequence": 11400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad499a8cba80d714"
+  },
+  "findings": []
+}

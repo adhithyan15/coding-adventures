@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-233-GEAR233",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a camel's saddle, rein, trappings and bells.",
+  "prerequisites": []
+}

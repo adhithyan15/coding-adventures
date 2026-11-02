@@ -1,0 +1,11 @@
+{
+  "id": "MW-C240-bali",
+  "pathSegment": "MW-PATH-240-HARV240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-240-HARV240",
+      "order": 3
+    }
+  ]
+}

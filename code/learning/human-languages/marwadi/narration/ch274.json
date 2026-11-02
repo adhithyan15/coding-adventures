@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 274,
+  "title": "Help in Trouble",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5d1d0927b8bf5842",
+  "lessons": [
+    {
+      "id": "MW-C274-takliph",
+      "sequence": 19410,
+      "title": "तकलीफ (taklīph) — trouble",
+      "headword": "तकलीफ",
+      "romanization": "taklīph",
+      "gloss": "trouble",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d6d43f1f9e0023d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to keep secret, then the Marwadi for a promise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तकलीफ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तकलीफ — taklīph — \"trouble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कोई तकलीफ है? koī taklīph hai? Is anything the matter?"
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तकलीफ (taklīph) is usually traced, through Persian taklīf, to Arabic taklīf, \"a burden laid on someone\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taklīph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taklīph*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taklīph, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taklīph*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koī taklīph hai? — Is anything the matter?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koī taklīph hai?* — Is anything the matter?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to keep secret, then the Marwadi for a promise, then say taklīph again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to keep secret, then the Marwadi for a promise, then say *taklīph* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तकलीफ (taklīph) mean? (\"Trouble\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C274-takliph-type",
+              "prompt": "Say the Marwadi for 'trouble'.",
+              "assesses": [
+                "MW-LEX-C274-SAHARO274-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तकलीफ",
+                "taklīph"
+              ],
+              "feedback": {
+                "correct": "Right: तकलीफ (taklīph) is 'trouble'.",
+                "incorrect": "'trouble' is तकलीफ (taklīph)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C274-pukar",
+      "sequence": 19420,
+      "title": "पुकार (pukār) — a cry for help",
+      "headword": "पुकार",
+      "romanization": "pukār",
+      "gloss": "a cry for help",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20bcb70750e84c60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a promise, then the Marwadi for trouble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुकार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुकार — pukār — \"a cry for help\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं पुकार सुणूं हूं। hū̃ pukār suṇū̃ hū̃. I hear a cry for help."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुकार (pukār) is inherited from an imitative pukkār, \"shout\"; CDIAL lists Old Marwari pukāra, \"complaint\" (CDIAL 8246)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ pukār suṇū̃ hū̃. — I hear a cry for help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ pukār suṇū̃ hū̃.* — I hear a cry for help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a promise, then the Marwadi for trouble, then say pukār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a promise, then the Marwadi for trouble, then say *pukār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुकार (pukār) mean? (\"A cry for help\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C274-pukar-type",
+              "prompt": "Say the Marwadi for 'a cry for help'.",
+              "assesses": [
+                "MW-LEX-C274-SAHARO274-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पुकार",
+                "pukār"
+              ],
+              "feedback": {
+                "correct": "Right: पुकार (pukār) is 'a cry for help'.",
+                "incorrect": "'a cry for help' is पुकार (pukār)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C274-saharo",
+      "sequence": 19430,
+      "title": "सहारो (sahāro) — support",
+      "headword": "सहारो",
+      "romanization": "sahāro",
+      "gloss": "support",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fed8d9540907314",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for trouble, then the Marwadi for a cry for help."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सहारो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहारो — sahāro — \"support\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां म्हारो सहारो है। mā̃ mhāro sahāro hai. Mother is my support."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहारो (sahāro) is inherited from Sanskrit sahakāra, \"assistance\"; CDIAL gives no Marwari form in this entry, but lists Hindi sahārā, \"help\" (CDIAL 13299)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ mhāro sahāro hai. — Mother is my support.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ mhāro sahāro hai.* — Mother is my support.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for trouble, then the Marwadi for a cry for help, then say sahāro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for trouble, then the Marwadi for a cry for help, then say *sahāro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सहारो (sahāro) mean? (\"Support\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C274-saharo-type",
+              "prompt": "Say the Marwadi for 'support'.",
+              "assesses": [
+                "MW-LEX-C274-SAHARO274-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सहारो",
+                "sahāro"
+              ],
+              "feedback": {
+                "correct": "Right: सहारो (sahāro) is 'support'.",
+                "incorrect": "'support' is सहारो (sahāro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C274-daya",
+      "sequence": 19440,
+      "title": "दया (dayā) — mercy",
+      "headword": "दया",
+      "romanization": "dayā",
+      "gloss": "mercy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdb0468e2bb89e33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a cry for help, then the Marwadi for support."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दया",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दया — dayā — \"mercy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दया करो सा। dayā karo sā. Have mercy, please."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दया (dayā) is a tatsama, taken from Sanskrit dayā, \"sympathy, compassion\" (Monier-Williams). दयाळु, kind, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dayā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dayā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dayā karo sā. — Have mercy, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dayā karo sā.* — Have mercy, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a cry for help, then the Marwadi for support, then say dayā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a cry for help, then the Marwadi for support, then say *dayā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दया (dayā) mean? (\"Mercy\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C274-daya-type",
+              "prompt": "Say the Marwadi for 'mercy'.",
+              "assesses": [
+                "MW-LEX-C274-SAHARO274-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दया",
+                "dayā"
+              ],
+              "feedback": {
+                "correct": "Right: दया (dayā) is 'mercy'.",
+                "incorrect": "'mercy' is दया (dayā)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C274-bhikh",
+      "sequence": 19450,
+      "title": "भीख (bhīkh) — alms",
+      "headword": "भीख",
+      "romanization": "bhīkh",
+      "gloss": "alms",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2c6318bca355a05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for support, then the Marwadi for mercy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भीख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीख — bhīkh — \"alms\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वो भीख मांगै है। vo bhīkh māṅgai hai. He begs for alms."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीख (bhīkh) is inherited from Sanskrit bhikṣā, \"alms\"; CDIAL lists Old Marwari bhīkha, \"alms\" (CDIAL 9485)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīkh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīkh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīkh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīkh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vo bhīkh māṅgai hai. — He begs for alms.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vo bhīkh māṅgai hai.* — He begs for alms.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for support, then the Marwadi for mercy, then say bhīkh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for support, then the Marwadi for mercy, then say *bhīkh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भीख (bhīkh) mean? (\"Alms\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C274-bhikh-type",
+              "prompt": "Say the Marwadi for 'alms'.",
+              "assesses": [
+                "MW-LEX-C274-SAHARO274-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भीख",
+                "bhīkh"
+              ],
+              "feedback": {
+                "correct": "Right: भीख (bhīkh) is 'alms'.",
+                "incorrect": "'alms' is भीख (bhīkh)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

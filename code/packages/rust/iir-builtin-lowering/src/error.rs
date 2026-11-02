@@ -56,6 +56,12 @@ pub enum BuiltinLoweringError {
         builtin_name: String,
         function_name: String,
     },
+
+    /// The module already defines a function under the name of a helper a
+    /// lowering pass generates (`__dyn_list_length`, `__dyn_call_closure`, …)
+    /// and that function is not the helper. See
+    /// [`crate::helper_names::HelperNameError`].
+    HelperName(crate::helper_names::HelperNameError),
 }
 
 impl std::fmt::Display for BuiltinLoweringError {
@@ -79,6 +85,7 @@ impl std::fmt::Display for BuiltinLoweringError {
                 "builtin {builtin_name:?} in function {function_name:?} \
                  has type_hint=\"any\" — run iir-type-checker before iir-builtin-lowering"
             ),
+            BuiltinLoweringError::HelperName(e) => write!(f, "{e}"),
         }
     }
 }

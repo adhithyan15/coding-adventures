@@ -9,3 +9,5 @@
   retained intermediate certificate.
 - Add non-copyable success evidence and payload-free mismatch, role, and
   validity failure categories.
+- Add a non-copyable follow-up that retains optional critical NameConstraints
+  decoded under a caller-owned budget beside the exact intermediate policy.

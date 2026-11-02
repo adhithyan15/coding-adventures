@@ -1,0 +1,11 @@
+{
+  "id": "MW-C249-gulal",
+  "pathSegment": "MW-PATH-249-HOLI249",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-249-HOLI249",
+      "order": 1
+    }
+  ]
+}

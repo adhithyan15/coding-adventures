@@ -14,6 +14,32 @@
   - New `conformance/flutter/journal_scroll_test.dart`, the same check with a
     drag of the pane's `Scrollable`. Journal has no Flutter desktop lane yet,
     so it is run locally, and the file says how.
+- **Rows name their Open button (`open-label`).** Every row list
+  (`timeline-rows`, search hits and `on-this-day-rows`) gains a seventh
+  field, `row[6] = "Open {title}"`. The row type is `[String; ROW_FIELDS]`,
+  with `ROW_FIELDS = 7`. It is needed because `journal-app` now draws timeline
+  rows as `mosaic-pkg-card` Cards, each with an *Open* button beside it, and
+  the button's accessible name must name the entry. A layout expression
+  cannot join strings, so the app sends the whole name. The name contains
+  the visible word "Open" (WCAG 2.5.3). Rows are append-only, so
+  `RecordList`, which reads `row[0]`–`row[5]`, is unaffected. A new test
+  checks that all three lists carry the field, including an untitled entry's
+  fallback title.
+- **The native UI tests open an entry by its Open button.** Compose
+  desktop, Android and iPadOS now match `timeline-entry-open` (prefix) and
+  the accessible name `Open {title}` (Compose `contentDescription`, the
+  XCUITest `label`), where they used to match `record-list-title` and its
+  text. A Card row is about 220px tall in the declared 1100×760 window, so
+  the second entry starts below the fold (misfit M7). Compose's
+  `JournalUiTest` therefore scrolls the pane before it asserts each row or
+  the empty state: back to the top, then down with the `ScrollBy` semantics
+  action, at most 40 steps of 200px, until the node is displayed. It still
+  requires `assertIsDisplayed`, not `assertExists`, and never calls
+  `performScrollTo()` (EM-11). `JournalScrollUiTest` and
+  `journal_scroll_test.dart` find rows by the button's accessible name
+  (`contentDescription`, and the Flutter `Semantics` label), since every
+  button's text is now "Open". The Android test reaches rows through
+  semantics and XCUITest's taps scroll on their own, so neither scrolls.
 
 - **iPadOS UI test.** New `conformance/swiftui-ios/JournalUiTests.swift`, an
   XCUITest that CI compiles into the iOS project (`--ios-ui-test`) and runs on

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:d9986c90b3bee4b7",
+  "lessonIds": [
+    "MW-C286-imtihan",
+    "MW-C286-hisab",
+    "MW-C286-natijo",
+    "MW-C286-darjo",
+    "MW-C286-akno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch286.txt",
+  "json": "marwadi/narration/ch286.json",
+  "textHash": "fnv1a64:8b0276d4bae55bd4",
+  "jsonHash": "fnv1a64:534bfd38f716e650",
+  "findings": []
+}

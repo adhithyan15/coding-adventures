@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C203-atro",
+    "language": "marwadi",
+    "chapter": 203,
+    "sequence": 13610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bed2ab3eccb6199b"
+  },
+  "findings": []
+}

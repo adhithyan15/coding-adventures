@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:b73354bbc58c8c0f",
+  "lessonIds": [
+    "MW-C168-ugno",
+    "MW-C168-dhup",
+    "MW-C168-chhav",
+    "MW-C168-tulsi",
+    "MW-C168-sichno"
+  ],
+  "tex": "marwadi/book/chapters/ch168-sun-and-shade.tex"
+}

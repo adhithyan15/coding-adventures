@@ -1,0 +1,11 @@
+{
+  "id": "MW-C249-divali",
+  "pathSegment": "MW-PATH-249-HOLI249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-249-HOLI249",
+      "order": 3
+    }
+  ]
+}

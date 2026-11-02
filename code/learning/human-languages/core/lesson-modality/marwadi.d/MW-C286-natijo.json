@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C286-natijo",
+    "language": "marwadi",
+    "chapter": 286,
+    "sequence": 20050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd3a62b7770c75a5"
+  },
+  "findings": []
+}

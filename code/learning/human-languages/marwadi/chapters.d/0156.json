@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Mine, In and From",
+  "label": "ch:mw-a2-mine-in-and-from",
+  "canDo": "I can say whose a thing is, where it is, and where someone comes from.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-R156-mine-in-from",
+    "kind": "production",
+    "summary": "Complete MW-R156-mine-in-from: make my and your agree, put things in and on places, and say where someone comes from.",
+    "assesses": [
+      "MW-GRAMMAR-C156-POSS-AGREE-01",
+      "MW-GRAMMAR-C156-POSTP-LOC-01",
+      "MW-GRAMMAR-C156-POSTP-SU-01"
+    ]
+  }
+}

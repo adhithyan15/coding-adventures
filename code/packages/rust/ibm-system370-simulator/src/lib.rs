@@ -7,6 +7,7 @@
 
 use ibm_system360_simulator as system360;
 use std::error::Error;
+use std::fmt::Write as _;
 use std::fmt::{self, Display, Formatter};
 
 /// Installed main-storage size for this bounded model.
@@ -47,27 +48,68 @@ pub struct ExecutionResult {
     pub traces: Vec<StepTrace>,
 }
 
+/// Fallible allocation boundaries used by an embedding gate oracle.
+#[doc(hidden)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum GateAllocationSite {
+    RawInstruction,
+    Mnemonic,
+    Description,
+}
+
 /// Typed checked failures at the System/370 boundary.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum System370Error {
     EmptyProgram,
-    MisalignedProgram { origin: u32 },
-    ProgramOutOfRange { origin: u32, bytes: usize },
-    FetchOutsideProgram { pc: u32 },
-    TruncatedInstruction { pc: u32, needed: usize },
-    UnknownOpcode { opcode: u8, pc: u32 },
-    UnsupportedSupervisorCall { number: u8 },
-    MisalignedAccess { address: u32, alignment: usize },
-    MemoryOutOfRange { address: u32, bytes: usize },
-    InvalidRegister { bank: &'static str, index: usize },
-    InvalidState { reason: &'static str },
-    Specification { reason: &'static str },
+    MisalignedProgram {
+        origin: u32,
+    },
+    ProgramOutOfRange {
+        origin: u32,
+        bytes: usize,
+    },
+    FetchOutsideProgram {
+        pc: u32,
+    },
+    TruncatedInstruction {
+        pc: u32,
+        needed: usize,
+    },
+    UnknownOpcode {
+        opcode: u8,
+        pc: u32,
+    },
+    UnsupportedSupervisorCall {
+        number: u8,
+    },
+    MisalignedAccess {
+        address: u32,
+        alignment: usize,
+    },
+    MemoryOutOfRange {
+        address: u32,
+        bytes: usize,
+    },
+    InvalidRegister {
+        bank: &'static str,
+        index: usize,
+    },
+    InvalidState {
+        reason: &'static str,
+    },
+    Specification {
+        reason: &'static str,
+    },
     FixedPointOverflow,
     FixedPointDivide,
     FloatingExponent,
     FloatingDivide,
+    /// A checked gate-level wrapper could not reserve required owned storage.
+    AllocationFailed,
     Halted,
-    MaxStepsExceeded { max_steps: usize },
+    MaxStepsExceeded {
+        max_steps: usize,
+    },
 }
 
 impl Display for System370Error {
@@ -114,6 +156,7 @@ impl Display for System370Error {
             Self::FixedPointDivide => write!(f, "System/370 fixed-point divide exception"),
             Self::FloatingExponent => write!(f, "System/370 floating-point exponent exception"),
             Self::FloatingDivide => write!(f, "System/370 floating-point divide exception"),
+            Self::AllocationFailed => write!(f, "System/370 allocation failed"),
             Self::Halted => write!(f, "System/370 CPU is halted"),
             Self::MaxStepsExceeded { max_steps } => {
                 write!(f, "execution exceeded {max_steps} steps")
@@ -168,6 +211,32 @@ impl System370Simulator {
         validate_state(&state)?;
         self.state = state;
         Ok(())
+    }
+
+    /// Construct an oracle by moving an already-owned state, without allocating.
+    #[doc(hidden)]
+    pub fn from_state_for_gate(state: System370State) -> Result<Self, System370Error> {
+        validate_state(&state)?;
+        Ok(Self { state })
+    }
+
+    /// Execute one extension transition without an infallible rollback clone.
+    #[doc(hidden)]
+    pub fn try_step_for_gate(
+        mut self,
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(StepTrace, System370State), System370Error> {
+        if self.state.halted {
+            return Err(System370Error::Halted);
+        }
+        let opcode = self.fetch_opcode()?;
+        if !matches!(opcode, 0x0e | 0x0f | 0xbd..=0xbf) {
+            return Err(System370Error::Specification {
+                reason: "gate extension oracle received an inherited opcode",
+            });
+        }
+        let trace = self.step_inner_checked(checkpoint)?;
+        Ok((trace, self.state))
     }
 
     /// Atomically reset and install a raw program image.
@@ -269,7 +338,7 @@ impl System370Simulator {
             return Err(System370Error::Halted);
         }
         let before = self.state.clone();
-        match self.step_inner() {
+        match self.step_inner_checked(&mut |_| Ok(())) {
             Ok(trace) => Ok(trace),
             Err(error) => {
                 self.state = before;
@@ -316,21 +385,24 @@ impl System370Simulator {
         self.run(max_steps)
     }
 
-    fn step_inner(&mut self) -> Result<StepTrace, System370Error> {
+    fn step_inner_checked(
+        &mut self,
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<StepTrace, System370Error> {
         let opcode = self.fetch_opcode()?;
         if !matches!(opcode, 0x0e | 0x0f | 0xbd..=0xbf) {
             return self.step_inherited();
         }
         let width = if opcode <= 0x0f { 2 } else { 4 };
-        let raw = self.fetch_exact(width)?;
+        let raw = self.fetch_exact_checked(width, checkpoint)?;
         let pc_before = self.state.pc;
         self.state.pc = self.state.pc.wrapping_add(width as u32) & ADDRESS_MASK;
         let (mnemonic, description) = match opcode {
-            0x0e => self.exec_mvcl(&raw)?,
-            0x0f => self.exec_clcl(&raw)?,
-            0xbd => self.exec_clm(&raw)?,
-            0xbe => self.exec_stcm(&raw)?,
-            0xbf => self.exec_icm(&raw)?,
+            0x0e => self.exec_mvcl(&raw, checkpoint)?,
+            0x0f => self.exec_clcl(&raw, checkpoint)?,
+            0xbd => self.exec_clm(&raw, checkpoint)?,
+            0xbe => self.exec_stcm(&raw, checkpoint)?,
+            0xbf => self.exec_icm(&raw, checkpoint)?,
             _ => unreachable!(),
         };
         Ok(StepTrace {
@@ -338,7 +410,11 @@ impl System370Simulator {
             pc_after: self.state.pc,
             raw,
             width: width as u8,
-            mnemonic: mnemonic.to_owned(),
+            mnemonic: checked_text(
+                format_args!("{mnemonic}"),
+                GateAllocationSite::Mnemonic,
+                checkpoint,
+            )?,
             description,
         })
     }
@@ -360,7 +436,11 @@ impl System370Simulator {
         })
     }
 
-    fn exec_mvcl(&mut self, raw: &[u8]) -> Result<(&'static str, String), System370Error> {
+    fn exec_mvcl(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System370Error> {
         let r1 = usize::from(raw[1] >> 4);
         let r2 = usize::from(raw[1] & 0x0f);
         self.long_pairs(r1, r2)?;
@@ -377,7 +457,14 @@ impl System370Simulator {
             self.state.gprs[r1] = destination;
             self.state.gprs[r2] = source;
             self.state.condition_code = 3;
-            return Ok(("MVCL", format!("MVCL R{r1},R{r2} (destructive overlap)")));
+            return Ok((
+                "MVCL",
+                checked_text(
+                    format_args!("MVCL R{r1},R{r2} (destructive overlap)"),
+                    GateAllocationSite::Description,
+                    checkpoint,
+                )?,
+            ));
         }
         if destination_len != 0 {
             Self::range(destination, destination_len as usize)?;
@@ -398,10 +485,21 @@ impl System370Simulator {
         self.state.gprs[r2] = source.wrapping_add(copied) & ADDRESS_MASK;
         self.state.gprs[r2 + 1] = (self.state.gprs[r2 + 1] & 0xff00_0000) | (source_len - copied);
         self.state.condition_code = ordering_code(destination_len.cmp(&source_len));
-        Ok(("MVCL", format!("MVCL R{r1},R{r2}")))
+        Ok((
+            "MVCL",
+            checked_text(
+                format_args!("MVCL R{r1},R{r2}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
-    fn exec_clcl(&mut self, raw: &[u8]) -> Result<(&'static str, String), System370Error> {
+    fn exec_clcl(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System370Error> {
         let r1 = usize::from(raw[1] >> 4);
         let r2 = usize::from(raw[1] & 0x0f);
         self.long_pairs(r1, r2)?;
@@ -440,10 +538,21 @@ impl System370Simulator {
         self.state.gprs[r2] = second_address;
         self.state.gprs[r2 + 1] = (self.state.gprs[r2 + 1] & 0xff00_0000) | second_len;
         self.state.condition_code = condition_code;
-        Ok(("CLCL", format!("CLCL R{r1},R{r2}")))
+        Ok((
+            "CLCL",
+            checked_text(
+                format_args!("CLCL R{r1},R{r2}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
-    fn exec_clm(&mut self, raw: &[u8]) -> Result<(&'static str, String), System370Error> {
+    fn exec_clm(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System370Error> {
         let register = usize::from(raw[1] >> 4);
         let mask = raw[1] & 0x0f;
         let address = self.effective_address(raw);
@@ -465,35 +574,69 @@ impl System370Simulator {
             }
         }
         self.state.condition_code = condition_code;
-        Ok(("CLM", format!("CLM R{register},{mask:#x},{address:#08x}")))
+        Ok((
+            "CLM",
+            checked_text(
+                format_args!("CLM R{register},{mask:#x},{address:#08x}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
-    fn exec_stcm(&mut self, raw: &[u8]) -> Result<(&'static str, String), System370Error> {
+    fn exec_stcm(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System370Error> {
         let register = usize::from(raw[1] >> 4);
         let mask = raw[1] & 0x0f;
         let address = self.effective_address(raw);
-        let bytes: Vec<_> = (0..4)
-            .filter(|byte_index| mask & (8 >> byte_index) != 0)
-            .map(|byte_index| (self.state.gprs[register] >> (24 - byte_index * 8)) as u8)
-            .collect();
-        if !bytes.is_empty() {
-            let range = Self::range(address, bytes.len())?;
-            self.state.memory[range].copy_from_slice(&bytes);
+        let mut bytes = [0; 4];
+        let mut count = 0;
+        for byte_index in 0..4 {
+            if mask & (8 >> byte_index) != 0 {
+                bytes[count] = (self.state.gprs[register] >> (24 - byte_index * 8)) as u8;
+                count += 1;
+            }
         }
-        Ok(("STCM", format!("STCM R{register},{mask:#x},{address:#08x}")))
+        if count != 0 {
+            let range = Self::range(address, count)?;
+            self.state.memory[range].copy_from_slice(&bytes[..count]);
+        }
+        Ok((
+            "STCM",
+            checked_text(
+                format_args!("STCM R{register},{mask:#x},{address:#08x}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
-    fn exec_icm(&mut self, raw: &[u8]) -> Result<(&'static str, String), System370Error> {
+    fn exec_icm(
+        &mut self,
+        raw: &[u8],
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<(&'static str, String), System370Error> {
         let register = usize::from(raw[1] >> 4);
         let mask = raw[1] & 0x0f;
         let address = self.effective_address(raw);
         if mask == 0 {
             Self::range(address, 1)?;
             self.state.condition_code = 0;
-            return Ok(("ICM", format!("ICM R{register},0,{address:#08x}")));
+            return Ok((
+                "ICM",
+                checked_text(
+                    format_args!("ICM R{register},0,{address:#08x}"),
+                    GateAllocationSite::Description,
+                    checkpoint,
+                )?,
+            ));
         }
         let count = mask.count_ones() as usize;
-        let bytes = self.state.memory[Self::range(address, count)?].to_vec();
+        let mut bytes = [0; 4];
+        bytes[..count].copy_from_slice(&self.state.memory[Self::range(address, count)?]);
         let mut value = self.state.gprs[register];
         let mut source = 0;
         for byte_index in 0..4 {
@@ -505,14 +648,21 @@ impl System370Simulator {
             source += 1;
         }
         self.state.gprs[register] = value;
-        self.state.condition_code = if bytes.iter().all(|byte| *byte == 0) {
+        self.state.condition_code = if bytes[..count].iter().all(|byte| *byte == 0) {
             0
         } else if bytes[0] & 0x80 != 0 {
             1
         } else {
             2
         };
-        Ok(("ICM", format!("ICM R{register},{mask:#x},{address:#08x}")))
+        Ok((
+            "ICM",
+            checked_text(
+                format_args!("ICM R{register},{mask:#x},{address:#08x}"),
+                GateAllocationSite::Description,
+                checkpoint,
+            )?,
+        ))
     }
 
     fn long_pairs(&self, r1: usize, r2: usize) -> Result<(), System370Error> {
@@ -547,7 +697,11 @@ impl System370Simulator {
         Ok(self.state.memory[start])
     }
 
-    fn fetch_exact(&self, width: usize) -> Result<Vec<u8>, System370Error> {
+    fn fetch_exact_checked(
+        &self,
+        width: usize,
+        checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+    ) -> Result<Vec<u8>, System370Error> {
         let start = self.state.pc as usize;
         let high = self.state.loaded_origin as usize + self.state.loaded_len;
         if start + width > high {
@@ -556,7 +710,13 @@ impl System370Simulator {
                 needed: width,
             });
         }
-        Ok(self.state.memory[start..start + width].to_vec())
+        checkpoint(GateAllocationSite::RawInstruction)
+            .map_err(|()| System370Error::AllocationFailed)?;
+        let mut raw = Vec::new();
+        raw.try_reserve_exact(width)
+            .map_err(|_| System370Error::AllocationFailed)?;
+        raw.extend_from_slice(&self.state.memory[start..start + width]);
+        Ok(raw)
     }
 
     fn range(address: u32, bytes: usize) -> Result<std::ops::Range<usize>, System370Error> {
@@ -568,6 +728,20 @@ impl System370Simulator {
         }
         Ok(address as usize..end)
     }
+}
+
+fn checked_text(
+    arguments: fmt::Arguments<'_>,
+    site: GateAllocationSite,
+    checkpoint: &mut dyn FnMut(GateAllocationSite) -> Result<(), ()>,
+) -> Result<String, System370Error> {
+    checkpoint(site).map_err(|()| System370Error::AllocationFailed)?;
+    let mut text = String::new();
+    text.try_reserve_exact(64)
+        .map_err(|_| System370Error::AllocationFailed)?;
+    text.write_fmt(arguments)
+        .expect("writing to reserved String cannot fail");
+    Ok(text)
 }
 
 fn validate_state(state: &System370State) -> Result<(), System370Error> {
@@ -672,6 +846,7 @@ fn map_system360_error(error: system360::System360Error) -> System370Error {
         system360::System360Error::FixedPointDivide => System370Error::FixedPointDivide,
         system360::System360Error::FloatingExponent => System370Error::FloatingExponent,
         system360::System360Error::FloatingDivide => System370Error::FloatingDivide,
+        system360::System360Error::AllocationFailed => System370Error::AllocationFailed,
         system360::System360Error::Halted => System370Error::Halted,
         system360::System360Error::MaxStepsExceeded { max_steps } => {
             System370Error::MaxStepsExceeded { max_steps }
@@ -718,6 +893,7 @@ mod tests {
             System370Error::FixedPointDivide,
             System370Error::FloatingExponent,
             System370Error::FloatingDivide,
+            System370Error::AllocationFailed,
             System370Error::Halted,
             System370Error::MaxStepsExceeded { max_steps: 1 },
         ];

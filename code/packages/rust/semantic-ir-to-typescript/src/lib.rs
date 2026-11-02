@@ -611,12 +611,17 @@ mod tests {
         // direction-aware so a negative step would still terminate.
         assert!(a.source.contains("const __sir_stop_0: number = (3) as number;"), "got:\n{}", a.source);
         assert!(a.source.contains("const __sir_step_0: number = (1) as number;"), "got:\n{}", a.source);
+        // The loop counts with a hidden counter and binds `i` from it each
+        // iteration, so the body cannot change the iteration count (#18482).
+        assert!(a.source.contains("let __sir_i_0: number = (0) as number;"), "got:\n{}", a.source);
         assert!(
-            a.source.contains("__sir_step_0 >= 0 ? (i as number) < __sir_stop_0 : (i as number) > __sir_stop_0"),
+            a.source.contains("__sir_step_0 >= 0 ? __sir_i_0 < __sir_stop_0 : __sir_i_0 > __sir_stop_0"),
             "got:\n{}",
             a.source
         );
-        assert!(a.source.contains("i = (i as number) + __sir_step_0;"), "got:\n{}", a.source);
+        assert!(a.source.contains("let i: __Sir.Val = __sir_i_0;"), "got:\n{}", a.source);
+        assert!(a.source.contains("__sir_i_0 = __sir_i_0 + __sir_step_0;"), "got:\n{}", a.source);
+        assert!(!a.source.contains("i = (i as number) +"), "got:\n{}", a.source);
     }
 
     #[test]

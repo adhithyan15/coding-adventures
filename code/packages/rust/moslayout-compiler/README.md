@@ -76,7 +76,12 @@ println!("{}", out.part_map_json);
 `compile(source, interface_json)`:
 - `source` — raw `.mll` source text
 - `interface_json` — optional descriptor JSON from `mosmodel-compiler`; when
-  supplied, all slot/emit references are validated against the declared interface.
+  supplied, all slot/emit references are validated against the declared interface,
+  and every bare name in a name-reference position (`Text ( content: hello )`)
+  must be an enclosing `For`'s `as:`/`index:` or a declared slot, else
+  `ErrorKind::UnboundName` (UI29 §3.4). Literal positions (`true`/`false`,
+  `KEYWORD_LITERAL_PROPS`), `For`/`If`/`Else` props and component call sites
+  are exempt. Without an interface the check is skipped.
 
 ## Running tests
 

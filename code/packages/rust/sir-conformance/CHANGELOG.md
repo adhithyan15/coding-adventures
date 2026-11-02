@@ -2,6 +2,114 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- **Temp files are unique per call (#18485).**  `temp_path` named a run's
+  source and binary after the program, the target and the process id.
+  Tests in one test binary share the process id and run on parallel
+  threads, so two tests compiling the same program for the same target
+  overwrote or deleted each other's files (`--test arithmetic` failed this
+  way once).  The name now ends in a process-wide atomic counter.  Unit
+  tests `temp_paths_are_unique_within_one_process` and
+  `temp_paths_are_unique_across_threads`.
+- **Temp files are removed on every path.**  `run_python` returned
+  `Skipped` when the `sir-runtime-*` packages were missing *after* writing
+  its `.py`, and left it behind.  Every `run_*` function now holds its
+  source and binary in a `TempFile` guard that deletes them on drop, and
+  `run_python` looks for the runtimes before writing anything.  Unit test
+  `a_temp_file_guard_removes_its_file_on_every_path`.
+
+### Added
+
+- **`tests/local_shadows_function.rs` (#18485).**  A variable named like a
+  function must not shadow it.  Five Ruby programs (a `main` local, a method
+  local, a parameter, a `rescue` binding, and a recursive method whose
+  parameter spells its own name) are checked against real `ruby` and run
+  on all six backends; four hand-built SIR modules cover what the Ruby
+  frontend cannot spell yet (a `for` range variable, a `for each`
+  variable, a closure capture and a keyword parameter).  Python,
+  JavaScript, Go and Rust failed every one; C and Ruby already named their
+  functions `sir_fn_<name>`.
+- **Two #18771 programs in `tests/python_statement_forms.rs`**: a
+  parameter copy and a hoisted method that the frontend used to give the
+  same name, in both orders, checked against CPython.  The new
+  `KNOWN_GAPS` table marks their Ruby cells, which fail for an unrelated
+  reason (the Ruby backend cannot define a class named `__param_a`, which
+  is not a Ruby constant); a gap cell that starts passing fails the test so
+  its entry is removed.
+
+## [0.29.0] - Python statement forms (#18482)
+
+Adds `tests/python_statement_forms.rs`: 33 Python programs covering the
+statement forms `python-to-semantic-ir` 0.13.0 fixed, each run on Python,
+JavaScript, Go, Rust, C and Ruby and compared with CPython's output:
+
+- augmented assignment (`+= -= *= /=`, on ints, floats and strings, on a
+  parameter in a loop, on `self.n` in a method);
+- annotated assignment, with and without a value;
+- chained assignment, including a shared list and a subscript target;
+- a parameter assigned in a loop or an `if`, and then captured;
+- a `for` over an already-bound variable, including a zero-trip loop;
+- falling off the end of a function, a call or `print` just before a tail
+  `return`, and one-line bodies;
+- a user `def main`, called and used as a value, and a variable spelled
+  like its escaped name;
+- `pass` everywhere, an expression statement last in a loop body, a loop
+  body that assigns its own loop variable, and an inner loop that rebinds
+  the outer loop's variable;
+- `self.n += self.bump()` where `bump` changes `self.n`, which tells the
+  evaluation order apart (CPython: 6);
+- two code-running arguments of one method call (`c.pair(c.get(),
+  c.bump())`, CPython 1005, #18768), a constructor and a method call with
+  a compound argument, an indirect call whose callee and argument both
+  print, and a local spelled `__lambda_0`.
+
+A backend that *refuses* one of these programs ("does not yet accept")
+counts as a failure here, not a skip: after the first ordering fix the C
+backend refused the compound-argument method call, and the skip hid it.
+
+`programs_lower_and_validate` checks every program passes the validator.
+`programs_print_cpythons_output_on_every_backend` first checks each
+expectation against a real `python3` (when present), then runs every
+`(program, backend)` cell and reports all the cells that disagree at once.
+
+Against `python-to-semantic-ir` 0.12.0, every program fails on at least
+four of the six backends, by printing the wrong value or not lowering.
+The six programs added after the security review fail against the first
+commit of this change (and its backends): `pass` was refused; the C
+backend printed 105 for the evaluation-order program; JavaScript printed
+`10` once for the loop-variable program, Rust refused it, and C and Ruby
+printed nothing for any loop whose last statement was a `print`.
+(Rebinding a parameter or loop variable happened to work on the Python
+and Ruby backends, whose emitted code has no block scope.)  `while` loops carry a guard counter so
+the old endless-loop lowering fails instead of hanging.
+
+## [0.28.0] - Python closures that name themselves or each other (#18468)
+
+Adds `tests/python_nested_closures.rs`: six Python programs whose nested
+`def`s name themselves (as a value, as a recursive call), call a sibling
+defined later (mutual recursion), call an "uncle" closure, or read a `main`
+local from a top-level `def`.  Each program is checked two ways:
+
+- `closures_thread_exactly_their_targets_captures`: after lowering, every
+  `MakeClosure` threads exactly as many captures as its target declares,
+  and no `DirectCall` targets a capturing function.  The validator does
+  not enforce the first rule yet.
+- `programs_print_cpythons_output_on_every_backend`: the program prints
+  CPython's output on Python, JavaScript, Go, Rust, C and Ruby.
+
+A third test, `large_capture_free_groups_run_on_every_backend`, generates
+two programs and runs them on every backend: a 300-def call chain, and a
+dispatcher calling 300 helpers defined below it.  These pin down that the
+capture planner sets no limit on how many capture-free functions name
+each other.
+
+Before `python-to-semantic-ir` 0.12.0 and `semantic-ir-to-c` 0.42.2, every
+one of these programs failed on every backend.  (The JavaScript backend
+ran some of them, but printed `NaN` or `nil`.)
+
 ## [0.27.0] - SIR21 T3b-2 Slice 5a: source-level regression for Python/JS division
 
 Adds `tests/division.rs::python_division_always_true_divides_from_source_on_every_backend`

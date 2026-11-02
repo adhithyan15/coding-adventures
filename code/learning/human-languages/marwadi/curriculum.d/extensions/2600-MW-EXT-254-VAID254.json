@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-254-VAID254",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the healer gave me and what I need.",
+  "prerequisites": []
+}

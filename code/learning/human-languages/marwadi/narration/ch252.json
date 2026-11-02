@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 252,
+  "title": "Bones and Breath",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6b4890b29e7a54ba",
+  "lessons": [
+    {
+      "id": "MW-C252-had",
+      "sequence": 17560,
+      "title": "हाड (hāḍ) — a bone",
+      "headword": "हाड",
+      "romanization": "hāḍ",
+      "gloss": "a bone",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:502b30ead4f11b45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an elbow, then the Marwadi for the waist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हाड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाड — hāḍ — \"a bone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो हाड कोनी टूट्यो। mhāro hāḍ konī ṭūṭyo. My bone did not break."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाड (hāḍ) is inherited from Sanskrit haḍḍa, \"bone\"; CDIAL lists Old Marwari hāḍī under it (CDIAL 13952)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro hāḍ konī ṭūṭyo. — My bone did not break.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro hāḍ konī ṭūṭyo.* — My bone did not break.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an elbow, then the Marwadi for the waist, then say hāḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an elbow, then the Marwadi for the waist, then say *hāḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हाड (hāḍ) mean? (\"A bone\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C252-had-type",
+              "prompt": "Say the Marwadi for 'a bone'.",
+              "assesses": [
+                "MW-LEX-C252-HAD252-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हाड",
+                "hāḍ"
+              ],
+              "feedback": {
+                "correct": "Right: हाड (hāḍ) is 'a bone'.",
+                "incorrect": "'a bone' is हाड (hāḍ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C252-sas",
+      "sequence": 17570,
+      "title": "सांस (sā̃s) — breath",
+      "headword": "सांस",
+      "romanization": "sā̃s",
+      "gloss": "breath",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:882bc3490df97453",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the waist, then the Marwadi for a bone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सांस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांस — sā̃s — \"breath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लांबी सांस लो। lā̃bī sā̃s lo. Take a long breath."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांस (sā̃s) is inherited from Sanskrit śvāsa, \"breath\"; CDIAL lists Marwari sā̃so, \"panting\", and Hindi sā̃s, \"breath\", under it (CDIAL 12769)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃s",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃s*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃s, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃s*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lā̃bī sā̃s lo. — Take a long breath.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lā̃bī sā̃s lo.* — Take a long breath.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the waist, then the Marwadi for a bone, then say sā̃s again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the waist, then the Marwadi for a bone, then say *sā̃s* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सांस (sā̃s) mean? (\"Breath\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C252-sas-type",
+              "prompt": "Say the Marwadi for 'breath'.",
+              "assesses": [
+                "MW-LEX-C252-HAD252-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सांस",
+                "sā̃s"
+              ],
+              "feedback": {
+                "correct": "Right: सांस (sā̃s) is 'breath'.",
+                "incorrect": "'breath' is सांस (sā̃s)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C252-haphno",
+      "sequence": 17580,
+      "title": "हांफणो (hā̃phṇo) — to pant; to be out of breath",
+      "headword": "हांफणो",
+      "romanization": "hā̃phṇo",
+      "gloss": "to pant; to be out of breath",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da7848ff465fdf50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a bone, then the Marwadi for breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हांफणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हांफणो — hā̃phṇo — \"to pant; to be out of breath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डूंगर माथै दादा हांफै है। ḍū̃gar māthai dādā hā̃phai hai. On the hill, grandfather is out of breath."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो छोरो हांफ्यो, vo chhoro hā̃phyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हांफणो (hā̃phṇo) is inherited from a reconstructed hamph, \"pant\". CDIAL gives no Marwari form in this entry; it lists Hindi hā̃phnā, \"to pant\" (CDIAL 13973)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃phṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃phṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃phṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃phṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍū̃gar māthai dādā hā̃phai hai. — On the hill, grandfather is out of breath.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍū̃gar māthai dādā hā̃phai hai.* — On the hill, grandfather is out of breath.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a bone, then the Marwadi for breath, then say hā̃phṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a bone, then the Marwadi for breath, then say *hā̃phṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हांफणो (hā̃phṇo) mean? (\"To pant; to be out of breath\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C252-haphno-type",
+              "prompt": "Say the Marwadi for 'to pant'.",
+              "assesses": [
+                "MW-LEX-C252-HAD252-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हांफणो",
+                "hā̃phṇo"
+              ],
+              "feedback": {
+                "correct": "Right: हांफणो (hā̃phṇo) is 'to pant; to be out of breath'.",
+                "incorrect": "'to pant' is हांफणो (hā̃phṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C252-chabno",
+      "sequence": 17590,
+      "title": "चाबणो (chābṇo) — to chew",
+      "headword": "चाबणो",
+      "romanization": "chābṇo",
+      "gloss": "to chew",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ceb377c17cbe238e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for breath, then the Marwadi for to pant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चाबणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाबणो — chābṇo — \"to chew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रोटी चाबो। roṭī chābo. Chew your flatbread."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं चणा चाब्या, mhaĩ chaṇā chābyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाबणो (chābṇo) is inherited from Sanskrit carvati, \"chews\"; CDIAL lists Marwari cābṇo under it (CDIAL 4711)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chābṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chābṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chābṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chābṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roṭī chābo. — Chew your flatbread.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roṭī chābo.* — Chew your flatbread.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for breath, then the Marwadi for to pant, then say chābṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for breath, then the Marwadi for to pant, then say *chābṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चाबणो (chābṇo) mean? (\"To chew\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C252-chabno-type",
+              "prompt": "Say the Marwadi for 'to chew'.",
+              "assesses": [
+                "MW-LEX-C252-HAD252-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चाबणो",
+                "chābṇo"
+              ],
+              "feedback": {
+                "correct": "Right: चाबणो (chābṇo) is 'to chew'.",
+                "incorrect": "'to chew' is चाबणो (chābṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C252-pir",
+      "sequence": 17600,
+      "title": "पीड़ (pīṛ) — an ache; a deep pain",
+      "headword": "पीड़",
+      "romanization": "pīṛ",
+      "gloss": "an ache; a deep pain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72e41276d68e225b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to pant, then the Marwadi for to chew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पीड़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पीड़ — pīṛ — \"an ache; a deep pain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी पीठ मांय पीड़ है। mhārī pīṭh mā̃y pīṛ hai. I have an ache in my back."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पीड़ (pīṛ) is inherited from Sanskrit pīḍā, \"pain\"; CDIAL lists Old Marwari pīḍa under it (CDIAL 8227)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṛ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṛ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī pīṭh mā̃y pīṛ hai. — I have an ache in my back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī pīṭh mā̃y pīṛ hai.* — I have an ache in my back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to pant, then the Marwadi for to chew, then say pīṛ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to pant, then the Marwadi for to chew, then say *pīṛ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पीड़ (pīṛ) mean? (\"An ache; a deep pain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C252-pir-type",
+              "prompt": "Say the Marwadi for 'an ache'.",
+              "assesses": [
+                "MW-LEX-C252-HAD252-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पीड़",
+                "pīṛ"
+              ],
+              "feedback": {
+                "correct": "Right: पीड़ (pīṛ) is 'an ache; a deep pain'.",
+                "incorrect": "'an ache' is पीड़ (pīṛ)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

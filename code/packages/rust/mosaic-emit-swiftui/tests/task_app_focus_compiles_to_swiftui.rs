@@ -150,9 +150,13 @@ fn task_app_package_graph_lowers_notes_to_native_multiline_swiftui() {
         output.contains("TextEditor(text: Binding(get: { noteBodyValue }"),
         "Trestle's Notes body must use a native multiline editor:\n{output}"
     );
+    // Notes 0.3.0 mounts DraftEditor for its body, so the body's identity is
+    // DraftEditor's part. Matched by PREFIX: a later DraftEditor mount in
+    // TaskApp would rename this one's parts `draft-editor-body-m2`
+    // (lesson adding-an-earlier-mount-of-a-component-renames-the-later-mount-s).
     assert!(
-        output.contains(".accessibilityIdentifier(\"notes-body-input\")"),
-        "the authored Notes body identity must reach SwiftUI:\n{output}"
+        output.contains(".accessibilityIdentifier(\"draft-editor-body"),
+        "the Notes body's DraftEditor identity must reach SwiftUI:\n{output}"
     );
 }
 

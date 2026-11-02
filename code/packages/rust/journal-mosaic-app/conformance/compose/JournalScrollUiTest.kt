@@ -9,6 +9,7 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
@@ -52,12 +53,14 @@ private const val ENTRIES = 8
 private const val SCROLL_STEP_PX = 200f
 private const val MAX_SCROLL_STEPS = 40
 
-// Timeline rows are the toolkit RecordList's buttons, tagged
-// `record-list-title` (`-selected` for the open entry, `-m2` for a later
-// mount), so rows are matched by tag PREFIX, as in JournalUiTest.
+// Timeline rows are mosaic-pkg-card Cards, each opened by the "Open" button
+// beside it, tagged `timeline-entry-open` (`-selected` for the open entry),
+// so rows are matched by tag PREFIX, as in JournalUiTest. Every button reads
+// "Open"; the entry it opens is in its accessible name, the Compose
+// `contentDescription` "Open {title}".
 private val timelineRowButton: SemanticsMatcher =
-    SemanticsMatcher("a timeline row button") { node ->
-        node.config.getOrNull(SemanticsProperties.TestTag)?.startsWith("record-list-title") == true
+    SemanticsMatcher("a timeline entry's Open button") { node ->
+        node.config.getOrNull(SemanticsProperties.TestTag)?.startsWith("timeline-entry-open") == true
     }
 
 // The pane's scroll container: the node with a vertical scroll range that
@@ -118,8 +121,10 @@ class JournalScrollUiTest {
         val rows = onAllNodes(timelineRowButton).fetchSemanticsNodes()
         assertEquals(ENTRIES, rows.size, "one timeline row per entry")
         val bottom = rows.last()
-        val title = bottom.config[SemanticsProperties.Text].joinToString("") { it.text }
-        val lastRow = timelineRowButton and hasText(title)
+        val name = bottom.config[SemanticsProperties.ContentDescription].joinToString("")
+        check(name.startsWith("Open ")) { "a timeline button is named \"Open {title}\", not \"$name\"" }
+        val title = name.removePrefix("Open ")
+        val lastRow = timelineRowButton and hasContentDescription(name)
         onNode(lastRow).assertIsNotDisplayed()
 
         // 3. Scroll the pane until the row is on screen.

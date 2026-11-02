@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:893766cd4bbaf5b1",
+  "lessonIds": [
+    "MW-C235-guvaro",
+    "MW-C235-charo",
+    "MW-C235-gobar",
+    "MW-C235-palno",
+    "MW-C235-bhuso"
+  ],
+  "tex": "marwadi/book/chapters/ch235-the-cattle-yard.tex"
+}

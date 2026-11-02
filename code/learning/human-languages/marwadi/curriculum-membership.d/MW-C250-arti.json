@@ -1,0 +1,11 @@
+{
+  "id": "MW-C250-arti",
+  "pathSegment": "MW-PATH-250-UCHHAV250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-250-UCHHAV250",
+      "order": 3
+    }
+  ]
+}

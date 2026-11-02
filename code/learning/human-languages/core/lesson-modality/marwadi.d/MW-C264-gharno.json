@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C264-gharno",
+    "language": "marwadi",
+    "chapter": 264,
+    "sequence": 18180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9728a2b3b939b53c"
+  },
+  "findings": []
+}

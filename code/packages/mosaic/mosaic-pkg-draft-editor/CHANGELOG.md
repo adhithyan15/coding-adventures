@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Documentation — Engram's NoteEditor is a consumer (E4)
+
+- The README and the spec's Adoption list say that `NoteEditor` 0.2.0 mounts
+  DraftEditor body-only for Engram's focused field. Nothing in the package
+  changes. Mounted there it has one style drop its own gate cannot see
+  (SwiftUI `gap` on the folded-away title group). NoteEditor's and Engram's
+  gates pin it.
+
 ### Added — `body-placeholder` (0.2.0, E1 of the editor convergence audit)
 
 - **`slot body-placeholder : text`**, bound to the body's `placeholder`: a

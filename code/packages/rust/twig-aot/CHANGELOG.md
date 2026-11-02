@@ -1,4 +1,109 @@
 # Changelog — `twig-aot`
+
+## Unreleased — a branch-joined string's length is read at run time; `linux_x86_64_smoke` back in CI
+
+- **Bug (silent miscompile).** In `lower_string_literals_for_aot`, a `mov` copied its source's compile-time literal into the destination even when the destination has more than one definition; the integer table beside it was already guarded. Twig writes `(if c "hello!!" "x")` as one literal register per arm and a `mov` into the join in each arm, so the arm emitted last won, and `(string-length s)` folded to 1 on every path (exit 1 instead of 7 when the first arm is taken).
+- **Fix.** A `mov` now passes a literal on only to a single-definition destination, exactly as the integer fact.
+- **The same hole in the rest of the string table, also fixed.**
+  - A `str_const` register overwritten by a non-string instruction (a `call`, a `const`, an `add`, …) kept its literal, because only the four string-producing ops touched the table; every other write now erases the destination's literal ("a fact dies the moment anything else writes the register").
+  - `collect_runtime_str_vars_for_aot` counted only `str`-hinted definitions when deciding that a variable is branch-selected, so a variable a `str_const` writes in one block and a `call` hinted `any` writes in another stayed on the literal fast path; it now counts every definition of a variable that has at least one `str` definition.
+  - The integer table needs nothing: it only ever holds single-definition registers. The other per-register maps in the crate are flow-insensitive unions (`root_heap_word_copies`, `sign_word_comparisons`) or a type environment (`propagate_aot_types`, tracked separately).
+- **Tests.** `linux_x86_64_smoke::branch_joined_string_copy_reads_its_length_at_run_time_on_linux` (the Twig `if` join, run natively: 7; it exited 1 before), and unit tests `mov_into_a_branch_joined_string_does_not_fold_one_arms_length`, `a_non_string_definition_in_another_block_disables_the_literal_fold` and `a_non_string_write_erases_the_literal_fact`. All four fail without the fix.
+- **CI.** `BUILD`'s comment said `linux_x86_64_smoke` fails 2 of 8. It passes 8 of 8 on origin/main (the precise-GC differentials have passed since the x86-64 precise-roots work) and 9 of 9 in three runs here, so the suite is listed again and the comment rewritten. `macos_arm64_smoke` stays excluded until someone re-checks it on Apple Silicon.
+
+## Unreleased — #18765 / #18766 — globals and string buffers stay GC roots
+
+- **Bug (#18765): globals were no GC root.** A top-level `define` that a function reads lives in a slot of the `_twig_globals` data block. No stack map names it and no stack scan reaches it, so the precise and compacting collectors (and the allocation-triggered conservative one) never saw it. A compacting collection moved a pair that both a global and `main`'s frame slot named, rewrote the frame slot, and left the global pointing at the freed from-space cell: `(define g (cons 7 8)) (define (f) (begin (w4) (car g))) (f)` with `gc_collect_compacting` spliced in before the read exited 51 instead of 7, and valgrind memcheck reported an invalid read. Non-moving collections got away with it because a stale word in a stack-mapped, not-yet-written frame slot of `f` (rule R1 names every root slot at every safepoint) still held the pair's address.
+- **Fix (#18765).** `__gc_init_stackmaps` now first calls gc-core-capi's new `__gc_register_global_roots(&_twig_globals, n_globals)` when the module has globals, and every collection treats each registered slot as a precise root slot: marked, and rewritten in place when a compaction moves its object. AArch64 materialises the address with an `ADRP`+`ADD` pair carrying the same `GlobalWordReloc` a `global_load` uses; x86-64 uses `lea reg, [rip + _twig_globals]` with the same `PcRel32` (SysV `rdi`/`rsi`; Win64 `rcx`/`rdx` inside a 32-byte shadow-space reservation). `build_gc_init_stackmaps*` take the global count; the AArch64 builder also returns the globals reloc. User function code is unchanged; only `__gc_init_stackmaps` gains these instructions, and only in a module with globals. Every global slot is registered, not only those a type analysis says may hold a heap word (see the spec for why precise slots, not a conservative region).
+- **Bug (#18766): string buffers were no GC root.** The string lowering types `alloc_bytes` `i64`, so the buffer's slot and the string variable (a `mov` alias of it) were in no stack map. In a stack-mapped frame the walker scans nothing else, so a precise or compacting collection freed the buffer, and `string-length` of a branch-selected literal read a reused cell (exit 0 or 144 instead of 7; memcheck: invalid read). `runtime/twig_runtime.c`'s comment that such a handle is "reached conservatively and PINNED" was wrong for every stack-mapped frame and now says so.
+- **Fix (#18766).** `root_heap_word_copies` gains a step 0: every instruction that allocates a GC block — the `alloc_bytes` / `alloc_array` ops and `call_builtin` of `alloc_bytes`, `str_concat`, `str_slice`, `input_str` and `dyn_pair_new` (`GC_ALLOCATING_BUILTINS`, each checked against its runtime entry) — gets `ty = "any"` if the specialiser gave it a machine-scalar type, and the copy rule then roots its aliases. Only `ty` changes; no backend reads it on these instructions except for the stack map, so the code bytes are unchanged (asserted on SysV and AArch64). The raw `gc_alloc` builtin keeps its declared type: the precise-GC smoke differentials use an `i64` `gc_alloc` result as the non-reference look-alike a precise collection must reclaim.
+- **Behaviour change.** A dead string literal in the *same* frame as a collection is now retained until that frame returns (R1 floating garbage), where before it was reclaimed only because its slot was wrongly unrooted. `macos_arm64_smoke`'s `end_to_end_gc_manages_runtime_strings` therefore builds its literals in a helper `mk` (they die with `mk`'s frame, so a precise collection in `main` still reclaims 21 of 34 bytes); its Linux twin is the new `dead_string_buffers_are_reclaimed_once_their_frame_is_gone`.
+- **Tests.** New `tests/gc_global_and_buffer_roots.rs` (Linux): compacting and precise collections spliced in front of a global read (a pair, a list of pairs, a second global slot; with `main`'s copy kept and cleared) and in front of `string-length` of a runtime string (a literal join, a `string-append`, a `substring`), each with and without immediate cell reuse; a 4 MiB allocation-pressure run over a global; valgrind memcheck of every compacting case; and the dead-buffer `live_bytes` table above. Before the fix the compacting-with-reuse global rows (exit 51 or a signal), both `literal` rows with reuse, and the memcheck run (every global row and `literal`) fail. New `gc_global_and_buffer_root_tests` unit tests: step 0 on hand-built CIR; a branch-selected string's two buffers and its variable newly rooted at every safepoint with identical code bytes on x86-64 and AArch64; the AArch64, SysV and Win64 init sequences; and a whole x86-64 module with and without globals.
+- **CI.** `BUILD` now runs `gc_param_roots` (#18492, which was never listed) and `gc_global_and_buffer_roots` on the ubuntu leg.
+- Spec: `AOT00-T1-stackmap-emission.md` §4.1 (allocations, unwritten slots) and new §4.2 (global roots), §5; `AOT00-T1-precise-gc.md` §2 contract; `AOT00-twig-native-gc-coverage.md` (strings row, new globals row).
+
+## Unreleased — #18492 — dynamic parameters stay GC roots
+
+- **Bug.** `prepare_module_for_aot` retyped every dynamic (`any` / `polymorphic`) parameter to `i64` in place, so signed comparisons would be emitted. The x86-64 and AArch64 backends build each function's GC stack map from the param types in `FunctionContext`, and `i64` is on their "never a reference" deny-list, so no Twig parameter was ever named in a stack map. Allocation-triggered collections were unaffected (they scan the stack conservatively), and so was `gc_collect_precise` (the caller's `any` temporary still rooted the argument). But a **compacting** collection inside the callee moved the argument, rewrote the caller's slot and freed the old cell, leaving the callee's parameter pointing at freed memory. Reproduced on Linux x86-64: `(define (f p) (begin (w4) (car p))) (f (cons 7 8))` with `gc_collect_compacting` spliced in before the `car` exited 51 instead of 7, and valgrind memcheck reported `__dyn_pair_first` reading a block freed by `FlatHeap::sweep`. A closure's captured values reach the lifted lambda body as parameters, so they were affected the same way.
+- **Fix.** The prepared module keeps the declared param types. Typing still reads dynamic params as `i64`: `propagate_aot_types` seeds them as `i64`, and the compile step specialises a `specialisation_view` (a copy with those params retyped by `normalize_params_to_i64`). The backend's `FunctionContext` is built from the declared params, so the machine code is byte-for-byte unchanged and the parameter's slot is now named at every safepoint. `compile_typed_module_to_arm64_bytes` follows the same rule. The x86-64 per-function compile is factored into `compile_one_x86_64`, shared by the module compile and the tests.
+- **Tests.** New `tests/gc_param_roots.rs` (Linux): compacting and precise collections spliced into the callee for a parameter and for a captured value, with and without immediate cell reuse; a valgrind memcheck run of the compacting case (skipped without valgrind); and a pure-Twig 4 MiB allocation run with a `gc_live_bytes` probe proving collections ran. The compacting and memcheck tests fail without the fix. New `gc_param_root_tests` unit tests (every host): the prepared module keeps `any`; on SysV, Win64 and AArch64 the code bytes are identical to the old pipeline's and the stack map gains exactly the parameter's slot at every safepoint; a lambda body's captured parameter is a root.
+- **Follow-up (security review): copies of heap words.** A `let` binding of a parameter, a chain of such bindings, a recursive call's result held in a `let`, and an `if` join of a parameter with a literal are all `mov`s that `propagate_aot_types` / `default_any_to_i64` type `i64`, so their slots were still missing from the stack map and went stale under compaction (each exited 51 instead of 7 and failed memcheck). New `root_heap_word_copies` runs after specialisation on both native paths: a variable that is a non-scalar-typed param, the dest of a root-typed instruction, or a `mov_*` copy of one (to a fixed point) gets `ty = "any"` on the integer `mov_*`s defining it. Only `ty` changes, never the mnemonic, so the code bytes are unchanged; arithmetic stays scalar. `gc_param_roots.rs` drives all five copy shapes (plus an `if` join of the parameter with a fresh pair, which was already rooted) through precise, compacting and memcheck runs; new unit tests check the rule on hand-built CIR and, for each copy shape on x86-64 and AArch64, identical code bytes with the copy's slot named at every safepoint.
+- Docs: `compile_typed_module_to_arm64_bytes` no longer tells callers to retype `any` params to `i64` (that would drop their roots); the untyped-path docs describe the `i64` reading instead of a "u64 normalisation".
+- Spec: `AOT00-T1-stackmap-emission.md` §4 obligations 2 and 3 — copies are covered, and the compaction rewrite risk is stated exactly (an exact payload address and its seven tagged forms) and accepted as a known limit until LANG85 (#18494).
+
+## Unreleased — `propagate_aot_types` doc follows the signed-`bool` fix (#18453)
+
+- The doc comment on `propagate_aot_types` no longer says `cmp_lt_bool` is an
+  unsigned comparison. Since #18453, the x86-64 and AArch64 backends compare
+  a `bool`-suffixed op as signed. No code change.
+
+## Unreleased — untyped Twig integers compare signed (#18483)
+
+- **Bug.** On the native x86-64 column `(if (< -8 100) 1 2)` exited 2; the
+  VM says 1. The frontend writes `(< a b)` as `cmp_lt a, b` with the hint
+  `"bool"` (the result type). `propagate_aot_types` only fills hints that are
+  still `"any"`, so `aot_specialise` named the op `cmp_lt_bool`, and the
+  x86-64 and AArch64 backends compared that suffix unsigned (-8 became
+  `0xFFFF_FFFF_FFFF_FFF8`). The issue's "`cmp_*_u64`" was the documented
+  intent of the untyped path; the op actually emitted was `cmp_*_bool`,
+  with the same unsigned effect.
+- **Fix.** New `sign_word_comparisons` (preparation step 5, after
+  `default_any_to_i64`) retypes a `cmp_*` whose hint is `"bool"` and whose
+  operands are all 64-bit integer words (`i64`, `bool`, `any`,
+  `polymorphic`, `ref<any>`, or an `Int` / `Bool` literal) to `"i64"`, the
+  operand type. The specialiser then emits `cmp_lt_i64` and every native
+  backend picks a signed condition code. It runs on both the untyped path
+  (`prepare_module_for_aot`, used by every native entry point and by
+  `lang-aot`) and `compile_typed_module_to_arm64_bytes`. A compare over a
+  float, narrow or unsigned operand, or one whose hint already names an
+  operand type (Nib and ALGOL hint `i64`, BASIC `f64`), is left alone.
+- Tagged words stay correct: a boxed integer is `n << 3`, which keeps the
+  sign and order of every 61-bit `n`, and equality compares whole words
+  either way. Non-integer tagged words (nil, `#f`, `#t`, pair pointers) are
+  small or below 2⁴⁷, so their (already undefined) ordering is unchanged.
+- Division, remainder and `modulo` were already `div_i64` / `mod_i64`
+  (signed); Twig has no shift or min/max builtins.
+- Doc comments no longer describe the untyped path as "u64": the crate
+  header, `compile_typed_module_to_arm64_bytes`, the preparation-pipeline
+  overview, `propagate_aot_types`, `infer_aot_type`, `prepare_module_for_aot`
+  and `compile_module_to_text`.
+- Tests: `untyped_twig_integer_comparisons_specialise_to_signed_i64` (every
+  comparison in eight negative-operand programs specialises to `_i64`),
+  `untyped_negative_comparisons_run_signed_on_linux_x86_64` (the same
+  programs run natively and exit with the VM's answer), and
+  `sign_word_comparisons_leaves_float_narrow_and_typed_compares_alone`.
+- Follow-up: `sign_word_comparisons_leaves_a_u64_operand_alone` and
+  `..._u32_operand_alone` pin that an unsigned operand blocks the rewrite.
+- `infer_aot_type` now consults every comparison operand, and a typed
+  register's type wins over a literal's. Before, only the first operand was
+  read, so an `"any"`-hinted `cmp_lt 5, x` with `x: u64` became a signed
+  `cmp_lt_i64`; it is now `cmp_lt_u64`
+  (`untyped_compare_takes_the_registers_type_over_a_literals`).
+
+## Unreleased — security review: fail-closed `__dyn_` check, shared with LLVM; the `__aot_` register namespace
+
+- `check_program_function_names` fails closed. A module function named `__dyn_*` is a runtime symbol unless it is one of `iir_builtin_lowering::PASS_GENERATED_DYN_HELPERS`. The old check listed the runtime's functions, parsed from `dynval_runtime.c` (`DYNVAL_RUNTIME_SYMBOLS`, now removed), which fails open for a function added to the runtime later. It is now `pub`, so `lang-aot`'s LLVM path runs the same check.
+- New `check_no_aot_registers`, first thing in `prepare_module_for_aot`: a module that already uses a register, parameter or operand beginning `__aot_` is refused (`AotError::Compile`). The string lowering names its registers `__aot_str{n}_len` / `_buf` / … and `__aot_ps{n}_*`, strips dead blocks by that prefix, and hands `__aot_str{n}_len` to the runtime's print as the byte count. A program register of that name would be the same register. Twig cannot spell it any more (`__` is reserved), but Python and JavaScript locals can.
+- Tests: `every_dyn_name_but_the_pass_helpers_is_a_runtime_symbol` replaces `dynval_runtime_symbols_match_the_c_source`. It requires every `__dyn_` function in the C file, every registry `dyn_*` builtin and names the runtime does not define (`__dyn_pair_firsts`, `__dyn_not_yet_in_the_runtime`) to be refused, and no pass helper to be a runtime function. Also new: `a_module_using_an_aot_register_is_refused` (Linux, Windows, macOS objects).
+
+## Unreleased — a program function cannot stand in for a runtime symbol
+
+- The link step patches a call in place whenever its symbol names a function of the module, and the backends name a runtime call by its runtime symbol. So a program function called `__twig_print_i64` received `print`'s call: `(define (__twig_print_i64 n) 0) (begin (print 5) 0)` printed nothing on native x86-64. New `check_program_function_names`, run first by both link steps (`compile_module_x86_64_to_text`, `compile_module_to_text_raw`, so every native target), refuses two kinds of module with `AotError::Linker`:
+  - one that defines a function named like a runtime symbol: the `__twig_*` and `__gc_*` namespaces, or one of the `__dyn_*` functions `dynval_runtime.c` defines (`DYNVAL_RUNTIME_SYMBOLS`; the pass-generated `__dyn_list_*` / `__dyn_call_closure` stay allowed);
+  - one that defines two functions with one name (the offset table kept only one).
+- `prepare_module_for_aot` propagates `lower_closures_to_heap` / `lower_heap_builtins_runtime`'s new `HelperNameError` as `AotError::Compile`.
+- Tests: `a_program_function_named_like_a_runtime_symbol_is_refused` (five names × Linux, Windows and macOS objects), `a_module_with_two_functions_of_one_name_is_refused`, `module_helpers_and_lookalikes_are_not_runtime_symbols`, and `dynval_runtime_symbols_match_the_c_source`, which pins the list to the C file and to every registry `dyn_*` builtin.
+
+## Unreleased — LANG83 PR7f follow-up — pair reads check the tag
+
+- `runtime/dynval_runtime.c`: `__dyn_pair_first` / `__dyn_pair_rest` check that the word carries the pair tag (`0b111`) before reading the cell. A non-pair used to be read through: Twig's `(car 1000000)` lowers to `__dyn_pair_first(8000000)` and read the 8 bytes at address 8000000. Now, matching the VM (`TypeError`) and the Rust `extern "C" dyn_pair_first` (panic), the program stops: stdout is flushed, `dyn_pair_first: argument 0x… is not a pair` goes to stderr, then `abort()`. The helper is local to the file (not `__twig_trap`): a type error is not a LANG83 trap kind, and `dynval_runtime.c` is linked without `twig_runtime.c` by some harnesses. A heap-tagged non-pair object is still read as a pair (a type confusion inside a live GC block, not a wild read).
+- `dynval_runtime_golden`: new `c_pair_reads_of_a_non_pair_fail_closed` re-runs the test binary as a child for each of an integer, nil, `#f`, `#t` and a symbol, through both functions, and asserts the child died with the refusal on stderr; it also asserts the Rust reference (`heap::car` / `heap::cdr`) refuses each word, and that a real pair still reads.
+
+- Security-review fixes to the refusal (`lispy_not_a_pair`):
+  - It prints the word's tag and kind (`dyn_pair_first: argument with tag 0 (int) is not a pair`), never the word, so no heap address can reach stderr. `dynval-runtime`'s Rust panic now uses the same words.
+  - `abort()` is no longer the last line of defence. It is called through a `volatile` function pointer and followed by `__builtin_trap()` (MSVC: `__fastfail(FAST_FAIL_FATAL_APP_EXIT)`). A program-defined `abort` that returns (possible on LLVM, #18416) now ends in SIGILL instead of running on. The pointer matters: libc declares `abort` `noreturn`, so a plain `abort(); __builtin_trap();` let clang and GCC delete the trap. Checked by hand with a returning `abort` linked in: the plain form fell through into the next function and looped printing refusals (with a heap address), the new form exits with SIGILL at -O0 and -O2 under both compilers.
+- `dynval_runtime_golden`: `c_pair_reads_of_a_non_pair_fail_closed` expects the tag-and-kind message and no `0x` on stderr; the child sets `RLIMIT_CORE` to 0 before the deliberate abort so no core file is written per case; the test is `#[cfg(unix)]` (no Windows Error Reporting dialog or minidump per child). New Unix-only dev-dependency `libc` for `setrlimit`.
+
 ## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
 
 - `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).

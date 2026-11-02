@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Fear and Joy",
+  "label": "ch:mw-fear-and-joy",
+  "canDo": "I can say what frightens me and what makes me glad.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C256-umang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say what frightens me and what makes me glad.",
+    "assesses": [
+      "MW-LEX-C256-DAR256-03",
+      "MW-LEX-C256-DAR256-04",
+      "MW-LEX-C256-DAR256-05"
+    ]
+  }
+}

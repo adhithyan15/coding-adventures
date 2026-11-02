@@ -1,0 +1,3 @@
+@PACKAGE_INIT@
+include("${CMAKE_CURRENT_LIST_DIR}/ca_neural_framework_targets.cmake")
+check_required_components(ca_neural_framework)

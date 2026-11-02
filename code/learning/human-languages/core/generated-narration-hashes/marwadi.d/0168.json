@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:4dcec789cbee328c",
+  "lessonIds": [
+    "MW-C168-ugno",
+    "MW-C168-dhup",
+    "MW-C168-chhav",
+    "MW-C168-tulsi",
+    "MW-C168-sichno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch168.txt",
+  "json": "marwadi/narration/ch168.json",
+  "textHash": "fnv1a64:a14bd510988f5597",
+  "jsonHash": "fnv1a64:e02889401a471229",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C160-ayo",
+  "pathSegment": "MW-PATH-160-CAME",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-160-CAME",
+      "order": 0
+    }
+  ]
+}

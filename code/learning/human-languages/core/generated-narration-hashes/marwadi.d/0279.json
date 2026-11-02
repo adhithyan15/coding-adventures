@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:05b0ce9ecf8a7d70",
+  "lessonIds": [
+    "MW-C279-gothiyo",
+    "MW-C279-chaupar",
+    "MW-C279-paso",
+    "MW-C279-hod",
+    "MW-C279-kusti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch279.txt",
+  "json": "marwadi/narration/ch279.json",
+  "textHash": "fnv1a64:6169d6d8b865d439",
+  "jsonHash": "fnv1a64:7e493cf6f1c96f2e",
+  "findings": []
+}

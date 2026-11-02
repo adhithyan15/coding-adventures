@@ -195,3 +195,79 @@ edited down towards the cap, but never grown past it.
 The task-name field is not capped by this addendum. Task names themselves
 have no limit anywhere in TaskApp yet, so a cap on the name typed to find
 one would be arbitrary.
+
+## Addendum (v1.3): `Notes` 0.3.0 is a composition of `RecordList` and `DraftEditor`
+
+Mosaic backlog item E3, from the editor convergence audit
+(`mosaic-editor-convergence-audit-v1.md` §4.2, probe C). `Notes` stops
+drawing its own list rows, fields and buttons. It keeps only what is
+Trestle's: the "+ New note" button, the attach-to-task field and the
+empty-state hint.
+
+**What `Notes` mounts.**
+
+```
+Column [ notes-root ]
+  Text [ notes-heading ]
+  Row [ notes-body ]
+    Column [ notes-list ]
+      HostButton [ notes-new ]                       new-note-label
+      pkg::mosaic-pkg-toolkit::RecordList            rows: note-rows,
+                                                     selected-key: selected-note-id
+    If ( selected-note-id )
+      Column [ notes-editor ]
+        Text      [ notes-task-label ]               task-label
+        HostInput [ notes-task-input ]               a11y-label: task-label
+        pkg::mosaic-pkg-draft-editor::DraftEditor    title, body, actions
+    Else
+      Column [ notes-empty ]
+        Text [ notes-empty-hint ]                    empty-hint
+```
+
+- **The list is `RecordList`.** `note-rows` widens from `[id, title]` to
+  RecordList's row, `[key, heading, title, subtitle, meta, badge]`, which
+  `Notes` passes through unchanged. Both hosts fill `key` and `title` as
+  before (the id, and the title or "Untitled") and leave the other four
+  empty, so a row is still one line. Selection stays by key
+  (`selected-key: selected-note-id`); a click still reports the row's index,
+  which the host resolves through the list it built, exactly as before.
+- **Title, body and actions are `DraftEditor`** (0.2.0). Its fields gain
+  visible labels, and each label is also the field's accessible name. The
+  body keeps Ctrl/Cmd+Enter to save. Every `DraftEditor` slot is bound at
+  `Notes`' call site, because an unbound slot of a mounted package component
+  is a compile error (E6 F1).
+- **The attach-to-task field stays `Notes`' own** `HostInput`, composed
+  above the editor as Journal composes its tags and journal fields above
+  its `DraftEditor`. It gains a visible label, `task-label`, which is also
+  its `a11y-label`, so it no longer relies on its placeholder for a name.
+  Above rather than below, because `DraftEditor` ends with its actions: a
+  field after Save would be filled in after the button that commits it.
+- **`Notes` draws no English.** Every literal becomes a slot of `Notes`,
+  bound at TaskApp's call site, as Journal binds `DraftEditor`'s:
+  `new-note-label`, `empty-hint`, `title-label`, `title-placeholder`,
+  `body-label`, `body-placeholder`, `task-label`, `task-placeholder`,
+  `save-label`, `delete-label` and `cancel-label`. None has a default:
+  a default would put the English back in the package.
+- **Delete is offered only for a saved note.** `delete-label` is the one
+  label TaskApp does not write as a literal. It binds a new TaskApp slot,
+  `note-delete-label`, which both hosts fill with "Delete" when the open
+  note exists in the project and with `""` for a new note that has never
+  been saved. `DraftEditor` draws no Delete button for `""`. Before this,
+  Delete on an unsaved note only discarded the draft, as Cancel does,
+  while the native host announced "Note deleted" for a note that never
+  existed. The `onDelete` handlers stay as they are: a Delete that
+  arrives anyway is still harmless.
+
+**What does not change.** The eight events and their payloads; the host
+logic for New, Select, Save, Delete and Cancel; the caps and the refused-Save
+message (v1.2); `note-error` above the mount. `Notes` is 0.3.0 because its
+slot set changes, and a consumer that does not bind the new slots no longer
+compiles.
+
+**Native drops.** The package gate (E2) pinned 12 style drops per theme,
+named by backend, property and part. The row buttons' two Qt `text-align`
+drops go with the rows. The body's `min-height` drops move from
+`notes-body-input` to `DraftEditor`'s own `draft-editor-body`, which its own
+gate already pins. `Notes`' list/editor flex split (`flex-grow` on
+`notes-editor` and `notes-empty`, `flex-shrink` on `notes-list`) is
+untouched; PR-6 (`HostNavigationSplit`) removes it.

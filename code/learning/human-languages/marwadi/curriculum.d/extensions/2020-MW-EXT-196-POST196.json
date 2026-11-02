@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-196-POST196",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can send a letter or a parcel.",
+  "prerequisites": []
+}

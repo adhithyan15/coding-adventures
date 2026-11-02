@@ -35,6 +35,49 @@ thread_local! {
     /// so the deep `emit_expr` / `emit_assign` call tree can read it without
     /// threading a context.
     static SIGNATURES: RefCell<HashMap<String, Vec<String>>> = RefCell::new(HashMap::new());
+
+    /// Per-module map from a function's RAW name to its
+    /// [`Function::exact_arity`], for the strict-closure marker (see
+    /// [`strict_closure_arity`]).  Snapshotted at the top of [`emit_module`]
+    /// like `SIGNATURES`.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+}
+
+/// The argument count the `lambda` marker's closure must be called with, or
+/// `None` when the marker leaves the closure lenient.
+///
+/// SIR10's strict closure is `BuiltinCall("lambda", [MakeClosure …])`: the
+/// Ruby frontend's `lambda { … }` and every Twig closure.  The emitted C is
+///
+/// ```text
+/// _sir_strict_arity(_sir_make_closure(_sir_thunk_f, ncap, …), N)
+/// ```
+///
+/// which stamps `N` on the closure; `_sir_apply` then refuses a call with any
+/// other argument count ("sir: arity mismatch: …", exit 1).  Without the stamp
+/// a closure body's thunk pads a missing argument with `nil` and ignores an
+/// extra one — right for a Ruby block, wrong for a lambda: Twig's `(g 4)` on
+/// a two-parameter lambda printed `4` (issue #18461).
+///
+/// `args` is the marker's own argument list, so this works even where the
+/// compound-argument path has already hoisted the closure into a temp.
+fn strict_closure_arity(args: &[Expr]) -> Option<usize> {
+    match args {
+        [Expr::MakeClosure { fn_name, .. }] => {
+            STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+        }
+        _ => None,
+    }
+}
+
+/// Render the `lambda` marker around an already-rendered closure value.
+fn emit_strict_closure(out: &mut String, closure: &str, arity: Option<usize>) {
+    match arity {
+        Some(n) => {
+            let _ = write!(out, "_sir_strict_arity({closure}, {n})");
+        }
+        None => out.push_str(closure),
+    }
 }
 
 fn fresh_id() -> u64 {
@@ -90,6 +133,11 @@ pub fn emit_module(m: &Module) -> String {
                 f.params.iter().map(|p| p.name.clone()).collect(),
             );
         }
+    });
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
     });
 
     let mut out = String::new();
@@ -152,7 +200,7 @@ pub fn emit_module(m: &Module) -> String {
         out.push_str("    sir_user_init();\n");
     }
     if m.functions.iter().any(|f| f.name == "main") {
-        out.push_str("    user_main();\n");
+        out.push_str("    sir_user_main();\n");
     }
     out.push_str("    return 0;\n}\n");
 
@@ -184,12 +232,29 @@ fn emit_globals_comment(out: &mut String, globals: &[Global]) {
 // ---------------------------------------------------------------------------
 
 /// The C name for a SIR function.  `main` and `_init` are renamed so they
-/// never collide with C's process entry or a reserved platform symbol.
+/// never collide with C's process entry; every other function lives in the
+/// `sir_fn_` namespace (#18466).
+///
+/// A C function is an external symbol in the same namespace as the C
+/// library the program links against and the headers it includes.  A user
+/// function spelled like any of those clashed: `(define (free x) x)` is
+/// "conflicting types for 'free'", and `(define (SirValue x) x)` redeclared
+/// the runtime's own value type.  No list of reserved names can keep up with
+/// every libc and platform header, so instead every user function gets a
+/// prefix no library uses.  The prefix sits inside the `sir…` namespace that
+/// [`sanitize_ident`] reserves, so no user name — a local included — can
+/// spell one, and [`sanitize_ident`] being one-to-one keeps the map
+/// one-to-one:
+///
+/// ```text
+/// main   ->  sir_user_main        free      ->  sir_fn_free
+/// _init  ->  sir_user_init        SirValue  ->  sir_fn_sir_esc_vSirValue
+/// ```
 fn function_emit_name(name: &str) -> String {
     match name {
-        "main" => "user_main".to_string(),
+        "main" => "sir_user_main".to_string(),
         "_init" => "sir_user_init".to_string(),
-        other => sanitize_ident(other),
+        other => format!("sir_fn_{}", sanitize_ident(other)),
     }
 }
 
@@ -312,61 +377,36 @@ fn thunk_name(name: &str) -> String {
 
 /// The set of function names referenced by a `MakeClosure` anywhere in the
 /// module — exactly the functions that need a thunk.  Sorted for determinism.
+///
+/// This uses the shared [`semantic_ir::Visitor`] walk, so it reaches a
+/// `MakeClosure` wherever the emitter can meet one.  An earlier hand-written
+/// walk skipped some places: the *target* of an `IndirectCall`, loop bodies,
+/// and most other expression kinds.  A closure built there was emitted as
+/// `_sir_make_closure(_sir_thunk_f, ...)` with no `_sir_thunk_f` defined, so
+/// the C did not compile.  The Python frontend builds exactly such a closure
+/// for a recursive call to a capturing nested `def`:
+///
+/// ```text
+///   go(x - 1)   ⇒   IndirectCall(MakeClosure(go, [n]), [x - 1])
+/// ```
+///
+/// Every `MakeClosure` the walk finds is one the emitter writes out, so each
+/// thunk collected here is used.
 fn collect_closure_targets(m: &Module) -> Vec<String> {
-    let mut set = std::collections::BTreeSet::new();
-    for f in &m.functions {
-        collect_targets_block(&f.body, &mut set);
-    }
-    set.into_iter().collect()
-}
+    use semantic_ir::Visitor;
 
-fn collect_targets_block(b: &Block, set: &mut std::collections::BTreeSet<String>) {
-    for s in &b.stmts {
-        collect_targets_stmt(s, set);
-    }
-    collect_targets_expr(&b.value, set);
-}
-
-fn collect_targets_stmt(s: &Stmt, set: &mut std::collections::BTreeSet<String>) {
-    match s {
-        Stmt::LetBinding { value, .. }
-        | Stmt::LetStarBinding { value, .. }
-        | Stmt::ExprStmt { expr: value, .. }
-        | Stmt::Assign { value, .. } => collect_targets_expr(value, set),
-        _ => {}
-    }
-}
-
-fn collect_targets_expr(e: &Expr, set: &mut std::collections::BTreeSet<String>) {
-    match e {
-        Expr::MakeClosure {
-            fn_name, captures, ..
-        } => {
-            set.insert(fn_name.clone());
-            for c in captures {
-                collect_targets_expr(&c.value, set);
+    struct Targets(std::collections::BTreeSet<String>);
+    impl Visitor for Targets {
+        fn visit_expr(&mut self, e: &Expr, depth: usize) {
+            if let Expr::MakeClosure { fn_name, .. } = e {
+                self.0.insert(fn_name.clone());
             }
+            semantic_ir::walker::walk_expr_default(self, e, depth);
         }
-        Expr::If {
-            cond,
-            then_branch,
-            else_branch,
-            ..
-        } => {
-            collect_targets_expr(cond, set);
-            collect_targets_block(then_branch, set);
-            collect_targets_block(else_branch, set);
-        }
-        Expr::Block(b) => collect_targets_block(b, set),
-        Expr::DirectCall { args, .. }
-        | Expr::IndirectCall { args, .. }
-        | Expr::BuiltinCall { args, .. } => {
-            for a in args {
-                collect_targets_expr(a, set);
-            }
-        }
-        _ => {}
     }
+    let mut targets = Targets(std::collections::BTreeSet::new());
+    targets.visit_module(m);
+    targets.0.into_iter().collect()
 }
 
 // ---------------------------------------------------------------------------
@@ -1464,6 +1504,31 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             out.push_str(");\n");
             let _ = writeln!(out, "{pad}}}");
         }
+        // A closure whose capture values are compound or order-sensitive
+        // (two of them run code or read mutable state): hoist the values into
+        // temps, left to right, then build the closure.  It used to fall
+        // through to `emit_compound_call` and panic there, since a closure is
+        // not a call.  (#18482 review)
+        Expr::MakeClosure {
+            fn_name, captures, ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let values: Vec<&Expr> = captures.iter().map(|c| &c.value).collect();
+            let names = hoist_operands(out, &values, inner);
+            let _ = write!(
+                out,
+                "{ipad}{dst} = _sir_make_closure({}, {}",
+                thunk_name(fn_name),
+                captures.len()
+            );
+            for n in &names {
+                let _ = write!(out, ", {n}");
+            }
+            out.push_str(");\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
         // A call whose arguments contain control flow: hoist every argument
         // into a temp (left-to-right), then make the call.
         _ => emit_compound_call(out, dst, e, indent),
@@ -1603,13 +1668,58 @@ fn hoist_sym_operands(out: &mut String, ops: &[&Expr], indent: usize) -> Vec<Str
 
 fn emit_compound_call(out: &mut String, dst: &str, e: &Expr, indent: usize) {
     let pad = indent_str(indent);
-    let args = call_args(e).expect("emit_compound_call on a non-call expr");
+    // Every non-call compound expression has its own `emit_assign` arm, so
+    // only calls reach here.  Should one not, emit a runtime error rather
+    // than panic the compiler.
+    let Some(args) = call_args(e) else {
+        let _ = writeln!(
+            out,
+            "{pad}{dst} = _sir_unknown_builtin(\"<compound expression>\");"
+        );
+        return;
+    };
     // SIR19 keyword call: a `DirectCall` carrying any `KeywordArg` needs by-name
     // resolution to the callee's declared slots (not the generic left-to-right
     // hoist below), so route it to the dedicated resolver.
     if let Expr::DirectCall { fn_name, .. } = e {
         if args.iter().any(|a| matches!(a, Expr::KeywordArg { .. })) {
             emit_keyword_call(out, dst, fn_name, args, indent);
+            return;
+        }
+    }
+    // An OOP dispatch call (`Foo.new(…)`, `recv.m(…)`, …) with a compound or
+    // order-sensitive argument: hoist every VALUE argument into a temporary,
+    // left to right, then emit the dispatch with its class/method names still
+    // quoted C literals (`emit_dispatch`).  The literal-name positions are
+    // never evaluated, so they are not hoisted.  (#18768)
+    if let Expr::BuiltinCall { name, .. } = e {
+        if is_oop_dispatch(name) {
+            let literals = dispatch_literal_positions(name);
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let values: Vec<&Expr> = args
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| !literals.contains(i))
+                .map(|(_, a)| a)
+                .collect();
+            let hoisted = hoist_operands(out, &values, inner);
+            // Map each argument position to its temporary (value positions
+            // only, in order).
+            let mut slot: Vec<Option<String>> = vec![None; args.len()];
+            let mut next = hoisted.into_iter();
+            for (i, s) in slot.iter_mut().enumerate() {
+                if !literals.contains(&i) {
+                    *s = next.next();
+                }
+            }
+            let _ = write!(out, "{ipad}{dst} = ");
+            emit_dispatch(out, name, args, &mut |o, i| {
+                o.push_str(slot[i].as_deref().unwrap_or("_sir_nil()"))
+            });
+            out.push_str(";\n");
+            let _ = writeln!(out, "{pad}}}");
             return;
         }
     }
@@ -1705,6 +1815,16 @@ fn emit_compound_call(out: &mut String, dst: &str, e: &Expr, indent: usize) {
     let _ = writeln!(out, "{pad}{{");
     let inner = indent + 1;
     let ipad = indent_str(inner);
+    // An indirect call's callee is evaluated BEFORE its arguments, so when the
+    // call is compound the callee is hoisted first, into its own temporary:
+    // `make()(side())` runs `make()` then `side()`.  (#18482 review)
+    let callee = match e {
+        Expr::IndirectCall { target, .. } => {
+            let names = hoist_operands(out, &[target.as_ref()], inner);
+            names.into_iter().next()
+        }
+        _ => None,
+    };
     let mut names = Vec::with_capacity(args.len());
     for a in args {
         let t = format!("_sir_a{}", fresh_id());
@@ -1719,7 +1839,16 @@ fn emit_compound_call(out: &mut String, dst: &str, e: &Expr, indent: usize) {
         names.push(t);
     }
     let _ = write!(out, "{ipad}{dst} = ");
-    emit_call_with_arg_names(out, e, &names);
+    match callee {
+        Some(t) => {
+            let _ = write!(out, "_sir_apply({t}, {}", names.len());
+            for n in &names {
+                let _ = write!(out, ", {n}");
+            }
+            out.push(')');
+        }
+        None => emit_call_with_arg_names(out, e, &names),
+    }
     out.push_str(";\n");
     let _ = writeln!(out, "{pad}}}");
 }
@@ -1825,8 +1954,8 @@ fn emit_call_with_arg_names(out: &mut String, e: &Expr, names: &[String]) {
             out.push(')');
         }
         Expr::IndirectCall { target, .. } => {
-            // target is simple (a compound target would itself be a hoisted
-            // arg elsewhere); render it directly.
+            // Only reached for a simple callee: `emit_compound_call` hoists
+            // the callee itself and renders `_sir_apply` directly.
             let mut t = String::new();
             emit_expr(&mut t, target, 0);
             let _ = write!(out, "_sir_apply({}, {}", t, names.len());
@@ -1834,6 +1963,11 @@ fn emit_call_with_arg_names(out: &mut String, e: &Expr, names: &[String]) {
                 let _ = write!(out, ", {n}");
             }
             out.push(')');
+        }
+        // The strict-closure marker's closure was hoisted into `names[0]`;
+        // its arity still comes from the original `MakeClosure` argument.
+        Expr::BuiltinCall { name, args, .. } if name == "lambda" && names.len() == 1 => {
+            emit_strict_closure(out, &names[0], strict_closure_arity(args));
         }
         Expr::BuiltinCall { name, .. } => emit_builtin_with_names(out, name, names),
         _ => unreachable!("emit_call_with_arg_names on non-call"),
@@ -1853,8 +1987,137 @@ fn push_joined(out: &mut String, names: &[String]) {
 // Simple expressions (rendered directly as C expression text)
 // ---------------------------------------------------------------------------
 
+/// Is `e` an **atom**: a value whose evaluation runs no code and reads no
+/// state that running code could change?
+///
+/// Literals, and locals / parameters / captures, are atoms: a SIR call
+/// cannot assign the caller's locals (captures are copied into a closure,
+/// not shared).  A builtin closure handle is a constant.  Anything else
+/// may run code (a call), or reads state a call can change (a global, an
+/// instance or class variable, a constant table entry).
+fn is_atom(e: &Expr) -> bool {
+    match e {
+        Expr::IntLit { .. }
+        | Expr::FloatLit { .. }
+        | Expr::BoolLit { .. }
+        | Expr::NilLit { .. }
+        | Expr::SymLit { .. }
+        | Expr::StrLit { .. } => true,
+        Expr::VarRef { scope, .. } => matches!(
+            scope,
+            Scope::Local | Scope::Param | Scope::Capture | Scope::Builtin
+        ),
+        Expr::Block(b) => b.stmts.is_empty() && is_atom(&b.value),
+        // The current method's receiver is fixed for the whole call.
+        Expr::BuiltinCall { name, args, .. } if name == "__self__" && args.is_empty() => true,
+        // Building a value out of atoms runs no user code and reads no
+        // mutable state: a fresh list, map, string or closure.
+        Expr::SeqLit { items, .. } => items.iter().all(is_atom),
+        Expr::MapLit { entries, .. } => {
+            entries.iter().all(|e| is_atom(&e.key) && is_atom(&e.value))
+        }
+        Expr::StrConcat { parts, .. } => parts.iter().all(is_atom),
+        Expr::MakeClosure { captures, .. } => captures.iter().all(|c| is_atom(&c.value)),
+        _ => false,
+    }
+}
+
+/// The OOP dispatch builtins.  Their class and method names are argument
+/// *positions* that must stay raw C string literals (see
+/// [`dispatch_literal_positions`]); every other argument is an ordinary value.
+///
+/// They are simple under the same rule as any call ([`operands_simple`]).
+/// When they are not, [`emit_compound_call`] hoists their value arguments
+/// into temporaries, left to right, and emits the dispatch with the names
+/// kept as literals ([`emit_dispatch`]).  (Before #18768 they had no such
+/// path: a dispatch call with a compound argument was refused, or for
+/// `__new__` emitted a call to `_sir_unknown_builtin`, and two code-running
+/// arguments of one dispatch call ran in C's unspecified order.)
+fn is_oop_dispatch(name: &str) -> bool {
+    !dispatch_literal_positions(name).is_empty()
+}
+
+/// The argument positions of OOP dispatch builtin `name` that hold a class or
+/// method **name** (a `StrLit` emitted as a quoted C literal, never evaluated);
+/// empty for any other builtin.
+///
+/// | builtin                                   | args                                   |
+/// |-------------------------------------------|----------------------------------------|
+/// | `__new__`                                 | `"Class", ctor-args…`                  |
+/// | `__method__`                              | `recv, "method", call-args…`           |
+/// | `__def_method__` / `__def_class_method__` | `"Class", "method", closure`           |
+/// | `__class_method__`                        | `"Class", "method", call-args…`        |
+/// | `__super__`                               | `"method", "DefiningClass", call-args…`|
+/// | `__include__` / `__extend__`              | `"Class", "Module"`                    |
+fn dispatch_literal_positions(name: &str) -> &'static [usize] {
+    match name {
+        "__new__" => &[0],
+        "__method__" => &[1],
+        "__def_method__"
+        | "__def_class_method__"
+        | "__class_method__"
+        | "__super__"
+        | "__include__"
+        | "__extend__" => &[0, 1],
+        _ => &[],
+    }
+}
+
+/// Is every literal-name position of dispatch call `name(args)` a `StrLit`?
+/// Only then can [`emit_dispatch`] render it.
+fn dispatch_names_are_literals(name: &str, args: &[Expr]) -> bool {
+    dispatch_literal_positions(name)
+        .iter()
+        .all(|&i| matches!(args.get(i), Some(Expr::StrLit { .. })))
+}
+
+/// Can `ops`, the operands of one call or constructor, be rendered inline as
+/// C function arguments *without changing the program's meaning*?
+///
+/// ## Why evaluation order matters here
+///
+/// C leaves the order in which a call's arguments are evaluated
+/// **unspecified**, and gcc on x86-64 evaluates them right to left.  SIR
+/// (like Python, JavaScript, Ruby and Rust) evaluates them left to right.
+/// So rendering
+///
+/// ```text
+///   BuiltinCall("+", [VarRef @n (Instance), __method__(self, "bump")])
+/// ```
+///
+/// inline as `_sir_plus(_sir_ivar_get("@n"), _sir_call_method(...))` ran
+/// `bump()` *first*.  When `bump` sets `@n`, the sum used the new value:
+/// Python's `self.n += self.bump()` gave 105 instead of 6 (#18482 review).
+///
+/// The order is only observable between operands that are not
+/// [atoms](is_atom): one of them must run code and another must run code
+/// or read mutable state.  So the operands render inline when each is
+/// simple and **at most one is not an atom**.  Otherwise the enclosing
+/// expression is not simple, and [`emit_assign`] hoists every operand into
+/// a temporary, in order, before the call: the generic hoist for calls,
+/// and [`hoist_operands`] for sequences, maps and string concatenation.
+/// A single non-atom operand (`f(g(x), 1)`, `_sir_plus(_sir_times(a, b),
+/// c)`) still renders inline, so ordinary arithmetic is unchanged.
+fn operands_simple<'a>(ops: impl IntoIterator<Item = &'a Expr>) -> bool {
+    let mut non_atoms = 0usize;
+    for op in ops {
+        if !is_simple(op) {
+            return false;
+        }
+        if !is_atom(op) {
+            non_atoms += 1;
+            if non_atoms > 1 {
+                return false;
+            }
+        }
+    }
+    true
+}
+
 /// A "simple" expression has no embedded control flow, so it can be rendered
-/// as a single C expression with no statements hoisted out.
+/// as a single C expression with no statements hoisted out.  Its operands
+/// must also be safe to evaluate in C's unspecified argument order (see
+/// [`operands_simple`]).
 fn is_simple(e: &Expr) -> bool {
     match e {
         Expr::IntLit { .. }
@@ -1872,29 +2135,33 @@ fn is_simple(e: &Expr) -> bool {
         {
             false
         }
-        Expr::DirectCall { args, .. }
-        | Expr::IndirectCall { args, .. }
-        | Expr::BuiltinCall { args, .. } => args.iter().all(is_simple),
-        Expr::MakeClosure { captures, .. } => captures.iter().all(|c| is_simple(&c.value)),
+        // An indirect call evaluates its callee first, then its arguments.
+        // The callee is an operand like any other: `make()(side())` must run
+        // `make()` before `side()`.
+        Expr::IndirectCall { target, args, .. } => {
+            operands_simple(std::iter::once(target.as_ref()).chain(args))
+        }
+        Expr::DirectCall { args, .. } | Expr::BuiltinCall { args, .. } => operands_simple(args),
+        Expr::MakeClosure { captures, .. } => operands_simple(captures.iter().map(|c| &c.value)),
         // SIR26: a conversion is as simple as its value.
         Expr::Convert { value, .. } => is_simple(value),
         // SIR16 sequences: a `_sir_seq_*` call is simple iff its operands are
         // (they render inline as function arguments); otherwise the operands
         // are hoisted by `emit_assign`.
-        Expr::SeqLit { items, .. } => items.iter().all(is_simple),
-        Expr::SeqIndex { seq, index, .. } => is_simple(seq) && is_simple(index),
+        Expr::SeqLit { items, .. } => operands_simple(items),
+        Expr::SeqIndex { seq, index, .. } => operands_simple([seq.as_ref(), index.as_ref()]),
         Expr::SeqLen { seq, .. } => is_simple(seq),
         // SIR16 maps: a `_sir_map_*` call is simple iff every operand is (they
         // render inline as function arguments); otherwise `emit_assign` hoists
         // them. A `MapLit` operand set is every entry's key AND value.
-        Expr::MapLit { entries, .. } => entries
-            .iter()
-            .all(|e| is_simple(&e.key) && is_simple(&e.value)),
-        Expr::MapGet { map, key, .. } => is_simple(map) && is_simple(key),
+        Expr::MapLit { entries, .. } => {
+            operands_simple(entries.iter().flat_map(|e| [&e.key, &e.value]))
+        }
+        Expr::MapGet { map, key, .. } => operands_simple([map.as_ref(), key.as_ref()]),
         // SIR18 string interpolation: a `_sir_str(_sir_cat(...))` fold is
         // simple iff every part is (they render inline as fold operands);
         // otherwise `emit_assign` hoists them, mirroring `SeqLit`.
-        Expr::StrConcat { parts, .. } => parts.iter().all(is_simple),
+        Expr::StrConcat { parts, .. } => operands_simple(parts),
         // SIR16+ nodes / Intrinsic are not accepted in v0 → unreachable after
         // the capability check.  Treat as non-simple defensively.
         _ => false,
@@ -2120,7 +2387,179 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
 }
 
 /// A builtin call whose arguments are all simple.
+/// Emit OOP dispatch builtin `name(args)` (see [`dispatch_literal_positions`]),
+/// with `emit_value(out, i)` writing value argument `i`.
+///
+/// The simple path passes `emit_expr` of the argument; the compound path
+/// ([`emit_compound_call`]) passes the name of the temporary it hoisted the
+/// argument into.  The class and method names are always written here as
+/// quoted C string literals, never evaluated.
+fn emit_dispatch(
+    out: &mut String,
+    name: &str,
+    args: &[Expr],
+    emit_value: &mut dyn FnMut(&mut String, usize),
+) {
+    // `Foo.new(args…)` → `_sir_call_new("Foo", argc, args…)`.  `args[0]` is the
+    // class name (a `StrLit`), emitted as a QUOTED C string literal (no
+    // injection); the remaining args are the constructor arguments, passed
+    // through to the registered `initialize` (if any) — matching the Go/Rust/
+    // Ruby backends, which have always run `initialize` here (see this crate's
+    // CHANGELOG for the fix that brought C in line with them).
+    if name == "__new__" {
+        if let Some(Expr::StrLit { value, .. }) = args.first() {
+            let ctor_args = &args[1..];
+            let _ = write!(out, "_sir_call_new({}, {}", quote_c_string(value), ctor_args.len());
+            for i in 1..args.len() {
+                out.push_str(", ");
+                emit_value(out, i);
+            }
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    // OOP slice 2: register an instance method.  `args = [StrLit(class),
+    // StrLit(method), MakeClosure(fn)]`.  Class/method are QUOTED C string
+    // literals (no injection); the closure is emitted as a `_sir_make_closure`.
+    if name == "__def_method__" {
+        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. }), Some(_)) =
+            (args.first(), args.get(1), args.get(2))
+        {
+            let _ = write!(out, "_sir_def_method({}, {}, ", quote_c_string(cls), quote_c_string(m));
+            emit_value(out, 2);
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    // OOP slice 2: dispatch an instance method.  `args = [recv, StrLit(method),
+    // call-args…]`.  The method name is a QUOTED C string literal; dispatch is an
+    // explicit `(class,method)` table lookup (anti-RCE — never reflection).
+    if name == "__method__" {
+        if let (Some(_), Some(Expr::StrLit { value: m, .. })) = (args.first(), args.get(1)) {
+            let call_args = &args[2..];
+            // A user-registered method (OOP) dispatches through the class method
+            // table; otherwise a KNOWN built-in name (Collections) routes to the
+            // runtime dispatcher.  Both take the same `(recv, "m", argc, args…)`
+            // shape, so only the helper name differs.  (The scan guarantees the
+            // name is one or the other; a truly unknown name is rejected there.)
+            let user = DEFINED_METHODS.with(|d| d.borrow().contains(m));
+            let helper = if !user && is_builtin_method(m) {
+                "_sir_builtin_method"
+            } else {
+                "_sir_call_method"
+            };
+            let _ = write!(out, "{helper}(");
+            emit_value(out, 0);
+            let _ = write!(out, ", {}, {}", quote_c_string(m), call_args.len());
+            for i in 2..args.len() {
+                out.push_str(", ");
+                emit_value(out, i);
+            }
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    // OOP slice 5: register a CLASS method.  `args = [StrLit(class),
+    // StrLit(method), MakeClosure(fn)]` — same shape as `__def_method__`, but it
+    // populates the SEPARATE class-method (singleton) table.
+    if name == "__def_class_method__" {
+        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. }), Some(_)) =
+            (args.first(), args.get(1), args.get(2))
+        {
+            let _ = write!(out, "_sir_def_class_method({}, {}, ", quote_c_string(cls), quote_c_string(m));
+            emit_value(out, 2);
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    // OOP slice 5: dispatch a CLASS method.  `args = [StrLit(class),
+    // StrLit(method), call-args…]` — the receiver is the class NAME (a StrLit),
+    // not an instance expression, so both leading args are quoted C literals.
+    if name == "__class_method__" {
+        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. })) =
+            (args.first(), args.get(1))
+        {
+            let call_args = &args[2..];
+            let _ = write!(
+                out,
+                "_sir_call_class_method({}, {}, {}",
+                quote_c_string(cls),
+                quote_c_string(m),
+                call_args.len()
+            );
+            for i in 2..args.len() {
+                out.push_str(", ");
+                emit_value(out, i);
+            }
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    // OOP slice 4: `super` — `args = [StrLit(method), StrLit(definingClass),
+    // call-args…]`.  Resolve `method` from the SUPERCLASS of the defining class
+    // and apply to the current self.  Method / defining-class are QUOTED C string
+    // literals (no injection); the walk is an ancestry table lookup (anti-RCE).
+    if name == "__super__" {
+        if let (Some(Expr::StrLit { value: m, .. }), Some(Expr::StrLit { value: dc, .. })) =
+            (args.first(), args.get(1))
+        {
+            let call_args = &args[2..];
+            let _ = write!(
+                out,
+                "_sir_call_super({}, {}, {}",
+                quote_c_string(m),
+                quote_c_string(dc),
+                call_args.len()
+            );
+            for i in 2..args.len() {
+                out.push_str(", ");
+                emit_value(out, i);
+            }
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    // OOP slice 7: `include M` / `extend M` — `args = [StrLit(class),
+    // StrLit(module)]`.  Both names are QUOTED C string literals (no injection);
+    // each records a `(class, module)` mixin the method resolvers consult.
+    if name == "__include__" || name == "__extend__" {
+        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. })) =
+            (args.first(), args.get(1))
+        {
+            let helper = if name == "__include__" {
+                "_sir_register_include"
+            } else {
+                "_sir_register_extend"
+            };
+            let _ = write!(out, "{}({}, {})", helper, quote_c_string(cls), quote_c_string(m));
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+}
+
 fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // SIR10 strict closure — see `strict_closure_arity`.
+    if name == "lambda" && args.len() == 1 {
+        let mut closure = String::new();
+        emit_expr(&mut closure, &args[0], indent);
+        emit_strict_closure(out, &closure, strict_closure_arity(args));
+        return;
+    }
     // SIR17 `raise`.  The FIRST argument decides the shape (mirroring the
     // Go/Rust/JS/Python backends for cross-backend parity):
     //   • no argument — re-raise the exception currently being handled.
@@ -2156,153 +2595,10 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
         }
         return;
     }
-    // `Foo.new(args…)` → `_sir_call_new("Foo", argc, args…)`.  `args[0]` is the
-    // class name (a `StrLit`), emitted as a QUOTED C string literal (no
-    // injection); the remaining args are the constructor arguments, passed
-    // through to the registered `initialize` (if any) — matching the Go/Rust/
-    // Ruby backends, which have always run `initialize` here (see this crate's
-    // CHANGELOG for the fix that brought C in line with them).
-    if name == "__new__" {
-        if let Some(Expr::StrLit { value, .. }) = args.first() {
-            let ctor_args = &args[1..];
-            let _ = write!(out, "_sir_call_new({}, {}", quote_c_string(value), ctor_args.len());
-            for a in ctor_args {
-                out.push_str(", ");
-                emit_expr(out, a, indent);
-            }
-            out.push(')');
-        } else {
-            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
-        }
-        return;
-    }
-    // OOP slice 2: register an instance method.  `args = [StrLit(class),
-    // StrLit(method), MakeClosure(fn)]`.  Class/method are QUOTED C string
-    // literals (no injection); the closure is emitted as a `_sir_make_closure`.
-    if name == "__def_method__" {
-        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. }), Some(clo)) =
-            (args.first(), args.get(1), args.get(2))
-        {
-            let _ = write!(out, "_sir_def_method({}, {}, ", quote_c_string(cls), quote_c_string(m));
-            emit_expr(out, clo, indent);
-            out.push(')');
-        } else {
-            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
-        }
-        return;
-    }
-    // OOP slice 2: dispatch an instance method.  `args = [recv, StrLit(method),
-    // call-args…]`.  The method name is a QUOTED C string literal; dispatch is an
-    // explicit `(class,method)` table lookup (anti-RCE — never reflection).
-    if name == "__method__" {
-        if let (Some(recv), Some(Expr::StrLit { value: m, .. })) = (args.first(), args.get(1)) {
-            let call_args = &args[2..];
-            // A user-registered method (OOP) dispatches through the class method
-            // table; otherwise a KNOWN built-in name (Collections) routes to the
-            // runtime dispatcher.  Both take the same `(recv, "m", argc, args…)`
-            // shape, so only the helper name differs.  (The scan guarantees the
-            // name is one or the other; a truly unknown name is rejected there.)
-            let user = DEFINED_METHODS.with(|d| d.borrow().contains(m));
-            let helper = if !user && is_builtin_method(m) {
-                "_sir_builtin_method"
-            } else {
-                "_sir_call_method"
-            };
-            let _ = write!(out, "{helper}(");
-            emit_expr(out, recv, indent);
-            let _ = write!(out, ", {}, {}", quote_c_string(m), call_args.len());
-            for a in call_args {
-                out.push_str(", ");
-                emit_expr(out, a, indent);
-            }
-            out.push(')');
-        } else {
-            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
-        }
-        return;
-    }
-    // OOP slice 5: register a CLASS method.  `args = [StrLit(class),
-    // StrLit(method), MakeClosure(fn)]` — same shape as `__def_method__`, but it
-    // populates the SEPARATE class-method (singleton) table.
-    if name == "__def_class_method__" {
-        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. }), Some(clo)) =
-            (args.first(), args.get(1), args.get(2))
-        {
-            let _ = write!(out, "_sir_def_class_method({}, {}, ", quote_c_string(cls), quote_c_string(m));
-            emit_expr(out, clo, indent);
-            out.push(')');
-        } else {
-            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
-        }
-        return;
-    }
-    // OOP slice 5: dispatch a CLASS method.  `args = [StrLit(class),
-    // StrLit(method), call-args…]` — the receiver is the class NAME (a StrLit),
-    // not an instance expression, so both leading args are quoted C literals.
-    if name == "__class_method__" {
-        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. })) =
-            (args.first(), args.get(1))
-        {
-            let call_args = &args[2..];
-            let _ = write!(
-                out,
-                "_sir_call_class_method({}, {}, {}",
-                quote_c_string(cls),
-                quote_c_string(m),
-                call_args.len()
-            );
-            for a in call_args {
-                out.push_str(", ");
-                emit_expr(out, a, indent);
-            }
-            out.push(')');
-        } else {
-            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
-        }
-        return;
-    }
-    // OOP slice 4: `super` — `args = [StrLit(method), StrLit(definingClass),
-    // call-args…]`.  Resolve `method` from the SUPERCLASS of the defining class
-    // and apply to the current self.  Method / defining-class are QUOTED C string
-    // literals (no injection); the walk is an ancestry table lookup (anti-RCE).
-    if name == "__super__" {
-        if let (Some(Expr::StrLit { value: m, .. }), Some(Expr::StrLit { value: dc, .. })) =
-            (args.first(), args.get(1))
-        {
-            let call_args = &args[2..];
-            let _ = write!(
-                out,
-                "_sir_call_super({}, {}, {}",
-                quote_c_string(m),
-                quote_c_string(dc),
-                call_args.len()
-            );
-            for a in call_args {
-                out.push_str(", ");
-                emit_expr(out, a, indent);
-            }
-            out.push(')');
-        } else {
-            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
-        }
-        return;
-    }
-    // OOP slice 7: `include M` / `extend M` — `args = [StrLit(class),
-    // StrLit(module)]`.  Both names are QUOTED C string literals (no injection);
-    // each records a `(class, module)` mixin the method resolvers consult.
-    if name == "__include__" || name == "__extend__" {
-        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. })) =
-            (args.first(), args.get(1))
-        {
-            let helper = if name == "__include__" {
-                "_sir_register_include"
-            } else {
-                "_sir_register_extend"
-            };
-            let _ = write!(out, "{}({}, {})", helper, quote_c_string(cls), quote_c_string(m));
-        } else {
-            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
-        }
+    // The OOP dispatch builtins (`Foo.new`, `recv.m(…)`, `def`/`super`/
+    // `include` registrations): see `emit_dispatch`.
+    if is_oop_dispatch(name) {
+        emit_dispatch(out, name, args, &mut |o, i| emit_expr(o, &args[i], indent));
         return;
     }
     // OOP slice 3: a bare `self` → the current receiver (`_sir_self()`).
@@ -2575,6 +2871,8 @@ fn is_supported_builtin(name: &str) -> bool {
         || matches!(
             name,
             "and" | "or"
+                // SIR10 strict closure (`emit_builtin_simple`).
+                | "lambda"
                 | "raise"
                 | "__new__"
                 | "__def_method__"
@@ -2931,6 +3229,16 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             if !is_supported_builtin(name) {
                 return Some((name.clone(), span.clone()));
             }
+            // SIR10's strict-closure marker wraps exactly one closure.  Any
+            // other count used to compile to a runtime
+            // `_sir_unknown_builtin("lambda")` (#18466); only a hand-built or
+            // non-Twig module can carry one, and it is refused here instead.
+            if name == "lambda" && args.len() != 1 {
+                return Some((
+                    format!("`lambda` with {} argument(s) (it wraps exactly one closure)", args.len()),
+                    span.clone(),
+                ));
+            }
             // `__new__` must start with `StrLit(class)` — a constant class name;
             // any further args are constructor arguments forwarded to
             // `initialize` and emitted like ordinary call args, so they need no
@@ -3002,22 +3310,16 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
                 return Some(("a malformed __class_method__ dispatch".to_string(), span.clone()));
             }
             // These OOP builtins carry `StrLit` class/method names that must stay
-            // raw C literals.  The compound (control-flow-argument) path cannot
-            // recover them, so reject a call that is not `is_simple` — deferred,
-            // not mis-emitted.
-            if matches!(
-                name.as_str(),
-                "__def_method__"
-                    | "__method__"
-                    | "__super__"
-                    | "__def_class_method__"
-                    | "__class_method__"
-                    | "__include__"
-                    | "__extend__"
-            ) && !is_simple(e)
-            {
+            // raw C literals.  The compound path (`emit_compound_call` →
+            // `emit_dispatch`) hoists their VALUE arguments and keeps the names
+            // literal, so a non-simple call is fine as long as every name
+            // position really is a `StrLit`.  The shape checks above already
+            // require that per builtin; this is the backstop for every dispatch
+            // builtin, `__new__` included, so a malformed one is refused rather
+            // than emitted as `_sir_unknown_builtin`.
+            if is_oop_dispatch(name) && !is_simple(e) && !dispatch_names_are_literals(name, args) {
                 return Some((
-                    format!("a `{name}` call with a control-flow argument"),
+                    format!("a `{name}` call whose class or method name is not a literal"),
                     span.clone(),
                 ));
             }
@@ -3404,16 +3706,51 @@ fn is_valid_c_ident(s: &str) -> bool {
 }
 
 /// Whether a syntactically-valid C identifier still needs the escape
-/// marker: a C keyword, a reserved platform macro (`min`/`max`), this
-/// backend's own reserved names, or already starting with the runtime's
-/// `_sir` namespace.
+/// marker: a C keyword, a reserved platform macro (`min`/`max`), a name this
+/// backend or its runtime generates, or a name the C library may define as
+/// a macro (#18466).
+///
+/// | reserved                                  | why                                    |
+/// |-------------------------------------------|----------------------------------------|
+/// | `sir…`, `_sir…` (any case)                | the runtime's functions (`_sir_apply`), types (`SirValue`), macros and enum constants (`SIR_INT`), the entry points `sir_user_main`/`sir_user_init`, every user function's `sir_fn_` prefix, and [`ESCAPE_MARKER`] |
+/// | `main`                                    | C's process entry                      |
+/// | no lowercase letter (`EOF`, `NAN`, `N`)   | the headers' object-like macros are upper case: `EOF`, `NAN`, `INFINITY`, `INT64_MAX`, `EXIT_SUCCESS`, … — a local of that name expands into garbage |
+/// | `__…`, `_` + upper case                   | reserved to the C implementation, which defines macros there (`__STDC__`, glibc's `__THROW`) |
+/// | `errno`, `math_errhandling`, `stdin`, `stdout`, `stderr`, `L_tmpnam` | the lower-case object-like macros of the included headers (MSVC's `stdin` is `(__acrt_iob_func(0))`) |
+/// | `…_t`                                     | the headers' typedefs — the emitted code declares `int64_t` loop counters inside user functions, so a local `int64_t` broke them; POSIX reserves the whole `_t` suffix |
+/// | `setjmp`, `longjmp`, `jmp_buf`, `va_list`, `va_start`, `va_arg`, `va_end`, `va_copy` | `<setjmp.h>`/`<stdarg.h>` names; the emitted `rescue` calls `setjmp(…)` inline, and on MSVC `setjmp` is a macro |
+///
+/// Function-like macros (`isnan`, `setjmp`) need no entry: they expand only
+/// before `(`, which a local never meets, and a user *function* is never
+/// spelled bare (see [`function_emit_name`]).
 fn needs_marker(s: &str) -> bool {
+    let lower = s.to_ascii_lowercase();
     is_c_keyword(s)
         || is_reserved_macro(s)
-        || s.starts_with("_sir")
+        || lower.starts_with("sir")
+        || lower.starts_with("_sir")
         || s == "main"
-        || s == "user_main"
-        || s == "sir_user_init"
+        || !s.chars().any(|c| c.is_ascii_lowercase())
+        || s.starts_with("__")
+        || (s.starts_with('_') && s.chars().nth(1).is_some_and(|c| c.is_ascii_uppercase()))
+        || s.ends_with("_t")
+        || matches!(
+            s,
+            "errno"
+                | "math_errhandling"
+                | "stdin"
+                | "stdout"
+                | "stderr"
+                | "L_tmpnam"
+                | "setjmp"
+                | "longjmp"
+                | "jmp_buf"
+                | "va_list"
+                | "va_start"
+                | "va_arg"
+                | "va_end"
+                | "va_copy"
+        )
 }
 
 /// Per-character encoding for a name containing at least one illegal

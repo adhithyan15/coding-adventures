@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C238-bij",
+    "language": "marwadi",
+    "chapter": 238,
+    "sequence": 16170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e65c92663de94ed"
+  },
+  "findings": []
+}

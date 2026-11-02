@@ -1,0 +1,21 @@
+{
+  "chapter": 228,
+  "title": "Summer Sun",
+  "label": "ch:mw-summer-sun",
+  "canDo": "I can describe dry air, the heat and a cool evening.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-R228-review-223-228",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can describe dry air, the heat and a cool evening.",
+    "assesses": [
+      "MW-LEX-C228-HEAT228-01",
+      "MW-LEX-C228-HEAT228-02",
+      "MW-LEX-C228-HEAT228-03",
+      "MW-LEX-C228-HEAT228-04",
+      "MW-LEX-C228-HEAT228-05"
+    ]
+  }
+}

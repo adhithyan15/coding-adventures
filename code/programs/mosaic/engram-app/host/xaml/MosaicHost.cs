@@ -656,7 +656,7 @@ public static class MosaicHost
         for (var index = 0; index < MaxQuarantinedSnapshots; index++)
         {
             var corrupt = index == 0 ? path + ".corrupt" : $"{path}.corrupt.{index}";
-            if (File.Exists(corrupt) || Directory.Exists(corrupt))
+            if (QuarantineNameTaken(corrupt))
             {
                 continue;
             }
@@ -670,6 +670,15 @@ public static class MosaicHost
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
+                // Something got to the name after the check: try the next
+                // one. Decided by looking again, not from the exception,
+                // because Windows reports a directory there as access denied
+                // (UnauthorizedAccessException), not as "already exists".
+                if (QuarantineNameTaken(corrupt))
+                {
+                    continue;
+                }
+
                 PersistenceDisabled = true;
                 Console.Error.WriteLine(
                     $"Engram could not copy the unreadable snapshot aside; this session will not be saved: {ex.Message}");
@@ -680,6 +689,26 @@ public static class MosaicHost
         PersistenceDisabled = true;
         Console.Error.WriteLine(
             $"Engram already holds {MaxQuarantinedSnapshots} unreadable snapshots beside {path}; this session will not be saved until they are cleared");
+    }
+
+    // Whether anything is at a quarantine name: a file, a directory, or a
+    // symbolic link or junction, even one whose target is gone. Exists covers
+    // the first two everywhere, but whether it sees a dangling link depends
+    // on the platform, so LinkTarget, which reads the link itself, settles
+    // that. A name that cannot even be inspected counts as taken: skipping it
+    // never overwrites anything.
+    private static bool QuarantineNameTaken(string corrupt)
+    {
+        try
+        {
+            return File.Exists(corrupt)
+                || Directory.Exists(corrupt)
+                || new FileInfo(corrupt).LinkTarget is not null;
+        }
+        catch (Exception)
+        {
+            return true;
+        }
     }
 
     private static void PersistSnapshot(IntPtr session)

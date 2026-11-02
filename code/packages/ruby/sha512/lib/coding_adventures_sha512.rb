@@ -139,16 +139,19 @@ module CodingAdventures
     # We use Ruby's pack: "N" = 32-bit big-endian unsigned.
     # "Q>" is 64-bit big-endian unsigned.
     def self.pad(data)
-      bit_len = data.bytesize * 8
       msg = data.dup.b
       msg << "\x80".b
       msg << "\x00".b while msg.bytesize % 128 != 112
-      # 128-bit big-endian length field (16 bytes).
-      # Upper 64 bits are zero (practical messages never exceed 2^64 bits).
-      # Lower 64 bits hold the bit length.
-      # Pack as four 32-bit big-endian values: [0, 0, hi32, lo32].
-      msg << [0, 0, bit_len >> 32, bit_len & 0xFFFFFFFF].pack("N4")
+      msg << encode_bit_length(data.bytesize)
       msg
+    end
+
+    def self.encode_bit_length(byte_count)
+      unless byte_count.is_a?(Integer) && byte_count >= 0 && byte_count < (1 << 125)
+        raise RangeError, "sha512: message length must be less than 2^128 bits"
+      end
+      bit_len = byte_count * 8
+      [bit_len >> 96, bit_len >> 64, bit_len >> 32, bit_len].map { |part| part & 0xFFFFFFFF }.pack("N4")
     end
 
     # ---- Message Schedule ----
@@ -214,6 +217,7 @@ module CodingAdventures
     #
     # "Q>8" packs eight 64-bit big-endian unsigned integers into 64 bytes.
     def self.sha512(data)
+      raise TypeError, "sha512: expected binary String" unless data.is_a?(String)
       padded = pad(data.b)
       state = INIT.dup
       0.step(padded.bytesize - 1, 128) do |i|
@@ -245,13 +249,26 @@ module CodingAdventures
 
       # Feed more bytes into the hash. Returns self for chaining.
       def update(data)
+        raise TypeError, "sha512.update: expected binary String" unless data.is_a?(String)
         data = data.b
-        @buffer << data
-        @byte_count += data.bytesize
-        while @buffer.bytesize >= 128
-          @state = Sha512.compress(@state, @buffer[0, 128])
-          @buffer = @buffer[128..]
+        next_count = @byte_count + data.bytesize
+        Sha512.encode_bit_length(next_count)
+        @byte_count = next_count
+        offset = 0
+        unless @buffer.empty?
+          copied = [128 - @buffer.bytesize, data.bytesize].min
+          @buffer << data.byteslice(0, copied)
+          offset = copied
+          if @buffer.bytesize == 128
+            @state = Sha512.compress(@state, @buffer)
+            @buffer = "".b
+          end
         end
+        while offset + 128 <= data.bytesize
+          @state = Sha512.compress(@state, data.byteslice(offset, 128))
+          offset += 128
+        end
+        @buffer << data.byteslice(offset, data.bytesize - offset)
         self
       end
       alias_method :<<, :update
@@ -259,11 +276,10 @@ module CodingAdventures
       # Return the 64-byte binary digest of all data fed so far.
       # Non-destructive: calling digest twice returns the same bytes.
       def digest
-        bit_len = @byte_count * 8
         tail = @buffer.dup
         tail << "\x80".b
         tail << "\x00".b while tail.bytesize % 128 != 112
-        tail << [0, 0, bit_len >> 32, bit_len & 0xFFFFFFFF].pack("N4")
+        tail << Sha512.encode_bit_length(@byte_count)
 
         state = @state.dup
         0.step(tail.bytesize - 1, 128) do |i|

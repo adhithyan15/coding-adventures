@@ -40,6 +40,13 @@ thread_local! {
     /// (not plain `let`) so the later reassignment compiles.  Populated
     /// per function in `emit_function`; immutable bindings stay `let`.
     static MUTABLE_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+
+    /// The SIR name of every function in the module being emitted.  A
+    /// *variable* spelled like one of them is renamed by [`var_ident`] so
+    /// it cannot shadow the function (#18485).  Filled at the start of
+    /// every `emit_module`, because `emit_expr` sees one expression at a
+    /// time and has no handle on the module.
+    static FUNCTION_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 fn fresh_loop_id() -> usize {
@@ -54,6 +61,11 @@ fn fresh_loop_id() -> usize {
 /// prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
     LOOP_COUNTER.with(|c| c.set(0));
+    FUNCTION_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().map(|f| f.name.clone()));
+    });
     let mut out = String::new();
     emit_banner(&mut out, m);
     emit_allows(&mut out);
@@ -279,14 +291,14 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{}: __sir::Value", sanitize_ident(&c.name));
+        let _ = write!(out, "{}: __sir::Value", var_ident(&c.name));
     }
     for p in &f.params {
         if !first {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{}: __sir::Value", sanitize_ident(&p.name));
+        let _ = write!(out, "{}: __sir::Value", var_ident(&p.name));
     }
     out.push_str(") -> __sir::Value {\n");
 
@@ -349,7 +361,7 @@ fn emit_default_param_prologue(out: &mut String, f: &Function, indent: usize) {
     let pad = indent_str(indent);
     for p in &f.params {
         let Some(default) = &p.default else { continue };
-        let name = sanitize_ident(&p.name);
+        let name = var_ident(&p.name);
         let _ = write!(
             out,
             "{}let {} = if __sir::is_missing(&{}) {{ ",
@@ -695,7 +707,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 "{}{} {}: __sir::Value = ",
                 pad,
                 let_keyword(name),
-                sanitize_ident(name)
+                var_ident(name)
             );
             emit_expr(out, value, indent);
             out.push_str(";\n");
@@ -721,7 +733,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             value,
             ..
         } => {
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, var_ident(name));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -1065,7 +1077,7 @@ fn emit_try_catch(
                     out,
                     "{}let {}: __sir::Value = __sir::exc_value(&__exc);",
                     bpad,
-                    sanitize_ident(bind)
+                    var_ident(bind)
                 );
             }
             emit_bare_stmts(out, &r.body, arm + 2);
@@ -1522,7 +1534,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
 fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
     match scope {
         Scope::Local | Scope::Param | Scope::Capture => {
-            let _ = write!(out, "{}.clone()", sanitize_ident(name));
+            let _ = write!(out, "{}.clone()", var_ident(name));
         }
         Scope::Global => {
             let _ = write!(out, "__sir::global_get_static({})", quote_rs_string(name));
@@ -1864,7 +1876,46 @@ fn emit_oop_name_arg(out: &mut String, e: &Expr) {
     }
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* (a Ruby lambda, every Twig closure):
+///
+/// ```text
+/// (lambda (x y) (+ x y))  →  __sir::strict_arity({ … Value::Closure(…) }, 2)
+/// ```
+///
+/// `strict_arity` wraps the closure so a call with any other argument count
+/// raises a catchable `ArgumentError` ("arity mismatch: …").  A plain
+/// closure's body drains its arguments with `unwrap_or(Nil)`, so a missing
+/// one became `nil` (Twig's `(g 4)` on a two-parameter lambda died later
+/// with "expected int, got nil") and an extra one was dropped (issue
+/// #18461).
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`semantic_ir::Function::exact_arity`] is `None`: defaults,
+/// `*rest`, …), the inner expression is emitted unchanged.
+fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
+    let arity = match inner {
+        Expr::MakeClosure { fn_name, .. } => {
+            STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+        }
+        _ => None,
+    };
+    match arity {
+        Some(n) => {
+            out.push_str("__sir::strict_arity(");
+            emit_expr(out, inner, indent);
+            let _ = write!(out, ", {n})");
+        }
+        None => emit_expr(out, inner, indent),
+    }
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // SIR10 strict closure — see `emit_strict_closure`.
+    if name == "lambda" && args.len() == 1 {
+        emit_strict_closure(out, &args[0], indent);
+        return;
+    }
     // `raise` → panic with a class-tagged `SirError` payload (SIR17
     // Exceptions).  The first argument decides the shape, mirroring the
     // TS backend's `raiseError` emission:
@@ -2325,7 +2376,17 @@ fn emit_make_closure(
     let pad = indent_str(indent + 1);
     let mut cap_names: Vec<String> = Vec::with_capacity(captures.len());
     for c in captures {
-        let bind = format!("__cap_{}", sanitize_ident(&c.name));
+        // `__cap_<capture>`.  The user can never spell one of these: the
+        // whole `__cap_` family is reserved by `sanitize_ident` (#18466), so
+        // a user variable named `__cap_A` is `__sir_esc_v__cap_A` and cannot
+        // be shadowed by the temporary for `A`.  A keyword capture sanitizes
+        // to raw-identifier syntax (`r#fn`), which cannot be glued onto a
+        // prefix; dropping the `r#` keeps the map one-to-one, because a
+        // keyword never sanitizes to its bare spelling.
+        let bind = format!(
+            "__cap_{}",
+            sanitize_ident(&c.name).trim_start_matches("r#")
+        );
         cap_names.push(bind.clone());
         let _ = write!(out, "{}let {}: __sir::Value = ", pad, bind);
         emit_expr(out, &c.value, indent + 1);
@@ -2423,6 +2484,12 @@ thread_local! {
     /// the emitter falls back to plain positional emission.
     static FN_PARAMS: std::cell::RefCell<std::collections::HashMap<String, Vec<Param>>> =
         std::cell::RefCell::new(std::collections::HashMap::new());
+
+    /// Function name → [`semantic_ir::Function::exact_arity`], for the
+    /// strict-closure marker (see `emit_strict_closure`).  Populated and
+    /// cleared alongside `FN_ARITY`.
+    static STRICT_ARITY: std::cell::RefCell<std::collections::HashMap<String, usize>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
 }
 
 /// Wrap a call to `emit_module` so that `MakeClosure` can resolve
@@ -2444,9 +2511,15 @@ pub fn emit_module_with_arity_table(m: &Module) -> String {
             t.insert(f.name.clone(), f.params.clone());
         }
     });
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     let out = emit_module(m);
     FN_ARITY.with(|t| t.borrow_mut().clear());
     FN_PARAMS.with(|t| t.borrow_mut().clear());
+    STRICT_ARITY.with(|t| t.borrow_mut().clear());
     out
 }
 
@@ -2544,7 +2617,7 @@ fn emit_for_range(
     indent: usize,
 ) {
     let id = fresh_loop_id();
-    let v = sanitize_ident(var);
+    let v = var_ident(var);
     let pad = indent_str(indent);
     let inner = indent + 1;
     let inner_pad = indent_str(inner);
@@ -2580,10 +2653,16 @@ fn emit_for_range(
         "{}while if __sir_step_{id} >= 0 {{ __sir_i_{id} < __sir_stop_{id} }} else {{ __sir_i_{id} > __sir_stop_{id} }} {{",
         inner_pad, id = id
     );
+    // `let mut` when the body assigns the loop variable (Python's
+    // `for i in range(3): i += 10`).  The next iteration still takes its
+    // value from the hidden counter, never from `var`.
     let _ = writeln!(
         out,
-        "{}let {}: __sir::Value = __sir::Value::Int(__sir_i_{});",
-        body_pad, v, id
+        "{}{} {}: __sir::Value = __sir::Value::Int(__sir_i_{});",
+        body_pad,
+        let_keyword(var),
+        v,
+        id
     );
     emit_block_as_stmts(out, body, inner + 1);
     let _ = writeln!(out, "{}__sir_i_{id} += __sir_step_{id};", body_pad, id = id);
@@ -2598,12 +2677,18 @@ fn emit_for_range(
 /// chain into a `Vec<Value>`; the loop binds each element to `var`.
 fn emit_for_each(out: &mut String, var: &str, iter: &Expr, body: &Block, indent: usize) {
     let pad = indent_str(indent);
-    let v = sanitize_ident(var);
+    let v = var_ident(var);
     // No type annotation on the loop pattern: `for <pat>: T in ...` is not
     // valid Rust (type ascription on a `for` binding is rejected).  The
     // element type is already `__sir::Value` because `seq_iter` returns a
     // `Vec<Value>`, so a plain `for <var> in ...` binds it correctly.
-    let _ = write!(out, "{}for {} in __sir::seq_iter(&(", pad, v);
+    // `mut` when the body assigns the loop variable (see `emit_for_range`).
+    let binding = if MUTABLE_NAMES.with(|m| m.borrow().contains(var)) {
+        format!("mut {v}")
+    } else {
+        v
+    };
+    let _ = write!(out, "{}for {} in __sir::seq_iter(&(", pad, binding);
     emit_expr(out, iter, indent);
     out.push_str(")) {\n");
     emit_block_as_stmts(out, body, indent + 1);
@@ -2618,7 +2703,7 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
                 out,
                 "{} {}: __sir::Value = ",
                 let_keyword(name),
-                sanitize_ident(name)
+                var_ident(name)
             );
             emit_expr(out, value, indent);
             out.push_str("; ");
@@ -2635,7 +2720,7 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
             value,
             ..
         } => {
-            let _ = write!(out, "{} = ", sanitize_ident(name));
+            let _ = write!(out, "{} = ", var_ident(name));
             emit_expr(out, value, indent);
             out.push_str("; ");
         }
@@ -2866,6 +2951,49 @@ const TAG_VERBATIM: &str = "v";
 /// empty-input sentinel.
 const TAG_ESCAPED: &str = "e";
 
+/// Tag immediately following [`ESCAPE_MARKER`] for a *variable* renamed
+/// because a function of the module has the same SIR name (see
+/// [`var_ident`]).  Distinct from [`TAG_VERBATIM`] and [`TAG_ESCAPED`], so a
+/// renamed variable can never equal any output of [`sanitize_ident`].
+const TAG_LOCAL: &str = "l";
+
+/// The Rust identifier for the SIR *variable* `name`: a local, parameter,
+/// capture, loop variable or `rescue` binding.  (Globals live in the
+/// runtime's global store, keyed by their SIR name, so they never reach
+/// here.)
+///
+/// SIR keeps functions and variables in two namespaces, and a source
+/// language may use both spellings at once (Ruby: `def f; 40; end; f = 2;
+/// f() + f` is 42).  In Rust a local `let f` shadows the item `fn f` in the
+/// value namespace, and `f()` failed with `error[E0618]: expected function,
+/// found Value` (#18485).  A variable that collides with a function is
+/// renamed:
+///
+/// | SIR variable | module has a function of that name? | Rust             |
+/// |--------------|-------------------------------------|------------------|
+/// | `x`          | no                                  | `x`              |
+/// | `f`          | yes                                 | `__sir_esc_lf`   |
+/// | `fn`         | yes                                 | `__sir_esc_lfn`  |
+///
+/// The renamed form is [`ESCAPE_MARKER`], [`TAG_LOCAL`], then
+/// `sanitize_ident(name)` with any raw-identifier `r#` dropped (it cannot
+/// follow a prefix).  Dropping it keeps the map one-to-one, because a
+/// keyword never sanitizes to its bare spelling -- the same argument as the
+/// `__cap_` temporaries in `emit_make_closure`.  Every renamed form is
+/// disjoint from every `sanitize_ident` output, which either lacks the
+/// marker or follows it with another tag, and it depends only on the name,
+/// so a variable's binding and every use of it agree.
+fn var_ident(name: &str) -> String {
+    if FUNCTION_NAMES.with(|t| t.borrow().contains(name)) {
+        format!(
+            "{ESCAPE_MARKER}{TAG_LOCAL}{}",
+            sanitize_ident(name).trim_start_matches("r#")
+        )
+    } else {
+        sanitize_ident(name)
+    }
+}
+
 /// Sanitize a SIR identifier for Rust.
 ///
 /// SIR names can include `?`, `!`, `-`, `+`, `*`, etc.  Rust
@@ -2913,11 +3041,28 @@ const TAG_ESCAPED: &str = "e";
 /// loop below verbatim. The fix: every `_` is now escaped too, as a
 /// fixed-width `_u{6-hex}_` token — see `semantic-ir-to-python::
 /// escape_body`'s own doc comment for the full argument.
+///
+/// # Generated names are reserved too (#18466)
+///
+/// The emitter invents names of its own — see [`is_generated_name`] — and a
+/// user name spelled the same way used to pass straight through and become
+/// the *same* Rust variable.  `(define (f A __cap_A) (lambda () (+ A
+/// __cap_A)))` bound the capture temporary `__cap_A` (for `A`) and then read
+/// it back as the user's `__cap_A`, printing 2 instead of 11.  A reserved
+/// name now takes the marker branch exactly like a keyword does, so no user
+/// name can spell a generated one:
+///
+/// ```text
+/// __cap_A          ->  __sir_esc_v__cap_A
+/// __sir_user_main  ->  __sir_esc_v__sir_user_main
+/// None             ->  __sir_esc_vNone
+/// A                ->  A                 (ordinary names are untouched)
+/// ```
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
-    if is_valid_rust_ident(s) && !is_rust_keyword(s) && !s.starts_with(ESCAPE_MARKER) {
+    if is_valid_rust_ident(s) && !is_rust_keyword(s) && !is_generated_name(s) {
         return s.to_string();
     }
     if is_rust_keyword(s) && !is_raw_incompatible_keyword(s) {
@@ -2944,6 +3089,46 @@ pub fn sanitize_ident(s: &str) -> String {
         }
     }
     out
+}
+
+/// Names the emitter generates itself, which a user name must never spell
+/// (#18466).  [`sanitize_ident`] routes every one of them into its escaped
+/// branch, so the generated name and the user's can never be one variable.
+///
+/// | reserved                  | where the emitter writes it                          |
+/// |---------------------------|------------------------------------------------------|
+/// | `__sir…`                  | the runtime module `__sir`, `__sir_user_main` (SIR's `main`), loop temporaries `__sir_i_N`/`__sir_stop_N`/`__sir_step_N`, and [`ESCAPE_MARKER`] itself |
+/// | `__cap_…`                 | a closure's capture temporaries, `__cap_<capture>` ([`emit_make_closure`]) |
+/// | `__args`, `__it`          | the closure adapter's argument vector and its iterator |
+/// | `__l`                     | the short-circuit `and`/`or` operand binding          |
+/// | `__r`, `__payload`, `__exc` | `catch_unwind` around a `TryCatch` and the entry point |
+/// | `Some`, `None`, `Ok`, `Err` | prelude variants the emitted `match` arms name — a user item or `let` of that name would shadow or refute them |
+/// | `_`                       | not generated, but Rust's wildcard: `let _ = …` binds nothing and `_` cannot be read back (security review of #18466) |
+///
+/// The prefixes make the reservation open-ended: a new `__sir_*` temporary
+/// is reserved the moment it is written.  A new temporary outside these
+/// families must be added here.
+/// `__sir_block__` is the one exception to the `__sir` family: it is not
+/// generated here but is the SIR-level name the Ruby frontend gives a
+/// method's block parameter, shared by every frontend and backend, so it
+/// keeps its spelling.
+fn is_generated_name(s: &str) -> bool {
+    (s.starts_with("__sir") && s != "__sir_block__")
+        || s.starts_with("__cap_")
+        || matches!(
+            s,
+            "__args"
+                | "__it"
+                | "__l"
+                | "__r"
+                | "__payload"
+                | "__exc"
+                | "Some"
+                | "None"
+                | "Ok"
+                | "Err"
+                | "_"
+        )
 }
 
 /// The subset of `is_rust_keyword` that raw-identifier syntax cannot
@@ -3190,6 +3375,40 @@ mod tests {
         let escaped_keyword = sanitize_ident("self"); // "__sir_esc_vself"
         assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
         assert!(sanitize_ident(&escaped_keyword).starts_with("__sir_esc_"));
+    }
+
+    /// The names the emitter binds are escaped; ordinary names are not
+    /// (#18466).  `__sir_block__` is the frontends' shared block-parameter
+    /// name, not a generated one, so it keeps its spelling.
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in [
+            "__sir", "__sir_user_main", "__sir_i_0", "__cap_A", "__args", "__it", "__l", "__r",
+            "__payload", "__exc", "Some", "None", "Ok", "Err", "_",
+        ] {
+            assert_eq!(sanitize_ident(name), format!("__sir_esc_v{name}"), "{name}");
+        }
+        for name in ["A", "__cap", "__lambda_0", "__sir_block__", "__self", "some", "Okay"] {
+            assert_eq!(sanitize_ident(name), name, "{name}");
+        }
+    }
+
+    /// A capture temporary is `__cap_` + the capture's sanitized name, with
+    /// a keyword's `r#` dropped so the result is one identifier.
+    #[test]
+    fn capture_temporaries_are_single_identifiers_for_keyword_captures() {
+        let e = Expr::MakeClosure {
+            fn_name: "__lambda_0".into(),
+            captures: vec![semantic_ir::CaptureValue {
+                name: "fn".into(),
+                value: Expr::IntLit { value: 1, span: Span::synthetic() },
+            }],
+            span: Span::synthetic(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert!(out.contains("let __cap_fn: __sir::Value"), "got: {out}");
+        assert!(!out.contains("__cap_r#"), "got: {out}");
     }
 
     #[test]
@@ -4437,6 +4656,57 @@ mod tests {
         assert!(out.trim_end().ends_with('}'), "got: {out}");
     }
 
+    /// A body that assigns the loop variable needs a `mut` binding, or
+    /// rustc refuses the program (`cannot assign twice to immutable
+    /// variable`).  Python's `for i in range(3): i += 10` lowers to this
+    /// (#18482).  The counter still steps `__sir_i_N`, not `i`.
+    #[test]
+    fn a_loop_variable_the_body_assigns_is_bound_mut() {
+        let assign_i = Stmt::Assign {
+            name: "i".into(),
+            scope: Scope::Local,
+            value: int(10),
+            span: s(),
+        };
+        let range = Stmt::ForRange {
+            var: "i".into(),
+            start: int(0),
+            stop: int(3),
+            step: int(1),
+            body: block(vec![assign_i.clone()], nil()),
+            span: s(),
+        };
+        let each = Stmt::ForEach {
+            var: "x".into(),
+            iter: int(0),
+            body: block(
+                vec![Stmt::Assign {
+                    name: "x".into(),
+                    scope: Scope::Local,
+                    value: int(1),
+                    span: s(),
+                }],
+                nil(),
+            ),
+            span: s(),
+        };
+        let mut out = String::new();
+        MUTABLE_NAMES.with(|m| {
+            let mut set = m.borrow_mut();
+            set.clear();
+            set.insert("i".to_string());
+            set.insert("x".to_string());
+        });
+        emit_stmt(&mut out, &range, 1);
+        emit_stmt(&mut out, &each, 1);
+        MUTABLE_NAMES.with(|m| m.borrow_mut().clear());
+        assert!(
+            out.contains("let mut i: __sir::Value = __sir::Value::Int(__sir_i_"),
+            "got: {out}"
+        );
+        assert!(out.contains("for mut x in __sir::seq_iter("), "got: {out}");
+    }
+
     #[test]
     fn emit_for_range_caches_bounds_and_binds_int_var() {
         let mut out = String::new();
@@ -5278,5 +5548,103 @@ mod tests {
             emit_s(&st),
             "let _ = __sir::cvar_set(\"@@count\", __sir::Value::Int(0i64));\n"
         );
+    }
+
+    // ── a variable never shadows a function (#18485) ─────────────────
+
+    /// `def f; 40; end` and a `main` whose local is also named `f`:
+    /// `let f = 2; f() + f`, which a source language with separate
+    /// namespaces (Ruby) evaluates to 42.
+    fn local_named_like_a_function() -> Module {
+        let sp = Span::synthetic;
+        let func = |name: &str, body: semantic_ir::Block| semantic_ir::Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let f = func(
+            "f",
+            semantic_ir::Block {
+                stmts: vec![],
+                value: Expr::IntLit { value: 40, span: sp() },
+                span: sp(),
+            },
+        );
+        let main = func(
+            "main",
+            semantic_ir::Block {
+                stmts: vec![Stmt::LetStarBinding {
+                    name: "f".to_string(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![
+                        Expr::DirectCall {
+                            fn_name: "f".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                        Expr::VarRef {
+                            name: "f".to_string(),
+                            scope: Scope::Local,
+                            span: sp(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+        );
+        Module {
+            name: "shadow".to_string(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    #[test]
+    fn a_local_named_like_a_function_is_renamed_and_the_function_is_not() {
+        let out = emit_module(&local_named_like_a_function());
+        // The function keeps its own spelling.  Everything from its
+        // definition on is the user's code (the inlined runtime comes
+        // first, and binds names of its own).
+        let at = out.find("fn f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let out = &out[at..];
+        // The local is bound, and read, under its renamed spelling...
+        assert!(out.contains("let __sir_esc_lf: __sir::Value = "), "{out}");
+        assert!(out.contains("__sir_esc_lf.clone()"), "{out}");
+        // ...never under the function's own spelling, which the call keeps.
+        assert!(!out.contains("let f: __sir::Value"), "{out}");
+        assert!(out.contains("f()"), "{out}");
+    }
+
+    #[test]
+    fn var_ident_renames_exactly_the_names_of_functions() {
+        FUNCTION_NAMES.with(|t| {
+            let mut t = t.borrow_mut();
+            t.clear();
+            t.insert("f".to_string());
+        });
+        assert_eq!(var_ident("f"), "__sir_esc_lf");
+        assert_eq!(var_ident("x"), sanitize_ident("x"));
+        // A user variable spelled like the renamed form takes the verbatim
+        // escape, so the two stay apart.
+        assert_ne!(var_ident("__sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
 }

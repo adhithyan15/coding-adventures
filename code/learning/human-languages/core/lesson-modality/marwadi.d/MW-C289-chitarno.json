@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C289-chitarno",
+    "language": "marwadi",
+    "chapter": 289,
+    "sequence": 20220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ff0714a5b062046"
+  },
+  "findings": []
+}

@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-pub const VERSION: &str = "0.85.0";
+pub const VERSION: &str = "0.99.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -2281,6 +2281,8 @@ pub enum StructuralNodeKind {
     Entity,
     Requirement,
     Element,
+    Database,
+    Queue,
     Junction,
 }
 
@@ -2374,9 +2376,46 @@ impl Default for ArchitectureConfig {
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct C4NodeMetadata {
+    pub element_type: String,
+    pub technology: Option<String>,
+    pub description: Option<String>,
+    pub sprite: Option<String>,
+    pub tags: Option<String>,
+    pub link: Option<String>,
+    pub style_overrides: C4ElementStyleOverrides,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct C4ElementStyleOverrides {
+    pub shadowing: Option<String>,
+    pub shape: Option<String>,
+    pub legend_text: Option<String>,
+    pub legend_sprite: Option<String>,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum C4DeploymentNodeType {
+    Node,
+    Left,
+    Right,
+}
+
+impl C4DeploymentNodeType {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Node => "node",
+            Self::Left => "nodeL",
+            Self::Right => "nodeR",
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralNodeMetadata {
     ArchitectureService(ArchitectureServiceMetadata),
+    C4(C4NodeMetadata),
     Requirement(RequirementMetadata),
     RequirementElement(RequirementElementMetadata),
 }
@@ -2396,6 +2435,23 @@ pub struct StructuralNode {
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralGroupMetadata {
     Architecture { icon_name: String },
+    C4Boundary {
+        boundary_type: String,
+        technology: Option<String>,
+        sprite: Option<String>,
+        tags: Option<String>,
+        link: Option<String>,
+        style_overrides: C4ElementStyleOverrides,
+    },
+    C4DeploymentNode {
+        node_type: C4DeploymentNodeType,
+        technology: Option<String>,
+        description: Option<String>,
+        sprite: Option<String>,
+        tags: Option<String>,
+        link: Option<String>,
+        style_overrides: C4ElementStyleOverrides,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -2404,6 +2460,7 @@ pub struct StructuralGroup {
     pub label: String,
     pub stereotype: Option<String>,
     pub metadata: Option<StructuralGroupMetadata>,
+    pub style: Option<DiagramStyle>,
     pub parent_group: Option<String>,
 }
 
@@ -2432,6 +2489,61 @@ pub enum StructuralRouting {
     Orthogonal,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum C4RelationshipDirection {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+impl C4RelationshipDirection {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Up => "up",
+            Self::Down => "down",
+            Self::Left => "left",
+            Self::Right => "right",
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct C4RelationshipMetadata {
+    pub direction: Option<C4RelationshipDirection>,
+    pub technology: Option<String>,
+    pub description: Option<String>,
+    pub sprite: Option<String>,
+    pub tags: Option<String>,
+    pub link: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum StructuralRelationshipMetadata {
+    C4(C4RelationshipMetadata),
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum C4DiagramType {
+    Context,
+    Container,
+    Component,
+    Dynamic,
+    Deployment,
+}
+
+impl C4DiagramType {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Context => "C4Context",
+            Self::Container => "C4Container",
+            Self::Component => "C4Component",
+            Self::Dynamic => "C4Dynamic",
+            Self::Deployment => "C4Deployment",
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralRelationship {
     pub from: String,
@@ -2447,6 +2559,10 @@ pub struct StructuralRelationship {
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,
     pub label: Option<String>,
+    pub label_offset_x: f64,
+    pub label_offset_y: f64,
+    pub metadata: Option<StructuralRelationshipMetadata>,
+    pub style: Option<DiagramStyle>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2465,6 +2581,9 @@ pub struct StructuralAlignment {
 pub struct StructuralRenderConfig {
     pub use_max_width: bool,
     pub html_labels: bool,
+    pub c4_diagram_type: Option<C4DiagramType>,
+    pub c4_shape_in_row: Option<usize>,
+    pub c4_boundary_in_row: Option<usize>,
 }
 
 impl Default for StructuralRenderConfig {
@@ -2472,6 +2591,9 @@ impl Default for StructuralRenderConfig {
         Self {
             use_max_width: true,
             html_labels: true,
+            c4_diagram_type: None,
+            c4_shape_in_row: None,
+            c4_boundary_in_row: None,
         }
     }
 }
@@ -2510,6 +2632,7 @@ pub struct LayoutedStructuralNode {
     pub stereotype: Option<String>,
     pub icon_name: Option<String>,
     pub icon_text: Option<String>,
+    pub metadata: Option<StructuralNodeMetadata>,
     pub style: ResolvedDiagramStyle,
     pub compartments: Vec<LayoutedCompartment>,
 }
@@ -2524,6 +2647,8 @@ pub struct LayoutedStructuralGroup {
     pub label: String,
     pub stereotype: Option<String>,
     pub icon_name: Option<String>,
+    pub metadata: Option<StructuralGroupMetadata>,
+    pub style: ResolvedDiagramStyle,
     pub parent_group: Option<String>,
 }
 
@@ -2543,6 +2668,8 @@ pub struct LayoutedStructuralRelationship {
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,
     pub label: Option<(Point, String)>,
+    pub metadata: Option<StructuralRelationshipMetadata>,
+    pub style: ResolvedDiagramStyle,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -3188,7 +3315,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.85.0");
+        assert_eq!(VERSION, "0.99.0");
     }
     #[test]
     fn default_direction_is_tb() {

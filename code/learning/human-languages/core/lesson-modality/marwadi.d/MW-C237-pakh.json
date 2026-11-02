@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C237-pakh",
+    "language": "marwadi",
+    "chapter": 237,
+    "sequence": 16090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67138428d80086fa"
+  },
+  "findings": []
+}

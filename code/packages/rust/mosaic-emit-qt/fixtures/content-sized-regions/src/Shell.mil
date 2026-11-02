@@ -1,0 +1,10 @@
+// UI21 §2.2 fixture, rules 6 and 7: the column shell of
+// host-scroll-column-shell, but the scrolled content's height comes ONLY
+// from the two lowerings that used to publish 0 x 0 -- a padded styled Box
+// with no size of its own (Engram's screen regions) and an If body with two
+// children (TaskApp's view switch). CI emits it and measures it with the
+// real `qml` runtime (code/scripts/qt-column-shell-scroll-render-check.qml).
+component Shell {
+  slot title : text ;
+  slot compact : bool ;
+}

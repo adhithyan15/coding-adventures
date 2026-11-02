@@ -139,15 +139,39 @@ fresh workspace:
 
 A newer failure never replaces or deletes an older quarantine, because that one
 may hold the user's real data: startup can reject the real state, and a later
-rejection must not destroy it. A name is skipped when anything is already
-there, and the move itself refuses to replace a target (SwiftUI
-`FileManager.moveItem`, Compose `Files.move` without `REPLACE_EXISTING`, WinUI
-`File.Move(..., overwrite: false)`; Flutter and Qt claim the name with an
-exclusive create and then rename onto that empty placeholder, because `dart:io`
-has no move that refuses an existing target and `QFile::rename` falls back to a
-truncating copy). A state file the Qt host cannot open at all is quarantined
-the same way. On a fresh state
-directory the first quarantine is still exactly `mosaic-state.v1.json.corrupt`.
+rejection must not destroy it.
+
+A name is **taken** when any file-system object is there: a regular file, a
+directory, or a symbolic link (even a dangling one), on every platform. A
+host never overwrites a taken name. Three rules follow:
+
+1. A pre-check that skips taken names is only advisory, because something can
+   appear between the check and the move. The operation that takes the name
+   must itself be exclusive: it fails rather than replace anything already
+   there.
+2. When that exclusive operation fails *and* something now occupies the name,
+   the name is skipped like any other taken one. Any other failure switches
+   saving off (below).
+3. "Taken" is never decided from an error code alone. An exclusive create or
+   copy onto a directory reports `EEXIST` on POSIX but `EPERM`, `EACCES` or
+   `EISDIR` on Windows, so a host that skipped only on `EEXIST` would switch
+   saving off on Windows where POSIX moves on. The host looks at the name
+   again (without following a link) instead.
+
+The exclusive step per host:
+
+| Host | Exclusive step |
+|------|----------------|
+| WinUI | `File.Move(..., overwrite: false)`: `MoveFileEx` without `MOVEFILE_REPLACE_EXISTING` on Windows, where it ships |
+| Flutter, Qt, Compose, SwiftUI | claim the name with an exclusive create (`O_CREAT \| O_EXCL`, Windows `CREATE_NEW`), then rename onto that empty placeholder, an atomic replace whose only victim is the placeholder the host just made |
+
+The four claim-first hosts cannot use a plain move. `dart:io`'s rename
+replaces its target. `QFile::rename` falls back to a truncating copy. The
+JDK's `Files.move` without `REPLACE_EXISTING`, and Foundation's
+`FileManager.moveItem`, check and then call `rename(2)` on POSIX, which
+replaces whatever appeared in between. A state file the Qt host cannot open
+at all is quarantined the same way. On a fresh state directory the first
+quarantine is still exactly `mosaic-state.v1.json.corrupt`.
 
 If the move fails, or all ten names are taken, the rejected file stays at the
 live path. The host then saves nothing for the rest of that session, since a

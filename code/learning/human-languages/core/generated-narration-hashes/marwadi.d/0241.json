@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:d3b9aa585560f423",
+  "lessonIds": [
+    "MW-C241-chot",
+    "MW-C241-thokar",
+    "MW-C241-ghav",
+    "MW-C241-tutno",
+    "MW-C241-khisakno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch241.txt",
+  "json": "marwadi/narration/ch241.json",
+  "textHash": "fnv1a64:b4066d0464c3d680",
+  "jsonHash": "fnv1a64:5600767ab95a4b46",
+  "findings": []
+}

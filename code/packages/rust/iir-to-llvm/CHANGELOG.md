@@ -1,4 +1,9 @@
 # Changelog — iir-to-llvm
+## Unreleased — only the entry point is exported (#18416)
+
+- In a module with an entry point, every function except the entry is emitted `define internal`. Before, every program function was a global symbol, and the linker binds every reference to a global in the executable to that one definition. So a program that defined a function named like libc's replaced it for the linked C runtime and the collector too. With `(define (abort) 0)`, the pair guard's `abort()` returned. With `(define (malloc n) 0)`, gc-core-capi's allocations failed. With `(define (calloc a b) 0)`, `__dyn_pair_new` got a null cell. Nothing in the runtime calls a program function by name: closures dispatch through the module's own `__dyn_call_closure`. So the entry (`main`, called by the C start-up code) is the only function that must stay external. A module without an entry point is a library and keeps external linkage everywhere.
+- A program function named like a symbol the module itself `declare`s (`@abort`, `@printf`, `@putchar` …, when the module uses them) is a duplicate name in one module, so clang refuses it. That fails closed.
+- Tests: `only_the_entry_point_has_external_linkage`; the `@pick` and `@"Some?"` expectations now read `define internal`.
 ## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
 
 - `DYN_BUILTINS` drops `dyn_equal`, `dyn_not`, `dyn_truthy` and `dyn_to_exit_code` (now compiler-emitted IIR: inline truthiness and `not`, module functions `@__lisp_equal` / `@__lisp_exit_code`).

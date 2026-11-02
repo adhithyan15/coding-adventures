@@ -8,7 +8,7 @@ behaviour of its own:
 
 | part | component | package |
 | --- | --- | --- |
-| the timeline | `RecordList` (rows grouped by day) | `mosaic-pkg-toolkit` |
+| the timeline | a `Card` per entry, with an *Open* button beside it, under each day's heading. This is Card's first real consumer: the misfits are in `journal-component-demand-audit-v1.md` | `mosaic-pkg-card` |
 | the first-run state, and "No entries match", "No entries in this journal", "No starred entries" | `EmptyState` (mounted four times) | `mosaic-pkg-toolkit` |
 | search (J4a) | a `HostInput` and a *Clear* button above the timeline | kernel primitives |
 | stars (J4b) | *Star* above the editor, *Starred only* under the search field | kernel primitives |
@@ -36,7 +36,7 @@ two together.
 ```text
 JournalApp.mil ──(slots/emits)── journal-mosaic-app ──(commands)── journal-core
       │
-JournalApp.mll ── RecordList · EmptyState · DraftEditor
+JournalApp.mll ── Card · RecordList · EmptyState · SegmentedControl · DraftEditor
 ```
 
 ## Files

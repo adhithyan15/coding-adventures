@@ -486,4 +486,21 @@ final class RendererTests: XCTestCase {
         XCTAssertTrue(result.contains("outer"))
         XCTAssertTrue(result.contains("inner"))
     }
+
+    func testFencedBlockUsesOnlyEscapedNameAsLanguageClass() {
+        let node = BlockNode.fencedBlock(FencedBlockNode(
+            name: "typescript\" onclick=\"bad",
+            info: "typescript linenos onload=bad",
+            value: "const x = 1 < 2;\n"
+        ))
+        XCTAssertEqual(
+            render(node),
+            "<pre><code class=\"language-typescript&quot; onclick=&quot;bad\">const x = 1 &lt; 2;\n</code></pre>\n"
+        )
+    }
+
+    func testAnonymousFencedBlockHasNoLanguageClass() {
+        let node = BlockNode.fencedBlock(FencedBlockNode(name: nil, info: nil, value: ""))
+        XCTAssertEqual(render(node), "<pre><code></code></pre>\n")
+    }
 }

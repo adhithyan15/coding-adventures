@@ -1,0 +1,11 @@
+{
+  "id": "MW-C192-dhire",
+  "pathSegment": "MW-PATH-192-BOARD192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-192-BOARD192",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:4cb09ca65d304866",
+  "lessonIds": [
+    "PA-C208-go-return",
+    "PA-C208-pia",
+    "PA-C208-pia-review",
+    "PA-C208-had-to-go",
+    "PA-C208-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch208.txt",
+  "json": "punjabi/narration/ch208.json",
+  "textHash": "fnv1a64:fab71592ccaf63aa",
+  "jsonHash": "fnv1a64:be72c2b422b00899",
+  "findings": []
+}

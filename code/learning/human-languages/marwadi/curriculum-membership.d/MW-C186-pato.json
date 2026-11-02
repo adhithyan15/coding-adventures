@@ -1,0 +1,11 @@
+{
+  "id": "MW-C186-pato",
+  "pathSegment": "MW-PATH-186-DHAKKAN186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-186-DHAKKAN186",
+      "order": 3
+    }
+  ]
+}

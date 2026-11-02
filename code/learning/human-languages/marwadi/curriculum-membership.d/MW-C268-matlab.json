@@ -1,0 +1,11 @@
+{
+  "id": "MW-C268-matlab",
+  "pathSegment": "MW-PATH-268-KAIVNO268",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-268-KAIVNO268",
+      "order": 3
+    }
+  ]
+}

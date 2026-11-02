@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:8e5cef829957ed9a",
+  "lessonIds": [
+    "MW-C218-rel",
+    "MW-C218-savari",
+    "MW-C218-draivar",
+    "MW-C218-chhutno",
+    "MW-C218-pugavno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch218.txt",
+  "json": "marwadi/narration/ch218.json",
+  "textHash": "fnv1a64:728e16ea3ef96aa7",
+  "jsonHash": "fnv1a64:a915c980f215503b",
+  "findings": []
+}

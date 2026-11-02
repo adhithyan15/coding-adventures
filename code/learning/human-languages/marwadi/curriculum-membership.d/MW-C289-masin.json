@@ -1,0 +1,11 @@
+{
+  "id": "MW-C289-masin",
+  "pathSegment": "MW-PATH-289-MASIN289",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-289-MASIN289",
+      "order": 0
+    }
+  ]
+}

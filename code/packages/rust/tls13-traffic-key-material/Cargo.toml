@@ -1,0 +1,12 @@
+[package]
+name = "tls13-traffic-key-material"
+version = "0.1.0"
+edition = "2021"
+description = "Cipher-suite-bound fixed-memory TLS 1.3 traffic key and IV derivation"
+license = "MIT"
+
+[dependencies]
+coding_adventures_hkdf = { path = "../hkdf" }
+coding_adventures_zeroize = { path = "../zeroize" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-hkdf-label = { path = "../tls13-hkdf-label" }

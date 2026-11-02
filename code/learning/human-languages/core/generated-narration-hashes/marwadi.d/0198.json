@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:3702b8b67ca7cd1f",
+  "lessonIds": [
+    "MW-C198-daphtar",
+    "MW-C198-aphsar",
+    "MW-C198-arji",
+    "MW-C198-binti",
+    "MW-C198-samjhavno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch198.txt",
+  "json": "marwadi/narration/ch198.json",
+  "textHash": "fnv1a64:38099a3e8550118c",
+  "jsonHash": "fnv1a64:7162c5f920bf3656",
+  "findings": []
+}

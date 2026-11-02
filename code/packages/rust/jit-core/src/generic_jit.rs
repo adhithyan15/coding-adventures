@@ -413,6 +413,13 @@ impl GenericCirJit {
 
     /// Get a clone of the error-slot handle so the wrapper VM can
     /// inspect it after execution.
+    ///
+    /// A builtin callback may also capture this handle to **fail** the run:
+    /// callbacks return a plain `Value`, so a callback that hits an error
+    /// (a type error in a language's runtime primitive) stores a message
+    /// here (if the slot is empty) and returns any placeholder. The
+    /// interpreter stops right after that `CALL_BUILTIN`, and `JITCore`
+    /// turns the message into an `Err` as for any other JIT failure.
     pub fn error_handle(&self) -> Arc<Mutex<Option<String>>> {
         Arc::clone(&self.error)
     }
@@ -932,6 +939,16 @@ impl Backend for GenericCirJit {
                         return Value::Null;
                     };
                     let result = cb(&args);
+                    // A callback cannot return an error, but it can record
+                    // one in the error slot (an embedder captures
+                    // [`GenericCirJit::error_handle`] for that — `lang-aot`'s
+                    // Lisp `car` of a non-pair does). Stop here when it did,
+                    // rather than run the rest of the program on whatever
+                    // placeholder the callback returned: the interpreter tier
+                    // stops at its `Err` the same way.
+                    if self.error.lock().unwrap_or_else(|e| e.into_inner()).is_some() {
+                        return Value::Null;
+                    }
                     if dst != 0xFF {
                         // The generic JIT carries everything as i64 in its
                         // registers: an `Int` or `Bool` result is stored as
@@ -2011,6 +2028,39 @@ mod tests {
         let bin = j.compile(&cir).unwrap();
         j.run(&bin, &[]);
         assert_eq!(*captured.lock().unwrap(), vec![7]);
+    }
+
+    /// A callback that records an error through `error_handle` stops the run
+    /// right after its `CALL_BUILTIN`: the next builtin is never called, and
+    /// the message is what `take_error` reports.
+    #[test]
+    fn a_callback_that_records_an_error_stops_the_run() {
+        let captured: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+        let j = GenericCirJit::new();
+        {
+            let slot = j.error_handle();
+            j.register_builtin("fail", move |_| {
+                slot.lock().unwrap().get_or_insert_with(|| "type error: not a pair".into());
+                Value::Int(0)
+            });
+            let captured = Arc::clone(&captured);
+            j.register_builtin("record", move |args| {
+                captured.lock().unwrap().push(args.first().and_then(|v| v.as_i64()).unwrap_or(0));
+                Value::Null
+            });
+        }
+        let cir = vec![
+            CIRInstr::new("const_i64", Some("x"), vec![CIROperand::Int(7)], "i64"),
+            CIRInstr::new("call_builtin", Some("y"),
+                vec![CIROperand::Var("fail".into()), CIROperand::Var("x".into())], "i64"),
+            CIRInstr::new("call_builtin", None::<&str>,
+                vec![CIROperand::Var("record".into()), CIROperand::Var("y".into())], "void"),
+            CIRInstr::new("ret_void", None::<&str>, vec![], "void"),
+        ];
+        let bin = j.compile(&cir).unwrap();
+        j.run(&bin, &[]);
+        assert!(captured.lock().unwrap().is_empty(), "the run went on after the error");
+        assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.contains("not a pair")));
     }
 
     #[test]

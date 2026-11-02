@@ -162,6 +162,7 @@ pub fn validate_pattern(pattern: &str) -> Result<(), GlobPatternError> {
 }
 
 /// Compile a complete declared list before callers enumerate candidates.
+#[allow(dead_code)] // Used by the binary target's hasher; the library validates one-at-a-time.
 pub(crate) fn compile_patterns(
     patterns: &[String],
 ) -> Result<Vec<CompiledPattern>, GlobPatternError> {
@@ -175,7 +176,7 @@ pub(crate) fn compile_patterns(
 // Internal matching engine
 // ---------------------------------------------------------------------------
 
-fn compile_pattern(pattern: &str) -> Result<CompiledPattern, GlobPatternError> {
+pub(crate) fn compile_pattern(pattern: &str) -> Result<CompiledPattern, GlobPatternError> {
     let normalized = pattern.replace('\\', "/");
     let mut segments = Vec::new();
 

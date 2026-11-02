@@ -1,5 +1,168 @@
 # Changelog
 
+## Unreleased — Temp files in the tests are unique per call and removed (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Hashing the source (the earlier fix for a CI flake)
+did not help two tests that compile the *same* source. Every such name in 23
+test files now carries a per-call `unique_suffix()` (process id plus a
+per-file atomic counter), the scheme `sir-conformance`'s `temp_path` uses.
+Test-only; no emitted code changes. Because every call now gets fresh names,
+the 23 hash-named helpers, which never deleted their `.c` and executable,
+would have left a new pair in the temp directory on every run instead of
+overwriting the last one, and 12 counter-named helpers already did.  All 35
+files are fixed. Each helper now holds its files in a
+`RemoveOnDrop` guard; the three `compile_and_link` helpers that hand their
+executable back drop the `.c` once linked, and each caller guards the
+executable it runs. Two back-to-back runs of the suite now leave nothing
+behind.
+
+## Unreleased — Call operands run left to right (#18482 review)
+
+C leaves the order in which a call's arguments are evaluated unspecified,
+and gcc on x86-64 evaluates them right to left.  `is_simple` treated a call
+whose operands were all simple as one inline C expression, so nested calls
+ran in gcc's order.  Python's `self.n += self.bump()` (where `bump` sets
+`self.n`) printed 105 instead of 6, and Ruby's `[@n, bump, @n]` read the
+ivar after `bump` had changed it.
+
+- New `is_atom`: a literal, a local / parameter / capture / builtin
+  reference, `__self__()`, or a list / map / string / closure built only
+  from atoms.  Evaluating one runs no code and reads no state a call can
+  change.
+- New `operands_simple`: a call's (or sequence / map / string literal's,
+  or closure's) operands render inline only when each is simple and **at
+  most one is not an atom**.  Otherwise the expression is not simple and
+  the existing hoist paths put every operand in a temporary, in order.
+  `f(g(x), 1)` and `_sir_plus(_sir_times(a, b), c)` are unchanged.
+- `tests/compile_and_run.rs` gains `operands_left_to_right` (Ruby source),
+  which printed `105` / `100001` before and prints `6` / `1100` now.
+
+**Dispatch calls get a compound emit path (fixes #18768).**  The first
+version of this change exempted the OOP dispatch builtins, which had no
+hoisted emit path.  A security re-review found that this broke valid
+programs: once `a.get() + b.get()` was correctly not simple, a dispatch
+call taking it as an argument had nowhere to go.  `P(a.get() + b.get())`
+emitted `_sir_unknown_builtin("__new__")` and exited 1 at runtime, and
+`a.add(a.get() + b.get())` was refused at compile time.  Both had worked.
+
+- New `emit_dispatch` renders every dispatch builtin (`__new__`,
+  `__method__`, `__def_method__`, `__def_class_method__`,
+  `__class_method__`, `__super__`, `__include__`, `__extend__`) with a
+  callback for each *value* argument.  `dispatch_literal_positions` lists
+  the class / method name positions, which are always written as quoted C
+  literals and never evaluated.
+- The simple path passes `emit_expr`.  `emit_compound_call` now handles a
+  non-simple dispatch call by hoisting its value arguments into
+  temporaries, left to right, and passing their names.  Dispatch calls
+  follow `operands_simple` like every other call, so two code-running
+  arguments of one dispatch call (`c.pair(c.n, c.bump)`) also run left to
+  right now.
+- The scan's old refusal of a non-simple dispatch call is now a backstop:
+  it refuses one only when a name position is not a `StrLit`, and it
+  covers `__new__` too.
+
+**An indirect call evaluates its callee first.**  `make()(side())` rendered
+as `_sir_apply(sir_fn_make(), 1, sir_fn_side())`, which ran `side()`
+first.  The callee now counts as an operand.  When the call is compound,
+the callee is hoisted into its own temporary before the arguments.
+
+**A compound `MakeClosure` no longer panics.**  A closure with two
+code-running capture values was not simple and fell through to
+`emit_compound_call`, which panicked (`call_args(...).expect`).
+`emit_assign` now has a `MakeClosure` arm that hoists the capture values
+in order.  The call hoister emits a runtime error, never a panic, for any
+non-call expression that reaches it.
+
+Tests: `tests/emit.rs` gains
+`dispatch_with_a_compound_argument_hoists_its_values`,
+`dispatch_arguments_are_hoisted_left_to_right`,
+`indirect_call_hoists_the_callee_before_the_arguments` and
+`make_closure_with_two_code_running_captures_is_hoisted`.
+`tests/compile_and_run.rs` gains `dispatch_operands_left_to_right`, which
+prints `1005 / 5 / 7` (the first value was `101005` before).
+
+## Unreleased — User names kept apart from libc and the runtime; `lambda` arity (issue #18466)
+
+- **Every user function is `sir_fn_<name>`.**  A C function shares the
+  symbol namespace of the C library and the headers the file includes, so
+  `(define (free x) x)` was "conflicting types for 'free'" and
+  `(define (SirValue x) x)` redeclared the runtime's value type.  SIR's
+  `main` and `_init` are now `sir_user_main` and `sir_user_init`.
+- **`sanitize_ident` reserves more.**  Besides C keywords and `min`/`max`:
+  every name starting `sir`/`_sir` in any case (the runtime's `_sir_*`,
+  `Sir*` types and `SIR_*` macros, and the `sir_fn_` prefix itself), `main`,
+  every name with no lower-case letter (the headers' object-like macros:
+  `EOF`, `NAN`, `INT64_MAX`, …), names C reserves for the implementation
+  (`__x`, `_X`), and `errno`, `math_errhandling`, `stdin`, `stdout`,
+  `stderr`, `L_tmpnam`.  A local named `EOF` or `errno` used to expand into
+  garbage.  `user_main` is no longer generated, so it is an ordinary name.
+- **A `lambda` marker without exactly one argument is refused** at compile
+  time instead of compiling to a runtime `_sir_unknown_builtin("lambda")`.
+- `tests/twig_generated_names.rs` runs the cross-backend table of programs
+  that spell other backends' generated names, checks a strict closure's
+  error is caught by `rescue ArgumentError` and not by `rescue TypeError`,
+  and checks the `lambda`-arity refusal.
+
+Security-review follow-up: `sanitize_ident` also reserves every name ending
+in `_t` (the headers' typedefs, which POSIX reserves as a family) and the
+`<setjmp.h>`/`<stdarg.h>` names `setjmp`, `longjmp`, `jmp_buf`, `va_list`,
+`va_start`, `va_arg`, `va_end`, `va_copy`.  A counted loop declares
+`int64_t` counters inside the user's function, so a parameter named
+`int64_t` made the file fail to compile; the emitted `rescue` calls
+`setjmp(…)` inline, and on MSVC `setjmp` is a macro.
+
+## Unreleased — Lambdas in callee position, strict closures (issue #18461)
+
+- **Every `MakeClosure` gets a thunk.**  `collect_closure_targets` walked
+  only some expression positions; it skipped an `IndirectCall`'s *target*,
+  so `((mk (lambda (a) 77)) 5)` referenced an undeclared
+  `_sir_thunk___lambda_1` and gcc rejected the file.  It now uses
+  `semantic_ir::Visitor`, which reaches every node (loops, conversions and
+  the SIR16+ nodes the hand-written walk also missed).
+- **Strict closures.**  The `lambda` marker (SIR10, `BuiltinCall("lambda",
+  [MakeClosure])`) is now lowered instead of refused:
+  `_sir_strict_arity(<closure>, N)` stamps the closure's exact arity, and
+  `_sir_apply` raises `ArgumentError: arity mismatch: closure expects N
+  argument(s), got M` for any other count.  A thunk pads a missing
+  argument with `nil`, so Twig's `((lambda (x y) (+ x y)) 4)` used to
+  print `4`.  `SirClosure` gains an `arity` field (`-1` = lenient, the
+  unchanged default for a bare `MakeClosure`).
+- **One way into a closure body.**  `_sir_call_closure` performs the strict
+  arity check and is now the only caller of a closure's `fn`: `_sir_apply`
+  and the four OOP dispatchers (method call, `initialize`, `super`, class
+  method) all go through it, where the dispatchers used to call `clo->fn`
+  directly and would have skipped the check (security review F3).  Today a
+  method body is always a bare, lenient `MakeClosure` (`__def_method__`
+  requires that shape), so this changes no current program; it keeps the
+  check from depending on which path reaches the closure.
+- `tests/twig_pairs_and_closures.rs` compiles and runs the #18460/#18461
+  Twig programs with the host C compiler, and checks that a closure
+  missing its capture values is refused before any C is emitted (the
+  NULL `caps` read the security review found, F1).
+## 0.42.2 — Every `MakeClosure` gets its thunk
+
+`collect_closure_targets` decides which functions need a
+`_sir_thunk_<f>` adapter.  It used a hand-written walk that missed many
+places a `MakeClosure` can sit:
+
+- the *target* of an `IndirectCall`;
+- `while`/`for` bodies;
+- most expression kinds other than `If`, `Block` and call arguments.
+
+A closure built in one of those places was emitted as
+`_sir_make_closure(_sir_thunk_f, ...)` with no `_sir_thunk_f` defined, so
+the C did not compile.  `python-to-semantic-ir` 0.12.0 emits exactly this
+shape for a recursive call to a capturing nested `def`
+(`IndirectCall(MakeClosure(go, [n]), [x - 1])`).
+
+The collector now uses the shared `semantic_ir::Visitor` walk, so it
+reaches every `MakeClosure` the emitter can meet.  It is covered end to
+end by `sir-conformance/tests/python_nested_closures.rs`.
+
 ## 0.42.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

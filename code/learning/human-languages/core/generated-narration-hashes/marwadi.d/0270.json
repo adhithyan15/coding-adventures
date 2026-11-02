@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:cf16581356a35d2f",
+  "lessonIds": [
+    "MW-C270-maphi",
+    "MW-C270-kasur",
+    "MW-C270-pachhtano",
+    "MW-C270-phorno",
+    "MW-C270-khijno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch270.txt",
+  "json": "marwadi/narration/ch270.json",
+  "textHash": "fnv1a64:597631175d913bca",
+  "jsonHash": "fnv1a64:6b5dbe6e76454b97",
+  "findings": []
+}
