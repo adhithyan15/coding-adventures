@@ -44,9 +44,12 @@
  * | `__twig_exit`         | Terminate the program with the given code.   |
  * | `__twig_str_eq`       | LANG-STR-RT: byte-equal two length-prefixed strings. |
  * | `__twig_str_len`      | E4-dyn: byte length of a length-prefixed string.     |
- * | `__twig_str_concat`   | E4-dyn: fresh block = a's bytes then b's.            |
- * | `__twig_str_slice`    | E4-dyn: fresh block = bytes [start,end); traps OOB.  |
- * | `__twig_str_index`    | E4-dyn: byte at index i (0..255); traps OOB.         |
+ * | `__twig_str_concat`   | E4-dyn: fresh block = a's bytes then b's; traps      |
+ * |                       | `Trap.Overflow` past the module's ceiling (PR5a).    |
+ * | `__twig_str_slice`    | E4-dyn: fresh block = bytes [start,end); traps       |
+ * |                       | `Trap.Bounds` out of range (LANG83 PR5a).            |
+ * | `__twig_str_index`    | E4-dyn: byte at index i (0..255); traps              |
+ * |                       | `Trap.Bounds` out of range (LANG83 PR5a).            |
  * | `__twig_str_cmp`      | E4-dyn: lexicographic byte compare → -1 / 0 / 1.     |
  *
  * Adding new runtime helpers
@@ -728,9 +731,26 @@ int64_t __twig_input_str(void) {
  * E4's immutable-value contract.
  *
  * Bounds: __twig_str_slice / __twig_str_index enforce the E4 bounds contract
- * (§2.2 of lang-full-e4-strings.md) and `abort()` on an out-of-range access —
- * the runtime twin of the static backends' `udf`/`ud2`/`llvm.trap` array-bounds
- * trap.  The metadata helpers (`__twig_str_len`, `__twig_str_cmp`) stay
+ * (§2.2 of lang-full-e4-strings.md).  Since LANG83 PR5a an out-of-range access
+ * is the registered `Trap.Bounds`, raised through `__twig_trap(1)`, which
+ * flushes stdout before it names the kind on stderr — so output written before
+ * a bad `str_index` is never lost, and a harness can tell the trap from a
+ * crash.  (Before PR5a these helpers called `abort()` directly: no flush, no
+ * kind.)  A null or negative-length handle cannot come from validated IR; it
+ * still `abort()`s, as corruption rather than a contract failure.
+ *
+ * The ceiling: `__twig_str_concat` takes the module's string ceiling as its
+ * third argument (the backend passes `IIRModule::str_ceiling()` as an
+ * immediate) and raises `Trap.Overflow` through `__twig_trap(5)` when the
+ * result would be longer.  The test is `la > max - lb`, which cannot overflow
+ * because both lengths are known non-negative and `lb <= max` is checked
+ * first.
+ *
+ *     index i of s      in range iff  0 <= i < len         else Trap.Bounds
+ *     slice [a, b) of s in range iff  0 <= a <= b <= len    else Trap.Bounds
+ *     concat a ++ b     fits     iff  len a <= max - len b  else Trap.Overflow
+ *
+ * The metadata helpers (`__twig_str_len`, `__twig_str_cmp`) stay
  * permissive on a null/corrupt handle (treat as the empty string), matching
  * __twig_str_eq, so a compiler bug degrades to a wrong-but-safe answer rather
  * than a crash.
@@ -755,18 +775,27 @@ int64_t __twig_str_len(int64_t s) {
     return len < 0 ? 0 : len;
 }
 
-/* __twig_str_concat — a fresh block holding a's bytes followed by b's.
+/* LANG83 trap kind ids (`exception_kind::trap_kind_id`), the two the string
+ * helpers raise. */
+#define TWIG_TRAP_BOUNDS   1
+#define TWIG_TRAP_OVERFLOW 5
+
+/* __twig_str_concat — a fresh block holding a's bytes followed by b's, or
+ * `Trap.Overflow` when that block would be longer than `max`, the module's
+ * string ceiling (LANG83 PR5a).  The ceiling check comes before the
+ * allocation, so an over-long string is never built.
  * Null/corrupt operands are treated as the empty string.  The `+ 8` and the
  * length sum are overflow-guarded before reaching __twig_alloc_bytes (which
- * would otherwise cast a wrapped negative to a huge size_t); a real string
- * never approaches INT64_MAX, so the guards only fire on corruption, where an
- * `abort()` trap is the safe outcome.  Allocation failure also traps rather
- * than returning a NULL handle a caller would dereference. */
-int64_t __twig_str_concat(int64_t a, int64_t b) {
+ * would otherwise cast a wrapped negative to a huge size_t); after the ceiling
+ * check they cannot fire, and they stay as a second line of defence against a
+ * corrupt `max`.  Allocation failure also traps rather than returning a NULL
+ * handle a caller would dereference. */
+int64_t __twig_str_concat(int64_t a, int64_t b, int64_t max) {
     int64_t la = twig_str_len_checked(a);
     int64_t lb = twig_str_len_checked(b);
     if (la < 0) la = 0;
     if (lb < 0) lb = 0;
+    if (max < 0 || lb > max || la > max - lb) __twig_trap(TWIG_TRAP_OVERFLOW);
     if (la > INT64_MAX - lb) abort();          /* la + lb overflow */
     int64_t total = la + lb;
     if (total > INT64_MAX - 8) abort();         /* total + 8 overflow */
@@ -786,7 +815,7 @@ int64_t __twig_str_concat(int64_t a, int64_t b) {
 int64_t __twig_str_slice(int64_t s, int64_t start, int64_t end) {
     int64_t len = twig_str_len_checked(s);
     if (len < 0) abort();
-    if (start < 0 || end < start || end > len) abort();
+    if (start < 0 || end < start || end > len) __twig_trap(TWIG_TRAP_BOUNDS);
     int64_t n = end - start;
     int64_t handle = __twig_alloc_bytes(n + 8);
     if (handle == 0) abort();
@@ -802,7 +831,7 @@ int64_t __twig_str_slice(int64_t s, int64_t start, int64_t end) {
 int64_t __twig_str_index(int64_t s, int64_t i) {
     int64_t len = twig_str_len_checked(s);
     if (len < 0) abort();
-    if (i < 0 || i >= len) abort();
+    if (i < 0 || i >= len) __twig_trap(TWIG_TRAP_BOUNDS);
     unsigned char byte = *((const unsigned char *)(intptr_t)s + 8 + i);
     return (int64_t)byte;
 }

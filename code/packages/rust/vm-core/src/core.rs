@@ -498,6 +498,8 @@ impl VMCore {
         // to this invocation, not cumulative lifetime instructions.
         let instrs_before = self.metrics_instrs;
 
+        // LANG83 PR5a: read before `module.functions` is borrowed below.
+        let str_max_bytes = module.str_ceiling();
         let mut ctx = DispatchCtx {
             frames: &mut self.frames,
             module_fns: &mut module.functions,
@@ -517,6 +519,7 @@ impl VMCore {
             // large limit does not overflow (which would panic in debug builds
             // or wrap silently in release builds, disabling the limit).
             max_instructions: self.max_instructions.map(|limit| instrs_before.saturating_add(limit)),
+            str_max_bytes: str_max_bytes as usize,
             fn_call_counts: &mut self.fn_call_counts,
             metrics_instrs: &mut self.metrics_instrs,
             metrics_jit_hits: &mut self.metrics_jit_hits,
@@ -578,6 +581,8 @@ impl VMCore {
         let instrs_before = self.metrics_instrs;
         let mut traces: Vec<crate::trace::VMTrace> = Vec::new();
 
+        // LANG83 PR5a: read before `module.functions` is borrowed below.
+        let str_max_bytes = module.str_ceiling();
         let mut ctx = DispatchCtx {
             frames: &mut self.frames,
             module_fns: &mut module.functions,
@@ -594,6 +599,7 @@ impl VMCore {
             max_memory_entries: self.max_memory_entries,
             max_gc_heap_bytes: self.max_gc_heap_bytes,
             max_instructions: self.max_instructions.map(|limit| instrs_before.saturating_add(limit)),
+            str_max_bytes: str_max_bytes as usize,
             fn_call_counts: &mut self.fn_call_counts,
             metrics_instrs: &mut self.metrics_instrs,
             metrics_jit_hits: &mut self.metrics_jit_hits,
