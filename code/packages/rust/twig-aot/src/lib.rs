@@ -7189,6 +7189,29 @@ mod gc_global_and_buffer_root_tests {
         }
     }
 
+    /// The macOS object for a program with a global puts `_twig_globals` on an 8-byte
+    /// boundary. Here the code is 0x114 bytes (≡ 4 mod 8). The block used to sit right
+    /// after it, and `ld64` kept it 4 bytes off an 8-byte boundary. The runtime then
+    /// refused to register it, and the init's registration check trapped (the macOS
+    /// `lang_matrix` failure of #18790).
+    #[test]
+    fn macos_object_puts_twig_globals_on_an_8_byte_boundary() {
+        let obj = compile_macos_arm64_object("(define (f) g) (define g 42) (f)", "m").unwrap();
+        // __data section_64: after mach_header_64 (32), LC_SEGMENT_64 (72), __text (80).
+        let sect = 32 + 72 + 80;
+        let text_size =
+            u64::from_le_bytes(obj[32 + 72 + 40..32 + 72 + 48].try_into().unwrap());
+        let addr = u64::from_le_bytes(obj[sect + 32..sect + 40].try_into().unwrap());
+        assert_eq!(addr % 8, 0, "__data at {addr:#x} (text {text_size:#x}) is not 8-aligned");
+        // LC_SYMTAB follows LC_BUILD_VERSION (24); symoff is its third word.
+        let symtab_cmd = 32 + 72 + 160 + 24;
+        let symoff =
+            u32::from_le_bytes(obj[symtab_cmd + 8..symtab_cmd + 12].try_into().unwrap()) as usize;
+        let n_value =
+            u64::from_le_bytes(obj[symoff + 16 + 8..symoff + 32].try_into().unwrap());
+        assert_eq!(n_value, addr, "_twig_globals is the start of the aligned __data");
+    }
+
     /// A module with more globals than the runtime will root is refused at compile
     /// time rather than run with every global unrooted.
     #[test]
