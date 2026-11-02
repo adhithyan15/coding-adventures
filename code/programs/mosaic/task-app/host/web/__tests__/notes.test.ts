@@ -234,4 +234,20 @@ describe("Matching a note's typed task name (shared vectors)", () => {
     expect(trimWhiteSpace("Gro ceries")).toBe("Gro ceries");
     expect(trimWhiteSpace("   ")).toBe("");
   });
+
+  it("trims in linear time, even around a long run of inner spaces", () => {
+    // A regex anchored only at `$` backtracks quadratically on this shape:
+    // 100,000 inner spaces took about 9.5 s. The walk takes milliseconds.
+    const inner = " ".repeat(200_000);
+    const name = `a${inner}a`;
+    const started = performance.now();
+    expect(trimWhiteSpace(` ${name} `)).toBe(name);
+    expect(trimWhiteSpace(inner)).toBe("");
+    expect(performance.now() - started).toBeLessThan(1_000);
+  });
+
+  it("stops the trim at a surrogate half or an astral character", () => {
+    expect(trimWhiteSpace(" 😀 ")).toBe("😀");
+    expect(trimWhiteSpace(" \ud83d ")).toBe("\ud83d");
+  });
 });

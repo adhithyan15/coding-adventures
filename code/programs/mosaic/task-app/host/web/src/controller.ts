@@ -1965,7 +1965,26 @@ export function taskNameKey(name: string): string {
  *   U+FEFF   cut       kept   kept
  *
  * Every other character the two trim alike.
+ *
+ * Why a loop and not `text.replace(/^\p{White_Space}+|\p{White_Space}+$/gu, "")`:
+ * the second alternative is anchored only at its end, so the regex engine
+ * tries it from every position inside a run of spaces in the middle of the
+ * text, matches the rest of the run, fails at `$`, and moves on. That is
+ * quadratic in the run's length: a name like "a" + 100,000 spaces + "a"
+ * froze Save for about 9.5 s. Walking inward from each end looks at every
+ * character at most once, so the cost is linear whatever the text holds.
+ *
+ * Testing one UTF-16 code unit at a time is exact here: every `White_Space`
+ * code point is in the Basic Multilingual Plane (the highest is U+3000), so
+ * none is ever split across a surrogate pair, and a lone surrogate half is
+ * never `White_Space`, so the walk stops at it.
  */
+const WHITE_SPACE_UNIT = /^\p{White_Space}$/u;
+
 export function trimWhiteSpace(text: string): string {
-  return text.replace(/^\p{White_Space}+|\p{White_Space}+$/gu, "");
+  let start = 0;
+  let end = text.length;
+  while (start < end && WHITE_SPACE_UNIT.test(text[start])) start++;
+  while (end > start && WHITE_SPACE_UNIT.test(text[end - 1])) end--;
+  return text.slice(start, end);
 }

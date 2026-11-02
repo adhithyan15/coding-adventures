@@ -15,6 +15,10 @@ engine's ascending-id order, now wins, as natively. And the typed name was
 trimmed with `.trim()`, which strips U+FEFF and keeps U+0085, unlike Rust's
 `str::trim`; it is now trimmed of Unicode `White_Space` by the new exported
 `trimWhiteSpace`. The new `taskNameKey` is the lowercasing, in one place.
+`trimWhiteSpace` walks inward from each end instead of using a
+`^\s+|\s+$`-style regex, which backtracks quadratically on a long run of
+inner spaces (100,000 spaces froze Save for about 9.5 s); a test pins that a
+200,000-space name trims in under a second.
 `__tests__/notes.test.ts` runs every case of TaskApp's new
 `fixtures/task-name-matching-v1.json`, which the native adapter runs too.
 
