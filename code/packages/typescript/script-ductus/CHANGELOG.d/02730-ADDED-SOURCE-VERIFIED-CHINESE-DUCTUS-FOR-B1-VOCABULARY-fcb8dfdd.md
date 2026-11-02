@@ -18,10 +18,13 @@
 - Add font-checked ductus for the fourteen characters B1 vocabulary
   tranche n writes (chapters 430-457):
   游 海 方 部 村 河 护 岛 城 市 味 特 色 图.
+- Add font-checked ductus for the first characters B1 vocabulary
+  tranche o writes (chapters 458-485):
+  情 爱 怕 兴 静 性 温.
   Each is fitted to the vendored Noto Sans SC outline from Hanzi Writer Data's
   ordered medians (snapshot 68d10a4) with the source's order, directions,
   turns, hooks and lifts; every stroke lies wholly on the ink and none of the
   glyph is left untraced.
-- Pin the Chinese inventory at 311 letters and the stroke-ownership owner at
-  311 keys with its new key and data hashes; add a ductusview case and a
+- Pin the Chinese inventory at 318 letters and the stroke-ownership owner at
+  318 keys with its new key and data hashes; add a ductusview case and a
   per-character strokes case for each character.
