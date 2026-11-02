@@ -1,4 +1,10 @@
 # Changelog — iir-to-llvm
+
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused at compile time
+
+- `validate_for_llvm` (and so `lower_iir_to_llvm`) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
+- Test `a_literal_past_the_module_ceiling_is_refused_at_compile_time` (fails without the check).
+
 ## Unreleased — LANG83 PR5a — strings fail closed
 
 - A folded out-of-range `str_index` or `str_slice` raises `Trap.Bounds` through the module's own `@__iir_trap` (flush, then `trap: Trap.Bounds` on stderr), not `@llvm.trap` (SIGILL, buffered output lost). The runtime path already calls `twig_runtime.c`'s helpers, which now raise `Trap.Bounds` themselves.

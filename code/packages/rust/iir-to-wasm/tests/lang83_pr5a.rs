@@ -196,3 +196,39 @@ fn str_concat_past_the_ceiling_traps_overflow_in_both_forms() {
         assert_eq!(run(&concat_literal(ceiling)), Ok(16), "{ceiling:?}");
     }
 }
+
+// ── #18800 item 1: the ceiling is checked at compile time ───────────────────
+
+/// `main` binds one literal of `len` bytes and returns its length.
+fn literal_of(len: usize, ceiling: Option<u32>) -> IIRModule {
+    module(
+        vec![IIRFunction::new("main", vec![], "i64", vec![
+            text("s", &"z".repeat(len)),
+            IIRInstr::new("str_len", Some("n".into()), vec![v("s")], "i64"),
+            IIRInstr::new("ret", None, vec![v("n")], "i64"),
+        ])],
+        ceiling,
+    )
+}
+
+/// A `str_const` longer than the module's ceiling is malformed IR, and so is
+/// a ceiling above `STR_MAX_BYTES`. `lower_iir_to_wasm` refuses both before
+/// it emits anything (#18800); before, it compiled the 17-byte literal and
+/// the program returned 17 under a ceiling of 16.
+#[test]
+fn a_literal_past_the_module_ceiling_is_refused_at_compile_time() {
+    let refusal = |m: &IIRModule| match lower_iir_to_wasm(m, &IIRWasmConfig::default()) {
+        Err(iir_to_wasm::IIRWasmError::ValidationFailed(errors)) => errors,
+        other => panic!("expected a validation failure, got {other:?}"),
+    };
+    let errors = refusal(&literal_of(17, Some(16)));
+    assert!(errors.iter().any(|e| e.starts_with("StrTooLong")), "{errors:?}");
+    let errors = refusal(&literal_of(0, Some(interpreter_ir::STR_MAX_BYTES + 1)));
+    assert!(errors.iter().any(|e| e.starts_with("StrMaxBytes")), "{errors:?}");
+    // The boundary: a literal exactly at the ceiling compiles and runs.
+    assert_eq!(run(&literal_of(16, Some(16))), Ok(16));
+    assert!(iir_to_wasm::validate_for_wasm(&literal_of(17, Some(16)))
+        .iter()
+        .any(|e| e.starts_with("StrTooLong")));
+}
+

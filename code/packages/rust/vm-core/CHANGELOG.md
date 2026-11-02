@@ -1,5 +1,10 @@
 # Changelog — vm-core
 
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused at load
+
+- New `VMError::InvalidModule { errors }` and load-time check `core::check_str_ceiling`, run by `VMCore::execute` and `execute_traced` after the frame-register check and before any instruction. A `str_const` longer than the module's string ceiling, or a `str_max_bytes` above `STR_MAX_BYTES`, is refused with `interpreter-ir`'s `StrTooLong` / `StrMaxBytes` messages, as every compiled column refuses it. Before, the VM ran such a module, and `str_len` of the literal returned 17 under a ceiling of 16.
+- Tests: `a_literal_past_the_module_ceiling_is_refused_at_load` (nothing is printed before the refusal; fails without the check) and `display_invalid_module_lists_every_error`.
+
 ## Unreleased — LANG83 PR5a — string failures are registered traps
 
 - `str_index` out of range and `str_slice` out of range return `VMError::Trap { kind: "Trap.Bounds" }`, not `VMError::Custom`. The predicates (`0 ≤ i < len`, `0 ≤ a ≤ b ≤ len`) are evaluated on the full `i64`.

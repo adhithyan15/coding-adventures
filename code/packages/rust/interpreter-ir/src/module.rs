@@ -48,7 +48,8 @@ use crate::module_exports::{IIRExport, IIRImport};
 // it to 16 so it can test the trap without allocating a gigabyte on nine
 // backends. Only `str_concat` can grow a string past it, and it raises
 // `Trap.Overflow` when it would. A `str_const` longer than the ceiling is
-// refused by `IIRModule::validate`.
+// refused by `IIRModule::str_ceiling_errors`, which `IIRModule::validate` and
+// every column's own validator call (#18800).
 //
 //     ceiling = str_max_bytes.unwrap_or(STR_MAX_BYTES)
 //     str_concat a, b  traps Trap.Overflow  iff  len a > ceiling − len b
@@ -172,6 +173,72 @@ impl IIRModule {
     /// ```
     pub fn str_ceiling(&self) -> u32 {
         self.str_max_bytes.map_or(STR_MAX_BYTES, |n| n.min(STR_MAX_BYTES))
+    }
+
+    /// The LANG83 PR5a string-ceiling checks, and nothing else (empty = the
+    /// module is within its ceiling).
+    ///
+    /// | Error | When |
+    /// |-------|------|
+    /// | `StrMaxBytes` | `str_max_bytes` is above [`STR_MAX_BYTES`]: malformed IR |
+    /// | `StrTooLong`  | a `str_const` literal is longer than [`IIRModule::str_ceiling`] |
+    ///
+    /// Why a literal past the ceiling is refused rather than trapped: no
+    /// backend could hold it, and the contract says `str_concat` is the only
+    /// op that may *discover* an over-long string at run time. A literal is
+    /// known before the program runs, so the module is malformed.
+    ///
+    /// [`IIRModule::validate`] includes these errors. Every column also calls
+    /// this method directly, where it already refuses a module (#18800): the
+    /// WASM, JVM, CLR, BEAM and LLVM validators, `twig-aot`'s native
+    /// preparation, and `vm-core`'s load-time check. Before that, nothing
+    /// called `validate` on the way to a backend, so a 17-byte literal in a
+    /// module whose ceiling is 16 compiled and ran everywhere. The columns call
+    /// only these checks, not the whole of `validate`: its other checks
+    /// (duplicate names, the entry point) are not every column's contract.
+    ///
+    /// ```
+    /// use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand, STR_MAX_BYTES};
+    /// let mut module = IIRModule::new("m", "iir");
+    /// module.functions.push(IIRFunction::new("main", vec![], "void", vec![
+    ///     IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("12345".into())], "str"),
+    ///     IIRInstr::new("ret_void", None, vec![], "void"),
+    /// ]));
+    /// assert!(module.str_ceiling_errors().is_empty());
+    /// module.str_max_bytes = Some(4);
+    /// assert!(module.str_ceiling_errors()[0].starts_with("StrTooLong"));
+    /// module.str_max_bytes = Some(STR_MAX_BYTES + 1);
+    /// assert!(module.str_ceiling_errors()[0].starts_with("StrMaxBytes"));
+    /// ```
+    pub fn str_ceiling_errors(&self) -> Vec<String> {
+        let mut errors = Vec::new();
+        // A ceiling above the registry's is malformed.
+        if let Some(max) = self.str_max_bytes {
+            if max > STR_MAX_BYTES {
+                errors.push(format!(
+                    "StrMaxBytes: module {:?} sets str_max_bytes = {max}, above the registry \
+                     ceiling STR_MAX_BYTES = {STR_MAX_BYTES}",
+                    self.name
+                ));
+            }
+        }
+        // So is a literal longer than the (clamped) ceiling.
+        let ceiling = self.str_ceiling() as usize;
+        for fn_ in &self.functions {
+            for instr in fn_.instructions.iter().filter(|i| i.op == "str_const") {
+                if let Some(literal) = instr.srcs.first().and_then(|s| s.as_str_lit()) {
+                    if literal.len() > ceiling {
+                        errors.push(format!(
+                            "StrTooLong: function {:?}: a {}-byte str_const exceeds the module's \
+                             string ceiling of {ceiling} bytes",
+                            fn_.name,
+                            literal.len()
+                        ));
+                    }
+                }
+            }
+        }
+        errors
     }
 
     // -----------------------------------------------------------------------
@@ -332,33 +399,9 @@ impl IIRModule {
         }
 
         // ── LANG83 PR5a: the string ceiling ─────────────────────────────────
-        // A ceiling above the registry's is malformed, and so is a literal
-        // longer than the ceiling: no backend could hold it, and `str_concat`
-        // is the only op allowed to discover an over-long string at run time.
-        if let Some(max) = self.str_max_bytes {
-            if max > STR_MAX_BYTES {
-                errors.push(format!(
-                    "StrMaxBytes: module {:?} sets str_max_bytes = {max}, above the registry \
-                     ceiling STR_MAX_BYTES = {STR_MAX_BYTES}",
-                    self.name
-                ));
-            }
-        }
-        let ceiling = self.str_ceiling() as usize;
-        for fn_ in &self.functions {
-            for instr in fn_.instructions.iter().filter(|i| i.op == "str_const") {
-                if let Some(literal) = instr.srcs.first().and_then(|s| s.as_str_lit()) {
-                    if literal.len() > ceiling {
-                        errors.push(format!(
-                            "StrTooLong: function {:?}: a {}-byte str_const exceeds the module's \
-                             string ceiling of {ceiling} bytes",
-                            fn_.name,
-                            literal.len()
-                        ));
-                    }
-                }
-            }
-        }
+        // Shared with every column's own validator (#18800), so it lives in
+        // its own method; see `str_ceiling_errors`.
+        errors.extend(self.str_ceiling_errors());
 
         // ── LANG33: export checks ────────────────────────────────────────────
         let fn_names: std::collections::HashSet<&str> =
@@ -471,6 +514,39 @@ mod tests {
         assert!(module_with_literal("", Some(STR_MAX_BYTES)).validate().is_empty());
         // `str_ceiling` clamps, so a backend never goes above the registry value.
         assert_eq!(module_with_literal("", Some(u32::MAX)).str_ceiling(), STR_MAX_BYTES);
+    }
+
+    /// `str_ceiling_errors` is exactly the ceiling part of `validate`: the
+    /// backends call it on its own (#18800), so it must not report the
+    /// other checks (here: the entry point `"lib"` that does not exist), and
+    /// `validate` must still report everything it reports.
+    #[test]
+    fn str_ceiling_errors_is_the_ceiling_part_of_validate() {
+        let mut module = module_with_literal("0123456789abcdefg", Some(16));
+        module.entry_point = Some("lib".into());
+        let ceiling = module.str_ceiling_errors();
+        assert_eq!(ceiling.len(), 1, "{ceiling:?}");
+        assert!(ceiling[0].starts_with("StrTooLong"), "{ceiling:?}");
+        let all = module.validate();
+        assert!(all.iter().any(|e| e.contains("entry_point")), "{all:?}");
+        assert!(ceiling.iter().all(|e| all.contains(e)), "{all:?}");
+        // Both malformations at once: the ceiling above the registry one is
+        // clamped, so a 17-byte literal is then within it.
+        module.str_max_bytes = Some(STR_MAX_BYTES + 1);
+        let ceiling = module.str_ceiling_errors();
+        assert_eq!(ceiling.len(), 1, "{ceiling:?}");
+        assert!(ceiling[0].starts_with("StrMaxBytes"), "{ceiling:?}");
+        // A literal in any function is checked, and a non-literal operand
+        // (a `Var`) is not a literal.
+        module.str_max_bytes = Some(1);
+        module.functions.push(IIRFunction::new("g", vec![], "void", vec![
+            IIRInstr::new("str_const", Some("t".into()), vec![Operand::Str("xy".into())], "str"),
+            IIRInstr::new("str_const", Some("u".into()), vec![Operand::Var("not_a_literal".into())], "str"),
+        ]));
+        let ceiling = module.str_ceiling_errors();
+        assert_eq!(ceiling.len(), 2, "{ceiling:?}");
+        assert!(ceiling[1].contains("\"g\""), "{ceiling:?}");
+        assert!(module_with_literal("", None).str_ceiling_errors().is_empty());
     }
 
     #[test]

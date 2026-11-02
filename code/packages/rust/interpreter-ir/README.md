@@ -83,9 +83,12 @@ assert_eq!(module.str_ceiling(), 16);
 ```
 
 Every backend reads `str_ceiling()` and makes `str_concat` raise
-`Trap.Overflow` rather than build a longer string. `validate()` reports a
-`str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`) and a `str_const` longer
-than the ceiling (`StrTooLong`). Like `release`, the field is not part of the
+`Trap.Overflow` rather than build a longer string. `str_ceiling_errors()`
+reports a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`) and a
+`str_const` longer than the ceiling (`StrTooLong`); `validate()` includes
+those errors, and every column calls `str_ceiling_errors()` itself before it
+compiles or runs a module (#18800), so an over-long literal is refused
+everywhere, never run. Like `release`, the field is not part of the
 binary wire format.
 
 ## The standard operation registry (LANG83)

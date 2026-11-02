@@ -196,6 +196,9 @@ const LISTY_PAIR_TYPE: &str = "ref<LispyPair>";
 ///
 /// 6. **UnsupportedOp** — see [`UNSUPPORTED_OPS`].
 ///
+/// 7. **StrTooLong / StrMaxBytes** (LANG83 PR5a, #18800) — the module's string
+///    ceiling, through the shared `IIRModule::str_ceiling_errors`.
+///
 /// # Example
 ///
 /// ```
@@ -216,6 +219,34 @@ const LISTY_PAIR_TYPE: &str = "ref<LispyPair>";
 /// };
 /// assert!(validate_iir_for_clr(&module).is_empty());
 /// ```
+/// The LANG83 string-ceiling check on its own, as a `Result` (#18800).
+///
+/// [`validate_iir_for_clr`] runs it as part of the binary path's full
+/// validation. The crate's two other entry points do not run that validation
+/// (their op sets differ from the v1 binary lowering's), so they call this:
+///
+/// | entry point                     | runs                                  |
+/// |---------------------------------|---------------------------------------|
+/// | `lower_iir_to_cil`              | `validate_iir_for_clr` (incl. this)   |
+/// | `emit_il` (real CoreCLR `.il`)  | this                                  |
+/// | `lower_typed_scalars_to_cil`    | this                                  |
+///
+/// So every path to the CLR refuses a `str_const` longer than the module's
+/// ceiling, and a ceiling above `STR_MAX_BYTES`, the way every other column
+/// does.
+///
+/// # Errors
+///
+/// `IIRClrError::ValidationFailed` with `interpreter-ir`'s messages.
+pub(crate) fn check_str_ceiling(module: &IIRModule) -> Result<(), crate::lower::IIRClrError> {
+    let errors = module.str_ceiling_errors();
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(crate::lower::IIRClrError::ValidationFailed(errors))
+    }
+}
+
 pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
     let mut errors = Vec::new();
 
@@ -228,6 +259,17 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
         // Return early — per-function checks below would be vacuous.
         return errors;
     }
+
+    // ── LANG83 PR5a: the module's string ceiling (#18800) ───────────────────
+    //
+    // A `str_const` longer than the module's ceiling (`StrTooLong`), or a
+    // ceiling above the registry's (`StrMaxBytes`), is malformed IR: no
+    // column could hold the literal, and `str_concat` is the only op allowed
+    // to find an over-long string at run time.  `IIRModule::validate` knew
+    // this, but nothing on the way to a backend called it, so every column
+    // compiled such a module.  The shared check lives in `interpreter-ir`, so
+    // every column refuses exactly the same modules.
+    errors.extend(module.str_ceiling_errors());
 
     for func in &module.functions {
         // ── Check 2: EmptyFunction ───────────────────────────────────────────

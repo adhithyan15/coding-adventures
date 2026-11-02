@@ -15,6 +15,8 @@
 //!   │                            — a function needs more registers than a frame holds
 //!   ├── RegisterBudgetExceeded { function, slots, budget }
 //!   │                            — the call stack's register files outgrew the VM budget
+//!   ├── InvalidModule { errors } — the module failed a load-time IIR check
+//!   │                            (the LANG83 string ceiling, #18800)
 //!   └── Custom(String)           — for type_assert and other domain errors
 //! ```
 
@@ -97,6 +99,21 @@ pub enum VMError {
         /// The VM-wide budget, `VMCore::max_register_slots`.
         budget: usize,
     },
+    /// The module failed one of vm-core's load-time IIR checks, so no
+    /// instruction ran.
+    ///
+    /// Today the only such check is the LANG83 PR5a string ceiling
+    /// (`IIRModule::str_ceiling_errors`, #18800): a `str_const` longer than
+    /// the module's ceiling (`StrTooLong`), or a `str_max_bytes` above the
+    /// registry's `STR_MAX_BYTES` (`StrMaxBytes`). Every compiled column
+    /// refuses such a module before code generation, and the reference
+    /// interpreter refuses the same modules before running them — before
+    /// #18800 it ran them, and printed a literal no `str_concat` could have
+    /// built.
+    InvalidModule {
+        /// Every violation, as `interpreter-ir` words it.
+        errors: Vec<String>,
+    },
     /// A custom error raised by language-specific opcode handlers.
     Custom(String),
 }
@@ -141,6 +158,9 @@ impl fmt::Display for VMError {
                      more than the vm-core budget of {budget} (raise VMCore::max_register_slots)"
                 )
             }
+            VMError::InvalidModule { errors } => {
+                write!(f, "invalid IIR module: {}", errors.join("; "))
+            }
             VMError::Custom(msg) => write!(f, "{msg}"),
         }
     }
@@ -163,6 +183,12 @@ mod tests {
         let e = VMError::FrameOverflow { depth: 512, callee: "foo".into() };
         assert!(e.to_string().contains("512"));
         assert!(e.to_string().contains("foo"));
+    }
+
+    #[test]
+    fn display_invalid_module_lists_every_error() {
+        let e = VMError::InvalidModule { errors: vec!["StrTooLong: a".into(), "StrTooLong: b".into()] };
+        assert_eq!(e.to_string(), "invalid IIR module: StrTooLong: a; StrTooLong: b");
     }
 
     #[test]

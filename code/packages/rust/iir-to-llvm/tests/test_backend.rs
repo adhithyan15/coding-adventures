@@ -1498,6 +1498,30 @@ fn a_literal_concat_past_the_ceiling_is_a_runtime_call_with_the_ceiling() {
     assert!(ll.contains(", i64 16)\n"), "the ceiling is the third argument:\n{ll}");
 }
 
+/// #18800 item 1: `validate_for_llvm` (and so `lower_iir_to_llvm`) refuses a
+/// literal longer than the module's ceiling, and a ceiling above the
+/// registry's. Before, both lowered.
+#[test]
+fn a_literal_past_the_module_ceiling_is_refused_at_compile_time() {
+    let literal = |len: usize, ceiling: Option<u32>| {
+        let mut m = module_with(IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("z".repeat(len))], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        m.str_max_bytes = ceiling;
+        m
+    };
+    let refused = |m: &IIRModule| match lower_iir_to_llvm(m, &IIRLlvmConfig::default()) {
+        Err(IIRLlvmError::ValidationFailed(errors)) => errors,
+        other => panic!("expected a validation failure, got {other:?}"),
+    };
+    assert!(refused(&literal(17, Some(16))).iter().any(|e| e.starts_with("StrTooLong")));
+    assert!(refused(&literal(0, Some(interpreter_ir::STR_MAX_BYTES + 1))).iter().any(|e| e.starts_with("StrMaxBytes")));
+    assert!(validate_for_llvm(&literal(16, Some(16))).is_empty());
+    lower(&literal(16, Some(16)));
+}
+
 #[test]
 fn e4_string_literal_cmp_folds_to_integer_return() {
     let f = IIRFunction::new(

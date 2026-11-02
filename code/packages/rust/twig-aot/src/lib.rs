@@ -655,6 +655,9 @@ pub fn compile_module_to_arm64_bytes(
 pub fn compile_typed_module_to_arm64_bytes(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
+    // This entry skips `prepare_module_for_aot`, so it runs that step's
+    // string-ceiling check itself (#18800).
+    check_str_ceiling(module)?;
     let mut module = module.clone();
     for func in &mut module.functions {
         pre_lower_aot_builtins(func);
@@ -1627,6 +1630,35 @@ fn check_no_aot_registers(module: &IIRModule) -> Result<(), AotError> {
         }
     }
     Ok(())
+}
+
+/// Refuse a module whose string literals do not fit its string ceiling
+/// (LANG83 PR5a, #18800), before any lowering.
+///
+/// The check is `interpreter-ir`'s [`IIRModule::str_ceiling_errors`], the same
+/// one every other column's validator runs, so the native columns refuse
+/// exactly the modules the others do:
+///
+/// | the module …                                         | error          |
+/// |------------------------------------------------------|----------------|
+/// | has a `str_const` longer than `str_ceiling()`        | `StrTooLong`   |
+/// | sets `str_max_bytes` above `STR_MAX_BYTES`           | `StrMaxBytes`  |
+///
+/// Before #18800 nothing on the native path asked: `lower_string_literals_for_aot`
+/// baked any literal into an `alloc_bytes` block, so a 17-byte literal in a
+/// module whose ceiling is 16 compiled and ran, although no `str_concat` could
+/// ever have built it.
+///
+/// # Errors
+///
+/// [`AotError::Compile`] listing every violation.
+fn check_str_ceiling(module: &IIRModule) -> Result<(), AotError> {
+    let errors = module.str_ceiling_errors();
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(AotError::Compile(errors.join("; ")))
+    }
 }
 
 /// Refuse any direct `call` to a runtime symbol that is not a function of the
@@ -4163,6 +4195,11 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///  5. `sign_word_comparisons` — retypes a `"bool"`-hinted comparison over
 ///     integer words `"i64"`, so it compares signed (#18483).
 fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
+    // First, on the module exactly as the caller built it: the string
+    // lowering below turns every `str_const` into `alloc_bytes` +
+    // `store_byte`, after which a literal is no longer visible as one.
+    check_str_ceiling(module)?;
+
     // Before anything adds registers of its own: the string lowering below
     // names its registers `__aot_…`, so the module may not already use one.
     check_no_aot_registers(module)?;
@@ -5648,21 +5685,62 @@ mod tests {
     }
 
     /// The ceiling comes from the module through `prepare_module_for_aot`:
-    /// a lowered `str_max_bytes` is passed as is, and one above
-    /// `STR_MAX_BYTES` (malformed IR) is clamped by `str_ceiling()`.
+    /// a lowered `str_max_bytes` is passed as is, and `None` is the registry
+    /// ceiling. One above `STR_MAX_BYTES` is malformed IR: until #18800 it was
+    /// clamped here by `str_ceiling()`; now `prepare_module_for_aot` refuses
+    /// it before any lowering (`StrMaxBytes`), as every other column does.
+    /// The lowering still reads `str_ceiling()`, so the clamp remains for a
+    /// caller that lowers an unvalidated module directly.
     #[test]
     fn a_call_builtin_str_concat_gets_the_clamped_module_ceiling() {
-        for (set, want) in [
-            (Some(5), 5),
-            (None, i64::from(interpreter_ir::STR_MAX_BYTES)),
-            (Some(u32::MAX), i64::from(interpreter_ir::STR_MAX_BYTES)),
-        ] {
+        for (set, want) in [(Some(5), 5), (None, i64::from(interpreter_ir::STR_MAX_BYTES))] {
             let mut module = IIRModule::new("m", "iir");
             module.add_or_replace(concat_call_builtin(concat_srcs(&[Operand::Int(i64::MAX)])));
             module.str_max_bytes = set;
             prepare_module_for_aot(&mut module).unwrap();
             assert_eq!(ceiling_passed_to_c(&module.functions[0]), want, "{set:?}");
         }
+        let mut module = IIRModule::new("m", "iir");
+        module.add_or_replace(concat_call_builtin(concat_srcs(&[Operand::Int(i64::MAX)])));
+        module.str_max_bytes = Some(u32::MAX);
+        match prepare_module_for_aot(&mut module) {
+            Err(AotError::Compile(msg)) => assert!(msg.starts_with("StrMaxBytes"), "{msg}"),
+            other => panic!("expected a StrMaxBytes refusal, got {other:?}"),
+        }
+        let mut f = module.functions[0].clone();
+        lower_string_literals_for_aot(&mut f, module.str_ceiling());
+        assert_eq!(ceiling_passed_to_c(&f), i64::from(interpreter_ir::STR_MAX_BYTES), "clamped");
+    }
+
+    /// #18800 item 1: every native entry point refuses a `str_const` longer
+    /// than the module's ceiling before it lowers anything. Before, the
+    /// literal was baked into an `alloc_bytes` block and the module compiled
+    /// on both backends, although no `str_concat` could have built it.
+    #[test]
+    fn a_literal_past_the_module_ceiling_is_refused_on_every_native_entry() {
+        let module = |len: usize| {
+            let mut m = IIRModule::new("m", "iir");
+            m.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("z".repeat(len))], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ]));
+            m.str_max_bytes = Some(16);
+            m
+        };
+        let refused = |r: Result<(), AotError>, entry: &str| match r {
+            Err(AotError::Compile(msg)) => assert!(msg.starts_with("StrTooLong"), "{entry}: {msg}"),
+            other => panic!("{entry}: expected a StrTooLong refusal, got {other:?}"),
+        };
+        let long = module(17);
+        refused(compile_module_linux_x86_64_object(&long).map(drop), "linux x86-64");
+        refused(compile_module_windows_x86_64_object(&long).map(drop), "windows x86-64");
+        refused(compile_module_macos_arm64_object(&long).map(drop), "macos arm64 object");
+        refused(compile_module_to_arm64_bytes(&long).map(drop), "arm64 bytes");
+        refused(compile_typed_module_to_arm64_bytes(&long).map(drop), "typed arm64 bytes");
+        // At the ceiling the module compiles.
+        compile_module_linux_x86_64_object(&module(16)).expect("16 bytes fit a ceiling of 16");
+        compile_module_to_arm64_bytes(&module(16)).expect("16 bytes fit a ceiling of 16");
     }
 
     /// LANG83 PR5a security review: a direct `call` of a runtime symbol is

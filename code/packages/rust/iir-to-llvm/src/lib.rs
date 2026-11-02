@@ -459,11 +459,25 @@ fn dyn_builtin(name: &str) -> Option<&'static (&'static str, &'static str, usize
 /// 2. Every instruction's `type_hint` maps to an LLVM type (see
 ///    [`llvm_type_for`]).
 /// 3. Every function's return type maps to an LLVM type.
+/// 4. The module's string ceiling (LANG83 PR5a, #18800):
+///    [`IIRModule::str_ceiling_errors`] — no `str_const` longer than
+///    `str_ceiling()`, and no `str_max_bytes` above `STR_MAX_BYTES`.
 ///
 /// These mirror the post-hoc checks the lowerer would do anyway, but
 /// surfaced up-front so callers can fail-fast and aggregate all errors.
 pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
     let mut errors = Vec::new();
+
+    // ── LANG83 PR5a: the module's string ceiling (#18800) ───────────────────
+    //
+    // A `str_const` longer than the module's ceiling (`StrTooLong`), or a
+    // ceiling above the registry's (`StrMaxBytes`), is malformed IR: no
+    // column could hold the literal, and `str_concat` is the only op allowed
+    // to find an over-long string at run time.  `IIRModule::validate` knew
+    // this, but nothing on the way to a backend called it, so every column
+    // compiled such a module.  The shared check lives in `interpreter-ir`, so
+    // every column refuses exactly the same modules.
+    errors.extend(module.str_ceiling_errors());
 
     for func in &module.functions {
         // Return type check.

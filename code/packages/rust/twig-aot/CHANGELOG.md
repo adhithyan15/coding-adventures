@@ -1,5 +1,11 @@
 # Changelog — `twig-aot`
 
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused before lowering
+
+- New `check_str_ceiling`, run first by `prepare_module_for_aot` (so by every module compile: Linux and Windows x86-64, macOS AArch64 objects and executables, `compile_module_to_arm64_bytes`) and by `compile_typed_module_to_arm64_bytes`, which skips that step. A `str_const` longer than the module's ceiling, or a `str_max_bytes` above `STR_MAX_BYTES`, is `AotError::Compile` with `interpreter-ir`'s `StrTooLong` / `StrMaxBytes` message. It runs on the module as given, because `lower_string_literals_for_aot` turns literals into `alloc_bytes` blocks. Before, the literal was baked in and the module compiled.
+- Behaviour change: a module with `str_max_bytes` above `STR_MAX_BYTES` is now refused instead of having its ceiling clamped. `a_call_builtin_str_concat_gets_the_clamped_module_ceiling` pins the refusal through `prepare_module_for_aot`, and the clamp (still in `str_ceiling()`) through `lower_string_literals_for_aot` directly.
+- Test `a_literal_past_the_module_ceiling_is_refused_on_every_native_entry` (fails without the check).
+
 ## Unreleased — LANG83 PR5a — native strings fail closed
 
 - **Runtime (`twig_runtime.c`).** `__twig_str_index` and `__twig_str_slice` out of range raise `Trap.Bounds` through `__twig_trap(1)` (stdout flushed, `trap: Trap.Bounds` on stderr) instead of a bare `abort()` that lost buffered output and named no kind. `__twig_str_concat` takes a third argument, the module's string ceiling, and raises `Trap.Overflow` through `__twig_trap(5)` past it, before allocating. A null or negative-length handle (impossible for validated IR) still `abort()`s.

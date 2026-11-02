@@ -1,5 +1,10 @@
 # Changelog — interpreter-ir
 
+## Unreleased — LANG83 PR5a follow-ups (#18800) — the ceiling is checked on every column
+
+- **New `IIRModule::str_ceiling_errors()`**: the two LANG83 PR5a ceiling checks (`StrMaxBytes`, `StrTooLong`) on their own. `validate()` now calls it, so its output is unchanged. Every column calls it too, where it already refuses a module: before #18800 nothing on the way to a backend called `validate()`, so a `str_const` longer than the module's ceiling compiled and ran on every column. The columns call only these checks, because `validate()`'s other checks (duplicate names, the entry point) are not every column's contract.
+- Test `str_ceiling_errors_is_the_ceiling_part_of_validate`, and a doc example.
+
 ## Unreleased — LANG83 PR5a — strings fail closed
 
 - **`STR_MAX_BYTES` and `IIRModule::str_max_bytes`.** A string is at most `STR_MAX_BYTES` = 2³⁰ − 64 bytes, the largest round value below .NET's `System.String` limit. A module may lower it with the new `str_max_bytes: Option<u32>` field (`None` = the registry value); `IIRModule::str_ceiling()` returns the effective value, clamped to `STR_MAX_BYTES`. `IIRModule::new` sets `None`. The field is not on the binary wire format, like `release`: a deserialised module uses the registry value.
