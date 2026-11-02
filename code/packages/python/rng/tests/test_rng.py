@@ -16,7 +16,7 @@ class TestVersion:
     """Verify the package is importable and has a version."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.1.0"
+        assert __version__ == "0.2.0"
 
 
 # ── Reference values ──────────────────────────────────────────────────────────

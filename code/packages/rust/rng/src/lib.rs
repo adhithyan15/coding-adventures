@@ -52,6 +52,69 @@ const LCG_INCREMENT: u64 = 1442695040888963407;
 /// 2^32 as an f64 = 4_294_967_296.0
 const FLOAT_DIV: f64 = 4_294_967_296.0;
 
+// ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ────────────────────
+
+/// A uniform integer in `[min, max]`, drawn from a stream of 32-bit outputs,
+/// identical in every language of the repository.
+///
+/// `span = max − min + 1` lies between 1 and 2^64. Taking `r % span` of a raw
+/// draw over-samples small offsets whenever the number of possible draws is
+/// not a multiple of `span`; rejecting the `threshold` lowest draws removes
+/// exactly the excess. Three regimes, chosen by `span` alone:
+///
+/// ```text
+///   span <= 2^32    draw next_u32,  threshold = (2^32 − span) mod span
+///   span <  2^64    draw next_u64,  threshold = (2^64 − span) mod span
+///   span == 2^64    the whole i64 domain: every u64 is a valid offset
+/// ```
+///
+/// `next_u64` is two 32-bit draws, high word first, exactly as the
+/// generators' own `next_u64`.
+///
+/// Example, span = 3 in the 32-bit regime: 2^32 = 3 × 1_431_655_765 + 1, so
+/// threshold = 1. Rejecting r = 0 leaves 2^32 − 1 draws, an exact multiple of
+/// 3, and each offset then has the same 1_431_655_765 chances.
+///
+/// v1 of the spec used the 32-bit loop for every span, and this crate took
+/// the threshold modulo 2^64 instead of 2^32 while drawing 32 bits. That was
+/// biased, disagreed with the other languages, never returned more than
+/// 2^32 − 1 above `min`, and divided by zero for the whole domain (whose span
+/// wraps to 0 in u64).
+fn int_in_range(mut next_u32: impl FnMut() -> u32, min: i64, max: i64) -> i64 {
+    assert!(min <= max, "rng: next_int_in_range requires min <= max");
+    // max − min + 1 in u64: exact, except that 2^64 wraps to 0.
+    let span = (max as u64).wrapping_sub(min as u64).wrapping_add(1);
+    let offset = if span == 0 {
+        next_u64_from(&mut next_u32)
+    } else if span <= 1 << 32 {
+        let threshold = (1u64 << 32).wrapping_sub(span) % span;
+        loop {
+            let r = u64::from(next_u32());
+            if r >= threshold {
+                break r % span;
+            }
+        }
+    } else {
+        // 2^64 − span is span.wrapping_neg() in u64 arithmetic.
+        let threshold = span.wrapping_neg() % span;
+        loop {
+            let r = next_u64_from(&mut next_u32);
+            if r >= threshold {
+                break r % span;
+            }
+        }
+    };
+    // min + offset never leaves [min, max], but min + offset as a sum of an
+    // i64 and a u64 can exceed i64 in between, so add in wrapping u64.
+    (min as u64).wrapping_add(offset) as i64
+}
+
+fn next_u64_from(next_u32: &mut impl FnMut() -> u32) -> u64 {
+    let hi = u64::from(next_u32());
+    let lo = u64::from(next_u32());
+    (hi << 32) | lo
+}
+
 // ── LCG ───────────────────────────────────────────────────────────────────────
 
 /// Linear Congruential Generator (Knuth 1948).
@@ -86,7 +149,10 @@ impl Lcg {
     /// Using the *upper* half discards the low-quality lower bits that
     /// have shorter sub-periods.
     pub fn next_u32(&mut self) -> u32 {
-        self.state = self.state.wrapping_mul(LCG_MULTIPLIER).wrapping_add(LCG_INCREMENT);
+        self.state = self
+            .state
+            .wrapping_mul(LCG_MULTIPLIER)
+            .wrapping_add(LCG_INCREMENT);
         (self.state >> 32) as u32
     }
 
@@ -103,28 +169,14 @@ impl Lcg {
         self.next_u32() as f64 / FLOAT_DIV
     }
 
-    /// Returns a uniform random integer in `[min, max]` inclusive.
+    /// Returns a uniform random integer in `[min, max]` inclusive, using
+    /// the rejection sampling of [`int_in_range`].
     ///
-    /// Uses rejection sampling to eliminate modulo bias. Naïve
-    /// `value % range` over-samples small residues when `2^32` is not
-    /// divisible by `range`. We compute:
+    /// # Panics
     ///
-    /// ```text
-    /// threshold = (-range_size) mod range_size
-    /// ```
-    ///
-    /// Any draw below `threshold` is discarded. The expected number of
-    /// extra draws per call is less than 2 for all range sizes.
+    /// If `min > max`. The check happens before any draw.
     pub fn next_int_in_range(&mut self, min: i64, max: i64) -> i64 {
-        assert!(min <= max, "rng: next_int_in_range requires min <= max");
-        let range_size = (max as u64).wrapping_sub(min as u64).wrapping_add(1);
-        let threshold = range_size.wrapping_neg() % range_size;
-        loop {
-            let r = self.next_u32() as u64;
-            if r >= threshold {
-                return min + (r % range_size) as i64;
-            }
-        }
+        int_in_range(|| self.next_u32(), min, max)
     }
 }
 
@@ -183,16 +235,12 @@ impl Xorshift64 {
 
     /// Returns a uniform random integer in `[min, max]` inclusive.
     /// Uses rejection sampling — identical algorithm to [`Lcg::next_int_in_range`].
+    ///
+    /// # Panics
+    ///
+    /// If `min > max`. The check happens before any draw.
     pub fn next_int_in_range(&mut self, min: i64, max: i64) -> i64 {
-        assert!(min <= max, "rng: next_int_in_range requires min <= max");
-        let range_size = (max as u64).wrapping_sub(min as u64).wrapping_add(1);
-        let threshold = range_size.wrapping_neg() % range_size;
-        loop {
-            let r = self.next_u32() as u64;
-            if r >= threshold {
-                return min + (r % range_size) as i64;
-            }
-        }
+        int_in_range(|| self.next_u32(), min, max)
     }
 }
 
@@ -235,7 +283,10 @@ impl Pcg32 {
     /// 4. Advance once more (scatters seed bits throughout state).
     pub fn new(seed: u64) -> Self {
         let increment = LCG_INCREMENT | 1; // must be odd for full period (already is)
-        let mut g = Self { state: 0, increment };
+        let mut g = Self {
+            state: 0,
+            increment,
+        };
         // Step 1 & 2: first advance from zero
         g.state = g.state.wrapping_mul(LCG_MULTIPLIER).wrapping_add(increment);
         // Step 3: mix seed in
@@ -251,7 +302,9 @@ impl Pcg32 {
     /// the pre-advance state — this is the standard PCG output function.
     pub fn next_u32(&mut self) -> u32 {
         let old_state = self.state;
-        self.state = old_state.wrapping_mul(LCG_MULTIPLIER).wrapping_add(self.increment);
+        self.state = old_state
+            .wrapping_mul(LCG_MULTIPLIER)
+            .wrapping_add(self.increment);
 
         // XSH RR permutation ─────────────────────────────────────────────────
         // Step 1: XOR-shift to mix high bits into the low 32.
@@ -281,16 +334,12 @@ impl Pcg32 {
 
     /// Returns a uniform random integer in `[min, max]` inclusive.
     /// Uses rejection sampling — identical algorithm to [`Lcg::next_int_in_range`].
+    ///
+    /// # Panics
+    ///
+    /// If `min > max`. The check happens before any draw.
     pub fn next_int_in_range(&mut self, min: i64, max: i64) -> i64 {
-        assert!(min <= max, "rng: next_int_in_range requires min <= max");
-        let range_size = (max as u64).wrapping_sub(min as u64).wrapping_add(1);
-        let threshold = range_size.wrapping_neg() % range_size;
-        loop {
-            let r = self.next_u32() as u64;
-            if r >= threshold {
-                return min + (r % range_size) as i64;
-            }
-        }
+        int_in_range(|| self.next_u32(), min, max)
     }
 }
 
@@ -333,22 +382,40 @@ mod tests {
 
     #[test]
     fn lcg_deterministic() {
-        let vals_a: Vec<u32> = { let mut g = Lcg::new(42); (0..10).map(|_| g.next_u32()).collect() };
-        let vals_b: Vec<u32> = { let mut g = Lcg::new(42); (0..10).map(|_| g.next_u32()).collect() };
+        let vals_a: Vec<u32> = {
+            let mut g = Lcg::new(42);
+            (0..10).map(|_| g.next_u32()).collect()
+        };
+        let vals_b: Vec<u32> = {
+            let mut g = Lcg::new(42);
+            (0..10).map(|_| g.next_u32()).collect()
+        };
         assert_eq!(vals_a, vals_b);
     }
 
     #[test]
     fn xorshift64_deterministic() {
-        let vals_a: Vec<u32> = { let mut g = Xorshift64::new(42); (0..10).map(|_| g.next_u32()).collect() };
-        let vals_b: Vec<u32> = { let mut g = Xorshift64::new(42); (0..10).map(|_| g.next_u32()).collect() };
+        let vals_a: Vec<u32> = {
+            let mut g = Xorshift64::new(42);
+            (0..10).map(|_| g.next_u32()).collect()
+        };
+        let vals_b: Vec<u32> = {
+            let mut g = Xorshift64::new(42);
+            (0..10).map(|_| g.next_u32()).collect()
+        };
         assert_eq!(vals_a, vals_b);
     }
 
     #[test]
     fn pcg32_deterministic() {
-        let vals_a: Vec<u32> = { let mut g = Pcg32::new(42); (0..10).map(|_| g.next_u32()).collect() };
-        let vals_b: Vec<u32> = { let mut g = Pcg32::new(42); (0..10).map(|_| g.next_u32()).collect() };
+        let vals_a: Vec<u32> = {
+            let mut g = Pcg32::new(42);
+            (0..10).map(|_| g.next_u32()).collect()
+        };
+        let vals_b: Vec<u32> = {
+            let mut g = Pcg32::new(42);
+            (0..10).map(|_| g.next_u32()).collect()
+        };
         assert_eq!(vals_a, vals_b);
     }
 
