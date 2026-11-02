@@ -217,12 +217,105 @@ public sealed class BuildToolTests : IDisposable
         { "unterminated quoted header ends the table", "[dependencies]\n[target.'cfg(unix).dependencies]\nc = { path = \"../c\" }\n", [] },
         { "CRLF and BOM", "\uFEFF[dependencies]\r\na = { path = \"../a\" }\r\n", ["a"] },
         { "union across tables keeps duplicates for the caller", "[dependencies]\na = { path = \"../a\" }\n[build-dependencies]\na = { path = \"../a\" }\n", ["a", "a"] },
+        { "quoted inline path key", "[dependencies]\na = { \"path\" = \"../a\" }\n", ["a"] },
+        { "literal-quoted inline path key", "[dependencies]\na = { 'path' = \"../a\" }\n", ["a"] },
+        { "quoted inline package key renames", "[dependencies]\nx = { \"package\" = \"a\", path = \"../a\" }\n", ["a"] },
+        { "quoted capitalised inline Path key", "[dependencies]\na = { \"Path\" = \"../a\" }\n", [] },
+        { "escaped inline path key is compared verbatim", "[dependencies]\na = { \"pa\\u0074h\" = \"../a\" }\n", [] },
+        { "dotted inline field key", "[dependencies]\na = { path.x = \"../a\" }\n", [] },
+        { "quoted sub-table path key", "[dependencies.a]\n\"path\" = \"../a\"\n", ["a"] },
+        { "quoted sub-table package key", "[dependencies.x]\n'package' = \"a\"\npath = \"../a\"\n", ["a"] },
+        { "quoted capitalised sub-table Path key", "[dependencies.a]\n\"Path\" = \"../a\"\n", [] },
+        { "open string continues across the join", "[dependencies]\na = { path = \"../a\", x = \"q [\n\" }\n", ["a"] },
+        { "line-final backslash escapes the joining space", "[dependencies]\na = { x = \"q\\\n\", path = \"../a\" }\n", ["a"] },
     };
 
     [Fact]
     public void CargoLinkCaseTableMatchesTheGoReference()
     {
-        Assert.Equal(46, CargoLinkCases.Count);
+        Assert.Equal(57, CargoLinkCases.Count);
+    }
+
+    // Rescanning the whole joined value for every appended line is
+    // quadratic: a 20,000-line continuation (about 500 KB) took tens of
+    // seconds. Carrying the scanner state makes it one pass; the bound is
+    // generous so a loaded CI machine cannot flake it.
+    [Fact]
+    public void CargoContinuationJoinIsLinear()
+    {
+        var manifest = "[dependencies]\na = { path = \"../a\", features = [\n"
+            + string.Concat(Enumerable.Repeat("  \"feature-name-padding\",\n", 20_000)) + "] }\n";
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        Assert.Equal(["a"], Resolver.CargoLinkDependencyNames(manifest));
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(10), $"took {stopwatch.Elapsed}");
+    }
+
+    // `(?m)^\s*name` runs `\s*` across every following blank line from each
+    // line start and backtracks when the match then fails (here: an
+    // unterminated name), which is quadratic in a run of blank lines.
+    [Fact]
+    public void CargoPackageNameReaderIsLinearInBlankLines()
+    {
+        WriteFile("code/packages/rust/late-dir/Cargo.toml", new string('\n', 100_000) + "name = \"x");
+        var package = new PackageSpec("rust/late-dir", Path.Combine(_tempRoot, "code/packages/rust/late-dir"), [], "rust", []);
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        var known = Resolver.BuildKnownNames([package]);
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(5), $"took {stopwatch.Elapsed}");
+        Assert.Equal(["late-dir"], known.Keys);
+
+        WriteFile("code/packages/rust/late-dir/Cargo.toml", new string('\n', 100_000) + "[package]\nname = \"Late-Crate\"\n");
+        Assert.Equal("rust/late-dir", Resolver.BuildKnownNames([package])["late-crate"]);
+    }
+
+    // Step 5: a candidate resolving to the crate itself -- by its directory
+    // alias, by its [package] name through a renamed sub-table, or from a
+    // target table -- is DEPENDENCY_SELF_EDGE, neither dropped nor drawn.
+    [Theory]
+    [InlineData("[dependencies]\napp-dir = { path = \".\" }\n")]
+    [InlineData("[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n")]
+    [InlineData("[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n")]
+    public void CargoSelfEdgeIsADiagnostic(string entry)
+    {
+        WriteFile("code/packages/rust/app-dir/BUILD", "cargo test\n");
+        WriteFile("code/packages/rust/app-dir/Cargo.toml", "[package]\nname = \"app-crate\"\n\n" + entry);
+
+        var error = Assert.Throws<DependencySelfEdgeException>(
+            () => Resolver.ResolveDependencies(Discovery.DiscoverPackages(Path.Combine(_tempRoot, "code"))));
+
+        Assert.Equal("DEPENDENCY_SELF_EDGE", error.Code);
+        Assert.Equal("rust/app-dir", error.Package);
+        Assert.Equal("code/packages/rust/app-dir/Cargo.toml", error.Manifest);
+        Assert.Equal("rust/app-dir", error.Dependency);
+        Assert.Equal(
+            "DEPENDENCY_SELF_EDGE: package=rust/app-dir manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir",
+            error.Message);
+        Assert.DoesNotContain(_tempRoot, error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AppExitsTwoForACargoSelfEdge()
+    {
+        WriteFile("code/packages/rust/app/BUILD", "cargo test\n");
+        WriteFile("code/packages/rust/app/Cargo.toml", "[package]\nname = \"app\"\n\n[dependencies]\napp = { path = \".\" }\n");
+
+        var originalError = Console.Error;
+        using var stderr = new StringWriter();
+        Console.SetError(stderr);
+        int exitCode;
+        try
+        {
+            exitCode = await BuildToolApp.RunAsync(["--root", _tempRoot, "--force", "--dry-run"]);
+        }
+        finally
+        {
+            Console.SetError(originalError);
+        }
+
+        Assert.Equal(2, exitCode);
+        Assert.Contains(
+            "DEPENDENCY_SELF_EDGE: package=rust/app manifest=code/packages/rust/app/Cargo.toml dependency=rust/app",
+            stderr.ToString(),
+            StringComparison.Ordinal);
     }
 
     [Theory]

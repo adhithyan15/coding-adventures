@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- From the shared C# engine: Cargo continuation lines are joined in linear
+  time, quoted `path`/`package` keys count, and a crate that resolves itself
+  is `DEPENDENCY_SELF_EDGE` with exit status 2 (see the C# build tool's
+  changelog).
+
 - Rust resolution, which this front door takes from the shared C# engine,
   now reads path dependencies from `[build-dependencies]`,
   `[build_dependencies]`, every `[target.<cfg>.…]` link table and the

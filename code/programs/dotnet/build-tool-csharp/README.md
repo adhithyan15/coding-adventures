@@ -102,12 +102,16 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   name and declared `[package]` `name` (a WASM wrapper only by its declared
   name). Dev-dependencies in every form, `[patch]`, `[replace]`,
   `[workspace]`, package metadata, features, comments, and registry-only
-  dependencies never create edges. `Resolver.CargoLinkDependencyNames` is the
+  dependencies never create edges. Field and sub-table keys may be bare or
+  quoted (`"path" = "..."`), continuation lines are joined in linear time,
+  and a crate that resolves itself is a `DEPENDENCY_SELF_EDGE` error
+  (`DependencySelfEdgeException`, exit status 2).
+  `Resolver.CargoLinkDependencyNames` is the
   line procedure of the Rust paragraph of
   `code/specs/build-tool-conformance.md`; the test suite pins it with the Go
-  reference's 46 shape cases, and it returns the same dependency names as the
+  reference's 57 shape cases, and it returns the same dependency names as the
   Go reference reader for all 1,650 tracked `Cargo.toml` files (checked
-  2026-11-01). The F# front door shares this engine.
+  2026-11-02). The F# front door shares this engine.
 - Discovery consumes the complete language-neutral registry. The exact bucket
   immediately below `packages` or `programs` is the sole language
   discriminator, BUILD roots outside those containers do not become packages,

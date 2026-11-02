@@ -1410,6 +1410,35 @@ public static class Discovery
     }
 }
 
+/// <summary>
+/// A package whose own manifest resolves the package itself as a dependency.
+/// The conformance contract rejects this as <c>DEPENDENCY_SELF_EDGE</c>: a
+/// self-edge is neither dropped nor drawn (a drawn self-loop would surface
+/// later as a cycle, far from its cause). A Cargo manifest can do it with
+/// nothing more than a path entry named after its own directory or its
+/// <c>[package]</c> name. <see cref="Manifest"/> is repository-relative, so
+/// the message never discloses the checkout root; the CLI reports it with
+/// exit status 2.
+/// </summary>
+public sealed class DependencySelfEdgeException : Exception
+{
+    public DependencySelfEdgeException(string package, string manifest, string dependency)
+        : base($"DEPENDENCY_SELF_EDGE: package={package} manifest={manifest} dependency={dependency}")
+    {
+        Package = package;
+        Manifest = manifest;
+        Dependency = dependency;
+    }
+
+    public string Code => "DEPENDENCY_SELF_EDGE";
+
+    public string Package { get; }
+
+    public string Manifest { get; }
+
+    public string Dependency { get; }
+}
+
 public static class Resolver
 {
     public static DirectedGraph ResolveDependencies(IReadOnlyList<PackageSpec> packages)
@@ -1450,6 +1479,17 @@ public static class Resolver
                 _ => [],
             };
 
+            // Step 5 of the Rust contract: a Cargo candidate resolving to the
+            // crate itself (by directory alias or [package] name) is
+            // rejected, neither dropped nor drawn.
+            if (package.Language is "rust" or "wasm" && dependencies.Contains(package.Name, StringComparer.Ordinal))
+            {
+                throw new DependencySelfEdgeException(
+                    package.Name,
+                    RepositoryManifestPath(Path.Combine(package.Path, "Cargo.toml")),
+                    package.Name);
+            }
+
             foreach (var dependency in dependencies.Distinct(StringComparer.Ordinal))
             {
                 graph.AddEdge(dependency, package.Name);
@@ -1457,6 +1497,23 @@ public static class Resolver
         }
 
         return graph;
+    }
+
+    // Everything from the last `code/packages` or `code/programs` pair of
+    // components on, or just the file name when there is none — the Go
+    // reference's rule, so a diagnostic never discloses the checkout root.
+    private static string RepositoryManifestPath(string path)
+    {
+        var parts = path.Replace('\\', '/').Split('/');
+        for (var index = parts.Length - 2; index >= 0; index--)
+        {
+            if (parts[index] == "code" && parts[index + 1] is "packages" or "programs")
+            {
+                return string.Join('/', parts[index..]);
+            }
+        }
+
+        return Path.GetFileName(path);
     }
 
     public static Dictionary<string, string> BuildKnownNames(IReadOnlyList<PackageSpec> packages) =>
@@ -1690,7 +1747,11 @@ public static class Resolver
             return null;
         }
 
-        var match = Regex.Match(File.ReadAllText(cargoToml), @"(?m)^\s*name\s*=\s*""([^""]+)""");
+        // `[ \t]*`, not `\s*`: with (?m) a `\s*` after `^` runs across every
+        // following blank line from each line start and backtracks when the
+        // match then fails, which is quadratic in a run of blank lines. Names
+        // never span lines either.
+        var match = Regex.Match(File.ReadAllText(cargoToml), @"(?m)^[ \t]*name[ \t]*=[ \t]*""([^""\n]+)""");
         return match.Success ? match.Groups[1].Value.Trim().ToLowerInvariant() : null;
     }
 
@@ -2010,7 +2071,11 @@ public static class Resolver
     // So while the entry's value still has an unclosed `{` or `[`, the next
     // lines are joined onto it with one space (and are not looked at as
     // headers or entries). If the file ends first, the entry contributes
-    // nothing.
+    // nothing. The brackets are counted over the joined value as one text —
+    // a string left open at the end of one line continues after the joining
+    // space — but the joined value is never rescanned: a TomlBracketScanner
+    // carries its state from line to line and the pieces are joined once, so
+    // the join is linear in the entry's length.
     internal static List<string> CargoLinkDependencyNames(string text)
     {
         if (text.StartsWith('﻿'))
@@ -2062,18 +2127,32 @@ public static class Resolver
             {
                 case CargoLinkTableKind.Inline:
                     {
+                        // The pieces are collected and joined once, and the
+                        // scanner carries its state from piece to piece, so
+                        // the join is linear.
                         var value = TrimTomlBlank(line[(equals + 1)..]);
                         var complete = true;
-                        while (value.StartsWith('{') && TomlOpenBracketDepth(value) > 0)
+                        if (value.StartsWith('{'))
                         {
-                            index++;
-                            if (index >= lines.Length)
+                            var scanner = new TomlBracketScanner();
+                            scanner.Feed(value);
+                            if (scanner.Depth > 0)
                             {
-                                complete = false; // the file ended inside the value
-                                break;
-                            }
+                                var pieces = new List<string> { value };
+                                complete = false;
+                                while (!complete && index + 1 < lines.Length)
+                                {
+                                    index++;
+                                    var piece = CleanLine(lines[index]);
+                                    scanner.Feed(" ");
+                                    scanner.Feed(piece);
+                                    pieces.Add(piece);
+                                    complete = scanner.Depth <= 0;
+                                }
 
-                            value += " " + CleanLine(lines[index]);
+                                // If the file ended inside the value, there is no entry.
+                                value = string.Join(' ', pieces);
+                            }
                         }
 
                         if (complete && CargoPathDependencyName(line[..equals], value) is { } crateName)
@@ -2086,15 +2165,17 @@ public static class Resolver
 
                 case CargoLinkTableKind.Sub:
                     {
-                        // Only the two bare, lowercase keys matter; the first
+                        // Only the keys `path` and `package` matter, bare or
+                        // quoted (`"path" = ...` is the same key); the first
                         // occurrence of each wins. `version`, `features`,
-                        // `optional` ... are ignored.
+                        // `optional` ... are ignored, and so is `Path`: TOML
+                        // keys are case-sensitive.
                         if (TomlSingleString(line[(equals + 1)..]) is not { } value)
                         {
                             break;
                         }
 
-                        switch (TrimTomlBlank(line[..equals]))
+                        switch (TomlKeySegment(line[..equals]))
                         {
                             case "path":
                                 subPath ??= value;
@@ -2174,9 +2255,16 @@ public static class Resolver
     //
     // Fields are split at commas outside strings AND outside nested `[...]`
     // or `{...}`, so a `features` array cannot leak a fake field and a nested
-    // table's `path` is not the entry's. Field keys must be exactly `path`
-    // and `package` (Cargo ignores `Package`, so it must not count as a
-    // rename).
+    // table's `path` is not the entry's. A field key is decoded like an
+    // entry key, so `"path"` and `'path'` are the key `path` (TOML, and so
+    // Cargo, read them that way); the decoded key must then be exactly
+    // `path` or `package` (Cargo ignores `Package`, so it must not count as a
+    // rename; escapes are not decoded):
+    //
+    //   a = { "path" = "../a" }                 -> a
+    //   x = { 'package' = "a", path = "../a" }  -> a
+    //   a = { "Path" = "../a" }                 -> not a path dep (case-sensitive)
+    //   a = { path.x = "../a" }                 -> not a path dep (dotted field key)
     private static string? CargoPathDependencyName(string key, string value)
     {
         if (TomlKeySegment(key) is not { } crateName)
@@ -2200,7 +2288,8 @@ public static class Resolver
                 continue;
             }
 
-            switch (TrimTomlBlank(field[..equals]))
+            // A dotted or malformed field key is no key at all (null).
+            switch (TomlKeySegment(field[..equals]))
             {
                 case "path":
                     path ??= fieldValue;
@@ -2301,35 +2390,62 @@ public static class Resolver
         return -1;
     }
 
-    // Counts the `{` and `[` outside strings that are not closed again
-    // within value. Zero (or less) means the value is complete; an unclosed
-    // string stops the count where it opens.
-    private static int TomlOpenBracketDepth(string value)
+    // Counts the `{` and `[` outside strings that are not closed again, over
+    // text fed in pieces. Feeding "ab" and then "cd" leaves exactly the
+    // state feeding "abcd" would, because the scanner keeps what a rescan of
+    // the joined text would have to rediscover: whether it is inside a
+    // string (and which delimiter closes it), and whether the previous
+    // character was a backslash escaping the next one in a basic string. So
+    // a string still open at the end of one line continues after the
+    // joining space, as it does in the joined value:
+    //
+    //   Feed("{ x = \"q\\")   depth 1, inside "...", escape pending
+    //   Feed(" ")              the space is escaped: still inside the string
+    //   Feed("\", p = 1 }")    the string closes, `}` closes the table: 0
+    //
+    // Depth zero (or less) means the value is complete. Carrying this state
+    // is what keeps the continuation join linear: the reader used to rescan
+    // the whole growing value for every appended line, which is quadratic.
+    private sealed class TomlBracketScanner
     {
-        var depth = 0;
-        for (var index = 0; index < value.Length; index++)
-        {
-            switch (value[index])
-            {
-                case '"' or '\'':
-                    var end = TomlStringEnd(value, index);
-                    if (end < 0)
-                    {
-                        return depth;
-                    }
+        private char _quote; // the delimiter of the string being scanned, or '\0'
+        private bool _escape; // the previous character was a backslash in "..."
 
-                    index = end - 1;
-                    break;
-                case '{' or '[':
-                    depth++;
-                    break;
-                case '}' or ']':
-                    depth--;
-                    break;
+        public int Depth { get; private set; }
+
+        public void Feed(string text)
+        {
+            foreach (var character in text)
+            {
+                if (_escape)
+                {
+                    _escape = false;
+                }
+                else if (_quote != '\0')
+                {
+                    if (_quote == '"' && character == '\\')
+                    {
+                        _escape = true;
+                    }
+                    else if (character == _quote)
+                    {
+                        _quote = '\0';
+                    }
+                }
+                else if (character is '"' or '\'')
+                {
+                    _quote = character;
+                }
+                else if (character is '{' or '[')
+                {
+                    Depth++;
+                }
+                else if (character is '}' or ']')
+                {
+                    Depth--;
+                }
             }
         }
-
-        return depth;
     }
 
     // Splits value at every separator outside strings. With nested set, a
@@ -3965,7 +4081,18 @@ public static class BuildToolApp
 
         Console.WriteLine($"Discovered {packages.Count} packages");
 
-        var graph = Resolver.ResolveDependencies(packages);
+        DirectedGraph graph;
+        try
+        {
+            graph = Resolver.ResolveDependencies(packages);
+        }
+        catch (DependencySelfEdgeException error)
+        {
+            // Malformed input: the stable, root-free diagnostic and exit 2.
+            Console.Error.WriteLine(error.Message);
+            return 2;
+        }
+
         HashSet<string>? affectedSet = null;
         var ciToolchains = new HashSet<string>(StringComparer.Ordinal);
         var force = options.Force;
