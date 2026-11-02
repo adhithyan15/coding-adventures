@@ -181,6 +181,18 @@ half their draws, single-value ranges, and both ends of the 64-bit domain.
 standard-library implementation of this spec, and checks each regime is
 exercised. A lane conforms when it reproduces every case.
 
+`--write` also generates `cases.txt`, the same corpus as whitespace-separated
+lines (`case <id> <generator> <seed>`, one line per call, `end`), for lanes
+with no JSON reader; the check fails if it is stale.
+
+**Invalid ranges.** `min > max` is an error raised before any draw. Lanes
+report it in their own idiom: an exception (Python `ValueError`, C++
+`std::invalid_argument`), a panic or trap (Rust, Go, Swift's
+`nextIntInRange`), or, where the language has neither, a separate checked
+form (C's `rng_*_try_int_in_range` returning -1, Swift's `tryIntInRange`
+returning `nil`). C's unchecked `rng_*_next_int_in_range` returns `min` for
+compatibility; the corpus tests the checked form.
+
 ### Known Reference Values (seed = 1)
 
 These values are the ground truth for cross-language test suites. All

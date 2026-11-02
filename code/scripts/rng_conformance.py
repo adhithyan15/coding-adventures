@@ -7,7 +7,7 @@ reproduce them. This script is the reference: standard-library Python written
 from the spec, sharing no code with any `rng` package.
 
     python3 code/scripts/rng_conformance.py           # check (CI)
-    python3 code/scripts/rng_conformance.py --write   # fill in results
+    python3 code/scripts/rng_conformance.py --write   # fill in results, regenerate cases.txt
 
 A case names a generator, a seed and a list of calls. `--write` runs the calls
 on the reference and records each result; the default mode re-runs them and
@@ -36,6 +36,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = REPO_ROOT / "code/specs/fixtures/rng-v1/cases.json"
+FLAT = "cases.txt"  # generated beside cases.json; see flat_form()
 
 M32 = (1 << 32) - 1
 M64 = (1 << 64) - 1
@@ -273,6 +274,40 @@ def check(document: object, *, results_required: bool = True) -> list[str]:
     return problems
 
 
+def flat_form(document: dict) -> str:
+    """The corpus as whitespace-separated lines, for lanes with no JSON reader.
+
+    Every token is free of spaces, so a lane can read it with fscanf, a line
+    split, or a stream extractor::
+
+        case <id> <generator> <seed>
+        next_u32 <result>
+        next_u64 <result>
+        next_float <16 hex digits of the IEEE-754 bits>
+        next_int_in_range <min> <max> <result | error>
+        end
+
+    It is generated from cases.json by --write; the check fails if stale.
+    """
+    lines = [
+        "# rng-v1 corpus, flat form. Generated from cases.json by",
+        "# code/scripts/rng_conformance.py --write; do not edit.",
+    ]
+    for case in document["cases"]:
+        lines.append(f"case {case['id']} {case['generator']} {case['seed']}")
+        for call in case["calls"]:
+            op = call["op"]
+            if op == "next_float":
+                lines.append(f"{op} {call['result_bits']}")
+            elif op == "next_int_in_range":
+                outcome = "error" if "error" in call else call["result"]
+                lines.append(f"{op} {call['min']} {call['max']} {outcome}")
+            else:
+                lines.append(f"{op} {call['result']}")
+        lines.append("end")
+    return "\n".join(lines) + "\n"
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--write", action="store_true", help="fill in results")
@@ -287,7 +322,13 @@ def main(argv: list[str] | None = None) -> int:
             for case in document["cases"]:
                 case["calls"] = run_case(case)[0]
             FIXTURE.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+            (FIXTURE.parent / FLAT).write_text(flat_form(document), encoding="utf-8")
     problems = check(document)
+    flat = FIXTURE.parent / FLAT
+    if not problems and (
+        not flat.exists() or flat.read_text(encoding="utf-8") != flat_form(document)
+    ):
+        problems.append(f"{FLAT} is stale: run with --write")
     for problem in problems:
         print(f"rng-v1: {problem}", file=sys.stderr)
     print(f"rng-v1: {len(document['cases'])} cases, {len(problems)} problem(s)")
