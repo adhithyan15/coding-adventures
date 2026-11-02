@@ -2654,11 +2654,9 @@ mod tests {
         assert!(matches!(stores(&then_branch.stmts, "__ret_")[..], [Expr::IntLit { value: 1, .. }]));
         assert!(matches!(&f.body.stmts[3], Stmt::ExprStmt { expr: Expr::If { cond, .. }, .. }
             if matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "==")));
-        for src in ["while true\n  next if 1 == 1\n  break unless 1 == 2\nend\n"] {
-            let m = lower(src);
-            assert_valid(&m);
-            assert_no_jump_marker(&m);
-        }
+        let m = lower("while true\n  next if 1 == 1\n  break unless 1 == 2\nend\n");
+        assert_valid(&m);
+        assert_no_jump_marker(&m);
     }
 
     /// #18798 (item 14) — the values stored, by the statements directly in
