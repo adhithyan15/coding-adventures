@@ -30,9 +30,27 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "for_statement" },
       { type: "rule_reference", name: "case_statement" },
       { type: "rule_reference", name: "begin_statement" },
-      { type: "rule_reference", name: "return_statement" },
-      { type: "rule_reference", name: "break_statement" },
-      { type: "rule_reference", name: "next_statement" },
+      { type: "sequence", elements: [
+        { type: "rule_reference", name: "return_statement" },
+        { type: "negative_lookahead", element: { type: "literal", value: "if_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "unless_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "while_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "until_modifier" } },
+      ] },
+      { type: "sequence", elements: [
+        { type: "rule_reference", name: "break_statement" },
+        { type: "negative_lookahead", element: { type: "literal", value: "if_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "unless_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "while_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "until_modifier" } },
+      ] },
+      { type: "sequence", elements: [
+        { type: "rule_reference", name: "next_statement" },
+        { type: "negative_lookahead", element: { type: "literal", value: "if_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "unless_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "while_modifier" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "until_modifier" } },
+      ] },
       { type: "rule_reference", name: "redo_statement" },
       { type: "rule_reference", name: "retry_statement" },
       { type: "rule_reference", name: "yield_statement" },
@@ -102,6 +120,9 @@ export const PARSER_GRAMMAR: ParserGrammar = {
     name: "modifier_statement",
     body: { type: "sequence", elements: [
       { type: "group", element: { type: "alternation", choices: [
+          { type: "rule_reference", name: "return_statement" },
+          { type: "rule_reference", name: "break_statement" },
+          { type: "rule_reference", name: "next_statement" },
           { type: "rule_reference", name: "assignment" },
           { type: "rule_reference", name: "method_call_no_paren" },
           { type: "sequence", elements: [

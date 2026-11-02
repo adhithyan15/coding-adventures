@@ -3679,7 +3679,10 @@ impl Lowerer {
     /// never tail-promoted to expression).
     fn lower_modifier_statement(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         // 1. Find the LHS inner-rule node.  It's the first child that's
-        //    one of the four LHS-eligible rules.
+        //    one of the LHS-eligible rules — since #18798 a jump too
+        //    (`return x if c`, `next unless c`): `lower_statement_inner`
+        //    lowers it to its marker, and `crate::jumps` turns the marker
+        //    inside the `If` into stores and guards like any other.
         let lhs_node = node
             .children
             .iter()
@@ -3687,7 +3690,13 @@ impl Lowerer {
                 ASTNodeOrToken::Node(n)
                     if matches!(
                         n.rule_name.as_str(),
-                        "assignment" | "method_call" | "method_call_no_paren" | "expression_stmt"
+                        "assignment"
+                            | "method_call"
+                            | "method_call_no_paren"
+                            | "expression_stmt"
+                            | "return_statement"
+                            | "break_statement"
+                            | "next_statement"
                     ) =>
                 {
                     Some(n)

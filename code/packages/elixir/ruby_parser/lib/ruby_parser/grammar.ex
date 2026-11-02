@@ -30,9 +30,27 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "for_statement", false},
             {:rule_reference, "case_statement", false},
             {:rule_reference, "begin_statement", false},
-            {:rule_reference, "return_statement", false},
-            {:rule_reference, "break_statement", false},
-            {:rule_reference, "next_statement", false},
+            {:sequence, [
+              {:rule_reference, "return_statement", false},
+              {:negative_lookahead, {:literal, "if_modifier"}},
+              {:negative_lookahead, {:literal, "unless_modifier"}},
+              {:negative_lookahead, {:literal, "while_modifier"}},
+              {:negative_lookahead, {:literal, "until_modifier"}},
+            ]},
+            {:sequence, [
+              {:rule_reference, "break_statement", false},
+              {:negative_lookahead, {:literal, "if_modifier"}},
+              {:negative_lookahead, {:literal, "unless_modifier"}},
+              {:negative_lookahead, {:literal, "while_modifier"}},
+              {:negative_lookahead, {:literal, "until_modifier"}},
+            ]},
+            {:sequence, [
+              {:rule_reference, "next_statement", false},
+              {:negative_lookahead, {:literal, "if_modifier"}},
+              {:negative_lookahead, {:literal, "unless_modifier"}},
+              {:negative_lookahead, {:literal, "while_modifier"}},
+              {:negative_lookahead, {:literal, "until_modifier"}},
+            ]},
             {:rule_reference, "redo_statement", false},
             {:rule_reference, "retry_statement", false},
             {:rule_reference, "yield_statement", false},
@@ -102,6 +120,9 @@ defmodule CodingAdventures.RubyParser.Grammar do
           name: "modifier_statement",
           body: {:sequence, [
             {:group, {:alternation, [
+                {:rule_reference, "return_statement", false},
+                {:rule_reference, "break_statement", false},
+                {:rule_reference, "next_statement", false},
                 {:rule_reference, "assignment", false},
                 {:rule_reference, "method_call_no_paren", false},
                 {:sequence, [

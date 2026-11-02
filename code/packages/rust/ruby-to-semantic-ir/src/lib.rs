@@ -2636,6 +2636,31 @@ mod tests {
         assert!(matches!(&then_branch.value, Expr::VarRef { name, .. } if name.starts_with("__rescue_value_")));
     }
 
+    /// #18798 (item 14) — `return x if c` is an `if` around the jump's two
+    /// stores, and the rest of the method is guarded by the flag.  It was
+    /// refused ("direct call to unknown function `if_modifier`").
+    #[test]
+    fn a_jump_with_a_modifier_lowers_inside_an_if() {
+        let m = lower("def f(c)\n  return 1 if c\n  puts 0\n  2\nend\nputs f(true)\n");
+        assert_valid(&m);
+        assert_no_jump_marker(&m);
+        let f = func(&m, "f");
+        let dbg = format!("{:?}", f.body);
+        assert!(!dbg.contains("if_modifier"), "{dbg}");
+        // `let __ret`, `let __jump`, the `if c`, then the guard around the rest.
+        let Stmt::ExprStmt { expr: Expr::If { then_branch, .. }, .. } = &f.body.stmts[2] else {
+            panic!("expected the `if`: {:?}", f.body);
+        };
+        assert!(matches!(stores(&then_branch.stmts, "__ret_")[..], [Expr::IntLit { value: 1, .. }]));
+        assert!(matches!(&f.body.stmts[3], Stmt::ExprStmt { expr: Expr::If { cond, .. }, .. }
+            if matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "==")));
+        for src in ["while true\n  next if 1 == 1\n  break unless 1 == 2\nend\n"] {
+            let m = lower(src);
+            assert_valid(&m);
+            assert_no_jump_marker(&m);
+        }
+    }
+
     /// #18798 (item 14) — the values stored, by the statements directly in
     /// `stmts`, into the local the jump lowering invented with `prefix`
     /// (`__ret_` or `__jump_`; see `crate::jumps`).
