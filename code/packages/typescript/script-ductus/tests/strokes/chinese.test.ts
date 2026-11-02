@@ -293,9 +293,12 @@ describe("handwriting ductus", () => {
     // 283 -> 297: the fourteen characters B1 vocabulary tranche m writes
     // (chapters 402-429), each right after the word that anchors
     // it: 旅 检 入 交 通 船 飞 场 停 速 北 南 酒 往.
-    expect(chinese.letters).toHaveLength(297);
+    // 297 -> 304: the first characters B1 vocabulary tranche n writes
+    // (chapters 430-457), each right after the word that anchors
+    // it: 游 海 方 部 村 河 护.
+    expect(chinese.letters).toHaveLength(304);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      297,
+      304,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
