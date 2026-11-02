@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-02
+
+- `resolution/rust-field-aware` pins quoted field and sub-table keys, which
+  TOML (and so Cargo) reads as the bare key: `rho = { "path" = "../rho" }`
+  (inline), `[dependencies.sigma]` `'path' = "../sigma"` (sub-table) and
+  `[build-dependencies.tau_alias]` `"package" = "tau"` (a quoted rename) are
+  three new edges, each its own package. `upsilon = { "Path" = "../upsilon" }`
+  is a new decoy: keys stay case-sensitive. Eleven edges now; the corpus stays
+  at 179 cases.
+
 ## 2026-11-01
 
 - Rewrote `resolution/rust-field-aware` for the corrected Cargo contract.
