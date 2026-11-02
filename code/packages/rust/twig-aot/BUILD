@@ -27,13 +27,20 @@
 #                       guard. Host-independent — runs on ubuntu + macOS.
 #   e4d_str_helpers     `#![cfg(unix)]`; drives the C runtime's string helpers
 #                       through $CC. Runs on ubuntu + macOS.
+#   gc_param_roots      `#![cfg(target_os = "linux")]`; #18492 — heap-valued
+#                       parameters and their copies stay precise GC roots. Builds
+#                       ELF executables with the system `cc`, runs them, and runs
+#                       valgrind memcheck when installed. ubuntu only.
+#   gc_global_and_buffer_roots `#![cfg(target_os = "linux")]`; #18765 / #18766 —
+#                       globals and `alloc_bytes` string buffers stay precise GC
+#                       roots. Same shape as gc_param_roots. ubuntu only.
 #   windows_x86_64_smoke `#![cfg(target_os = "windows")]`; PE end-to-end + GC
 #                       stackmap differentials. Listed so a developer on a Windows
 #                       host runs it, but NOTHING IN CI DOES — see above. Treat it
 #                       as unwatched until the windows leg builds Rust.
 #
-# Be honest about what that leaves: in CI only `--lib` and `e4d_str_helpers`
-# actually execute assertions. The two end-to-end suites that would exercise the
+# Be honest about what that leaves: in CI only `--lib`, `e4d_str_helpers` and,
+# on the ubuntu leg, the two GC-root suites actually execute assertions. The two end-to-end suites that would exercise the
 # native AOT pipeline are excluded (below) or unreachable (windows).
 #
 # TWO TARGETS ARE DELIBERATELY EXCLUDED because they are red today, both on the
@@ -86,4 +93,4 @@
 #
 # Listing targets explicitly rather than running the whole crate is what makes
 # the exclusions visible. A bare `cargo test -p twig-aot` would hide them.
-cargo test -p twig-aot --lib --test e4d_str_helpers --test windows_x86_64_smoke
+cargo test -p twig-aot --lib --test e4d_str_helpers --test gc_param_roots --test gc_global_and_buffer_roots --test windows_x86_64_smoke

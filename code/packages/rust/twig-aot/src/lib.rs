@@ -99,6 +99,16 @@ const GC_INIT_STACKMAPS: &str = "__gc_init_stackmaps";
 /// generated `__gc_init_stackmaps` calls it once per user function; resolved by the
 /// system linker from the embedded `libgc_core_capi.a` (an external `BL`).
 const GC_REGISTER_STACKMAP: &str = "__gc_register_stackmap";
+/// The GC runtime's **global-root** registration entry (gc-core-capi, #18765). The
+/// generated `__gc_init_stackmaps` calls it once, before any stack map, with the
+/// address of the module's globals block and its slot count, so every collection
+/// treats each global slot as a precise root (marked, and rewritten when a
+/// compaction moves its object). Skipped for a module with no globals.
+const GC_REGISTER_GLOBAL_ROOTS: &str = "__gc_register_global_roots";
+/// The data symbol every packager defines for the module's global slots (slot `k`
+/// at byte `8·k`) — the target of `global_load` / `global_store` relocations, and
+/// of the one [`GC_REGISTER_GLOBAL_ROOTS`] argument that needs relocating.
+const TWIG_GLOBALS: &str = "_twig_globals";
 
 /// One `ADR` in `__gc_init_stackmaps` that must be patched to a user function's
 /// runtime address (`func_start`, the first argument of [`GC_REGISTER_STACKMAP`]).
@@ -196,6 +206,11 @@ fn build_gc_wrapper(user_entry: &str) -> Result<(Vec<u8>, Vec<Reloc>), AotError>
 /// ```text
 ///   __gc_init_stackmaps:
 ///       stp x29,x30,[sp,#-16]! ; mov x29,sp
+///       ; ── only if the module has globals (#18765) ──
+///       adrp x0, _twig_globals@PAGE  ; x0 = &_twig_globals   (ARM64_RELOC_PAGE21)
+///       add  x0, x0, _twig_globals@PAGEOFF                   (ARM64_RELOC_PAGEOFF12)
+///       mov  x1, #<global count>
+///       bl   __gc_register_global_roots
 ///       ; ── per function F with records ──
 ///       adr  x0, F                   ; x0 = func_start   (patched in pass 2)
 ///       mov  x1, #<F byte length>    ; x1 = func_len
@@ -221,20 +236,44 @@ fn build_gc_wrapper(user_entry: &str) -> Result<(Vec<u8>, Vec<Reloc>), AotError>
 /// needs no relocation. The registry copies the slot data into owned storage, so the
 /// arrays need not outlive the call.
 ///
-/// Returns the function bytes, the external `BL __gc_register_stackmap` relocations
-/// (patched by the system linker), and the [`FuncAddrReloc`]s pass 2 resolves.
+/// **The globals block** (#18765). A module's globals live in `_twig_globals`, a
+/// data section that no stack map names and no stack scan reaches, so before any
+/// stack map the init hands the whole block to `__gc_register_global_roots`. Its
+/// address is the one argument that cannot be a compile-time constant or an
+/// init-internal `adr`: it is materialised with the same `ADRP`+`ADD` pair, and the
+/// same [`GlobalWordReloc`] (→ `ARM64_RELOC_PAGE21`/`PAGEOFF12` against
+/// `_twig_globals`), that every `global_load` uses, so `ld` resolves it exactly as it
+/// resolves the program's own global accesses. (The page-alignment hazard
+/// [`FuncAddrReloc`] avoids does not apply: these bytes carry real `ld` relocations,
+/// so `ld` computes the page from the final layout.)
+///
+/// Returns the function bytes, the external `BL` relocations (patched by the
+/// system linker), the [`FuncAddrReloc`]s pass 2 resolves, and the globals
+/// block's [`GlobalWordReloc`] (empty when `n_global_slots == 0`).
 #[allow(clippy::type_complexity)]
 fn build_gc_init_stackmaps(
     fn_maps: &[FnStackMap],
-) -> Result<(Vec<u8>, Vec<Reloc>, Vec<FuncAddrReloc>), AotError> {
+    n_global_slots: usize,
+) -> Result<(Vec<u8>, Vec<Reloc>, Vec<FuncAddrReloc>, Vec<GlobalWordReloc>), AotError> {
     let mut a = Assembler::new();
     let mut faddr: Vec<FuncAddrReloc> = Vec::new();
+    let mut glob: Vec<GlobalWordReloc> = Vec::new();
     // Data-pool contents, bound after the epilogue: (label, words).
     let mut pool: Vec<(LabelId, Vec<u32>)> = Vec::new();
 
     // Prologue — a real frame; the body makes calls (each `bl` clobbers lr).
     a.stp_pre(Reg::Fp, Reg::Lr, Reg::Sp, -16).map_err(gc_asm_err)?;
     a.add_imm(Reg::Fp, Reg::Sp, 0).map_err(gc_asm_err)?; // mov x29, sp
+
+    // The globals block, registered as precise roots before anything can collect.
+    if n_global_slots > 0 {
+        let adrp_word = a.adrp_placeholder(Reg::X0); //   x0 = page(&_twig_globals)
+        let add_word = a.len_words();
+        a.add_imm(Reg::X0, Reg::X0, 0).map_err(gc_asm_err)?; // + pageoff
+        glob.push(GlobalWordReloc { adrp_word, add_word });
+        a.mov_imm64(Reg::X1, n_global_slots as u64); //   count
+        a.bl_external(GC_REGISTER_GLOBAL_ROOTS);
+    }
 
     for fm in fn_maps {
         if fm.records.is_empty() {
@@ -290,7 +329,7 @@ fn build_gc_init_stackmaps(
     }
 
     let relocs = std::mem::take(&mut a.external_relocs);
-    Ok((a.finish().map_err(gc_asm_err)?, relocs, faddr))
+    Ok((a.finish().map_err(gc_asm_err)?, relocs, faddr, glob))
 }
 use aot_core::infer::infer_types;
 use aot_core::link::{entry_point_offset, link};
@@ -1156,6 +1195,10 @@ fn call_return_offsets_x86_64(relocs: &[x86_64_encoder::ExternalReloc]) -> Vec<u
 /// ```text
 ///   __gc_init_stackmaps:
 ///       push rbp ; mov rbp, rsp
+///       ; ── only if the module has globals (#18765) ──
+///       lea  rdi, [rip + _twig_globals]   ; PcRel32 reloc, like every global_load
+///       mov  rsi, <global count>
+///       call __gc_register_global_roots
 ///       ; ── per function F with records (System V) ──
 ///       lea  rdi, [rip + F]          ; func_start   (patched in pass 2b)
 ///       mov  rsi, <F byte length>    ; func_len
@@ -1176,18 +1219,29 @@ fn call_return_offsets_x86_64(relocs: &[x86_64_encoder::ExternalReloc]) -> Vec<u
 /// 16). Everything but `func_start` is a compile-time constant; the three arrays live in
 /// a pool after the final `ret` (never executed), addressed by `RIP`-relative `lea`
 /// resolved at `finish()`. The registry copies the slots, so the pool need not outlive
-/// the call.
+/// the call. The globals block's address (#18765) is the one argument the system
+/// linker relocates: a `PcRel32` against `_twig_globals`, the same reloc a
+/// `global_load` emits.
 #[allow(clippy::type_complexity)]
 fn build_gc_init_stackmaps_x86_64(
     fn_maps: &[FnStackMap],
+    n_global_slots: usize,
 ) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>, Vec<FuncAddrRelocX86>), AotError> {
-    use x86_64_encoder::{Assembler, LabelId, Reg};
+    use x86_64_encoder::{Assembler, ExternalRelocKind, LabelId, Reg};
     let mut a = Assembler::new();
     let mut faddr: Vec<FuncAddrRelocX86> = Vec::new();
     let mut pool: Vec<(LabelId, Vec<u32>)> = Vec::new();
 
     a.push(Reg::Rbp);
     a.mov_r64_r64(Reg::Rbp, Reg::Rsp);
+
+    // The globals block, registered as precise roots (#18765). `rsp` is 16-aligned
+    // here (after `push rbp`), as the call requires.
+    if n_global_slots > 0 {
+        a.lea_rip_rel(Reg::Rdi, TWIG_GLOBALS, ExternalRelocKind::PcRel32); // base
+        a.mov_r64_imm64(Reg::Rsi, n_global_slots as u64); //                  count
+        a.call_rel32(GC_REGISTER_GLOBAL_ROOTS, ExternalRelocKind::PltRel32);
+    }
 
     for fm in fn_maps {
         if fm.records.is_empty() {
@@ -1275,17 +1329,36 @@ fn build_gc_init_stackmaps_x86_64(
 /// args are placed with `mov [rsp+disp], rax` (an `rsp`-based store, which the encoder
 /// emits with the required SIB byte) rather than SysV's `push`, because MsX64 must not
 /// disturb the shadow space below them.
+///
+/// The globals block (#18765) is registered first, MsX64-style:
+///
+/// ```text
+///   sub  rsp, 32                       ; shadow space; rsp stays 16-aligned
+///   lea  rcx, [rip + _twig_globals]    ; arg1 base   (PcRel32, like a global_load)
+///   mov  rdx, <global count>           ; arg2 count
+///   call __gc_register_global_roots
+///   add  rsp, 32
+/// ```
 #[allow(clippy::type_complexity)]
 fn build_gc_init_stackmaps_x86_64_msx64(
     fn_maps: &[FnStackMap],
+    n_global_slots: usize,
 ) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>, Vec<FuncAddrRelocX86>), AotError> {
-    use x86_64_encoder::{Assembler, LabelId, Reg};
+    use x86_64_encoder::{Assembler, ExternalRelocKind, LabelId, Reg};
     let mut a = Assembler::new();
     let mut faddr: Vec<FuncAddrRelocX86> = Vec::new();
     let mut pool: Vec<(LabelId, Vec<u32>)> = Vec::new();
 
     a.push(Reg::Rbp);
     a.mov_r64_r64(Reg::Rbp, Reg::Rsp);
+
+    if n_global_slots > 0 {
+        a.sub_imm32(Reg::Rsp, 32); // shadow space for the callee
+        a.lea_rip_rel(Reg::Rcx, TWIG_GLOBALS, ExternalRelocKind::PcRel32); // arg1 base
+        a.mov_r64_imm64(Reg::Rdx, n_global_slots as u64); //                  arg2 count
+        a.call_rel32(GC_REGISTER_GLOBAL_ROOTS, ExternalRelocKind::PltRel32);
+        a.add_imm32(Reg::Rsp, 32);
+    }
 
     for fm in fn_maps {
         if fm.records.is_empty() {
@@ -1545,8 +1618,66 @@ fn is_machine_scalar(ty: &str) -> bool {
     )
 }
 
+/// Runtime helpers reached through `call_builtin` whose result is a **fresh
+/// gc-core block** — so the result is a heap reference whatever CIR type the
+/// specialiser gave it (#18766). Checked against the runtime sources:
+///
+/// | builtin        | runtime entry                         | allocates with                         |
+/// |----------------|---------------------------------------|----------------------------------------|
+/// | `alloc_bytes`  | `__twig_alloc_bytes`                  | `__gc_alloc_kind(n, blob_kind)`        |
+/// | `str_concat`   | `__twig_str_concat`                   | `__twig_alloc_bytes(total + 8)`        |
+/// | `str_slice`    | `__twig_str_slice`                    | `__twig_alloc_bytes(n + 8)`            |
+/// | `input_str`    | `__twig_input_str`                    | `__twig_alloc_bytes(8 + len)`          |
+/// | `dyn_pair_new` | `__dyn_pair_new` (`dynval_runtime.c`) | `__gc_alloc_kind(16, cons_kind)`, tagged |
+///
+/// `str_index`, `str_len`, `str_eq` and `str_cmp` return integers and are not
+/// listed. Nor is the raw `gc_alloc` builtin (`__twig_gc_alloc`), deliberately: no
+/// compiler on this path emits it, and the precise-GC smoke differentials use a
+/// `gc_alloc` result typed `i64` as their *non-reference look-alike* — a block
+/// whose address sits in a slot the program declares to be an integer, which a
+/// precise collection must reclaim. Its type is the caller's statement; the
+/// helpers above are called by lowerings that type a live handle `i64` only
+/// because the byte ops around it treat it as an address.
+const GC_ALLOCATING_BUILTINS: &[&str] =
+    &["alloc_bytes", "str_concat", "str_slice", "input_str", "dyn_pair_new"];
+
+/// Does `instr` produce a fresh GC block? The `alloc_bytes` / `alloc_array` ops
+/// (both lowered to `__twig_alloc_bytes`) and the [`GC_ALLOCATING_BUILTINS`].
+fn allocates_gc_block(instr: &jit_core::cir::CIRInstr) -> bool {
+    match instr.op.as_str() {
+        "alloc_bytes" | "alloc_array" => true,
+        "call_builtin" => matches!(
+            instr.srcs.first(),
+            Some(jit_core::cir::CIROperand::Var(name)) if GC_ALLOCATING_BUILTINS.contains(&name.as_str())
+        ),
+        _ => false,
+    }
+}
+
 /// Give every **copy of a possible heap word** a root type in the CIR, so the
-/// backend's stack map names its slot (#18492, follow-up).
+/// backend's stack map names its slot (#18492, follow-up), starting from every
+/// **GC allocation**, whatever type it was given (#18766).
+///
+/// ## Step 0: allocations are references (#18766)
+///
+/// A string buffer is built by `alloc_bytes`, which the string lowering types
+/// `i64` (a pointer is "an integer" to the byte-store ops around it). But the
+/// buffer is a gc-core block (`__gc_alloc_kind(n, blob_kind)`), and `i64` tells
+/// the backend "never a reference": the buffer's slot, and every `mov` alias of it
+/// (the string variable itself), were left out of the stack map. The conservative
+/// scan does not cover for that — in a frame that has a stack map the walker
+/// trusts the map and scans nothing else — so a precise or compacting collection
+/// freed the buffer, and `string-length` read whatever reused the cell.
+/// The same holds for any allocation the specialiser typed `i64` (a `call_builtin
+/// "dyn_pair_new"` whose destination is also written by an integer `const` takes
+/// the integer's type from `infer_types`, which keys types by variable name).
+/// So every instruction that [`allocates_gc_block`] and carries a machine-scalar
+/// type gets `ty = "any"` first; the rule below then roots its copies. No backend
+/// reads `ty` on these instructions except for the stack map (`alloc_array`'s
+/// element width is fixed at 8 and read from `array_get` / `array_set`, never
+/// from here), so the code bytes do not change.
+///
+/// ## Step 1: copies (#18492 follow-up)
 ///
 /// [`specialisation_view`] keeps a dynamic *parameter* a root, but Twig also
 /// copies values into locals with `mov`: a `let` binding, each arm of an `if`
@@ -1590,6 +1721,13 @@ fn is_machine_scalar(ty: &str) -> bool {
 /// Like the parameter rule, this accepts the known imprecision that a root slot
 /// may hold a plain integer (see `AOT00-T1-stackmap-emission.md` §4).
 fn root_heap_word_copies(declared_params: &[(String, String)], cir: &mut [jit_core::cir::CIRInstr]) {
+    // Step 0 (#18766): a fresh GC block is a reference, whatever the specialiser
+    // inferred for it.
+    for instr in cir.iter_mut() {
+        if instr.dest.is_some() && allocates_gc_block(instr) && is_machine_scalar(&instr.ty) {
+            instr.ty = "any".to_string();
+        }
+    }
     let mut may_hold_heap: HashSet<String> = declared_params
         .iter()
         .filter(|(_, ty)| !is_machine_scalar(ty))
@@ -1740,8 +1878,10 @@ fn compile_module_x86_64_to_text(
             records: wrapper_records,
         });
         match abi {
-            X86_64Abi::SysV => build_gc_init_stackmaps_x86_64(&fn_maps)?,
-            X86_64Abi::MsX64 => build_gc_init_stackmaps_x86_64_msx64(&fn_maps)?,
+            X86_64Abi::SysV => build_gc_init_stackmaps_x86_64(&fn_maps, global_slots.len())?,
+            X86_64Abi::MsX64 => {
+                build_gc_init_stackmaps_x86_64_msx64(&fn_maps, global_slots.len())?
+            }
         }
     };
     fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs));
@@ -4009,8 +4149,11 @@ fn compile_module_to_text_raw(
         records: wrapper_records,
     });
 
-    let (init_bytes, init_relocs, fn_addr_relocs) = build_gc_init_stackmaps(&fn_maps)?;
-    fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs, Vec::new()));
+    // The init also registers the globals block (#18765); its ADRP+ADD reloc rides in
+    // the init's own GlobalWordReloc list, lifted to byte relocs below like any other.
+    let (init_bytes, init_relocs, fn_addr_relocs, init_glob_relocs) =
+        build_gc_init_stackmaps(&fn_maps, n_global_slots)?;
+    fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs, init_glob_relocs));
     fn_results.push((GC_AOT_ENTRY.to_string(), wrapper_bytes, wrapper_relocs, Vec::new()));
 
     // ── LANG41: external symbols are resolved by the system linker ───────────
@@ -4556,7 +4699,7 @@ mod tests {
             FnStackMap { name: "leaf".into(), len: 8, records: vec![] }, // skipped
             FnStackMap { name: "g".into(), len: 16, records: vec![(4, vec![])] },
         ];
-        let (bytes, relocs, faddr) = build_gc_init_stackmaps_x86_64(&maps).expect("codegen");
+        let (bytes, relocs, faddr) = build_gc_init_stackmaps_x86_64(&maps, 0).expect("codegen");
         assert_eq!(
             relocs.iter().filter(|r| r.symbol == GC_REGISTER_STACKMAP).count(),
             2,
@@ -4581,7 +4724,7 @@ mod tests {
             FnStackMap { name: "g".into(), len: 16, records: vec![(4, vec![])] },
         ];
         let (bytes, relocs, faddr) =
-            build_gc_init_stackmaps_x86_64_msx64(&maps).expect("codegen");
+            build_gc_init_stackmaps_x86_64_msx64(&maps, 0).expect("codegen");
 
         // Same registration set as SysV: one call + one func_start LEA per fn with records.
         assert_eq!(
@@ -4743,7 +4886,8 @@ mod tests {
             // One safepoint, no ref slots (slots_flat empty → x7 = NULL).
             FnStackMap { name: "g".into(), len: 16, records: vec![(4, vec![])] },
         ];
-        let (bytes, relocs, faddr) = build_gc_init_stackmaps(&maps).expect("codegen");
+        let (bytes, relocs, faddr, glob) = build_gc_init_stackmaps(&maps, 0).expect("codegen");
+        assert!(glob.is_empty(), "no globals, no globals-block reloc");
 
         // One register call + one func_start reloc per function WITH records (f, g).
         assert_eq!(
@@ -4766,8 +4910,8 @@ mod tests {
     /// callable init: prologue + epilogue + `RET`, no register calls, no relocs.
     #[test]
     fn gc_init_with_no_records_is_a_bare_frame() {
-        let (bytes, relocs, faddr) = build_gc_init_stackmaps(&[]).expect("codegen");
-        assert!(relocs.is_empty() && faddr.is_empty());
+        let (bytes, relocs, faddr, glob) = build_gc_init_stackmaps(&[], 0).expect("codegen");
+        assert!(relocs.is_empty() && faddr.is_empty() && glob.is_empty());
         // stp / mov / ldp / ret = 4 instructions.
         assert_eq!(bytes.len(), 16);
         assert_eq!(&bytes[bytes.len() - 4..], 0xD65F03C0u32.to_le_bytes(), "ends in RET");
@@ -6587,3 +6731,203 @@ mod gc_param_root_tests {
     }
 }
 
+
+// ── #18765 / #18766: globals and GC allocations are roots ────────────────────
+#[cfg(test)]
+mod gc_global_and_buffer_root_tests {
+    use super::*;
+    use jit_core::cir::{CIRInstr, CIROperand};
+
+    fn cir(op: &str, dest: Option<&str>, srcs: &[&str], ty: &str) -> CIRInstr {
+        let srcs = srcs.iter().map(|s| CIROperand::Var((*s).to_string())).collect();
+        CIRInstr::new(op, dest.map(str::to_string), srcs, ty)
+    }
+
+    fn ty_of<'c>(cir: &'c [CIRInstr], dest: &str) -> Vec<&'c str> {
+        cir.iter().filter(|i| i.dest.as_deref() == Some(dest)).map(|i| i.ty.as_str()).collect()
+    }
+
+    /// Step 0 of `root_heap_word_copies`: every GC allocation gets a root type,
+    /// and the copy rule then roots its aliases; integer helpers and the
+    /// allocation's size operand stay scalar, and no mnemonic changes.
+    #[test]
+    fn gc_allocations_and_their_copies_get_a_root_type() {
+        let mut code = vec![
+            cir("const_i64", Some("n"), &[], "i64"),
+            cir("alloc_bytes", Some("buf"), &["n"], "i64"), //            string buffer
+            cir("mov_i64", Some("s"), &["buf"], "i64"), //               its alias (the str var)
+            cir("alloc_array", Some("arr"), &["n"], "i64"),
+            cir("call_builtin", Some("cat"), &["str_concat", "s", "s"], "i64"),
+            cir("call_builtin", Some("sub"), &["str_slice", "s", "n", "n"], "i64"),
+            cir("call_builtin", Some("line"), &["input_str"], "u64"),
+            cir("call_builtin", Some("raw"), &["alloc_bytes", "n"], "i64"),
+            cir("call_builtin", Some("p"), &["dyn_pair_new", "n", "n"], "i64"),
+            cir("call_builtin", Some("blk"), &["gc_alloc", "n"], "i64"), //    the look-alike
+            cir("call_builtin", Some("len"), &["str_index", "s", "n"], "i64"), // a byte
+            cir("call_builtin", Some("eq"), &["str_eq", "s", "s"], "i64"), //     a flag
+            cir("mov_i64", Some("c"), &["cat"], "i64"),
+        ];
+        let ops_before: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        root_heap_word_copies(&[], &mut code);
+        for v in ["buf", "s", "arr", "cat", "sub", "line", "raw", "p", "c"] {
+            assert_eq!(ty_of(&code, v), ["any"], "{v} holds a GC block");
+        }
+        for v in ["n", "len", "eq", "blk"] {
+            assert_eq!(ty_of(&code, v), ["i64"], "{v} is an integer");
+        }
+        let ops_after: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        assert_eq!(ops_before, ops_after, "only `ty` changes");
+    }
+
+    /// End to end through both native compile paths: a branch-selected string's
+    /// `alloc_bytes` buffers and the string variable are newly rooted at every
+    /// safepoint, and the machine code is byte-for-byte what the un-rooted CIR
+    /// produces (#18766 changes only the stack map).
+    #[test]
+    fn string_buffer_slots_are_roots_on_both_native_backends_with_identical_code() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![("c".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("jmp_if_false", None, vec![Operand::Var("c".into()), Operand::Var("else".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello!!".into())], "str"),
+                IIRInstr::new("jmp", None, vec![Operand::Var("end".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("else".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("x".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+                IIRInstr::new("call", Some("w".into()), vec![Operand::Var("f".into()), Operand::Var("c".into())], "any"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        f.source_map.clear();
+        let mut module = IIRModule::new("m", "twig");
+        module.add_or_replace(f);
+        module.entry_point = Some("f".into());
+        prepare_module_for_aot(&mut module).unwrap();
+        let f = module.functions.iter().find(|f| f.name == "f").unwrap();
+        assert!(
+            f.instructions.iter().any(|i| i.op == "alloc_bytes"),
+            "the branch-selected string is a runtime alloc_bytes buffer"
+        );
+        let globals = collect_global_slots(&module);
+        let typed = specialisation_view(f);
+        let inferred = infer_types(&typed);
+        let raw = aot_specialise(&typed, Some(&inferred));
+        let ctx = FunctionContext { name: &f.name, params: &f.params, return_type: &f.return_type };
+        let slots = |records: &[(u32, Vec<i32>)]| -> HashSet<i32> {
+            records.iter().flat_map(|(_, s)| s.iter().copied()).collect()
+        };
+
+        let (bytes, _, records) = compile_one_x86_64(f, X86_64Abi::SysV, &globals).unwrap();
+        let (old_bytes, _, old_map) =
+            x86_64_compile_with_stackmap(&ctx, &raw, X86_64Abi::SysV, &globals).unwrap();
+        let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+        assert_eq!(bytes, old_bytes, "x86-64 code unchanged");
+        let added: Vec<i32> = slots(&records).difference(&slots(&old)).copied().collect();
+        // Two buffers (one per arm) and the string variable `s`.
+        assert_eq!(added.len(), 3, "x86-64: both buffers and s newly rooted, got {added:?}");
+        for (pc, s) in &records {
+            assert!(added.iter().all(|a| s.contains(a)), "x86-64 pc {pc}");
+        }
+
+        let (bytes, _, _, records) = compile_one_with_globals(f, &globals).unwrap();
+        let (old_bytes, _, _, old_map) =
+            compile_with_globals_and_stackmap(&ctx, &raw, &globals).unwrap();
+        let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+        assert_eq!(bytes, old_bytes, "aarch64 code unchanged");
+        let added: Vec<i32> = slots(&records).difference(&slots(&old)).copied().collect();
+        assert_eq!(added.len(), 3, "aarch64: both buffers and s newly rooted, got {added:?}");
+    }
+
+    fn one_map() -> Vec<FnStackMap> {
+        vec![FnStackMap { name: "f".into(), len: 64, records: vec![(8, vec![-16])] }]
+    }
+
+    /// AArch64 init with globals: `adrp x0` + `add x0, x0` (one `GlobalWordReloc`,
+    /// the same reloc pair a `global_load` emits) + `mov x1, #n` + one
+    /// `bl __gc_register_global_roots`, ahead of the stack-map registrations.
+    #[test]
+    fn aarch64_init_registers_the_globals_block() {
+        let (bytes, relocs, _, glob) = build_gc_init_stackmaps(&one_map(), 3).expect("codegen");
+        assert_eq!(glob.len(), 1, "one ADRP+ADD pair for &_twig_globals");
+        let word = |i: usize| u32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+        let (adrp, add) = (word(glob[0].adrp_word), word(glob[0].add_word));
+        assert_eq!(adrp & 0x9F00_0000, 0x9000_0000, "ADRP");
+        assert_eq!(adrp & 0x1F, 0, "into x0");
+        assert_eq!(add & 0xFF80_0000, 0x9100_0000, "ADD (immediate, 64-bit)");
+        assert_eq!(add & 0x3FF, 0, "x0 = x0 + pageoff");
+        let calls: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert_eq!(calls, [GC_REGISTER_GLOBAL_ROOTS, GC_REGISTER_STACKMAP], "globals first");
+
+        let (_, relocs, _, glob) = build_gc_init_stackmaps(&one_map(), 0).expect("codegen");
+        assert!(glob.is_empty());
+        assert!(relocs.iter().all(|r| r.symbol != GC_REGISTER_GLOBAL_ROOTS), "no globals, no call");
+    }
+
+    /// x86-64 init with globals, both ABIs: a `PcRel32` against `_twig_globals`
+    /// (as a `global_load` emits) loaded into the first argument register, and one
+    /// call to `__gc_register_global_roots` before the stack-map registrations. Win64
+    /// brackets it with a 32-byte shadow-space reservation.
+    #[test]
+    fn x86_64_init_registers_the_globals_block_on_both_abis() {
+        use x86_64_encoder::ExternalRelocKind;
+        for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
+            let build = |n| match abi {
+                X86_64Abi::SysV => build_gc_init_stackmaps_x86_64(&one_map(), n),
+                X86_64Abi::MsX64 => build_gc_init_stackmaps_x86_64_msx64(&one_map(), n),
+            };
+            let (bytes, relocs, _) = build(3).expect("codegen");
+            let order: Vec<(&str, ExternalRelocKind)> =
+                relocs.iter().map(|r| (r.symbol.as_str(), r.kind)).collect();
+            assert_eq!(
+                order,
+                [
+                    (TWIG_GLOBALS, ExternalRelocKind::PcRel32),
+                    (GC_REGISTER_GLOBAL_ROOTS, ExternalRelocKind::PltRel32),
+                    (GC_REGISTER_STACKMAP, ExternalRelocKind::PltRel32),
+                ],
+                "{abi:?}"
+            );
+            // The LEA's ModRM picks the first argument register: rdi (SysV) / rcx (Win64).
+            // `lea r64, [rip+disp32]` = 48 8D <modrm> with modrm = 00 reg 101.
+            let lea = relocs[0].patch_offset - 3;
+            assert_eq!(&bytes[lea..lea + 2], [0x48, 0x8D], "{abi:?}: lea");
+            let reg = (bytes[lea + 2] >> 3) & 7;
+            let want = if abi == X86_64Abi::SysV { 7 } else { 1 }; // rdi / rcx
+            assert_eq!(reg, want, "{abi:?}: base goes in the first argument register");
+            if abi == X86_64Abi::MsX64 {
+                // `sub rsp, 32` = 48 81 EC 20 ; `add rsp, 32` = 48 81 C4 20
+                assert!(bytes.windows(4).any(|w| w == [0x48, 0x81, 0xEC, 0x20]), "shadow space");
+                assert!(bytes.windows(4).any(|w| w == [0x48, 0x81, 0xC4, 0x20]), "released");
+            }
+            let (_, relocs, _) = build(0).expect("codegen");
+            assert!(
+                relocs.iter().all(|r| r.symbol != GC_REGISTER_GLOBAL_ROOTS && r.symbol != TWIG_GLOBALS),
+                "{abi:?}: no globals, no registration"
+            );
+        }
+    }
+
+    /// Whole x86-64 module: a program with a global hands the packager a
+    /// `_twig_globals` reloc and a `__gc_register_global_roots` call from
+    /// `__gc_init_stackmaps`; a program without one does not.
+    #[test]
+    fn x86_64_module_with_globals_registers_them_at_start_up() {
+        let count = |src: &str| {
+            let mut module = twig_ir_compiler::compile_source(src, "globals").unwrap();
+            prepare_module_for_aot(&mut module).unwrap();
+            let (_, offsets, _, relocs) =
+                compile_module_x86_64_to_text(&module, X86_64Abi::SysV).unwrap();
+            let init = offsets[GC_INIT_STACKMAPS];
+            relocs
+                .iter()
+                .filter(|r| r.symbol == GC_REGISTER_GLOBAL_ROOTS)
+                .inspect(|r| assert!(r.patch_offset as usize > init, "called from the init"))
+                .count()
+        };
+        assert_eq!(count("(define g (cons 7 8))\n(define (f) (car g))\n(f)\n"), 1);
+        assert_eq!(count("(define (f) (car (cons 7 8)))\n(f)\n"), 0);
+    }
+}
