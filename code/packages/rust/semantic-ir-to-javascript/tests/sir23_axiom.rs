@@ -178,7 +178,8 @@ fn run_module(module: &Module, tag: &str) -> Option<(bool, String, String)> {
         eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
         return None;
     }
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_axiom_{}_{}.js", tag, unique_suffix()));
     // `create_new` (not `std::fs::write`) fails loudly on an existing path
     // (including a symlink) instead of silently following/truncating

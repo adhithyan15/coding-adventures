@@ -1,0 +1,9 @@
+[package]
+name = "sir-test-scratch"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Private scratch directories, no-clobber file creation and an isolated Go build cache for the Semantic IR backends' execution tests."
+
+[dependencies]
+tempfile = "3"

@@ -207,14 +207,15 @@ fn array_aggregates_compile_and_run() {
 
     let artifact = compile(&full_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_array_aggregates_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_array_aggregates_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -354,14 +355,15 @@ fn array_more_methods_compile_and_run() {
 
     let artifact = compile(&more_methods_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_array_more_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_array_more_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -453,14 +455,15 @@ fn take_drop_values_at_compile_and_run() {
 
     let artifact = compile(&take_drop_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_take_drop_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_take_drop_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -559,12 +562,13 @@ fn array_each_slice_each_cons_chunk_while_compile_and_run() {
 
     let artifact = compile(&slice_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_arr_slice_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_arr_slice_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -647,12 +651,13 @@ fn array_slice_when_compile_and_run() {
 
     let artifact = compile(&slice_when_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_arr_slicewhen_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_arr_slicewhen_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -739,12 +744,13 @@ fn array_cycle_compile_and_run() {
 
     let artifact = compile(&cycle_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_arr_cycle_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_arr_cycle_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");

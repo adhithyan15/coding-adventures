@@ -1,5 +1,11 @@
 # Changelog — code-packager
 
+## Unreleased — Mach-O `__data` / `_twig_globals` are 8-aligned
+
+- **Bug.** `pack_object_with_globals` and `pack_object_with_globals_and_externals` placed `__data` (and the `_twig_globals` symbol) at address `code_len`, straight after `__text`. AArch64 code is a multiple of 4 bytes, so that address was often ≡ 4 (mod 8). `ld64` keeps a section's address *modulo its alignment* (an atom's alignment carries the modulus it had in the object), so the declared `align = 2^3` did not help: the globals block landed 4 bytes off an 8-byte boundary in the linked image. Loads and stores still worked (AArch64 tolerates unaligned access). But gc-core-capi's `__gc_register_global_roots` rejects a misaligned block, so on macOS the globals were silently not GC roots. Once twig-aot's start-up code began checking that registration (#18789), every native program with a global trapped. `lang_matrix`'s `(define (f) g) (define g 42) (f)` died by signal on macOS.
+- **Fix.** New `data_section_addr(code_len)` rounds the `__data` address up to 8. The file gets zero padding after `__text` (the `__text` size is unchanged), and the segment size, section address, file offset and `_twig_globals` value all use the aligned address.
+- Test: `data_section_and_twig_globals_are_8_aligned` checks code lengths 4, 8, 12 and 276 through both packers. Size and offset tests updated for the padding.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - The Mach-O symbol-decoration test uses `__dyn_pair_first` (the runtime symbol `__dyn_car` was renamed by LANG83 PR7f). No code change.

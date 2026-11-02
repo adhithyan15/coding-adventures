@@ -723,37 +723,69 @@ a C function shares the C library's symbol namespace and a top-level Ruby
 > JavaScript's `Map` for the inlined runtime.  The full list of reserved
 > names is in each backend's `sanitize_ident` documentation.
 
-### Functions and variables are separate namespaces
+### Functions, globals, variables and constants are separate namespaces
 
-A SIR function is named only by `DirectCall`, `MakeClosure` and
-`Function::name`; a variable only by `VarRef`, `Assign`, the binding
-statements, parameters, captures, loop variables and `rescue` bindings.  The
-two namespaces are **separate**: one module may hold a function `f` and a
-variable `f`, and `DirectCall f` inside the variable's scope still calls the
-function.  A frontend may rely on this.  Ruby does:
+SIR names a binding in one of four namespaces:
+
+| namespace | named by                                                                 |
+|-----------|--------------------------------------------------------------------------|
+| function  | `Function::name`, `DirectCall`, `MakeClosure`                            |
+| global    | `Module::globals`, and `VarRef`/`Assign` of `Scope::Global`              |
+| variable  | `VarRef`/`Assign` of `Scope::Local`/`Param`/`Capture`, the binding statements, parameters, captures, loop variables and `rescue` bindings |
+| constant  | `VarRef`/`Assign` of `Scope::Const`                                      |
+
+The namespaces are **separate**: one module may hold a function `f`, a global
+`f`, a variable `f` and a constant `f`, and each reference reaches its own
+kind -- `DirectCall f` still calls the function inside the variable's scope.
+(A `Global` reference to a name that is not a declared global but is a
+function names the function's value; the validator accepts both.)  A frontend
+may rely on this.  Ruby does:
 
 ```ruby
 def f; 40; end
 f = 2
 puts f() + f      # 42
+
+def F; 40; end
+F = 2
+puts F() + F      # 42
 ```
 
 Most targets have one namespace, so every backend must keep the emitted
 spellings apart.  C and Ruby already do: every user function is
-`sir_fn_<name>`, which no variable can spell.  The JavaScript, TypeScript,
-Go, Rust and Python backends keep their functions' names (callers append
-code that calls a JavaScript or Python artifact's functions by name) and
-rename the function-scoped **variable** (local, parameter, capture, loop
-variable, `rescue` binding) instead, only when it collides: `var_ident(name)` is
-`<marker>l<sanitize_ident(name)>` when a module function is named `name`, and
-`sanitize_ident(name)` otherwise.  The `l` tag is distinct from the `v` and
-`e` tags `sanitize_ident` uses, so the renamed form equals no other emitted
-identifier, and it depends only on the name, so every binding and use of one
-variable agree.  A keyword argument's name is renamed with the parameter it
-names where the target matches the two by spelling (Python).  Module
-globals are not renamed: Go, Rust and Python keep them in a runtime store
-keyed by name, and JavaScript and TypeScript reach a function's handle
-through a `Global` reference.
+`sir_fn_<name>`, which nothing else can spell; C keeps globals and constants
+in runtime stores, and Ruby has native constants.  The other backends keep
+their functions' names (callers append code that calls a JavaScript or
+Python artifact's functions by name) and move the other kinds instead, only
+when they collide with a kind that outranks them:
+
+| kind     | renamed when the module has a ... of the same name | spelling (`<m>` = the backend's escape marker) |
+|----------|-----------------------------------------------------|-----------------------------------------------|
+| function | (never)                                             | `sanitize_ident(name)`                        |
+| global   | function (JavaScript, TypeScript)                   | `<m>g` + `sanitize_ident(name)` (`global_ident`) |
+| variable | function; or global (JavaScript, TypeScript)        | `<m>l` + `sanitize_ident(name)` (`var_ident`) |
+| constant | function; or global (JavaScript, TypeScript)        | `<m>c` + `sanitize_ident(name)` (`const_ident`) |
+
+The `g`, `l` and `c` tags differ from each other and from the `v` and `e`
+tags `sanitize_ident` uses, so every renamed form equals no other emitted
+identifier; each depends only on the name and its namespace, so every binding
+and use of one name agree.  Where a kind never becomes an identifier there is
+nothing to rename: Go, Rust and Python keep globals in a runtime store keyed
+by name, and Go and Rust accept a constant only as the class operand of
+`raise`/`rescue`, which they emit as a name *string* (any other constant use
+is refused before emit, as is a JavaScript constant *assignment*).  A
+variable and a constant spelled alike still share a spelling; Ruby cannot
+write that pair (a constant starts with a capital letter, a local does not).
+
+A keyword argument's name is renamed with the parameter it names where the
+target matches the two by spelling (Python) -- but only when the callee is a
+user function (`DirectCall`).  A keyword passed to the runtime names a
+runtime parameter and keeps its own name.
+
+Each backend's renamed `main` is reserved the same way: `_sir_user_main`
+(Python, Go) and `__sir_user_main` (Rust) fall under the `_sir…`/`__sir…`
+names `sanitize_ident` escapes, so no user function, variable or constant
+can spell them.
 
 > **Revision (issue #18485).** Python, JavaScript, TypeScript, Go and Rust
 > emitted a variable under its own name next to a same-named function, so
@@ -761,6 +793,29 @@ through a `Global` reference.
 > TypeScript), `'int' object is not callable` (Python), and a compile error
 > (Go, Rust).  `sir-conformance`'s `tests/local_shadows_function.rs` runs
 > the cases on every backend.
+>
+> **Revision (security review of #18788).** The rule covered variables
+> only.  JavaScript and TypeScript declared a global spelled like a function
+> twice (`SyntaxError`) and let a local hide a global from a `Global` read in
+> the same function; Python and TypeScript bound a constant spelled like a
+> function over it (`F = 2; F()`); and Python renamed a runtime builtin's
+> keyword argument as if it named a user parameter.  The global and constant
+> rows above, the keyword rule and the `main` paragraph are new.
+> `tests/local_shadows_function.rs` gains a global, a local-versus-global and
+> two Ruby constant programs; the TypeScript backend's
+> `twig_generated_names.rs` runs the same three under `node`.
+
+### Backend execution tests: private scratch files
+
+A backend's execution tests write the emitted program to a file and run the
+real toolchain on it.  They write into a fresh private directory per test
+call (`sir-test-scratch`'s `Scratch`: random name, created atomically, mode
+`0700` on Unix, removed on drop), never into a predictable name in the shared
+system temp directory, and create files with `create_new`.  Every `go` they
+run uses a build cache under the cargo target directory
+(`sir_test_scratch::go_command`), because `go clean -cache` elsewhere
+deletes the shared cache's standard-library export data mid-build and turns
+into a spurious compile error.
 
 ## Versioning
 

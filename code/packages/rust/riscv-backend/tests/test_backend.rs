@@ -1033,6 +1033,54 @@ fn bool_typed_compare_on_64_bit_pairs_compares_both_words() {
     assert!(wrong.is_empty(), "{wrong:#?}");
 }
 
+/// #18463 item 2, the 2^31 edge: a value that needs bit 31 but not the high
+/// word has a low word that is *negative as an i32*. The two-word compare must
+/// therefore test the high words signed and, only when they are equal, the low
+/// words **unsigned** — a signed low-word compare calls 2^31 smaller than
+/// 2^31 − 1. Each pair below straddles 2^31 or −2^31, with the order the low
+/// words alone would get wrong. (#18464 landed the two-word lowering; this pins
+/// the boundary the issue's acceptance list names, beside the 2^32 cases.)
+#[test]
+fn wide_bool_compare_orders_values_either_side_of_two_to_the_31() {
+    let evaluate = |relation: &str, a: i64, b: i64| {
+        let cir = vec![
+            ci("const_i64", Some("a"), vec![CIROperand::Int(a)], "i64"),
+            ci("const_i64", Some("b"), vec![CIROperand::Int(b)], "i64"),
+            ci(
+                &format!("cmp_{relation}_bool"),
+                Some("result"),
+                vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+                "bool",
+            ),
+            ci("ret_bool", None, vec![CIROperand::Var("result".into())], "bool"),
+        ];
+        compile_and_run(&cir)
+    };
+    const TWO_31: i64 = 1 << 31;
+    let wrong = [
+        // high words equal (0), low words 0x8000_0000 vs 0x7FFF_FFFF
+        ("gt", TWO_31, TWO_31 - 1, 1),
+        ("lt", TWO_31 - 1, TWO_31, 1),
+        ("ge", TWO_31, TWO_31 - 1, 1),
+        ("le", TWO_31, TWO_31 - 1, 0),
+        // high words equal (-1), low words 0x8000_0000 vs 0x7FFF_FFFF
+        ("lt", -TWO_31 - 1, -TWO_31, 1),
+        ("gt", -TWO_31, -TWO_31 - 1, 1),
+        // high words differ in sign: 2^31 (hi 0) against -1 (hi -1)
+        ("gt", TWO_31, -1, 1),
+        ("lt", -1, TWO_31, 1),
+        ("eq", TWO_31, -TWO_31, 0),
+        ("ne", TWO_31, -TWO_31, 1),
+    ]
+    .into_iter()
+    .filter_map(|(relation, a, b, want)| {
+        let got = evaluate(relation, a, b);
+        (got != want).then(|| format!("{a} {relation} {b}: got {got}, want {want}"))
+    })
+    .collect::<Vec<_>>();
+    assert!(wrong.is_empty(), "{wrong:#?}");
+}
+
 #[test]
 fn executes_pair_aware_signed_and_unsigned_64_bit_comparisons() {
     let signed = vec![

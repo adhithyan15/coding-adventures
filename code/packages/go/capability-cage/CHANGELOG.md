@@ -4,6 +4,24 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- D21's three nondeterminism categories (VER00 §6.3): `CategoryRand`,
+  `CategoryThread`, `CategoryUI`, and actions `ActionSpawn`,
+  `ActionMessage`, `ActionEvent`. The closed taxonomy grows from 19 to 25
+  pairs: `rand:read`, `thread:spawn`, `thread:message`, `ui:read`,
+  `ui:write`, `ui:event`.
+- `ReadRandom(m, p)` checks `rand:read:*` and `Spawn(m, role, body)` checks
+  `thread:spawn:{role}`. Both delegate to two new `Backend` methods,
+  `ReadRandom` (`crypto/rand` in `OpenBackend`) and `Spawn` (a goroutine),
+  so a test backend can serve seeded entropy and schedule workers itself.
+  `Spawn` refuses a nil body.
+
+### Changed
+
+- **Breaking for custom backends**: `Backend` gains `ReadRandom` and `Spawn`.
+  No implementation outside this package exists in the repository.
+
 ### Security
 
 - `NewManifest` now rejects category/action combinations outside Spec 13's

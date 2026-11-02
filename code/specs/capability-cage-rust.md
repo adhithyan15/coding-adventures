@@ -95,7 +95,9 @@ agree on every published test case.
 
 ## Capability Taxonomy
 
-The taxonomy is fixed by the spec at 8 categories and 14 actions. New
+The taxonomy is fixed by the spec at 11 categories and 17 actions (D21 added
+`rand`, `thread` and `ui`, with `spawn`, `message` and `event`, for VER00
+§6.3). New
 categories require a spec amendment (and a corresponding update to the
 JSON schema published alongside).
 
@@ -110,6 +112,9 @@ pub enum Category {
     Time,
     Stdin,
     Stdout,
+    Rand,
+    Thread,
+    Ui,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -128,6 +133,9 @@ pub enum Action {
     Call,
     Load,
     Sleep,
+    Spawn,
+    Message,
+    Event,
 }
 ```
 
@@ -143,7 +151,14 @@ ffi      call, load
 time     read, sleep
 stdin    read
 stdout   write
+rand     read
+thread   spawn, message
+ui       read, write, event
 ```
+
+These 25 pairs are the whole taxonomy. The crate has no secure wrappers for
+`rand`, `thread` or `ui` yet (it has them only for `fs` and `env`); manifests
+using them load and validate, and `CapabilitySurfaceSummary` counts them.
 
 Constructing a `Capability` with an invalid (category, action) pair
 returns `Err(InvalidCombination)`. The manifest loader rejects manifests

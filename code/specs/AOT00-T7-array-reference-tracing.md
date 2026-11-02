@@ -1,7 +1,7 @@
 # AOT00-T7 — array reference-tracing fix (LANG-FULL E5, LLVM)
 
-> Status: complete for LLVM; native backends (aarch64/x86_64) explicitly
-> out of scope this round, tracked as a follow-up (§4). Closes a gap
+> Status: complete for LLVM, and since the #18785 follow-up for the native
+> backends (aarch64/x86_64) too (§3a). Closes a gap
 > documented (but deliberately left open) by the LLVM `alloc_bytes`/
 > `alloc_array` GC-tracking fix (`iir-to-llvm` `lower_alloc_array`'s own doc
 > comment).
@@ -59,7 +59,24 @@ reference-typed element allocates via `__twig_alloc_ref_array_bytes`; a
 scalar element (`i64`/`f64`/`bool`/etc.) keeps allocating via the original
 no-ref `__twig_alloc_bytes`.
 
-**The native backends (aarch64/x86_64) do NOT get this fix in this round**
+### 3a. Native backends (#18785 follow-up)
+
+The native backends now get the same split, without touching the specialiser.
+twig-aot rewrites, at the IIR level and before specialisation, every
+`alloc_array` whose `array<T>` element is a reference (the same predicate as
+`elem_is_gc_reference`: `str`, `any`, `ref<any>`, `symbol`, `ref<Lispy…>`) to a
+new op, `alloc_ref_array`. Both native backends lower that op exactly like
+`alloc_array` but call `__twig_alloc_ref_array_bytes`; the instruction bytes are
+identical, and only the call target differs. The array handle is the block base
+on native (header at `+0`), and that kind's `tail_from = 8` skips the header, so
+every element word is traced. In practice this is BASIC `DIM A$(n)`, the only
+reference element the native array ops accept (`native_array_elem_size`).
+Regression: `twig-aot/tests/native_ref_arrays_and_string_params.rs` stores 16
+strings only in an `array<str>`, collects (precise and compacting), reuses the
+freed cells and sums the lengths. Before the fix the sum was wrong and memcheck
+reported reads of freed memory.
+
+**Historical (before §3a): the native backends did NOT get this fix in the first round**
 and continue calling `__twig_alloc_bytes` unconditionally, unchanged from
 before this round started. The AOT specialiser collapses `array<T>`'s
 result type to `any` before native codegen ever sees `alloc_array`
@@ -169,8 +186,9 @@ conditional, LLVM-only design in §2.
 
 ## 4. Explicitly out of scope / follow-up
 
-- **Native-backend (aarch64/x86_64) precise tracing for reference-typed
-  arrays.** These two backends keep the narrower, pre-existing
+- ~~**Native-backend (aarch64/x86_64) precise tracing for reference-typed
+  arrays.**~~ Done in §3a, by choosing the op in twig-aot rather than plumbing
+  the type through the specialiser. Original note: These two backends keep the narrower, pre-existing
   dangling-reference bug from §1: a `str`/`any`/`ref<T>` array element on
   native codegen is still invisible to the collector. Fixing this requires
   plumbing the original (pre-specialiser) element type through to

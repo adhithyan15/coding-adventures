@@ -14,6 +14,13 @@ const (
 	CategoryStdin  = "stdin"
 	CategoryStdout = "stdout"
 
+	// The three nondeterminism categories (D21, VER00 §6.3). A unit test can
+	// only replay a run if ambient randomness, in-process concurrency and UI
+	// access go through capabilities a simulated host controls.
+	CategoryRand   = "rand"
+	CategoryThread = "thread"
+	CategoryUI     = "ui"
+
 	ActionRead    = "read"
 	ActionWrite   = "write"
 	ActionCreate  = "create"
@@ -28,6 +35,9 @@ const (
 	ActionCall    = "call"
 	ActionLoad    = "load"
 	ActionSleep   = "sleep"
+	ActionSpawn   = "spawn"
+	ActionMessage = "message"
+	ActionEvent   = "event"
 )
 
 // Capability declares a single OS-level permission.
@@ -44,7 +54,19 @@ type Manifest struct {
 }
 
 // validCapabilityPair implements the closed category/action taxonomy from
-// Spec 13.
+// Spec 13: 11 categories, 17 actions, and only these 25 pairs.
+//
+//	fs      read, write, create, delete, list
+//	net     connect, listen, dns
+//	proc    exec, fork, signal
+//	env     read, write
+//	ffi     call, load
+//	time    read, sleep
+//	stdin   read
+//	stdout  write
+//	rand    read
+//	thread  spawn, message
+//	ui      read, write, event
 func validCapabilityPair(category, action string) bool {
 	switch category {
 	case CategoryFS:
@@ -64,6 +86,12 @@ func validCapabilityPair(category, action string) bool {
 		return action == ActionRead
 	case CategoryStdout:
 		return action == ActionWrite
+	case CategoryRand:
+		return action == ActionRead
+	case CategoryThread:
+		return action == ActionSpawn || action == ActionMessage
+	case CategoryUI:
+		return action == ActionRead || action == ActionWrite || action == ActionEvent
 	default:
 		return false
 	}

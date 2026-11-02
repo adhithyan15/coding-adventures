@@ -191,9 +191,10 @@ fn run(module: &Module, tag: &str) -> Option<String> {
     }
     let artifact = compile(module).expect("compile to typescript");
     let js = ts_to_runnable_js(&artifact.source);
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_typescript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_ts_div_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &js).expect("write temp js");
+    sir_test_scratch::write_new(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(

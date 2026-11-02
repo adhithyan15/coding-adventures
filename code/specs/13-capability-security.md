@@ -290,38 +290,60 @@ category:action:target
 | `time` | `read`, `sleep` | `*` | `time:read:*` |
 | `stdin` | `read` | `*` | `stdin:read:*` |
 | `stdout` | `write` | `*` | `stdout:write:*` |
+| `rand` | `read` | `*` | `rand:read:*` |
+| `thread` | `spawn`, `message` | Worker, thread or actor role, or `*` | `thread:spawn:decode-pool` |
+| `ui` | `read`, `write`, `event` | View or DOM subtree, or `*` | `ui:event:#editor` |
 
 `stdout` is the taxonomy's unified process-output category: it covers writes
 to both standard output and standard error. Both streams therefore use
 `stdout:write:*`.
 
+`rand`, `thread` and `ui` exist so that a unit test can run against a
+simulated host that controls every source of nondeterminism (VER00 §6.3):
+
+- `rand:read:*` is a draw from ambient entropy: the OS random source, or a
+  generator that seeds itself from it. A generator seeded with a value the
+  caller supplies is pure computation and needs no capability.
+- `thread:spawn:{role}` starts a concurrent unit of execution inside the
+  process (an OS thread, a goroutine, a Web Worker, an OCaml domain, an
+  actor). `thread:message:{role}` sends to or receives from one across a
+  thread boundary. A new *process* is still `proc:fork` or `proc:exec`.
+- `ui:read:{view}` reads a view's state, `ui:write:{view}` changes it
+  (including dispatching a synthetic event), and `ui:event:{view}` receives
+  user input from it. A view is a DOM subtree root or a native view
+  identifier.
+
+D21 ("Nondeterminism categories") gives the full semantics and which
+enforcement layers cover each pair today.
+
 #### Closed category/action contract
 
 Category and action are a pair, not two independent vocabularies. A manifest
-MUST use one of the 19 pairs in the table above. An action that is valid for a
+MUST use one of the 25 pairs in the table above. An action that is valid for a
 different category is still invalid; for example, `fs:connect`, `net:read`,
-and `stdout:read` MUST be rejected.
+`stdout:read`, `proc:spawn` and `ui:message` MUST be rejected.
 
 The language-neutral fixture
 `code/specs/fixtures/capability-security-v1/taxonomy.json` is the executable
-form of this table. It lists the eight categories, the 14-action union, the 19
-allowed pairs, and the expected 93 invalid cross-pairs. Its schema is
+form of this table. It lists the eleven categories, the 17-action union, the 25
+allowed pairs, and the expected 162 invalid cross-pairs. Its schema is
 `code/specs/schemas/capability_taxonomy.schema.json`.
 
 Every manifest schema and every ingestion or enforcement boundary MUST:
 
-1. recognize all 19 declared category/action pairs, with both manifest schemas
-   accepting all 19;
-2. reject all 93 other combinations drawn from the known category and action
+1. recognize all 25 declared category/action pairs, with both manifest schemas
+   accepting all 25;
+2. reject all 162 other combinations drawn from the known category and action
    vocabularies;
 3. reject unknown categories and unknown actions;
 4. reject the whole manifest before generation, analysis, or cage construction
    rather than dropping, weakening, or converting an invalid declaration; and
 5. test its local pair table exhaustively against the shared fixture.
 
-An enforcement backend that cannot safely implement one of the 19 recognized
+An enforcement backend that cannot safely implement one of the 25 recognized
 pairs MUST return an explicit unsupported-capability error before replacing or
-emitting output. It MUST NOT emit an empty namespace, a TODO, or an unguarded
+emitting output, and an OS sandbox planner MUST refuse to launch a plan that
+holds a pair it cannot enforce. It MUST NOT emit an empty namespace, a TODO, or an unguarded
 operation. This permits capability-aware runtimes and analyzers to accept the
 whole taxonomy while allowing narrower code generators to fail closed.
 
@@ -779,6 +801,22 @@ Each language gets its own analyzer implemented using the language's native AST 
 | `import "net"`, `import "net/http"` | `net:*:*` |
 | `import "os/exec"` | `proc:exec:*` |
 | `os.Getenv`, `os.Environ` | `env:read:*` |
+| `import "crypto/rand"`; top-level `math/rand` and `math/rand/v2` calls (`rand.Intn`, `rand.Float64`, ...) | `rand:read:*` |
+| `go` statement | `thread:spawn:*` |
+
+Calls on a generator the caller seeded (`rand.New(rand.NewSource(seed)).Intn`)
+are method calls on a local value, not top-level calls, so they are not
+reported: seeded randomness is pure computation.
+
+**OCaml** (OCAML06):
+
+| Call | Detected Capability |
+|------|-------------------|
+| `Random.self_init`, `Random.State.make_self_init` | `rand:read:*` |
+| `Thread.create`, `Domain.spawn` | `thread:spawn:*` |
+
+OCaml 5's default `Random` state starts from a fixed seed, so `Random.int`
+without `self_init` is deterministic and is not reported.
 
 ### Integration with Build System
 

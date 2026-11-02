@@ -34,9 +34,10 @@
 //
 // # Wildcard policy
 //
-// Scopeable categories (fs, net, proc, env, ffi) must declare exact targets.
-// Wildcards ("*") are rejected at generation time. Non-scopeable categories
-// (time, stdin, stdout) always use "*" — there is nothing to narrow.
+// Scopeable categories (fs, net, proc, env, ffi, thread, ui) should declare
+// exact targets; a "*" target generates a gate with no runtime target check.
+// Non-scopeable categories (time, stdin, stdout, rand) always use "*" —
+// there is nothing to narrow.
 package main
 
 import (
@@ -77,10 +78,12 @@ type capabilityJSON struct {
 
 // scopeableCategory returns true for categories where exact targets provide
 // meaningful runtime enforcement. Non-scopeable categories (time, stdin,
-// stdout) always use "*" because they are not path-based.
+// stdout, rand) always use "*" because they name a single resource: there is
+// one clock, one stdin, one stdout and one entropy source. thread targets
+// name a worker role and ui targets name a view, so both are scopeable.
 func scopeableCategory(cat string) bool {
 	switch cat {
-	case "fs", "net", "proc", "env", "ffi":
+	case "fs", "net", "proc", "env", "ffi", "thread", "ui":
 		return true
 	}
 	return false
@@ -108,7 +111,7 @@ func hasWildcard(targets []string) bool {
 }
 
 // validCapabilityPair implements the closed category/action taxonomy from
-// Spec 13. Category and action are not independent enums: only these 19 pairs
+// Spec 13. Category and action are not independent enums: only these 25 pairs
 // are valid capability identities.
 func validCapabilityPair(category, action string) bool {
 	switch category {
@@ -129,6 +132,12 @@ func validCapabilityPair(category, action string) bool {
 		return action == "read"
 	case "stdout":
 		return action == "write"
+	case "rand":
+		return action == "read"
+	case "thread":
+		return action == "spawn" || action == "message"
+	case "ui":
+		return action == "read" || action == "write" || action == "event"
 	default:
 		return false
 	}
@@ -137,12 +146,19 @@ func validCapabilityPair(category, action string) bool {
 // generatorSupportsCapability reports whether this generator has a concrete,
 // enforcing method for a valid taxonomy pair. Valid but not-yet-supported
 // pairs fail explicitly rather than producing a TODO or weaker cage.
+//
+// Of D21's nondeterminism categories, rand:read and thread:spawn have a method
+// (op.Rand.Read, op.Thread.Spawn). thread:message and ui:* do not: a message is
+// a send on a typed Go channel and a view is not a Go value, so no generic
+// method can perform them. They stay unsupported, and a manifest that declares
+// them fails generation instead of getting an unchecked method.
 func generatorSupportsCapability(category, action string) bool {
 	switch category + ":" + action {
 	case "fs:read", "fs:write", "fs:create", "fs:delete", "fs:list",
 		"net:connect", "net:listen", "net:dns",
 		"proc:exec", "env:read", "time:read", "time:sleep",
-		"stdin:read", "stdout:write":
+		"stdin:read", "stdout:write",
+		"rand:read", "thread:spawn":
 		return true
 	default:
 		return false
@@ -206,6 +222,12 @@ func categoryFieldName(cat string) string {
 		return "Stdin"
 	case "stdout":
 		return "Stdout"
+	case "rand":
+		return "Rand"
+	case "thread":
+		return "Thread"
+	case "ui":
+		return "UI"
 	default:
 		if len(cat) == 0 {
 			return "Unknown"
@@ -256,6 +278,10 @@ func neededImports(caps []capabilityJSON) []string {
 			set[`"net"`] = true
 		case "time":
 			set[`"time"`] = true
+		case "rand":
+			// Aliased so the import can never collide with a package-level
+			// identifier named rand in the package the file is generated into.
+			set[`_cryptorand "crypto/rand"`] = true
 		}
 		if c.Category == "proc" && c.Action == "exec" {
 			set[`"os/exec"`] = true
@@ -277,7 +303,14 @@ func neededImports(caps []capabilityJSON) []string {
 	for imp := range set {
 		result = append(result, imp)
 	}
-	sort.Strings(result)
+	// Sort by import path, ignoring any alias, which is the order gofmt
+	// keeps: `_cryptorand "crypto/rand"` belongs before `"fmt"`.
+	importPath := func(spec string) string {
+		return spec[strings.Index(spec, `"`):]
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return importPath(result[i]) < importPath(result[j])
+	})
 	return result
 }
 
@@ -473,7 +506,13 @@ func emitResolvedPathVars(b *strings.Builder, relTargets []string) map[string]st
 // Relative targets use pre-emitted sync.OnceValue vars for exact canonical path
 // comparison. Absolute targets use inline exact string equality. Mixed groups are
 // handled correctly — each target type uses its own comparison form.
-func emitScopedCheck(b *strings.Builder, targets []string, paramName string, twoReturns bool, cat, action string, targetToVar map[string]string) {
+//
+// zeroValue is the first return value of the method the check is emitted
+// into, or "" when the method returns only an error. It must be the zero
+// value of that method's own result type: "nil" for a slice or interface,
+// `""` for a string. (env:read's Getenv once got "nil" here, which does not
+// compile for a string result.)
+func emitScopedCheck(b *strings.Builder, targets []string, paramName string, zeroValue string, cat, action string, targetToVar map[string]string) {
 	// Wildcard target: no path restriction — the package declared an unconstrained
 	// capability (e.g. it accepts user-provided paths). The value of the generated
 	// method is routing all OS calls through op.File for code-review visibility;
@@ -506,8 +545,8 @@ func emitScopedCheck(b *strings.Builder, targets []string, paramName string, two
 		fmt.Fprintf(b, "\tif !_allowed {\n")
 	}
 
-	if twoReturns {
-		fmt.Fprintf(b, "\t\treturn nil, &_capabilityViolationError{category: %q, action: %q, requested: %s}\n", cat, action, paramName)
+	if zeroValue != "" {
+		fmt.Fprintf(b, "\t\treturn %s, &_capabilityViolationError{category: %q, action: %q, requested: %s}\n", zeroValue, cat, action, paramName)
 	} else {
 		fmt.Fprintf(b, "\t\treturn &_capabilityViolationError{category: %q, action: %q, requested: %s}\n", cat, action, paramName)
 	}
@@ -531,7 +570,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		}
 		fmt.Fprintf(b, "func (c *%s) ReadFile(path string) ([]byte, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "read", targetToVar)
+		emitScopedCheck(b, g.Targets, "path", "nil", "fs", "read", targetToVar)
 		fmt.Fprintf(b, "\treturn os.ReadFile(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -548,7 +587,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		}
 		fmt.Fprintf(b, "func (c *%s) WriteFile(path string, data []byte, perm os.FileMode) error {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", false, "fs", "write", targetToVar)
+		emitScopedCheck(b, g.Targets, "path", "", "fs", "write", targetToVar)
 		fmt.Fprintf(b, "\treturn os.WriteFile(path, data, perm) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -565,7 +604,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		}
 		fmt.Fprintf(b, "func (c *%s) CreateFile(path string) (*os.File, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "create", targetToVar)
+		emitScopedCheck(b, g.Targets, "path", "nil", "fs", "create", targetToVar)
 		fmt.Fprintf(b, "\treturn os.Create(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -582,7 +621,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		}
 		fmt.Fprintf(b, "func (c *%s) DeleteFile(path string) error {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", false, "fs", "delete", targetToVar)
+		emitScopedCheck(b, g.Targets, "path", "", "fs", "delete", targetToVar)
 		fmt.Fprintf(b, "\treturn os.Remove(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -599,7 +638,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		}
 		fmt.Fprintf(b, "func (c *%s) ReadDir(path string) ([]os.DirEntry, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "list", targetToVar)
+		emitScopedCheck(b, g.Targets, "path", "nil", "fs", "list", targetToVar)
 		fmt.Fprintf(b, "\treturn os.ReadDir(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -607,7 +646,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// Connect opens a network connection to addr.\n")
 		fmt.Fprintf(b, "// Only addresses declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "func (c *%s) Connect(network, addr string) (net.Conn, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "addr", true, "net", "connect", targetToVar)
+		emitScopedCheck(b, g.Targets, "addr", "nil", "net", "connect", targetToVar)
 		fmt.Fprintf(b, "\treturn net.Dial(network, addr) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -615,7 +654,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// Listen opens a network listener on addr.\n")
 		fmt.Fprintf(b, "// Only addresses declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "func (c *%s) Listen(network, addr string) (net.Listener, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "addr", true, "net", "listen", targetToVar)
+		emitScopedCheck(b, g.Targets, "addr", "nil", "net", "listen", targetToVar)
 		fmt.Fprintf(b, "\treturn net.Listen(network, addr) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -623,7 +662,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// LookupHost resolves host to a list of IP addresses.\n")
 		fmt.Fprintf(b, "// Only hosts declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "func (c *%s) LookupHost(host string) ([]string, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "host", true, "net", "dns", targetToVar)
+		emitScopedCheck(b, g.Targets, "host", "nil", "net", "dns", targetToVar)
 		fmt.Fprintf(b, "\treturn net.LookupHost(host) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -640,7 +679,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// or enforce argument constraints in the calling code.\n")
 		fmt.Fprintf(b, "func (c *%s) Exec(name string, args ...string) ([]byte, error) {\n", typeName)
 		fmt.Fprintf(b, "\tname = filepath.Clean(name)\n")
-		emitScopedCheck(b, g.Targets, "name", true, "proc", "exec", targetToVar)
+		emitScopedCheck(b, g.Targets, "name", "nil", "proc", "exec", targetToVar)
 		fmt.Fprintf(b, "\treturn exec.Command(name, args...).Output() //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -648,7 +687,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// Getenv returns the value of the environment variable key.\n")
 		fmt.Fprintf(b, "// Only variables declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "func (c *%s) Getenv(key string) (string, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "key", true, "env", "read", targetToVar)
+		emitScopedCheck(b, g.Targets, "key", `""`, "env", "read", targetToVar)
 		fmt.Fprintf(b, "\treturn os.Getenv(key), nil //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -674,6 +713,28 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// WriteStdout writes data to standard output.\n")
 		fmt.Fprintf(b, "func (c *%s) WriteStdout(data []byte) (int, error) {\n", typeName)
 		fmt.Fprintf(b, "\treturn os.Stdout.Write(data) //nolint:cap\n")
+		fmt.Fprintf(b, "}\n\n")
+
+	case "rand:read":
+		// rand is not scoped: the only target is "*", so there is no check
+		// to emit. The method exists so ambient entropy is reachable only
+		// through op.Rand in a package that declared rand:read.
+		fmt.Fprintf(b, "// Read fills p with bytes from the operating system's random source.\n")
+		fmt.Fprintf(b, "// Generators seeded with a value you supply need no capability.\n")
+		fmt.Fprintf(b, "func (c *%s) Read(p []byte) (int, error) {\n", typeName)
+		fmt.Fprintf(b, "\treturn _cryptorand.Read(p) //nolint:cap\n")
+		fmt.Fprintf(b, "}\n\n")
+
+	case "thread:spawn":
+		fmt.Fprintf(b, "// Spawn runs body in a new goroutine. role names the worker and must be\n")
+		fmt.Fprintf(b, "// one declared in required_capabilities.json.\n")
+		fmt.Fprintf(b, "func (c *%s) Spawn(role string, body func()) error {\n", typeName)
+		emitScopedCheck(b, g.Targets, "role", "", "thread", "spawn", targetToVar)
+		fmt.Fprintf(b, "\tif body == nil {\n")
+		fmt.Fprintf(b, "\t\treturn fmt.Errorf(\"thread:spawn: nil body for role %%q\", role)\n")
+		fmt.Fprintf(b, "\t}\n")
+		fmt.Fprintf(b, "\tgo body() //nolint:cap\n")
+		fmt.Fprintf(b, "\treturn nil\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	default:

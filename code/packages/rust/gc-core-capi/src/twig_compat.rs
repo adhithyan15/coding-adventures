@@ -27,7 +27,7 @@
 //! this shim can be deleted.
 
 use crate::stack_scan::{
-    __gc_collect, __gc_collect_incremental_finish, __gc_collect_incremental_step, anchor_trampoline,
+    __gc_collect, __gc_collect_incremental_step, anchor_trampoline,
 };
 use crate::{
     __gc_alloc, __gc_alloc_kind, __gc_collection_count, __gc_kind_of, __gc_live_bytes,
@@ -341,15 +341,22 @@ pub unsafe extern "C" fn __twig_gc_collect_incremental_step(budget: i64) -> i64 
     __gc_collect_incremental_step(budget)
 }
 
-/// `__twig_gc_collect_incremental_finish()` → [`__gc_collect_incremental_finish`]. Sweeps the
-/// unreachable objects and ends the incremental cycle; returns the count reclaimed.
+/// `__twig_gc_collect_incremental_finish()` → [`__gc_collect_incremental_finish`](crate::stack_scan::__gc_collect_incremental_finish). Re-marks
+/// from the current roots, sweeps the unreachable objects and ends the incremental cycle;
+/// returns the count reclaimed.
 ///
 /// # Safety
-/// Same contract as [`__gc_collect_incremental_finish`]: called after marking is complete.
+/// Same contract as [`__gc_collect_incremental_finish`](crate::stack_scan::__gc_collect_incremental_finish): called after marking is complete;
+/// the calling thread owns its stack. Like `start`, it is its own frame-building trampoline
+/// (the finish now walks the stack to re-scan the roots), so the walk's anchor return
+/// address points straight into the compiled caller.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __twig_gc_collect_incremental_finish() -> i64 {
-    __gc_collect_incremental_finish()
+    anchor_trampoline!(
+        __twig_gc_collect_incremental_finish,
+        crate::stack_scan::collect_incremental_finish_from
+    )
 }
 
 /// `__twig_gc_live_bytes()` → [`__gc_live_bytes`].
