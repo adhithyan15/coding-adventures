@@ -1,13 +1,19 @@
 //! Capability categories and actions.
 //!
-//! The taxonomy is fixed by `capability-cage-rust.md`: 8 categories and
-//! 14 actions. Not every (category, action) pair is meaningful; the
-//! valid pairings are encoded in [`Capability::new`] (see `capability.rs`).
+//! The taxonomy is fixed by D21 and spec 13: 11 categories and 17 actions.
+//! Not every (category, action) pair is meaningful: only 25 of the 187
+//! combinations are. The valid pairings are encoded in
+//! [`is_valid_combination`], which [`Capability::new`] (see `capability.rs`)
+//! enforces.
+//!
+//! The last three categories, `rand`, `thread` and `ui`, were added for
+//! VER00 §6.3. They name the sources of nondeterminism a unit test must be
+//! able to control: ambient entropy, in-process concurrency, and views.
 
 use std::fmt;
 use std::str::FromStr;
 
-/// One of the eight category types in the cage taxonomy.
+/// One of the eleven category types in the cage taxonomy.
 ///
 /// Adding a category requires a spec amendment and corresponding
 /// updates to the JSON schema and every backend.
@@ -21,6 +27,15 @@ pub enum Category {
     Time,
     Stdin,
     Stdout,
+    /// Ambient entropy: the OS random source, or a generator seeded from
+    /// it. A generator seeded with a caller-supplied value needs nothing.
+    Rand,
+    /// A concurrent unit of execution inside the process (thread,
+    /// goroutine, worker, domain, actor), and messages between them.
+    Thread,
+    /// A DOM subtree or a native view: reading it, changing it, and
+    /// receiving user input from it.
+    Ui,
 }
 
 impl Category {
@@ -35,6 +50,9 @@ impl Category {
             Category::Time => "time",
             Category::Stdin => "stdin",
             Category::Stdout => "stdout",
+            Category::Rand => "rand",
+            Category::Thread => "thread",
+            Category::Ui => "ui",
         }
     }
 }
@@ -58,12 +76,15 @@ impl FromStr for Category {
             "time" => Ok(Category::Time),
             "stdin" => Ok(Category::Stdin),
             "stdout" => Ok(Category::Stdout),
+            "rand" => Ok(Category::Rand),
+            "thread" => Ok(Category::Thread),
+            "ui" => Ok(Category::Ui),
             _ => Err(()),
         }
     }
 }
 
-/// One of the fourteen action types in the cage taxonomy.
+/// One of the seventeen action types in the cage taxonomy.
 ///
 /// Adding an action requires a spec amendment.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -82,6 +103,14 @@ pub enum Action {
     Call,
     Load,
     Sleep,
+    /// Start a thread, worker or actor (`thread` only).
+    Spawn,
+    /// Send to or receive from a worker across a thread boundary
+    /// (`thread` only).
+    Message,
+    /// Receive user input from a view (`ui` only). Dispatching a synthetic
+    /// event changes the view, so it is `ui:write`, not `ui:event`.
+    Event,
 }
 
 impl Action {
@@ -101,6 +130,9 @@ impl Action {
             Action::Call => "call",
             Action::Load => "load",
             Action::Sleep => "sleep",
+            Action::Spawn => "spawn",
+            Action::Message => "message",
+            Action::Event => "event",
         }
     }
 }
@@ -130,6 +162,9 @@ impl FromStr for Action {
             "call" => Ok(Action::Call),
             "load" => Ok(Action::Load),
             "sleep" => Ok(Action::Sleep),
+            "spawn" => Ok(Action::Spawn),
+            "message" => Ok(Action::Message),
+            "event" => Ok(Action::Event),
             _ => Err(()),
         }
     }
@@ -148,6 +183,9 @@ impl FromStr for Action {
 /// time     read, sleep
 /// stdin    read
 /// stdout   write
+/// rand     read
+/// thread   spawn, message
+/// ui       read, write, event
 /// ```
 pub fn is_valid_combination(category: Category, action: Action) -> bool {
     use Action::*;
@@ -173,6 +211,12 @@ pub fn is_valid_combination(category: Category, action: Action) -> bool {
             | (Time, Sleep)
             | (Stdin, Read)
             | (Stdout, Write)
+            | (Rand, Read)
+            | (Thread, Spawn)
+            | (Thread, Message)
+            | (Ui, Read)
+            | (Ui, Write)
+            | (Ui, Event)
     )
 }
 
@@ -184,7 +228,9 @@ mod tests {
 
     #[test]
     fn category_round_trips() {
-        for s in ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout"] {
+        for s in [
+            "fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout", "rand", "thread", "ui",
+        ] {
             let cat: Category = s.parse().unwrap();
             assert_eq!(cat.as_str(), s);
             assert_eq!(format!("{cat}"), s);
@@ -195,11 +241,50 @@ mod tests {
     fn action_round_trips() {
         for s in [
             "read", "write", "create", "delete", "list", "connect", "listen", "dns", "exec",
-            "fork", "signal", "call", "load", "sleep",
+            "fork", "signal", "call", "load", "sleep", "spawn", "message", "event",
         ] {
             let act: Action = s.parse().unwrap();
             assert_eq!(act.as_str(), s);
         }
+    }
+
+    #[test]
+    fn nondeterminism_pairs_are_exactly_the_six_from_ver00() {
+        use Action::*;
+        use Category::*;
+        for (category, action) in [
+            (Rand, Read),
+            (Thread, Spawn),
+            (Thread, Message),
+            (Ui, Read),
+            (Ui, Write),
+            (Ui, Event),
+        ] {
+            assert!(
+                is_valid_combination(category, action),
+                "{category}:{action}"
+            );
+        }
+        // The new actions belong to one category each, and the new
+        // categories take none of the old process or clock actions.
+        for (category, action) in [
+            (Proc, Spawn),
+            (Net, Message),
+            (Stdout, Event),
+            (Rand, Write),
+            (Thread, Fork),
+            (Thread, Exec),
+            (Ui, Message),
+            (Ui, Sleep),
+        ] {
+            assert!(
+                !is_valid_combination(category, action),
+                "{category}:{action}"
+            );
+        }
+        // No category or action means "all".
+        assert!("all".parse::<Category>().is_err());
+        assert!("*".parse::<Action>().is_err());
     }
 
     #[test]

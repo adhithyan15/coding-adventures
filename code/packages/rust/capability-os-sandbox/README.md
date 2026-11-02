@@ -8,8 +8,11 @@ capability into a platform-specific defense-in-depth rule and labels the rule's
 coverage:
 
 - `direct`: an OS primitive names the exact declared target. Today that is only
-  exact-path filesystem rules. Network, process and wildcard grants are
-  brokered on every platform, and `ffi` is unsupported everywhere.
+  exact-path filesystem rules. Network, process, randomness (`rand:read`) and
+  wildcard grants are brokered on every platform, and `ffi`, `thread` and
+  `ui` are unsupported everywhere: they act inside the agent's own process,
+  where no kernel primitive can scope them and no broker can perform them,
+  so a manifest that declares them cannot launch under a kernel sandbox.
 - `brokered`: a host broker must mediate the operation.
 - `launch_time`: the boundary is applied when the process is spawned.
 - `advisory`: the OS primitive narrows the class of behavior but not the exact
