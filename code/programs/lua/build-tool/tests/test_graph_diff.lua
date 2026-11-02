@@ -614,4 +614,70 @@ describe("process-free Lua graph and diff selection", function()
         assert.same({ok = false, code = "DIFF_INPUT_INVALID"},
             GraphDiff.evaluate_diff_selection(base))
     end)
+    -- The ASCII fast paths and the byte-class scan in graph_diff.lua must give
+    -- exactly the answers the per-scalar Unicode code gave. Each case below
+    -- pins one boundary of one fast path through the public entry point.
+    describe("ASCII fast paths keep every validation answer", function()
+        local function accepts(...)
+            local result = GraphDiff.evaluate_diff_selection(simple_diff({...}))
+            assert.is_true(result.ok, result.code)
+        end
+        local function rejects(...)
+            assert.same({ok = false, code = "DIFF_PATH_INVALID"},
+                GraphDiff.evaluate_diff_selection(simple_diff({...})))
+        end
+
+        it("folds ASCII case exactly as Unicode case folding does", function()
+            rejects(package_prefix("fixture/upper", "code/Foo"),
+                package_prefix("fixture/lower", "code/foo"))
+            rejects(package_prefix("fixture/upper", "code/ABC/x"),
+                package_prefix("fixture/lower", "code/abc"))
+            accepts(package_prefix("fixture/a", "code/foo"),
+                package_prefix("fixture/b", "code/foo-bar"))
+            -- Bytes next to the A..Z range are not letters and do not fold.
+            accepts(package_prefix("fixture/at", "code/@"),
+                package_prefix("fixture/backtick", "code/`"),
+                package_prefix("fixture/bracket", "code/["))
+        end)
+
+        it("rejects control bytes and forbidden characters, and nothing else", function()
+            rejects(package_prefix("fixture/soh", "code/a\1b"))
+            rejects(package_prefix("fixture/us", "code/a\31b"))
+            rejects(package_prefix("fixture/nul", "code/a\0b"))
+            for _, character in ipairs({"<", ">", ":", "\"", "|", "?", "*"}) do
+                rejects(package_prefix("fixture/forbidden", "code/a" .. character .. "b"))
+            end
+            -- DEL (127) was never a control scalar here (only < 32 is), and
+            -- class metacharacters must not widen the rejected class.
+            accepts(package_prefix("fixture/del", "code/a\127b"))
+            for index, character in ipairs({"]", "^", "-", "%", "(", ")", "+", "~"}) do
+                accepts(package_prefix("fixture/meta" .. index, "code/a" .. character .. "b"))
+            end
+        end)
+
+        it("uppercases ASCII exactly as Unicode does for reserved names", function()
+            rejects(package_prefix("fixture/con", "code/con"))
+            rejects(package_prefix("fixture/con-ext", "code/Con.txt"))
+            rejects(package_prefix("fixture/lpt", "code/lPt9"))
+            accepts(package_prefix("fixture/console", "code/console"))
+        end)
+
+        it("still runs full NFC on non-ASCII paths", function()
+            -- "e" + U+0301 COMBINING ACUTE is not NFC; U+00E9 is.
+            rejects(package_prefix("fixture/decomposed", "code/e\204\129"))
+            accepts(package_prefix("fixture/precomposed", "code/\195\169"))
+        end)
+
+        it("orders roots that share a long prefix exactly as byte order with / first", function()
+            local long = "code/" .. string.rep("q", 400)
+            rejects(package_prefix("fixture/root", long .. "a"),
+                package_prefix("fixture/punctuation", long .. "a!"),
+                package_prefix("fixture/descendant", long .. "a/x"))
+            accepts(package_prefix("fixture/punctuation", long .. "a!"),
+                package_prefix("fixture/digit", long .. "a0"),
+                package_prefix("fixture/letter", long .. "ab"))
+            rejects(package_prefix("fixture/same", long .. "a"),
+                package_prefix("fixture/same-again", long .. "A"))
+        end)
+    end)
 end)
