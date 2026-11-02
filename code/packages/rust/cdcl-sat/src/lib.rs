@@ -65,6 +65,7 @@
 //! | [`dimacs`] | `Cnf`, the strict DIMACS reader, the writer |
 //! | `heap` | the VSIDS activity heap (internal) |
 //! | [`luby`] | the Luby restart sequence |
+//! | [`proof`] | DRAT proofs the solver records for `drat-check` (VER11) |
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
@@ -74,6 +75,7 @@ pub mod dimacs;
 mod heap;
 pub mod lit;
 pub mod luby;
+pub mod proof;
 pub mod solver;
 
 pub use dimacs::{
@@ -81,13 +83,25 @@ pub use dimacs::{
     MAX_VARS_LIMIT,
 };
 pub use lit::{LBool, Lit, Var};
+pub use proof::{DratProof, ProofStep};
 pub use solver::{SolveResult, Solver, Stats};
 
 impl Solver {
     /// A solver loaded with every clause of `cnf`, and with all of its
     /// variables created (even ones no clause mentions).
     pub fn from_cnf(cnf: &Cnf) -> Solver {
+        Solver::load(Solver::new(), cnf)
+    }
+
+    /// As [`Solver::from_cnf`], recording a DRAT proof from the start
+    /// (VER11 §4).
+    pub fn from_cnf_with_proof(cnf: &Cnf) -> Solver {
         let mut s = Solver::new();
+        s.enable_proof();
+        Solver::load(s, cnf)
+    }
+
+    fn load(mut s: Solver, cnf: &Cnf) -> Solver {
         s.reserve_vars(cnf.num_vars);
         for clause in &cnf.clauses {
             s.add_clause(clause);
