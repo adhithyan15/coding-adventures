@@ -47,8 +47,8 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "method_with_block", false},
             {:sequence, [
               {:rule_reference, "method_call", false},
-              {:negative_lookahead, {:rule_reference, "PLUS", true}},
-              {:negative_lookahead, {:rule_reference, "MINUS", true}},
+              {:negative_lookahead, {:literal, "+"}},
+              {:negative_lookahead, {:literal, "-"}},
               {:negative_lookahead, {:rule_reference, "STAR", true}},
               {:negative_lookahead, {:rule_reference, "SLASH", true}},
               {:negative_lookahead, {:literal, "<<"}},
@@ -88,7 +88,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "expression", false},
               ]}},
           ]},
-          line_number: 83,
+          line_number: 87,
         },
         %{
           name: "mlhs_target",
@@ -96,7 +96,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:optional, {:literal, "*"}},
             {:rule_reference, "NAME", true},
           ]},
-          line_number: 84,
+          line_number: 88,
         },
         %{
           name: "modifier_statement",
@@ -106,8 +106,8 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "method_call_no_paren", false},
                 {:sequence, [
                   {:rule_reference, "method_call", false},
-                  {:negative_lookahead, {:rule_reference, "PLUS", true}},
-                  {:negative_lookahead, {:rule_reference, "MINUS", true}},
+                  {:negative_lookahead, {:literal, "+"}},
+                  {:negative_lookahead, {:literal, "-"}},
                   {:negative_lookahead, {:rule_reference, "STAR", true}},
                   {:negative_lookahead, {:rule_reference, "SLASH", true}},
                   {:negative_lookahead, {:literal, "<<"}},
@@ -135,7 +135,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "expression", false},
           ]},
-          line_number: 120,
+          line_number: 124,
         },
         %{
           name: "def_statement",
@@ -144,6 +144,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:optional, {:rule_reference, "def_receiver", false}},
             {:rule_reference, "NAME", true},
             {:optional, {:sequence, [
+                {:negative_lookahead, {:literal, "( line start"}},
                 {:rule_reference, "LPAREN", true},
                 {:optional, {:rule_reference, "params", false}},
                 {:rule_reference, "RPAREN", true},
@@ -158,7 +159,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:optional, {:rule_reference, "ensure_clause", false}},
             {:literal, "end"},
           ]},
-          line_number: 144,
+          line_number: 148,
         },
         %{
           name: "def_receiver",
@@ -166,7 +167,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "singleton_receiver", false},
             {:literal, "."},
           ]},
-          line_number: 150,
+          line_number: 154,
         },
         %{
           name: "endless_def_statement",
@@ -182,7 +183,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "EQUALS", true},
             {:rule_reference, "expression", false},
           ]},
-          line_number: 159,
+          line_number: 163,
         },
         %{
           name: "class_statement",
@@ -211,7 +212,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               {:literal, "end"},
             ]},
           ]},
-          line_number: 180,
+          line_number: 184,
         },
         %{
           name: "singleton_receiver",
@@ -219,7 +220,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "self"},
             {:rule_reference, "NAME", true},
           ]},
-          line_number: 182,
+          line_number: 186,
         },
         %{
           name: "module_statement",
@@ -232,7 +233,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:literal, "end"},
           ]},
-          line_number: 183,
+          line_number: 187,
         },
         %{
           name: "method_with_block",
@@ -242,6 +243,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "KEYWORD", true},
               ]}},
             {:optional, {:sequence, [
+                {:negative_lookahead, {:literal, "( line start"}},
                 {:rule_reference, "LPAREN", true},
                 {:optional, {:sequence, [
                     {:rule_reference, "expression", false},
@@ -254,7 +256,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "block", false},
           ]},
-          line_number: 185,
+          line_number: 189,
         },
         %{
           name: "block",
@@ -262,7 +264,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "do_block", false},
             {:rule_reference, "brace_block", false},
           ]},
-          line_number: 186,
+          line_number: 190,
         },
         %{
           name: "do_block",
@@ -275,7 +277,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:literal, "end"},
           ]},
-          line_number: 187,
+          line_number: 191,
         },
         %{
           name: "brace_block",
@@ -285,7 +287,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:repetition, {:rule_reference, "statement", false}},
             {:rule_reference, "RBRACE", true},
           ]},
-          line_number: 188,
+          line_number: 192,
         },
         %{
           name: "block_params",
@@ -306,7 +308,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:literal, "|"},
           ]},
-          line_number: 198,
+          line_number: 202,
         },
         %{
           name: "return_statement",
@@ -314,7 +316,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "return"},
             {:optional, {:rule_reference, "expression", false}},
           ]},
-          line_number: 200,
+          line_number: 204,
         },
         %{
           name: "break_statement",
@@ -322,7 +324,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "break"},
             {:optional, {:rule_reference, "expression", false}},
           ]},
-          line_number: 201,
+          line_number: 205,
         },
         %{
           name: "next_statement",
@@ -330,17 +332,17 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "next"},
             {:optional, {:rule_reference, "expression", false}},
           ]},
-          line_number: 202,
+          line_number: 206,
         },
         %{
           name: "redo_statement",
           body: {:literal, "redo"},
-          line_number: 206,
+          line_number: 210,
         },
         %{
           name: "retry_statement",
           body: {:literal, "retry"},
-          line_number: 210,
+          line_number: 214,
         },
         %{
           name: "alias_statement",
@@ -349,7 +351,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "NAME", true},
             {:rule_reference, "NAME", true},
           ]},
-          line_number: 221,
+          line_number: 225,
         },
         %{
           name: "undef_statement",
@@ -357,7 +359,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "undef"},
             {:rule_reference, "NAME", true},
           ]},
-          line_number: 233,
+          line_number: 237,
         },
         %{
           name: "yield_statement",
@@ -365,7 +367,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "yield"},
             {:optional, {:rule_reference, "yield_args", false}},
           ]},
-          line_number: 255,
+          line_number: 259,
         },
         %{
           name: "yield_args",
@@ -389,7 +391,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 ]}},
             ]},
           ]},
-          line_number: 256,
+          line_number: 260,
         },
         %{
           name: "super_args",
@@ -413,7 +415,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 ]}},
             ]},
           ]},
-          line_number: 283,
+          line_number: 287,
         },
         %{
           name: "params",
@@ -427,7 +429,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 ]}},
             ]},
           ]},
-          line_number: 312,
+          line_number: 316,
         },
         %{
           name: "param",
@@ -448,7 +450,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 ]},
               ]}},
           ]},
-          line_number: 357,
+          line_number: 361,
         },
         %{
           name: "if_statement",
@@ -465,7 +467,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:optional, {:rule_reference, "else_clause", false}},
             {:literal, "end"},
           ]},
-          line_number: 358,
+          line_number: 362,
         },
         %{
           name: "elsif_clause",
@@ -479,7 +481,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "statement", false},
               ]}},
           ]},
-          line_number: 359,
+          line_number: 363,
         },
         %{
           name: "else_clause",
@@ -490,7 +492,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "statement", false},
               ]}},
           ]},
-          line_number: 360,
+          line_number: 364,
         },
         %{
           name: "unless_statement",
@@ -505,7 +507,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:optional, {:rule_reference, "else_clause", false}},
             {:literal, "end"},
           ]},
-          line_number: 361,
+          line_number: 365,
         },
         %{
           name: "while_statement",
@@ -518,7 +520,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:literal, "end"},
           ]},
-          line_number: 362,
+          line_number: 366,
         },
         %{
           name: "until_statement",
@@ -531,7 +533,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:literal, "end"},
           ]},
-          line_number: 363,
+          line_number: 367,
         },
         %{
           name: "for_statement",
@@ -547,7 +549,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:literal, "end"},
           ]},
-          line_number: 371,
+          line_number: 375,
         },
         %{
           name: "case_statement",
@@ -561,7 +563,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:optional, {:rule_reference, "else_clause", false}},
             {:literal, "end"},
           ]},
-          line_number: 394,
+          line_number: 398,
         },
         %{
           name: "when_clause",
@@ -580,7 +582,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "statement", false},
               ]}},
           ]},
-          line_number: 395,
+          line_number: 399,
         },
         %{
           name: "in_clause",
@@ -595,7 +597,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "statement", false},
               ]}},
           ]},
-          line_number: 417,
+          line_number: 421,
         },
         %{
           name: "pattern",
@@ -607,7 +609,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "literal_pattern", false},
             {:rule_reference, "binding_pattern", false},
           ]},
-          line_number: 418,
+          line_number: 422,
         },
         %{
           name: "literal_pattern",
@@ -617,12 +619,12 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "symbol_literal", false},
             {:rule_reference, "KEYWORD", true},
           ]},
-          line_number: 419,
+          line_number: 423,
         },
         %{
           name: "binding_pattern",
           body: {:rule_reference, "NAME", true},
-          line_number: 420,
+          line_number: 424,
         },
         %{
           name: "array_pattern",
@@ -643,7 +645,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "RBRACKET", true},
           ]},
-          line_number: 421,
+          line_number: 425,
         },
         %{
           name: "hash_pattern",
@@ -658,7 +660,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "RBRACE", true},
           ]},
-          line_number: 422,
+          line_number: 426,
         },
         %{
           name: "hash_pattern_pair",
@@ -667,7 +669,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "COLON", true},
             {:optional, {:rule_reference, "pattern", false}},
           ]},
-          line_number: 423,
+          line_number: 427,
         },
         %{
           name: "splat_pattern",
@@ -675,7 +677,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "*"},
             {:optional, {:rule_reference, "NAME", true}},
           ]},
-          line_number: 430,
+          line_number: 434,
         },
         %{
           name: "pin_pattern",
@@ -683,7 +685,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "^"},
             {:rule_reference, "NAME", true},
           ]},
-          line_number: 435,
+          line_number: 439,
         },
         %{
           name: "class_pattern",
@@ -699,7 +701,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "RPAREN", true},
           ]},
-          line_number: 441,
+          line_number: 445,
         },
         %{
           name: "begin_statement",
@@ -715,7 +717,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:optional, {:rule_reference, "ensure_clause", false}},
             {:literal, "end"},
           ]},
-          line_number: 462,
+          line_number: 466,
         },
         %{
           name: "rescue_clause",
@@ -728,9 +730,15 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 ]},
                 {:sequence, [
                   {:rule_reference, "exception_list", false},
-                  {:literal, "=>"},
-                  {:rule_reference, "NAME", true},
+                  {:group, {:alternation, [
+                      {:sequence, [
+                        {:literal, "=>"},
+                        {:rule_reference, "NAME", true},
+                      ]},
+                      {:literal, ";"},
+                    ]}},
                 ]},
+                {:literal, ";"},
               ]}},
             {:repetition, {:sequence, [
                 {:negative_lookahead, {:literal, "rescue"}},
@@ -739,7 +747,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "statement", false},
               ]}},
           ]},
-          line_number: 476,
+          line_number: 486,
         },
         %{
           name: "exception_list",
@@ -750,7 +758,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "NAME", true},
               ]}},
           ]},
-          line_number: 477,
+          line_number: 487,
         },
         %{
           name: "ensure_clause",
@@ -761,7 +769,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "statement", false},
               ]}},
           ]},
-          line_number: 478,
+          line_number: 488,
         },
         %{
           name: "index_write_receiver_postfix",
@@ -770,7 +778,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "scope_resolution", false},
             {:rule_reference, "index_suffix", false},
           ]},
-          line_number: 531,
+          line_number: 541,
         },
         %{
           name: "index_assignment",
@@ -784,7 +792,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "EQUALS", true},
             {:rule_reference, "expression", false},
           ]},
-          line_number: 532,
+          line_number: 542,
         },
         %{
           name: "assignment",
@@ -808,7 +816,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "expression", false},
           ]},
-          line_number: 533,
+          line_number: 543,
         },
         %{
           name: "rightward_assignment",
@@ -817,7 +825,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "=>"},
             {:rule_reference, "NAME", true},
           ]},
-          line_number: 552,
+          line_number: 562,
         },
         %{
           name: "method_call",
@@ -829,6 +837,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                   {:rule_reference, "KEYWORD", true},
                 ]},
               ]}},
+            {:negative_lookahead, {:literal, "( line start"}},
             {:rule_reference, "LPAREN", true},
             {:optional, {:sequence, [
                 {:rule_reference, "call_arg", false},
@@ -840,7 +849,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "RPAREN", true},
             {:repetition, {:rule_reference, "dot_call", false}},
           ]},
-          line_number: 569,
+          line_number: 583,
         },
         %{
           name: "dot_call",
@@ -851,6 +860,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "KEYWORD", true},
               ]}},
             {:optional, {:sequence, [
+                {:negative_lookahead, {:literal, "( line start"}},
                 {:rule_reference, "LPAREN", true},
                 {:optional, {:sequence, [
                     {:rule_reference, "call_arg", false},
@@ -863,7 +873,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:optional, {:rule_reference, "block", false}},
           ]},
-          line_number: 570,
+          line_number: 584,
         },
         %{
           name: "scope_resolution",
@@ -874,7 +884,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "KEYWORD", true},
               ]}},
           ]},
-          line_number: 578,
+          line_number: 592,
         },
         %{
           name: "call_arg",
@@ -893,7 +903,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               {:rule_reference, "expression", false},
             ]},
           ]},
-          line_number: 633,
+          line_number: 647,
         },
         %{
           name: "method_call_no_paren",
@@ -914,23 +924,29 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:negative_lookahead, {:literal, "||"}},
             {:negative_lookahead, {:literal, "<<"}},
             {:negative_lookahead, {:literal, "[ line start"}},
+            {:negative_lookahead, {:literal, "( line start"}},
+            {:negative_lookahead, {:literal, "- line start"}},
+            {:negative_lookahead, {:literal, "+ line start"}},
             {:rule_reference, "expression", false},
             {:repetition, {:sequence, [
                 {:rule_reference, "COMMA", true},
                 {:rule_reference, "expression", false},
               ]}},
           ]},
-          line_number: 681,
+          line_number: 701,
         },
         %{
           name: "expression_stmt",
-          body: {:rule_reference, "expression", false},
-          line_number: 684,
+          body: {:sequence, [
+            {:rule_reference, "expression", false},
+            {:optional, {:literal, ";"}},
+          ]},
+          line_number: 705,
         },
         %{
           name: "expression",
           body: {:rule_reference, "ternary", false},
-          line_number: 791,
+          line_number: 812,
         },
         %{
           name: "ternary",
@@ -943,7 +959,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "expression", false},
               ]}},
           ]},
-          line_number: 792,
+          line_number: 813,
         },
         %{
           name: "range",
@@ -966,7 +982,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 ]}},
             ]},
           ]},
-          line_number: 793,
+          line_number: 814,
         },
         %{
           name: "logical_or",
@@ -980,7 +996,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "logical_and", false},
               ]}},
           ]},
-          line_number: 794,
+          line_number: 815,
         },
         %{
           name: "logical_and",
@@ -994,7 +1010,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "logical_not", false},
               ]}},
           ]},
-          line_number: 795,
+          line_number: 816,
         },
         %{
           name: "logical_not",
@@ -1005,7 +1021,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 ]}}},
             {:rule_reference, "comparison", false},
           ]},
-          line_number: 802,
+          line_number: 823,
         },
         %{
           name: "comparison",
@@ -1023,7 +1039,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "shift", false},
               ]}},
           ]},
-          line_number: 818,
+          line_number: 839,
         },
         %{
           name: "shift",
@@ -1034,13 +1050,15 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "sum", false},
               ]}},
           ]},
-          line_number: 819,
+          line_number: 840,
         },
         %{
           name: "sum",
           body: {:sequence, [
             {:rule_reference, "term", false},
             {:repetition, {:sequence, [
+                {:negative_lookahead, {:literal, "- line start"}},
+                {:negative_lookahead, {:literal, "+ line start"}},
                 {:group, {:alternation, [
                     {:rule_reference, "PLUS", true},
                     {:rule_reference, "MINUS", true},
@@ -1048,7 +1066,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "term", false},
               ]}},
           ]},
-          line_number: 820,
+          line_number: 845,
         },
         %{
           name: "term",
@@ -1062,7 +1080,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "factor", false},
               ]}},
           ]},
-          line_number: 821,
+          line_number: 846,
         },
         %{
           name: "super_expr",
@@ -1070,7 +1088,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "super"},
             {:optional, {:rule_reference, "super_args", false}},
           ]},
-          line_number: 890,
+          line_number: 915,
         },
         %{
           name: "index_suffix",
@@ -1080,7 +1098,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "expression", false},
             {:rule_reference, "RBRACKET", true},
           ]},
-          line_number: 918,
+          line_number: 943,
         },
         %{
           name: "factor",
@@ -1114,6 +1132,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                   {:rule_reference, "RPAREN", true},
                 ]},
                 {:rule_reference, "unary_minus", false},
+                {:rule_reference, "unary_plus", false},
               ]}},
             {:repetition, {:alternation, [
                 {:rule_reference, "dot_call", false},
@@ -1121,7 +1140,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "index_suffix", false},
               ]}},
           ]},
-          line_number: 919,
+          line_number: 944,
         },
         %{
           name: "lambda_literal",
@@ -1134,7 +1153,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "block", false},
           ]},
-          line_number: 938,
+          line_number: 963,
         },
         %{
           name: "unary_minus",
@@ -1142,7 +1161,15 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "MINUS", true},
             {:rule_reference, "factor", false},
           ]},
-          line_number: 939,
+          line_number: 964,
+        },
+        %{
+          name: "unary_plus",
+          body: {:sequence, [
+            {:literal, "+ line start"},
+            {:rule_reference, "factor", false},
+          ]},
+          line_number: 971,
         },
         %{
           name: "defined_expression",
@@ -1150,7 +1177,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "defined?"},
             {:rule_reference, "factor", false},
           ]},
-          line_number: 950,
+          line_number: 982,
         },
         %{
           name: "symbol_literal",
@@ -1162,7 +1189,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "STRING", true},
               ]}},
           ]},
-          line_number: 957,
+          line_number: 989,
         },
         %{
           name: "array_literal",
@@ -1177,7 +1204,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "RBRACKET", true},
           ]},
-          line_number: 958,
+          line_number: 990,
         },
         %{
           name: "hash_literal",
@@ -1192,7 +1219,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "RBRACE", true},
           ]},
-          line_number: 959,
+          line_number: 991,
         },
         %{
           name: "hash_entry",
@@ -1212,7 +1239,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               {:rule_reference, "expression", false},
             ]},
           ]},
-          line_number: 960,
+          line_number: 992,
         },
       ],
       version: 1,

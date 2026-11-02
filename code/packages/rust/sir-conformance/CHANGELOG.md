@@ -4,6 +4,17 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18798)
+
+- `tests/ruby_sir_gaps.rs` gains 10 Ruby programs, each checked against
+  real `ruby` and run on all six backends: a line starting with `-`, `+`
+  or `(` (after an assignment, a name and `;`), an operator ending a line
+  and a leading-dot chain, a lone name before a `(` line, a bare `puts`,
+  `unless`/`until`/`!` (Go and Rust panicked `unknown builtin: not`),
+  `rescue Klass` ⏎ next line, a method-level `rescue`'s value, `;` between
+  statements, and a store into an outer local inside `begin`/`rescue`
+  (rustc refused it).
+
 ### Added (#18778)
 
 - Review follow-up: `tests/ruby_sir_gaps.rs` gains `for`-body locals

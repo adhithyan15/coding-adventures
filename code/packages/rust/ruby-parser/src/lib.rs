@@ -3563,6 +3563,54 @@ mod tests {
         assert!(find_descendant(&ast, "index_suffix").is_some());
     }
 
+    /// #18798 — a `-`, `+` or `(` that starts a line after a complete
+    /// expression starts a new statement too, while an operator at the end
+    /// of a line still continues it.
+    #[test]
+    fn test_parse_sign_or_paren_on_a_new_line_starts_a_new_statement() {
+        assert_eq!(
+            statement_rules(&parse_ruby("x = 5\n-1\ny = 6\n+2\nz = foo\n(3)\n")),
+            vec!["assignment", "expression_stmt", "assignment", "expression_stmt", "assignment", "expression_stmt"]
+        );
+        let ast = parse_ruby("x = 5\n-1");
+        assert!(find_descendant(&ast, "unary_minus").is_some());
+        assert!(find_descendant(&ast, "method_call").is_none());
+        assert_eq!(statement_rules(&parse_ruby("x = 5 -\n1")), vec!["assignment"]);
+        // `f(1).g` ⏎ `-1`: the whole call is the first statement.
+        assert_eq!(
+            statement_rules(&parse_ruby("f(1).g\n-1")),
+            vec!["method_call", "expression_stmt"]
+        );
+        // An untagged `+` is never unary: `super + 1` is a sum.
+        let ast = parse_ruby("super + 1");
+        assert!(find_descendant(&ast, "unary_plus").is_none());
+    }
+
+    /// #18798 — a name alone on its line takes nothing from the next line:
+    /// `puts` ⏎ `puts 2` is two statements (the lexer ends the first with a
+    /// `;`, which `expression_stmt` consumes), and so is `foo` ⏎ `(1)`.
+    #[test]
+    fn test_parse_a_lone_name_is_a_whole_statement() {
+        assert_eq!(
+            statement_rules(&parse_ruby("puts\nputs 2\nfoo\n(1)\n")),
+            vec!["expression_stmt", "method_call_no_paren", "expression_stmt", "expression_stmt"]
+        );
+    }
+
+    /// #18798 — `rescue Boom` ⏎ `puts 40`: the class list ends at the line
+    /// break (it read `Boom(puts 40)`), and `;` separates statements.
+    #[test]
+    fn test_parse_rescue_class_list_ends_at_the_line_break() {
+        let ast = parse_ruby("begin\n  raise Boom\nrescue Boom\n  puts 40\nend");
+        let rc = find_descendant(&ast, "rescue_clause").expect("rescue_clause");
+        let el = find_descendant(rc, "exception_list").expect("exception_list");
+        assert!(tree_has_token_value(el, "Boom"));
+        assert!(!tree_has_token_value(el, "puts"));
+        assert!(find_descendant(rc, "method_call_no_paren").is_some(), "`puts 40` is the body");
+        let ast = parse_ruby("def risky; raise \"x\"; rescue => e; \"rescued\"; end");
+        assert!(find_descendant(&ast, "rescue_clause").is_some());
+    }
+
     #[test]
     fn test_parse_locals_spelled_like_the_lexer_tags() {
         // The line-start tag is `[ line start`, a value no name can spell.

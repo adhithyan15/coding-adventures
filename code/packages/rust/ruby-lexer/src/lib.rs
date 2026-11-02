@@ -31,7 +31,7 @@
 
 use std::collections::VecDeque;
 
-use lexer::token::{Token, TokenType};
+use lexer::token::{Token, TokenType, TOKEN_SYNTHETIC};
 use state_machine::transducer::{EffectfulInput, EffectfulStateMachine};
 
 mod _grammar;
@@ -532,11 +532,6 @@ impl RubyLexer {
         // fused-token shape (notably `end` of a same-line block
         // already in place if relevant).
         self.tag_modifier_keywords();
-        // #18778 — re-tag a `[` that starts a new statement (see
-        // `tag_line_start_brackets`).  Same reason as the modifier pass:
-        // the grammar ignores newlines, so the lexer says where one ends a
-        // statement.  Pre-1.0 Ruby — no era gating.
-        self.tag_line_start_brackets();
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
         }
@@ -552,6 +547,13 @@ impl RubyLexer {
         if era_at_least(&self.era, "2.7") {
             self.mark_numbered_block_params();
         }
+        // #18778 / #18798 — say where a newline (or `;`) ends a statement
+        // (see `mark_statement_ends`).  Same reason as the modifier pass:
+        // the grammar ignores newlines, so the lexer must.  Pre-1.0 Ruby —
+        // no era gating.  It runs LAST, after every fusion, so it sees the
+        // final token shapes: the `-` of a lambda arrow `->` is already
+        // part of a `->` token and is never mistaken for a unary minus.
+        self.mark_statement_ends();
     }
 
     /// Phase 4l — fuse radix-prefixed integer literals emitted by the
@@ -1094,68 +1096,338 @@ impl RubyLexer {
         }
     }
 
-    /// #18778 — re-tag an `[` that opens a new statement.
+    /// #18778 / #18798 — mark where a newline (or a `;`) ends a statement.
     ///
-    /// In Ruby a newline after a complete expression ends the statement, so
-    /// a line that starts with `[` starts a new one with an array literal:
+    /// Ruby ends a statement at a newline that follows a complete
+    /// expression.  `ruby.grammar` ignores newlines — the grammar parser
+    /// steps over every `Newline` token — so on its own it glues the next
+    /// line onto the one before, and some programs print a wrong answer
+    /// with no error at all:
     ///
-    /// ```text
-    /// x = 5
-    /// [1].each { |v| puts v }     # two statements: Ruby prints 1
+    /// | source                      | glued reading          | Ruby reads it as            |
+    /// |-----------------------------|------------------------|-----------------------------|
+    /// | `x = 5` ⏎ `[1].each { … }`  | `x = 5[1].each { … }`  | two statements              |
+    /// | `x = 5` ⏎ `-1` ⏎ `puts x`   | `x = 5 - 1`: prints 4  | `x = 5`, then `-1`: prints 5 |
+    /// | `x = foo` ⏎ `(1)`           | `x = foo(1)`           | `x = foo`, then `(1)`       |
+    /// | `puts` ⏎ `puts 2`           | `puts(puts 2)`         | a blank line, then `2`      |
+    /// | `rescue Boom` ⏎ `puts 40`   | `rescue` + `Boom(puts 40)` | class `Boom`, body `puts 40` |
+    ///
+    /// The grammar is shared by six languages' parsers and only Rust's
+    /// grammar tool has adjacency predicates, so the fix is portable data:
+    /// this pass re-tags or inserts tokens, and the grammar refuses or
+    /// consumes them with plain literals.  The other languages' lexers never
+    /// produce them, so nothing changes there.  Four steps, in order:
+    ///
+    /// 1. [`Self::semicolons_end_lines`] — a `;` between statements becomes
+    ///    a `Newline`, so `def risky; raise "x"; rescue => e; 1; end` lexes
+    ///    as the same program on five lines.
+    /// 2. [`Self::end_rescue_class_lists`] — a `rescue` line with no `=>`
+    ///    gets a `;` after its class list (or after a bare `rescue`).
+    /// 3. [`Self::tag_line_start_tokens`] — a `[`, `(`, `-` or `+` that
+    ///    starts a line after a complete expression is re-tagged.
+    /// 4. [`Self::end_lone_names`] — a name alone on its line, where a
+    ///    statement starts, gets a `;` after it.
+    fn mark_statement_ends(&mut self) {
+        self.semicolons_end_lines();
+        self.end_rescue_class_lists();
+        self.tag_line_start_tokens();
+        self.end_lone_names();
+    }
+
+    /// The `(open, close)` indices of every block-parameter list's `|`
+    /// bars: a `|` right after `{` or `do` opens one, and the next `|`
+    /// closes it (`do |x; y|`, `{ |a, b| … }`).
+    fn block_param_bars(&self) -> Vec<(usize, usize)> {
+        let is_bar = |t: &Token| t.type_ == TokenType::Name && t.value == "|";
+        let mut out = Vec::new();
+        let mut i = 0;
+        while i < self.tokens.len() {
+            let opens = is_bar(&self.tokens[i])
+                && i > 0
+                && match &self.tokens[i - 1] {
+                    t if t.type_ == TokenType::LBrace => true,
+                    t => t.type_ == TokenType::Keyword && t.value == "do",
+                };
+            if opens {
+                if let Some(close) = (i + 1..self.tokens.len()).find(|&k| is_bar(&self.tokens[k])) {
+                    out.push((i, close));
+                    i = close;
+                }
+            }
+            i += 1;
+        }
+        out
+    }
+
+    /// Step 1: a `;` that separates statements is a line break.
+    ///
+    /// Ruby's `;` and a newline both end a statement, and the grammar has
+    /// no statement separator at all (it ignores newlines instead), so a
+    /// `;` used to stop the parse: `x = 1; puts x` was a parse error.  The
+    /// token keeps its `;` value but becomes a `Newline`, which the parser
+    /// steps over and the later steps treat as the end of a line.
+    ///
+    /// The one `;` the grammar does use is kept: the one that starts a
+    /// block's block-local names, `do |x; y|`.
+    fn semicolons_end_lines(&mut self) {
+        let params = self.block_param_bars();
+        for i in 0..self.tokens.len() {
+            if self.tokens[i].type_ == TokenType::Semicolon
+                && !params.iter().any(|&(open, close)| open < i && i < close)
+            {
+                self.tokens[i].type_ = TokenType::Newline;
+            }
+        }
+    }
+
+    /// Insert a synthetic `;` ([`STATEMENT_END`]) right after `tokens[i]`.
+    /// Its type is `Semicolon`, which no grammar rule matches by type; the
+    /// grammar consumes it as the literal `";"` only where a statement or a
+    /// `rescue` class list may end.
+    fn insert_statement_end_after(&mut self, i: usize) {
+        let (line, column) = {
+            let t = &self.tokens[i];
+            (t.line, t.column + t.value.chars().count())
+        };
+        self.tokens.insert(
+            i + 1,
+            Token {
+                type_: TokenType::Semicolon,
+                value: STATEMENT_END.to_string(),
+                line,
+                column,
+                type_name: None,
+                // Not in the source: the grammar parser leaves it out of
+                // every node's span, and `source_spelling` drops it.
+                flags: Some(TOKEN_SYNTHETIC),
+                cv: None,
+            },
+        );
+        if i < self.whitespace_before_token.len() {
+            self.whitespace_before_token.insert(i + 1, false);
+        }
+    }
+
+    /// Step 2: end a `rescue` clause's class list at its line break.
+    ///
+    /// ```ruby
+    /// rescue Boom        # the class list is `Boom` …
+    ///   puts 40          # … and this is the clause's first statement
     /// ```
     ///
-    /// The grammar ignores newlines, so it read `x = 5[1].each …` — an
-    /// index into `5` — and the C backend failed with `undefined method []`.
-    /// Worse, `puts` ⏎ `[7].each …` read as `puts([7].each …)` and printed a
-    /// wrong answer with no error at all.
+    /// The grammar cannot see the newline, so a class list without `=> e`
+    /// used to read `Boom` as a paren-less call: `Boom(puts 40)`.  And a
+    /// bare `rescue` followed by a line holding one name (`rescue` ⏎
+    /// `retry_count` ⏎ …) could read that name as the class.  So when the
+    /// line is `rescue` alone, or `rescue A, B` with nothing after the last
+    /// class, a `;` goes after it; `rescue_clause` consumes it as the end
+    /// of the list.  A comma at the end of a line continues the list onto
+    /// the next one, as in Ruby.  Any other shape (`=> e`, `A::B`, `then`)
+    /// is left as it is.
+    fn end_rescue_class_lists(&mut self) {
+        let ends_line =
+            |t: &Token| matches!(t.type_, TokenType::Newline | TokenType::Eof);
+        let mut i = 0;
+        while i < self.tokens.len() {
+            let is_rescue =
+                self.tokens[i].type_ == TokenType::Keyword && self.tokens[i].value == "rescue";
+            if !is_rescue {
+                i += 1;
+                continue;
+            }
+            // `end_at`: the token the `;` goes after, once the line is known
+            // to end there.
+            let mut end_at = None;
+            match self.tokens.get(i + 1) {
+                Some(t) if ends_line(t) => end_at = Some(i),
+                _ => {
+                    let mut j = i + 1;
+                    while self.tokens.get(j).is_some_and(|t| {
+                        t.type_ == TokenType::Name && is_identifier_like(&t.value)
+                    }) {
+                        match self.tokens.get(j + 1) {
+                            Some(t) if ends_line(t) => {
+                                end_at = Some(j);
+                                break;
+                            }
+                            Some(t) if t.type_ == TokenType::Comma => {
+                                j += 2;
+                                while self.tokens.get(j).is_some_and(|t| t.type_ == TokenType::Newline) {
+                                    j += 1;
+                                }
+                            }
+                            _ => break,
+                        }
+                    }
+                }
+            }
+            if let Some(at) = end_at {
+                self.insert_statement_end_after(at);
+                i = at + 2;
+            } else {
+                i += 1;
+            }
+        }
+    }
+
+    /// Step 3: re-tag a `[`, `(`, `-` or `+` that starts a statement.
+    ///
+    /// Each of these can both start a statement and continue the
+    /// expression before it (`a[0]`, `f(1)`, `a - 1`, `a + 1`).  Ruby
+    /// decides by the newline; here the lexer does:
+    ///
+    /// | token | tag                  | refused by (grammar)                                    | still accepted by          |
+    /// |-------|----------------------|---------------------------------------------------------|----------------------------|
+    /// | `[`   | [`LINE_START_LBRACKET`] | `index_suffix`, a paren-less call's first argument   | `array_literal`            |
+    /// | `(`   | [`LINE_START_LPAREN`]   | a call's argument list (`f(…)`, `.m(…)`, `def f(…)`), a paren-less call's first argument | `( expression )` |
+    /// | `-`   | [`LINE_START_MINUS`]    | binary `-` in `sum`, a paren-less call's first argument | `unary_minus`         |
+    /// | `+`   | [`LINE_START_PLUS`]     | binary `+` in `sum`                                   | `unary_plus`               |
     ///
     /// Trigger (both must hold):
-    /// - the token is `LBracket` `[`, and at least one `Newline` token sits
-    ///   between it and the preceding non-`Newline` token (a newline inside
+    /// - at least one `Newline` token (a line break or a `;`) sits between
+    ///   the token and the preceding non-`Newline` token (a newline inside
     ///   a multi-line string is part of that string, not a `Newline`
     ///   token, so `"a⏎b"[0]` is still an index);
-    /// - that preceding token ends an expression — the same test
-    ///   [`Self::tag_modifier_keywords`] uses.  After `,`, `(`, `[`, an
-    ///   operator or a keyword such as `in`, the statement is not over, so
+    /// - that preceding token ends an expression ([`Self::ends_expression`]).
+    ///   After `,`, `(`, `[`, `=`, an operator or a keyword such as `in`,
+    ///   the statement is not over, so `x = 5 -` ⏎ `1` is still `5 - 1` and
     ///   a multi-line array (`[⏎  [1, 2],⏎  [3, 4]⏎]`) is unaffected.
     ///
-    /// Effect: the token's `value` becomes [`LINE_START_LBRACKET`]; its
-    /// `type_` stays `LBracket`, so `array_literal` (which matches
-    /// `LBRACKET` by type) still accepts it, while `index_suffix` and a
-    /// paren-less call's first argument refuse that value (the grammar's
-    /// `!"[ line start"` lookaheads).
-    fn tag_line_start_brackets(&mut self) {
+    /// The type is kept, so every rule that matches the token by type still
+    /// accepts it; only the grammar's `!"… line start"` lookaheads see the
+    /// difference.  A line that starts with `.` (`.map { … }`) is not
+    /// touched, so a leading-dot method chain still continues the line
+    /// before, as in Ruby.
+    fn tag_line_start_tokens(&mut self) {
         let mut prev: Option<usize> = None;
         let mut newline_since_prev = false;
         for i in 0..self.tokens.len() {
-            match self.tokens[i].type_ {
-                TokenType::Newline => {
-                    newline_since_prev = true;
-                    continue;
+            if self.tokens[i].type_ == TokenType::Newline {
+                newline_since_prev = true;
+                continue;
+            }
+            if newline_since_prev && prev.is_some_and(|j| self.ends_expression(j)) {
+                let tag = match (self.tokens[i].type_, self.tokens[i].value.as_str()) {
+                    (TokenType::LBracket, "[") => Some(LINE_START_LBRACKET),
+                    (TokenType::LParen, "(") => Some(LINE_START_LPAREN),
+                    (TokenType::Minus, "-") => Some(LINE_START_MINUS),
+                    (TokenType::Plus, "+") => Some(LINE_START_PLUS),
+                    _ => None,
+                };
+                if let Some(tag) = tag {
+                    self.tokens[i].value = tag.to_string();
                 }
-                TokenType::LBracket
-                    if newline_since_prev && prev.is_some_and(|j| self.ends_expression(j)) =>
-                {
-                    self.tokens[i].value = LINE_START_LBRACKET.to_string();
-                }
-                _ => {}
             }
             prev = Some(i);
             newline_since_prev = false;
         }
     }
 
+    /// Step 4: end a statement that is one name alone on its line.
+    ///
+    /// ```ruby
+    /// puts          # a call with no arguments: prints a blank line
+    /// puts 2
+    /// ```
+    ///
+    /// A paren-less call's arguments start on the callee's own line, but
+    /// `method_call_no_paren` cannot see the line break, so this read as
+    /// `puts(puts 2)`.  Any statement that is a lone name has the same
+    /// problem (`foo` ⏎ `bar` was `foo(bar)`), so a `;` goes after the
+    /// name, `expression_stmt` consumes it, and a paren-less call cannot
+    /// start with it.
+    ///
+    /// The name must be where a statement starts: first on its line, after
+    /// a token that ends an expression ([`Self::ends_expression`]), a `;`
+    /// from step 2, the `|` that closes block parameters, `{`, or one of
+    /// `do`, `then`, `else`, `begin`, `ensure`.  After `,`, `(`, `=` or an
+    /// operator it is the rest of an expression and is left alone.  No `;`
+    /// goes in when the next line cannot be an argument anyway: it starts
+    /// with `end`, another clause keyword, a closing bracket, or a `.` that
+    /// continues a method chain.
+    fn end_lone_names(&mut self) {
+        let closing_bars: Vec<usize> =
+            self.block_param_bars().into_iter().map(|(_, close)| close).collect();
+        // Find them all first, then insert from the back, so no index moves
+        // under the search.  (Whether a name is lone never depends on an
+        // earlier insertion: one would only replace a name that already
+        // ends an expression with a `;`, and both start a statement.)
+        let lone: Vec<usize> = (0..self.tokens.len())
+            .filter(|&i| self.is_lone_name(i, &closing_bars))
+            .collect();
+        for &i in lone.iter().rev() {
+            self.insert_statement_end_after(i);
+        }
+    }
+
+    /// Whether `tokens[i]` is a name alone on its line where a statement
+    /// starts, followed by a line that could otherwise be read as its
+    /// argument (see [`Self::end_lone_names`]).  `closing_bars` holds the
+    /// indices of the `|` that close block parameters.
+    fn is_lone_name(&self, i: usize, closing_bars: &[usize]) -> bool {
+        let t = &self.tokens[i];
+        if t.type_ != TokenType::Name || !is_identifier_like(&t.value) {
+            return false;
+        }
+        if self.tokens.get(i + 1).map(|t| t.type_) != Some(TokenType::Newline) {
+            return false;
+        }
+        // The token before: on an earlier line, and where a statement ends.
+        let mut p = i;
+        while p > 0 && self.tokens[p - 1].type_ == TokenType::Newline {
+            p -= 1;
+        }
+        if p == i && i > 0 {
+            return false; // something precedes the name on its own line
+        }
+        let statement_starts = p == 0 || {
+            let prev = p - 1;
+            let pt = &self.tokens[prev];
+            self.ends_expression(prev)
+                || pt.type_ == TokenType::Semicolon
+                || pt.type_ == TokenType::LBrace
+                || (pt.type_ == TokenType::Keyword
+                    && matches!(pt.value.as_str(), "do" | "then" | "else" | "begin" | "ensure"))
+                || closing_bars.contains(&prev)
+        };
+        if !statement_starts {
+            return false;
+        }
+        // The token after: one that could start an argument.
+        let next = (i + 1..self.tokens.len()).find(|&k| self.tokens[k].type_ != TokenType::Newline);
+        let Some(next) = next else { return false };
+        let nt = &self.tokens[next];
+        match nt.type_ {
+            TokenType::Eof
+            | TokenType::RParen
+            | TokenType::RBracket
+            | TokenType::RBrace
+            | TokenType::Dot => false,
+            TokenType::Keyword => !matches!(
+                nt.value.as_str(),
+                "end" | "else" | "elsif" | "when" | "in" | "rescue" | "ensure" | "then" | "do"
+            ),
+            TokenType::Name => nt.value != "&.",
+            _ => true,
+        }
+    }
+
     /// Whether `tokens[j]` can end an expression: a literal, a name, a
     /// closing bracket, or one of the value keywords.  Shared by the
-    /// modifier-keyword and line-start-bracket passes.
+    /// modifier-keyword pass and [`Self::mark_statement_ends`].
+    ///
+    /// The lexer leaves most operators (`<`, `&&`, `=>`, `?`, `|`, …) on
+    /// `Name` tokens, so a `Name` counts only when it spells an identifier
+    /// or a sigil variable (`x`, `Foo`, `empty?`, `@a`, `$g`).  `x = a &&`
+    /// ⏎ `-b` is one expression, as in Ruby.
     fn ends_expression(&self, j: usize) -> bool {
         match self.tokens[j].type_ {
             TokenType::Number
             | TokenType::String
-            | TokenType::Name
             | TokenType::RParen
             | TokenType::RBracket
             | TokenType::RBrace => true,
+            TokenType::Name => is_identifier_like(&self.tokens[j].value),
             TokenType::Keyword => matches!(
                 self.tokens[j].value.as_str(),
                 "nil" | "true" | "false" | "self" | "end"
@@ -2213,7 +2485,7 @@ fn is_ruby_keyword(s: &str) -> bool {
 // `ruby-parser` keeps working without changes.
 // ---------------------------------------------------------------------------
 
-/// #18778 — the value `tag_line_start_brackets` gives a `[` that opens a
+/// #18778 — the value `tag_line_start_tokens` gives a `[` that opens a
 /// new statement (its type stays `LBracket`).  The grammar refuses it with
 /// the literal lookahead `!"[ line start"`.  A grammar literal matches a
 /// token's value whatever the token's type, so the tag must be a value no
@@ -2224,6 +2496,61 @@ fn is_ruby_keyword(s: &str) -> bool {
 /// a `String` token, which is what makes `puts "[ line start"` safe here.
 /// The other languages' grammar parsers have no such guard (#18798).
 pub const LINE_START_LBRACKET: &str = "[ line start";
+
+/// #18798 — the value `tag_line_start_tokens` gives a `(` that opens a new
+/// statement (its type stays `LParen`): `x = foo` ⏎ `(1)` is `x = foo`, then
+/// `(1)`, not `x = foo(1)`.  Spelled with a space for the reason given at
+/// [`LINE_START_LBRACKET`].
+pub const LINE_START_LPAREN: &str = "( line start";
+
+/// #18798 — the value `tag_line_start_tokens` gives a `-` that starts a new
+/// statement (its type stays `Minus`, so `unary_minus` still takes it):
+/// `x = 5` ⏎ `-1` is `x = 5`, then `-1`, not `x = 5 - 1`.
+pub const LINE_START_MINUS: &str = "- line start";
+
+/// #18798 — the value `tag_line_start_tokens` gives a `+` that starts a new
+/// statement (its type stays `Plus`, so `unary_plus` still takes it).
+pub const LINE_START_PLUS: &str = "+ line start";
+
+/// #18798 — the synthetic token `mark_statement_ends` inserts where a
+/// newline ends a statement the grammar would otherwise continue: after a
+/// name alone on its line (`puts` ⏎ `puts 2`) and after a `rescue` line's
+/// class list (`rescue Boom` ⏎ `puts 40`).  It is a `Semicolon` token
+/// spelled `;`, because a `;` is exactly what Ruby would accept there: the
+/// grammar consumes it as the literal `";"` (`expression_stmt`,
+/// `rescue_clause`), and a source `;` means the same thing to the other
+/// languages' parsers, which never produce the synthetic one.
+pub const STATEMENT_END: &str = ";";
+
+/// #18798 — what the source wrote for a token, undoing
+/// `mark_statement_ends`: `None` for a synthetic statement end (nothing was
+/// written there), the bare `[`, `(`, `-` or `+` for a line-start tag, and
+/// the token's own value otherwise (a `;` that became a `Newline` keeps the
+/// value `;`).  For a tool that compares this lexer's output with the source
+/// or with another lexer.
+pub fn source_spelling(token: &Token) -> Option<&str> {
+    if token.flags.unwrap_or(0) & TOKEN_SYNTHETIC != 0 {
+        return None;
+    }
+    Some(match token.value.as_str() {
+        LINE_START_LBRACKET => "[",
+        LINE_START_LPAREN => "(",
+        LINE_START_MINUS => "-",
+        LINE_START_PLUS => "+",
+        other => other,
+    })
+}
+
+/// Whether a `Name` token's value spells an identifier or a sigil variable
+/// (`x`, `Foo`, `empty?`, `save!`, `@a`, `@@c`, `$g`, `_1`) rather than one
+/// of the operators the lexer leaves on `Name` tokens (`<`, `&&`, `=>`,
+/// `?`, `|`, `..`, `->`, `&.`).
+fn is_identifier_like(value: &str) -> bool {
+    value
+        .chars()
+        .next()
+        .is_some_and(|c| c.is_alphanumeric() || matches!(c, '_' | '@' | '$'))
+}
 
 /// Tokenize Ruby source (Phase-1 = Ruby 1.8 lexer).  Returns the
 /// EOF-terminated token list.  Diagnostics are dropped silently;
@@ -2897,12 +3224,16 @@ mod tests {
 
     #[test]
     fn newline_is_significant() {
+        // #18798 — `a` alone on its line, before a line that could be its
+        // argument, also gets a `;` after it (`end_lone_names`): `a` ⏎ `b`
+        // is two statements, not the call `a(b)`.
         let toks = tokenize_ruby("a\nb");
         let p = pairs(&toks);
         assert_eq!(
             p,
             vec![
                 (TokenType::Name, "a"),
+                (TokenType::Semicolon, STATEMENT_END),
                 (TokenType::Newline, "\n"),
                 (TokenType::Name, "b"),
             ]
@@ -4684,6 +5015,164 @@ mod tests {
                 bracket_values(src)
             );
         }
+    }
+
+    // -----------------------------------------------------------------
+    // #18798 — `mark_statement_ends`: the line-start `(`, `-` and `+`
+    // tags, the synthetic `;` after a lone name and after a `rescue`
+    // class list, and `;` as a line break.
+    // -----------------------------------------------------------------
+
+    /// `(type, value)` of every token but `Newline`/`Eof`, era 3.0.
+    fn significant(src: &str) -> Vec<(TokenType, String)> {
+        tokenize_ruby_for_version(src, "3.0")
+            .unwrap()
+            .into_iter()
+            .filter(|t| !matches!(t.type_, TokenType::Newline | TokenType::Eof))
+            .map(|t| (t.type_, t.value))
+            .collect()
+    }
+
+    #[test]
+    fn paren_and_signs_starting_a_statement_are_retagged() {
+        // Type kept (so `( expression )`, `unary_minus` and `unary_plus`
+        // still take them); value tagged.  After a number, a name, `end`,
+        // and a `;`, which is a line break too.
+        for (src, ty, tag) in [
+            ("x = foo\n(1)", TokenType::LParen, LINE_START_LPAREN),
+            ("x = 5\n-1", TokenType::Minus, LINE_START_MINUS),
+            ("x = 5\n- 1", TokenType::Minus, LINE_START_MINUS),
+            ("x = 5\n+1", TokenType::Plus, LINE_START_PLUS),
+            ("if a\n  b\nend\n-1", TokenType::Minus, LINE_START_MINUS),
+            ("x = 5; -1", TokenType::Minus, LINE_START_MINUS),
+        ] {
+            assert!(
+                significant(src).contains(&(ty, tag.to_string())),
+                "{src:?}: {:?}",
+                significant(src)
+            );
+        }
+    }
+
+    #[test]
+    fn paren_and_signs_that_continue_an_expression_are_left_alone() {
+        // On the same line; after an operator, `=`, `(` or `,` that ends
+        // the line before; and after `&&`, which the lexer keeps on a
+        // `Name` token but which does not end an expression.
+        for src in [
+            "f(1) - g(2) + h",
+            "x = 5 -\n1",
+            "x = 5 +\n1",
+            "x =\n-1",
+            "f(\n(1))",
+            "f(1,\n-2)",
+            "x = a &&\n-b",
+            "x = a ||\n(b)",
+        ] {
+            assert!(
+                !significant(src).iter().any(|(_, v)| v.ends_with(" line start")),
+                "{src:?}: {:?}",
+                significant(src)
+            );
+        }
+        // A lambda arrow at the start of a line is not a minus.
+        assert!(significant("x = 1\n->(a) { a }")
+            .iter()
+            .any(|(t, v)| *t == TokenType::Name && v == "->"));
+    }
+
+    #[test]
+    fn a_name_alone_on_its_line_ends_its_statement() {
+        let ends = |src: &str| {
+            significant(src)
+                .iter()
+                .filter(|(t, v)| *t == TokenType::Semicolon && v == STATEMENT_END)
+                .count()
+        };
+        // At the top, after an expression, after `do |x|`, `{`, `begin`,
+        // `else` and a `;` (a line break here).
+        for src in [
+            "puts\nputs 2",
+            "x = 1\nfoo\nbar",
+            "[1].each do |x|\n  puts\n  puts x\nend",
+            "f {\n  g\n  h 1\n}",
+            "begin\n  g\n  h 1\nend",
+            "if a\n  1\nelse\n  g\n  h 1\nend",
+            "x = 1; g; h 1",
+        ] {
+            assert!(ends(src) >= 1, "{src:?}: {:?}", significant(src));
+        }
+        // Not when something precedes it on its line, when the line before
+        // ends in an operator, `,` or `(`, or when the next line cannot be
+        // an argument: `end`, a closing bracket, a leading `.`, the end.
+        for src in [
+            "puts 1\nputs 2",
+            "x = 1 +\n  y\nz 1",
+            "f(1,\n  y\n)",
+            "def f\n  x\nend",
+            "x = [1]\n  .first",
+            "x = a\n  &.b",
+            "foo",
+            "f {\n  g\n}",
+        ] {
+            assert_eq!(ends(src), 0, "{src:?}: {:?}", significant(src));
+        }
+    }
+
+    #[test]
+    fn a_rescue_line_without_a_binding_ends_with_a_semicolon() {
+        // After the class list, a bare `rescue`, and a list continued after
+        // a trailing comma; the `;` is synthetic (not in the source).
+        for (src, before) in [
+            ("begin\nrescue Boom\n  puts 40\nend", "Boom"),
+            ("begin\nrescue\n  note\nend", "rescue"),
+            ("begin\nrescue A,\n  B\n  puts 1\nend", "B"),
+            ("begin\nrescue A, B; puts 1\nend", "B"),
+        ] {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            let at = toks
+                .iter()
+                .position(|t| t.type_ == TokenType::Semicolon)
+                .unwrap_or_else(|| panic!("{src:?}: {toks:?}"));
+            assert_eq!(toks[at - 1].value, before, "{src:?}: {toks:?}");
+            assert_eq!(source_spelling(&toks[at]), None);
+        }
+        // A binding, or a shape the grammar does not take, is left alone.
+        for src in ["begin\nrescue Boom => e\n  1\nend", "begin\nrescue => e\n  1\nend", "begin\nrescue A::B\n  1\nend"] {
+            assert!(
+                !tokenize_ruby_for_version(src, "3.0")
+                    .unwrap()
+                    .iter()
+                    .any(|t| t.type_ == TokenType::Semicolon),
+                "{src:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_semicolon_between_statements_is_a_line_break() {
+        let toks = tokenize_ruby_for_version("x = 1; y = 2", "3.0").unwrap();
+        assert!(toks.iter().any(|t| t.type_ == TokenType::Newline && t.value == ";"), "{toks:?}");
+        assert!(!toks.iter().any(|t| t.type_ == TokenType::Semicolon), "{toks:?}");
+        // The one that starts block-local names stays a `Semicolon`.
+        for src in ["f do |x; y|\nend", "f { |a, b; c| a }"] {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            assert!(toks.iter().any(|t| t.type_ == TokenType::Semicolon && t.value == ";"), "{src:?}: {toks:?}");
+        }
+    }
+
+    #[test]
+    fn source_spelling_undoes_the_tags() {
+        let spelled: Vec<String> = tokenize_ruby_for_version("x = foo\n(1)\n-2\n+3\n[4]\nputs\nputs 5; 6", "3.0")
+            .unwrap()
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof && (t.type_ != TokenType::Newline || t.value == ";"))
+            .filter_map(|t| source_spelling(t).map(str::to_string))
+            .collect();
+        assert_eq!(
+            spelled,
+            ["x", "=", "foo", "(", "1", ")", "-", "2", "+", "3", "[", "4", "]", "puts", "puts", "5", ";", "6"]
+        );
     }
 
     #[test]

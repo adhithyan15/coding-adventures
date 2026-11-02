@@ -25,9 +25,13 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | for_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | index_assignment | assignment | defined_expression | method_with_block | method_call !PLUS !MINUS !STAR !SLASH !"<<" !"==" !"!=" !"<=" !">=" !"<" !">" !"&&" !"||" !"and" !"or" !"..." !".." !"?" | method_call_no_paren | expression_stmt ;
+statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | for_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | index_assignment | assignment | defined_expression | method_with_block | method_call !"+" !"-" !STAR !SLASH !"<<" !"==" !"!=" !"<=" !">=" !"<" !">" !"&&" !"||" !"and" !"or" !"..." !".." !"?" | method_call_no_paren | expression_stmt ;
 # #18778 — a parenthesised call is a whole statement only when no binary
-# operator follows it (the `!…` lookaheads after `method_call`).  `statement`
+# operator follows it (the `!…` lookaheads after `method_call`).
+# #18798 — `+` and `-` are refused by VALUE (`!"+" !"-"`), not by type: a
+# `+`/`-` that starts the next line keeps its PLUS/MINUS type but carries
+# the value `+ line start`/`- line start` (ruby-lexer), and is a new
+# statement, so `f(1).g` ⏎ `-1` is still the whole call `f(1).g`.  `statement`
 # tries `method_call` before `expression_stmt`, and a PEG choice never
 # backtracks into an alternative that already matched: `f() + f` matched
 # `f()` as the statement and then failed at `+`, both at the start of a
@@ -117,7 +121,7 @@ mlhs_target  = [ "*" ] NAME ;
 # the start of a line / after a semicolon / after a non-expression-ending
 # token.  This split sidesteps the grammar's newline-insensitive default
 # mode (modifier syntax is intrinsically a same-line construct in Ruby).
-modifier_statement = ( assignment | method_call_no_paren | method_call !PLUS !MINUS !STAR !SLASH !"<<" !"==" !"!=" !"<=" !">=" !"<" !">" !"&&" !"||" !"and" !"or" !"..." !".." !"?" | expression_stmt ) ( "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier" ) expression ;
+modifier_statement = ( assignment | method_call_no_paren | method_call !"+" !"-" !STAR !SLASH !"<<" !"==" !"!=" !"<=" !">=" !"<" !">" !"&&" !"||" !"and" !"or" !"..." !".." !"?" | expression_stmt ) ( "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier" ) expression ;
 # Phase 16e (FC) — method-level rescue/ensure: a `def` body may carry
 # trailing `rescue`/`ensure` clauses WITHOUT an explicit `begin` (the
 # whole method body is the protected region).  The body repetition gets
@@ -141,7 +145,7 @@ modifier_statement = ( assignment | method_call_no_paren | method_call !PLUS !MI
 # byte-for-byte as before (the optional group cleanly matches nothing when
 # the token after the method name is `(`, `=`, a newline, or a body
 # statement — none of which is a `.`).
-def_statement = "def" [ def_receiver ] NAME [ LPAREN [ params ] RPAREN ] { !"rescue" !"ensure" !"end" statement } { rescue_clause } [ ensure_clause ] "end" ;
+def_statement = "def" [ def_receiver ] NAME [ !"( line start" LPAREN [ params ] RPAREN ] { !"rescue" !"ensure" !"end" statement } { rescue_clause } [ ensure_clause ] "end" ;
 # The receiver prefix of a class/singleton method definition: `self.` or
 # `Const.` (or `name.`).  `singleton_receiver` (Phase 14e — `self | NAME`)
 # is reused verbatim so the `self`/`NAME` choice stays in one place.  The
@@ -182,7 +186,7 @@ class_statement  = "class" "<<" singleton_receiver { !"end" statement } "end"
 singleton_receiver = "self" | NAME ;
 module_statement = "module" NAME { !"end" statement } "end" ;
 # Phase 6g — blocks `do … end` and brace-blocks `method { … }`.
-method_with_block = ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression } ] RPAREN ] block ;
+method_with_block = ( NAME | KEYWORD ) [ !"( line start" LPAREN [ expression { COMMA expression } ] RPAREN ] block ;
 block        = do_block | brace_block ;
 do_block     = "do" [ block_params ] { !"end" statement } "end" ;
 brace_block  = LBRACE [ block_params ] { statement } RBRACE ;
@@ -473,7 +477,13 @@ begin_statement = "begin" { !"rescue" !"ensure" !"end" statement } { rescue_clau
 # a `Name`-typed token, so `exception_list` could otherwise read `=>` itself
 # as a class name.  Before this, `rescue => e` matched the bare `rescue` and
 # left `=> e` to be read as a paren-less call to a method named `=>`.
-rescue_clause   = "rescue" [ "=>" NAME | exception_list "=>" NAME ] { !"rescue" !"ensure" !"end" statement } ;
+# #18798 — the class list ends at the line break: `rescue Boom` ⏎ `puts 40`
+# rescues `Boom` and runs `puts 40`.  The grammar cannot see the newline, so
+# it read `Boom(puts 40)` as the clause's first statement.  ruby-lexer puts
+# a `;` after a `rescue` line that has no `=>` (after its last class, or
+# after a bare `rescue`), and the clause consumes it.  A source `;` there
+# means the same in Ruby (`rescue Boom; puts 40`).
+rescue_clause   = "rescue" [ "=>" NAME | exception_list ( "=>" NAME | ";" ) | ";" ] { !"rescue" !"ensure" !"end" statement } ;
 exception_list  = NAME { COMMA NAME } ;
 ensure_clause   = "ensure" { !"end" statement } ;
 # Phase 6p — compound assignment (`x += 1`, `x ||= 1`, etc.).
@@ -566,8 +576,12 @@ rightward_assignment = expression "=>" NAME ;
 # form now routes through `factor`'s `super_expr`; the guard hands the
 # `super` token off to `expression_stmt → … → super_expr` instead.  Every
 # other keyword-led call (`puts(1)`, value-keyword receivers) is unaffected.
-method_call  = ( NAME | !"super" KEYWORD ) LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
-dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] [ block ] ;
+# #18798 — a call's `(` must be on the callee's line: `x = foo` ⏎ `(1)` is
+# `x = foo`, then `(1)`.  ruby-lexer tags a `(` that starts a statement
+# `( line start` (still an LPAREN), and every argument list here, in
+# `dot_call`, `method_with_block` and a `def` header refuses it.
+method_call  = ( NAME | !"super" KEYWORD ) !"( line start" LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
+dot_call     = "." ( NAME | KEYWORD ) [ !"( line start" LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] [ block ] ;
 # Phase 15d (FC) — scope-resolution operator `Foo::Bar` (and chains
 # `A::B::C`).  The lexer emits `::` as a `Colon` token whose VALUE is
 # "::", so the grammar literal `"::"` matches it by value.  A
@@ -678,10 +692,17 @@ call_arg     = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
 # would otherwise mis-parse as a paren-less call to `a` with `<<` consumed
 # as the FIRST "argument", the exact bug this whole guard list exists to
 # prevent.)
+#
+# #18798 — nor may the first argument start on the next line: the `(`,
+# `-` and `+` line-start tags join `[ line start` (see `index_suffix`).  A
+# name alone on its line is followed by a `;` from ruby-lexer instead, which
+# no expression starts with, so `puts` ⏎ `puts 2` is two statements;
+# `expression_stmt` consumes that `;`.
 method_call_no_paren = ( NAME | !"super" KEYWORD )
     !"<" !">" !"<=" !">=" !"!=" !"&&" !"||" !"<<" !"[ line start"
+    !"( line start" !"- line start" !"+ line start"
     expression { COMMA expression } ;
-expression_stmt = expression ;
+expression_stmt = expression [ ";" ] ;
 # Phase 6i — comparison operators at the top of the precedence pyramid.
 #
 # Precedence (lowest to highest):
@@ -817,7 +838,11 @@ logical_not  = { ( "!" | "not" ) } comparison ;
 # `comparison` uses just below.
 comparison   = shift { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) shift } ;
 shift        = sum { "<<" sum } ;
-sum          = term { ( PLUS | MINUS ) term } ;
+# #18798 — a `+`/`-` that starts a line after a complete expression starts
+# a new statement (`x = 5` ⏎ `-1` leaves `x` at 5).  ruby-lexer tags it
+# `+ line start`/`- line start`, so it is never a binary operator here; its
+# type is unchanged, so `unary_minus`/`unary_plus` take it.
+sum          = term { !"- line start" !"+ line start" ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
 # Phase 6k — unary minus.  New `factor` alternative AFTER literals/names
 # so they win first.  Right-recursive: `--5` parses fine.  Precedence:
@@ -916,7 +941,7 @@ super_expr   = "super" [ super_args ] ;
 # other languages' parsers compare the value alone, so for them
 # `puts "[ line start"` does not parse (as `puts "<"` already does not; #18798).
 index_suffix = !"[ line start" LBRACKET expression RBRACKET ;
-factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution | index_suffix } ;
+factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus | unary_plus ) { dot_call | scope_resolution | index_suffix } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
 #
 # Ruby 1.9+ shorthand for creating a `Proc`/`Lambda`.  The parameter
@@ -937,6 +962,13 @@ factor       = ( defined_expression | lambda_literal | super_expr | method_call 
 # downstream emitters a single closure-construction shape.
 lambda_literal = "->" [ LPAREN [ params ] RPAREN ] block ;
 unary_minus  = MINUS factor ;
+# #18798 — unary `+x` is `x` (Ruby's `+@` returns a number unchanged).  It
+# exists only so that a line starting with `+` (`x = 5` ⏎ `+1`) parses as
+# its own statement, so it takes only the tagged `+ line start` token.  An
+# untagged `+` stays binary everywhere: `super + 1` and `yield + 1` must not
+# become `super(+1)` / `yield(+1)`, whose argument lists start with any
+# expression.
+unary_plus   = "+ line start" factor ;
 # Phase 23b — Ruby `defined?` operator.  `defined?(expr)` / `defined? expr`
 # returns a description string of the operand (or nil if undefined); the
 # operand is never raised on.  The lexer emits `defined?` as a single

@@ -47,8 +47,8 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "method_with_block" },
       { type: "sequence", elements: [
         { type: "rule_reference", name: "method_call" },
-        { type: "negative_lookahead", element: { type: "token_reference", name: "PLUS" } },
-        { type: "negative_lookahead", element: { type: "token_reference", name: "MINUS" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "+" } },
+        { type: "negative_lookahead", element: { type: "literal", value: "-" } },
         { type: "negative_lookahead", element: { type: "token_reference", name: "STAR" } },
         { type: "negative_lookahead", element: { type: "token_reference", name: "SLASH" } },
         { type: "negative_lookahead", element: { type: "literal", value: "<<" } },
@@ -88,7 +88,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "expression" },
         ] } },
     ] },
-    lineNumber: 83,
+    lineNumber: 87,
   },
   {
     name: "mlhs_target",
@@ -96,7 +96,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "optional", element: { type: "literal", value: "*" } },
       { type: "token_reference", name: "NAME" },
     ] },
-    lineNumber: 84,
+    lineNumber: 88,
   },
   {
     name: "modifier_statement",
@@ -106,8 +106,8 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "method_call_no_paren" },
           { type: "sequence", elements: [
             { type: "rule_reference", name: "method_call" },
-            { type: "negative_lookahead", element: { type: "token_reference", name: "PLUS" } },
-            { type: "negative_lookahead", element: { type: "token_reference", name: "MINUS" } },
+            { type: "negative_lookahead", element: { type: "literal", value: "+" } },
+            { type: "negative_lookahead", element: { type: "literal", value: "-" } },
             { type: "negative_lookahead", element: { type: "token_reference", name: "STAR" } },
             { type: "negative_lookahead", element: { type: "token_reference", name: "SLASH" } },
             { type: "negative_lookahead", element: { type: "literal", value: "<<" } },
@@ -135,7 +135,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "rule_reference", name: "expression" },
     ] },
-    lineNumber: 120,
+    lineNumber: 124,
   },
   {
     name: "def_statement",
@@ -144,6 +144,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "optional", element: { type: "rule_reference", name: "def_receiver" } },
       { type: "token_reference", name: "NAME" },
       { type: "optional", element: { type: "sequence", elements: [
+          { type: "negative_lookahead", element: { type: "literal", value: "( line start" } },
           { type: "token_reference", name: "LPAREN" },
           { type: "optional", element: { type: "rule_reference", name: "params" } },
           { type: "token_reference", name: "RPAREN" },
@@ -158,7 +159,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "optional", element: { type: "rule_reference", name: "ensure_clause" } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 144,
+    lineNumber: 148,
   },
   {
     name: "def_receiver",
@@ -166,7 +167,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "singleton_receiver" },
       { type: "literal", value: "." },
     ] },
-    lineNumber: 150,
+    lineNumber: 154,
   },
   {
     name: "endless_def_statement",
@@ -182,7 +183,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "EQUALS" },
       { type: "rule_reference", name: "expression" },
     ] },
-    lineNumber: 159,
+    lineNumber: 163,
   },
   {
     name: "class_statement",
@@ -211,7 +212,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "literal", value: "end" },
       ] },
     ] },
-    lineNumber: 180,
+    lineNumber: 184,
   },
   {
     name: "singleton_receiver",
@@ -219,7 +220,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "self" },
       { type: "token_reference", name: "NAME" },
     ] },
-    lineNumber: 182,
+    lineNumber: 186,
   },
   {
     name: "module_statement",
@@ -232,7 +233,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 183,
+    lineNumber: 187,
   },
   {
     name: "method_with_block",
@@ -242,6 +243,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "token_reference", name: "KEYWORD" },
         ] } },
       { type: "optional", element: { type: "sequence", elements: [
+          { type: "negative_lookahead", element: { type: "literal", value: "( line start" } },
           { type: "token_reference", name: "LPAREN" },
           { type: "optional", element: { type: "sequence", elements: [
               { type: "rule_reference", name: "expression" },
@@ -254,7 +256,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "rule_reference", name: "block" },
     ] },
-    lineNumber: 185,
+    lineNumber: 189,
   },
   {
     name: "block",
@@ -262,7 +264,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "do_block" },
       { type: "rule_reference", name: "brace_block" },
     ] },
-    lineNumber: 186,
+    lineNumber: 190,
   },
   {
     name: "do_block",
@@ -275,7 +277,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 187,
+    lineNumber: 191,
   },
   {
     name: "brace_block",
@@ -285,7 +287,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "repetition", element: { type: "rule_reference", name: "statement" } },
       { type: "token_reference", name: "RBRACE" },
     ] },
-    lineNumber: 188,
+    lineNumber: 192,
   },
   {
     name: "block_params",
@@ -306,7 +308,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "literal", value: "|" },
     ] },
-    lineNumber: 198,
+    lineNumber: 202,
   },
   {
     name: "return_statement",
@@ -314,7 +316,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "return" },
       { type: "optional", element: { type: "rule_reference", name: "expression" } },
     ] },
-    lineNumber: 200,
+    lineNumber: 204,
   },
   {
     name: "break_statement",
@@ -322,7 +324,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "break" },
       { type: "optional", element: { type: "rule_reference", name: "expression" } },
     ] },
-    lineNumber: 201,
+    lineNumber: 205,
   },
   {
     name: "next_statement",
@@ -330,17 +332,17 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "next" },
       { type: "optional", element: { type: "rule_reference", name: "expression" } },
     ] },
-    lineNumber: 202,
+    lineNumber: 206,
   },
   {
     name: "redo_statement",
     body: { type: "literal", value: "redo" },
-    lineNumber: 206,
+    lineNumber: 210,
   },
   {
     name: "retry_statement",
     body: { type: "literal", value: "retry" },
-    lineNumber: 210,
+    lineNumber: 214,
   },
   {
     name: "alias_statement",
@@ -349,7 +351,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "NAME" },
       { type: "token_reference", name: "NAME" },
     ] },
-    lineNumber: 221,
+    lineNumber: 225,
   },
   {
     name: "undef_statement",
@@ -357,7 +359,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "undef" },
       { type: "token_reference", name: "NAME" },
     ] },
-    lineNumber: 233,
+    lineNumber: 237,
   },
   {
     name: "yield_statement",
@@ -365,7 +367,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "yield" },
       { type: "optional", element: { type: "rule_reference", name: "yield_args" } },
     ] },
-    lineNumber: 255,
+    lineNumber: 259,
   },
   {
     name: "yield_args",
@@ -389,7 +391,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           ] } },
       ] },
     ] },
-    lineNumber: 256,
+    lineNumber: 260,
   },
   {
     name: "super_args",
@@ -413,7 +415,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           ] } },
       ] },
     ] },
-    lineNumber: 283,
+    lineNumber: 287,
   },
   {
     name: "params",
@@ -427,7 +429,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           ] } },
       ] },
     ] },
-    lineNumber: 312,
+    lineNumber: 316,
   },
   {
     name: "param",
@@ -448,7 +450,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           ] },
         ] } },
     ] },
-    lineNumber: 357,
+    lineNumber: 361,
   },
   {
     name: "if_statement",
@@ -465,7 +467,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "optional", element: { type: "rule_reference", name: "else_clause" } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 358,
+    lineNumber: 362,
   },
   {
     name: "elsif_clause",
@@ -479,7 +481,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "statement" },
         ] } },
     ] },
-    lineNumber: 359,
+    lineNumber: 363,
   },
   {
     name: "else_clause",
@@ -490,7 +492,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "statement" },
         ] } },
     ] },
-    lineNumber: 360,
+    lineNumber: 364,
   },
   {
     name: "unless_statement",
@@ -505,7 +507,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "optional", element: { type: "rule_reference", name: "else_clause" } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 361,
+    lineNumber: 365,
   },
   {
     name: "while_statement",
@@ -518,7 +520,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 362,
+    lineNumber: 366,
   },
   {
     name: "until_statement",
@@ -531,7 +533,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 363,
+    lineNumber: 367,
   },
   {
     name: "for_statement",
@@ -547,7 +549,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 371,
+    lineNumber: 375,
   },
   {
     name: "case_statement",
@@ -561,7 +563,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "optional", element: { type: "rule_reference", name: "else_clause" } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 394,
+    lineNumber: 398,
   },
   {
     name: "when_clause",
@@ -580,7 +582,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "statement" },
         ] } },
     ] },
-    lineNumber: 395,
+    lineNumber: 399,
   },
   {
     name: "in_clause",
@@ -595,7 +597,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "statement" },
         ] } },
     ] },
-    lineNumber: 417,
+    lineNumber: 421,
   },
   {
     name: "pattern",
@@ -607,7 +609,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "literal_pattern" },
       { type: "rule_reference", name: "binding_pattern" },
     ] },
-    lineNumber: 418,
+    lineNumber: 422,
   },
   {
     name: "literal_pattern",
@@ -617,12 +619,12 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "symbol_literal" },
       { type: "token_reference", name: "KEYWORD" },
     ] },
-    lineNumber: 419,
+    lineNumber: 423,
   },
   {
     name: "binding_pattern",
     body: { type: "token_reference", name: "NAME" },
-    lineNumber: 420,
+    lineNumber: 424,
   },
   {
     name: "array_pattern",
@@ -643,7 +645,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RBRACKET" },
     ] },
-    lineNumber: 421,
+    lineNumber: 425,
   },
   {
     name: "hash_pattern",
@@ -658,7 +660,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RBRACE" },
     ] },
-    lineNumber: 422,
+    lineNumber: 426,
   },
   {
     name: "hash_pattern_pair",
@@ -667,7 +669,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "COLON" },
       { type: "optional", element: { type: "rule_reference", name: "pattern" } },
     ] },
-    lineNumber: 423,
+    lineNumber: 427,
   },
   {
     name: "splat_pattern",
@@ -675,7 +677,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "*" },
       { type: "optional", element: { type: "token_reference", name: "NAME" } },
     ] },
-    lineNumber: 430,
+    lineNumber: 434,
   },
   {
     name: "pin_pattern",
@@ -683,7 +685,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "^" },
       { type: "token_reference", name: "NAME" },
     ] },
-    lineNumber: 435,
+    lineNumber: 439,
   },
   {
     name: "class_pattern",
@@ -699,7 +701,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RPAREN" },
     ] },
-    lineNumber: 441,
+    lineNumber: 445,
   },
   {
     name: "begin_statement",
@@ -715,7 +717,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "optional", element: { type: "rule_reference", name: "ensure_clause" } },
       { type: "literal", value: "end" },
     ] },
-    lineNumber: 462,
+    lineNumber: 466,
   },
   {
     name: "rescue_clause",
@@ -728,9 +730,15 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           ] },
           { type: "sequence", elements: [
             { type: "rule_reference", name: "exception_list" },
-            { type: "literal", value: "=>" },
-            { type: "token_reference", name: "NAME" },
+            { type: "group", element: { type: "alternation", choices: [
+                { type: "sequence", elements: [
+                  { type: "literal", value: "=>" },
+                  { type: "token_reference", name: "NAME" },
+                ] },
+                { type: "literal", value: ";" },
+              ] } },
           ] },
+          { type: "literal", value: ";" },
         ] } },
       { type: "repetition", element: { type: "sequence", elements: [
           { type: "negative_lookahead", element: { type: "literal", value: "rescue" } },
@@ -739,7 +747,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "statement" },
         ] } },
     ] },
-    lineNumber: 476,
+    lineNumber: 486,
   },
   {
     name: "exception_list",
@@ -750,7 +758,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "token_reference", name: "NAME" },
         ] } },
     ] },
-    lineNumber: 477,
+    lineNumber: 487,
   },
   {
     name: "ensure_clause",
@@ -761,7 +769,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "statement" },
         ] } },
     ] },
-    lineNumber: 478,
+    lineNumber: 488,
   },
   {
     name: "index_write_receiver_postfix",
@@ -770,7 +778,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "scope_resolution" },
       { type: "rule_reference", name: "index_suffix" },
     ] },
-    lineNumber: 531,
+    lineNumber: 541,
   },
   {
     name: "index_assignment",
@@ -784,7 +792,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "EQUALS" },
       { type: "rule_reference", name: "expression" },
     ] },
-    lineNumber: 532,
+    lineNumber: 542,
   },
   {
     name: "assignment",
@@ -808,7 +816,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "rule_reference", name: "expression" },
     ] },
-    lineNumber: 533,
+    lineNumber: 543,
   },
   {
     name: "rightward_assignment",
@@ -817,7 +825,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "=>" },
       { type: "token_reference", name: "NAME" },
     ] },
-    lineNumber: 552,
+    lineNumber: 562,
   },
   {
     name: "method_call",
@@ -829,6 +837,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
             { type: "token_reference", name: "KEYWORD" },
           ] },
         ] } },
+      { type: "negative_lookahead", element: { type: "literal", value: "( line start" } },
       { type: "token_reference", name: "LPAREN" },
       { type: "optional", element: { type: "sequence", elements: [
           { type: "rule_reference", name: "call_arg" },
@@ -840,7 +849,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "RPAREN" },
       { type: "repetition", element: { type: "rule_reference", name: "dot_call" } },
     ] },
-    lineNumber: 569,
+    lineNumber: 583,
   },
   {
     name: "dot_call",
@@ -851,6 +860,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "token_reference", name: "KEYWORD" },
         ] } },
       { type: "optional", element: { type: "sequence", elements: [
+          { type: "negative_lookahead", element: { type: "literal", value: "( line start" } },
           { type: "token_reference", name: "LPAREN" },
           { type: "optional", element: { type: "sequence", elements: [
               { type: "rule_reference", name: "call_arg" },
@@ -863,7 +873,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "optional", element: { type: "rule_reference", name: "block" } },
     ] },
-    lineNumber: 570,
+    lineNumber: 584,
   },
   {
     name: "scope_resolution",
@@ -874,7 +884,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "token_reference", name: "KEYWORD" },
         ] } },
     ] },
-    lineNumber: 578,
+    lineNumber: 592,
   },
   {
     name: "call_arg",
@@ -893,7 +903,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "rule_reference", name: "expression" },
       ] },
     ] },
-    lineNumber: 633,
+    lineNumber: 647,
   },
   {
     name: "method_call_no_paren",
@@ -914,23 +924,29 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "negative_lookahead", element: { type: "literal", value: "||" } },
       { type: "negative_lookahead", element: { type: "literal", value: "<<" } },
       { type: "negative_lookahead", element: { type: "literal", value: "[ line start" } },
+      { type: "negative_lookahead", element: { type: "literal", value: "( line start" } },
+      { type: "negative_lookahead", element: { type: "literal", value: "- line start" } },
+      { type: "negative_lookahead", element: { type: "literal", value: "+ line start" } },
       { type: "rule_reference", name: "expression" },
       { type: "repetition", element: { type: "sequence", elements: [
           { type: "token_reference", name: "COMMA" },
           { type: "rule_reference", name: "expression" },
         ] } },
     ] },
-    lineNumber: 681,
+    lineNumber: 701,
   },
   {
     name: "expression_stmt",
-    body: { type: "rule_reference", name: "expression" },
-    lineNumber: 684,
+    body: { type: "sequence", elements: [
+      { type: "rule_reference", name: "expression" },
+      { type: "optional", element: { type: "literal", value: ";" } },
+    ] },
+    lineNumber: 705,
   },
   {
     name: "expression",
     body: { type: "rule_reference", name: "ternary" },
-    lineNumber: 791,
+    lineNumber: 812,
   },
   {
     name: "ternary",
@@ -943,7 +959,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "expression" },
         ] } },
     ] },
-    lineNumber: 792,
+    lineNumber: 813,
   },
   {
     name: "range",
@@ -966,7 +982,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           ] } },
       ] },
     ] },
-    lineNumber: 793,
+    lineNumber: 814,
   },
   {
     name: "logical_or",
@@ -980,7 +996,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "logical_and" },
         ] } },
     ] },
-    lineNumber: 794,
+    lineNumber: 815,
   },
   {
     name: "logical_and",
@@ -994,7 +1010,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "logical_not" },
         ] } },
     ] },
-    lineNumber: 795,
+    lineNumber: 816,
   },
   {
     name: "logical_not",
@@ -1005,7 +1021,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           ] } } },
       { type: "rule_reference", name: "comparison" },
     ] },
-    lineNumber: 802,
+    lineNumber: 823,
   },
   {
     name: "comparison",
@@ -1023,7 +1039,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "shift" },
         ] } },
     ] },
-    lineNumber: 818,
+    lineNumber: 839,
   },
   {
     name: "shift",
@@ -1034,13 +1050,15 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "sum" },
         ] } },
     ] },
-    lineNumber: 819,
+    lineNumber: 840,
   },
   {
     name: "sum",
     body: { type: "sequence", elements: [
       { type: "rule_reference", name: "term" },
       { type: "repetition", element: { type: "sequence", elements: [
+          { type: "negative_lookahead", element: { type: "literal", value: "- line start" } },
+          { type: "negative_lookahead", element: { type: "literal", value: "+ line start" } },
           { type: "group", element: { type: "alternation", choices: [
               { type: "token_reference", name: "PLUS" },
               { type: "token_reference", name: "MINUS" },
@@ -1048,7 +1066,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "term" },
         ] } },
     ] },
-    lineNumber: 820,
+    lineNumber: 845,
   },
   {
     name: "term",
@@ -1062,7 +1080,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "factor" },
         ] } },
     ] },
-    lineNumber: 821,
+    lineNumber: 846,
   },
   {
     name: "super_expr",
@@ -1070,7 +1088,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "super" },
       { type: "optional", element: { type: "rule_reference", name: "super_args" } },
     ] },
-    lineNumber: 890,
+    lineNumber: 915,
   },
   {
     name: "index_suffix",
@@ -1080,7 +1098,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "expression" },
       { type: "token_reference", name: "RBRACKET" },
     ] },
-    lineNumber: 918,
+    lineNumber: 943,
   },
   {
     name: "factor",
@@ -1114,6 +1132,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
             { type: "token_reference", name: "RPAREN" },
           ] },
           { type: "rule_reference", name: "unary_minus" },
+          { type: "rule_reference", name: "unary_plus" },
         ] } },
       { type: "repetition", element: { type: "alternation", choices: [
           { type: "rule_reference", name: "dot_call" },
@@ -1121,7 +1140,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "index_suffix" },
         ] } },
     ] },
-    lineNumber: 919,
+    lineNumber: 944,
   },
   {
     name: "lambda_literal",
@@ -1134,7 +1153,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "rule_reference", name: "block" },
     ] },
-    lineNumber: 938,
+    lineNumber: 963,
   },
   {
     name: "unary_minus",
@@ -1142,7 +1161,15 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "MINUS" },
       { type: "rule_reference", name: "factor" },
     ] },
-    lineNumber: 939,
+    lineNumber: 964,
+  },
+  {
+    name: "unary_plus",
+    body: { type: "sequence", elements: [
+      { type: "literal", value: "+ line start" },
+      { type: "rule_reference", name: "factor" },
+    ] },
+    lineNumber: 971,
   },
   {
     name: "defined_expression",
@@ -1150,7 +1177,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "defined?" },
       { type: "rule_reference", name: "factor" },
     ] },
-    lineNumber: 950,
+    lineNumber: 982,
   },
   {
     name: "symbol_literal",
@@ -1162,7 +1189,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "token_reference", name: "STRING" },
         ] } },
     ] },
-    lineNumber: 957,
+    lineNumber: 989,
   },
   {
     name: "array_literal",
@@ -1177,7 +1204,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RBRACKET" },
     ] },
-    lineNumber: 958,
+    lineNumber: 990,
   },
   {
     name: "hash_literal",
@@ -1192,7 +1219,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RBRACE" },
     ] },
-    lineNumber: 959,
+    lineNumber: 991,
   },
   {
     name: "hash_entry",
@@ -1212,7 +1239,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "rule_reference", name: "expression" },
       ] },
     ] },
-    lineNumber: 960,
+    lineNumber: 992,
   },
 ],
 };

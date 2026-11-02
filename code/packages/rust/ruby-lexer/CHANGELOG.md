@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## Unreleased — a newline or `;` ends a statement before `-`, `+`, `(` and after a lone name or a `rescue` list (#18798)
+
+### Added
+
+- **`mark_statement_ends`**, the lexer's last pass (after every era
+  fusion, so a lambda arrow `->` is never a minus).  It replaces
+  `tag_line_start_brackets` and runs four steps:
+  1. a `;` between statements becomes a `Newline` token (value `;`), so
+     `x = 1; puts x` and `def risky; raise "x"; rescue => e; 1; end` lex
+     as the same programs on several lines (a `;` used to stop the
+     parse).  The `;` that starts block-local names (`do |x; y|`) stays a
+     `Semicolon`;
+  2. a `rescue` line with no `=>` gets a synthetic `;` after its class
+     list, or after a bare `rescue` (a trailing comma continues the list
+     onto the next line);
+  3. a `(`, `-` or `+` that starts a line after a complete expression is
+     re-tagged `( line start` / `- line start` / `+ line start` (type
+     kept), alongside the existing `[ line start`;
+  4. a name alone on its line, where a statement starts, gets a synthetic
+     `;` when the next line could be read as its argument.
+- Constants `LINE_START_LPAREN`, `LINE_START_MINUS`, `LINE_START_PLUS`,
+  `STATEMENT_END`; synthetic tokens carry `TOKEN_SYNTHETIC`.
+- `source_spelling(token)`: what the source wrote for a token (`None` for a
+  synthetic `;`, the bare character for a line-start tag), for tools that
+  compare this lexer with another.
+
+### Changed
+
+- `ends_expression` counts a `Name` token only when it spells an
+  identifier or a sigil variable: the operators the lexer leaves on `Name`
+  tokens (`&&`, `||`, `=>`, `?`, `|`, `->`) do not end an expression, so
+  `x = a &&` ⏎ `-b` is one expression.
+- The `newline_is_significant` test expects the synthetic `;` in `a` ⏎ `b`.
+
+Tests: `paren_and_signs_starting_a_statement_are_retagged`,
+`paren_and_signs_that_continue_an_expression_are_left_alone`,
+`a_name_alone_on_its_line_ends_its_statement`,
+`a_rescue_line_without_a_binding_ends_with_a_semicolon`,
+`a_semicolon_between_statements_is_a_line_break`,
+`source_spelling_undoes_the_tags`.
+
 ## Unreleased — a `[` that starts a line starts a statement (#18778)
 
 ### Changed (re-review of #18778)

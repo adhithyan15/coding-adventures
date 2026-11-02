@@ -99,6 +99,19 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
   backends emit only a loop body's statements).
 - **`x if c` as a method's last statement** returns `x` when `c` holds and
   `nil` otherwise.
+- **Where a statement ends (#18798).**  As in Ruby, a newline after a
+  complete expression ends the statement, even before a line that starts
+  with `[`, `(`, `-` or `+`: `x = 5` ⏎ `-1` leaves `x` at 5, and `x = foo` ⏎
+  `(1)` does not pass 1 to `foo`.  An operator at the end of a line, or a
+  `.` at the start of the next, still continues it.  A name alone on its
+  line takes nothing from the next line (`puts` ⏎ `puts 2`), a `rescue`
+  line's class list ends at the line break, and `;` separates statements.
+  (The `ruby-lexer` crate marks these places; see its `mark_statement_ends`.)
+- **A bare `puts` (#18798)** prints a newline, like `puts()`.
+- **A method-level `rescue` keeps its value (#18798).**  `def risky; raise
+  "x"; rescue => e; "rescued"; end` returns `"rescued"`: the last value of
+  the body, or of the clause that caught the exception, goes through an
+  invented local `__rescue_value_<n>`.  `ensure` never changes it.
 
 ## Usage
 

@@ -2,6 +2,46 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## Unreleased — newline gluing, `rescue Klass` ⏎, bare `puts`, method-level `rescue` value (#18798)
+
+### Fixed
+
+- **A line that starts with `-`, `+` or `(` starts a statement.**
+  `x = 5` ⏎ `-1` ⏎ `puts x` printed 4 on every backend (`x = 5 - 1`), and
+  `x = foo` ⏎ `(1)` passed 1 to `foo`.  The lexer tags those tokens and the
+  grammar refuses them in binary and argument positions; `unary_plus`
+  lowers to its operand.  Tests
+  `a_sign_that_starts_a_line_starts_a_new_statement`,
+  `an_operator_ending_a_line_or_a_dot_starting_one_continues_it`,
+  `a_paren_that_starts_a_line_is_not_an_argument_list`.
+- **A name alone on its line takes nothing from the next line**
+  (`puts` ⏎ `puts 2` was `puts(puts 2)`, `foo` ⏎ `(1)` was `foo(1)`).
+- **`rescue Klass` ⏎ next line.**  The class list ends at the line break;
+  it read `Klass(next line)`, which the validator refused.  Test
+  `a_rescue_class_list_ends_at_the_line_break`.
+- **A bare `puts` prints a newline.**  It lowers like `puts()` (a
+  `__sys_write__` with no values) unless a local, parameter or user `def`
+  is named `puts`; it was a read of an unknown local.  Test
+  `a_bare_puts_prints_a_newline_and_takes_nothing_from_the_next_line`.
+- **A method-level `rescue` keeps its value.**  `def risky; raise "x";
+  rescue => e; "rescued"; end` returned `nil`: the body and clauses were a
+  `TryCatch` statement.  `lower_rescued_method_body` stores the last value
+  of the body and of each `rescue` clause into an invented
+  `__rescue_value_<n>` and returns it; `ensure` never changes it.  Tests
+  `method_level_rescue_keeps_the_value_of_each_block` and the updated
+  `def_with_method_level_*` shape tests.
+- **`;` separates statements** (it stopped the parse).  Test
+  `semicolons_separate_statements`.
+
+### Changed
+
+- Invented locals (`__for_<n>`, `__rescue_value_<n>`) are claimed from one
+  pool, `used_names`, seeded with every `Name` the source spells, so a
+  program name assigned *later* can no longer be one of them (#18771's
+  lesson).  `for_while_form_temporaries_are_declared_locals` now expects
+  the loop to skip the program's own `__for_0`/`__for_1`; test
+  `invented_names_skip_every_name_the_source_spells`.
+
 ## Unreleased — Ruby-on-SIR gaps (#18778)
 
 ### Fixed (re-review of #18778)

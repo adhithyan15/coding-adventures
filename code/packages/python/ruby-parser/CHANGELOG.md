@@ -6,6 +6,15 @@ All notable changes to the Ruby Parser package will be documented in this file.
 
 ### Changed
 
+- Regenerated from `code/grammars/ruby/ruby.grammar` for #18798.  The new
+  literals `( line start`, `- line start` and `+ line start` are token
+  values only the Rust `ruby-lexer` produces, so for this package's lexer
+  they change nothing (`unary_plus` takes only `+ line start`, so it never
+  matches here).  Two changes do reach this parser: a source `;` may now end
+  an expression statement and a `rescue` class list (`rescue Boom; puts
+  40`), and the lookaheads after a statement-level `method_call` compare
+  `+`/`-` by value instead of by type, which is the same test for these
+  tokens.
 - Regenerated again after a comment change in `ruby.grammar` (rule line
   numbers only).  Note: this package's grammar parser compares a literal
   with a token's value alone, so `puts "[ line start"` does not parse here,

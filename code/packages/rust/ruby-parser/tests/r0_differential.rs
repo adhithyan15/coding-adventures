@@ -18,7 +18,7 @@
 
 use std::path::{Path, PathBuf};
 
-use coding_adventures_ruby_lexer::tokenize_ruby_for_version;
+use coding_adventures_ruby_lexer::{source_spelling, tokenize_ruby_for_version};
 use coding_adventures_ruby_parser::{tokenize_ruby_at, FrontendBudgets};
 use lexer::token::{Token, TokenType};
 
@@ -247,6 +247,23 @@ fn spellings(tokens: &[Token]) -> Vec<String> {
         .collect()
 }
 
+/// The hand-written lexer's spellings, as the source wrote them.  Its last
+/// pass (#18798, `mark_statement_ends`) re-tags a line-start `[`, `(`, `-`
+/// and `+`, turns a `;` into a `Newline` spelled `;`, and inserts a
+/// synthetic `;` where a newline ends a statement; `source_spelling` undoes
+/// all three, so only real lexing differences are compared.
+fn legacy_spellings(tokens: &[Token]) -> Vec<String> {
+    tokens
+        .iter()
+        .filter(|t| match t.type_ {
+            TokenType::Eof => false,
+            TokenType::Newline => t.value == ";",
+            _ => true,
+        })
+        .filter_map(|t| source_spelling(t).map(str::to_string))
+        .collect()
+}
+
 #[test]
 fn grammar_lexer_against_hand_written_ruby_lexer() {
     let mut agree = Vec::new();
@@ -254,7 +271,7 @@ fn grammar_lexer_against_hand_written_ruby_lexer() {
     for (name, source, _) in corpus() {
         let grammar = spellings(&grammar_tokens(ORACLE_RELEASE, &source));
         let legacy = tokenize_ruby_for_version(&source, "3.3")
-            .map(|tokens| spellings(&tokens))
+            .map(|tokens| legacy_spellings(&tokens))
             .unwrap_or_else(|error| vec![format!("<ruby-lexer error: {error}>")]);
         if grammar == legacy {
             agree.push(name);

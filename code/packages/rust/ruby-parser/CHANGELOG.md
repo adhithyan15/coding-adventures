@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## Unreleased — statement ends before `-`, `+`, `(`, after a lone name and a `rescue` list (#18798)
+
+### Changed
+
+- Regenerated from `ruby.grammar`, which now:
+  - refuses `( line start` before every argument list (`method_call`,
+    `dot_call`, `method_with_block`, a `def` header), and `- line start` /
+    `+ line start` as binary operators in `sum`; a paren-less call's first
+    argument refuses all three;
+  - checks `!"+" !"-"` by value after a statement-level `method_call`, so
+    a tagged sign on the next line (still a PLUS/MINUS token) does not
+    stop `f(1).g` ⏎ `-1` from being the whole call;
+  - adds `unary_plus = "+ line start" factor` (only the tagged token, so
+    `super + 1` stays a sum);
+  - lets `expression_stmt` end with a `;`, and `rescue_clause` take
+    `exception_list ";"` or a bare `";"`.
+- `tests/r0_differential.rs` compares the hand-written lexer through
+  `source_spelling`, so its new tags and synthetic `;` tokens are not
+  reported as lexing differences.
+
+Tests: `test_parse_sign_or_paren_on_a_new_line_starts_a_new_statement`,
+`test_parse_a_lone_name_is_a_whole_statement`,
+`test_parse_rescue_class_list_ends_at_the_line_break`.
+
 ## Unreleased — `for`, `rescue => e`, `f() + f`, line-start `[` (#18778)
 
 ### Changed (re-review of #18778)

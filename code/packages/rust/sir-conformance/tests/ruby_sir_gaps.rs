@@ -13,7 +13,21 @@
 //! | `[1].each do … end`                             | refused by the Ruby backend                 |
 //! | a `[` that starts a line after an expression    | glued on as an index: `x = 5[1].each …`; C: `undefined method []`, and `puts` ⏎ `[7].each …` printed the wrong thing on every backend |
 //!
-//! Fixing them turned up two more of the same kind, pinned here too:
+//! #18798 followed with five more, also here:
+//!
+//! | gap                                             | what used to happen                         |
+//! |-------------------------------------------------|---------------------------------------------|
+//! | a line that starts with `-`, `+` or `(`         | glued on: `x = 5` ⏎ `-1` printed 4, `foo` ⏎ `(1)` passed 1 to `foo` |
+//! | `rescue Klass` ⏎ next line                      | read as `Klass(next line)`; refused         |
+//! | `unless` / `until` / `!x` on Go and Rust        | `panic: unknown builtin: not`               |
+//! | a bare `puts`                                   | refused, and `puts` ⏎ `puts 2` was `puts(puts 2)` |
+//! | the value of a method-level `rescue`            | `nil` on every backend                      |
+//!
+//! and two found on the way: `;` between statements stopped the parse, and
+//! on Rust a store into an outer local inside `begin`/`rescue` failed
+//! rustc (`cannot assign twice to immutable variable`).
+//!
+//! Fixing the #18778 gaps turned up two more of the same kind, pinned here too:
 //!
 //! - a `while` body's last statement became the body's *value*, which the C
 //!   and Ruby backends never emit: `while … puts x end` printed nothing
@@ -184,6 +198,75 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "rb_bracket_line_after_a_call",
         "puts 3\n[4].each { |v| puts v }\n",
         "3\n4",
+    ),
+    // ── #18798: a newline ends the statement before `-`, `+`, `(` ──────
+    // `x = 5` ⏎ `-1` was `x = 5 - 1`, printing 4 everywhere.  With or
+    // without a space after the sign, and after `;` too.
+    (
+        "rb_sign_line_after_an_assignment",
+        "x = 5\n-1\nputs x\ny = 6\n+2\nputs y\nz = 7\n- 3\nputs z\nw = 8; -4; puts w\n",
+        "5\n6\n7\n8",
+    ),
+    // An operator at the END of a line still continues it, and so does a
+    // `.` at the start of the next.
+    (
+        "rb_operator_ending_a_line_or_dot_starting_one_continues_it",
+        "x = 5 -\n1\nputs x\nclass C\n  def v\n    7\n  end\nend\nc = C.new\nputs c\n  .v\n",
+        "4\n7",
+    ),
+    // `x = foo` ⏎ `(1)` passed 1 to `foo`; so did `puts foo` ⏎ `(2)`.
+    (
+        "rb_paren_line_after_a_name",
+        "def foo(a = 9)\n  a\nend\nx = foo\n(1)\nputs x\nputs foo\n(2)\n",
+        "9\n9",
+    ),
+    // A name alone on its line takes nothing from the next line.
+    (
+        "rb_lone_name_line_before_a_paren",
+        "def foo(a = 9)\n  puts a\nend\nfoo\n(1)\n",
+        "9",
+    ),
+    // ── #18798: a bare `puts` ──────────────────────────────────────────
+    (
+        "rb_bare_puts_prints_a_newline",
+        "puts 1\nputs\nputs 2\n[3].each do |x|\n  puts\n  puts x\nend\n",
+        "1\n\n2\n\n3",
+    ),
+    // ── #18798: `not` on Go and Rust ───────────────────────────────────
+    // `unless`, `until` and `!` all lower to `not`.
+    (
+        "rb_unless_until_and_bang",
+        "x = 2\nunless x == 3\n  puts \"no\"\nend\nputs \"neg\" if !(x == 3)\ni = 0\nuntil i == 2\n  i += 1\nend\nputs i\nputs \"nil is falsy\" unless nil\nputs \"zero is truthy\" unless !0\n",
+        "no\nneg\n2\nnil is falsy\nzero is truthy",
+    ),
+    // ── #18798: `rescue Klass` ⏎ next line ─────────────────────────────
+    // The class list ends at the line break; a bare `rescue` ⏎ a lone name
+    // keeps the name as a statement; a trailing comma continues the list.
+    (
+        "rb_rescue_class_list_ends_at_the_line_break",
+        "class Boom < StandardError\nend\nclass Bang < StandardError\nend\ndef note\n  puts \"noted\"\nend\nbegin\n  raise Boom\nrescue Boom\n  puts 40\nend\nbegin\n  raise \"x\"\nrescue\n  note\n  puts 41\nend\nbegin\n  raise Bang\nrescue Boom,\n  Bang\n  puts 42\nend\n",
+        "40\nnoted\n41\n42",
+    ),
+    // ── #18798: a method-level `rescue` keeps its value ────────────────
+    // The body's last value when it finishes, the catching clause's when
+    // it raises; `ensure` runs but does not change it.
+    (
+        "rb_method_level_rescue_value",
+        "def risky\n  raise \"x\"\nrescue => e\n  \"rescued\"\nend\nputs risky\ndef g(n)\n  if n > 0\n    raise \"neg\"\n  end\n  \"fine\"\nrescue\n  \"bad\"\nend\nputs g(0)\nputs g(1)\ndef k\n  1\nrescue\n  2\nensure\n  puts \"ensured\"\n  3\nend\nputs k\n",
+        "rescued\nfine\nbad\nensured\n1",
+    ),
+    // The issue's one-line form: `;` separates statements.
+    (
+        "rb_semicolons_separate_statements",
+        "def risky; raise \"x\"; rescue => e; \"rescued\"; end\nputs risky\nx = 1; y = 2; puts x + y\n",
+        "rescued\n3",
+    ),
+    // A store into an outer local inside `begin`/`rescue` (Rust declared
+    // the local immutable).
+    (
+        "rb_store_into_an_outer_local_inside_begin",
+        "x = 0\nbegin\n  x = 1\nrescue\n  x = 2\nend\nputs x\ny = 0\nbegin\n  raise \"z\"\nrescue\n  y = 2\nend\nputs y\n",
+        "1\n2",
     ),
 ];
 
