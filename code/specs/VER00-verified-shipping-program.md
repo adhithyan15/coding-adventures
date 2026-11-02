@@ -1,7 +1,7 @@
 # VER00 — The Verified Shipping Program
 
 **Status:** Draft umbrella spec. Nothing here is implemented. Child specs
-(VER01–VER25, listed in §11) are written one at a time before their code.
+(VER01–VER26, listed in §11) are written one at a time before their code.
 
 **Layer:** Repository-wide policy and tooling.
 
@@ -3050,6 +3050,7 @@ S4 for S1.
 | VER23 | Generated capability modules: exact per-package effect modules, enforced targets, deny-by-default allowlists with core and transitional lists, native shim and binary checks, object-capability passing |
 | VER24 | Capability proof certificates and information flow: effect-type certificates and their small checker; taint tracking and noninterference proofs over WIR; declassification; required flow claims for dangerous capability combinations |
 | VER25 | The Warrant IR (WIR): formal semantics, mandatory types, cost and label annotations, explicit implicit calls, reference interpreter, and the first language front ends |
+| VER26 | The `ct-compare` pilot: the whole ladder on one package in Rust, the quirks log, and the deferred-languages record (Nib, Oct and Twig, with the Busicom-to-gates pilot next) |
 
 ## 12. Open decisions
 
