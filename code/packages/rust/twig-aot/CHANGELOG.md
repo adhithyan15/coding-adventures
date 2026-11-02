@@ -1,5 +1,11 @@
 # Changelog — `twig-aot`
 
+## Unreleased — macOS: the globals block is 8-aligned (fixes the #18790 macOS failure)
+
+- **Bug.** On macOS every native program with a global died at start-up. Example: `lang_matrix`'s `(define (f) g) (define g 42) (f)`, "expected exit 42, got None". code-packager put `_twig_globals` right after `__text`, at an address ≡ 4 (mod 8) whenever the code length was (here 0x114). `ld64` preserves that modulus. gc-core-capi then refused the misaligned block, and the init's registration check (added in #18789) hit its `udf`. In #18785 the same refusal went unnoticed: the program ran, but on macOS its globals were never GC roots. Linux is unaffected (ELF `.data` is aligned by the linker).
+- **Fix** in code-packager: `__data` starts at the next 8-byte boundary (zero padding after the code).
+- Test: `macos_object_puts_twig_globals_on_an_8_byte_boundary` compiles that program to a Mach-O object and checks that the `__data` address and the `_twig_globals` value are 8-aligned. It fails without the fix.
+
 ## Unreleased — review follow-ups to #18785: arrays of strings, string parameters, global-root registration
 
 - **Bug: native arrays of strings were not traced.** The native backends allocated every `alloc_array` with `__twig_alloc_bytes`, a no-reference blob kind. In a BASIC `DIM A$(n)` array, a string reachable only through the array was therefore freed by any collection while the array still held its handle. A program that stores 16 strings only in an `array<str>`, collects, and reuses the cells read the wrong lengths, and memcheck reported invalid reads.
