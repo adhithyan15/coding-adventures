@@ -65,7 +65,26 @@ defmodule CodingAdventures.CtCompareTest do
     end
 
     for bad <- [true, false, 1.0, nil] do
-      assert_raise FunctionClauseError, fn -> CtCompare.ct_select_bytes(<<1>>, <<2>>, bad) end
+      assert_raise ArgumentError, fn -> CtCompare.ct_select_bytes(<<1>>, <<2>>, bad) end
+    end
+  end
+
+  test "wrong-type arguments raise ArgumentError without echoing the secrets" do
+    # A FunctionClauseError would carry the arguments in its stack trace.
+    for call <- [
+          fn -> CtCompare.ct_eq("SECRETLEFT", :not_binary) end,
+          fn -> CtCompare.ct_select_bytes("SECRETLEFT", "SECRETRIGHT", true) end,
+          fn -> CtCompare.ct_eq_u64(1.5, 0) end
+        ] do
+      formatted =
+        try do
+          call.()
+          flunk("expected ArgumentError")
+        rescue
+          error in ArgumentError -> Exception.format(:error, error, __STACKTRACE__)
+        end
+
+      refute formatted =~ "SECRET"
     end
   end
 end

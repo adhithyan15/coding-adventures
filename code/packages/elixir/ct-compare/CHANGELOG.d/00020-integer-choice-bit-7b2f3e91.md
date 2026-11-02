@@ -9,3 +9,7 @@
   rejected before either input is read. This follows CT01's new "how a lane
   receives the selection bit" rule and Go's own `crypto/subtle`.
 - Tests for rejected choice values and fresh-copy output.
+- **Security fix.** Wrong-type arguments to `ct_eq`, `ct_select_bytes` and
+  `ct_eq_u64` raised `FunctionClauseError`, whose BEAM stack trace carries the
+  full argument list, so secret inputs reached crash logs. Catch-all clauses now
+  raise `ArgumentError` instead, without recording the arguments.
