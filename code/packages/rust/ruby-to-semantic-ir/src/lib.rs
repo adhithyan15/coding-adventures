@@ -37,7 +37,7 @@
 //! See [the crate README](../README.md) for the v0 lowering rules
 //! and the explicit list of deferred Ruby features.
 
-use coding_adventures_ruby_parser::parse_ruby;
+use coding_adventures_ruby_parser::try_create_ruby_parser;
 
 mod lower;
 
@@ -45,15 +45,29 @@ pub use lower::{compile, RubyLowerError};
 
 /// Parse Ruby source and lower it to SIR in a single call.
 ///
-/// Wraps [`parse_ruby`] followed by [`compile`].  The current
-/// `parse_ruby` panics on parse errors (legacy behaviour shared with
-/// the rest of the grammar-driven parsers); a future refactor will
-/// surface those as [`RubyLowerError`]s with proper line/column.
+/// Lexes and parses like `coding_adventures_ruby_parser::parse_ruby`,
+/// then runs [`compile`].
+///
+/// - A lexer failure is a [`RubyLowerError`] at line 0, column 0 (the
+///   position is unknown).  That includes the lexer's source budget
+///   (#18814): a source longer than the lexer's 1 MiB `MAX_SOURCE_BYTES`
+///   is refused before any of it is lexed, instead of panicking.
+/// - A parse error still panics, as `parse_ruby` does (legacy behaviour
+///   shared with the rest of the grammar-driven parsers); a future
+///   refactor will surface those as [`RubyLowerError`]s with proper
+///   line/column.
 pub fn compile_source(
     source: &str,
     module_name: &str,
 ) -> Result<semantic_ir::Module, RubyLowerError> {
-    let ast = parse_ruby(source);
+    let mut parser = try_create_ruby_parser(source).map_err(|message| RubyLowerError {
+        message,
+        line: 0,
+        column: 0,
+    })?;
+    let ast = parser
+        .parse()
+        .unwrap_or_else(|e| panic!("Ruby parse failed: {e}"));
     compile(&ast, module_name)
 }
 
@@ -65,6 +79,24 @@ mod tests {
 
     fn lower(src: &str) -> semantic_ir::Module {
         compile_source(src, "test").expect("lowering succeeded")
+    }
+
+    /// #18814 — a source past the lexer's 1 MiB budget is refused with a
+    /// typed error before any of it is lexed; it used to be lexed (in
+    /// quadratic time) and a lexer failure panicked.
+    #[test]
+    fn oversized_source_is_a_typed_error_not_a_panic() {
+        // `coding_adventures_ruby_lexer::MAX_SOURCE_BYTES`, plus one.
+        let source = "x = 1\n".repeat((1024 * 1024) / 6 + 1);
+        assert!(source.len() > 1024 * 1024);
+        let start = std::time::Instant::now();
+        let err = compile_source(&source, "test").unwrap_err();
+        assert!(start.elapsed() < std::time::Duration::from_secs(1));
+        assert_eq!((err.line, err.column), (0, 0));
+        assert!(
+            err.message.starts_with("ruby lexer: source bytes") && err.message.contains("exceed the limit of 1048576"),
+            "{err}"
+        );
     }
 
     fn main_body(m: &semantic_ir::Module) -> &semantic_ir::Block {

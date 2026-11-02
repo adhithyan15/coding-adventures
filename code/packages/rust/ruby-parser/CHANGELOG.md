@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## Unreleased — the legacy path inherits the lexer's source budget (#18814)
+
+- `try_create_ruby_parser` now refuses a source past `ruby-lexer`'s
+  `MAX_SOURCE_BYTES` (1 MiB) with the lexer's budget message, through the
+  lexer's new `From<RubyLexError> for String`; no code change here.  Test
+  `try_create_ruby_parser_refuses_source_past_the_lexer_budget`.
+
 ## Unreleased — statement ends before `-`, `+`, `(`, after a lone name and a `rescue` list (#18798)
 
 ### Fixed (re-review of #18798)

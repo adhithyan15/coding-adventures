@@ -2,6 +2,19 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## Unreleased — lexer refusals are typed errors (#18814)
+
+### Changed
+
+- `compile_source` builds its parser with `try_create_ruby_parser` and
+  returns a lexer failure as a `RubyLowerError` at line 0, column 0
+  instead of panicking.  That includes the lexer's new 1 MiB source
+  budget, so an oversized program is refused at once with
+  `ruby lexer: source bytes (N) exceed the limit of 1048576`; before
+  #18814 it was lexed in quadratic time (~150 s for 400 KB of `a&.b`).
+  Parse errors still panic, as `parse_ruby` does.  Test
+  `oversized_source_is_a_typed_error_not_a_panic`.
+
 ## Unreleased — newline gluing, `rescue Klass` ⏎, bare `puts`, method-level `rescue` value (#18798)
 
 ### Fixed (re-review of #18798)

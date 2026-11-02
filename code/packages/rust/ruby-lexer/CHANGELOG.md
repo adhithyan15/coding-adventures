@@ -2,6 +2,69 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## Unreleased — linear token fusion and a source budget (#18814)
+
+### Fixed
+
+- **Every token-fusion pass is linear.**  `fuse_range_ops`,
+  `fuse_radix_integers`, the three sweeps of `fuse_float_literals`,
+  `fuse_right_shifts`, `fuse_compound_assigns`, `fuse_lambda_arrow`,
+  `fuse_numeric_suffixes` and `fuse_safe_nav` folded each pair with
+  `Vec::remove`, shifting the rest of the token vector every time:
+  O(tokens × fusions).  80 000 lines of `a&.b` or `x = 2r` (~400 KB) took
+  about 153 s.  They now share one engine, `fuse_adjacent`, which compacts
+  the vector in place with a read and a write cursor (each token read once
+  and moved at most once) and keeps the whitespace flags in step.  The
+  output is unchanged token for token.  Debug-build timings through
+  `tokenize_ruby_for_version`, lines of `a&.b`:
+
+  | lines   | before                 | after |
+  |---------|------------------------|-------|
+  | 20 000  | 4.9 s                  | 0.8 s |
+  | 40 000  | 23.3 s                 | 1.3 s |
+  | 80 000  | ~153 s (the issue)     | 2.3 s |
+  | 200 000 | ~10 min (extrapolated) | 5.5 s |
+
+- **The state machine's step trace no longer grows with the input.**  The
+  engine keeps a copy of every step it takes; `push` now drops it every
+  4 096 steps (`reset`, then `set_current_state` back).  Lexing 1 MiB
+  peaked at ~593 MB; it now peaks at ~146 MB.
+
+### Added
+
+- **`MAX_SOURCE_BYTES` (1 MiB)**, the parser release API's
+  `MAX_TRUSTED_SOURCE_BYTES`.  `RubyLexer::push` holds the running total
+  against it across calls (a refused call changes nothing) and
+  `tokenize_ruby_for_version` checks it before building anything.
+  `tokenize_ruby`, `tokenize_ruby_with_oracle` and `tokenize_ruby_diag`
+  return no tokens for an oversized source; `tokenize_ruby_diag` adds one
+  `lex-error:` diagnostic naming the budget.
+- **`RubyLexError`**: `Budget { which, limit, actual }` or `Lex(String)`.
+
+### Changed
+
+- `RubyLexer::push` and `tokenize_ruby_for_version` return
+  `Result<_, RubyLexError>` instead of `Result<_, String>`.  `Lex` carries
+  the message they used to return, `Display` prints it unchanged, and
+  `impl From<RubyLexError> for String` keeps `?` working in callers that
+  return `String` errors (`try_create_ruby_parser`).
+
+### Tests
+
+- `differential_tests.rs` keeps the old pass bodies (`reference_passes.rs`,
+  test-only) and compares tokens and whitespace flags after every pipeline
+  step, under all 15 eras, on every string literal in `lib.rs`, every
+  `.rb` file in `code/grammars/ruby/corpus` and `ruby-parser`'s fixtures,
+  and 1 000 seeded fragment soups.  It also checks that dropping the
+  engine trace after every step changes nothing.
+- `linear_time_tests.rs`: one timing regression per fused construct, at
+  200 000 occurrences each, bound 20 s (1–3.5 s in a debug build; the old
+  passes did not finish `a&.b` in 120 s).
+- `tests/linear_time.rs`: the issue's two reproductions end to end, a
+  source of exactly `MAX_SOURCE_BYTES` (lexed, ~6.5 s in debug), one byte
+  past it (refused), UTF-8 byte counting, cumulative `push`, and the
+  infallible entry points.
+
 ## Unreleased — a newline or `;` ends a statement before `-`, `+`, `(` and after a lone name or a `rescue` list (#18798)
 
 - A keyword in method-name position (`5.then`, `obj&.do`, `A::begin`) no longer opens a statement, so `x = 5.then foo` ⏎ `bar` keeps `foo` as the call's argument instead of splitting after `then` (#18798 third review).

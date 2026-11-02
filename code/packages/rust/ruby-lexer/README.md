@@ -93,6 +93,37 @@ that apply budgets and typed errors. The state-machine lexer described above
 is unchanged and still serves every existing caller until the later slices
 reach parity (LANG84 phase 3.10).
 
+## Budget and cost (#18814)
+
+Source text is untrusted.  Every entry point refuses more than
+`MAX_SOURCE_BYTES` (1 MiB — the most the parser's release API lets even a
+trusted caller parse) before lexing any of it:
+
+| entry point | over budget |
+|-------------|-------------|
+| `RubyLexer::push` | `Err(RubyLexError::Budget { .. })`; counts every call's bytes, and a refused call changes nothing |
+| `tokenize_ruby_for_version` | `Err(RubyLexError::Budget { .. })`, checked before the era |
+| `tokenize_ruby`, `tokenize_ruby_with_oracle` | no tokens |
+| `tokenize_ruby_diag` | no tokens, one `lex-error:` diagnostic naming the budget |
+
+Lexing is linear in the source: the state machine takes one step per
+character, and every post-pass over the tokens (the era fusions `..`,
+`0x1F`, `1.5e-3`, `>>=`, `+=`, `->`, `2r`, `&.`, and the statement-end
+marking) is a single sweep.  The fusions compact the token vector in place
+rather than calling `Vec::remove` once per fusion, which made them
+quadratic until #18814 (80 000 lines of `a&.b` took ~153 s; they now take
+~2 s in a debug build, and a whole megabyte ~6.5 s).
+
+```rust
+use coding_adventures_ruby_lexer::{tokenize_ruby_for_version, RubyLexError, MAX_SOURCE_BYTES};
+
+let huge = " ".repeat(MAX_SOURCE_BYTES + 1);
+assert!(matches!(
+    tokenize_ruby_for_version(&huge, "3.3"),
+    Err(RubyLexError::Budget { which: "source bytes", .. })
+));
+```
+
 ## Usage
 
 ```rust

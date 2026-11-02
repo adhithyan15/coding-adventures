@@ -43,12 +43,19 @@ const BOUND: Duration = Duration::from_secs(20);
 /// The pre-fusion stream of `unit` (one line, ending in `\n`) repeated
 /// `copies` times, one line per copy, then the `Eof`.
 fn repeated_prefusion(unit: &str, copies: usize) -> (Vec<Token>, Vec<bool>) {
-    assert!(unit.ends_with('\n') && unit.matches('\n').count() == 1, "{unit:?} must be one line");
+    assert!(
+        unit.ends_with('\n') && unit.matches('\n').count() == 1,
+        "{unit:?} must be one line"
+    );
     let (mut toks, mut ws) = prefusion(unit).expect("unit lexes");
     let eof = toks.pop().expect("an Eof token");
     let eof_ws = ws.pop().expect("its whitespace flag");
     assert_eq!(eof.type_, TokenType::Eof);
-    assert_eq!(toks.len(), ws.len(), "{unit:?}: tokens and whitespace flags out of step");
+    assert_eq!(
+        toks.len(),
+        ws.len(),
+        "{unit:?}: tokens and whitespace flags out of step"
+    );
     let mut out_toks = Vec::with_capacity(toks.len() * copies + 1);
     let mut out_ws = Vec::with_capacity(ws.len() * copies + 1);
     for k in 0..copies {
@@ -83,7 +90,10 @@ fn assert_linear(unit: &str, fused: &str) {
         "#18814: fusing {COPIES} x {unit:?} took {elapsed:?} (bound {BOUND:?}); a pass has gone quadratic again"
     );
     let count = lexer.tokens.iter().filter(|t| t.value == fused).count();
-    assert_eq!(count, COPIES, "{unit:?}: expected {COPIES} fused {fused:?} tokens");
+    assert_eq!(
+        count, COPIES,
+        "{unit:?}: expected {COPIES} fused {fused:?} tokens"
+    );
 }
 
 #[test]

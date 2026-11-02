@@ -11,8 +11,8 @@
 use std::time::{Duration, Instant};
 
 use coding_adventures_ruby_lexer::{
-    tokenize_ruby, tokenize_ruby_diag, tokenize_ruby_for_version, tokenize_ruby_with_oracle, NoLocals,
-    RubyLexError, RubyLexer, MAX_SOURCE_BYTES,
+    tokenize_ruby, tokenize_ruby_diag, tokenize_ruby_for_version, tokenize_ruby_with_oracle,
+    NoLocals, RubyLexError, RubyLexer, MAX_SOURCE_BYTES,
 };
 
 /// Generous for a debug build on a loaded runner; the linear lexer needs a
@@ -31,7 +31,10 @@ fn lex_timed(source: &str) -> (Vec<lexer::token::Token>, Duration) {
 fn issue_18814_safe_nav_lines_lex_in_linear_time() {
     let source = "a&.b\n".repeat(80_000);
     let (tokens, elapsed) = lex_timed(&source);
-    eprintln!("#18814 80k lines of a&.b ({} bytes): {elapsed:?}", source.len());
+    eprintln!(
+        "#18814 80k lines of a&.b ({} bytes): {elapsed:?}",
+        source.len()
+    );
     assert!(elapsed < BOUND, "took {elapsed:?}");
     assert_eq!(tokens.iter().filter(|t| t.value == "&.").count(), 80_000);
 }
@@ -41,7 +44,10 @@ fn issue_18814_safe_nav_lines_lex_in_linear_time() {
 fn issue_18814_rational_lines_lex_in_linear_time() {
     let source = "x = 2r\n".repeat(80_000);
     let (tokens, elapsed) = lex_timed(&source);
-    eprintln!("#18814 80k lines of x = 2r ({} bytes): {elapsed:?}", source.len());
+    eprintln!(
+        "#18814 80k lines of x = 2r ({} bytes): {elapsed:?}",
+        source.len()
+    );
     assert!(elapsed < BOUND, "took {elapsed:?}");
     assert_eq!(tokens.iter().filter(|t| t.value == "2r").count(), 80_000);
 }
@@ -79,7 +85,10 @@ fn source_one_byte_past_the_budget_is_refused() {
     );
     assert_eq!(
         err.to_string(),
-        format!("ruby lexer: source bytes ({}) exceed the limit of {MAX_SOURCE_BYTES}", MAX_SOURCE_BYTES + 1)
+        format!(
+            "ruby lexer: source bytes ({}) exceed the limit of {MAX_SOURCE_BYTES}",
+            MAX_SOURCE_BYTES + 1
+        )
     );
     // Callers that carry the error as a `String` (`try_create_ruby_parser`)
     // get the same message.
@@ -106,7 +115,10 @@ fn byte_budget_is_checked_before_the_era() {
         tokenize_ruby_for_version(&source, "5.0"),
         Err(RubyLexError::Budget { .. })
     ));
-    assert!(matches!(tokenize_ruby_for_version("x", "5.0"), Err(RubyLexError::Lex(_))));
+    assert!(matches!(
+        tokenize_ruby_for_version("x", "5.0"),
+        Err(RubyLexError::Lex(_))
+    ));
 }
 
 /// `RubyLexer::push` holds the running total against the budget across
@@ -141,7 +153,10 @@ fn infallible_entry_points_refuse_oversized_source() {
     assert!(tokens.is_empty());
     assert_eq!(diags.len(), 1, "{diags:?}");
     assert!(
-        diags[0].code.starts_with("lex-error:ruby lexer: source bytes") && diags[0].code.contains("exceed the limit"),
+        diags[0]
+            .code
+            .starts_with("lex-error:ruby lexer: source bytes")
+            && diags[0].code.contains("exceed the limit"),
         "{:?}",
         diags[0]
     );

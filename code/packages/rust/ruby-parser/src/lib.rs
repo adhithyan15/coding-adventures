@@ -105,6 +105,23 @@ mod tests {
     // Helpers
     // -----------------------------------------------------------------------
 
+    /// #18814 — the legacy entry point inherits the lexer's source budget:
+    /// one byte past `MAX_SOURCE_BYTES` is refused with the lexer's
+    /// message, before anything is lexed.
+    #[test]
+    fn try_create_ruby_parser_refuses_source_past_the_lexer_budget() {
+        use coding_adventures_ruby_lexer::MAX_SOURCE_BYTES;
+        let source = " ".repeat(MAX_SOURCE_BYTES + 1);
+        let err = try_create_ruby_parser(&source).err().expect("refused");
+        assert_eq!(
+            err,
+            format!(
+                "ruby lexer: source bytes ({}) exceed the limit of {MAX_SOURCE_BYTES}",
+                MAX_SOURCE_BYTES + 1
+            )
+        );
+    }
+
     fn assert_program_root(ast: &GrammarASTNode) {
         assert_eq!(
             ast.rule_name, "program",

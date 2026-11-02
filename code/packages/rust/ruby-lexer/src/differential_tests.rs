@@ -68,7 +68,13 @@ impl Pipelines {
     fn new() -> Self {
         let by_era = ERA_VERSIONS
             .iter()
-            .map(|&era| (era, RubyLexer::new(era).unwrap(), RubyLexer::new(era).unwrap()))
+            .map(|&era| {
+                (
+                    era,
+                    RubyLexer::new(era).unwrap(),
+                    RubyLexer::new(era).unwrap(),
+                )
+            })
             .collect();
         Self { by_era }
     }
@@ -83,11 +89,19 @@ impl Pipelines {
         old.whitespace_before_token = pre.1.clone();
         let mut new_steps = Vec::new();
         new.run_era_token_fusions(&mut |name, lx| {
-            new_steps.push((name.to_string(), lx.tokens.clone(), lx.whitespace_before_token.clone()));
+            new_steps.push((
+                name.to_string(),
+                lx.tokens.clone(),
+                lx.whitespace_before_token.clone(),
+            ));
         });
         let mut old_steps = Vec::new();
         old.ref_apply_era_token_fusions(&mut |name, lx| {
-            old_steps.push((name.to_string(), lx.tokens.clone(), lx.whitespace_before_token.clone()));
+            old_steps.push((
+                name.to_string(),
+                lx.tokens.clone(),
+                lx.whitespace_before_token.clone(),
+            ));
         });
         (new_steps, old_steps)
     }
@@ -114,7 +128,11 @@ fn assert_same(source: &str, eras: &[&str], pipes: &mut Pipelines, tally: &mut T
     for &era in eras {
         let (new_steps, old_steps) = pipes.run(&pre, era);
         let names = |s: &[Snapshot]| s.iter().map(|(n, _, _)| n.clone()).collect::<Vec<_>>();
-        assert_eq!(names(&new_steps), names(&old_steps), "step order differs (era {era}, source {source:?})");
+        assert_eq!(
+            names(&new_steps),
+            names(&old_steps),
+            "step order differs (era {era}, source {source:?})"
+        );
         let mut before = pre.0.len();
         for ((name, new_toks, new_ws), (_, old_toks, old_ws)) in new_steps.iter().zip(&old_steps) {
             assert_eq!(
@@ -225,7 +243,9 @@ fn rust_string_literals(src: &str) -> Vec<String> {
                         Some('u') => {
                             let close = (j..c.len()).find(|&k| c[k] == '}').unwrap_or(j);
                             let hex: String = c[(j + 2).min(close)..close].iter().collect();
-                            if let Some(ch) = u32::from_str_radix(&hex, 16).ok().and_then(char::from_u32) {
+                            if let Some(ch) =
+                                u32::from_str_radix(&hex, 16).ok().and_then(char::from_u32)
+                            {
                                 s.push(ch);
                             }
                             j = close;
@@ -278,8 +298,12 @@ fn lib_rs_literals() -> Vec<String> {
 // ---------------------------------------------------------------------------
 
 fn rb_files_under(dir: &Path, out: &mut Vec<PathBuf>) {
-    let entries = std::fs::read_dir(dir)
-        .unwrap_or_else(|e| panic!("#18814 differential corpus {} is missing: {e}", dir.display()));
+    let entries = std::fs::read_dir(dir).unwrap_or_else(|e| {
+        panic!(
+            "#18814 differential corpus {} is missing: {e}",
+            dir.display()
+        )
+    });
     for entry in entries {
         let path = entry.unwrap().path();
         if path.is_dir() {
@@ -314,26 +338,18 @@ fn corpus_files() -> Vec<(String, String)> {
 /// (space, tab, line break, `;`).
 const FRAGMENTS: &[&str] = &[
     // radix integers
-    "0", "x1F", "b101", "o17", "d10", "xZZ", "0x1F",
-    // floats and exponents
-    "1", "5", "1_000", ".", "e", "E", "e10", "E5", "1.5", "1e+3", "2.5e-3",
-    // ranges
-    "..", "...",
-    // shifts and comparisons
-    ">", ">=", ">>", ">>=", "<", "<<", "<=",
-    // compound assignment halves
+    "0", "x1F", "b101", "o17", "d10", "xZZ", "0x1F", // floats and exponents
+    "1", "5", "1_000", ".", "e", "E", "e10", "E5", "1.5", "1e+3", "2.5e-3", // ranges
+    "..", "...", // shifts and comparisons
+    ">", ">=", ">>", ">>=", "<", "<<", "<=", // compound assignment halves
     "=", "+", "-", "*", "/", "%", "**", "&", "|", "^", "||", "&&",
     // lambda, safe navigation, numeric suffixes
-    "->", "&.", "r", "i", "2r", "3i",
-    // brackets and punctuation
-    "(", ")", "[", "]", "{", "}", ",", ";", ":", "::",
-    // names, keywords, numbered params
-    "a", "b", "foo", "puts", "x", "_1", "_2", "if", "unless", "while", "until",
-    "end", "do", "|x|", "then", "else", "begin", "rescue", "super", "yield",
-    "return", "nil", "true", "def",
+    "->", "&.", "r", "i", "2r", "3i", // brackets and punctuation
+    "(", ")", "[", "]", "{", "}", ",", ";", ":", "::", // names, keywords, numbered params
+    "a", "b", "foo", "puts", "x", "_1", "_2", "if", "unless", "while", "until", "end", "do", "|x|",
+    "then", "else", "begin", "rescue", "super", "yield", "return", "nil", "true", "def",
     // literals
-    "\"s\"", "'t'", ":sym", "%w[a b]",
-    // separators: the near misses
+    "\"s\"", "'t'", ":sym", "%w[a b]", // separators: the near misses
     " ", " ", " ", "\t", "\n", "\n", "\n\n",
 ];
 
@@ -343,7 +359,10 @@ struct Lcg(u64);
 
 impl Lcg {
     fn next(&mut self) -> u64 {
-        self.0 = self.0.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        self.0 = self
+            .0
+            .wrapping_mul(6364136223846793005)
+            .wrapping_add(1442695040888963407);
         self.0 >> 33
     }
     fn below(&mut self, n: usize) -> usize {
@@ -354,7 +373,9 @@ impl Lcg {
 fn soup(seed: u64) -> String {
     let mut rng = Lcg(seed);
     let len = 1 + rng.below(40);
-    (0..len).map(|_| FRAGMENTS[rng.below(FRAGMENTS.len())]).collect()
+    (0..len)
+        .map(|_| FRAGMENTS[rng.below(FRAGMENTS.len())])
+        .collect()
 }
 
 // ---------------------------------------------------------------------------
@@ -365,7 +386,11 @@ fn soup(seed: u64) -> String {
 #[test]
 fn linear_passes_match_reference_on_lib_rs_test_inputs() {
     let inputs = lib_rs_literals();
-    assert!(inputs.len() > 500, "harvested only {} literals", inputs.len());
+    assert!(
+        inputs.len() > 500,
+        "harvested only {} literals",
+        inputs.len()
+    );
     let mut pipes = Pipelines::new();
     let mut tally = Tally::default();
     for src in &inputs {
@@ -449,7 +474,10 @@ fn linear_passes_match_reference_on_fragment_soups() {
 
 /// Lex `source` to completion with the engine trace dropped after every
 /// `limit` steps; return the tokens and diagnostics.
-fn lex_with_trace_limit(source: &str, limit: usize) -> (Result<Vec<Token>, String>, Vec<super::Diagnostic>) {
+fn lex_with_trace_limit(
+    source: &str,
+    limit: usize,
+) -> (Result<Vec<Token>, String>, Vec<super::Diagnostic>) {
     let mut lexer = RubyLexer::new("3.3").unwrap();
     lexer.engine_trace_limit = limit;
     let result = lexer

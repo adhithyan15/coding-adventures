@@ -322,6 +322,17 @@ convenience.
   for deciding whether to abort or skip ahead.
 - **Determinism**: the same input + version + oracle always
   produces the same token stream.  Property tests verify this.
+- **Source budget** (#18814): the lexer refuses more than
+  `MAX_SOURCE_BYTES` = 1 MiB (the parser release API's
+  `MAX_TRUSTED_SOURCE_BYTES`) before lexing any of it, with the typed
+  `RubyLexError::Budget { which, limit, actual }` from `RubyLexer::push`
+  and `tokenize_ruby_for_version` (no tokens from the infallible
+  wrappers).  Never a panic.
+- **Linear post-passes** (#18814): every token-stream post-pass (the era
+  fusions and the statement-end marking) is one sweep over the tokens.
+  A pass that folds or inserts tokens builds or compacts the vector once;
+  it never calls `Vec::remove` / `Vec::insert` per token, which made the
+  fusions quadratic (80 000 lines of `a&.b` took ~153 s).
 - **Performance budget**: ~10 µs per KB of typical Ruby source on
   a 2024 laptop.  This isn't a real number yet — to be tightened
   after Phase 1 benchmarks.
