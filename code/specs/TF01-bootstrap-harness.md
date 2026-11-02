@@ -67,7 +67,7 @@ space.
 |---|---|---|
 | `N` | null | |
 | `T`, `F` | true, false | |
-| `I<int>` | integer | Arbitrary precision. Decimal, optional `-`, no leading zeros, and never `-0` |
+| `I<int>` | integer | Arbitrary precision up to **1000 digits**. Decimal, optional `-`, no leading zeros, and never `-0` |
 | `D<16 hex>` | 64-bit float | The exact IEEE-754 bit pattern, lowercase. `-0` and every NaN payload are exact |
 | `X<hex>` | bytes | Lowercase, even length; `X` alone is the empty byte string |
 | `S<hex>` | text | The UTF-8 bytes of the string as lowercase hex; `S` alone is the empty string. Hex keeps spaces and newlines out of the token stream |
@@ -77,7 +77,9 @@ space.
 Lists and maps nest at most **64** deep: the outermost container is depth 1,
 and a container at depth 65 is rejected. The limit bounds a recursive
 parser's stack whatever the input, and every lane enforces the same number so
-that they accept the same files.
+that they accept the same files. The digit limit on integers exists for the
+same reason: without it, a lane would meet its own limit first (Python refuses
+to convert more than 4300 digits).
 
 A parser must **reject** any line that breaks these rules. The rejected inputs
 include:
@@ -91,7 +93,8 @@ include:
 - a duplicate record id;
 - invalid UTF-8 inside `S`;
 - a carriage return anywhere in a record line;
-- nesting deeper than 64.
+- nesting deeper than 64;
+- an integer of more than 1000 digits.
 
 The corpus includes such inputs as `tfv_reject` cases (§4).
 

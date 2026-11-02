@@ -53,7 +53,7 @@ class ValidatorTests(unittest.TestCase):
 
     def test_canonical_corpus_is_clean(self) -> None:
         self.assertEqual(MODULE.check(self.cases), [])
-        self.assertEqual(len(self.cases), 68)
+        self.assertEqual(len(self.cases), 72)
 
     def test_flipped_verdict_is_caught(self) -> None:
         def flip(cases: list[dict]) -> None:
@@ -219,6 +219,31 @@ class TfvTests(unittest.TestCase):
         tfv.parse_file("tfv 1\nr R1 Kv " + "L1 " * tfv.MAX_DEPTH + "N\n")
         with self.assertRaises(tfv.TfvError):
             tfv.parse_file("tfv 1\nr R1 Kv " + "L1 " * (tfv.MAX_DEPTH + 1) + "N\n")
+
+    def test_huge_numbers_raise_tfv_error_not_value_error(self) -> None:
+        # Python refuses int() on more than 4300 digits with a plain
+        # ValueError; every such input must still surface as TfvError.
+        huge = "9" * 5000
+        for text in (
+            f"tfv 1\nr R1 Kv I{huge}\n",
+            f"tfv 1\nr R1 Kv I{huge} N\n",
+            f"tfv 1\nr R{huge} Kv N\n",
+            f"tfv 1\nr R1 Kv L{huge} N\n",
+            f"tfv 1\nr R1 Kv M{huge} N N\n",
+        ):
+            with self.assertRaises(tfv.TfvError):
+                tfv.parse_file(text)
+        with self.assertRaises(tfv.TfvError):
+            tfv.from_json({"kind": "int", "value": huge})
+        limit = "9" * tfv.MAX_INT_DIGITS
+        self.assertEqual(
+            tfv.parse_file(f"tfv 1\nr R1 Kv I-{limit}\n")[0][1][0][1][0], "int"
+        )
+
+    def test_malformed_json_raises_tfv_error(self) -> None:
+        for bad in ({"kind": []}, {"kind": None}, "\ud800"):
+            with self.assertRaises(tfv.TfvError, msg=repr(bad)):
+                tfv.from_json(bad)
 
     def test_encoder_refuses_bad_names(self) -> None:
         with self.assertRaises(tfv.TfvError):

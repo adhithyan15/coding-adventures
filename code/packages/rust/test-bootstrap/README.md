@@ -18,7 +18,7 @@ reading, and pinned by data:
   L1  Warrant: specs compiled into plain tests ─┐
   L0  test-bootstrap  ◄─────────────────────────┘  this crate
         ▲
-        └── checked by code/specs/fixtures/test-bootstrap-v1 (68 cases),
+        └── checked by code/specs/fixtures/test-bootstrap-v1 (72 cases),
             whose answers an independent Python reference re-derives
 ```
 

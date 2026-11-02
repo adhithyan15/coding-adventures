@@ -46,6 +46,11 @@ pub const HEADER: &str = "tfv 1";
 /// use bounded whatever the input.
 pub const MAX_DEPTH: usize = 64;
 
+/// How many digits an integer may have, not counting its sign. Arbitrary
+/// precision still, but bounded, so that no lane meets a limit of its own
+/// first: Python, for one, refuses to convert more than 4300 digits.
+pub const MAX_INT_DIGITS: usize = 1000;
+
 /// One TFV value.
 ///
 /// There is deliberately no `PartialEq`: the only equality the harness
@@ -323,10 +328,10 @@ fn is_count(s: &str) -> bool {
             && s.bytes().all(|b| b.is_ascii_digit()))
 }
 
-/// `-?(0|[1-9][0-9]*)`, but never `-0`.
+/// `-?(0|[1-9][0-9]*)` with at most [`MAX_INT_DIGITS`] digits, never `-0`.
 fn is_canonical_int(s: &str) -> bool {
     let digits = s.strip_prefix('-').unwrap_or(s);
-    is_count(digits) && s != "-0"
+    digits.len() <= MAX_INT_DIGITS && is_count(digits) && s != "-0"
 }
 
 fn is_lower_hex(s: &str) -> bool {
@@ -526,6 +531,14 @@ mod tests {
         ] {
             assert!(parse_file(bad).is_err(), "{bad:?} was accepted");
         }
+    }
+
+    #[test]
+    fn integer_digit_limit_is_exact() {
+        let at_limit = format!("I-9{}", "0".repeat(MAX_INT_DIGITS - 1));
+        let past_limit = format!("I9{}", "0".repeat(MAX_INT_DIGITS));
+        assert!(one_value(&at_limit).is_ok());
+        assert!(one_value(&past_limit).is_err());
     }
 
     #[test]

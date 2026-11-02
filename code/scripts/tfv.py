@@ -44,9 +44,10 @@ Record = tuple[str, list[tuple[str, Value]]]
 
 HEADER = "tfv 1"
 MAX_DEPTH = 64  # lists and maps nest at most this deep (TF01 section 2.2)
+MAX_INT_DIGITS = 1000  # an integer has at most this many digits (TF01 section 2.2)
 _ID = re.compile(r"[A-Za-z0-9._/-]+")
 _FIELD = re.compile(r"[a-z][a-z0-9_]*")
-_INT = re.compile(r"-?(0|[1-9][0-9]*)")
+_INT = re.compile(rf"-?(0|[1-9][0-9]{{0,{MAX_INT_DIGITS - 1}}})")
 _HEX = re.compile(r"(?:[0-9a-f]{2})*")
 _COUNT = re.compile(r"0|[1-9][0-9]*")
 
@@ -64,6 +65,10 @@ def from_json(node: Any, depth: int = 0) -> Value:
     if node is True or node is False:
         return ("bool", node)
     if isinstance(node, str):
+        try:
+            node.encode("utf-8")
+        except UnicodeEncodeError as error:
+            raise TfvError("text must be valid Unicode (no lone surrogates)") from error
         return ("text", node)
     is_container = isinstance(node, list) or (
         isinstance(node, dict) and node.get("kind") == "map"
@@ -75,6 +80,8 @@ def from_json(node: Any, depth: int = 0) -> Value:
     if not isinstance(node, dict) or "kind" not in node:
         raise TfvError(f"not a TFV JSON value (bare numbers are not allowed): {node!r}")
     kind = node["kind"]
+    if not isinstance(kind, str):
+        raise TfvError(f"kind must be a string: {kind!r}")
     expected_keys = {
         "int": {"kind", "value"},
         "f64": {"kind", "bits"},
@@ -203,7 +210,7 @@ def _parse_record(line: str, number: int) -> Record:
         raise TfvError(f"line {number}: expected R<count>")
     position = 2
     fields: list[tuple[str, Value]] = []
-    for _ in range(int(head[1:])):
+    for _ in range(_count(head[1:], number)):
         if position >= len(tokens):
             raise TfvError(f"line {number}: record ends early")
         key = tokens[position]
@@ -216,6 +223,16 @@ def _parse_record(line: str, number: int) -> Record:
     if position != len(tokens):
         raise TfvError(f"line {number}: trailing tokens")
     return record_id, fields
+
+
+def _count(body: str, number: int) -> int:
+    # Rust parses a count into usize and rejects overflow; 20 digits is the
+    # most a 64-bit count can have. Checking length first keeps a huge count
+    # from ever reaching int(), whose digit limit would raise a plain
+    # ValueError instead of TfvError.
+    if len(body) > 20:
+        raise TfvError(f"line {number}: count too large")
+    return int(body)
 
 
 def _parse_value(
@@ -246,7 +263,7 @@ def _parse_value(
             raise TfvError(
                 f"line {number}: lists and maps nest at most {MAX_DEPTH} deep"
             )
-        count, position = int(body), position + 1
+        count, position = _count(body, number), position + 1
         if tag == "L":
             items = []
             for _ in range(count):
