@@ -55,6 +55,7 @@
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use semantic_ir::{BackendErrorKind, Module};
 
@@ -311,15 +312,70 @@ fn normalise(s: &str) -> String {
     s.replace("\r\n", "\n").trim_end_matches('\n').to_string()
 }
 
+/// A path in the system temp directory for one run's emitted source or
+/// binary, unique to this call.
+///
+/// The name is `sir_conf_<program>_<target>_<pid>_<n><ext>`:
+///
+/// | part        | keeps apart                                            |
+/// |-------------|--------------------------------------------------------|
+/// | `<program>` | readability: a leftover file says what it was          |
+/// | `<pid>`     | two test *processes* (`cargo test` runs each test file as its own binary, in parallel) |
+/// | `<n>`       | two calls in *one* process                             |
+///
+/// The counter is the fix for #18485.  The name used to stop at the process
+/// id, but `cargo test` runs the tests of one binary on parallel threads,
+/// which share that id.  Two tests compiling the same program for the same
+/// target wrote, compiled, ran and deleted the *same* file at once, and one
+/// failed when the other deleted its source or overwrote its binary.
+/// [`TEMP_COUNTER`] is a process-wide atomic, so no two calls, on any
+/// thread, ever see the same `<n>`.  (A caller that asks for the source and
+/// the binary of one run gets two numbers; they differ in extension anyway.)
 fn temp_path(name: &str, target: Target, ext: &str) -> PathBuf {
+    let n = TEMP_COUNTER.fetch_add(1, Ordering::Relaxed);
     let mut p = std::env::temp_dir();
     p.push(format!(
-        "sir_conf_{}_{}_{}{ext}",
+        "sir_conf_{}_{}_{}_{n}{ext}",
         name,
         target.tag(),
         std::process::id()
     ));
     p
+}
+
+/// The per-process counter behind [`temp_path`].  `Relaxed` is enough: the
+/// only promise needed is that every `fetch_add` returns a different value,
+/// which atomicity alone gives.
+static TEMP_COUNTER: AtomicU64 = AtomicU64::new(0);
+
+/// A temp file that is deleted when the guard goes out of scope.
+///
+/// Every `run_*` function writes a source file, and the compiled ones a
+/// binary, then returns along one of several paths: ran, failed to compile,
+/// toolchain missing, runtime packages missing.  Each path used to remove
+/// its files by hand, and `run_python` missed one: when the `sir-runtime-*`
+/// packages were not found it returned `Skipped` and left the `.py` behind.
+/// Tying the deletion to `Drop` covers every return, `?` and panic, so no
+/// path can forget.  (A file that was never created is fine: the removal
+/// error is ignored.)
+#[derive(Debug)]
+struct TempFile(PathBuf);
+
+impl TempFile {
+    /// A guard for a fresh [`temp_path`].
+    fn new(name: &str, target: Target, ext: &str) -> Self {
+        TempFile(temp_path(name, target, ext))
+    }
+
+    fn path(&self) -> &std::path::Path {
+        &self.0
+    }
+}
+
+impl Drop for TempFile {
+    fn drop(&mut self) {
+        let _ = fs::remove_file(&self.0);
+    }
 }
 
 // ── Python ────────────────────────────────────────────────────────────────
@@ -358,18 +414,19 @@ fn run_python(name: &str, module: &Module) -> RunOutcome {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("python emit failed: {e:?}")),
     };
-    let path = temp_path(name, Target::Python, ".py");
-    if fs::write(&path, &artifact.source).is_err() {
-        return RunOutcome::Failed("could not write temp .py".into());
-    }
+    // Look for the runtime packages *before* writing anything, so the skip
+    // has nothing to clean up; the guard covers every other path.
     let Some(pythonpath) = python_runtime_path() else {
         return RunOutcome::Skipped("sir-runtime-* python packages not found".into());
     };
+    let file = TempFile::new(name, Target::Python, ".py");
+    if fs::write(file.path(), &artifact.source).is_err() {
+        return RunOutcome::Failed("could not write temp .py".into());
+    }
     let out = Command::new("python3")
-        .arg(&path)
+        .arg(file.path())
         .env("PYTHONPATH", pythonpath)
         .output();
-    let _ = fs::remove_file(&path);
     finish(out, &artifact.source, "python")
 }
 
@@ -380,12 +437,11 @@ fn run_javascript(name: &str, module: &Module) -> RunOutcome {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("javascript emit failed: {e:?}")),
     };
-    let path = temp_path(name, Target::JavaScript, ".js");
-    if fs::write(&path, &artifact.source).is_err() {
+    let file = TempFile::new(name, Target::JavaScript, ".js");
+    if fs::write(file.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .js".into());
     }
-    let out = Command::new("node").arg(&path).output();
-    let _ = fs::remove_file(&path);
+    let out = Command::new("node").arg(file.path()).output();
     finish(out, &artifact.source, "javascript")
 }
 
@@ -396,12 +452,11 @@ fn run_go(name: &str, module: &Module) -> RunOutcome {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("go emit failed: {e:?}")),
     };
-    let path = temp_path(name, Target::Go, ".go");
-    if fs::write(&path, &artifact.source).is_err() {
+    let file = TempFile::new(name, Target::Go, ".go");
+    if fs::write(file.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .go".into());
     }
-    let out = Command::new("go").arg("run").arg(&path).output();
-    let _ = fs::remove_file(&path);
+    let out = Command::new("go").arg("run").arg(file.path()).output();
     finish(out, &artifact.source, "go")
 }
 
@@ -417,9 +472,9 @@ fn run_rust(name: &str, module: &Module) -> RunOutcome {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("rust emit failed: {e:?}")),
     };
-    let src = temp_path(name, Target::Rust, ".rs");
-    let bin = temp_path(name, Target::Rust, if cfg!(windows) { ".exe" } else { "" });
-    if fs::write(&src, &artifact.source).is_err() {
+    let src = TempFile::new(name, Target::Rust, ".rs");
+    let bin = TempFile::new(name, Target::Rust, if cfg!(windows) { ".exe" } else { "" });
+    if fs::write(src.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .rs".into());
     }
     let mut cmd = Command::new("rustc");
@@ -429,17 +484,14 @@ fn run_rust(name: &str, module: &Module) -> RunOutcome {
             cmd.arg("-C").arg(format!("linker={linker}"));
         }
     }
-    let compiled = cmd.arg(&src).arg("-o").arg(&bin).output();
+    let compiled = cmd.arg(src.path()).arg("-o").arg(bin.path()).output();
     match compiled {
         Ok(o) if o.status.success() => {
-            let run_out = Command::new(&bin).output();
-            let _ = fs::remove_file(&src);
-            let _ = fs::remove_file(&bin);
+            let run_out = Command::new(bin.path()).output();
             finish(run_out, &artifact.source, "rust")
         }
         Ok(o) => {
             let stderr = String::from_utf8_lossy(&o.stderr);
-            let _ = fs::remove_file(&src);
             if stderr.contains("linker")
                 && (stderr.contains("not found") || stderr.contains("No such file"))
             {
@@ -451,10 +503,7 @@ fn run_rust(name: &str, module: &Module) -> RunOutcome {
                 ))
             }
         }
-        Err(e) => {
-            let _ = fs::remove_file(&src);
-            RunOutcome::Skipped(format!("rustc unavailable: {e}"))
-        }
+        Err(e) => RunOutcome::Skipped(format!("rustc unavailable: {e}")),
     }
 }
 
@@ -483,39 +532,33 @@ fn run_c(name: &str, module: &Module) -> RunOutcome {
     let Some(cc) = c_compiler() else {
         return RunOutcome::Skipped("no C compiler (set SIR_CC or install cc/clang/gcc)".into());
     };
-    let src = temp_path(name, Target::C, ".c");
-    let bin = temp_path(name, Target::C, if cfg!(windows) { ".exe" } else { "" });
-    if fs::write(&src, &artifact.source).is_err() {
+    let src = TempFile::new(name, Target::C, ".c");
+    let bin = TempFile::new(name, Target::C, if cfg!(windows) { ".exe" } else { "" });
+    if fs::write(src.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .c".into());
     }
     let compiled = Command::new(&cc)
         .arg("-std=c99")
         .arg("-o")
-        .arg(&bin)
-        .arg(&src)
+        .arg(bin.path())
+        .arg(src.path())
         // Linux needs -lm to link floor/ceil/fabs (Numeric methods, slice 9);
         // macOS's libSystem folds libm in, so this is a no-op there.
         .arg("-lm")
         .output();
     match compiled {
         Ok(o) if o.status.success() => {
-            let run_out = Command::new(&bin).output();
-            let _ = fs::remove_file(&src);
-            let _ = fs::remove_file(&bin);
+            let run_out = Command::new(bin.path()).output();
             finish(run_out, &artifact.source, "c")
         }
         Ok(o) => {
             let stderr = String::from_utf8_lossy(&o.stderr);
-            let _ = fs::remove_file(&src);
             RunOutcome::Failed(format!(
                 "C compiler failed:\n{stderr}\n--- source ---\n{}",
                 artifact.source
             ))
         }
-        Err(e) => {
-            let _ = fs::remove_file(&src);
-            RunOutcome::Skipped(format!("C compiler unavailable: {e}"))
-        }
+        Err(e) => RunOutcome::Skipped(format!("C compiler unavailable: {e}")),
     }
 }
 
@@ -542,12 +585,11 @@ fn run_ruby(name: &str, module: &Module) -> RunOutcome {
         }
         Err(e) => return RunOutcome::Failed(format!("ruby emit failed: {e:?}")),
     };
-    let path = temp_path(name, Target::Ruby, ".rb");
-    if fs::write(&path, &artifact.source).is_err() {
+    let file = TempFile::new(name, Target::Ruby, ".rb");
+    if fs::write(file.path(), &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .rb".into());
     }
-    let out = Command::new("ruby").arg(&path).output();
-    let _ = fs::remove_file(&path);
+    let out = Command::new("ruby").arg(file.path()).output();
     finish(out, &artifact.source, "ruby")
 }
 
@@ -570,5 +612,62 @@ fn finish(
             source,
         )),
         Err(e) => RunOutcome::Skipped(format!("{tag} toolchain vanished mid-run: {e}")),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Two calls for the same `(program, target, extension)` in one process
+    /// get different paths (#18485).  Every test in a test binary shares a
+    /// process id, and the harness runs those tests on parallel threads, so a
+    /// name built from the process id alone let two tests that compile the
+    /// same program for the same target overwrite or delete each other's
+    /// files mid-run.
+    #[test]
+    fn temp_paths_are_unique_within_one_process() {
+        let a = temp_path("same_program", Target::Rust, ".rs");
+        let b = temp_path("same_program", Target::Rust, ".rs");
+        assert_ne!(a, b);
+    }
+
+    /// A [`TempFile`] removes its file however its owner returns, and a
+    /// guard whose file was never written drops quietly (#18485 follow-up:
+    /// `run_python`'s skip path used to leave its `.py` behind).
+    #[test]
+    fn a_temp_file_guard_removes_its_file_on_every_path() {
+        let file = TempFile::new("guard_probe", Target::Python, ".py");
+        fs::write(file.path(), "print(1)\n").expect("write the probe");
+        let path = file.path().to_path_buf();
+        assert!(path.exists());
+        drop(file);
+        assert!(!path.exists(), "left behind: {path:?}");
+
+        let unwritten = TempFile::new("guard_probe", Target::C, "");
+        let path = unwritten.path().to_path_buf();
+        drop(unwritten);
+        assert!(!path.exists());
+    }
+
+    /// The same holds across threads: many threads asking at once never
+    /// receive a path another thread was also given.
+    #[test]
+    fn temp_paths_are_unique_across_threads() {
+        let handles: Vec<_> = (0..8)
+            .map(|_| {
+                std::thread::spawn(|| {
+                    (0..64)
+                        .map(|_| temp_path("same_program", Target::C, ".c"))
+                        .collect::<Vec<_>>()
+                })
+            })
+            .collect();
+        let mut all = std::collections::HashSet::new();
+        for h in handles {
+            for p in h.join().expect("thread finishes") {
+                assert!(all.insert(p.clone()), "path handed out twice: {p:?}");
+            }
+        }
     }
 }

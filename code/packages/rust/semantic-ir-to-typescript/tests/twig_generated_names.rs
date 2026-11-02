@@ -586,3 +586,84 @@ fn non_finite_float_literals_name_nothing() {
         String::from_utf8_lossy(&out.stderr)
     );
 }
+
+/// Rename every variable `from` to `to` in `e`: the variable reads and the
+/// `let` bindings these Twig programs lower to.  Function names (calls) are
+/// left alone, which is the point: afterwards a variable and a function
+/// share one SIR name.
+fn rename_var(e: &mut Expr, from: &str, to: &str) {
+    match e {
+        Expr::VarRef { name, .. } if name == from => *name = to.to_string(),
+        Expr::BuiltinCall { args, .. } | Expr::DirectCall { args, .. } => {
+            for a in args {
+                rename_var(a, from, to);
+            }
+        }
+        Expr::Block(b) => {
+            for s in &mut b.stmts {
+                if let Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } =
+                    s
+                {
+                    if name == from {
+                        *name = to.to_string();
+                    }
+                    rename_var(value, from, to);
+                }
+            }
+            rename_var(&mut b.value, from, to);
+        }
+        _ => {}
+    }
+}
+
+/// #18485: SIR keeps functions and variables apart, so a parameter or a
+/// local may share a function's name, and a call must still reach the
+/// function.  Twig cannot spell that (it has one namespace), so each program
+/// is lowered with the variable spelled `x` and then renamed to `f` in SIR.
+/// TypeScript bound the variable as `f`, which shadowed `function f`, and
+/// `f()` failed with `TypeError: f is not a function`.
+#[test]
+fn a_variable_named_like_a_function_does_not_shadow_it() {
+    let cases: [(&str, &str, &str); 2] = [
+        // A parameter: (g 2) = (f) + 2.
+        (
+            "param",
+            "(define (f) 40) (define (g x) (+ (f) x)) (print (g 2))",
+            "g",
+        ),
+        // A `let` local: (f) + 2.
+        (
+            "let",
+            "(define (f) 40) (define (g) (let ((x 2)) (+ (f) x))) (print (g))",
+            "g",
+        ),
+    ];
+    let mut failures = Vec::new();
+    for (tag, src, holder) in cases {
+        let mut m = lower(src);
+        let g = m
+            .functions
+            .iter_mut()
+            .find(|f| f.name == holder)
+            .expect("the function holding the variable");
+        for p in &mut g.params {
+            if p.name == "x" {
+                p.name = "f".to_string();
+            }
+        }
+        rename_var(&mut g.body.value, "x", "f");
+        let report = semantic_ir::validate(&m);
+        assert!(report.is_ok(), "[{tag}] renamed module is valid: {:?}", report.issues);
+        let Some(out) = run_module(&m, src, &format!("shadow_{tag}")) else {
+            continue;
+        };
+        let got = String::from_utf8_lossy(&out.stdout);
+        if !out.status.success() || got.trim_end() != "42" {
+            failures.push(format!(
+                "[{tag}] printed {got:?}, want \"42\"; stderr:\n{}",
+                String::from_utf8_lossy(&out.stderr)
+            ));
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n\n"));
+}

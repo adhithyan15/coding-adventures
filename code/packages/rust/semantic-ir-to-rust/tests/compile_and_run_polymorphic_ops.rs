@@ -134,7 +134,7 @@ fn compile_run(module: &Module, tag: &str) -> Option<String> {
     let artifact = compile(module).expect("module should compile to Rust source");
 
     let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_polyops_{tag}_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_polyops_{tag}_{nonce}{}",
@@ -241,4 +241,15 @@ fn polymorphic_plus_times_match_ruby() {
 
     // ── regression: numeric `*` unchanged: 2 * 3 → 6 ───────────────
     assert_output("puts", "num_times", binop("*", ilit(2), ilit(3)), "6\n");
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

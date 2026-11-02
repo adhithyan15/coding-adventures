@@ -8,7 +8,7 @@
 //! nested `def __block_<n>():` functions invoked at the source site.
 
 use std::cell::RefCell;
-use std::collections::{BTreeSet, HashMap};
+use std::collections::{BTreeSet, HashMap, HashSet};
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -577,6 +577,11 @@ pub fn emit_module(m: &Module) -> String {
             t.insert(f.name.clone(), f.params.len());
         }
     });
+    FUNCTION_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().map(|f| f.name.clone()));
+    });
 
     let mut out = String::new();
     emit_banner(&mut out, m);
@@ -745,7 +750,7 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        out.push_str(&sanitize_ident(&c.name));
+        out.push_str(&var_ident(&c.name));
     }
     // KW2 keyword-only `*` separator.  A `Keyword` param is Python-native as a
     // *keyword-only* parameter — one that sits AFTER a `*` in the signature and
@@ -793,7 +798,7 @@ fn emit_function(out: &mut String, f: &Function) {
             ParamKind::KwRest => out.push_str("**"),
             ParamKind::Required | ParamKind::Keyword => {}
         }
-        out.push_str(&sanitize_ident(&p.name));
+        out.push_str(&var_ident(&p.name));
         // Default parameters (positional P2c *and* KW2 optional keyword params).
         // A defaulted param gets the *sentinel* as its native Python default —
         // `name=_SIR_MISSING` — so callers may omit the trailing/keyword
@@ -824,7 +829,7 @@ fn emit_function(out: &mut String, f: &Function) {
     let pad = indent_str(1);
     for p in &f.params {
         if p.kind == ParamKind::Rest {
-            let name = sanitize_ident(&p.name);
+            let name = var_ident(&p.name);
             let _ = writeln!(out, "{pad}{name} = list({name})");
         }
     }
@@ -845,7 +850,7 @@ fn emit_function(out: &mut String, f: &Function) {
     let inner_pad = indent_str(2);
     for p in &f.params {
         let Some(default) = &p.default else { continue };
-        let name = sanitize_ident(&p.name);
+        let name = var_ident(&p.name);
         let mut tmp = String::new();
         let _ = writeln!(tmp, "{pad}if {name} is _SIR_MISSING:");
         let _ = write!(tmp, "{inner_pad}{name} = ");
@@ -901,7 +906,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
     let pad = indent_str(indent);
     match s {
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, var_ident(name));
             emit_expr(out, value, indent, env);
             out.push('\n');
         }
@@ -980,7 +985,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
             value,
             ..
         } => {
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, var_ident(name));
             emit_expr(out, value, indent, env);
             out.push('\n');
         }
@@ -1039,7 +1044,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
             body,
             ..
         } => {
-            let _ = write!(out, "{}for {} in range(", pad, sanitize_ident(var));
+            let _ = write!(out, "{}for {} in range(", pad, var_ident(var));
             emit_expr(out, start, indent, env);
             out.push_str(", ");
             emit_expr(out, stop, indent, env);
@@ -1052,7 +1057,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
         Stmt::ForEach {
             var, iter, body, ..
         } => {
-            let _ = write!(out, "{}for {} in ", pad, sanitize_ident(var));
+            let _ = write!(out, "{}for {} in ", pad, var_ident(var));
             emit_expr(out, iter, indent, env);
             out.push_str(":\n");
             emit_block_as_stmts(out, body, indent + 1, env);
@@ -1192,7 +1197,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
                     // `rescue Foo => e` binds the caught value as a local.
                     if let Some(bind) = &r.binding {
                         let bpad = indent_str(indent + 2);
-                        let _ = writeln!(out, "{}{} = __exc", bpad, sanitize_ident(bind));
+                        let _ = writeln!(out, "{}{} = __exc", bpad, var_ident(bind));
                         emit_stmt_list_allow_only_value(out, &r.body, indent + 2, false, env);
                     } else {
                         emit_stmt_list(out, &r.body, indent + 2, env);
@@ -1528,7 +1533,9 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
         // not a string literal — so it is emitted through `sanitize_ident`,
         // and the value lowers through the ordinary expression emitter.
         Expr::KeywordArg { name, value, .. } => {
-            out.push_str(&sanitize_ident(name));
+            // The callee's parameter is bound under `var_ident(name)`, so
+            // the keyword must be spelled the same way (#18485).
+            out.push_str(&var_ident(name));
             out.push('=');
             emit_expr(out, value, indent, env);
         }
@@ -1838,7 +1845,7 @@ fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv
 fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
     match scope {
         Scope::Local | Scope::Param | Scope::Capture => {
-            out.push_str(&sanitize_ident(name));
+            out.push_str(&var_ident(name));
         }
         Scope::Global => {
             let _ = write!(out, "_sir_global_get_static({})", quote_py_string(name));
@@ -2383,7 +2390,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                 value,
                 ..
             } => {
-                let _ = write!(out, "({} := ", sanitize_ident(name));
+                let _ = write!(out, "({} := ", var_ident(name));
                 emit_expr(out, value, indent, env);
                 out.push_str("), ");
                 env.declare(name, sir_type.clone());
@@ -2394,7 +2401,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                 value,
                 ..
             } => {
-                let _ = write!(out, "({} := ", sanitize_ident(name));
+                let _ = write!(out, "({} := ", var_ident(name));
                 emit_expr(out, value, indent, env);
                 out.push_str("), ");
             }
@@ -2582,7 +2589,7 @@ fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize, env: &mu
     let inner = indent + 1;
     let inner_pad = indent_str(inner);
     for n in &nonlocals {
-        let _ = writeln!(def, "{}nonlocal {}", inner_pad, sanitize_ident(n));
+        let _ = writeln!(def, "{}nonlocal {}", inner_pad, var_ident(n));
     }
     // This `def` opens a *new* Python function scope, so clone `env`
     // before recursing: any bindings introduced inside the lifted block
@@ -2753,6 +2760,11 @@ thread_local! {
     /// Pending nested-`def` sources, awaiting flush before the current
     /// statement (see [`flush_hoist`]).
     static HOIST: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
+    /// The SIR name of every function in the module being emitted.  A
+    /// *variable* spelled like one of them is renamed by [`var_ident`] so
+    /// it cannot shadow the function (#18485).  Filled at the top of every
+    /// `emit_module`, like `STRICT_ARITY`.
+    static FUNCTION_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 fn fresh_block_name() -> String {
@@ -2774,6 +2786,43 @@ fn fresh_block_name() -> String {
 
 fn indent_str(level: usize) -> String {
     "    ".repeat(level)
+}
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a *variable* renamed
+/// because a function of the module has the same SIR name (see
+/// [`var_ident`]).  Distinct from [`TAG_VERBATIM`] and [`TAG_ESCAPED`], so a
+/// renamed variable can never equal any output of [`sanitize_ident`].
+const TAG_LOCAL: &str = "l";
+
+/// The Python identifier for the SIR *variable* `name`: a local,
+/// parameter, capture, loop variable, `rescue` binding, or the name of a
+/// keyword argument (which must match the callee's parameter).  Globals
+/// live in the runtime's store, keyed by their SIR name, so they never
+/// reach here.
+///
+/// SIR keeps functions and variables in two namespaces, and a source
+/// language may use both spellings at once (Ruby: `def f; 40; end; f = 2;
+/// f() + f` is 42).  Python has one: an assignment `f = 2` anywhere in a
+/// `def` makes `f` local to the whole body, so `f()` called the integer
+/// (`TypeError: 'int' object is not callable`, #18485).  A variable that
+/// collides with a function is renamed:
+///
+/// | SIR variable | module has a function of that name? | Python        |
+/// |--------------|-------------------------------------|---------------|
+/// | `x`          | no                                  | `x`           |
+/// | `f`          | yes                                 | `sir_esc_lf`  |
+///
+/// The renamed form is [`ESCAPE_MARKER`], [`TAG_LOCAL`], then
+/// `sanitize_ident(name)`: one-to-one because `sanitize_ident` is, and
+/// disjoint from every `sanitize_ident` output, which either lacks the
+/// marker or follows it with another tag.  It depends only on the name, so
+/// a variable's binding and every use of it agree.
+fn var_ident(name: &str) -> String {
+    if FUNCTION_NAMES.with(|t| t.borrow().contains(name)) {
+        format!("{ESCAPE_MARKER}{TAG_LOCAL}{}", sanitize_ident(name))
+    } else {
+        sanitize_ident(name)
+    }
 }
 
 /// Sanitize a SIR identifier for Python.
@@ -3995,5 +4044,103 @@ mod tests {
         assert!(out.contains("else:\n"), "got {out}");
         assert!(!out.contains(":="), "must not route through the walrus-tuple path: {out}");
         assert!(!out.contains("def "), "must not route through a lifted nested def: {out}");
+    }
+
+    // ── a variable never shadows a function (#18485) ─────────────────
+
+    /// `def f; 40; end` and a `main` whose local is also named `f`:
+    /// `let f = 2; f() + f`, which a source language with separate
+    /// namespaces (Ruby) evaluates to 42.
+    fn local_named_like_a_function() -> Module {
+        let sp = Span::synthetic;
+        let func = |name: &str, body: semantic_ir::Block| semantic_ir::Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let f = func(
+            "f",
+            semantic_ir::Block {
+                stmts: vec![],
+                value: Expr::IntLit { value: 40, span: sp() },
+                span: sp(),
+            },
+        );
+        let main = func(
+            "main",
+            semantic_ir::Block {
+                stmts: vec![Stmt::LetStarBinding {
+                    name: "f".to_string(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![
+                        Expr::DirectCall {
+                            fn_name: "f".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                        Expr::VarRef {
+                            name: "f".to_string(),
+                            scope: Scope::Local,
+                            span: sp(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+        );
+        Module {
+            name: "shadow".to_string(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    #[test]
+    fn a_local_named_like_a_function_is_renamed_and_the_function_is_not() {
+        let out = emit_module(&local_named_like_a_function());
+        // The function keeps its own spelling.  Everything from its
+        // definition on is the user's code (the inlined runtime comes
+        // first, and binds names of its own).
+        let at = out.find("def f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let out = &out[at..];
+        // The local is bound, and read, under its renamed spelling...
+        assert!(out.contains("sir_esc_lf = "), "{out}");
+        assert!(out.contains("sir_esc_lf"), "{out}");
+        // ...never under the function's own spelling, which the call keeps.
+        assert!(!out.contains("    f = "), "{out}");
+        assert!(out.contains("f()"), "{out}");
+    }
+
+    #[test]
+    fn var_ident_renames_exactly_the_names_of_functions() {
+        FUNCTION_NAMES.with(|t| {
+            let mut t = t.borrow_mut();
+            t.clear();
+            t.insert("f".to_string());
+        });
+        assert_eq!(var_ident("f"), "sir_esc_lf");
+        assert_eq!(var_ident("x"), sanitize_ident("x"));
+        // A user variable spelled like the renamed form takes the verbatim
+        // escape, so the two stay apart.
+        assert_ne!(var_ident("sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
 }
