@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: a `BracketScanner` carries the bracket depth,
+  open-string delimiter and pending escape from line to line instead of
+  rescanning the growing value, which was quadratic. Quoted field and
+  sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`) are read as
+  the bare key, per the amended contract. A dependency that resolves to the
+  package itself is now `DependencySelfEdgeError` (`DEPENDENCY_SELF_EDGE`,
+  exit status 2) instead of a silently inserted self-loop. Tests: 11 new
+  one-shape cases (57), a 20 000-line continuation, and Cargo self-edges.
+
 - Rust resolution now reads path dependencies from `[build-dependencies]`,
   `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
   tables, not just the top-level `[dependencies]`, and reads the

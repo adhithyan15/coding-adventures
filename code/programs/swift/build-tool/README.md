@@ -115,7 +115,10 @@ ASCII-lowercased, against each Rust package's directory name and declared
 `[package]` `name`; a WASM wrapper is known only by its declared name, so its
 own dependency on the Rust crate it wraps is not a self-edge. Dev-dependencies
 in every form, `[patch]`, `[replace]`, `[workspace]`, package metadata,
-features, comments, and registry-only dependencies never create edges. The
+features, comments, and registry-only dependencies never create edges. Field
+and sub-table keys may be bare or quoted (`"path" = "..."`), continuation
+lines are joined in linear time, and a dependency that resolves to the package
+itself is a `DEPENDENCY_SELF_EDGE` error (exit status 2). The
 reader works on UTF-8 bytes (a Swift `Character` would treat CRLF as one
 grapheme) and is the line procedure of the Rust paragraph of
 `code/specs/build-tool-conformance.md`; the shared

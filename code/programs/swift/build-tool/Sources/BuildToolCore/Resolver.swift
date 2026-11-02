@@ -46,6 +46,18 @@ public enum Resolver {
             }
 
             for dependency in deps {
+                // A package that resolves itself is malformed input: the
+                // conformance contract's DEPENDENCY_SELF_EDGE, never a
+                // silently drawn self-loop (which would surface later as a
+                // cycle, far from its cause) and never dropped.
+                if dependency == package.name {
+                    throw DependencySelfEdgeError(
+                        code: "DEPENDENCY_SELF_EDGE",
+                        package: package.name,
+                        manifest: repositoryManifestPath(dependencyManifestPath(package)),
+                        dependency: dependency
+                    )
+                }
                 graph.addEdge(from: dependency, to: package.name)
             }
         }
@@ -407,6 +419,12 @@ public enum Resolver {
     /// lines are joined onto it with one space (and are not looked at as
     /// headers or entries). If the file ends first, the entry contributes
     /// nothing.
+    ///
+    /// The brackets are counted over the joined value, but it is never
+    /// rescanned: a `BracketScanner` keeps its count (and whether it is
+    /// inside a string) from one piece to the next, and each piece is
+    /// appended once. Rescanning the growing value for every appended line,
+    /// as this function first did, is quadratic in a long entry.
     public static func cargoLinkDependencyNames(_ text: String) -> [String] {
         var bytes = Array(text.utf8)
         if bytes.starts(with: [0xEF, 0xBB, 0xBF]) {
@@ -458,26 +476,34 @@ public enum Resolver {
             case .inline:
                 var value = Array(trimBlank(line[(equals + 1)...]))
                 var complete = true
-                while value.first == UInt8(ascii: "{"), openBracketDepth(value[...]) > 0 {
-                    guard index < lines.count else {
-                        complete = false // the file ended inside the value
-                        break
+                if value.first == UInt8(ascii: "{") {
+                    var scanner = BracketScanner()
+                    scanner.feed(value[...])
+                    while scanner.depth > 0 {
+                        guard index < lines.count else {
+                            complete = false // the file ended inside the value
+                            break
+                        }
+                        let next = cleanLine(lines[index])
+                        index += 1
+                        scanner.feed([space][...])
+                        scanner.feed(next)
+                        value.append(space)
+                        value.append(contentsOf: next)
                     }
-                    value.append(space)
-                    value.append(contentsOf: cleanLine(lines[index]))
-                    index += 1
                 }
                 if complete, let name = cargoPathDependencyName(key: line[..<equals], value: value[...]) {
                     names.append(name)
                 }
             case .sub:
-                // Only the two bare, lowercase keys matter; the first
-                // occurrence of each wins. `version`, `features`,
-                // `optional` ... are ignored.
+                // Only the keys `path` and `package` matter, bare or quoted
+                // (`"path" = ...` is the same key); the first occurrence of
+                // each wins. `version`, `features`, `optional` ... are
+                // ignored, and so is `Path`: TOML keys are case-sensitive.
                 guard let value = singleString(line[(equals + 1)...]) else {
                     continue
                 }
-                switch decode(trimBlank(line[..<equals])) {
+                switch keySegment(line[..<equals]) {
                 case "path" where subPath == nil:
                     subPath = value
                 case "package" where subPackage == nil:
@@ -545,9 +571,15 @@ public enum Resolver {
     ///
     /// Fields are split at commas outside strings AND outside nested `[...]`
     /// or `{...}`, so a `features` array cannot leak a fake field and a
-    /// nested table's `path` is not the entry's. Field keys must be exactly
-    /// `path` and `package` (Cargo ignores `Package`, so it must not count as
-    /// a rename).
+    /// nested table's `path` is not the entry's. A field key is decoded like
+    /// an entry key, so `"path"` and `'path'` are the key `path` (TOML, and so
+    /// Cargo, read them that way); the decoded key must then be exactly
+    /// `path` or `package` (Cargo ignores `Package`, so it must not count as
+    /// a rename):
+    ///
+    ///     a = { "path" = "../a" }                                      -> a
+    ///     x = { 'package' = "a", path = "../a" }                       -> a
+    ///     a = { "Path" = "../a" }                                      -> not a path dep
     private static func cargoPathDependencyName(key: Bytes, value: Bytes) -> String? {
         guard let crateName = keySegment(key) else {
             return nil
@@ -564,7 +596,7 @@ public enum Resolver {
                   let fieldValue = singleString(field[(equals + 1)...]) else {
                 continue
             }
-            switch decode(trimBlank(field[..<equals])) {
+            switch keySegment(field[..<equals]) { // nil: a dotted or malformed key
             case "path" where path == nil:
                 path = fieldValue
             case "package" where packageName == nil:
@@ -649,30 +681,51 @@ public enum Resolver {
         return nil
     }
 
-    /// Counts the `{` and `[` outside strings that are not closed again
-    /// within `bytes`. Zero (or less) means the value is complete; an
-    /// unclosed string stops the count where it opens.
-    private static func openBracketDepth(_ bytes: Bytes) -> Int {
+    /// Counts the `{` and `[` outside strings that are not closed again,
+    /// over bytes fed to it in pieces. Feeding "ab" and then "cd" leaves
+    /// exactly the state feeding "abcd" would, because the scanner keeps
+    /// what a rescan would have to rediscover: whether it is inside a string
+    /// (and which delimiter closes it), and whether the last byte was a
+    /// backslash escaping the next one in a basic string. So a string still
+    /// open at the end of one line continues after the joining space, as it
+    /// does in the joined value:
+    ///
+    ///     feed({ x = "q\)    depth 1, inside "...", escape pending
+    ///     feed( )            the space is escaped: still inside the string
+    ///     feed(", p = 1 })   the string closes, } closes the table: depth 0
+    ///
+    /// A depth of zero (or less) means the value is complete.
+    private struct BracketScanner {
         var depth = 0
-        var index = bytes.startIndex
-        while index < bytes.endIndex {
-            switch bytes[index] {
-            case quote, apostrophe:
-                guard let end = stringEnd(bytes, index) else {
-                    return depth
+        /// The delimiter of the string being scanned, if any.
+        var delimiter: UInt8?
+        /// The previous byte was a backslash inside a basic string.
+        var escape = false
+
+        mutating func feed(_ bytes: Bytes) {
+            for byte in bytes {
+                if escape {
+                    escape = false
+                } else if let open = delimiter {
+                    if open == Resolver.quote, byte == Resolver.backslash {
+                        escape = true
+                    } else if byte == open {
+                        delimiter = nil
+                    }
+                } else {
+                    switch byte {
+                    case Resolver.quote, Resolver.apostrophe:
+                        delimiter = byte
+                    case UInt8(ascii: "{"), UInt8(ascii: "["):
+                        depth += 1
+                    case UInt8(ascii: "}"), UInt8(ascii: "]"):
+                        depth -= 1
+                    default:
+                        break
+                    }
                 }
-                index = end
-                continue
-            case UInt8(ascii: "{"), UInt8(ascii: "["):
-                depth += 1
-            case UInt8(ascii: "}"), UInt8(ascii: "]"):
-                depth -= 1
-            default:
-                break
             }
-            index += 1
         }
-        return depth
     }
 
     /// Splits at every `separator` outside strings. With `nested` set, a
@@ -895,6 +948,31 @@ public enum Resolver {
 
     private static func normalizePath(_ path: String) -> String {
         path.replacingOccurrences(of: "\\", with: "/").lowercased()
+    }
+
+    /// The file a package's dependencies are read from, for diagnostics.
+    /// Ecosystems whose manifest name varies report the first such file in
+    /// sorted order, and the BUILD file when there is none.
+    private static func dependencyManifestPath(_ package: BuildPackage) -> String {
+        let fixed: [String: String] = [
+            "python": "pyproject.toml", "go": "go.mod", "typescript": "package.json",
+            "rust": "Cargo.toml", "wasm": "Cargo.toml", "elixir": "mix.exs",
+            "perl": "cpanfile", "swift": "Package.swift",
+        ]
+        if let name = fixed[package.language] {
+            return (package.path as NSString).appendingPathComponent(name)
+        }
+        let suffixes: [String: [String]] = [
+            "ruby": [".gemspec"], "lua": [".rockspec"], "haskell": [".cabal"],
+            "csharp": [".csproj", ".fsproj"], "fsharp": [".csproj", ".fsproj"],
+            "dotnet": [".csproj", ".fsproj"],
+        ]
+        for suffix in suffixes[package.language] ?? [] {
+            if let path = firstFile(in: package.path, suffix: suffix) {
+                return path
+            }
+        }
+        return (package.path as NSString).appendingPathComponent("BUILD")
     }
 
     private static func repositoryManifestPath(_ path: String) -> String {

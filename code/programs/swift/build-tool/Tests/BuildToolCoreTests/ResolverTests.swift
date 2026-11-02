@@ -91,7 +91,7 @@ struct ResolverTests {
     /// for case, so the two readers are held to the same shapes.
     @Test
     func cargoLinkDependencyNamesFollowsTheLineContract() {
-        #expect(Self.cargoLinkCases.count == 46)
+        #expect(Self.cargoLinkCases.count == 57)
         for (name, manifest, want) in Self.cargoLinkCases {
             #expect(Resolver.cargoLinkDependencyNames(manifest) == want, "case \(name)")
         }
@@ -144,7 +144,65 @@ struct ResolverTests {
         ("unterminated quoted header ends the table", "[dependencies]\n[target.'cfg(unix).dependencies]\nc = { path = \"../c\" }\n", []),
         ("CRLF and BOM", "\u{FEFF}[dependencies]\r\na = { path = \"../a\" }\r\n", ["a"]),
         ("union across tables keeps duplicates for the caller", "[dependencies]\na = { path = \"../a\" }\n[build-dependencies]\na = { path = \"../a\" }\n", ["a", "a"]),
+        ("quoted inline path key", "[dependencies]\na = { \"path\" = \"../a\" }\n", ["a"]),
+        ("literal-quoted inline path key", "[dependencies]\na = { 'path' = \"../a\" }\n", ["a"]),
+        ("quoted inline package key renames", "[dependencies]\nx = { \"package\" = \"a\", path = \"../a\" }\n", ["a"]),
+        ("quoted capitalised inline Path key", "[dependencies]\na = { \"Path\" = \"../a\" }\n", []),
+        ("escaped inline path key is compared verbatim", "[dependencies]\na = { \"pa\\u0074h\" = \"../a\" }\n", []),
+        ("dotted inline field key", "[dependencies]\na = { path.x = \"../a\" }\n", []),
+        ("quoted sub-table path key", "[dependencies.a]\n\"path\" = \"../a\"\n", ["a"]),
+        ("quoted sub-table package key", "[dependencies.x]\n'package' = \"a\"\npath = \"../a\"\n", ["a"]),
+        ("quoted capitalised sub-table Path key", "[dependencies.a]\n\"Path\" = \"../a\"\n", []),
+        ("open string continues across the join", "[dependencies]\na = { path = \"../a\", x = \"q [\n\" }\n", ["a"]),
+        ("line-final backslash escapes the joining space", "[dependencies]\na = { x = \"q\\\n\", path = \"../a\" }\n", ["a"]),
     ]
+
+    /// Rescanning the growing value for every appended line is quadratic: a
+    /// 20 000-line continuation (about 500 KB) took tens of seconds. The
+    /// scanner state is carried from line to line instead, so this takes
+    /// about half a second in a debug build; the bound leaves room for a
+    /// loaded machine running the suite in parallel.
+    @Test
+    func cargoLinkDependencyNamesJoinsContinuationsInLinearTime() {
+        var manifest = "[dependencies]\na = { path = \"../a\", features = [\n"
+        for _ in 0 ..< 20_000 {
+            manifest += "  \"feature-name-padding\",\n"
+        }
+        manifest += "] }\n"
+        let start = Date()
+        #expect(Resolver.cargoLinkDependencyNames(manifest) == ["a"])
+        #expect(Date().timeIntervalSince(start) < 30, "the join must be linear")
+    }
+
+    /// A Cargo path entry that resolves to the package itself — by its
+    /// directory alias or its [package] name, in any link table — is the
+    /// contract's DEPENDENCY_SELF_EDGE with a repository-relative manifest,
+    /// not a silently inserted self-loop.
+    @Test
+    func rustSelfEdgeIsRejected() throws {
+        for entry in [
+            "[dependencies]\napp-dir = { path = \".\" }\n",
+            "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n",
+            "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n",
+        ] {
+            let root = try makeTempDirectory(label: "resolver_self_edge")
+            defer { try? FileManager.default.removeItem(atPath: root) }
+            let packagePath = (root as NSString).appendingPathComponent("code/packages/rust/app-dir")
+            try writeFile(
+                (packagePath as NSString).appendingPathComponent("Cargo.toml"),
+                "[package]\nname = \"app-crate\"\n\n" + entry
+            )
+            let packages = [BuildPackage(name: "rust/app-dir", path: packagePath, language: "rust")]
+            #expect(throws: DependencySelfEdgeError(
+                code: "DEPENDENCY_SELF_EDGE",
+                package: "rust/app-dir",
+                manifest: "code/packages/rust/app-dir/Cargo.toml",
+                dependency: "rust/app-dir"
+            )) {
+                _ = try Resolver.resolveDependencies(packages: packages)
+            }
+        }
+    }
 
     /// A crate named by three link tables yields one edge, and an unknown
     /// path dependency (`serde`) is dropped.
