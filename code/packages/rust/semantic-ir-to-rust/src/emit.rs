@@ -2641,10 +2641,16 @@ fn emit_for_range(
         "{}while if __sir_step_{id} >= 0 {{ __sir_i_{id} < __sir_stop_{id} }} else {{ __sir_i_{id} > __sir_stop_{id} }} {{",
         inner_pad, id = id
     );
+    // `let mut` when the body assigns the loop variable (Python's
+    // `for i in range(3): i += 10`).  The next iteration still takes its
+    // value from the hidden counter, never from `var`.
     let _ = writeln!(
         out,
-        "{}let {}: __sir::Value = __sir::Value::Int(__sir_i_{});",
-        body_pad, v, id
+        "{}{} {}: __sir::Value = __sir::Value::Int(__sir_i_{});",
+        body_pad,
+        let_keyword(var),
+        v,
+        id
     );
     emit_block_as_stmts(out, body, inner + 1);
     let _ = writeln!(out, "{}__sir_i_{id} += __sir_step_{id};", body_pad, id = id);
@@ -2664,7 +2670,13 @@ fn emit_for_each(out: &mut String, var: &str, iter: &Expr, body: &Block, indent:
     // valid Rust (type ascription on a `for` binding is rejected).  The
     // element type is already `__sir::Value` because `seq_iter` returns a
     // `Vec<Value>`, so a plain `for <var> in ...` binds it correctly.
-    let _ = write!(out, "{}for {} in __sir::seq_iter(&(", pad, v);
+    // `mut` when the body assigns the loop variable (see `emit_for_range`).
+    let binding = if MUTABLE_NAMES.with(|m| m.borrow().contains(var)) {
+        format!("mut {v}")
+    } else {
+        v
+    };
+    let _ = write!(out, "{}for {} in __sir::seq_iter(&(", pad, binding);
     emit_expr(out, iter, indent);
     out.push_str(")) {\n");
     emit_block_as_stmts(out, body, indent + 1);
@@ -4587,6 +4599,57 @@ mod tests {
             "got: {out}"
         );
         assert!(out.trim_end().ends_with('}'), "got: {out}");
+    }
+
+    /// A body that assigns the loop variable needs a `mut` binding, or
+    /// rustc refuses the program (`cannot assign twice to immutable
+    /// variable`).  Python's `for i in range(3): i += 10` lowers to this
+    /// (#18482).  The counter still steps `__sir_i_N`, not `i`.
+    #[test]
+    fn a_loop_variable_the_body_assigns_is_bound_mut() {
+        let assign_i = Stmt::Assign {
+            name: "i".into(),
+            scope: Scope::Local,
+            value: int(10),
+            span: s(),
+        };
+        let range = Stmt::ForRange {
+            var: "i".into(),
+            start: int(0),
+            stop: int(3),
+            step: int(1),
+            body: block(vec![assign_i.clone()], nil()),
+            span: s(),
+        };
+        let each = Stmt::ForEach {
+            var: "x".into(),
+            iter: int(0),
+            body: block(
+                vec![Stmt::Assign {
+                    name: "x".into(),
+                    scope: Scope::Local,
+                    value: int(1),
+                    span: s(),
+                }],
+                nil(),
+            ),
+            span: s(),
+        };
+        let mut out = String::new();
+        MUTABLE_NAMES.with(|m| {
+            let mut set = m.borrow_mut();
+            set.clear();
+            set.insert("i".to_string());
+            set.insert("x".to_string());
+        });
+        emit_stmt(&mut out, &range, 1);
+        emit_stmt(&mut out, &each, 1);
+        MUTABLE_NAMES.with(|m| m.borrow_mut().clear());
+        assert!(
+            out.contains("let mut i: __sir::Value = __sir::Value::Int(__sir_i_"),
+            "got: {out}"
+        );
+        assert!(out.contains("for mut x in __sir::seq_iter("), "got: {out}");
     }
 
     #[test]

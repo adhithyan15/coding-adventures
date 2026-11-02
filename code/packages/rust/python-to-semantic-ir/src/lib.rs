@@ -848,8 +848,18 @@ mod tests {
         let m = lower("c = True\nwhile c:\n    if c:\n        x = 1\n");
         match &main_stmts(&m)[1] {
             Stmt::While { body, .. } => {
-                // The body's value is the nested `If` (a trailing if-suite).
-                assert!(matches!(body.value, Expr::If { .. }));
+                // The nested `If` is a statement of the body, never the
+                // body's value: the C and Ruby backends do not emit a loop
+                // body's value, so a trailing `if` there was dropped
+                // (#18482).
+                assert!(matches!(
+                    body.stmts.last(),
+                    Some(Stmt::ExprStmt {
+                        expr: Expr::If { .. },
+                        ..
+                    })
+                ));
+                assert!(matches!(body.value, Expr::NilLit { .. }));
             }
             other => panic!("expected While, got {other:?}"),
         }
