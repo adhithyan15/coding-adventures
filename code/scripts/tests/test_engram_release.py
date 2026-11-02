@@ -383,6 +383,12 @@ class EveryPayloadStateGateTests(unittest.TestCase):
         self.assertNotIn("--fixture", step)
         self.assertIn("Remove-Item Env:ENGRAM_SNAPSHOT_PATH", step)
         self.assertIn("*.runtimeconfig.json", step)
+        # `archive-xaml` stages the publish output as `<root>/Engram/`, so the
+        # runtimeconfig is two directories below the extraction point. A
+        # one-level search found nothing on the first real Windows run.
+        self.assertIn(
+            "Get-ChildItem $unpacked -Directory | Get-ChildItem -Directory |", step
+        )
         self.assertIn("-ExePath $executable -Seconds 15 -Label 'recovery'", step)
         self.assertIn(
             "python $gate verify-quarantine --app engram --state $state --probe $probe", step

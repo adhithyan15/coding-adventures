@@ -1330,6 +1330,10 @@ jobs:
       # The app is the apphost the publish output's `*.runtimeconfig.json`
       # names, as the archiver identifies it, launched through the shared
       # Windows launcher. Non-blocking with the rest of this job.
+      #
+      # `archive-xaml` stages the publish output as `Engram/` inside the zip's
+      # `engram-xaml-<platform>-v<version>/` root, so the runtimeconfig sits two
+      # directories down -- the same depth as the Flutter Windows bundle's exe.
       - name: Verify corrupt-state recovery on the XAML payload
         shell: pwsh
         env:
@@ -1345,10 +1349,11 @@ jobs:
             --backend xaml --version $env:RELEASE_VERSION --platform windows
           if ($LASTEXITCODE -ne 0) { throw 'Could not name the XAML payload' }
           Expand-Archive (Join-Path 'release-assets' $name) $unpacked
-          $configs = @(Get-ChildItem $unpacked -Directory |
+          $configs = @(Get-ChildItem $unpacked -Directory | Get-ChildItem -Directory |
             Get-ChildItem -File -Filter '*.runtimeconfig.json')
           if ($configs.Count -ne 1) {
-            throw "The extracted XAML payload must hold exactly one runtimeconfig at its root, found $($configs.Count)"
+            Get-ChildItem $unpacked -Recurse -Depth 2 | Select-Object -ExpandProperty FullName | Write-Host
+            throw "The extracted XAML payload must hold exactly one runtimeconfig in its <root>/Engram directory, found $($configs.Count)"
           }
           $stem = $configs[0].Name.Substring(0, $configs[0].Name.Length - '.runtimeconfig.json'.Length)
           $executable = Join-Path $configs[0].DirectoryName "$stem.exe"
