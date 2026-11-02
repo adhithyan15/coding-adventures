@@ -146,7 +146,7 @@ fn repeated_runtime_str_concat_grows_past_one_page_and_keeps_running() {
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = iir_to_wasm::encode_module(&wasm).expect("encoding failed");
 
-    let result = WasmRuntime::new()
+    let result = WasmRuntime::with_host(Box::new(TrapHost))
         .load_and_run(&bytes, "main", &[])
         .expect("repeated runtime str_concat must grow linear memory instead of trapping");
     assert_eq!(
@@ -154,4 +154,61 @@ fn repeated_runtime_str_concat_grows_past_one_page_and_keeps_running() {
         vec![42],
         "execution must continue correctly across multiple memory.grow calls"
     );
+}
+
+/// LANG83 PR5a: a module with runtime `str_concat` imports `env.__trap :
+/// (i32) -> ()` for its length ceiling, even when no call reaches it. This
+/// host provides that one import and turns a call into a `TrapError` naming
+/// the kind id: growing memory must never trap.
+struct TrapHost;
+
+struct TrapImport;
+
+impl wasm_execution::HostFunction for TrapImport {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        Err(wasm_execution::TrapError::new(format!("env.__trap({:?})", args.first())))
+    }
+}
+
+impl wasm_execution::HostInterface for TrapHost {
+    fn resolve_function(
+        &self,
+        module_name: &str,
+        name: &str,
+    ) -> Option<Box<dyn wasm_execution::HostFunction>> {
+        (module_name == "env" && name == "__trap")
+            .then(|| Box::new(TrapImport) as Box<dyn wasm_execution::HostFunction>)
+    }
+
+    fn resolve_global(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<(
+        wasm_types::GlobalType,
+        std::rc::Rc<std::cell::RefCell<wasm_execution::GlobalStorage>>,
+    )> {
+        None
+    }
+
+    fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<wasm_execution::LinearMemory> {
+        None
+    }
+
+    fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<wasm_execution::Table> {
+        None
+    }
 }
