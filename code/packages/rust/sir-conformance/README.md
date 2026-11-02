@@ -111,7 +111,8 @@ entry as stale.
 
 Every run writes its source and binary under a name ending in the process id
 and a process-wide counter, so tests running on parallel threads of one test
-binary never share a file (#18485).
+binary never share a file (#18485).  The files are held by a `TempFile`
+guard, so every return path, skips included, deletes them.
 
 Adding a program is one `Program { name, frontend, source, expected }` entry
 in `tests/conformance.rs`. `frontend` defaults nothing — pick the `Frontend`

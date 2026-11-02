@@ -2567,7 +2567,7 @@ mod tests {
         // (`path`, `vm`, …) as globals, which an emitted program never sees.
         let script = std::env::temp_dir().join(format!(
             "sir_js_globals_{}.js",
-            std::process::id()
+            unique_suffix()
         ));
         std::fs::write(
             &script,
@@ -4471,5 +4471,16 @@ mod tests {
         // escape, so the two stay apart.
         assert_ne!(var_ident("_$sir_esc_lf"), var_ident("f"));
         FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
+    }
+
+    /// A per-call unique part for this file's temp-file names.  The process id
+    /// keeps parallel test binaries apart, and the counter keeps apart the tests
+    /// of this binary, which run on parallel threads under one process id
+    /// (#18485).  A name built from the process id alone, or from it and a hash
+    /// of the source, let two tests that compile the same program share a file.
+    fn unique_suffix() -> String {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static NEXT: AtomicU64 = AtomicU64::new(0);
+        format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
     }
 }

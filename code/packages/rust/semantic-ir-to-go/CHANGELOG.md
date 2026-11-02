@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 25 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
 ## Unreleased — A variable never shadows a function of the same name (#18485)
 
 SIR keeps functions and variables in separate namespaces, and Ruby relies on

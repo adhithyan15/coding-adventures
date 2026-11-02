@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — Unique temp files, removed on every path (#18485 follow-up)
+
+`temp_path` named a measurement's source and binary from the program, the
+target and the process id only, so two measurements of one program in one
+process (parallel test threads) shared files. It now adds a process-wide
+atomic counter, as `sir-conformance` does. The files are held by a
+`TempFile` guard that deletes them on drop, so every early return of
+`measure` (a failed write, a failed compile, a failed run) cleans up; a
+failed compile used to leave the binary path behind.
+
 ## 0.1.1 — fix: Linux link failure benchmarking the C target
 
 The C-target compile step didn't link `-lm`. Harmless until

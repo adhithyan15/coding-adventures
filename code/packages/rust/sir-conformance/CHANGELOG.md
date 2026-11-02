@@ -14,11 +14,17 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
   way once).  The name now ends in a process-wide atomic counter.  Unit
   tests `temp_paths_are_unique_within_one_process` and
   `temp_paths_are_unique_across_threads`.
+- **Temp files are removed on every path.**  `run_python` returned
+  `Skipped` when the `sir-runtime-*` packages were missing *after* writing
+  its `.py`, and left it behind.  Every `run_*` function now holds its
+  source and binary in a `TempFile` guard that deletes them on drop, and
+  `run_python` looks for the runtimes before writing anything.  Unit test
+  `a_temp_file_guard_removes_its_file_on_every_path`.
 
 ### Added
 
 - **`tests/local_shadows_function.rs` (#18485).**  A variable named like a
-  function must not shadow it.  Six Ruby programs (a `main` local, a method
+  function must not shadow it.  Five Ruby programs (a `main` local, a method
   local, a parameter, a `rescue` binding, and a recursive method whose
   parameter spells its own name) are checked against real `ruby` and run
   on all six backends; four hand-built SIR modules cover what the Ruby
