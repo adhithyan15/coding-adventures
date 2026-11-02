@@ -482,6 +482,52 @@ search, and theory tactics handle leaves of theories they own.  The
   formulas.  ~1-2 KLOC.  Reference: original Cooper 1972 paper +
   Bjorner's modern presentation.
 
+#### LIA as built, and its soundness contract (2026-11)
+
+**Divergence.** The `LiaTactic` that shipped is not Cooper's algorithm. It
+is a **bounded enumeration**:
+
+1. Pick a variable.
+2. Read simple bounds (`x ≥ k`, `x ≤ k`, `x = k`, `x ≠ k`) off the
+   constraints.
+3. Try up to about a thousand candidate values.
+4. Recurse on the remaining variables.
+
+That is incomplete by design. Until 2026-11 it also reported **UNSAT when
+the enumeration ran out**, even when values it never tried were solutions:
+
+- the search started at 0 when there was no lower bound;
+- the range was cut to 1 001 values;
+- `x ≥ a ∧ x ≤ b` written inside one `and` lost both bounds.
+
+So `x < 0` and `2x = 4000` came back UNSAT. A false UNSAT is a false
+proof: LANG23 reads it as `PROVEN_SAFE`. The verified shipping program
+(VER00) builds on this engine.
+
+**Contract.** The tactic may answer `Sat` only with a model that satisfies
+every assertion, and **`Unsat` only after an exhaustive search**. Anything
+else is `Unknown`. Concretely:
+
+| Situation for a variable | Exhaustive? |
+|---|---|
+| A Bool variable, domain {0, 1} | yes |
+| An Int variable with a real lower bound and a real upper bound, at most `MAX_SEARCH_WIDTH` apart | yes |
+| An `x = k` equality fixing the variable | yes (one value) |
+| Bounds contradict (`lb > ub`), both real | yes: `Unsat` is proved |
+| Any missing bound, or a range wider than the cap | **no**: the candidates tried are a sample; failure is `Unknown` |
+| A sub-search answered `Unknown` | the whole answer is at best `Unknown` |
+
+- **Conjunctions are flattened** before the search, so `(and (>= x a)
+  (<= x b))` contributes both bounds.
+- **Sampling with no bound looks both ways**: a window centred on 0 with
+  no bounds, or a window ending at the one real bound otherwise. That way
+  negative solutions are found too.
+- **Evaluation is three-valued and exact** (VER10): a constraint that
+  cannot be evaluated is unknown, never false.
+
+The tactic stays incomplete (`Unknown` is always allowed); it is now sound.
+A real Cooper or Omega procedure is still the plan for completeness.
+
 Both ship as Lispy programs running on the LANG VM (eat-own-dogfood),
 with a Rust shim providing the FFI surface — same pattern as the
 solver-as-Lispy proposal in LANG23.  Hand-rolled in Rust first; the
