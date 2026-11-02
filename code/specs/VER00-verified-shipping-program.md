@@ -1,7 +1,7 @@
 # VER00 — The Verified Shipping Program
 
 **Status:** Draft umbrella spec. Nothing here is implemented. Child specs
-(VER01–VER21, listed in §11) are written one at a time before their code.
+(VER01–VER23, listed in §11) are written one at a time before their code.
 
 **Layer:** Repository-wide policy and tooling.
 
@@ -114,7 +114,7 @@ the shipping configuration*, at the tagged commit.
 
 | Rung | Evidence | Answers | Generated from |
 |---|---|---|---|
-| **E0** | Security audit | Does the package do only what it declares, and is every known weakness class impossible here or tested and proven absent? | `required_capabilities.json` + analyzer; weakness registry (§8.2) |
+| **E0** | Security audit | Does the package do only what it declares, and is every known weakness class impossible here or tested and proven absent? | `required_capabilities.json` + analyzer + locked-box observation (§8.5); weakness registry (§8.2) |
 | **E1** | Unit tests | Do the stated examples hold? Fast, pure, deterministic. | `example` blocks |
 | **E2** | Integration tests | Does it work against real capabilities? | `scenario` blocks |
 | **E3** | Property tests | Do the claims hold over generated inputs? | `claim` blocks |
@@ -1161,6 +1161,687 @@ deterministic scheduler explores interleavings systematically: every
 ordering for small cases, randomized orderings with replayable seeds for
 large ones. A race found once can be replayed exactly.
 
+### 8.5 Observed capabilities: running the package in a locked box — VER22
+
+The capability analyzers of §8.1 read the code and infer what it *might*
+do. That is necessary, and it is not enough: an analyzer has blind spots,
+and a manifest can be wrong in ways nobody reads closely enough to notice.
+This section adds the dynamic half. Run the package inside a locked box
+and **watch what it actually does**.
+
+#### 8.5.1 What runs in the box
+
+A library does nothing on its own, so something must drive it. The driver
+is the harness the Warrant compiler already generates (§4): the package's
+examples, integration scenarios, property tests and fuzz targets, run as a
+program. Programs and command-line tools also run directly, under their
+`scenario` blocks. For gate runs, the box is a VM (§8.5.4). That is
+stricter than the general "OS or VM boundary" §9.2.1 asks of dynamic
+rungs, so a dynamic rung that also feeds this check must run in the VM.
+
+#### 8.5.2 The box: built on `capability-os-sandbox`
+
+The starting point is `capability-os-sandbox`. It lowers a
+`required_capabilities.json` into a deny-by-default sandbox *plan* per OS:
+
+- seccomp and Landlock on Linux;
+- Seatbelt on macOS;
+- AppContainer on Windows;
+- equivalents on FreeBSD and OpenBSD.
+
+Every rule is labelled with how well it is enforced, and an unsupported
+capability is a launch failure, never a silent downgrade.
+
+**What is missing is most of the enforcement.** Today the only code that
+applies a plan is the macOS Seatbelt applier, and its profile still starts
+from `(allow default)`. The base deny-all policy is modelled but not
+installed. There is **no applier at all** for Linux, Windows or the BSDs,
+and Linux is the platform the gate's VM uses. VER22 owns building them,
+in coordination with D18S, and it settles which of the two specs owns which
+platform. Two platform limits shape the design:
+
+- Landlock restricts network use by port only, not address.
+- Seatbelt filters network by port, not host.
+
+So enforcing *which host* a package may reach needs the host broker or a
+filter on the host side of the VM's network device. The kernel primitives
+inside the box cannot do it.
+
+#### 8.5.3 Enforcement and observation are separate jobs
+
+Enforcement must be **race-free**. Observation must **miss nothing**. No
+single mechanism does both, so the box uses each for what it does well.
+
+**Enforcement rests only on race-free primitives:**
+
+- Landlock for the filesystem;
+- the host-side egress filter for the network;
+- the **broker** (below), for the process spawns and wildcard filesystem
+  grants that `capability-os-sandbox` routes through it;
+- seccomp filters that return an error or kill the process, for whole
+  classes of system call.
+
+**seccomp user notification is used to observe, never to approve.** A
+supervisor process that is told about each relevant system call is the
+natural way to watch. But it reads pointer arguments (paths, socket
+addresses) out of the process's memory. If it then tells the kernel to
+continue, the kernel reads those arguments *again*, and another thread can
+swap a declared path for an undeclared one in between. A `userfaultfd`
+stall or a symlink swapped after the check works just as well. The
+`seccomp_unotify(2)` manual itself warns against using "continue" for
+security policy. So the supervisor **never lets a pointer-argument call
+continue on the strength of its own check**. Either:
+
+- it **only observes, and lets the race-free layer decide**. This is the
+  default;
+- or, where VER22 justifies it per system call, it *emulates* the call on
+  its own copy of the arguments. Emulation must not become a way around
+  enforcement. A supervisor opening a file with its own credentials would
+  skip Landlock and the package's permissions entirely, because both are
+  checked only in the process that opens. So the emulation runs in a
+  helper with:
+  - the package's user, group and supplementary groups, in the same user
+    namespace;
+  - an **empty set of Linux capabilities** (no `CAP_DAC_OVERRIDE` or
+    similar) and `no_new_privs`;
+  - **the same Landlock ruleset**;
+  - the same mount namespace;
+  - the root and working directory **of the calling thread at the time of
+    the call**, read under a `NOTIF_ID_VALID` check. Threads can
+    `chdir` or `unshare(CLONE_FS)`, so the values from launch time are not
+    reliable;
+  - directory descriptors for relative paths taken from the package via
+    `pidfd_getfd`.
+
+  The helper resolves paths with `openat2` and its `RESOLVE_*` flags,
+  injects the resulting descriptor with `SECCOMP_IOCTL_NOTIF_ADDFD`, and
+  confirms with `NOTIF_ID_VALID` that the call is still current after
+  reading memory. Its denials are recorded like any other.
+
+`userfaultfd` stays denied by the base policy in every mode.
+
+**Every denial is evidence.** Landlock denials, seccomp errors and
+Seatbelt denials are silent by default. A package that tries an undeclared
+`connect`, catches the error and carries on would leave no trace and pass,
+and in production, outside the box, that attempt succeeds. So every
+denial, at every layer, is recorded as an observation:
+
+- **seccomp.** Denials are preferably delivered as user notifications
+  that the supervisor answers with an error. That is lossless, and it is
+  race-free because it denies rather than continues. Filters that return
+  an error or kill directly are installed with `SECCOMP_FILTER_FLAG_LOG`,
+  with those actions enabled in `/proc/sys/kernel/seccomp/actions_logged`.
+  (`SECCOMP_RET_LOG` is *not* a way to record denials: it means "log, then
+  **allow**".)
+- **Landlock** auditing needs Linux 6.15 or later. Because the launcher
+  restricts itself and then starts the runtime with `execve`, the domain
+  is created with `LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON`. Otherwise
+  denials after the `exec` are not logged.
+- **The broker** logs every request it refuses.
+- **The host-side egress filter and the resolver** record every packet
+  they drop and every name they refuse. The supervisor's own record of
+  `connect` and `send` calls cannot stand in for these logs. It only
+  observes, so it reads pointer arguments racily: a second thread can
+  show it a declared address while the kernel sends to an undeclared one.
+  All of these channels must be lossless, and a drop that cannot be
+  observed makes the run "not checked".
+- **Seatbelt** (development only, §8.5.4) logs deny violations unless they
+  are silenced with `(with no-report)`. That logging is rate-limited.
+
+The audit path can lose records, through rate limits or a full backlog.
+**Any loss of audit records during a run turns its result into "not
+checked"**, never into an empty set of denials.
+
+**Any denial fails the gate, whatever the process's exit status.** Two
+kinds of error are tagged and not counted as denials:
+
+- failures injected on purpose for chaos testing (below);
+- **policy-shaping returns**, such as forcing `clone3` to fail with
+  `ENOSYS` (§8.5.5). Without this tag, `SECCOMP_FILTER_FLAG_LOG` would log
+  that return and fail every run that starts a thread.
+
+Audit loss is detected by comparing the audit subsystem's `lost` counter
+before and after the run. Gate runs disable audit rate limiting and set a
+large backlog. **A gate run requires a guest in which
+every enforcing layer's denials are observable**: a Linux 6.15+ guest
+kernel, auditing enabled, and the logging flags above. If any enforcing
+layer's denials cannot be observed, the result is "not checked", which
+blocks the gate, never "pass, with a caveat".
+
+**Two modes.**
+
+| Mode | Behaviour | Used for |
+|---|---|---|
+| **Enforce** | Anything outside the manifest is denied; every denial is recorded and fails the run | **All** gate evidence |
+| **Observe** | Observable operations are allowed and recorded. Two sets of denials stay in place in this mode, as in every mode. First, the base policy's denials of *unobservable* channels: the architecture check (so 32-bit and x32 system-call numbers cannot alias others), `io_uring`, `ptrace`, `process_vm_writev`, `userfaultfd`, `bpf` and `perf_event_open`. Second, the integrity denials of §8.5.4: `vsock`, and signals to the supervisor. | Proposing a manifest for a new package; finding over-declaration |
+
+Observe mode never supplies gate evidence. A manifest drafted from it is a
+**proposal for human review**, because it would otherwise launder whatever
+the code happened to do straight into the declaration. And untrusted code,
+such as code from a pull request, runs in observe mode **only in a VM with
+no credentials and with network egress sinkholed**, never in a container
+on a maintainer's machine (§9.4, rule 2).
+
+**Chaos comes for free.** The same supervisor can make an observed call
+fail on purpose, with `ENOSPC`, `ECONNRESET` or a short write. That brings
+the fault plans of §6.4 to every language at the system-call level.
+
+#### 8.5.4 The box's own integrity
+
+The supervisor runs inside the same guest as the code it watches, so it
+must be protected from that code:
+
+- it runs as a **separate user**;
+- the package is denied `ptrace`, signals to the supervisor, and `vsock`;
+- the channel to the host accepts **one** connection, opened before the
+  package starts, and its listening socket never leaks into the box;
+- a supervisor crash or timeout fails the run, and a call the supervisor
+  has not answered is never allowed to proceed;
+- network traffic is observed and enforced from the **host side** of the
+  VM's network device wherever possible, out of the guest's reach.
+
+Even so, **a compromised guest kernel defeats observation**. Observations
+leave the box only through the host-side signed channel of §9.2.1, but
+that signature covers only what the supervisor reported. So the gate's
+security never rests on observation alone. It rests on the static check
+S ⊆ D (§8.5.7) together with race-free enforcement.
+
+**No VM, no check.** If the VM boundary is unavailable, the gate fails. It
+never falls back to a container or to Seatbelt on the bare host. A platform
+that cannot observe yields the result **"not checked"**, never "pass":
+otherwise an empty observation set would satisfy every check in §8.5.7
+vacuously. macOS has no unprivileged per-system-call supervisor (Endpoint
+Security needs an entitlement and root), so until VER22 specifies one,
+**the gate's locked-box runs use Linux guests**. macOS boxes are for
+development.
+
+#### 8.5.5 From system calls to capabilities
+
+The mapping is a **closed allowlist over system-call numbers, per CPU
+architecture**. Any system call the mapping does not classify is a
+violation in enforce mode and an "unclassified" failure in observe mode.
+Targets are checked as well as categories: which path, which address,
+which program. The table below is **illustrative**. VER22 holds the
+complete mapping.
+
+| Observed (examples; each family includes its aliases) | Capability |
+|---|---|
+| `open`, `openat`, `openat2`, `creat`, `open_by_handle_at` with read flags; `stat`, `statx`, `newfstatat`, `faccessat2`, `readlink`, `getdents64` | `fs.read`, `fs.list` on that path |
+| The same opens with write or create flags; `rename`, `renameat2`, `unlink`, `unlinkat`, `rmdir`, `mkdir`, `link`, `symlink`, `truncate`, `chmod`, `chown`, `setxattr`, `mknod` | `fs.write`, `fs.create`, `fs.delete` on that path |
+| `socket` of any family; `connect`; `sendto`, `sendmsg`, `sendmmsg` (whose address is a nested pointer) | `net.connect` to that **IP and port**. AF_UNIX, AF_NETLINK, AF_PACKET, AF_VSOCK and raw sockets are each mapped explicitly and denied unless declared |
+| `bind`, `listen` | `net.listen` on that address |
+| `execve`, `execveat`, `fexecve`; `clone` and `clone3` creating a process, `vfork`; `kill`, `tkill`, `tgkill`, `pidfd_send_signal`, `rt_sigqueueinfo` | `proc.exec` of that program, `proc.fork`, `proc.signal` |
+| `clone` with `CLONE_THREAD` | `thread.spawn` (§6.3), not `proc.fork`. seccomp cannot read `clone3`'s flags, which sit behind a pointer, so the box makes `clone3` fail with `ENOSYS`. The C library then falls back to `clone`, whose flags are register arguments |
+| Reads of `/dev/urandom` or `/dev/random`; `getrandom` when it is a real system call | `rand.read` |
+| A read or write on the descriptor that *currently* refers to the process's stdin or stdout, after tracking `dup`, `dup2`, `fcntl` and descriptors passed with `SCM_RIGHTS` or `pidfd_getfd` | `stdin.read`, `stdout.write` |
+
+Three rules make the network rows honest:
+
+- **Targets are IP-level.** System calls see an IP address and port, not a
+  hostname. Shared CDN addresses and domain fronting defeat any attempt
+  to match addresses to declared hostnames. A hostname-level grant is
+  enforced only when egress goes through a trusted host-side proxy or
+  broker that resolves the name itself and sees the TLS SNI and HTTP Host.
+- **`net.dns` is checked against the name queried.** D21 defines a DNS
+  grant by the host*name* being resolved (`net:dns:{host}`). Restricting
+  *which resolver* is used is not enough: a recursive resolver forwards any
+  name, including one under an attacker's domain, straight to that
+  attacker's server, which is the classic way to exfiltrate data through
+  DNS. So:
+  - DNS goes only to the configured resolver. A connection to any other
+    host on port 53 is `net.connect` to that host;
+  - the observed target is the **queried name**, taken from the broker log
+    or a host-side parse of the DNS traffic, and checked exactly against
+    the declared names. "Exactly" means after a defined canonical form:
+    case folded (resolvers randomise letter case), trailing dot removed,
+    and IDNA/punycode normalised;
+  - the broker or resolver **refuses** undeclared names.
+
+  Low-bandwidth channels remain even then, through the timing, type and
+  number of queries for *declared* names. They are accepted, in writing,
+  as residual risk. VER22 enumerates every resolver channel: classic DNS over UDP and TCP,
+  DNS over HTTPS (443) and over TLS (853), mDNS (5353), and the local
+  resolver daemons' sockets (nscd, systemd-resolved, macOS mDNSResponder).
+- **Brokered operations are observed at the broker, and the broker stays
+  inside the VM.** `capability-os-sandbox` lowers network grants, process
+  grants and wildcard filesystem grants to a broker. The package then
+  performs those operations by writing to a broker connection, not with
+  `connect` or `execve`, so system-call observation alone misses them.
+  - The observation set includes the **broker's own operation log**.
+  - The broker is part of the gate's trust root (§9.4).
+  - The broker does filesystem work on the package's behalf, so it must
+    not become a way around enforcement, as emulation could (§8.5.3):
+    - it resolves every path from a pinned descriptor for the grant's root,
+      using `openat2` with `RESOLVE_BENEATH`, `RESOLVE_NO_MAGICLINKS` and
+      `RESOLVE_NO_SYMLINKS` (or `RESOLVE_NO_XDEV` as required);
+    - it matches the wildcard against the *resolved* path;
+    - it runs as the package's user, with no Linux capabilities and a
+      Landlock domain limited to the grant's base directory;
+    - it passes descriptors back, not paths.
+  - It also gets the supervisor's integrity protections (§8.5.4): a
+    separate user, and no `ptrace` of it or signals to it from the
+    package.
+  - **Brokered process spawns and filesystem operations run inside the
+    guest.** A broker on the VM's host would serve the *host's*
+    filesystem and start programs *outside* the VM, escaping the boundary
+    entirely. Children the broker starts get the restricted subset plan of
+    D18S under the same supervisor, and their system calls and denials
+    join O, charged to the package.
+  - Only network egress mediation sits on the VM host.
+
+**What the box cannot observe**, which the report lists as not observable
+rather than implying it was checked:
+
+- Environment variables: reading one is a memory read. The box instead
+  starts the package with an explicitly constructed environment block, so
+  an undeclared variable is simply absent.
+- Most clock reads, which on Linux go through the vDSO without entering
+  the kernel.
+- Randomness from the vDSO (`vgetrandom`, Linux 6.11+ with glibc 2.41+)
+  or from a CPU instruction.
+- **`ffi` is only partly observable.** Mapping a *new* library is visible.
+  Calling into a library that is already loaded (libc, through ctypes or
+  `dlsym`) is not, and neither is making anonymous or `memfd` memory
+  executable, which JIT runtimes do constantly. A package that declares
+  `ffi` is boxed with the VM as the real boundary, every observation is
+  charged to the package, and stack attribution is never used for it.
+  (`capability-os-sandbox` currently refuses to launch any plan with an
+  `ffi` grant. VER22 must settle that explicitly rather than special-case
+  it.)
+
+These remain the job of the language-level wrappers and the static
+analyzer.
+
+#### 8.5.6 Separating the runtime from the package
+
+An interpreter does a great deal before the package runs a single line.
+Python and Node read their standard libraries, locale data and random
+devices just to start. Charging that to the package would make every
+manifest wrong. Excusing it carelessly would hide real violations, and the
+code under test gets a say in how carefully it is excused. Hence one hard
+rule:
+
+**Nothing may excuse an observation except an exact entry in a protected
+baseline.** The baseline is a profile of the runtime alone, an empty
+harness on the same toolchain. It is recorded and stored under the
+protected ref (§9.4) as exact (operation, target) pairs, never categories.
+An observation matching one of those pairs is charged to the runtime.
+**Everything else is charged to the package.**
+
+**Attribution only moves charges; it never removes one.** Reading the
+call stack to see which module made a call can *move* a charge between
+the package and an in-repo dependency. That charge is then checked
+against the dependency's own manifest, which is exactly the closure union
+of §8.1. Attribution can never move a charge to "the runtime", because
+the code under test can forge stacks:
+
+- callbacks that runtime frames run (finalizers, exit and signal handlers,
+  thread pools, promise jobs, import hooks);
+- monkey-patched standard-library functions;
+- fake frame metadata (a forged `co_filename`, a `sourceURL` posing as
+  `node:internal`, a custom `prepareStackTrace`);
+- native code that forges its own unwind data.
+
+Building reliable attribution is the research part of VER22. Until it
+exists, every charge not excused by the baseline goes to the package,
+including charges that really belong to its dependencies. That is why the
+checks in §8.5.7 compare against the package's **effective** capability
+set (§8.1, rule 3), the union over its whole closure. Attribution between
+the package and its in-repo dependencies is as forgeable as attribution to
+the runtime. But it can only move charges *within* that union, so it is
+harmless while gate decisions use the effective set.
+
+Two further rules keep the baseline workable:
+
+- **The enforce-mode plan grants exactly the baseline pairs**, so the
+  runtime's own start-up reads are not denied and do not fail every run.
+- **Runtimes with unpredictable targets** need a rule of their own. A
+  runtime that writes caches or temporary files under generated names
+  cannot be described as exact pairs. VER22 must specify the rule, for
+  example a dedicated per-run directory granted to the runtime alone,
+  without falling back to whole categories.
+
+#### 8.5.7 Three views, cross-checked
+
+Each package has three capability sets: what its manifest **declares**
+(D), what the static analyzer **infers** (S), and what the box
+**observes** in enforce mode (O). D and S are both taken over the
+package's whole closure, as its effective set (§8.1, rule 3). The gate
+checks:
+
+| Check | If it fails |
+|---|---|
+| O ⊆ D | A **violation**: the package did, or tried to do, something it never declared. This fails the gate. |
+| S ⊆ D | Today's static check (§8.1): the code *could* do something undeclared. This fails the gate. |
+| O ⊆ S | **The static analyzer has a blind spot**: the package did something the analyzer could not see. This fails the gate, and it is filed as a bug against the analyzer, which gets a regression test. |
+| D ⊆ O ∪ S | Over-declaration: a declared capability that is neither observed nor inferred. This is a warning that proposes narrowing the manifest. |
+
+The third row is the bonus. The box is a continuous, free test oracle for
+the capability analyzers in all 22 languages, and the analyzers are part
+of the gate's own trust root (§9.4).
+
+#### 8.5.8 What it cannot do
+
+- **It sees only the code paths that actually run.** A capability used
+  only on an input the harness never generates goes unobserved. That is
+  why O is checked against S as well as against D, and why the harness is
+  driven by the property and fuzz engines rather than by fixed examples:
+  their job here is to make O as large as possible.
+- **It is no defence against a package that knows it is being watched.** A
+  hostile package can detect the box, through the seccomp status in
+  `/proc/self/status`, the hypervisor CPU flag or the VM's firmware
+  strings, and behave until it is outside. A time bomb never fires during
+  a test. Dynamic checking therefore gives assurance against **honest
+  mistakes and analyzer blind spots**, not against an adversarial
+  package. Against an adversary, the protection is the static check
+  (S ⊆ D), the capability analyzers of §8.1, and review.
+- **A passing run is evidence, not proof.** It shows nothing undeclared
+  happened **on the paths exercised**. Proving that nothing undeclared
+  *can* happen is the static analyzer's job, and the report never conflates
+  the two.
+- **The box is configured from the protected ref.** The sandbox plan is
+  derived from the manifest by the gate's own code. The supervisor, the
+  mapping, the broker and the baseline profiles are part of the gate's
+  trust root (§9.4), never supplied by the commit being judged.
+
+### 8.6 Generated capability modules: you cannot name what you did not declare — VER23
+
+The capability analyzer of §8.1 has a hard job. It must recognise every
+way a program in a given language can touch the outside world: every
+standard-library function, every alias, every indirect route. Whatever it
+fails to recognise is a blind spot. This section turns the problem around.
+**Generate, from the manifest, the only module through which the package
+can reach the world, and forbid everything else.** A package that declared
+only `fs.write` on `cache/` then has no way to even *write the words* for
+reading a file. There is no function for it to call.
+
+This is D21's design taken to its strongest form. It is the same idea as
+capability-safe language subsets such as Joe-E for Java and SES (Secure
+ECMAScript) for JavaScript.
+
+#### 8.6.1 What the generator emits
+
+For each package, in each language, the generator turns
+`required_capabilities.json` into one module. It contains **exactly one
+function per declared capability, scoped to the declared target**, and
+nothing else:
+
+```
+manifest:  { "category": "fs", "action": "write", "target": "cache/*" }
+
+generated (Python lane, abridged):
+    # Generated from required_capabilities.json. Do not edit.
+    def write_cache_file(path: CachePath, data: bytes) -> None: ...
+```
+
+- **There is no `read`, no `delete`, and no general `open`.** An undeclared
+  operation is not refused at runtime; it cannot be expressed.
+- **Targets are enforced where they are used, not just typed.** A
+  `CachePath` type documents intent, but in Python, JavaScript,
+  TypeScript and Ruby a type can be forged (`object.__new__`, a
+  structural cast), and a check made when a path is constructed is out of
+  date by the time it is used. So the **production backend** enforces the
+  target at the moment of use:
+  - it resolves every path against a directory descriptor pinned at
+    start-up from a trusted root, never the working directory;
+  - on Linux it uses `openat2` with `RESOLVE_BENEATH` and
+    `RESOLVE_NO_MAGICLINKS`, plus `RESOLVE_NO_SYMLINKS` or
+    `RESOLVE_NO_XDEV` where the grant requires;
+  - on macOS, which has no `openat2`, it walks the path one component at a
+    time with `openat` and `O_NOFOLLOW` (or `O_NOFOLLOW_ANY`);
+  - on Windows it uses handle-relative opens and checks reparse points,
+    alternate data streams, device names, 8.3 short names and case;
+  - it rejects NUL bytes and defines exactly what a wildcard matches (for
+    example, whether `*` crosses `/`).
+
+  Hard links that already exist in the directory defeat `RESOLVE_BENEATH`,
+  so VER23 says how granted directories are created and kept clean of
+  them.
+
+  A declared network target produces a function that connects to that
+  address and port (§8.5.5), not a general `connect(host)`.
+
+  A declared `proc.exec` produces a function that runs **one program**,
+  pinned by absolute path and content hash. Each argument is checked
+  against a schema, and options are separated from arguments with `--`. A
+  free-form string argument is close to arbitrary code for many programs
+  (`git -c core.sshCommand`, `tar --to-command`, `find -exec`). The
+  program's own authority counts toward the package's effective set:
+  unbounded, unless it is an in-repo package with its own manifest.
+- **The manifest is compiled in.** As `capability-cage-generator` already
+  does for Go, the grants become constants in the build, so editing a
+  JSON file at runtime grants nothing.
+- **Two backends, one interface.** The production backend performs the
+  operation through the D21 runtime. The simulated-host backend (§6) sits
+  behind the same functions for unit tests, and is compiled out of
+  shipped artifacts (§6.1).
+- **Auditing a package's effects means reading the short generated files
+  of its closure**: its own module and those of its in-repo dependencies.
+  Reviewers, the gate and the weakness registry all start there. A
+  generated module may be imported **only by its own package**, so one
+  package cannot borrow another's grants by importing them directly.
+
+The repository already has two early generators. `capability-cage-generator`
+(Go) bakes the manifest in, but still exposes every operation and checks
+it at runtime. `required-capabilities-compiler` (Rust) generates an HTTP
+client limited to the declared domains. VER23 moves Go to "only what was
+declared", generalises the Rust compiler beyond HTTP, and adds the rest of
+the language lanes (§2.1).
+
+The generator is part of the gate's trust root (§9.4). The gate
+**regenerates** every package's module and compares it with the committed
+one, never trusting the committed copy (§9.2.1).
+
+#### 8.6.2 Everything else is forbidden: a closed allowlist of names, per member
+
+A generated module confines nothing if the package can reach the world
+some other way. Imports are only one of those ways. Many languages hand
+every program effects **without any import**:
+
+- Python's builtins: `open`, `exec`, `eval`, `compile`, `__import__`,
+  `print`, `input`;
+- JavaScript's globals: `globalThis.process` (with `.binding`, `.dlopen`
+  and `.env`), `fetch` and `WebSocket` in Node 18+, `WebAssembly`;
+- Ruby's `Kernel` methods on every object (`system`, backticks, `spawn`,
+  `exec`, `fork`, `open("|cmd")`) and core constants such as `File`, `IO`
+  and `ObjectSpace`;
+- Java's implicitly imported `java.lang`: `System.getenv`, `System.load`,
+  `Runtime`, `ProcessBuilder`, `Class.forName`;
+- Erlang and Elixir modules called by name, including `apply` with a
+  computed module;
+- Rust's fully qualified paths, such as `::std::fs::read`, with no `use`;
+- Go's `print` and `println`.
+
+So the rule is not an import list. **Every name the package uses that
+resolves outside the package must be on a closed allowlist.** That covers
+imports, builtins, globals, implicitly available namespaces and fully
+qualified paths alike. What may be on the list:
+
+- the package's own generated module;
+- in-repo dependencies, each confined in the same way;
+- standard-library members on the language's reviewed
+  **pure-computation list**.
+
+**The list is per member, not per module.** Allowing a whole module is
+too coarse, because an allowed module is a doorway to everything reachable
+from it. Python's `typing.sys`, `collections._sys` and `dataclasses.sys`
+all lead to `sys.modules['os']`. So the list is kept at (module, member)
+granularity, the way Joe-E's "taming database" works. A member is
+reviewed against **everything reachable from it**, not just its documented
+behaviour. Some members that look pure have effects in D21's categories,
+and those are capabilities like any other, usable only through a
+declaration:
+
+| Looks pure | Is actually |
+|---|---|
+| `print`, `console.log`, `fmt.Println`, `println!` | `stdout.write` |
+| `datetime.now`, `Date.now`, `time.Now` | `time.read` |
+| `random`, `Math.random`, auto-seeded `math/rand` | `rand.read` |
+| `codecs.open`, `io.open` | `fs.*` |
+| Go `plugin`, `runtime/debug.WriteHeapDump` | `ffi.load`, `fs.write` |
+
+The pure lists are **trust-root policy data** (§9.4), because a member
+wrongly listed as pure is a hole. A member goes on a list only after that
+review, and when in doubt it stays off.
+
+**Reflection is rejected outright**, because it turns any allowed object
+into a path to everything else. That means:
+
+- double-underscore and private-attribute access
+  (`().__class__.__mro__`, a function's `__globals__`);
+- computed attribute and method access (`getattr` with a computed name,
+  `send`, `__send__`, `public_send`, `method`, `const_get`,
+  `instance_variable_get`, `operator.attrgetter`, `operator.methodcaller`);
+- `constructor` access in JavaScript (`({}).constructor.constructor`
+  reaches `Function` without writing either word);
+- `gc`, `sys`, `inspect`, `ObjectSpace`;
+- `eval`, `exec`, `compile`, `Function`, and dynamic import of a
+  non-literal name;
+- **deserialisers that look up names**: `pickle` and `marshal`, Ruby's
+  `Marshal.load` and `YAML.unsafe_load`, and `JSON.load` with
+  `create_additions`. These can call `os.system` from a byte string.
+
+**Lock the globals as well, where the runtime allows it.** JavaScript runs
+under SES-style `lockdown`: frozen built-in objects, with tamed `Function`
+and `eval`. Python's builtins can be replaced at start-up. This is defence
+in depth, not the primary control.
+
+**The check runs on code as it is compiled, not as it is written.**
+Several things never appear in source text:
+
+- the output of macros: Rust proc-macros and `macro_rules!` from
+  dependencies, which can emit a `$crate`-style path to `std::fs`;
+- code that runs during compilation with full authority: Elixir macros
+  and module attributes, Java annotation processors;
+- embedded files (`include_bytes!`, `//go:embed`), Rust `global_asm!`,
+  `#[no_mangle]` symbol interposition, and Go assembly (`.s`) files, which
+  are native code (§8.6.3).
+
+So the allowlist is checked after expansion: Rust's HIR or MIR, or the
+compiled form, depending on the language. Code that runs at compile time
+comes only from trust-root crates and macros, or is itself subject to the
+allowlist.
+
+**The check covers every way the package can be built.** That means all
+code reachable in the shipped artifact under every feature, extra or
+`cfg` a consumer can enable (Cargo features are additive), including
+`TYPE_CHECKING` blocks, `try`/`except ImportError` fallbacks and
+`__main__` blocks. Test code is excluded only through the mechanism of
+§6.1.
+
+**An escape fails the gate, or loses the label.** If code steps outside
+these rules, through reflection, `eval`, a dynamic import or a native
+escape, the package is not quietly accepted and labelled
+`not-yet-provable`, as §7.5.4 would do for proofs. One of two things
+happens, and the report says which:
+
+- the gate fails; or
+- the package is labelled **"not language-confined"**. Its S then comes
+  from the full effect-inference analyzer of §8.1, not from the
+  allowlist, and that downgrade is an exemption needing approval (§9.1).
+
+**S is computed from use, not from imports.** S is the set of generated
+functions the package actually references, or can reach, not the whole
+generated module. Otherwise S would equal D by construction, S ⊆ D would
+say nothing, and over-declaration would never be found.
+
+#### 8.6.3 Where the language cannot confine: native code
+
+C and C++ can reach the kernel through any pointer, inline assembly or a
+raw system-call instruction. So can Rust `unsafe`, Go cgo and assembly,
+and anything behind an FFI boundary. This is how the `unsafe`-with-proof
+rule of §7.5.4 and the allowlist above fit together: such code is
+confined only by the means below. **No list of names or symbols can
+confine native code in production.** Native code running inside an
+interpreter that already has a full C library can find it anyway:
+
+- by walking the dynamic linker's state or the auxiliary vector;
+- through the vDSO or return addresses;
+- by calling the host runtime's own API (`PyRun_SimpleString`, JNI) or
+  `dlsym`.
+
+A statically linked binary has no imported symbols to inspect. On x86,
+instructions overlap, so a system-call instruction can hide inside other
+instructions. Native code can also jump straight to a shim's own
+system-call instruction, skipping its checks. The Go runtime and Rust's
+standard library contain raw system calls of their own.
+
+So, for native code:
+
+- **The report says so plainly.** It labels the package **"not confined
+  in production; observed on exercised paths only"**.
+- **A restricted shim and binary checks still run, but as a lint against
+  honest mistakes.** The shim exports only the declared operations, and
+  never `syscall()`, `ioctl`, `prctl`, `dlopen` or `dlsym`. The binary is
+  checked for undeclared imported symbols and memory that is both
+  writable and executable. Neither is a security boundary, and the report
+  does not present them as one.
+- **The locked box (§8.5) observes the package only during gate runs.**
+  It is not present in production, and a package that detects it can
+  behave until released (§8.5.8).
+- **Real confinement comes from one of three things:**
+  - native-code proofs (§8.3);
+  - a sandbox applied in production (D18S);
+  - compiling the native code to WebAssembly and running it in the
+    repository's own WebAssembly runtime, which confines it by
+    construction (software fault isolation).
+
+#### 8.6.4 Libraries take capabilities as arguments
+
+A module-level function is still *ambient*: any code path in the package
+can call it at any time. The stronger form, **object capabilities** in the
+strict sense, is for a library to receive its capabilities as arguments.
+The embedding program builds capability objects from its own generated
+module in `main` and passes them in. A library's manifest then declares
+what it **accepts**, and it can do nothing unless the program hands it the
+capability. Capabilities can also be **attenuated** before being passed:
+a program holding write access to `cache/` can hand a library a handle that
+writes only to `cache/thumbnails/`. VER23 decides when this becomes the
+default, starting at the latest with new library packages.
+
+Attenuation is sound only when all of these hold, and VER23 makes them
+requirements:
+
+- **Handles are descriptors, not path prefixes.** As a string prefix,
+  `cache/thumbnails` would also match `cache/thumbnails_x/` and
+  `cache/thumbnails/../`.
+- **A handle cannot be used to recover its parent's authority**, whether
+  through `__dict__`, closure cells, private fields or reflection. Python
+  and Ruby have no enforced privacy, so this depends on the reflection
+  ban of §8.6.2.
+- **Handles cannot be serialised, recreated or forged.**
+- **Libraries hold no ambient grants** and cannot import any generated
+  module other than their own.
+- **There is no shared mutable global state** in which a library could
+  hide or intercept capabilities. That needs frozen built-in objects (SES)
+  and no mutable statics (Joe-E); otherwise patching a prototype would
+  intercept handles passed in later.
+
+#### 8.6.5 How the layers fit together
+
+| Layer | Catches | Cannot catch |
+|---|---|---|
+| Generated module + per-member allowlist (§8.6) | Any undeclared effect in code that stays inside the confined subset. It makes S nearly exact | Native code and FFI; memory-safety bugs in the C code behind allowed standard-library modules (CPython is not a security boundary); Go data races that corrupt memory and so forge interfaces (§8.2) |
+| Capability analyzer (§8.1) | Enforces the allowlist and the subset; computes S | Whatever the subset rules miss |
+| Locked box (§8.5) | What the program actually did, including native code | Paths never exercised; a package that detects the box |
+| Weakness registry and proofs (§8.2, E5) | Whole classes of misuse, *within* the declared capabilities | Anything outside their stated assumptions |
+
+**A package is only as confined as its closure.** Its confinement label is
+the **weakest** label anywhere in its closure. An importer of a dependency
+labelled "not language-confined" or "not confined in production" carries
+that label too, whatever its own code does.
+
+The layers also simplify the rest of the program. With effects confined to
+generated functions, S ⊆ D becomes close to automatic. An O ⊆ S failure in
+the locked box then has two likely causes. Often it is a gap in the
+runtime baseline, because allowed "pure" calls trigger lazy runtime reads:
+time-zone and locale data, codec modules, the C library's name-service
+files, `.pyc` writes. Otherwise it is a subset escape. The box reports
+which. For proofs (§7.5), every effect is a call into the generated module
+with a stated contract. The prover treats effects as functions it does
+not need to look inside, and those contracts join the assumption
+catalogue (§7.5.2) and its per-language tests (§7.5.3).
+
 ## 9. The ship gate — VER01
 
 ### 9.1 The assurance report
@@ -1767,8 +2448,10 @@ ends with its rung **live and blocking**.
 | 0b | Trust-root rules (agent identity, human review of trust-root paths, signed policy data); SSHSIG `-sk` verifier; signed-tag release approval | Approvals | VER01, VER21 |
 | — | P-256, in-house USB HID and CTAP2, `release-approve` CLI | — | VER21 |
 | 1 | Capability analyzers for all languages, capability diff, weakness registry v1 (exclusions) | E0 | VER08, VER15 |
+| 1b | Generated capability modules and closed import allowlists: Go and Rust first, extending the existing generators, then every lane; native shim and binary checks | E0 language-level | VER23 |
 | 2 | Test tiers, purity and speed enforcement, simulated host, taxonomy extension, chaos injection | E1 purity, E2 | VER02, VER03, VER17 |
 | 2b | Checked allocator, checked C interpreter, native attack corpora | E0 for native code | VER16 |
+| 2c | Locked-box capability check: Linux appliers and the base deny, race-free enforcement, recorded denials, closed system-call mapping, broker log, exact-target baseline, D/S/O cross-check. Live with baseline charging only; attribution is research. Gets most of its reach once phases 3–4 drive the harness. | E0 dynamic (Linux guests) | VER22 |
 | 3 | Warrant v0 (examples, claims, models) with TypeScript and Rust backends; property engine | E3 | VER04, VER05 |
 | 4 | Fuzz engine; `input` blocks | E4 | VER06 |
 | 5 | Microbench harness in every lane; `budget` blocks; timing calibration | (budgets only) | VER07 |
@@ -1818,6 +2501,8 @@ S4 for S1.
 | VER19 | SIR symbolic execution and bit-precise proofs |
 | VER20 | Resource-bound and timing proofs: cost semantics, ranking functions, constant time, gate-level WCET |
 | VER21 | Hardware-key release approval: phone approval app, SSHSIG `-sk` verification, P-256, in-house USB HID and CTAP2, `release-approve`, root-key ceremony (shared with VLT-PM51) |
+| VER22 | Locked-box capability check: `capability-os-sandbox` enforce and observe modes, seccomp user-notification supervisor, VM isolation, attribution, D/S/O cross-check |
+| VER23 | Generated capability modules: exact per-package effect modules, target types, closed import allowlists, native shim and binary checks, object-capability passing |
 
 ## 12. Open decisions
 
