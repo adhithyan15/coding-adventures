@@ -535,8 +535,10 @@ pub fn compile_module_macos_arm64_object_with_mode(
 
 /// Returns raw ARM64 machine code bytes and a function-name→byte-offset map.
 ///
-/// Uses the standard untyped prep pipeline (pre-lower + i64 normalization +
-/// type propagation + default-any-to-i64).  The resulting bytes are a flat
+/// Uses the standard untyped prep pipeline (pre-lower + type propagation with
+/// dynamic params read as `i64` + default-any-to-i64; the params themselves stay
+/// `any`, so they remain GC roots — see [`specialisation_view`]).  The resulting
+/// bytes are a flat
 /// code section with no Mach-O wrapping — suitable for in-process execution
 /// via [`call_arm64_function_in_process`].
 ///
@@ -555,18 +557,24 @@ pub fn compile_module_to_arm64_bytes(
 }
 
 /// Like [`compile_module_to_arm64_bytes`] but uses the caller-supplied type
-/// annotations instead of forcing everything to `u64`.
+/// annotations for the params the caller has typed.
 ///
 /// The caller is responsible for having:
 /// 1. Run `pre_lower_aot_builtins_on_module` (or equivalent).
 /// 2. Run a type-inference pass (e.g. `iir-type-checker::infer_and_check`).
-/// 3. Set any remaining `"any"` params to a concrete type (e.g. `"i64"`).
+/// 3. Typed every param it *knows* is a plain integer (e.g. `(x : int)` →
+///    `"i64"`). **Leave every other param `"any"`** — do not retype it to
+///    `"i64"` to get signed comparisons. An `i64` param is "never a reference"
+///    to the backend's GC stack map, so a param that can hold a pair or closure
+///    would lose its root and go stale under a compacting collection (#18492).
+///    This function already reads `any` params as `i64` for typing.
 ///
-/// This function then runs `propagate_aot_types` (seeded from the caller's
-/// type annotations) and `default_any_to_u64` to fill in any gaps, without
-/// ever running `normalize_params_to_u64`.  Because params stay at whatever
-/// type the caller gave them (e.g. `i64`), arithmetic and comparisons are
-/// emitted with signed `i64` semantics — correct for negative numbers.
+/// This function then runs `propagate_aot_types` (seeded from the params, with
+/// `any` / `polymorphic` ones read as `i64`) and `default_any_to_i64` to fill in
+/// any gaps, and specialises a [`specialisation_view`] in which the dynamic
+/// params are `i64` while the backend still sees them as `any`. So arithmetic and
+/// comparisons are emitted with signed `i64` semantics — correct for negative
+/// numbers — and every param that may hold a heap word stays a root.
 ///
 /// ## Why propagation is still needed
 ///
@@ -1375,6 +1383,109 @@ fn check_direct_call_arities(module: &IIRModule) -> Result<(), AotError> {
     Ok(())
 }
 
+/// The machine scalar types whose slots can **never** hold a GC reference — the
+/// same deny-list the x86-64 and AArch64 backends apply (`is_definitely_not_ref`
+/// in each, private there). Everything else (`any`, `str`, `ref<…>`, …) is a
+/// potential root. Kept in step by hand; [`root_heap_word_copies`] only needs it
+/// to recognise which CIR types the backends already treat as roots.
+fn is_machine_scalar(ty: &str) -> bool {
+    matches!(
+        ty,
+        "u4" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "f32" | "f64"
+            | "bool" | "void"
+    )
+}
+
+/// Give every **copy of a possible heap word** a root type in the CIR, so the
+/// backend's stack map names its slot (#18492, follow-up).
+///
+/// [`specialisation_view`] keeps a dynamic *parameter* a root, but Twig also
+/// copies values into locals with `mov`: a `let` binding, each arm of an `if`
+/// writing the join variable, a chain of `let`s. Type propagation types such a
+/// `mov` from its source — `i64` when the source is a dynamic param — and
+/// `default_any_to_i64` types any `mov` it could not resolve (for example a copy
+/// of a recursive call's result) `i64`. The specialiser then emits `mov_i64`
+/// with `ty = "i64"`, the backend leaves the slot out of the stack map, and a
+/// compacting collection rewrites the original while the copy keeps pointing at
+/// the freed cell:
+///
+/// ```text
+///   f(p):  q = mov_i64 p        ; ty i64 → q's slot not a root
+///          call w4              ; compaction moves the pair, rewrites p's slot
+///          dyn_pair_first q     ; reads the freed from-space copy
+/// ```
+///
+/// The rule: a variable **may hold a heap word** if
+///
+/// 1. it is a parameter whose declared type is not a machine scalar (a dynamic
+///    `any` / `polymorphic` param, or a `ref<…>`), or
+/// 2. some CIR instruction defining it already has a root type (a `call` /
+///    `call_builtin` result, a `field_load`, a `global_load`, …), or
+/// 3. some `mov_*` copies it from a variable that may hold a heap word —
+///    iterated to a fixed point, so chains and loops are covered.
+///
+/// Every `mov_*` defining such a variable whose `ty` is a 64-bit integer gets
+/// `ty = "any"`. Only `ty` changes, never `op`: the backends pick the
+/// instruction from the mnemonic (`mov_i64`) and read `ty` only for the stack map
+/// (and for `array_get` / `array_set` element widths, which this never touches),
+/// so the machine code is byte-for-byte the same. Arithmetic results stay
+/// scalar: a `sub_i64` of a param is an integer, not a copy.
+///
+/// | CIR                         | before          | after          |
+/// |-----------------------------|-----------------|----------------|
+/// | `q = mov_i64 p` (`p : any`) | `ty i64`, no root | `ty any`, root |
+/// | `x = mov_i64 _r4` (`_r4` a call result) | `ty i64`, no root | `ty any`, root |
+/// | `n2 = sub_i64 n, 1`         | `ty i64`        | unchanged      |
+/// | `k = mov_i64 _n3` (`_n3` a literal only) | `ty i64` | unchanged |
+///
+/// Like the parameter rule, this accepts the known imprecision that a root slot
+/// may hold a plain integer (see `AOT00-T1-stackmap-emission.md` §4).
+fn root_heap_word_copies(declared_params: &[(String, String)], cir: &mut [jit_core::cir::CIRInstr]) {
+    let mut may_hold_heap: HashSet<String> = declared_params
+        .iter()
+        .filter(|(_, ty)| !is_machine_scalar(ty))
+        .map(|(name, _)| name.clone())
+        .collect();
+    for instr in cir.iter() {
+        if let Some(dest) = &instr.dest {
+            if !is_machine_scalar(&instr.ty) {
+                may_hold_heap.insert(dest.clone());
+            }
+        }
+    }
+    let copies_heap_word = |instr: &jit_core::cir::CIRInstr, set: &HashSet<String>| {
+        instr.op.starts_with("mov")
+            && instr
+                .srcs
+                .iter()
+                .any(|s| matches!(s, jit_core::cir::CIROperand::Var(v) if set.contains(v)))
+    };
+    // Fixed point: a copy of a copy is a copy. Each round adds at least one
+    // variable or stops, so it ends after at most |variables| rounds.
+    loop {
+        let before = may_hold_heap.len();
+        for instr in cir.iter() {
+            if let Some(dest) = &instr.dest {
+                if copies_heap_word(instr, &may_hold_heap) {
+                    may_hold_heap.insert(dest.clone());
+                }
+            }
+        }
+        if may_hold_heap.len() == before {
+            break;
+        }
+    }
+    for instr in cir.iter_mut() {
+        let Some(dest) = &instr.dest else { continue };
+        if instr.op.starts_with("mov")
+            && matches!(instr.ty.as_str(), "i64" | "u64")
+            && may_hold_heap.contains(dest)
+        {
+            instr.ty = "any".to_string();
+        }
+    }
+}
+
 /// Compile one prepared `IIRFunction` with the x86-64 backend, returning its bytes,
 /// its call relocations and its GC stack-map records — `(pc_offset, rbp-relative
 /// reference slots)` per safepoint, the shape `__gc_init_stackmaps` registers.
@@ -1398,7 +1509,8 @@ fn compile_one_x86_64(
 ) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>, Vec<(u32, Vec<i32>)>), AotError> {
     let typed = specialisation_view(fn_);
     let inferred = infer_types(&typed);
-    let cir = aot_specialise(&typed, Some(&inferred));
+    let mut cir = aot_specialise(&typed, Some(&inferred));
+    root_heap_word_copies(&fn_.params, &mut cir);
     let ctx = FunctionContext {
         name: &fn_.name,
         params: &fn_.params,
@@ -3427,12 +3539,14 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
 /// Run the per-function AOT pipeline and link into a single text section.
 ///
 /// Clones `module`, runs the full AOT preparation pipeline (builtin
-/// pre-lowering + u64 type normalisation + type propagation + default-any),
-/// and then delegates to [`compile_module_to_text_raw`] for the actual
-/// two-pass compile + link.
+/// pre-lowering + type propagation with dynamic params read as `i64` +
+/// default-any-to-i64), and then delegates to [`compile_module_to_text_raw`]
+/// for the actual two-pass compile + link.
 ///
-/// This is the "untyped u64" path: all params and arithmetic are treated as
-/// `u64`.  For signed `i64` semantics use [`compile_typed_module_to_arm64_bytes`].
+/// This is the untyped path: params the frontend left `any` are typed `i64` for
+/// arithmetic and comparisons (signed), through a [`specialisation_view`], while
+/// staying `any` — GC roots — for the backend's stack map (#18492). Callers that
+/// supply their own param types use [`compile_typed_module_to_arm64_bytes`].
 #[allow(clippy::type_complexity)] // cohesive compiled-module tuple; see compile_module_x86_64_to_text
 fn compile_module_to_text(
     module: &IIRModule,
@@ -3787,7 +3901,9 @@ fn compile_one_with_globals(
     // Typed view for the specialiser; declared params for the stack map (#18492).
     let typed = specialisation_view(fn_);
     let inferred = infer_types(&typed);
-    let cir = aot_specialise(&typed, Some(&inferred));
+    let mut cir = aot_specialise(&typed, Some(&inferred));
+    // ...and local copies of heap words keep a root type too (#18492 follow-up).
+    root_heap_word_copies(&fn_.params, &mut cir);
     let ctx = FunctionContext {
         name:        &fn_.name,
         params:      &fn_.params,
@@ -5736,6 +5852,104 @@ mod gc_param_root_tests {
         }
     }
 
+    // ── Follow-up: copies of heap words (`root_heap_word_copies`) ────────────
+
+    use jit_core::cir::{CIRInstr, CIROperand};
+
+    fn cir(op: &str, dest: Option<&str>, srcs: &[&str], ty: &str) -> CIRInstr {
+        let srcs = srcs.iter().map(|s| CIROperand::Var((*s).to_string())).collect();
+        CIRInstr::new(op, dest.map(str::to_string), srcs, ty)
+    }
+
+    fn ty_of<'c>(cir: &'c [CIRInstr], dest: &str) -> Vec<&'c str> {
+        cir.iter().filter(|i| i.dest.as_deref() == Some(dest)).map(|i| i.ty.as_str()).collect()
+    }
+
+    /// The rule on hand-built CIR: copies (and copies of copies) of a dynamic
+    /// param or of a root-typed result become `any`; arithmetic, literal-only
+    /// copies and a typed `i64` param's copies stay scalar; no `op` changes.
+    #[test]
+    fn heap_word_copies_get_a_root_type_and_nothing_else_does() {
+        let params = vec![
+            ("p".to_string(), "any".to_string()),
+            ("n".to_string(), "i64".to_string()),
+        ];
+        let mut code = vec![
+            cir("mov_i64", Some("q"), &["p"], "i64"),          // let copy of a param
+            cir("mov_i64", Some("a"), &["q"], "i64"),          // copy chain
+            cir("mov_i64", Some("b"), &["a"], "i64"),
+            cir("call", Some("r"), &["mk"], "any"),            // call result (root already)
+            cir("mov_i64", Some("x"), &["r"], "i64"),          // its copy
+            cir("const_i64", Some("k"), &[], "i64"),
+            cir("mov_i64", Some("j"), &["k"], "i64"),          // join: literal arm…
+            cir("mov_i64", Some("j"), &["p"], "i64"),          // …and param arm
+            cir("mov_i64", Some("lit"), &["k"], "i64"),        // literal-only copy
+            cir("sub_i64", Some("d"), &["p", "k"], "i64"),     // arithmetic on a param
+            cir("mov_i64", Some("m"), &["n"], "i64"),          // copy of a typed i64 param
+            cir("mov_bool", Some("t"), &["p"], "bool"),        // a narrow copy is left alone
+        ];
+        let ops_before: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        root_heap_word_copies(&params, &mut code);
+        for v in ["q", "a", "b", "x"] {
+            assert_eq!(ty_of(&code, v), ["any"], "{v} copies a heap word");
+        }
+        assert_eq!(ty_of(&code, "j"), ["any", "any"], "both arms of a join that may hold p");
+        for v in ["lit", "d", "m"] {
+            assert_eq!(ty_of(&code, v), ["i64"], "{v} never holds a heap word");
+        }
+        assert_eq!(ty_of(&code, "t"), ["bool"]);
+        assert_eq!(ty_of(&code, "r"), ["any"]);
+        let ops_after: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        assert_eq!(ops_before, ops_after, "only `ty` changes, never the mnemonic");
+    }
+
+    /// The copy shapes end to end through both native compile paths: the code
+    /// bytes equal those of the un-rooted CIR, and the copy's slot is now named at
+    /// every safepoint (the stack map gains slots, and every record holds them).
+    #[test]
+    fn heap_word_copy_slots_are_roots_on_both_native_backends_with_identical_code() {
+        let shapes = [
+            "(define (w4) (list 1 2))\n(define (f p) (let ((q p)) (begin (w4) (car q))))\n(f (cons 7 8))\n",
+            "(define (w4) (list 1 2))\n(define (f p) (let ((a p)) (let ((b a)) (begin (w4) (car b)))))\n(f (cons 7 8))\n",
+            "(define (w4) (list 1 2))\n(define (f p n) (if (pair? n) (let ((x (f p 0))) (begin (w4) (car x))) p))\n(f (cons 7 8) (cons 1 1))\n",
+            "(define (w4) (list 1 2))\n(define (f p c) (let ((x (if (pair? c) p 0))) (begin (w4) (car x))))\n(f (cons 7 8) (cons 1 1))\n",
+        ];
+        for src in shapes {
+            let mut module = twig_ir_compiler::compile_source(src, "gc_copy_roots").unwrap();
+            prepare_module_for_aot(&mut module).unwrap();
+            let globals = collect_global_slots(&module);
+            let f = func(&module, "f");
+            let typed = specialisation_view(f);
+            let inferred = infer_types(&typed);
+            let raw = aot_specialise(&typed, Some(&inferred));
+            let ctx = FunctionContext { name: &f.name, params: &f.params, return_type: &f.return_type };
+
+            // x86-64: production path vs. the same CIR without the copy rule.
+            let (bytes, _, records) = compile_one_x86_64(f, X86_64Abi::SysV, &globals).unwrap();
+            let (old_bytes, _, old_map) =
+                x86_64_compile_with_stackmap(&ctx, &raw, X86_64Abi::SysV, &globals).unwrap();
+            let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+            assert_eq!(bytes, old_bytes, "{src}: x86-64 code unchanged");
+            let added: Vec<i32> = all_slots(&records).difference(&all_slots(&old)).copied().collect();
+            assert!(!added.is_empty(), "{src}: x86-64 copy slot(s) newly rooted");
+            for (pc, slots) in &records {
+                assert!(added.iter().all(|a| slots.contains(a)), "{src}: x86-64 pc {pc}");
+            }
+
+            // AArch64: same comparison.
+            let (bytes, _, _, records) = compile_one_with_globals(f, &globals).unwrap();
+            let (old_bytes, _, _, old_map) =
+                compile_with_globals_and_stackmap(&ctx, &raw, &globals).unwrap();
+            let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+            assert_eq!(bytes, old_bytes, "{src}: aarch64 code unchanged");
+            let added: Vec<i32> = all_slots(&records).difference(&all_slots(&old)).copied().collect();
+            assert!(!added.is_empty(), "{src}: aarch64 copy slot(s) newly rooted");
+            for (pc, slots) in &records {
+                assert!(added.iter().all(|a| slots.contains(a)), "{src}: aarch64 pc {pc}");
+            }
+        }
+    }
+
     /// Closures: a lambda's captured values reach its lifted body as ordinary
     /// dynamic params, so the same rule roots them. (The body is the function that
     /// reads `car p`.)
@@ -5770,3 +5984,4 @@ mod gc_param_root_tests {
         }
     }
 }
+

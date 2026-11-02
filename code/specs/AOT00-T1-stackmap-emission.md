@@ -199,13 +199,42 @@ Getting a record *wrong* is worse than emitting none, so these are obligations:
    now types a *copy* of the function with those params read as `i64`
    (`specialisation_view`) and builds `FunctionContext` from the declared params,
    so the machine code is unchanged and the parameter's slot is named at every
-   safepoint. Regression tests: `twig-aot/tests/gc_param_roots.rs` (compacting and
-   precise collections spliced into the callee, a 4 MiB allocation-pressure run, and
-   a valgrind memcheck run) and the `gc_param_root_tests` unit tests.
-3. **Declare only reference-typed slots** (a non-reference slot is a wasted root under
-   a non-moving collection; under compaction a declared slot whose word *exactly*
-   equals a movable object's payload address is rewritten, so a plain integer must
-   never be declared — which is why the deny-list keeps `i64` and friends out).
+   safepoint.
+   **The same holds for every local that may hold a heap word**, whatever type the
+   specialiser picks for the instruction that writes it. A `let` binding, each arm
+   of an `if` writing the join variable, and a copy of a call result whose type was
+   unknown (a recursive call) are all `mov`s that propagation or
+   `default_any_to_i64` type `i64`, so the follow-up to #18492 found their slots
+   unrooted too: compaction rewrote the original and left the copy stale. twig-aot's
+   `root_heap_word_copies` now marks, after specialisation, every variable that is a
+   non-scalar-typed param, the dest of a root-typed instruction, or a `mov_*` copy of
+   such a variable (to a fixed point), and sets `ty = "any"` on the integer `mov_*`s
+   that define it. Only `ty` changes, never the mnemonic, and the backends read `ty`
+   only for the stack map (and for array element widths, which `mov` never has), so
+   the code bytes are unchanged. Arithmetic results stay scalar. Regression tests:
+   `twig-aot/tests/gc_param_roots.rs` (compacting and precise collections spliced
+   into the callee for the parameter, a captured value, a `let` copy, a copy chain, a
+   recursive call's result held in a `let`, and `if` joins of the parameter with a
+   literal and with a fresh pair; a 4 MiB allocation-pressure run; and a valgrind
+   memcheck run) and the `gc_param_root_tests` unit tests.
+3. **Declare only reference-typed slots.** Declaring a slot that holds a plain
+   integer is not free. Under a non-moving collection the word goes through the
+   validated lookup, so an integer that happens to name a block only keeps it alive
+   one more cycle. Under **compaction** a declared slot is *rewritten* when its word
+   names a moved object: `FlatHeap::forwarded` matches the exact payload address
+   `base` **and** the seven tagged forms `base | 1` … `base | 7` (`word & !7 == base`
+   with a non-zero tag), so eight integer values per moved object would be silently
+   changed into its new address. (An interior address is pinned instead, never
+   rewritten.) The deny-list keeps the machine scalars out for that reason, but a
+   dynamic `any` slot — a parameter, a copy, a call result — cannot be told apart
+   from a reference by type: it holds a boxed integer (`n << 3`, which collides
+   only with an exact `base`) or, where the boxed/raw confusion of #18480 leaves a
+   raw integer, any of the eight. **Known limit, accepted:** such a slot is declared,
+   so a Twig integer numerically equal to a moved object's address (or one of its
+   tagged forms) is rewritten by a compaction. It needs a value the program computed
+   to equal a live heap address; it disappears when LANG85 (one dynamic-value
+   representation, spec PR #18494) makes every dynamic word uniformly tagged, so
+   that a word's tag alone says whether it is a reference.
 
 Naming a slot the executed path has not written yet is safe: every slot word goes
 through the same validated candidate-pointer lookup as a conservative scan.
