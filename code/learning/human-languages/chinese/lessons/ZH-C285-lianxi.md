@@ -57,7 +57,7 @@ Its characters come later; for now it is a word for the ear.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*liánxì* is built from lián 'to join' and xì 'to tie'. The Guangyun has no entry for the first under the traditional forms we look it up by, so the history of that part is not settled; the second is inherited from Middle Chinese *kejH* (Guangyun, in Baxter's transcription), glossed 'joined together' under one traditional form and 'to tie up' under another.
+*liánxì* is built from lián 'to join' and xì 'to tie'. The Guangyun has no entry for the first under the traditional forms we look it up by, so the history of that part is not settled; the second is written with a character that stands for two traditional ones. The Guangyun reads one *kejH*, glossed 'joined together', and lists the other under two readings, *kejH*, glossed 'to tie up', and *hejH*, given only as the name of a part of the Book of Changes (Guangyun, in Baxter's transcription). The senses sit with *kejH*, but xì is not its regular modern sound, which would be jì: the change of sound is irregular.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C63-PHONE63-02, ZH-LEX-C153-GEN-01, ZH-LEX-C283-ZENME-01] -->

@@ -58,7 +58,7 @@ Its first character comes later; for now it is a word for the ear.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*tuìpiào* is built from tuì 'to give back' and 票 'a ticket'. The first is inherited from Middle Chinese *thwojH* (Guangyun, in Baxter's transcription), glossed 'to draw back'; the dictionary gives no form for the second in its ticket sense, so that part's history is not settled.
+*tuìpiào* is built from tuì 'to give back' and 票 'a ticket'. The first is inherited from Middle Chinese *thwojH* (Guangyun, in Baxter's transcription), glossed 'to draw back'; the dictionary has no entry for 票, so that part's history is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C200-HOTEL200-05, ZH-LEX-C73-STATION73-05] -->

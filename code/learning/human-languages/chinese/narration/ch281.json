@@ -4,7 +4,7 @@
   "chapter": 281,
   "title": "For Example",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:73710c380a60d33d",
+  "sourceHash": "fnv1a64:05f795345cc5874a",
   "lessons": [
     {
       "id": "ZH-C281-biru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5d6e871d4842c59",
+      "sourceHash": "fnv1a64:5edaa81015b5860b",
       "notice": null,
       "blocks": [
         {
@@ -77,7 +77,7 @@
             },
             {
               "kind": "speech",
-              "text": "我喜欢中国菜 比如白菜 wǒ xǐhuan Zhōngguó cài, bǐrú báicài — I like Chinese food, cabbage for one."
+              "text": "我喜欢中国菜 比如包子 wǒ xǐhuan Zhōngguó cài, bǐrú bāozi — I like Chinese food, steamed buns for instance."
             },
             {
               "kind": "speech",
@@ -107,7 +107,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "比如 (bǐrú) comes after the general point and before the example: 中国菜, then 比如白菜."
+              "text": "比如 (bǐrú) comes after the general point and before the example: 中国菜, then 比如包子."
             },
             {
               "kind": "speech",
@@ -147,11 +147,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "我喜欢中国菜 比如白菜 — wǒ xǐhuan Zhōngguó cài, bǐrú báicài — I like Chinese food, cabbage for one.",
+              "instruction": "我喜欢中国菜 比如包子 — wǒ xǐhuan Zhōngguó cài, bǐrú bāozi — I like Chinese food, steamed buns for instance.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: 我喜欢中国菜 比如白菜 — *wǒ xǐhuan Zhōngguó cài, bǐrú báicài* — I like Chinese food, cabbage for one.]"
+              "source": "[YOU SAY: 我喜欢中国菜 比如包子 — *wǒ xǐhuan Zhōngguó cài, bǐrú bāozi* — I like Chinese food, steamed buns for instance.]"
             },
             {
               "kind": "prompt",
@@ -670,7 +670,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0923bb35f977de9d",
+      "sourceHash": "fnv1a64:8eaed85998b4e67d",
       "notice": null,
       "blocks": [
         {
@@ -734,7 +734,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "yīncǐ is built from 因 and cǐ 'this', both inherited from Middle Chinese, 'jin and tshjeX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to rely on' and 'a cause'; 'for this reason' for the pair is the word's own sense."
+              "text": "yīncǐ is built from 因 and cǐ 'this', both inherited from Middle Chinese, 'jin and tshjeX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to rely on' and 'a cause', and the second 'to stop'; 'this' is not given there, and 'for this reason' for the pair is the word's own sense."
             }
           ]
         },
@@ -834,7 +834,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cacbbf8cdaa4d25a",
+      "sourceHash": "fnv1a64:c4977c34eab0fa6c",
       "notice": null,
       "blocks": [
         {
@@ -898,7 +898,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "lìzi is built from lì 'a precedent' and the ending 子, both inherited from Middle Chinese, ljejH and tsiX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to compare' and 'all of a kind'."
+              "text": "lìzi is built from lì 'a precedent' and the ending 子, both inherited from Middle Chinese, ljejH and tsiX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to compare' and 'all'; 'an example' is the modern word's own sense."
             }
           ]
         },
@@ -958,11 +958,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "比如白菜 — bǐrú báicài — Cabbage, for instance.",
+              "instruction": "比如包子 — bǐrú bāozi — Steamed buns, for instance.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: 比如白菜 — *bǐrú báicài* — Cabbage, for instance.]"
+              "source": "[YOU SAY: 比如包子 — *bǐrú bāozi* — Steamed buns, for instance.]"
             },
             {
               "kind": "prompt",
@@ -1166,7 +1166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbaff5d078f8078b",
+      "sourceHash": "fnv1a64:fe63d1f508a00d3b",
       "notice": null,
       "blocks": [
         {
@@ -1220,7 +1220,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A: 你为什么学汉语 nǐ wèishénme xué Hànyǔ — Why are you learning Chinese? B: 因为我喜欢中国 所以学汉语 yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ — Because I like China, so I'm learning Chinese. A: 你喜欢中国的什么 nǐ xǐhuan Zhōngguó de shénme — What do you like about China? B: 中国菜 中国茶 Zhōngguó cài, Zhōngguó chá — Chinese food, Chinese tea. A: nǐ néng shuō yí ge lìzi ma — Can you give an example? B: 比如白菜 我很喜欢 bǐrú báicài, wǒ hěn xǐhuan — Cabbage, for one. I love it. A: wǒ yě shì, yīncǐ wǒ xiǎng qù Zhōngguó — Me too, and so I want to go to China."
+              "text": "A: 你为什么学汉语 nǐ wèishénme xué Hànyǔ — Why are you learning Chinese? B: 因为我喜欢中国 所以学汉语 yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ — I like China, so I'm learning Chinese. A: 你喜欢中国的什么 nǐ xǐhuan Zhōngguó de shénme — What do you like about China? B: 中国菜 中国茶 Zhōngguó cài, Zhōngguó chá — Chinese food, Chinese tea. A: nǐ néng shuō yí ge lìzi ma — Can you give an example? B: 比如包子 我很喜欢 bǐrú bāozi, wǒ hěn xǐhuan — Steamed buns, for one. I love them. A: wǒ yě shì, yīncǐ wǒ xiǎng qù Zhōngguó — Me too, and so I want to go to China."
             },
             {
               "kind": "speech",
@@ -1290,7 +1290,7 @@
             },
             {
               "kind": "speech",
-              "text": "中国菜 比如白菜 Zhōngguó cài, bǐrú báicài — an example brought in."
+              "text": "中国菜 比如包子 Zhōngguó cài, bǐrú bāozi — an example brought in."
             },
             {
               "kind": "speech",
@@ -1371,7 +1371,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say because it rained, we didn't go. (因为下雨了 所以我们没去.) Say cabbage, for instance. (比如白菜.) Ask for an example. (qǐng shuō yí ge lìzi.)"
+              "text": "Say because it rained, we didn't go. (因为下雨了 所以我们没去.) Say steamed buns, for instance. (比如包子.) Ask for an example. (qǐng shuō yí ge lìzi.)"
             }
           ]
         }

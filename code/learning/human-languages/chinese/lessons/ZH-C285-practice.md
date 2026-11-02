@@ -9,27 +9,27 @@ headword: "我的车票不见了"
 romanization: "wǒ de chēpiào bú jiàn le"
 gloss: "a traveller reports a lost ticket and papers, and is told what to do"
 concept_tag: ZH-CH285-PRACTICE
-prerequisites: [ZH-C285-guashi, ZH-C285-zhengjian, ZH-C285-zhaohui, ZH-C285-problem, ZH-C285-potential, ZH-C279-de-shihou, ZH-C284-v-zai, ZH-C282-yinggai-grammar, ZH-C282-dei, ZH-C196-chepiao, ZH-C206-qiantai, ZH-C83-mashang, ZH-C285-lianxi]
+prerequisites: [ZH-C285-guashi, ZH-C285-zhengjian, ZH-C285-zhaohui, ZH-C285-problem, ZH-C285-potential, ZH-C279-de-shihou, ZH-C284-v-zai, ZH-C282-yinggai-grammar, ZH-C285-lianxi, ZH-C282-dei, ZH-C196-chepiao, ZH-C83-mashang]
 sounds: [tone-3, tone-neutral, tone-1, tone-4, tone-2, tone-sandhi-bu]
 roots: []
 etymology_hook: "The chapter that lets the reader report a lost thing and write a short note about it."
 duration:
   max_seconds: 270
 requires:
-  knowledge: [ZH-LEX-C285-GUASHI-01, ZH-LEX-C285-ZHENGJIAN-01, ZH-LEX-C285-ZHAOHUI-01, ZH-GRAMMAR-PROBLEM-01, ZH-GRAMMAR-POTENTIAL-01, ZH-GRAMMAR-DE-SHIHOU-01, ZH-GRAMMAR-V-ZAI-PLACE-01, ZH-GRAMMAR-YINGGAI-01, ZH-LEX-C282-DEI-01, ZH-LEX-C196-TICKET196-01, ZH-LEX-C206-FLOOR206-05, ZH-LEX-C83-WAIT83-03, ZH-LEX-C285-LIANXI-01]
+  knowledge: [ZH-LEX-C285-GUASHI-01, ZH-LEX-C285-ZHENGJIAN-01, ZH-LEX-C285-ZHAOHUI-01, ZH-GRAMMAR-PROBLEM-01, ZH-GRAMMAR-POTENTIAL-01, ZH-GRAMMAR-DE-SHIHOU-01, ZH-GRAMMAR-V-ZAI-PLACE-01, ZH-GRAMMAR-YINGGAI-01, ZH-LEX-C285-LIANXI-01, ZH-LEX-C282-DEI-01, ZH-LEX-C196-TICKET196-01, ZH-LEX-C83-WAIT83-03]
 introduces:
   knowledge: [ZH-PERFORMANCE-PROBLEM-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [ZH-PERFORMANCE-PROBLEM-01, ZH-LEX-C285-GUASHI-01, ZH-LEX-C285-ZHENGJIAN-01, ZH-LEX-C285-ZHAOHUI-01, ZH-GRAMMAR-PROBLEM-01, ZH-GRAMMAR-POTENTIAL-01, ZH-GRAMMAR-DE-SHIHOU-01, ZH-GRAMMAR-V-ZAI-PLACE-01, ZH-GRAMMAR-YINGGAI-01, ZH-LEX-C282-DEI-01, ZH-LEX-C196-TICKET196-01, ZH-LEX-C206-FLOOR206-05, ZH-LEX-C83-WAIT83-03, ZH-LEX-C285-LIANXI-01]
+  knowledge: [ZH-PERFORMANCE-PROBLEM-01, ZH-LEX-C285-GUASHI-01, ZH-LEX-C285-ZHENGJIAN-01, ZH-LEX-C285-ZHAOHUI-01, ZH-GRAMMAR-PROBLEM-01, ZH-GRAMMAR-POTENTIAL-01, ZH-GRAMMAR-DE-SHIHOU-01, ZH-GRAMMAR-V-ZAI-PLACE-01, ZH-GRAMMAR-YINGGAI-01, ZH-LEX-C285-LIANXI-01, ZH-LEX-C282-DEI-01, ZH-LEX-C196-TICKET196-01, ZH-LEX-C83-WAIT83-03]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
 register: neutral
 variety: standard-mandarin-simplified
-reviews_of: [ZH-C285-guashi, ZH-C285-zhengjian, ZH-C285-zhaohui, ZH-C285-problem, ZH-C285-potential, ZH-C279-de-shihou, ZH-C284-v-zai, ZH-C282-yinggai-grammar, ZH-C282-dei, ZH-C196-chepiao, ZH-C206-qiantai, ZH-C83-mashang, ZH-C285-lianxi]
+reviews_of: [ZH-C285-guashi, ZH-C285-zhengjian, ZH-C285-zhaohui, ZH-C285-problem, ZH-C285-potential, ZH-C279-de-shihou, ZH-C284-v-zai, ZH-C282-yinggai-grammar, ZH-C285-lianxi, ZH-C282-dei, ZH-C196-chepiao, ZH-C83-mashang]
 ---
 
 # 我的车票不见了
@@ -44,7 +44,7 @@ reviews_of: [ZH-C285-guashi, ZH-C285-zhengjian, ZH-C285-zhaohui, ZH-C285-problem
 - [YOU RECALL: say 我找回了我的手机 — *wǒ zhǎohuí le wǒ de shǒujī* — **R2**]
 
 ## The exchange
-<!-- hl-knowledge: introduces=[ZH-PERFORMANCE-PROBLEM-01]; assesses=[ZH-GRAMMAR-PROBLEM-01, ZH-GRAMMAR-POTENTIAL-01, ZH-GRAMMAR-DE-SHIHOU-01, ZH-GRAMMAR-V-ZAI-PLACE-01, ZH-GRAMMAR-YINGGAI-01, ZH-LEX-C285-ZHENGJIAN-01, ZH-LEX-C285-GUASHI-01, ZH-LEX-C282-DEI-01, ZH-LEX-C196-TICKET196-01, ZH-LEX-C206-FLOOR206-05, ZH-LEX-C83-WAIT83-03] -->
+<!-- hl-knowledge: introduces=[ZH-PERFORMANCE-PROBLEM-01]; assesses=[ZH-GRAMMAR-PROBLEM-01, ZH-GRAMMAR-POTENTIAL-01, ZH-GRAMMAR-DE-SHIHOU-01, ZH-GRAMMAR-V-ZAI-PLACE-01, ZH-GRAMMAR-YINGGAI-01, ZH-LEX-C285-LIANXI-01, ZH-LEX-C285-ZHENGJIAN-01, ZH-LEX-C285-GUASHI-01, ZH-LEX-C282-DEI-01, ZH-LEX-C196-TICKET196-01, ZH-LEX-C83-WAIT83-03] -->
 
 > **A:** 我的车票不见了
 >
@@ -66,7 +66,7 @@ reviews_of: [ZH-C285-guashi, ZH-C285-zhengjian, ZH-C285-zhaohui, ZH-C285-problem
 >
 > *yǒu, wǒ zuò zài zhèr de shíhou hái yǒu* — Yes. I still had it when I sat down here.
 >
-> **B:** *nǐ yīnggāi qù qiántái* — You should go to the desk.
+> **B:** *nǐ yīnggāi liánxì chēzhàn* — You should get in touch with the station.
 >
 > **A:** *wǒ de zhèngjiàn yě bú jiàn le* — My papers are gone too.
 >

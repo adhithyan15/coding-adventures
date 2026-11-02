@@ -7,12 +7,12 @@ chapter: 289
 type: grammar
 headword: "如果…就…"
 romanization: "rúguǒ … jiù …"
-gloss: "如果 for the condition and 就 for the result, in writing and careful speech"
+gloss: "如果 for the condition and 就 for the result, in speech or in writing"
 concept_tag: CONNECTIVE-IF
 prerequisites: [ZH-W289-guo-fruit, ZH-C289-ruguo, ZH-C288-conditional, ZH-C288-dehua, ZH-C288-yaoshi, ZH-C288-jiu, ZH-C66-xiayu, ZH-C68-shan, ZH-C83-shijian]
 sounds: [tone-2, tone-3, tone-4]
 roots: []
-etymology_hook: "如果 … 就 …: the if and then of writing and careful speech."
+etymology_hook: "如果 … 就 …: if and then, in speech or in writing."
 duration:
   max_seconds: 240
 requires:
@@ -46,7 +46,7 @@ reviews_of: [ZH-W289-guo-fruit, ZH-C289-ruguo, ZH-C288-conditional, ZH-C288-dehu
 ## Grammar Lens: 如果 … 就 …, if and then
 <!-- hl-knowledge: introduces=[ZH-GRAMMAR-RUGUO-JIU-01]; assesses=[ZH-GRAMMAR-YAOSHI-JIU-01, ZH-LEX-C288-YAOSHI-01, ZH-LEX-C288-DEHUA-01, ZH-LEX-C288-JIU-01, ZH-LEX-C66-WEATHER66-03, ZH-LEX-C68-NATURE68-01, ZH-LEX-C83-WAIT83-01] -->
 
-> **如果 opens the condition and 就 opens the result: 要是 … 就 … for writing and careful speech.**
+> **如果 opens the condition and 就 opens the result, as 要是 … 就 … does, in speech or in writing.**
 
 > **如果明天不下雨 我们就去山上** *rúguǒ míngtiān bú xiàyǔ, wǒmen jiù qù shān shàng* — If it doesn't rain tomorrow, we'll go up the mountain.
 > **如果你有时间的话 就来我家** *rúguǒ nǐ yǒu shíjiān dehuà, jiù lái wǒ jiā* — If you have the time, come round.

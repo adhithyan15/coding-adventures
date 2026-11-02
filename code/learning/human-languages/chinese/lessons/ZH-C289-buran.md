@@ -56,7 +56,7 @@ reviews_of: [ZH-C289-would, ZH-C62-kuai, ZH-C288-jiu, ZH-C282-dei]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**不然** (*bùrán*) is built from 不 'not' and 然 'so', both inherited from Middle Chinese. The Guangyun lists 不 under three readings, *pjuw*, *pjuwX* and *pjut*, all glossed 'not'; bù is the regular modern sound of *pjut*. 然 is *nyen*, glossed 'so, like this' (Guangyun, in Baxter's transcription). 'Not so', and so 'otherwise', is the plain sum of the two.
+**不然** (*bùrán*) is built from 不 'not' and 然 'so', both inherited from Middle Chinese. The Guangyun lists 不 under three readings, *pjuw*, *pjuwX* and *pjut*, all glossed 'not'. bù comes from *pjut* irregularly: other syllables of its kind changed their p to f, while 不 kept the plain lip sound, now written b. 然 is *nyen*, glossed 'so, like this' (Guangyun, in Baxter's transcription). 'Not so', and so 'otherwise', is the plain sum of the two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C288-JIU-01, ZH-LEX-C282-DEI-01] -->

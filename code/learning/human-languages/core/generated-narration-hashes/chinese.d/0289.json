@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 289,
-  "sourceHash": "fnv1a64:7a028caddd5ec8b3",
+  "sourceHash": "fnv1a64:a39f5d8c60ea2f74",
   "lessonIds": [
     "ZH-C289-ruguo",
     "ZH-W289-guo-fruit",
@@ -15,7 +15,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch289.txt",
   "json": "chinese/narration/ch289.json",
-  "textHash": "fnv1a64:ac4c276d22b194e1",
-  "jsonHash": "fnv1a64:85d157e0f8b6110c",
+  "textHash": "fnv1a64:d2121b83d6970092",
+  "jsonHash": "fnv1a64:efac892236696fb9",
   "findings": []
 }

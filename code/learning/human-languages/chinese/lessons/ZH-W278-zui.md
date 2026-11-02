@@ -55,7 +55,7 @@ reviews_of: [ZH-C278-zuihou, ZH-W04-ri, ZH-W26-dui, ZH-C29-characters]
 
 **日, four strokes**, wide and flat on top: the left side, the top that turns down the right side, the middle bar, the bottom bar.
 
-**Six strokes under it, on the left**: a long horizontal across the whole width; two verticals down from it, the left one first; two short horizontals between them, the upper one first; and last a short stroke at the foot that rises to the right.
+**Six strokes under it**: a long horizontal across the whole width; then, on the left, two verticals down from it, the left one first; two short horizontals between them, the upper one first; and last a short stroke at the foot that rises to the right.
 
 **又, two strokes**, on the right, as on the left of 对: a horizontal that turns and falls to the lower left, then a long right-falling stroke.
 

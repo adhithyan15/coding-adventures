@@ -36,7 +36,7 @@ reviews_of: [ZH-C286-duojiu, ZH-C286-yihan, ZH-C289-buran, ZH-C278-practice, ZH-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C286-DUOJIU-01, ZH-LEX-C286-YIHAN-01, ZH-LEX-C289-BURAN-01] -->
 
-[PAUSE 3s] The last lesson of the B1 core: one conversation that uses every chapter of it.
+[PAUSE 3s] The last lesson of the B1 core: one conversation across all of it.
 
 - [YOU RECALL: say *duōjiǔ*, how long — **R3**]
 - [YOU RECALL: say *yíhàn*, a pity — **R3**]
@@ -65,7 +65,7 @@ reviews_of: [ZH-C286-duojiu, ZH-C286-yihan, ZH-C289-buran, ZH-C278-practice, ZH-
 >
 > *zuìhòu zhǎohuí le, wǒ gǎnjué hěn hǎo* — In the end I did. I feel fine.
 >
-> **B:** *wǒ de zhèngjiàn yě bú jiàn le, wǒ děi mǎshàng guàshī* — My papers went missing too; I have to report them lost at once.
+> **B:** *wǒ de zhèngjiàn yě bú jiàn le, wǒ děi mǎshàng guàshī* — My papers are gone too; I must report them lost at once.
 >
 > **A:** *wǒ juéde nǐ yīnggāi xiān liánxì wǒ* — I think you should have got in touch with me first.
 >
@@ -93,9 +93,9 @@ reviews_of: [ZH-C286-duojiu, ZH-C286-yihan, ZH-C289-buran, ZH-C278-practice, ZH-
 >
 > *rúguǒ bú xiàyǔ, wǒmen jiù zuò huǒchē qù* — If it doesn't rain, we'll go by train.
 >
-> **A:** 快点儿 不然我们就晚了
+> **B:** 那早点儿走 不然就晚了
 >
-> *kuài diǎnr, bùrán wǒmen jiù wǎn le* — Hurry, or we'll be late.
+> *nà zǎo diǎnr zǒu, bùrán jiù wǎn le* — Then let's leave early, or we'll be late.
 
 [PAUSE 2s each]
 

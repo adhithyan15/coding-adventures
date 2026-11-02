@@ -130,7 +130,7 @@ Numbers you know, and a new place to put them.
 Grammar Lens: the length after the verb.
 How long something lasted goes after the verb and its 了; with an object, the object comes after the length.
 我学了两年汉语 wǒ xué le liǎng nián Hànyǔ — I studied Chinese for two years. tā zài Zhōngguó zhù le yì nián — He lived in China for a year.
-When it happened goes before the verb: 去年. How long it lasted goes after: 两年.
+When it happened goes before the verb: 上个月. How long it lasted goes after: 一个月.
 To ask, put 多 before 长, as you put it before 大 in 多大: 你学了多长时间 nǐ xué le duō cháng shíjiān?
 
 Guided Practice.
@@ -169,7 +169,7 @@ The word, taken apart.
 duōjiǔ is built from 多 'much' and jiǔ 'long-lasting', both inherited from Middle Chinese, ta and kjuwX (Guangyun, in Baxter's transcription), which glosses the first 'many' and the second 'lasting long'.
 
 What you've built.
-duōjiǔ is the short form of 多长时间, and it takes the same place, after the verb.
+duōjiǔ asks what 多长时间 asks, in fewer words, and it takes the same place, after the verb.
 hǎojiǔ answers it: a long time.
 
 Guided Practice.
@@ -210,7 +210,7 @@ wǒ méi qù, hěn yíhàn — I didn't go, which is a shame.
 Its characters come later; for now it is a word for the ear.
 
 The word, taken apart.
-yíhàn is built from yí 'to leave behind' and hàn 'resentment', both inherited from Middle Chinese. The Guangyun lists the first under two readings, ywij, glossed 'to lose' and 'to leave', and ywijH, glossed 'to give'; the second is homH, glossed 'resentment' (Guangyun, in Baxter's transcription). 'A pity' for the pair is the modern word's own sense.
+yíhàn is built from yí 'to leave behind' and hàn 'resentment', both inherited from Middle Chinese. The Guangyun lists the first under two readings, ywij, glossed 'to lose', 'to be gone' and 'to give', and ywijH, glossed 'to give'; the second is homH, glossed 'resentment' (Guangyun, in Baxter's transcription). 'A pity' for the pair is the modern word's own sense.
 
 What you've built.
 hòuhuǐ is regretting what you did yourself; yíhàn is a pity, whoever was to blame.

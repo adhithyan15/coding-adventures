@@ -54,7 +54,7 @@ Its second character comes later; for now it is a word for the ear.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*yīncǐ* is built from 因 and cǐ 'this', both inherited from Middle Chinese, *'jin* and *tshjeX* (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to rely on' and 'a cause'; 'for this reason' for the pair is the word's own sense.
+*yīncǐ* is built from 因 and cǐ 'this', both inherited from Middle Chinese, *'jin* and *tshjeX* (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to rely on' and 'a cause', and the second 'to stop'; 'this' is not given there, and 'for this reason' for the pair is the word's own sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C96-SUOYI-01, ZH-GRAMMAR-YINWEI-SUOYI-01, ZH-LEX-C66-WEATHER66-01] -->

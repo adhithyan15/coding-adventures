@@ -41,9 +41,10 @@
 - Origins from the Guangyun in Baxter's transcription, every reading listed before one
   is chosen (突 *thwot* and *dwot*, 应 *'ing* and *'ingH*, 当 *tang* and *tangH*, 觉
   *kaewH* and *kaewk*), every sense the gloss does not give hedged, and "not settled"
-  where there is no reading (怎, 找, 联, the 么 of 这么 and 怎么). Corpus slugs are reused
-  for their own etymon (坐 *dzwaX* as in *zuò*, 突 *thwot* as in Japanese 突然, 当
-  *tang* as in *dāngshí*); new ones: *ing* (应 'ought to', apart from *ingh* 'to
+  where there is no reading (怎, 找, 联, 票, the 么 of 这么 and 怎么); irregular modern
+  sounds are named (得 *děi* from *tok*, 不 *bù* from *pjut*, 系 *xì* from *kejH*).
+  Corpus slugs are reused for their own etymon (突 *thwot* as in Japanese 突然, 当
+  *tang* as in *dāngshí*, 座 *dzwaH* as in Japanese 座席); new ones: *ing* (应 'ought to', apart from *ingh* 'to
   respond'), *koj*, *nyo*, *tshjex*, *ljejh*, *homh*, and the sense-tagged *kejh-tie*
   and *kaewk-awake*, whose bare slugs are 计 and 角.
 - B1 headwords 1,290 -> 1,329 and verbs 403 -> 410; all five B1 spine nodes realized.

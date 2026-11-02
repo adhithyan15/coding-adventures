@@ -51,7 +51,7 @@ reviews_of: [ZH-W282-ying, ZH-C282-yinggai, ZH-C282-gai, ZH-C214-zenmeban, ZH-C8
 > **你应该去看医生** *nǐ yīnggāi qù kàn yīshēng* — You should see a doctor.
 > **你不应该这么晚回家** *nǐ bù yīnggāi zhème wǎn huí jiā* — You shouldn't come home so late.
 
-不 goes in front of 应该, and stays *bù* before the level yīng.
+不 goes in front of 应该, and stays *bù* before the level yīng. 晚 here is late, the 晚 of 晚上.
 
 To ask for advice: *wǒ yīnggāi zěnme bàn?*, what should I do?
 

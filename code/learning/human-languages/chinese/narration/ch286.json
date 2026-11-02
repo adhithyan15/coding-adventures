@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "How It Felt",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ceff696e1204e0ba",
+  "sourceHash": "fnv1a64:dad90b7ee64ffd85",
   "lessons": [
     {
       "id": "ZH-C286-ganjue",
@@ -514,7 +514,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab3733ee83e241c8",
+      "sourceHash": "fnv1a64:354b75fb71f753f4",
       "notice": null,
       "blocks": [
         {
@@ -585,7 +585,7 @@
             },
             {
               "kind": "speech",
-              "text": "When it happened goes before the verb: 去年. How long it lasted goes after: 两年."
+              "text": "When it happened goes before the verb: 上个月. How long it lasted goes after: 一个月."
             },
             {
               "kind": "speech",
@@ -688,7 +688,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29434373f89b9670",
+      "sourceHash": "fnv1a64:a39ea3b7e88c7a9a",
       "notice": null,
       "blocks": [
         {
@@ -767,7 +767,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "duōjiǔ is the short form of 多长时间, and it takes the same place, after the verb."
+              "text": "duōjiǔ asks what 多长时间 asks, in fewer words, and it takes the same place, after the verb."
             },
             {
               "kind": "speech",
@@ -865,7 +865,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5e880557e594dd3",
+      "sourceHash": "fnv1a64:b4a570d80607b353",
       "notice": null,
       "blocks": [
         {
@@ -942,7 +942,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "yíhàn is built from yí 'to leave behind' and hàn 'resentment', both inherited from Middle Chinese. The Guangyun lists the first under two readings, ywij, glossed 'to lose' and 'to leave', and ywijH, glossed 'to give'; the second is homH, glossed 'resentment' (Guangyun, in Baxter's transcription). 'A pity' for the pair is the modern word's own sense."
+              "text": "yíhàn is built from yí 'to leave behind' and hàn 'resentment', both inherited from Middle Chinese. The Guangyun lists the first under two readings, ywij, glossed 'to lose', 'to be gone' and 'to give', and ywijH, glossed 'to give'; the second is homH, glossed 'resentment' (Guangyun, in Baxter's transcription). 'A pity' for the pair is the modern word's own sense."
             }
           ]
         },

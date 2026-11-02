@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 281,
-  "sourceHash": "fnv1a64:73710c380a60d33d",
+  "sourceHash": "fnv1a64:05f795345cc5874a",
   "lessonIds": [
     "ZH-C281-biru",
     "ZH-W281-ru",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch281.txt",
   "json": "chinese/narration/ch281.json",
-  "textHash": "fnv1a64:813688224f51e515",
-  "jsonHash": "fnv1a64:a374d6b0ac0e050d",
+  "textHash": "fnv1a64:443a218b0532db21",
+  "jsonHash": "fnv1a64:a4fbe0601c067cbd",
   "findings": []
 }

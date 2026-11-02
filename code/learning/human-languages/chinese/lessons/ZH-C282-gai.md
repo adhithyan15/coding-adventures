@@ -74,7 +74,7 @@ It sits before the verb, after the person, where 要 and 想 sit.
 - [YOU SAY: *gāi*, once more]
 - [YOU SAY: 我该回家了 — *wǒ gāi huí jiā le* — It's time I went home.]
 - [YOU SAY: 该你了 — *gāi nǐ le* — Your turn.]
-- [YOU RECALL: say *xiūxi*, then 我该 *xiūxi* 了: time I rested]
+- [YOU RECALL: say *xiūxi*, then *wǒ gāi xiūxi le*: time I rested]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C282-GAI-01, ZH-PERFORMANCE-REASON-01, ZH-LEX-C281-LIZI-01, ZH-LEX-C50-SLEEP50-03, ZH-GRAMMAR-LE-CHANGED-STATE-01, ZH-LEX-C55-LIKE55-01] -->

@@ -288,8 +288,8 @@ Twelve hand-authored chapters, 91 lessons, two or three on each B1 spine node, s
 five are realized: narrating events (278-279), giving reasons (280-282), handling travel
 (283-285), describing experience (286-287) and expressing conditions (288-289). Sixteen
 characters are written (最 然 第 突 意 如 所 该 应 怎 走 坐 感 当 就 果), 227 inventory rows in
-all; three of them are anchored by the grammar lesson whose pattern first prints them
-(先…然后…最后, 因为…所以…, 去…怎么走). A thirteen-line story in written characters, and three
+all; four of them are anchored by the grammar lesson whose pattern first prints them
+(先…然后…最后, 因为…所以…, 去…怎么走, 坐火车去). A thirteen-line story in written characters, and three
 compositions: one controlled line (281), a four-line note (285) and six connected lines
 (289). B1 headwords 1,290 -> 1,329 and verbs 403 -> 410. B1 is not attained: the B1
 vocabulary (about 1,170 more headwords, with 126 more characters planned) comes next.

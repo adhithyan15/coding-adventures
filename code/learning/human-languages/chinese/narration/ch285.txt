@@ -182,7 +182,7 @@ qǐng gēn wǒ liánxì — Please get in touch with me.
 Its characters come later; for now it is a word for the ear.
 
 The word, taken apart.
-liánxì is built from lián 'to join' and xì 'to tie'. The Guangyun has no entry for the first under the traditional forms we look it up by, so the history of that part is not settled; the second is inherited from Middle Chinese kejH (Guangyun, in Baxter's transcription), glossed 'joined together' under one traditional form and 'to tie up' under another.
+liánxì is built from lián 'to join' and xì 'to tie'. The Guangyun has no entry for the first under the traditional forms we look it up by, so the history of that part is not settled; the second is written with a character that stands for two traditional ones. The Guangyun reads one kejH, glossed 'joined together', and lists the other under two readings, kejH, glossed 'to tie up', and hejH, given only as the name of a part of the Book of Changes (Guangyun, in Baxter's transcription). The senses sit with kejH, but xì is not its regular modern sound, which would be jì: the change of sound is irregular.
 
 What you've built.
 打电话 is one way to liánxì; a message is another. The person you reach follows it, or comes before it with gēn: qǐng gēn wǒ liánxì.
@@ -302,7 +302,7 @@ The chapter closes here, on a train, with two things missing.
 [pause 8 seconds for the answer]
 
 The exchange.
-A: 我的车票不见了 wǒ de chēpiào bú jiàn le — My ticket's gone. B: 你找了吗 nǐ zhǎo le ma — Have you looked for it? A: 找了 我找不到 zhǎo le, wǒ zhǎo bu dào — I have. I can't find it. B: 你上车的时候有吗 nǐ shàngchē de shíhou yǒu ma — Did you have it when you got on? A: 有 我坐在这儿的时候还有 yǒu, wǒ zuò zài zhèr de shíhou hái yǒu — Yes. I still had it when I sat down here. B: nǐ yīnggāi qù qiántái — You should go to the desk. A: wǒ de zhèngjiàn yě bú jiàn le — My papers are gone too. B: nà nǐ děi mǎshàng guàshī — Then you'll have to report them lost straight away.
+A: 我的车票不见了 wǒ de chēpiào bú jiàn le — My ticket's gone. B: 你找了吗 nǐ zhǎo le ma — Have you looked for it? A: 找了 我找不到 zhǎo le, wǒ zhǎo bu dào — I have. I can't find it. B: 你上车的时候有吗 nǐ shàngchē de shíhou yǒu ma — Did you have it when you got on? A: 有 我坐在这儿的时候还有 yǒu, wǒ zuò zài zhèr de shíhou hái yǒu — Yes. I still had it when I sat down here. B: nǐ yīnggāi liánxì chēzhàn — You should get in touch with the station. A: wǒ de zhèngjiàn yě bú jiàn le — My papers are gone too. B: nà nǐ děi mǎshàng guàshī — Then you'll have to report them lost straight away.
 A answers with the verb alone, 找了, and B leads with the moment, 你上车的时候. 还有 says A still had it then.
 
 Reading — the exchange at once.

@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 284,
-  "sourceHash": "fnv1a64:a35c8f6cf269d4b7",
+  "sourceHash": "fnv1a64:110b41d4242d9502",
   "lessonIds": [
     "ZH-C284-zhantai",
     "ZH-C284-ticket",
@@ -17,7 +17,7 @@
   "drivablePrefix": 2,
   "text": "chinese/narration/ch284.txt",
   "json": "chinese/narration/ch284.json",
-  "textHash": "fnv1a64:3ead82b99b6ee0e8",
-  "jsonHash": "fnv1a64:ab18dd141db353cd",
+  "textHash": "fnv1a64:a31bfbe928c1dae4",
+  "jsonHash": "fnv1a64:bf5889cc9add5315",
   "findings": []
 }

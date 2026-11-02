@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "Two Tickets",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a35c8f6cf269d4b7",
+  "sourceHash": "fnv1a64:110b41d4242d9502",
   "lessons": [
     {
       "id": "ZH-C284-zhantai",
@@ -868,7 +868,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cff2500c94ee3f7b",
+      "sourceHash": "fnv1a64:01a947aeb06d3157",
       "notice": null,
       "blocks": [
         {
@@ -945,7 +945,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tuìpiào is built from tuì 'to give back' and 票 'a ticket'. The first is inherited from Middle Chinese thwojH (Guangyun, in Baxter's transcription), glossed 'to draw back'; the dictionary gives no form for the second in its ticket sense, so that part's history is not settled."
+              "text": "tuìpiào is built from tuì 'to give back' and 票 'a ticket'. The first is inherited from Middle Chinese thwojH (Guangyun, in Baxter's transcription), glossed 'to draw back'; the dictionary has no entry for 票, so that part's history is not settled."
             }
           ]
         },
@@ -1216,7 +1216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebfd9dfb01a89307",
+      "sourceHash": "fnv1a64:b0c9b6f8350e6157",
       "notice": null,
       "blocks": [
         {
@@ -1278,7 +1278,7 @@
             },
             {
               "kind": "speech",
-              "text": "一家书店 (yì jiā shūdiàn), a bookshop; liǎng jiā bīnguǎn, two hotels. It is the 家 of home, now counting places that do business. 个 does not count them."
+              "text": "一家书店 (yì jiā shūdiàn), a bookshop; liǎng jiā bīnguǎn, two hotels. It is the 家 of home, now counting places that do business: 家, not 个, is the measure word to use for them."
             }
           ]
         },
@@ -1338,7 +1338,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does 家 count? (Shops, hotels and restaurants.) Does 个 count them? (No.)"
+              "text": "What does 家 count? (Shops, hotels and restaurants.) Which measure word do you use for a bookshop, 家 or 个? (家.)"
             },
             {
               "kind": "activity",
@@ -1359,7 +1359,7 @@
               ],
               "feedback": {
                 "correct": "家: 一家书店.",
-                "incorrect": "家, as in 一家书店: 个 does not count shops."
+                "incorrect": "家, as in 一家书店: the measure word for shops."
               }
             }
           ]

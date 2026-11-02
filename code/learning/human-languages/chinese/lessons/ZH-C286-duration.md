@@ -52,7 +52,7 @@ reviews_of: [ZH-C286-feeling, ZH-C47-nian, ZH-C185-haojiu, ZH-C78-duoda, ZH-C88-
 > **我学了两年汉语** *wǒ xué le liǎng nián Hànyǔ* — I studied Chinese for two years.
 > *tā zài Zhōngguó zhù le yì nián* — He lived in China for a year.
 
-When it happened goes before the verb: 去年. How long it lasted goes after: 两年.
+When it happened goes before the verb: 上个月. How long it lasted goes after: 一个月.
 
 To ask, put 多 before 长, as you put it before 大 in 多大: **你学了多长时间** *nǐ xué le duō cháng shíjiān*?
 

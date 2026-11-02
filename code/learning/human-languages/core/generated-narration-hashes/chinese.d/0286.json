@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 286,
-  "sourceHash": "fnv1a64:ceff696e1204e0ba",
+  "sourceHash": "fnv1a64:dad90b7ee64ffd85",
   "lessonIds": [
     "ZH-C286-ganjue",
     "ZH-W286-gan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch286.txt",
   "json": "chinese/narration/ch286.json",
-  "textHash": "fnv1a64:1baa3e3c31250835",
-  "jsonHash": "fnv1a64:67ced891b8b46798",
+  "textHash": "fnv1a64:9d584f48dd239359",
+  "jsonHash": "fnv1a64:f92f8226dee91360",
   "findings": []
 }

@@ -51,7 +51,7 @@ reviews_of: [ZH-C284-v-zai, ZH-C190-shudian, ZH-C200-binguan, ZH-C44-fandian, ZH
 > **这家书店很好** *zhè jiā shūdiàn hěn hǎo* — This bookshop is very good.
 > **那家饭店的菜很好吃** *nà jiā fàndiàn de cài hěn hǎochī* — The food at that restaurant is delicious.
 
-一家书店, a bookshop; *liǎng jiā bīnguǎn*, two hotels. It is the 家 of home, now counting places that do business. 个 does not count them.
+一家书店, a bookshop; *liǎng jiā bīnguǎn*, two hotels. It is the 家 of home, now counting places that do business: 家, not 个, is the measure word to use for them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-JIA-MEASURE-01, ZH-LEX-C190-TOWN190-01, ZH-LEX-C44-PLACES44-02] -->
@@ -63,6 +63,6 @@ reviews_of: [ZH-C284-v-zai, ZH-C190-shudian, ZH-C200-binguan, ZH-C44-fandian, ZH
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-JIA-MEASURE-01] -->
-<!-- hl-activity: {"id":"ZH-C284-jia-measure-shop","kind":"text","assesses":["ZH-GRAMMAR-JIA-MEASURE-01"],"prompt":"Which measure word counts a bookshop?","answer":"家","accepted":["jiā","jia","一家","这家"],"feedback":{"correct":"家: 一家书店.","incorrect":"家, as in 一家书店: 个 does not count shops."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ZH-C284-jia-measure-shop","kind":"text","assesses":["ZH-GRAMMAR-JIA-MEASURE-01"],"prompt":"Which measure word counts a bookshop?","answer":"家","accepted":["jiā","jia","一家","这家"],"feedback":{"correct":"家: 一家书店.","incorrect":"家, as in 一家书店: the measure word for shops."},"response_seconds":10} -->
 
-[PAUSE 3s] What does 家 count? (**Shops, hotels and restaurants**.) Does 个 count them? (**No**.)
+[PAUSE 3s] What does 家 count? (**Shops, hotels and restaurants**.) Which measure word do you use for a bookshop, 家 or 个? (**家**.)

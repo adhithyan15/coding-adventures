@@ -4,7 +4,7 @@
   "chapter": 283,
   "title": "Which Way?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d1b0e2e2bbbee262",
+  "sourceHash": "fnv1a64:f26f4f12bdd01255",
   "lessons": [
     {
       "id": "ZH-C283-zenme",
@@ -1020,7 +1020,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:817f023215fbabb2",
+      "sourceHash": "fnv1a64:abb71b50ad6772f8",
       "notice": null,
       "blocks": [
         {
@@ -1073,7 +1073,7 @@
             },
             {
               "kind": "speech",
-              "text": "我每天路过这个书店 wǒ měitiān lùguò zhège shūdiàn — I go past this bookshop every day."
+              "text": "我每天路过学校 wǒ měitiān lùguò xuéxiào — I go past the school every day."
             },
             {
               "kind": "speech",
@@ -1107,7 +1107,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is a verb, and the place follows it: 路过这个书店."
+              "text": "It is a verb, and the place follows it: 路过学校."
             }
           ]
         },
@@ -1143,11 +1143,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "我每天路过这个书店 — wǒ měitiān lùguò zhège shūdiàn — I go past this bookshop every day.",
+              "instruction": "我每天路过学校 — wǒ měitiān lùguò xuéxiào — I go past the school every day.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: 我每天路过这个书店 — *wǒ měitiān lùguò zhège shūdiàn* — I go past this bookshop every day.]"
+              "source": "[YOU SAY: 我每天路过学校 — *wǒ měitiān lùguò xuéxiào* — I go past the school every day.]"
             },
             {
               "kind": "prompt",

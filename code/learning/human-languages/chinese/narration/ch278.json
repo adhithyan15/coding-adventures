@@ -4,7 +4,7 @@
   "chapter": 278,
   "title": "First, Then, Last",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4c17b4207c6c717c",
+  "sourceHash": "fnv1a64:e2e685415fbd13b2",
   "lessons": [
     {
       "id": "ZH-C278-zuihou",
@@ -215,7 +215,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c85cae4ac22ab644",
+      "sourceHash": "fnv1a64:8dcbb4f8f65c2f50",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -288,7 +288,7 @@
             },
             {
               "kind": "speech",
-              "text": "Six strokes under it, on the left: a long horizontal across the whole width; two verticals down from it, the left one first; two short horizontals between them, the upper one first; and last a short stroke at the foot that rises to the right."
+              "text": "Six strokes under it: a long horizontal across the whole width; then, on the left, two verticals down from it, the left one first; two short horizontals between them, the upper one first; and last a short stroke at the foot that rises to the right."
             },
             {
               "kind": "speech",

@@ -17,7 +17,7 @@ A new chapter, and it opens on the word that brings in an example.
 
 You'll want to know: 比如.
 比如 — bǐrú — "for instance; such as".
-我喜欢中国菜 比如白菜 wǒ xǐhuan Zhōngguó cài, bǐrú báicài — I like Chinese food, cabbage for one.
+我喜欢中国菜 比如包子 wǒ xǐhuan Zhōngguó cài, bǐrú bāozi — I like Chinese food, steamed buns for instance.
 我喜欢喝茶 比如中国茶 wǒ xǐhuan hē chá, bǐrú Zhōngguó chá — I like tea, Chinese tea for instance.
 The next lesson puts the second character in your hand. The first is the 比 you write.
 
@@ -25,7 +25,7 @@ The word, taken apart.
 比如 (bǐrú) is built from 比 'to compare' and 如 (rú) 'like', both inherited from Middle Chinese. The Guangyun lists 比 under five readings, of which pjijX is glossed 'to compare', and 如 (rú) under two, nyo and nyoH; it glosses nyo with several words, among them 'to resemble' (Guangyun, in Baxter's transcription). 'For instance' for the pair is the word's own sense.
 
 What you've built.
-比如 (bǐrú) comes after the general point and before the example: 中国菜, then 比如白菜.
+比如 (bǐrú) comes after the general point and before the example: 中国菜, then 比如包子.
 It is the 比 of comparing, 比 as in 我比他大, with an example set beside the point.
 
 Guided Practice.
@@ -34,7 +34,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: bǐrú, once more]
 [pause 8 seconds for the answer]
-[your turn — say: 我喜欢中国菜 比如白菜 — wǒ xǐhuan Zhōngguó cài, bǐrú báicài — I like Chinese food, cabbage for one.]
+[your turn — say: 我喜欢中国菜 比如包子 — wǒ xǐhuan Zhōngguó cài, bǐrú bāozi — I like Chinese food, steamed buns for instance.]
 [pause 8 seconds for the answer]
 [your turn — say: 我喜欢喝茶 比如中国茶 — wǒ xǐhuan hē chá, bǐrú Zhōngguó chá — I like tea, Chinese tea for instance.]
 [pause 8 seconds for the answer]
@@ -165,7 +165,7 @@ tiānqì bù hǎo, yīncǐ wǒmen méi qù — The weather was bad, and so we di
 Its second character comes later; for now it is a word for the ear.
 
 The word, taken apart.
-yīncǐ is built from 因 and cǐ 'this', both inherited from Middle Chinese, 'jin and tshjeX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to rely on' and 'a cause'; 'for this reason' for the pair is the word's own sense.
+yīncǐ is built from 因 and cǐ 'this', both inherited from Middle Chinese, 'jin and tshjeX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to rely on' and 'a cause', and the second 'to stop'; 'this' is not given there, and 'for this reason' for the pair is the word's own sense.
 
 What you've built.
 suǒyǐ is the everyday so. yīncǐ belongs to writing and careful speech, and it usually stands on its own, with no 因为 in front.
@@ -203,7 +203,7 @@ qǐng shuō yí ge lìzi — Please give an example.
 Its first character comes later; for now it is a word for the ear.
 
 The word, taken apart.
-lìzi is built from lì 'a precedent' and the ending 子, both inherited from Middle Chinese, ljejH and tsiX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to compare' and 'all of a kind'.
+lìzi is built from lì 'a precedent' and the ending 子, both inherited from Middle Chinese, ljejH and tsiX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to compare' and 'all'; 'an example' is the modern word's own sense.
 
 What you've built.
 比如 (bǐrú) brings an example in; lìzi is the example itself, a noun you can count: yí ge lìzi.
@@ -217,7 +217,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: qǐng shuō yí ge lìzi — Please give an example.]
 [pause 8 seconds for the answer]
-[your turn — say: 比如白菜 — bǐrú báicài — Cabbage, for instance.]
+[your turn — say: 比如包子 — bǐrú bāozi — Steamed buns, for instance.]
 [pause 8 seconds for the answer]
 [your turn — recall: say 比如 (bǐrú), then lìzi: bringing one in, then the example itself]
 [pause 8 seconds for the answer]
@@ -272,7 +272,7 @@ The chapter closes here, with the question your own line answered.
 [once you have stopped driving — read: 如, aloud — rú, the second half of 比如 (bǐrú)]
 
 The exchange.
-A: 你为什么学汉语 nǐ wèishénme xué Hànyǔ — Why are you learning Chinese? B: 因为我喜欢中国 所以学汉语 yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ — Because I like China, so I'm learning Chinese. A: 你喜欢中国的什么 nǐ xǐhuan Zhōngguó de shénme — What do you like about China? B: 中国菜 中国茶 Zhōngguó cài, Zhōngguó chá — Chinese food, Chinese tea. A: nǐ néng shuō yí ge lìzi ma — Can you give an example? B: 比如白菜 我很喜欢 bǐrú báicài, wǒ hěn xǐhuan — Cabbage, for one. I love it. A: wǒ yě shì, yīncǐ wǒ xiǎng qù Zhōngguó — Me too, and so I want to go to China.
+A: 你为什么学汉语 nǐ wèishénme xué Hànyǔ — Why are you learning Chinese? B: 因为我喜欢中国 所以学汉语 yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ — I like China, so I'm learning Chinese. A: 你喜欢中国的什么 nǐ xǐhuan Zhōngguó de shénme — What do you like about China? B: 中国菜 中国茶 Zhōngguó cài, Zhōngguó chá — Chinese food, Chinese tea. A: nǐ néng shuō yí ge lìzi ma — Can you give an example? B: 比如包子 我很喜欢 bǐrú bāozi, wǒ hěn xǐhuan — Steamed buns, for one. I love them. A: wǒ yě shì, yīncǐ wǒ xiǎng qù Zhōngguó — Me too, and so I want to go to China.
 因为 … 所以 … gives the reason and the result in one breath; 比如 (bǐrú) then backs it up. The line with yīncǐ sounds a little careful, as that word does.
 
 Reading — the exchange at once.
@@ -284,7 +284,7 @@ What you've built — a reason and an example.
 A reason, what follows from it, and something to show it:
 因为下雨了 所以我们没去 yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù — the reason and the result.
 tiānqì bù hǎo, yīncǐ wǒmen méi qù — the careful version.
-中国菜 比如白菜 Zhōngguó cài, bǐrú báicài — an example brought in.
+中国菜 比如包子 Zhōngguó cài, bǐrú bāozi — an example brought in.
 qǐng shuō yí ge lìzi — asking for one.
 Listen. Nǐ wèishénme xué Hànyǔ?
 Speak. Give two reasons for something you do every week, each with 因为 … 所以 ….
@@ -301,4 +301,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say because it rained, we didn't go. (因为下雨了 所以我们没去.) Say cabbage, for instance. (比如白菜.) Ask for an example. (qǐng shuō yí ge lìzi.)
+Say because it rained, we didn't go. (因为下雨了 所以我们没去.) Say steamed buns, for instance. (比如包子.) Ask for an example. (qǐng shuō yí ge lìzi.)

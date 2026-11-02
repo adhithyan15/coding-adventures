@@ -54,7 +54,7 @@ Its first character comes later; for now it is a word for the ear.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*lìzi* is built from lì 'a precedent' and the ending 子, both inherited from Middle Chinese, *ljejH* and *tsiX* (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to compare' and 'all of a kind'.
+*lìzi* is built from lì 'a precedent' and the ending 子, both inherited from Middle Chinese, *ljejH* and *tsiX* (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to compare' and 'all'; 'an example' is the modern word's own sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C281-BIRU-01] -->
@@ -70,7 +70,7 @@ So a teacher asks *qǐng shuō yí ge lìzi*, and you answer with 比如 ….
 - [YOU SAY: *lìzi*]
 - [YOU SAY: *lìzi*, once more]
 - [YOU SAY: *qǐng shuō yí ge lìzi* — Please give an example.]
-- [YOU SAY: 比如白菜 — *bǐrú báicài* — Cabbage, for instance.]
+- [YOU SAY: 比如包子 — *bǐrú bāozi* — Steamed buns, for instance.]
 - [YOU RECALL: say 比如, then *lìzi*: bringing one in, then the example itself]
 
 ## Wrap-up Recall

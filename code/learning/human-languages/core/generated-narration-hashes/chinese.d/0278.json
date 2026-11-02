@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 278,
-  "sourceHash": "fnv1a64:4c17b4207c6c717c",
+  "sourceHash": "fnv1a64:e2e685415fbd13b2",
   "lessonIds": [
     "ZH-C278-zuihou",
     "ZH-W278-zui",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch278.txt",
   "json": "chinese/narration/ch278.json",
-  "textHash": "fnv1a64:a7820a42317e75eb",
-  "jsonHash": "fnv1a64:344a2c1dfac58ccc",
+  "textHash": "fnv1a64:7832fde9b1d913e0",
+  "jsonHash": "fnv1a64:6ecfc316d7ec8734",
   "findings": []
 }

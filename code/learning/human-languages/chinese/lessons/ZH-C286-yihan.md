@@ -57,7 +57,7 @@ Its characters come later; for now it is a word for the ear.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*yíhàn* is built from yí 'to leave behind' and hàn 'resentment', both inherited from Middle Chinese. The Guangyun lists the first under two readings, *ywij*, glossed 'to lose' and 'to leave', and *ywijH*, glossed 'to give'; the second is *homH*, glossed 'resentment' (Guangyun, in Baxter's transcription). 'A pity' for the pair is the modern word's own sense.
+*yíhàn* is built from yí 'to leave behind' and hàn 'resentment', both inherited from Middle Chinese. The Guangyun lists the first under two readings, *ywij*, glossed 'to lose', 'to be gone' and 'to give', and *ywijH*, glossed 'to give'; the second is *homH*, glossed 'resentment' (Guangyun, in Baxter's transcription). 'A pity' for the pair is the modern word's own sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C187-BADDAY187-03, ZH-LEX-C252-FEEL252-04] -->

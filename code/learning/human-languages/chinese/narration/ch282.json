@@ -4,7 +4,7 @@
   "chapter": 282,
   "title": "You Should Rest",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b838adf86ec4ae9a",
+  "sourceHash": "fnv1a64:313ec1d880336752",
   "lessons": [
     {
       "id": "ZH-C282-gai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf554273dc1b840f",
+      "sourceHash": "fnv1a64:2e424372dbdc7d7b",
       "notice": null,
       "blocks": [
         {
@@ -165,11 +165,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say xiūxi, then 我该 xiūxi 了: time I rested",
+              "instruction": "say xiūxi, then wǒ gāi xiūxi le: time I rested",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *xiūxi*, then 我该 *xiūxi* 了: time I rested]"
+              "source": "[YOU RECALL: say *xiūxi*, then *wǒ gāi xiūxi le*: time I rested]"
             }
           ]
         },
@@ -655,7 +655,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80e436187771b139",
+      "sourceHash": "fnv1a64:45836fd050af008b",
       "notice": null,
       "blocks": [
         {
@@ -717,7 +717,7 @@
             },
             {
               "kind": "speech",
-              "text": "不 goes in front of 应该 (yīnggāi), and stays bù before the level yīng."
+              "text": "不 goes in front of 应该 (yīnggāi), and stays bù before the level yīng. 晚 here is late, the 晚 of 晚上."
             },
             {
               "kind": "speech",

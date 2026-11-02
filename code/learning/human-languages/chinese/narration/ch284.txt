@@ -215,7 +215,7 @@ wǒ xiǎng tuìpiào — I'd like to return my ticket.
 Its first character comes later; for now it is a word for the ear.
 
 The word, taken apart.
-tuìpiào is built from tuì 'to give back' and 票 'a ticket'. The first is inherited from Middle Chinese thwojH (Guangyun, in Baxter's transcription), glossed 'to draw back'; the dictionary gives no form for the second in its ticket sense, so that part's history is not settled.
+tuìpiào is built from tuì 'to give back' and 票 'a ticket'. The first is inherited from Middle Chinese thwojH (Guangyun, in Baxter's transcription), glossed 'to draw back'; the dictionary has no entry for 票, so that part's history is not settled.
 
 What you've built.
 You know tuìfáng, to give back a hotel room; tuìpiào gives back a ticket the same way.
@@ -288,7 +288,7 @@ A word you wrote in the first chapters, doing a new job.
 Grammar Lens: 家 for counting shops.
 家 after a number, or after 这 or 那, counts shops, hotels and restaurants.
 这家书店很好 zhè jiā shūdiàn hěn hǎo — This bookshop is very good. 那家饭店的菜很好吃 nà jiā fàndiàn de cài hěn hǎochī — The food at that restaurant is delicious.
-一家书店 (yì jiā shūdiàn), a bookshop; liǎng jiā bīnguǎn, two hotels. It is the 家 of home, now counting places that do business. 个 does not count them.
+一家书店 (yì jiā shūdiàn), a bookshop; liǎng jiā bīnguǎn, two hotels. It is the 家 of home, now counting places that do business: 家, not 个, is the measure word to use for them.
 
 Guided Practice.
 [your turn — say: 这家书店很好 — zhè jiā shūdiàn hěn hǎo — This bookshop is very good.]
@@ -302,7 +302,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does 家 count? (Shops, hotels and restaurants.) Does 个 count them? (No.)
+What does 家 count? (Shops, hotels and restaurants.) Which measure word do you use for a bookshop, 家 or 个? (家.)
 [question — say your answer, then pause 10 seconds]
 Which measure word counts a bookshop?
 

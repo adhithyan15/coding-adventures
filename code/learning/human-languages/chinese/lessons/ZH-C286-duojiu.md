@@ -61,7 +61,7 @@ Its second character comes later; for now it is a word for the ear.
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-DURATION-01, ZH-LEX-C185-WHEN185-01] -->
 
-*duōjiǔ* is the short form of 多长时间, and it takes the same place, after the verb.
+*duōjiǔ* asks what 多长时间 asks, in fewer words, and it takes the same place, after the verb.
 
 *hǎojiǔ* answers it: a long time.
 

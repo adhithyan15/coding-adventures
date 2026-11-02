@@ -4,7 +4,7 @@
   "chapter": 289,
   "title": "If I Had the Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7a028caddd5ec8b3",
+  "sourceHash": "fnv1a64:a39f5d8c60ea2f74",
   "lessons": [
     {
       "id": "ZH-C289-ruguo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e34e9de0ffe313a",
+      "sourceHash": "fnv1a64:0ca082e57497dda4",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "A new chapter, and it opens on the if of writing and careful speech."
+              "text": "A new chapter, and it opens on an if that fits anywhere, in speech or in writing."
             },
             {
               "kind": "prompt",
@@ -81,7 +81,7 @@
             },
             {
               "kind": "speech",
-              "text": "如果 (rúguǒ) is 要是 in writing and in careful speech. The next lesson puts the second character in your hand; the first is the 如 of 比如, and the second is the guǒ of jiéguǒ."
+              "text": "如果 (rúguǒ) means what 要是 means, and it fits anywhere, in speech or in writing; 要是 sounds more casual. The next lesson puts the second character in your hand; the first is the 如 of 比如, and the second is the guǒ of jiéguǒ."
             }
           ]
         },
@@ -107,7 +107,7 @@
             },
             {
               "kind": "speech",
-              "text": "With a friend, 要是 is more usual; in a note or a talk, 如果 (rúguǒ)."
+              "text": "要是 belongs to easy talk; 如果 (rúguǒ) fits a chat, a note or a talk alike."
             }
           ]
         },
@@ -152,11 +152,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say 要是, then 如果 (rúguǒ): the everyday if, then the careful one",
+              "instruction": "say 要是, then 如果 (rúguǒ): the casual if, then the one that fits anywhere",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say 要是, then 如果: the everyday if, then the careful one]"
+              "source": "[YOU RECALL: say 要是, then 如果: the casual if, then the one that fits anywhere]"
             }
           ]
         },
@@ -328,14 +328,14 @@
       "title": "如果…就… (rúguǒ … jiù …) — if, then",
       "headword": "如果…就…",
       "romanization": "rúguǒ … jiù …",
-      "gloss": "如果 for the condition and 就 for the result, in writing and careful speech",
+      "gloss": "如果 for the condition and 就 for the result, in speech or in writing",
       "script": "chinese",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9fea4f02da85df9",
+      "sourceHash": "fnv1a64:f93acdc9824e7044",
       "notice": null,
       "blocks": [
         {
@@ -389,7 +389,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "如果 (rúguǒ) opens the condition and 就 opens the result: 要是 … 就 … for writing and careful speech."
+              "text": "如果 (rúguǒ) opens the condition and 就 opens the result, as 要是 … 就 … does, in speech or in writing."
             },
             {
               "kind": "speech",
@@ -644,7 +644,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cafe133dae23d45",
+      "sourceHash": "fnv1a64:7b39e785f21c7023",
       "notice": null,
       "blocks": [
         {
@@ -712,7 +712,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "不然 (bùrán) is built from 不 'not' and 然 'so', both inherited from Middle Chinese. The Guangyun lists 不 under three readings, pjuw, pjuwX and pjut, all glossed 'not'; bù is the regular modern sound of pjut. 然 is nyen, glossed 'so, like this' (Guangyun, in Baxter's transcription). 'Not so', and so 'otherwise', is the plain sum of the two."
+              "text": "不然 (bùrán) is built from 不 'not' and 然 'so', both inherited from Middle Chinese. The Guangyun lists 不 under three readings, pjuw, pjuwX and pjut, all glossed 'not'. bù comes from pjut irregularly: other syllables of its kind changed their p to f, while 不 kept the plain lip sound, now written b. 然 is nyen, glossed 'so, like this' (Guangyun, in Baxter's transcription). 'Not so', and so 'otherwise', is the plain sum of the two."
             }
           ]
         },
@@ -1046,7 +1046,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:334b0373368ea9ec",
+      "sourceHash": "fnv1a64:ef802e309c6c4882",
       "notice": null,
       "blocks": [
         {
@@ -1062,7 +1062,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last lesson of the B1 core: one conversation that uses every chapter of it."
+              "text": "The last lesson of the B1 core: one conversation across all of it."
             },
             {
               "kind": "prompt",
@@ -1100,7 +1100,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A: 那天你做什么了 nà tiān nǐ zuò shénme le — What did you do that day? B: 我先去了书店 然后坐火车回家 wǒ xiān qù le shūdiàn, ránhòu zuò huǒchē huí jiā — First the bookshop, then home by train. B: 在火车上 我的手机突然不见了 zài huǒchē shàng, wǒ de shǒujī tūrán bú jiàn le — On the train my phone suddenly went missing. A: 你找回了吗 nǐ zhǎohuí le ma — Did you get it back? B: 最后找回了 我感觉很好 zuìhòu zhǎohuí le, wǒ gǎnjué hěn hǎo — In the end I did. I feel fine. B: wǒ de zhèngjiàn yě bú jiàn le, wǒ děi mǎshàng guàshī — My papers went missing too; I have to report them lost at once. A: wǒ juéde nǐ yīnggāi xiān liánxì wǒ — I think you should have got in touch with me first. B: yīnwèi wǒ hěn lèi, suǒyǐ wàng le — I was tired, so I forgot. A: 以后你想当什么 yǐhòu nǐ xiǎng dāng shénme — What do you want to be later on? B: wǒ de mèngxiǎng shì dāng yīshēng, wǒ de mùbiāo shì shuō hǎo Hànyǔ — My dream is to be a doctor; my goal is to speak good Chinese. A: nǐ xué le duōjiǔ — How long have you studied? B: liǎng nián, wǒ méi qù guo Zhōngguó, tài yíhàn le — Two years. I've never been to China, sadly. A: 明天去山上吗 去山上怎么走 míngtiān qù shān shàng ma, qù shān shàng zěnme zǒu — Going up the mountain tomorrow? How do you get there? B: 要看天气 要是下雨的话 我就不去了 yào kàn tiānqì, yàoshi xiàyǔ dehuà, wǒ jiù bú qù le — It depends on the weather. If it rains, I won't go. A: 如果不下雨 我们就坐火车去 rúguǒ bú xiàyǔ, wǒmen jiù zuò huǒchē qù — If it doesn't rain, we'll go by train. A: 快点儿 不然我们就晚了 kuài diǎnr, bùrán wǒmen jiù wǎn le — Hurry, or we'll be late."
+              "text": "A: 那天你做什么了 nà tiān nǐ zuò shénme le — What did you do that day? B: 我先去了书店 然后坐火车回家 wǒ xiān qù le shūdiàn, ránhòu zuò huǒchē huí jiā — First the bookshop, then home by train. B: 在火车上 我的手机突然不见了 zài huǒchē shàng, wǒ de shǒujī tūrán bú jiàn le — On the train my phone suddenly went missing. A: 你找回了吗 nǐ zhǎohuí le ma — Did you get it back? B: 最后找回了 我感觉很好 zuìhòu zhǎohuí le, wǒ gǎnjué hěn hǎo — In the end I did. I feel fine. B: wǒ de zhèngjiàn yě bú jiàn le, wǒ děi mǎshàng guàshī — My papers are gone too; I must report them lost at once. A: wǒ juéde nǐ yīnggāi xiān liánxì wǒ — I think you should have got in touch with me first. B: yīnwèi wǒ hěn lèi, suǒyǐ wàng le — I was tired, so I forgot. A: 以后你想当什么 yǐhòu nǐ xiǎng dāng shénme — What do you want to be later on? B: wǒ de mèngxiǎng shì dāng yīshēng, wǒ de mùbiāo shì shuō hǎo Hànyǔ — My dream is to be a doctor; my goal is to speak good Chinese. A: nǐ xué le duōjiǔ — How long have you studied? B: liǎng nián, wǒ méi qù guo Zhōngguó, tài yíhàn le — Two years. I've never been to China, sadly. A: 明天去山上吗 去山上怎么走 míngtiān qù shān shàng ma, qù shān shàng zěnme zǒu — Going up the mountain tomorrow? How do you get there? B: 要看天气 要是下雨的话 我就不去了 yào kàn tiānqì, yàoshi xiàyǔ dehuà, wǒ jiù bú qù le — It depends on the weather. If it rains, I won't go. A: 如果不下雨 我们就坐火车去 rúguǒ bú xiàyǔ, wǒmen jiù zuò huǒchē qù — If it doesn't rain, we'll go by train. B: 那早点儿走 不然就晚了 nà zǎo diǎnr zǒu, bùrán jiù wǎn le — Then let's leave early, or we'll be late."
             },
             {
               "kind": "pause",
