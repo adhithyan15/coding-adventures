@@ -38,6 +38,10 @@ mod _grammar;
 mod lex_state;
 mod machine;
 mod oracle;
+#[cfg(test)]
+mod reference_passes;
+#[cfg(test)]
+mod differential_tests;
 
 /// LANG84 per-release token tables, generated from
 /// `code/grammars/ruby/ruby<release>.tokens` by
@@ -435,10 +439,19 @@ impl RubyLexer {
     /// accumulators), emits an EOF token, then applies era-specific
     /// token-stream fusions (Phase 4b+).
     pub fn finish(&mut self) -> Result<(), String> {
+        self.drain_machine()?;
+        self.apply_era_token_fusions();
+        Ok(())
+    }
+
+    /// Feed end-of-input to the engine until it reaches its final state,
+    /// emitting whatever its peek states were still holding (and the EOF
+    /// token).  The first half of [`Self::finish`]; the differential tests
+    /// call it on its own to capture the stream before any fusion pass.
+    fn drain_machine(&mut self) -> Result<(), String> {
         const MAX_DRAIN: usize = 32;
         for _ in 0..MAX_DRAIN {
             if self.machine.is_final() {
-                self.apply_era_token_fusions();
                 return Ok(());
             }
             let step = self
@@ -477,11 +490,20 @@ impl RubyLexer {
     /// Future eras will plug in here without touching the
     /// state-machine TOML.
     fn apply_era_token_fusions(&mut self) {
+        self.run_era_token_fusions(&mut |_, _| {});
+    }
+
+    /// [`Self::apply_era_token_fusions`], calling `after_each` with each
+    /// step's name after the step runs.  Production passes a no-op; the
+    /// differential tests compare every step against the pre-#18814
+    /// reference pipeline (`reference_passes.rs`).
+    fn run_era_token_fusions(&mut self, after_each: &mut dyn FnMut(&str, &RubyLexer)) {
         // The range fusions (`..` / `...`) are unconditional — Ruby
         // has had range literals since 1.0.  They run first so
         // later era-gated passes operate on the already-fused
         // stream.
         self.fuse_range_ops();
+        after_each("fuse_range_ops", self);
         // Phase 4l — radix-prefixed integers (`0x1F`, `0b1010`,
         // `0o17`, `0d10`) are pre-1.0 Ruby; no era gating.  Runs
         // BEFORE float fusion — they share the `Int "0"` left flank,
@@ -489,11 +511,13 @@ impl RubyLexer {
         // float dot doesn't, so the two passes are non-overlapping.
         // Ordering is documentation-only.
         self.fuse_radix_integers();
+        after_each("fuse_radix_integers", self);
         // Phase 4k — float literals (`1.5`, `1e10`, `1.5e-3`, etc.)
         // are pre-1.0 Ruby; no era gating.  Runs after range fusion
         // so `1..5` (which the range pass converts to `Int ".." Int`)
         // doesn't get mistaken for a float.
         self.fuse_float_literals();
+        after_each("fuse_float_literals", self);
         // Phase 8a-2 (FC) companion — pre-fuse `>>` and `>>=`.
         //
         // The 1.8-baseline state machine emits `>>` as two separate
@@ -513,11 +537,13 @@ impl RubyLexer {
         // compound-assign fusion (currently moot — `>>=` is folded
         // directly here, but the pattern stays consistent).
         self.fuse_right_shifts();
+        after_each("fuse_right_shifts", self);
         // Phase 6p companion — fuse compound-assignment operators
         // (`+=`, `-=`, `*=`, `/=`, `||=`, `&&=`).  Pre-1.0 Ruby, so
         // no era gating.  Runs AFTER float/radix fusions (which fold
         // numeric forms) so `x +=` doesn't fight with `1e+10` etc.
         self.fuse_compound_assigns();
+        after_each("fuse_compound_assigns", self);
         // Phase 6q companion — re-tag the trailing-modifier keywords
         // (`if`, `unless`, `while`, `until`) to `if_modifier`,
         // `unless_modifier`, `while_modifier`, `until_modifier` when
@@ -532,20 +558,26 @@ impl RubyLexer {
         // fused-token shape (notably `end` of a same-line block
         // already in place if relevant).
         self.tag_modifier_keywords();
+        after_each("tag_modifier_keywords", self);
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
+            after_each("fuse_lambda_arrow", self);
         }
         if era_at_least(&self.era, "2.1") {
             self.fuse_numeric_suffixes();
+            after_each("fuse_numeric_suffixes", self);
         }
         if era_at_least(&self.era, "2.3") {
             self.fuse_safe_nav();
+            after_each("fuse_safe_nav", self);
         }
         if era_at_least(&self.era, "2.6") {
             self.mark_endless_ranges();
+            after_each("mark_endless_ranges", self);
         }
         if era_at_least(&self.era, "2.7") {
             self.mark_numbered_block_params();
+            after_each("mark_numbered_block_params", self);
         }
         // #18778 / #18798 — say where a newline (or `;`) ends a statement
         // (see `mark_statement_ends`).  Same reason as the modifier pass:
@@ -554,6 +586,7 @@ impl RubyLexer {
         // final token shapes: the `-` of a lambda arrow `->` is already
         // part of a `->` token and is never mistaken for a unary minus.
         self.mark_statement_ends();
+        after_each("mark_statement_ends", self);
     }
 
     /// Phase 4l — fuse radix-prefixed integer literals emitted by the
@@ -671,10 +704,10 @@ impl RubyLexer {
                 let b = &self.tokens[i + 1];
                 let c = &self.tokens[i + 2];
                 let a_is_int = a.type_ == TokenType::Number
-                    && self.is_integer_lexeme(&a.value);
+                    && is_integer_lexeme(&a.value);
                 let b_is_dot = b.type_ == TokenType::Dot;
                 let c_is_int = c.type_ == TokenType::Number
-                    && self.is_integer_lexeme(&c.value);
+                    && is_integer_lexeme(&c.value);
                 let same_line = a.line == b.line && b.line == c.line;
                 let no_ws_b = !self
                     .whitespace_before_token
@@ -773,7 +806,7 @@ impl RubyLexer {
                 let c_is_sign = (c.type_ == TokenType::Plus && c.value == "+")
                     || (c.type_ == TokenType::Minus && c.value == "-");
                 let d_is_int = d.type_ == TokenType::Number
-                    && self.is_integer_lexeme(&d.value);
+                    && is_integer_lexeme(&d.value);
                 let same_line =
                     a.line == b.line && b.line == c.line && c.line == d.line;
                 let no_ws_b = !self
@@ -1566,15 +1599,6 @@ impl RubyLexer {
             ),
             _ => false,
         }
-    }
-
-    /// Phase 4k helper — true iff `s` is a pure integer-shaped lexeme
-    /// (digits and underscore separators only, no dot or exponent).
-    /// Used to discriminate already-fused float Numbers from the
-    /// integer Numbers that float-fusion is allowed to consume.
-    fn is_integer_lexeme(&self, s: &str) -> bool {
-        !s.is_empty()
-            && s.chars().all(|c| c.is_ascii_digit() || c == '_')
     }
 
     /// 2.1: fold a `Number` token followed (with no whitespace) by
@@ -2387,6 +2411,14 @@ pub const NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 0;
 /// were parse errors, so the flag stays off and any downstream
 /// parser can reject them.
 pub const ENDLESS_RANGE_FLAG: u32 = 1 << 1;
+
+/// Phase 4k helper — true iff `s` is a pure integer-shaped lexeme
+/// (digits and underscore separators only, no dot or exponent).
+/// Used to discriminate already-fused float Numbers from the
+/// integer Numbers that float-fusion is allowed to consume.
+fn is_integer_lexeme(s: &str) -> bool {
+    !s.is_empty() && s.chars().all(|c| c.is_ascii_digit() || c == '_')
+}
 
 /// Phase 4d — true if `s` is `_1`, `_2`, …, `_9` exactly.  These
 /// are the only nine numbered block parameter lexemes Ruby 2.7+
