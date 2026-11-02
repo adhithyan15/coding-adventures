@@ -33,6 +33,9 @@
 //! | `__gc_register_stackmap(...)` | register a function's stack maps (code range + per-safepoint records) for precise-root resolution |
 //! | `__gc_stackmap_count()` | number of functions registered |
 //! | `__gc_stackmap_reset()` | drop all registered stack maps (tests / teardown) |
+//! | `__gc_register_global_roots(base, count)` | register `count` word slots at `base` (a program's globals) as precise roots of every collection |
+//! | `__gc_global_root_count()` | number of global root slots registered |
+//! | `__gc_global_roots_reset()` | drop all registered global roots (tests / teardown) |
 //!
 //! ## State & threading
 //!
@@ -65,6 +68,11 @@ mod stackmap_registry;
 /// platform-independent walk logic; the naked frame-building trampolines in
 /// [`stack_scan`] (section 2b) supply its anchor. See [`precise_walk`].
 mod precise_walk;
+
+/// Word slots **outside the stack** — a compiled program's globals — that every
+/// collection roots precisely (#18765). Populated by
+/// [`__gc_register_global_roots`]. See [`global_roots`].
+mod global_roots;
 
 /// The one process-wide heap.  `None` until the first allocation (lazy init);
 /// `__gc_reset` puts it back to `None`, running `FlatHeap`'s `Drop` to free
@@ -474,6 +482,48 @@ pub unsafe extern "C" fn __gc_register_stackmap_module(
         );
     }
     total
+}
+
+/// Register `count` 8-byte **global slots** starting at `base` as precise roots of
+/// every collection — conservative, precise, compacting, minor and incremental
+/// alike (#18765). Returns `count` on success (re-registering the same block is a
+/// no-op that also returns `count`), or `0` if rejected: null `base`, `count <= 0`
+/// or absurdly large, `base` not 8-byte aligned, a range that wraps, or one that
+/// overlaps a different registered block.
+///
+/// A native image calls this once at start-up for its globals block, next to its
+/// [`__gc_register_stackmap`] calls: a global lives in a data section, which no
+/// stack map names and no stack scan reaches, so without it an object only a
+/// global refers to is freed by a precise collection and left behind (the global
+/// still naming the freed from-space copy) by a compacting one. Each slot is
+/// treated exactly like a stack-map slot: its word is marked, and a compacting
+/// collection writes a moved object's new address back into it. See
+/// `global_roots.rs` for why slots and not a conservative region.
+///
+/// # Safety
+///
+/// `[base, base + 8·count)` must remain readable **and writable** for as long as
+/// it is registered (until [`__gc_global_roots_reset`] or process exit): every
+/// collection reads each slot and a compacting one may overwrite it.
+#[no_mangle]
+pub unsafe extern "C" fn __gc_register_global_roots(base: *mut i64, count: i64) -> i64 {
+    // SAFETY: the caller's range contract is forwarded verbatim.
+    global_roots::register(base, count)
+}
+
+/// Number of global root slots currently registered via
+/// [`__gc_register_global_roots`]. Introspection for diagnostics and tests.
+#[no_mangle]
+pub extern "C" fn __gc_global_root_count() -> i64 {
+    global_roots::count()
+}
+
+/// Forget every registered global root block. Like the stack maps, globals live
+/// for the whole process, so [`__gc_reset`] does **not** run this; it exists for
+/// test isolation and teardown.
+#[no_mangle]
+pub extern "C" fn __gc_global_roots_reset() {
+    global_roots::reset()
 }
 
 /// Number of functions currently registered via [`__gc_register_stackmap`].

@@ -65,6 +65,7 @@ fn compile_and_link(module: &Module) -> Option<(PathBuf, String)> {
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
     let stem = format!("sirc_array_{}_{}", std::process::id(), n);
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
+    let _c_cleanup = RemoveOnDrop(cpath.clone());
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
     std::fs::File::create(&cpath)
         .and_then(|mut f| f.write_all(artifact.source.as_bytes()))
@@ -87,6 +88,7 @@ fn compile_and_link(module: &Module) -> Option<(PathBuf, String)> {
 
 fn run(module: &Module) -> Option<String> {
     let (exe, _src) = compile_and_link(module)?;
+    let _exe_cleanup = RemoveOnDrop(exe.clone());
     let r = Command::new(&exe).output().expect("run");
     assert!(r.status.success(), "run failed (exit {:?})", r.status.code());
     Some(String::from_utf8_lossy(&r.stdout).replace("\r\n", "\n"))
@@ -640,4 +642,17 @@ fn index_get_with_three_indices_is_rejected_cleanly_at_compile_time() {
         "error should name the rejected construct: {}",
         err.message
     );
+}
+
+/// Deletes a temp file when dropped, however the test returns or panics.
+/// [`compile_and_link`] drops the `.c` as soon as it has linked, and each
+/// caller holds one of these for the executable it runs.  Each call names
+/// its files uniquely (the counter above), so without this they would pile
+/// up in the temp directory, one pair per test run.
+struct RemoveOnDrop(PathBuf);
+
+impl Drop for RemoveOnDrop {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.0);
+    }
 }

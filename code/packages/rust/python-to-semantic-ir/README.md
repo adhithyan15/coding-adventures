@@ -131,11 +131,15 @@ so `while n > 0: n -= 1` looped forever.  The copy has a fresh name
 because JavaScript, Go and C refuse to redeclare a parameter in the
 function's own scope, and the Rust backend refuses to assign one.
 
-**Temporaries** (`__chain_N`, `__for_N`, `__param_<name>_N`) never take a
-name spelled anywhere in the source file, and neither do synthesised
-functions (`__lambda_N`, a hoisted method's `{Class}__{method}`): the
-backends keep functions and variables in one namespace, so a local
-spelled `__lambda_0` would otherwise shadow the lambda.
+**Invented names** come from one pool.  Temporaries (`__chain_N`,
+`__for_N`, `__param_<name>_N`) and synthesised functions (`__lambda_N`, a
+hoisted method's `{Class}__{method}`) never take a name spelled anywhere in
+the source file, and never take a name invented before them, of either
+kind: the backends keep functions and variables in one namespace, so a
+local spelled `__lambda_0` would otherwise shadow the lambda, and the copy
+of a parameter `a__b` (`__param_a__b_0`) would shadow the method `b_0` of a
+class `__param_a` (#18771).  Each invented name is claimed the moment it is
+made, so the order in which they are invented does not matter.
 
 **Tuples.**  A trailing comma makes a tuple (`x = 1,`, `return y,`,
 `for x, in rows:`, `xs[i,]`).  These used to lower as the bare element;

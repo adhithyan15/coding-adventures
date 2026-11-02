@@ -1,5 +1,39 @@
 # Changelog — `constraint-engine`
 
+## 0.2.0 — 2026-11-02
+
+VER09: the SAT tactic now runs on the `cdcl-sat` CDCL solver.
+
+### Changed
+
+- **`SatTactic` is an adapter over `cdcl-sat`.** The recursive DPLL over
+  string-named literals is replaced by a conflict-driven clause-learning
+  solver. The signature, the three outcomes, and the "variables that occur
+  in no clause are `false`" model rule are unchanged. The DPLL's
+  1 000 000-node budget becomes a 1 000 000-conflict budget, and running
+  out still answers `Unknown`.
+- **The Cargo description is now true.** It said "SAT CDCL" while the code
+  was DPLL; the tactic is now CDCL, via `cdcl-sat`.
+- `src/sat.rs` became `src/sat/mod.rs`.
+
+### Security
+
+- **NNF size guard.** `SatTactic::solve` now refuses (`Unknown`) any
+  predicate whose negation normal form would exceed `sat::MAX_NNF_NODES`
+  (100 000) nodes, computed in linear time without building it. `Iff`
+  copies both operands, so a chain of nested `Iff`s made `to_nnf` take
+  time and memory exponential in the depth (seconds at depth 20, hours at
+  depth 30, far below the depth guard) before any budget applied. That
+  case existed before VER09; the security review of this change found it.
+
+### Added
+
+- `sat::CONFLICT_BUDGET`, `sat::MAX_NNF_NODES`.
+- `src/sat/dpll_oracle.rs`: the pre-VER09 DPLL, unchanged, compiled only
+  under `cfg(test)`. A new test runs 1000 random propositional formulas
+  through the adapter, the old DPLL and a truth table, and requires all
+  three to agree; every model is checked with `eval_bool`.
+
 ## Unreleased — 2026-08-18
 
 Brought under CI: the crate had no `BUILD` file, so nothing ever ran its tests

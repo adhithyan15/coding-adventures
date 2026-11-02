@@ -97,6 +97,7 @@ pub fn compile_source(
 mod tests {
     use super::*;
     use semantic_ir::{Effect, Expr, Feature, Scope, Stmt};
+    use std::collections::HashSet;
 
     /// Find a function by name in a lowered module.
     fn func<'a>(m: &'a semantic_ir::Module, name: &str) -> &'a semantic_ir::Function {
@@ -1538,6 +1539,97 @@ mod tests {
         assert!(m.functions.iter().any(|f| f.name == "__lambda_0"));
         assert!(m.functions.iter().any(|f| f.name == "__lambda_1"));
         assert_closures_consistent(&m);
+    }
+
+    /// Every name bound as a variable anywhere in `m`: parameters,
+    /// captures, `let`/`let*` bindings, loop variables and `rescue`
+    /// bindings.
+    fn variable_names(m: &semantic_ir::Module) -> HashSet<String> {
+        struct Bound(HashSet<String>);
+        impl semantic_ir::Visitor for Bound {
+            fn visit_function(&mut self, f: &semantic_ir::Function) {
+                self.0.extend(f.params.iter().map(|p| p.name.clone()));
+                self.0.extend(f.captures.iter().map(|c| c.name.clone()));
+                semantic_ir::walk_function_default(self, f);
+            }
+            fn visit_stmt(&mut self, s: &Stmt, depth: usize) {
+                match s {
+                    Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } => {
+                        self.0.insert(name.clone());
+                    }
+                    Stmt::ForRange { var, .. } | Stmt::ForEach { var, .. } => {
+                        self.0.insert(var.clone());
+                    }
+                    Stmt::TryCatch { rescues, .. } => {
+                        self.0.extend(rescues.iter().filter_map(|r| r.binding.clone()));
+                    }
+                    _ => {}
+                }
+                semantic_ir::walk_stmt_default(self, s, depth);
+            }
+        }
+        let mut v = Bound(HashSet::new());
+        semantic_ir::walk_module_default(&mut v, m);
+        v.0
+    }
+
+    #[test]
+    fn a_parameter_copy_never_takes_a_hoisted_method_s_name() {
+        // #18771.  The copy of the assigned parameter `a__b` is
+        // `__param_a__b_0`; the method `b_0` of class `__param_a` is hoisted
+        // to `__param_a__b_0` too.  The copy is invented first (it opens
+        // `f`'s body), and the method name used to skip only source names
+        // and other functions, so it took the copy's name.
+        let m = lower(
+            "def f(a__b):\n    a__b += 1\n    class __param_a:\n        def b_0(self):\n            return 40\n    return a__b + __param_a().b_0()\nprint(f(1))\n",
+        );
+        let vars = variable_names(&m);
+        assert!(vars.contains("__param_a__b_0"), "the parameter copy: {vars:?}");
+        assert!(
+            m.functions.iter().any(|f| f.name == "__param_a__b_0_1"),
+            "the method takes the next free name"
+        );
+        for f in &m.functions {
+            assert!(!vars.contains(&f.name), "`{}` is a function and a variable", f.name);
+        }
+    }
+
+    #[test]
+    fn a_parameter_copy_never_takes_an_earlier_hoisted_method_s_name() {
+        // The other order: the class is lowered first, so the method claims
+        // `__param_a__b_0`, and `g`'s parameter copy must skip it.
+        let m = lower(
+            "class __param_a:\n    def b_0(self):\n        return 40\ndef g(a__b):\n    a__b += 1\n    return a__b + __param_a().b_0()\nprint(g(1))\n",
+        );
+        assert!(m.functions.iter().any(|f| f.name == "__param_a__b_0"));
+        let vars = variable_names(&m);
+        assert!(vars.contains("__param_a__b_1"), "the copy skips to the next number: {vars:?}");
+        for f in &m.functions {
+            assert!(!vars.contains(&f.name), "`{}` is a function and a variable", f.name);
+        }
+    }
+
+    #[test]
+    fn every_invented_name_is_distinct_from_every_other_and_from_the_source() {
+        // All four kinds of invented name in one module, each spelled so
+        // that its first candidate is already taken: by the source
+        // (`__chain_0`, `__lambda_0`) or by another invention.  No name may
+        // be both a function and a variable, and no two functions may share
+        // a name (the validator checks the second; this checks the first).
+        let src = "__chain_0 = 1\n__lambda_0 = 2\n\
+                   def f(a__b):\n    a__b += 1\n    \
+                   class __param_a:\n        def b_0(self):\n            return 40\n    \
+                   x = y = a__b\n    h = lambda: x\n    \
+                   for i in range(2):\n        x = x + i\n    \
+                   return x + h() + __param_a().b_0()\n\
+                   print(f(1) + __chain_0 + __lambda_0)\n";
+        let m = lower(src);
+        let vars = variable_names(&m);
+        for f in &m.functions {
+            assert!(!vars.contains(&f.name), "`{}` is a function and a variable", f.name);
+        }
+        let report = semantic_ir::validate(&m);
+        assert!(report.is_ok(), "{:?}", report.issues);
     }
 
     #[test]

@@ -21,9 +21,10 @@ native (aarch64 / x86_64 → Mach-O/ELF/PE → system linker) path, rather than 
 | **cons / pairs / lists** | `__dyn_cons` → `__gc_alloc_kind({0,8})` | precise + **movable** | `end_to_end_gc_compacting_relocates_and_preserves` |
 | **closures** | lowered to a `__dyn_cons` cons chain `(box(idx) . caps…)` (E6d-7a) + a synthesized `__dyn_call_closure` dispatcher | precise + **movable** | `end_to_end_closure_captured_env_survives_collect` (#9274); `closures_run_on_native` |
 | **records / unions** | generic `alloc` → `__twig_gc_alloc_pair` → `__gc_alloc_kind({0,8})` | precise + **movable** | `end_to_end_gc_record_field_traced_and_relocated`; `records_run_on_native` |
-| **strings** | `__twig_alloc_bytes` → `__gc_register_kind(NULL,0)` (no-reference blob) + `__gc_alloc_kind` | GC-managed **leaf** (traced, reclaimed; movable by pin-when-unsure) | `end_to_end_gc_manages_runtime_strings` (#9218) |
+| **strings** | `__twig_alloc_bytes` → `__gc_register_kind(NULL,0)` (no-reference blob) + `__gc_alloc_kind` | GC-managed **leaf** (traced, reclaimed, movable). Rooted by its stack-map slot: twig-aot types every `alloc_bytes` / `str_concat` / `str_slice` / `input_str` result and its copies as a root (#18766; before that the `i64`-typed handle was invisible to a precise or compacting collection) | `end_to_end_gc_manages_runtime_strings` (#9218); `gc_global_and_buffer_roots.rs` (#18766) |
 | **symbols** | *none* — `intern_symbols` rewrites each symbol literal to the tagged immediate `(id<<32) \| 0b010` at compile time | **not a heap object** (an immediate, like an int) | `symbol_intern` unit tests |
 | **ints / nil / bools** | *none* — immediate tagged words | **not a heap object** | — |
+| **globals** (top-level `define`) | *not an allocation* — slot `k` of the `_twig_globals` data block holds the value's word | every slot is a **precise root** of every collector: `__gc_init_stackmaps` registers the block with `__gc_register_global_roots` at start-up, so a compaction rewrites the global when it moves the object (#18765; before that a global was no root at all) | `gc_global_and_buffer_roots.rs`; gc-core-capi `registered_global_slots_are_roots_of_every_collector` |
 
 So the native-AOT heap surface partitions cleanly into: **precise + movable** (cons/lists,
 closures, records/unions), a **GC-managed leaf** (strings — an opaque byte blob has no interior

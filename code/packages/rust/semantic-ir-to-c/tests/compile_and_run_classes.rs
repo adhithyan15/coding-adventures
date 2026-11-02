@@ -45,6 +45,7 @@ fn run(module: &Module) -> Option<String> {
     let stem = format!("sirc_cls_{}_{}", std::process::id(), n);
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
+    let _cleanup = RemoveOnDrop([cpath.clone(), exe.clone()]);
     std::fs::File::create(&cpath)
         .and_then(|mut f| f.write_all(artifact.source.as_bytes()))
         .expect("write .c");
@@ -226,4 +227,18 @@ fn deferred_oop_shapes_are_rejected_cleanly() {
         ),
         "a non-empty class body must be rejected"
     );
+}
+
+/// Deletes a run's `.c` file and executable when the helper returns or
+/// panics.  Each call names its files uniquely (see `unique_suffix` or the
+/// counter above), so without this they would pile up in the temp directory,
+/// one pair per test run.
+struct RemoveOnDrop([std::path::PathBuf; 2]);
+
+impl Drop for RemoveOnDrop {
+    fn drop(&mut self) {
+        for path in &self.0 {
+            let _ = std::fs::remove_file(path);
+        }
+    }
 }

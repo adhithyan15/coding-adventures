@@ -31,9 +31,12 @@
 //!    crate: `pthread_get_stackaddr_np` (macOS), `pthread_getattr_np` +
 //!    `pthread_attr_getstack` (Linux), `GetCurrentThreadStackLimits` (Windows).
 //!
-//! 4. **Hand `[sp, base)` to [`FlatHeap::collect_region`].** That span contains
+//! 4. **Hand `[sp, base)` to [`FlatHeap::collect_mixed`].** That span contains
 //!    the spill buffer (it lives in this frame, above `sp`) and every caller
-//!    frame, so it conservatively roots from all of them.
+//!    frame, so it conservatively roots from all of them. The program's
+//!    **globals** live in a data section outside that span, so the slots it
+//!    registered with `__gc_register_global_roots` go in beside it as precise
+//!    root slots (#18765; see `global_roots.rs`).
 //!
 //! ## Why this is safe to run with no explicit roots
 //!
@@ -453,14 +456,19 @@ pub unsafe extern "C" fn __gc_collect() -> i64 {
     // wrong, scan nothing — freeing on an empty root set would be a
     // use-after-free, so we bias to leaking this cycle instead.
     let freed = if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
-        with_heap(|h| h.collect_region(sp as *const u8, base - sp).freed as i64)
+        // The registered global slots (#18765) are outside `[sp, base)`, so they go in
+        // as precise root slots beside the stack region. With none registered this is
+        // exactly `collect_region(sp, base - sp)`.
+        let globals = crate::global_roots::slots();
+        let stack = [(sp as *const u8, base - sp)];
+        with_heap(|h| h.collect_mixed(&globals, &stack).freed as i64)
     } else {
         0
     };
 
     // Keep `regs` materialised across the scan: its address is what makes the
     // spilled register values part of `[sp, base)`. Without this the optimiser
-    // could reuse the slot before `collect_region` reads it.
+    // could reuse the slot before the collection reads it.
     core::hint::black_box(&regs);
     freed
 }
@@ -484,7 +492,11 @@ pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
     let sp = spill_and_sp(regs.as_mut_ptr());
     let base = stack_base();
     let freed = if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
-        with_heap(|h| h.collect_minor_region(sp as *const u8, base - sp).freed as i64)
+        // Globals are roots of a minor cycle too (#18765): a global store has no write
+        // barrier, so a young object only a global names is found only this way.
+        let globals = crate::global_roots::slots();
+        let stack = [(sp as *const u8, base - sp)];
+        with_heap(|h| h.collect_minor_mixed(&globals, &stack).freed as i64)
     } else {
         0
     };
@@ -634,6 +646,10 @@ pub(crate) unsafe extern "C" fn collect_precise_from(fp: usize) -> i64 {
         let mut regions: Vec<(*const u8, usize)> = Vec::new();
         // Walk the frame-pointer chain into precise slots + conservative regions.
         crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        // The program's globals (`_twig_globals` and the like) are not on the stack,
+        // so no stack map names them: add every registered global slot as a precise
+        // root too, read and (when compacting) rewritten like a stack-map slot (#18765).
+        crate::global_roots::extend_slots(&mut slots);
         // Always scan the spilled callee-saved registers, independent of the walk.
         regions.push((
             regs.as_ptr() as *const u8,
@@ -710,6 +726,7 @@ pub(crate) unsafe extern "C" fn collect_minor_precise_from(fp: usize) -> i64 {
         let mut slots: Vec<usize> = Vec::new();
         let mut regions: Vec<(*const u8, usize)> = Vec::new();
         crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        crate::global_roots::extend_slots(&mut slots); // globals (#18765)
         regions.push((
             regs.as_ptr() as *const u8,
             SPILL_SLOTS * core::mem::size_of::<usize>(),
@@ -772,6 +789,7 @@ pub(crate) unsafe extern "C" fn collect_incremental_start_from(fp: usize) {
         let mut regions: Vec<(*const u8, usize)> = Vec::new();
         // Walk the frame-pointer chain into precise slots + conservative regions.
         crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        crate::global_roots::extend_slots(&mut slots); // globals (#18765)
         // Always scan the spilled callee-saved registers (a ref live only in one is named by
         // no stack map). Valid here because `incremental_start` greys these roots NOW, while
         // `regs` and the walked frames are still live.
@@ -886,6 +904,7 @@ pub(crate) unsafe extern "C" fn collect_compacting_from(fp: usize) -> i64 {
         let mut regions: Vec<(*const u8, usize)> = Vec::new();
         // Walk the frame-pointer chain into precise slots + conservative regions.
         crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        crate::global_roots::extend_slots(&mut slots); // globals (#18765)
         // Always scan the spilled callee-saved registers as a conservative region: a
         // reference live only in such a register is named by no stack map yet, so it must
         // pin (never move) — exactly as __gc_collect_precise scans it.
@@ -966,6 +985,7 @@ pub(crate) unsafe extern "C" fn collect_minor_compacting_from(fp: usize) -> i64 
         let mut slots: Vec<usize> = Vec::new();
         let mut regions: Vec<(*const u8, usize)> = Vec::new();
         crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        crate::global_roots::extend_slots(&mut slots); // globals (#18765)
         regions.push((
             regs.as_ptr() as *const u8,
             SPILL_SLOTS * core::mem::size_of::<usize>(),
@@ -1465,6 +1485,112 @@ mod tests {
             assert!(base - sp < MAX_STACK_SCAN, "current frame is near the base");
         }
         core::hint::black_box(&buf);
+    }
+
+    // ── Global roots (#18765) ─────────────────────────────────────────────────
+
+    /// Number of objects each global-root case parks in its global block.
+    const GLOBAL_BATCH: usize = 64;
+
+    /// Allocate [`GLOBAL_BATCH`] movable 16-byte objects whose **only** lasting
+    /// reference is a slot of `globals` (a block outside the stack, like a data
+    /// section). Each object's first word is its marker `i + 1`. Returns the
+    /// original addresses in a Rust-heap `Vec`, which no collection scans, so the
+    /// record itself roots nothing. `#[inline(never)]` keeps the loop's locals in a
+    /// frame that is gone by the time the caller collects.
+    #[inline(never)]
+    fn park_in_globals(globals: &mut [i64], kind: u16) -> Vec<i64> {
+        let mut originals = Vec::with_capacity(globals.len());
+        for (i, slot) in globals.iter_mut().enumerate() {
+            let p = crate::__gc_alloc_kind(16, kind);
+            assert!(p != 0);
+            unsafe { *(p as *mut i64) = i as i64 + 1 };
+            *slot = p;
+            originals.push(p);
+        }
+        originals
+    }
+
+    /// A kind with no reference fields: precisely traced, so movable.
+    fn movable_leaf_kind() -> u16 {
+        unsafe { crate::__gc_register_kind(core::ptr::null(), 0) as u16 }
+    }
+
+    /// **#18765.** A word slot registered with `__gc_register_global_roots` is a root
+    /// of every collector — and a *precise* one: a compacting collection moves the
+    /// objects it names and writes their new addresses back into the global block.
+    ///
+    /// As in `run_stack_scan_case`, a batch makes this deterministic against stray
+    /// stack words (which can pin, or keep alive, a bounded handful of objects):
+    ///
+    /// | collector                | registered                         | not registered (control)        |
+    /// |--------------------------|------------------------------------|---------------------------------|
+    /// | `__gc_collect` (conservative) | every object kept, marker intact | most freed                      |
+    /// | `__gc_collect_precise`   | every object kept, marker intact   | most freed                      |
+    /// | `__gc_collect_compacting`| every object kept; most **moved**, the global rewritten | — |
+    #[test]
+    fn registered_global_slots_are_roots_of_every_collector() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        type Collect = unsafe extern "C" fn() -> i64;
+        let collectors: [(&str, Collect); 2] =
+            [("conservative", __gc_collect), ("precise", __gc_collect_precise)];
+        for (name, collect) in collectors {
+            // Control: the same objects with no registration are garbage.
+            __gc_reset();
+            crate::global_roots::reset();
+            let kind = movable_leaf_kind();
+            let mut globals = vec![0i64; GLOBAL_BATCH];
+            park_in_globals(&mut globals, kind);
+            let freed = unsafe { collect() };
+            assert!(
+                freed >= (GLOBAL_BATCH - STRAY_TOLERANCE as usize) as i64,
+                "{name}: unregistered, the parked objects are garbage (freed = {freed})"
+            );
+
+            // Registered: every one survives with its marker.
+            __gc_reset();
+            let kind = movable_leaf_kind();
+            let mut globals = vec![0i64; GLOBAL_BATCH];
+            let n = GLOBAL_BATCH as i64;
+            assert_eq!(unsafe { crate::__gc_register_global_roots(globals.as_mut_ptr(), n) }, n);
+            assert_eq!(crate::__gc_global_root_count(), n);
+            park_in_globals(&mut globals, kind);
+            // Exact signals only: a freed block's payload bytes are often left intact,
+            // so reading the marker alone would not prove survival. `freed` counts the
+            // parked objects reclaimed (they are the whole heap), and `__gc_kind_of`
+            // looks each address up in the heap's own block table.
+            let freed = unsafe { collect() };
+            assert_eq!(freed, 0, "{name}: a registered global keeps its object alive");
+            for (i, &p) in globals.iter().enumerate() {
+                assert_eq!(unsafe { crate::__gc_kind_of(p) }, kind as i64, "{name}: global {i}");
+                assert_eq!(unsafe { *(p as *const i64) }, i as i64 + 1, "{name}: global {i}");
+            }
+            crate::__gc_global_roots_reset();
+        }
+
+        // Compacting: survivors move and the global block is rewritten in place.
+        __gc_reset();
+        let kind = movable_leaf_kind();
+        let mut globals = vec![0i64; GLOBAL_BATCH];
+        let n = GLOBAL_BATCH as i64;
+        assert_eq!(unsafe { crate::__gc_register_global_roots(globals.as_mut_ptr(), n) }, n);
+        let originals = park_in_globals(&mut globals, kind);
+        assert_eq!(unsafe { __gc_collect_compacting() }, 0, "compacting: nothing parked is freed");
+        let mut moved = 0usize;
+        for (i, &p) in globals.iter().enumerate() {
+            assert_eq!(unsafe { crate::__gc_kind_of(p) }, kind as i64, "compacting: global {i}");
+            assert_eq!(unsafe { *(p as *const i64) }, i as i64 + 1, "compacting: global {i}");
+            if p != originals[i] {
+                moved += 1;
+            }
+        }
+        assert!(
+            moved >= GLOBAL_BATCH - STRAY_TOLERANCE as usize,
+            "a global slot is a precise root, so its object moves and the slot is \
+             rewritten (moved {moved} of {GLOBAL_BATCH})"
+        );
+        crate::__gc_global_roots_reset();
+        __gc_reset();
     }
 
     /// `FlatHeap` is the type the scan collects over — a direct sanity check that
