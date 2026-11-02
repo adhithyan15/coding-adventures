@@ -50,7 +50,7 @@ authority and tried to subtract permissions via complex, optional, application-l
 │                    │                          │ any code in the package  │
 │                    │                          │ can use SecureFile.read  │
 ├────────────────────┼──────────────────────────┼──────────────────────────┤
-│ Hundreds of        │ FilePermission, Socket   │ 8 categories, 14 actions │
+│ Hundreds of        │ FilePermission, Socket   │ 11 categories, 17 actions│
 │ permission classes │ Permission, Property     │ The entire taxonomy fits │
 │                    │ Permission, Runtime      │ on one page.             │
 │                    │ Permission...            │                          │
@@ -85,8 +85,9 @@ authority and tried to subtract permissions via complex, optional, application-l
 Capability Cage (D21)
 │
 ├── defines ──► Capability Taxonomy
-│                └── 8 categories (fs, net, proc, env, ffi, time, stdin, stdout)
-│                └── 14 actions (read, write, create, delete, list, connect, ...)
+│                └── 11 categories (fs, net, proc, env, ffi, time, stdin, stdout,
+│                │                  rand, thread, ui)
+│                └── 17 actions (read, write, create, delete, list, connect, ...)
 │                └── Targets with glob matching
 │
 ├── provides ──► Secure Wrappers
@@ -153,10 +154,11 @@ Capability
 ═══════════════════════════════════════════════════════════════
 ┌──────────────────┬─────────────────────────────────────────┐
 │ category         │ One of: fs, net, proc, env, ffi, time,   │
-│                  │ stdin, stdout                             │
+│                  │ stdin, stdout, rand, thread, ui           │
 │ action           │ One of: read, write, create, delete,      │
 │                  │ list, connect, listen, dns, exec, fork,   │
-│                  │ signal, call, load, sleep                 │
+│                  │ signal, call, load, sleep, spawn,         │
+│                  │ message, event                            │
 │ target           │ Specific resource with optional glob      │
 │                  │ (e.g., "../../grammars/*.tokens")         │
 │ justification    │ Why this specific capability is needed    │
@@ -192,8 +194,8 @@ Capability
 }
 ```
 
-**No AllPermission.** The `category` field is an enum with exactly 8 values. The `action`
-field is an enum with exactly 14 values. There is no "all" value in either enum. To get
+**No AllPermission.** The `category` field is an enum with exactly 11 values. The `action`
+field is an enum with exactly 17 values. There is no "all" value in either enum. To get
 broad access, you must enumerate every `category:action` pair individually — making
 escalation loud, visible in diffs, and impossible to hide.
 
@@ -202,8 +204,9 @@ escalation loud, visible in diffs, and impossible to hide.
 ### The Capability Taxonomy
 
 The taxonomy defines what OS-level operations exist in the system. It is deliberately
-small — 8 categories and 14 actions — so that a human can read and understand a complete
-manifest in under 30 seconds.
+small — 11 categories and 17 actions — so that a human can read and understand a complete
+manifest in under 30 seconds. Only 25 of the 187 category/action combinations are valid
+pairs; the rest are rejected, so `fs:spawn` or `ui:sleep` can never be declared.
 
 **Contrast with Java:** Java's SecurityManager had hundreds of permission classes
 (`FilePermission`, `SocketPermission`, `PropertyPermission`, `RuntimePermission`,
@@ -239,11 +242,107 @@ stdin       read                             "*" (stdin is not scoped)
 
 stdout      write                            "*" (stdout and stderr share this
                                              unified output category)
+
+rand        read                             "*" (there is one entropy source)
+
+thread      spawn, message                   Worker, thread or actor role
+                                             e.g., "decode-pool"
+                                             e.g., "./search.worker.js"
+
+ui          read, write, event               View or DOM subtree
+                                             e.g., "#editor"
+                                             e.g., "settings-window"
 ```
 
 The wire category remains `stdout` for both process output streams. A write to
 standard error therefore requires `stdout:write:*`; no separate `stderr`
-category exists in the eight-category taxonomy.
+category exists in the taxonomy.
+
+#### Nondeterminism categories: `rand`, `thread`, `ui`
+
+The first eight categories describe what a package can reach. The last three were added
+for VER00 §6.3: they describe what a unit test must be able to *control*. A unit test
+runs against a simulated host. That host can only replay a run if every source of
+nondeterminism goes through a capability it can see. Time already does (`time:read`,
+`time:sleep`). Three sources did not:
+
+```
+Category  Action    Means                                             Simulated host
+────────  ───────   ───────────────────────────────────────────────   ─────────────────────
+rand      read      Draw from ambient entropy: the OS random          serves a seeded
+                    source (getrandom, /dev/urandom, crypto/rand),    stream, so the run
+                    or a generator that seeds itself from it          replays
+                    (Math.random, Python's module-level random,
+                    auto-seeded math/rand, Random.self_init)
+
+thread    spawn     Start a concurrent unit of execution that stays   decides when each
+                    in this process: an OS thread, a goroutine, a     worker runs
+                    Web Worker, an OCaml domain, an actor
+
+thread    message   Send to or receive from a worker across a         decides the order
+                    thread boundary: postMessage, an actor's          messages arrive in
+                    mailbox, a channel another thread reads
+
+ui        read      Read the state of a view: query DOM nodes, read   backs the view with
+                    text, values, attributes or layout                dom-core, no browser
+
+ui        write     Change a view: insert or remove nodes, set text   records the change
+                    or attributes, dispatch a synthetic event
+
+ui        event     Receive user input from a view: register a        injects clicks, keys
+                    handler for clicks, keys, pointer or focus        and focus changes
+```
+
+Rules for the new categories:
+
+- **Seeded randomness is pure computation.** A generator built from a seed the caller
+  passes in (`rand.New(rand.NewSource(42))`, `Random.State.make [| 42 |]`) is a
+  deterministic function of its input and needs no capability. Only *ambient* entropy
+  does. Reading `/dev/urandom` through the filesystem is still `rand:read:*`; it is the
+  same entropy by a different door.
+- **A thread is not a process.** `thread:spawn` stays inside the address space;
+  `proc:fork` and `proc:exec` create a new process. On Linux, `clone` with
+  `CLONE_THREAD` is `thread:spawn`, and `clone` without it is `proc:fork`.
+- **A thread target names a role, not an instance.** A pool of eight decoders is one
+  declaration, `thread:spawn:decode-pool`. A Web Worker's role is its script path.
+  `thread:message` uses the same role names, so a reviewer can pair every spawn with
+  the messages it receives.
+- **A ui target names a view.** It is the root of a DOM subtree (`#editor`) or a native
+  window or view identifier (`settings-window`). `ui:read:#editor` covers every node
+  beneath `#editor`, as `fs:read:/data/*` covers files beneath `/data`.
+- **Synthetic events are writes.** Dispatching an event into a view changes it, so it
+  needs `ui:write`. `ui:event` is only for *receiving* input.
+- **D21's three rules are unchanged.** No category or action means "all", so there is
+  no `thread:*` or `ui:all`. Every capability needs its own justification. A package
+  with no manifest has none of these capabilities, so starting a thread or reading
+  ambient entropy in such a package is a violation the analyzers report.
+
+Where each layer enforces the new categories today:
+
+```
+Layer                         rand:read            thread:spawn         thread:message   ui:*
+───────────────────────────   ──────────────────   ──────────────────   ──────────────   ──────────────
+Manifest schemas + loaders    validated            validated            validated        validated
+Go capability-cage            ReadRandom wrapper   Spawn wrapper        no wrapper       no wrapper
+Go cage generator             op.Rand.Read         op.Thread.Spawn      unsupported-     unsupported-
+                                                                        pair error       pair error
+Rust capability-cage          taxonomy + summary   taxonomy + summary   taxonomy +       taxonomy +
+                                                                        summary          summary
+capability-os-sandbox         brokered entropy     unsupported:         unsupported:     unsupported:
+                              (host_broker)        launch fails         launch fails     launch fails
+Go analyzer                   math/rand, rand/v2   `go` statement       —                —
+                              top-level calls,
+                              crypto/rand import
+OCaml analyzer                Random.self_init,    Thread.create,       —                —
+                              make_self_init       Domain.spawn
+```
+
+"Unsupported" is the honest answer, not a gap to paper over. A thread and a DOM node live
+inside the agent's own process, so no kernel primitive can scope them to one target and
+no broker can perform them, the same reason `ffi` is unsupported. A plan that holds an
+unsupported rule refuses to launch (D18S S-P3); it never silently runs with a weaker
+policy. A generator asked for a pair it has no enforcing method for fails the same way,
+rather than emitting a method that performs the operation unchecked.
 
 **The `*` target:** Within a specific `category:action` pair, the target `*` means "any
 resource of this type." For example, `fs:read:*` means "can read any file." This is
@@ -562,7 +661,8 @@ Manifest
   .capabilities -> List           All declared capabilities
 
 Capability
-  .category -> String             fs, net, proc, env, ffi, time, stdin, stdout
+  .category -> String             fs, net, proc, env, ffi, time, stdin, stdout,
+                                  rand, thread, ui
   .action -> String               read, write, create, etc.
   .target -> String               Specific resource or glob
   .justification -> String        Why this capability is needed
@@ -620,7 +720,18 @@ SecureProc(manifest, backend=OpenBackend)
 SecureEnv(manifest, backend=OpenBackend)
   .read(name: string) -> string         checks env:read:{name}
   .write(name: string, value: string)   checks env:write:{name}
+
+SecureRand(manifest, backend=OpenBackend)
+  .read(buffer) -> count                checks rand:read:*
+
+SecureThread(manifest, backend=OpenBackend)
+  .spawn(role: string, body)            checks thread:spawn:{role}
 ```
+
+`thread:message` and the `ui` actions have no generic wrapper yet. Messaging and view
+access are shaped by each runtime (a Go channel, `postMessage`, a DOM node), so they
+get wrappers in the language packages that host them. Until then a generator refuses
+those pairs instead of emitting an unchecked method.
 
 ### Language-Specific API
 

@@ -40,14 +40,14 @@ class CapabilityTaxonomyTest(unittest.TestCase):
         actions = self.taxonomy["all_actions"]
         valid_count = sum(len(allowed) for allowed in categories.values())
         invalid_count = len(categories) * len(actions) - valid_count
-        self.assertEqual(19, valid_count)
-        self.assertEqual(93, invalid_count)
+        self.assertEqual(25, valid_count)
+        self.assertEqual(162, invalid_count)
         self.assertEqual(self.taxonomy["expected_valid_pair_count"], valid_count)
         self.assertEqual(
             self.taxonomy["expected_invalid_cross_pair_count"], invalid_count
         )
 
-    def test_both_manifest_schemas_accept_all_19_valid_pairs(self) -> None:
+    def test_both_manifest_schemas_accept_all_25_valid_pairs(self) -> None:
         for schema_name, schema in self.manifest_schemas.items():
             validator = jsonschema.Draft202012Validator(schema)
             for category, actions in self.taxonomy["categories"].items():
@@ -62,7 +62,7 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                         )
                         self.assertEqual([], [error.message for error in errors])
 
-    def test_both_manifest_schemas_reject_all_93_invalid_cross_pairs(self) -> None:
+    def test_both_manifest_schemas_reject_all_162_invalid_cross_pairs(self) -> None:
         for schema_name, schema in self.manifest_schemas.items():
             validator = jsonschema.Draft202012Validator(schema)
             for category, allowed in self.taxonomy["categories"].items():
@@ -92,6 +92,88 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                         )
                     )
                     self.assertTrue(errors, "unknown vocabulary must fail closed")
+
+    def test_nondeterminism_categories_are_closed_and_named(self) -> None:
+        # VER00 section 6.3 adds rand, thread and ui so a simulated host can
+        # control every source of nondeterminism a unit test meets. Spell
+        # the new pairs out here, independently of the fixture, so a fixture
+        # edit cannot quietly widen or narrow them.
+        categories = self.taxonomy["categories"]
+        self.assertEqual(["read"], categories["rand"])
+        self.assertEqual(["spawn", "message"], categories["thread"])
+        self.assertEqual(["read", "write", "event"], categories["ui"])
+        accepted = [
+            ("rand", "read"),
+            ("thread", "spawn"),
+            ("thread", "message"),
+            ("ui", "read"),
+            ("ui", "write"),
+            ("ui", "event"),
+        ]
+        # Each new action belongs to exactly one category, and the old
+        # categories must not pick the new actions up, nor the new
+        # categories the old actions.
+        rejected = [
+            ("rand", "write"),
+            ("rand", "sleep"),
+            ("thread", "fork"),
+            ("thread", "exec"),
+            ("thread", "read"),
+            ("ui", "message"),
+            ("ui", "spawn"),
+            ("ui", "list"),
+            ("proc", "spawn"),
+            ("stdout", "event"),
+            ("net", "message"),
+            ("time", "spawn"),
+        ]
+        for schema_name, schema in self.manifest_schemas.items():
+            validator = jsonschema.Draft202012Validator(schema)
+            for category, action in accepted:
+                with self.subTest(schema=schema_name, pair=(category, action)):
+                    validator.validate(self.manifest(schema_name, category, action))
+            for category, action in rejected:
+                with self.subTest(schema=schema_name, pair=(category, action)):
+                    self.assertTrue(
+                        list(
+                            validator.iter_errors(
+                                self.manifest(schema_name, category, action)
+                            )
+                        ),
+                        "a cross-pair with a new category or action must fail",
+                    )
+
+    def test_there_is_no_all_or_wildcard_category_or_action(self) -> None:
+        # D21 has no escape hatch: over-declaring must be impossible, so no
+        # category or action may stand for "everything".
+        for schema_name, schema in self.manifest_schemas.items():
+            validator = jsonschema.Draft202012Validator(schema)
+            for category, action in (
+                ("all", "read"),
+                ("*", "read"),
+                ("rand", "all"),
+                ("thread", "*"),
+                ("ui", "all"),
+            ):
+                with self.subTest(schema=schema_name, pair=(category, action)):
+                    self.assertTrue(
+                        list(
+                            validator.iter_errors(
+                                self.manifest(schema_name, category, action)
+                            )
+                        )
+                    )
+
+    def test_new_capabilities_still_require_a_justification(self) -> None:
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["required"])
+        for category, action in (("rand", "read"), ("thread", "spawn"), ("ui", "event")):
+            manifest = self.manifest("required", category, action)
+            del manifest["capabilities"][0]["justification"]
+            with self.subTest(pair=(category, action)):
+                self.assertTrue(list(validator.iter_errors(manifest)))
+            manifest["capabilities"][0]["justification"] = "short"
+            with self.subTest(pair=(category, action), justification="short"):
+                self.assertTrue(list(validator.iter_errors(manifest)))
 
     def test_agent_manifest_schema_versions_are_explicitly_evolved(self) -> None:
         validator = jsonschema.Draft202012Validator(self.manifest_schemas["agent"])

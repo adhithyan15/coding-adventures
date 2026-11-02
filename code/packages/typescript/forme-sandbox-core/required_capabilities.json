@@ -11,7 +11,7 @@
     },
     {
       "category": "proc",
-      "action": "spawn",
+      "action": "exec",
       "target": "$trustedNativeLauncher",
       "justification": "Starts the selected checked-in OS sandbox helper with bounded inherited descriptors."
     }
