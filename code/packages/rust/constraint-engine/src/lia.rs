@@ -85,17 +85,32 @@ impl LiaTactic {
         bool_vars: &[String],
     ) -> SolverResult {
         // Flatten into a conjunction of linear constraints.
-        let constraints: Vec<Predicate> = assertions.to_vec();
+        // Flatten nested conjunctions into separate constraints, so that
+        // `(and (>= x a) (<= x b))` contributes both of its bounds (one
+        // `And` merges a lower and an upper bound into "complex").
+        let mut constraints: Vec<Predicate> = Vec::new();
+        let mut pending: Vec<&Predicate> = assertions.iter().rev().collect();
+        while let Some(p) = pending.pop() {
+            match p {
+                Predicate::And(parts) => pending.extend(parts.iter().rev()),
+                other => constraints.push(other.clone()),
+            }
+        }
 
         // Start with an empty partial assignment and eliminate variables
         // one by one.
         let mut assignment: HashMap<String, i128> = HashMap::new();
 
-        // Eliminate int variables first.
+        // Eliminate int variables first. A variable no constraint mentions
+        // can take any value: it is not searched (searching it unboxed would
+        // only turn a proof into Unknown), and the model gives it 0 / false.
+        let mentioned: std::collections::BTreeSet<String> =
+            constraints.iter().flat_map(|c| c.free_vars()).collect();
         let all_vars: Vec<String> = {
             let mut v = int_vars.to_vec();
             // Treat Bool vars as 0-or-1 integers.
             v.extend_from_slice(bool_vars);
+            v.retain(|name| mentioned.contains(name));
             v
         };
 
@@ -113,6 +128,16 @@ impl LiaTactic {
         // LANG23 case: two refined parameters) while providing a hard ceiling
         // against adversarial formulae with 3+ unconstrained variables.
         const LIA_BUDGET: usize = 2_000_000;
+        // Tighten the search with bounds the constraints imply (interval
+        // propagation over the linear atoms). Every derived bound is a
+        // consequence of the constraints, so adding it changes no answer;
+        // it only lets the search be exhaustive where it otherwise samples.
+        let ints: HashSet<&str> = int_vars.iter().map(String::as_str).collect();
+        match propagate_intervals(&constraints, &ints) {
+            Propagated::Contradiction => return SolverResult::Unsat,
+            Propagated::Bounds(bounds) => constraints.extend(bounds),
+        }
+
         let mut budget = LIA_BUDGET;
         let bools: HashSet<String> = bool_vars.iter().cloned().collect();
         match eliminate_all(&constraints, &all_vars, &bools, &mut assignment, &mut budget) {
@@ -253,73 +278,264 @@ fn eliminate_all(
         return eliminate_all(constraints, rest, bools, assignment, budget);
     }
 
-    // Step 3: determine search range.
+    // Step 3: decide which values to try, and whether trying them all is a
+    // proof (LANG24 "LIA as built, and its soundness contract").
     //
-    // For the Cooper algorithm the search range is [lb, ub].  We bound
-    // the maximum search width to avoid blowup.
+    // The search is exhaustive only when every value the variable could
+    // take is tried: a Bool (domain {0, 1}), or an Int boxed in by a real
+    // lower and a real upper bound at most MAX_SEARCH_WIDTH apart. Anything
+    // else is a *sample*. A sample can find a model (SAT), but its failing
+    // proves nothing: the answer is then Unknown, never UNSAT.
+    //
+    //   bounds              values tried                       exhaustive?
+    //   Bool                {0, 1} ∩ [lb, ub]                  yes
+    //   lb and ub, narrow   [lb, ub]                           yes
+    //   lb and ub, wide     [lb, lb + W]                       no
+    //   lb only             [lb, lb + W]                       no
+    //   ub only             [ub − W, ub]                       no
+    //   neither             [−W/2, W/2]                        no
     const MAX_SEARCH_WIDTH: i128 = 1_000;
 
-    let lo = lb.unwrap_or(0);
-    let hi = ub.unwrap_or(lo + MAX_SEARCH_WIDTH);
-
-    // If lb > ub the range is empty — UNSAT.
-    if lo > hi {
-        return EliminationResult::Unsat;
-    }
-
-    // If the range is too large and there's no upper bound clamping it,
-    // try just the lower bound + a small number of alternatives.
-    let search_hi = if hi - lo > MAX_SEARCH_WIDTH {
-        lo + MAX_SEARCH_WIDTH
-    } else {
-        hi
-    };
-
-    // Step 4: enumerate candidate values.
-    //
-    // For Bool vars: restrict to {0, 1}, the only integers a Boolean
-    //   grounds to (the evaluator compares them with Booleans by truth).
-    // For Int vars: start at `lo`, skip values in `neqs`.
-    let candidates: Vec<i128> = {
-        let range = if bools.contains(var) { lo.max(0)..=search_hi.min(1) } else { lo..=search_hi };
-        let mut cands: Vec<i128> = range
-            .filter(|v| !neqs.contains(v))
-            .collect();
-        // If we couldn't find a candidate because neqs block the whole range,
-        // give up.
-        if cands.is_empty() {
-            if lo <= hi {
-                return EliminationResult::Unknown(format!(
-                    "variable `{var}` has no candidate (range [{lo},{hi}] fully excluded by ≠ constraints)"
-                ));
-            }
+    let is_bool = bools.contains(var);
+    if let (Some(l), Some(u)) = (lb, ub) {
+        if l > u {
+            // Two real bounds that contradict: no integer fits. A proof.
             return EliminationResult::Unsat;
         }
-        // Prefer the smallest magnitude (avoids overflow cascade).
-        cands.sort_by_key(|v| v.unsigned_abs());
-        cands
+    }
+    let (lo, hi, exhaustive) = if is_bool {
+        (lb.unwrap_or(0).max(0), ub.unwrap_or(1).min(1), true)
+    } else {
+        match (lb, ub) {
+            (Some(l), Some(u)) => match u.checked_sub(l) {
+                Some(width) if width <= MAX_SEARCH_WIDTH => (l, u, true),
+                _ => (l, l.saturating_add(MAX_SEARCH_WIDTH), false),
+            },
+            (Some(l), None) => (l, l.saturating_add(MAX_SEARCH_WIDTH), false),
+            (None, Some(u)) => (u.saturating_sub(MAX_SEARCH_WIDTH), u, false),
+            (None, None) => (-MAX_SEARCH_WIDTH / 2, MAX_SEARCH_WIDTH / 2, false),
+        }
     };
 
-    // Try each candidate.
+    // Step 4: enumerate the candidates, smallest magnitude first.
+    let mut candidates: Vec<i128> = (lo..=hi).filter(|v| !neqs.contains(v)).collect();
+    if candidates.is_empty() {
+        // Every value in range is excluded by ≠ (or the Bool domain is cut
+        // empty by its bounds). That is a proof only if the range was
+        // everything the variable could be.
+        return if exhaustive {
+            EliminationResult::Unsat
+        } else {
+            EliminationResult::Unknown(format!(
+                "variable `{var}`: every sampled value in [{lo}, {hi}] is excluded by ≠ constraints"
+            ))
+        };
+    }
+    candidates.sort_by_key(|v| v.unsigned_abs());
+
+    // Try each candidate. A child's UNSAT only means "this value fails"; a
+    // child's Unknown is remembered, and the search goes on, since a later
+    // value may still give a model.
+    let mut unknown: Option<String> = None;
     for &val in &candidates {
         assignment.insert(var.clone(), val);
-        match eliminate_all(constraints, rest, bools, assignment, budget) {
-            EliminationResult::Sat => return EliminationResult::Sat,
-            EliminationResult::Unsat => {
-                // This candidate doesn't work — try next.
-                assignment.remove(var);
-                continue;
+        let result = eliminate_all(constraints, rest, bools, assignment, budget);
+        assignment.remove(var);
+        match result {
+            EliminationResult::Sat => {
+                assignment.insert(var.clone(), val);
+                return EliminationResult::Sat;
             }
+            EliminationResult::Unsat => {}
             EliminationResult::Unknown(reason) => {
-                // Solver gave up — propagate.
-                assignment.remove(var);
-                return EliminationResult::Unknown(reason);
+                unknown.get_or_insert(reason);
             }
         }
     }
 
     // No candidate worked.
-    EliminationResult::Unsat
+    match unknown {
+        Some(reason) => EliminationResult::Unknown(reason),
+        None if exhaustive => EliminationResult::Unsat,
+        None => EliminationResult::Unknown(format!(
+            "variable `{var}`: no model among the sampled values [{lo}, {hi}], and the search \
+             there is not exhaustive (missing or distant bounds)"
+        )),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Interval propagation
+// ---------------------------------------------------------------------------
+//
+// The enumeration below can only prove UNSAT for a variable it can box in
+// (LANG24 soundness contract). Constraints often box a variable only
+// indirectly: in `x > 5 ∧ y > 5 ∧ x + y < 10`, `x` has no upper bound of its
+// own, but `x + y < 10` with `y ≥ 6` gives `x ≤ 3`, and that contradicts
+// `x ≥ 6`. This pass derives such bounds.
+//
+// Every top-level linear atom is normalised to `Σ aᵢ·xᵢ + c ≤ 0`. For each
+// variable `xⱼ` in it, the other terms are at least their interval minimum
+// `S`, so `aⱼ·xⱼ ≤ −c − S`, which bounds `xⱼ` from above (aⱼ > 0) or below
+// (aⱼ < 0). Rounds repeat until nothing tightens, up to a cap: a cyclic
+// system like `x < y ∧ y < x` tightens by one per round forever, and
+// stopping early is always sound, only less precise.
+
+/// `Σ terms[v]·v + constant`, over integer variables.
+struct Linear {
+    terms: HashMap<String, i128>,
+    constant: i128,
+}
+
+/// The linear form of an integer expression, or `None` if it is not linear
+/// over `ints` or its coefficients overflow.
+fn linearize(p: &Predicate, ints: &HashSet<&str>) -> Option<Linear> {
+    match p {
+        Predicate::Int(n) => Some(Linear { terms: HashMap::new(), constant: *n }),
+        Predicate::Var(v) if ints.contains(v.as_str()) => {
+            Some(Linear { terms: HashMap::from([(v.clone(), 1)]), constant: 0 })
+        }
+        Predicate::Add(parts) => {
+            let mut acc = Linear { terms: HashMap::new(), constant: 0 };
+            for q in parts {
+                acc = combine(acc, linearize(q, ints)?, 1)?;
+            }
+            Some(acc)
+        }
+        Predicate::Sub(a, b) => combine(linearize(a, ints)?, linearize(b, ints)?, -1),
+        Predicate::Mul { coef, term } => {
+            let t = linearize(term, ints)?;
+            let mut terms = HashMap::new();
+            for (v, c) in t.terms {
+                terms.insert(v, c.checked_mul(*coef)?);
+            }
+            Some(Linear { terms, constant: t.constant.checked_mul(*coef)? })
+        }
+        _ => None,
+    }
+}
+
+/// `a + sign·b`, with overflow checks.
+fn combine(mut a: Linear, b: Linear, sign: i128) -> Option<Linear> {
+    for (v, c) in b.terms {
+        let e = a.terms.entry(v).or_insert(0);
+        *e = e.checked_add(c.checked_mul(sign)?)?;
+    }
+    a.constant = a.constant.checked_add(b.constant.checked_mul(sign)?)?;
+    Some(a)
+}
+
+/// The atoms of `p`, normalised to `form ≤ 0`. Non-linear or unsupported
+/// constraints contribute nothing (they are still checked by the search).
+fn atoms_le_zero(p: &Predicate, ints: &HashSet<&str>) -> Vec<Linear> {
+    let diff = |a: &Predicate, b: &Predicate, plus: i128| -> Option<Linear> {
+        let mut d = combine(linearize(a, ints)?, linearize(b, ints)?, -1)?;
+        d.constant = d.constant.checked_add(plus)?;
+        Some(d)
+    };
+    let out = match p {
+        Predicate::Le(a, b) => vec![diff(a, b, 0)],
+        Predicate::Lt(a, b) => vec![diff(a, b, 1)], // a < b ⇔ a − b + 1 ≤ 0
+        Predicate::Ge(a, b) => vec![diff(b, a, 0)],
+        Predicate::Gt(a, b) => vec![diff(b, a, 1)],
+        Predicate::Eq(a, b) => vec![diff(a, b, 0), diff(b, a, 0)],
+        // A negated comparison is the opposite comparison (integers are
+        // totally ordered): ¬(a ≤ b) ⇔ a > b, and so on. (¬(a = b) bounds
+        // nothing.)
+        Predicate::Not(inner) => match inner.as_ref() {
+            Predicate::Le(a, b) => vec![diff(b, a, 1)],
+            Predicate::Lt(a, b) => vec![diff(b, a, 0)],
+            Predicate::Ge(a, b) => vec![diff(a, b, 1)],
+            Predicate::Gt(a, b) => vec![diff(a, b, 0)],
+            _ => vec![],
+        },
+        _ => vec![],
+    };
+    out.into_iter().flatten().collect()
+}
+
+/// `⌊a / b⌋` and `⌈a / b⌉` for `b ≠ 0`, or `None` on overflow.
+fn floor_div(a: i128, b: i128) -> Option<i128> {
+    let q = a.checked_div(b)?;
+    if (a % b != 0) && ((a < 0) != (b < 0)) { q.checked_sub(1) } else { Some(q) }
+}
+
+fn ceil_div(a: i128, b: i128) -> Option<i128> {
+    let q = a.checked_div(b)?;
+    if (a % b != 0) && ((a < 0) == (b < 0)) { q.checked_add(1) } else { Some(q) }
+}
+
+/// What interval propagation found.
+enum Propagated {
+    /// Implied bounds, as constraints (`x ≥ l`, `x ≤ u`).
+    Bounds(Vec<Predicate>),
+    /// Some variable's implied interval is empty: the constraints are UNSAT.
+    Contradiction,
+}
+
+/// Derive the bounds the top-level linear atoms of `constraints` imply.
+fn propagate_intervals(constraints: &[Predicate], ints: &HashSet<&str>) -> Propagated {
+    const MAX_ROUNDS: usize = 64;
+    let atoms: Vec<Linear> = constraints.iter().flat_map(|c| atoms_le_zero(c, ints)).collect();
+    // Interval per variable: (lower, upper); None is unbounded.
+    let mut iv: HashMap<String, (Option<i128>, Option<i128>)> = HashMap::new();
+    for _ in 0..MAX_ROUNDS {
+        let mut changed = false;
+        for atom in &atoms {
+            for (xj, &aj) in &atom.terms {
+                if aj == 0 {
+                    continue;
+                }
+                // S = Σ_{i≠j} min(aᵢ·xᵢ); give up on xⱼ if some term is unbounded.
+                let mut s: Option<i128> = Some(atom.constant);
+                for (xi, &ai) in &atom.terms {
+                    if xi == xj || ai == 0 {
+                        continue;
+                    }
+                    let (lo, hi) = iv.get(xi).copied().unwrap_or((None, None));
+                    let min_term = if ai > 0 { lo.and_then(|l| ai.checked_mul(l)) } else { hi.and_then(|h| ai.checked_mul(h)) };
+                    s = s.zip(min_term).and_then(|(acc, m)| acc.checked_add(m));
+                }
+                // aⱼ·xⱼ ≤ −S
+                let Some(rhs) = s.and_then(|v| v.checked_neg()) else { continue };
+                let entry = iv.entry(xj.clone()).or_insert((None, None));
+                if aj > 0 {
+                    if let Some(u) = floor_div(rhs, aj) {
+                        if entry.1.is_none_or(|old| u < old) {
+                            entry.1 = Some(u);
+                            changed = true;
+                        }
+                    }
+                } else if let Some(l) = ceil_div(rhs, aj) {
+                    if entry.0.is_none_or(|old| l > old) {
+                        entry.0 = Some(l);
+                        changed = true;
+                    }
+                }
+                if let (Some(l), Some(u)) = *entry {
+                    if l > u {
+                        return Propagated::Contradiction;
+                    }
+                }
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+    let mut bounds = Vec::new();
+    let mut names: Vec<_> = iv.into_iter().collect();
+    names.sort_by(|a, b| a.0.cmp(&b.0)); // deterministic order
+    for (v, (lo, hi)) in names {
+        let var = || Box::new(Predicate::Var(v.clone()));
+        if let Some(l) = lo {
+            bounds.push(Predicate::Ge(var(), Box::new(Predicate::Int(l))));
+        }
+        if let Some(u) = hi {
+            bounds.push(Predicate::Le(var(), Box::new(Predicate::Int(u))));
+        }
+    }
+    Propagated::Bounds(bounds)
 }
 
 /// Build a `Model` (for evaluation) from an `assignment` map.
@@ -377,18 +593,8 @@ fn extract_bound(
         Predicate::Eq(lhs, rhs) => extract_eq(lhs, rhs, var, assignment, false),
         Predicate::NEq(lhs, rhs) => extract_eq(lhs, rhs, var, assignment, true),
 
-        // ─── And: recurse and aggregate ───────────────────────────────
-        Predicate::And(parts) => {
-            let mut result = BoundInfo::Irrelevant;
-            for part in parts {
-                let info = extract_bound(part, var, assignment);
-                result = merge_bounds(result, info);
-                if matches!(result, BoundInfo::Unsatisfiable) {
-                    return BoundInfo::Unsatisfiable;
-                }
-            }
-            result
-        }
+        // (No `And` arm: `LiaTactic::solve` flattens conjunctions before the
+        // search, so every constraint reaching here is a single conjunct.)
 
         // ─── Bool literal ─────────────────────────────────────────────
         Predicate::Bool(true) => BoundInfo::Irrelevant,
@@ -544,30 +750,6 @@ fn extract_eq(
         };
     }
     BoundInfo::Complex
-}
-
-/// Merge two `BoundInfo` values.  Used when walking `And` nodes.
-fn merge_bounds(a: BoundInfo, b: BoundInfo) -> BoundInfo {
-    match (a, b) {
-        (BoundInfo::Unsatisfiable, _) | (_, BoundInfo::Unsatisfiable) => {
-            BoundInfo::Unsatisfiable
-        }
-        (BoundInfo::Unknown, _) | (_, BoundInfo::Unknown) => BoundInfo::Unknown,
-        // If either is Complex, the whole thing is Complex.
-        (BoundInfo::Complex, _) | (_, BoundInfo::Complex) => BoundInfo::Complex,
-        // Both irrelevant → irrelevant.
-        (BoundInfo::Irrelevant, other) | (other, BoundInfo::Irrelevant) => other,
-        // Both lower bounds → take the tighter one.
-        (BoundInfo::LowerBound(a), BoundInfo::LowerBound(b)) => {
-            BoundInfo::LowerBound(a.max(b))
-        }
-        // Both upper bounds → take the tighter one.
-        (BoundInfo::UpperBound(a), BoundInfo::UpperBound(b)) => {
-            BoundInfo::UpperBound(a.min(b))
-        }
-        // Mixed: Complex (caller will enumerate anyway).
-        _ => BoundInfo::Complex,
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -834,6 +1016,120 @@ mod tests {
             ],
             &["x", "y"],
         );
+    }
+
+    // ─── Soundness contract (LANG24): every UNSAT is a proof ──────────────
+
+    fn solve(assertions: &[Predicate], ints: &[&str]) -> SolverResult {
+        let ints: Vec<String> = ints.iter().map(|s| s.to_string()).collect();
+        LiaTactic::solve(assertions, &ints, &[])
+    }
+
+    fn cmp(f: fn(Box<Predicate>, Box<Predicate>) -> Predicate, v: &str, k: i128) -> Predicate {
+        f(Box::new(vi(v)), Box::new(lit(k)))
+    }
+
+    #[test]
+    fn equalities_that_conflict_are_proofs() {
+        let eq = |k| cmp(Predicate::Eq, "x", k);
+        assert_unsat(&[eq(1), eq(2)], &["x"]);
+        assert_unsat(&[eq(5), cmp(Predicate::Ge, "x", 10)], &["x"]);
+        assert_unsat(&[eq(5), cmp(Predicate::Le, "x", 1)], &["x"]);
+        assert_unsat(&[eq(5), cmp(Predicate::NEq, "x", 5)], &["x"]);
+        assert_unsat(&[cmp(Predicate::Ge, "x", 3), cmp(Predicate::Le, "x", 2)], &["x"]);
+    }
+
+    #[test]
+    fn exclusions_prove_only_when_the_range_is_complete() {
+        // x ∈ [0, 1], x ≠ 0, x ≠ 1: every value excluded, a proof.
+        let boxed = [
+            cmp(Predicate::Ge, "x", 0),
+            cmp(Predicate::Le, "x", 1),
+            cmp(Predicate::NEq, "x", 0),
+            cmp(Predicate::NEq, "x", 1),
+        ];
+        assert_unsat(&boxed, &["x"]);
+        // Unbounded x with the whole sample window excluded: Unknown.
+        let window: Vec<Predicate> = (-500..=500).map(|k| cmp(Predicate::NEq, "x", k)).collect();
+        assert!(matches!(solve(&window, &["x"]), SolverResult::Unknown(_)));
+    }
+
+    #[test]
+    fn samples_that_fail_are_unknown_not_unsat() {
+        // A wide box with the model behind a disjunction (which propagation
+        // does not read): only [0, 1000] is sampled, the model 3000 lies
+        // beyond.
+        let a = [
+            cmp(Predicate::Ge, "x", 0),
+            cmp(Predicate::Le, "x", 5000),
+            Predicate::Or(vec![cmp(Predicate::Eq, "x", 3000), cmp(Predicate::Eq, "x", 4000)]),
+        ];
+        assert!(matches!(solve(&a, &["x"]), SolverResult::Unknown(_)));
+        // The same with a linear equality is decided exactly: propagation
+        // turns 3x = 9000 into x ∈ [3000, 3000].
+        let b = [
+            cmp(Predicate::Ge, "x", 0),
+            cmp(Predicate::Le, "x", 5000),
+            Predicate::Eq(Box::new(Predicate::Mul { coef: 3, term: Box::new(vi("x")) }), Box::new(lit(9000))),
+        ];
+        assert_eq!(sat_model(&b, &["x"]).get("x").unwrap().as_int(), Some(3000));
+        // Only an upper bound: the sample ends at it, so negatives are found.
+        let r = solve(&[cmp(Predicate::Lt, "x", -3)], &["x"]);
+        assert!(r.model().unwrap().get("x").unwrap().as_int().unwrap() < -3);
+    }
+
+    #[test]
+    fn bounds_at_the_i128_edge_are_exact() {
+        // x < MIN and x > MAX have no integer solutions; MIN − 1 does not exist.
+        assert_unsat(&[cmp(Predicate::Lt, "x", i128::MIN)], &["x"]);
+        assert_unsat(&[cmp(Predicate::Gt, "x", i128::MAX)], &["x"]);
+        let flipped = |f: fn(Box<Predicate>, Box<Predicate>) -> Predicate, k| f(Box::new(lit(k)), Box::new(vi("x")));
+        assert_unsat(&[flipped(Predicate::Lt, i128::MAX)], &["x"]);
+        assert_unsat(&[flipped(Predicate::Gt, i128::MIN)], &["x"]);
+    }
+
+    #[test]
+    fn what_cannot_be_evaluated_is_unknown() {
+        // Called directly (no engine guard): an uninterpreted term.
+        let f = |args: Vec<Predicate>| Predicate::Apply { f: "f".into(), args };
+        let ground = Predicate::Eq(Box::new(f(vec![])), Box::new(lit(1)));
+        assert!(matches!(solve(&[ground], &["x"]), SolverResult::Unknown(_)));
+        let over_x = Predicate::Eq(Box::new(f(vec![vi("x")])), Box::new(lit(1)));
+        assert!(matches!(solve(&[cmp(Predicate::Ge, "x", 0), cmp(Predicate::Le, "x", 2), over_x], &["x"]), SolverResult::Unknown(_)));
+        // `true` constrains nothing.
+        assert!(solve(&[Predicate::Bool(true), cmp(Predicate::Ge, "x", 4)], &["x"]).is_sat());
+    }
+
+    #[test]
+    fn propagation_helpers() {
+        assert_eq!(floor_div(7, 2), Some(3));
+        assert_eq!(floor_div(-7, 2), Some(-4));
+        assert_eq!(floor_div(7, -2), Some(-4));
+        assert_eq!(ceil_div(7, 2), Some(4));
+        assert_eq!(ceil_div(-7, 2), Some(-3));
+        assert_eq!(ceil_div(-7, -2), Some(4));
+        assert_eq!(floor_div(i128::MIN, -1), None);
+        let ints: HashSet<&str> = ["x", "y"].into_iter().collect();
+        // Non-linear and unknown variables contribute nothing.
+        assert!(linearize(&vi("z"), &ints).is_none());
+        assert!(linearize(&Predicate::Mul { coef: i128::MAX, term: Box::new(lit(2)) }, &ints).is_none());
+        assert!(atoms_le_zero(&Predicate::Or(vec![]), &ints).is_empty());
+        assert!(atoms_le_zero(&Predicate::Not(Box::new(cmp(Predicate::Eq, "x", 1))), &ints).is_empty());
+        assert_eq!(atoms_le_zero(&cmp(Predicate::Eq, "x", 1), &ints).len(), 2);
+        // Negated comparisons are bounds: ¬(x ≤ 3) ∧ ¬(x > 5) boxes x to [4, 5].
+        let r = solve(
+            &[
+                Predicate::Not(Box::new(cmp(Predicate::Le, "x", 3))),
+                Predicate::Not(Box::new(cmp(Predicate::Gt, "x", 5))),
+                cmp(Predicate::NEq, "x", 4),
+                cmp(Predicate::NEq, "x", 5),
+            ],
+            &["x"],
+        );
+        assert!(r.is_unsat(), "{r:?}");
+        // Coefficients other than ±1 round correctly: 2x ≤ 7 ∧ 2x ≥ 7 has no integer x.
+        let two_x = || Box::new(Predicate::Mul { coef: 2, term: Box::new(vi("x")) });
+        assert_unsat(&[Predicate::Le(two_x(), Box::new(lit(7))), Predicate::Ge(two_x(), Box::new(lit(7)))], &["x"]);
     }
 
     // ─── Coefficient scaling ──────────────────────────────────────────────
