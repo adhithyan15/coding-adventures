@@ -149,11 +149,15 @@ root.tw  →  BFS discovery
   and check them at link time.  (Until #18432 *every* function name in the
   tree was an extern of every module, private ones included.)
 
-- **Budgets** — every file is held to `twig-ir-compiler`'s budgets (#18474):
-  its source-bytes budget (1 MiB) before the driver parses the file, then
-  the tree and per-function budgets inside `compile_ast_with_externs_and_globals`.
-  A breach is `ModuleDriverError::Compile` naming the file.  The import graph
-  is capped separately at `MAX_MODULES` (1,000).
+- **Budgets** — every file is held to `twig-ir-compiler`'s budgets (#18474).
+  `read_source` checks the file's size, then reads at most 1 MiB + 1 bytes,
+  so an oversized file (or one that grows, or `/dev/zero`) is refused
+  without being loaded; then the tree and per-function budgets apply inside
+  `compile_ast_with_externs_and_globals`.  The modules' instructions,
+  summed as each is compiled, are held to one module's budget (2²⁰),
+  because the linker merges them into the one module the VM runs.  A breach
+  is `ModuleDriverError::Compile` naming the file.  The import graph is
+  capped separately at `MAX_MODULES` (1,000).
 
 - **Root module** — the root `.tw` file's `entry_point = Some("main")` is preserved.
   All other modules have their `entry_point` cleared so the linker uses the root's

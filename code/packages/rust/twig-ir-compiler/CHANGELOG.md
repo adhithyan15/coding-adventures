@@ -26,8 +26,12 @@
   (`SYNTHETIC`) instructions, else at the declaration.
 - **`Compiler::admit_function`** is now the only way a function enters
   the module, so no function skips the checks.
-- **`budgets::check_source`** is public, for callers that parse Twig
-  themselves (`twig-module-driver`).
+- **`budgets::check_source`, `check_source_len` and
+  `check_linked_instructions`** are public. `check_source_len` measures a
+  file's size before it is read; `check_linked_instructions` holds a
+  program linked from several modules (`twig-module-driver`) to the same
+  2²⁰-instruction budget as one module, because the linker merges them
+  into the one module the VM runs.
 - `RecordView::pos` and `VariantView::pos` (crate-internal), so a record's
   or union's helper functions can be blamed on their declaration.
 - `tests/budgets.rs`: every budget at its limit and one past it, plus the

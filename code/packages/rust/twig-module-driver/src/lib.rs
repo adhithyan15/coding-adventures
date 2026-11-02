@@ -378,13 +378,9 @@ pub fn compile_module_tree(
     visited.insert(root_canonical.clone());
 
     while let Some(current_path) = queue.pop_front() {
-        // Read source.
-        let source = std::fs::read_to_string(&current_path).map_err(|e| {
-            ModuleDriverError::Io {
-                path: current_path.clone(),
-                error: e,
-            }
-        })?;
+        // Read source, never more than the compiler's source budget
+        // (`read_source`, #18474).
+        let source = read_source(&current_path)?;
 
         let module_name = unique_module_name(
             derive_module_name(&current_path, search_roots),
@@ -398,15 +394,6 @@ pub fn compile_module_tree(
             path: current_path.clone(),
             error: e,
         };
-        // The compiler's source-bytes budget (#18474).  `compile_source`
-        // checks it before lexing; this driver parses each file itself and
-        // hands the compiler a tree, so it checks here, before the parser.
-        twig_ir_compiler::budgets::check_source(&source).map_err(|error| {
-            ModuleDriverError::Compile {
-                path: current_path.clone(),
-                error,
-            }
-        })?;
         let cst = twig_parser::parse_to_ast(&source).map_err(parse_error)?;
         let program = twig_parser::extract_program(&cst).map_err(parse_error)?;
         parse_trees.insert(current_path.clone(), cst);
@@ -686,6 +673,10 @@ pub fn compile_module_tree(
     let empty_globals: std::collections::HashMap<String, twig_type_checker::TwigKind> =
         std::collections::HashMap::new();
     let mut modules: Vec<IIRModule> = Vec::new();
+    // Instructions compiled so far, summed over every module: the linked
+    // program's budget (`check_linked_instructions`, #18474), checked as
+    // each module is added so an oversized graph stops early.
+    let mut linked_instructions: usize = 0;
 
     for (path, _program, module_name) in &discovered {
         let globals_for_path = module_extra_globals.get(path).unwrap_or(&empty_globals);
@@ -745,6 +736,14 @@ pub fn compile_module_tree(
             }
         }
 
+        linked_instructions = linked_instructions.saturating_add(instruction_count(&iir_mod));
+        twig_ir_compiler::budgets::check_linked_instructions(linked_instructions).map_err(
+            |error| ModuleDriverError::Compile {
+                path: path.clone(),
+                error,
+            },
+        )?;
+
         modules.push(iir_mod);
     }
 
@@ -763,7 +762,66 @@ pub fn compile_module_tree(
     // names it declares as imports, so this signals a driver bug).
     // Private functions that share a name are *not* an error: the linker
     // renames them apart.
-    iir_linker::link(&modules).map_err(ModuleDriverError::Link)
+    let linked = iir_linker::link(&modules).map_err(ModuleDriverError::Link)?;
+
+    // Backstop: the linker renames and merges, it does not add code, so the
+    // merged module holds exactly the instructions counted above.  Checking
+    // the result itself keeps that true by construction rather than by the
+    // linker's current behaviour.
+    twig_ir_compiler::budgets::check_linked_instructions(instruction_count(&linked)).map_err(
+        |error| ModuleDriverError::Compile {
+            path: root_canonical.clone(),
+            error,
+        },
+    )?;
+    Ok(linked)
+}
+
+/// Every instruction of every function in `module`.
+fn instruction_count(module: &IIRModule) -> usize {
+    module.functions.iter().map(|f| f.instructions.len()).sum()
+}
+
+/// Read a Twig source file, refusing it if it is longer than the
+/// compiler's source budget, `twig_ir_compiler::MAX_SOURCE_BYTES` (1 MiB).
+///
+/// `read_to_string` would read the whole file before anyone could measure
+/// it, so a 10 GB file cost 10 GB of memory just to be refused.  Instead
+/// two checks bracket the read:
+///
+/// | Check | Catches |
+/// |-------|---------|
+/// | the open file's `metadata().len()` | a file that is too big now, before a byte is read |
+/// | reading through `take(MAX + 1)` and counting | a file that grows after the size check, or one whose size the metadata does not report (a pipe, `/dev/zero`) |
+///
+/// The size comes from the *open handle*, not the path, so the file
+/// measured is the file read.  At most `MAX_SOURCE_BYTES + 1` bytes are
+/// ever buffered.  A breach is `ModuleDriverError::Compile` carrying the
+/// compiler's own `source bytes` error; a file that is not UTF-8 is
+/// `Io` with `InvalidData`, as `read_to_string` reported it.
+///
+/// Public so that `twig-vm`'s command line reads files the same way.
+pub fn read_source(path: &Path) -> Result<String, ModuleDriverError> {
+    use std::io::Read;
+
+    let io = |error| ModuleDriverError::Io {
+        path: path.to_path_buf(),
+        error,
+    };
+    let too_big = |error| ModuleDriverError::Compile {
+        path: path.to_path_buf(),
+        error,
+    };
+    let limit = twig_ir_compiler::MAX_SOURCE_BYTES as u64;
+
+    let file = std::fs::File::open(path).map_err(io)?;
+    twig_ir_compiler::budgets::check_source_len(file.metadata().map_err(io)?.len())
+        .map_err(too_big)?;
+    let mut bytes = Vec::new();
+    file.take(limit + 1).read_to_end(&mut bytes).map_err(io)?;
+    twig_ir_compiler::budgets::check_source_len(bytes.len() as u64).map_err(too_big)?;
+    String::from_utf8(bytes)
+        .map_err(|e| io(std::io::Error::new(std::io::ErrorKind::InvalidData, e)))
 }
 
 // ---------------------------------------------------------------------------
@@ -1166,6 +1224,114 @@ mod tests {
         }
     }
 
+    /// `read_source` refuses a file by its size before reading it: a sparse
+    /// 1 GiB file (no disk blocks, but `metadata().len()` says 1 GiB) is
+    /// refused without the gigabyte `read_to_string` used to allocate.  A
+    /// file of exactly the budget is read whole.
+    #[test]
+    fn read_source_checks_the_file_size_before_reading() {
+        use twig_ir_compiler::MAX_SOURCE_BYTES;
+        let dir = make_tempdir("read_source_size");
+
+        let at = write_temp(&dir, "at.tw", &"1".repeat(MAX_SOURCE_BYTES));
+        assert_eq!(read_source(&at).unwrap().len(), MAX_SOURCE_BYTES);
+
+        let huge = dir.join("huge.tw");
+        fs::File::create(&huge).unwrap().set_len(1 << 30).unwrap();
+        match read_source(&huge) {
+            Err(ModuleDriverError::Compile { path, error }) => {
+                assert_eq!(path, huge);
+                assert!(error.message.starts_with("source bytes exceeds"), "{error}");
+            }
+            other => panic!("expected a source-bytes refusal, got {other:?}"),
+        }
+        fs::remove_file(&huge).unwrap();
+    }
+
+    /// The size check alone is not enough: a file can grow after it, and
+    /// some files do not report their size at all.  `/dev/zero` has a
+    /// metadata length of 0 and never ends, the extreme case of both.  The
+    /// bounded read stops after `MAX_SOURCE_BYTES + 1` bytes and refuses it;
+    /// `read_to_string` would have read until memory ran out.
+    #[cfg(unix)]
+    #[test]
+    fn read_source_bounds_a_file_that_is_longer_than_its_size_says() {
+        let zero = Path::new("/dev/zero");
+        assert_eq!(fs::metadata(zero).unwrap().len(), 0, "the size check passes");
+        match read_source(zero) {
+            Err(ModuleDriverError::Compile { error, .. }) => {
+                assert!(error.message.starts_with("source bytes exceeds"), "{error}");
+            }
+            other => panic!("expected a source-bytes refusal, got {other:?}"),
+        }
+    }
+
+    /// Bytes that are not UTF-8 stay the `Io`/`InvalidData` error
+    /// `read_to_string` gave them.
+    #[test]
+    fn read_source_reports_invalid_utf8_as_invalid_data() {
+        let dir = make_tempdir("read_source_utf8");
+        let bad = dir.join("bad.tw");
+        fs::write(&bad, [b'1', 0xFF]).unwrap();
+        match read_source(&bad) {
+            Err(ModuleDriverError::Io { error, .. }) => {
+                assert_eq!(error.kind(), std::io::ErrorKind::InvalidData);
+            }
+            other => panic!("expected InvalidData, got {other:?}"),
+        }
+    }
+
+    /// The linked program is held to one module's instruction budget
+    /// (`check_linked_instructions`, 2²⁰), though each module is under it on
+    /// its own.  `lib.tw` holds a 1,100-field record (≈ 610,000
+    /// instructions: record accessors grow with the square of the field
+    /// count) and `main.tw` a 900-field one (≈ 409,000); `main` is padded
+    /// with top-level `1`s, one instruction each, until the linked module
+    /// holds exactly 2²⁰.  That links; one more `1` is refused.
+    #[test]
+    fn linked_program_is_held_to_the_module_instruction_budget() {
+        use twig_ir_compiler::MAX_IIR_INSTRUCTIONS_PER_MODULE as LIMIT;
+        let record = |name: &str, fields: usize| {
+            let fields: String = (0..fields).map(|i| format!(" (f{i} : int)")).collect();
+            format!("(record {name}{fields})")
+        };
+        let dir = make_tempdir("linked_instruction_budget");
+        write_temp(&dir, "lib.tw", &format!(
+            "(module lib (export f))\n(define (f) 1)\n{}\n",
+            record("P", 1_100)
+        ));
+        let tree = |ones: usize| {
+            let root = write_temp(&dir, "main.tw", &format!(
+                "(module main (import lib))\n{}\n(f)\n{}",
+                record("Q", 900),
+                "1\n".repeat(ones)
+            ));
+            compile_module_tree(&root, &[dir.as_path()])
+        };
+        let total = |m: &IIRModule| instruction_count(m);
+
+        // Measure with one `1`, then pad to exactly the limit.
+        let probe = total(&tree(1).expect("the probe is under the budget"));
+        assert!(probe < LIMIT && probe + 65_000 > LIMIT, "{probe}");
+        let ones = 1 + (LIMIT - probe);
+        let at = tree(ones).expect("a linked program of exactly the budget links");
+        assert_eq!(total(&at), LIMIT);
+
+        match tree(ones + 1) {
+            Err(ModuleDriverError::Compile { path, error }) => {
+                assert!(
+                    error.message
+                        == format!("IIR instructions per linked program exceeds the limit of {LIMIT}"),
+                    "{error}"
+                );
+                // The root is compiled first, so `lib.tw` is the module
+                // that takes the running total over.
+                assert!(path.ends_with("lib.tw"), "{path:?}");
+            }
+            other => panic!("expected the linked-program budget, got {:?}", other.map(|m| total(&m))),
+        }
+    }
+
     #[test]
     fn single_file_with_module_decl_exports_populates_iirexport() {
         // (module mymod (export sq)) should populate IIRExport for "sq" in
@@ -1391,14 +1557,22 @@ mod tests {
 
     #[test]
     fn private_library_function_gets_no_string_param_inference() {
-        // `strlen` is private to lib, and lib only ever calls it with a
-        // string.  But the driver makes every module's functions visible to
-        // every other module, and main calls it with 5.  Inferring
-        // `x : str` from lib's own call would lower its body to the typed
-        // `str_len` and then hand it an integer.
+        // `strlen` is called with a string inside lib, but main can call it
+        // too and passes 5.  Inferring `x : str` from lib's own call would
+        // lower its body to the typed `str_len` and then hand it an
+        // integer.
+        //
+        // Until #18432 every function was visible to every module, so this
+        // test left `strlen` private.  Since #18432 a module sees only its
+        // imports' *exports*, so main's call was refused as
+        // `unbound name "strlen"` before the assertion was reached.  `lib`
+        // now exports `strlen`: an exported function can be called with
+        // anything, so its own module's calls are no evidence about its
+        // parameter types.  (The test keeps its name; the function is no
+        // longer private, but the property is the one the name promised.)
         let dir = make_tempdir("private_strlen_inference");
         write_temp(&dir, "lib.tw", "
-            (module lib (export run))
+            (module lib (export run strlen))
             (define (strlen x) (string-length x))
             (define (run) 0)
             (define n (strlen \"abc\"))

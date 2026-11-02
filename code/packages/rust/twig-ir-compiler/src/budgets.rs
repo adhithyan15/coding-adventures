@@ -33,6 +33,7 @@
 //! | registers per function      | 2¹⁶ = 65,536 | parameters + distinct non-parameter `dest`s       | the frame limit of both VMs Twig runs on (see below) |
 //! | IIR instructions per function | 2¹⁸ = 262,144 | `instructions.len()`                            | four instructions per register at the register limit, while a branchy `(if x x x)` spends six per register |
 //! | IIR instructions per module | 2²⁰ = 1,048,576 | the sum over every function                    | twig-vm profiles at most 2²⁰ instruction slots (`MAX_PROFILED_INSTRUCTION_SLOTS`); the other frontends' cap is 1,000,000 (LANG84 C5) |
+//! | IIR instructions per linked program | 2²⁰ (the same constant) | the sum over every module of a `twig-module-driver` graph | the linker merges the graph into the one module the VM runs, so it gets one module's budget ([`check_linked_instructions`]) |
 //!
 //! ## Registers: the stricter of two VM frames
 //!
@@ -128,8 +129,39 @@ fn breach(
 /// `compile_ast*` entry point, as `twig-module-driver` does for every file
 /// of an import graph.
 pub fn check_source(source: &str) -> Result<(), TwigCompileError> {
-    if source.len() > MAX_SOURCE_BYTES {
+    check_source_len(source.len() as u64)
+}
+
+/// [`check_source`] for a length known before the text is read: a file's
+/// `metadata().len()`, or the bytes a bounded reader returned.  A `u64`, so
+/// a file larger than `usize::MAX` on a 32-bit host is still refused, not
+/// truncated.
+pub fn check_source_len(len: u64) -> Result<(), TwigCompileError> {
+    if len > MAX_SOURCE_BYTES as u64 {
         return Err(breach("source bytes", MAX_SOURCE_BYTES, None, (1, 1)));
+    }
+    Ok(())
+}
+
+/// Refuse a program linked from several modules whose instructions,
+/// summed over every module, exceed [`MAX_IIR_INSTRUCTIONS_PER_MODULE`].
+///
+/// Each module is already under that budget on its own, but a
+/// `twig-module-driver` graph may hold up to 1,000 modules, and the linker
+/// merges them into the *one* module the VM runs and profiles. So the
+/// linked program gets the same budget as any single module: the limit
+/// that matters downstream (twig-vm's 2²⁰ profile slots) is per module the
+/// VM sees, not per source file. The driver calls this with the running
+/// total as each module is compiled, so a graph is refused as soon as it
+/// goes over, without compiling the rest.
+pub fn check_linked_instructions(total: usize) -> Result<(), TwigCompileError> {
+    if total > MAX_IIR_INSTRUCTIONS_PER_MODULE {
+        return Err(breach(
+            "IIR instructions per linked program",
+            MAX_IIR_INSTRUCTIONS_PER_MODULE,
+            None,
+            (1, 1),
+        ));
     }
     Ok(())
 }

@@ -2,6 +2,18 @@
 
 ## Unreleased — #18474: the compiler's register budget is the frame limit
 
+### Fixed
+
+- **The CLI read a source file of any size.** `twig-vm <FILE>` called
+  `read_to_string`, so a huge file was read whole before the compiler's
+  1 MiB source budget refused it, and `/dev/zero` was read until memory ran
+  out. It now reads with `twig_module_driver::read_source`, which checks
+  the file's size first and reads at most 1 MiB + 1 bytes. A breach exits 1
+  with ``compile error in "<file>": … source bytes exceeds the limit of
+  1048576``. `tests/cli_source_budget.rs` runs the binary on a file of
+  exactly 1 MiB (runs), one byte more (refused) and `/dev/zero` (refused);
+  it is not built under Miri, which cannot spawn processes.
+
 ### Tests
 
 - `compiler_register_budget_is_the_frame_limit` pins

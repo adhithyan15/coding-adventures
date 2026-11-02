@@ -1,22 +1,55 @@
 # Changelog — twig-module-driver
 
-## Unreleased — #18474: every file is held to the compiler's source budget
+## Unreleased — #18474: source and linked-program budgets
+
+### Added
+
+- **`read_source(path)`**, public: reads a Twig file without ever holding
+  more than the compiler's source budget (`MAX_SOURCE_BYTES`, 1 MiB). It
+  checks the open file's `metadata().len()` before reading, then reads
+  through `take(MAX + 1)` and counts, so a file that grows after the size
+  check, or never reports its size (`/dev/zero`, a pipe), is still refused
+  after at most 1 MiB + 1 bytes. A breach is `ModuleDriverError::Compile`
+  with the compiler's `source bytes` error; non-UTF-8 stays
+  `Io`/`InvalidData`. `twig-vm`'s CLI uses it too.
 
 ### Fixed
 
-- **A module file of any size was parsed.** `compile_source` now refuses
-  Twig source over `twig_ir_compiler::MAX_SOURCE_BYTES` (1 MiB) before
-  lexing, but this driver parses each file itself and hands the compiler a
-  tree, so it skipped that check. It now calls
-  `twig_ir_compiler::budgets::check_source` before the parser and reports a
-  breach as `ModuleDriverError::Compile` naming the file. The compiler's
-  tree and function budgets already applied, through
-  `compile_ast_with_externs_and_globals`.
+- **A module file of any size was read and parsed.** The driver read each
+  file with `read_to_string` and parsed it itself, so `compile_source`'s new
+  source budget never applied, and a 10 GB file cost 10 GB of memory. Every
+  file now goes through `read_source`.
+- **A linked program had no instruction budget.** Each module is held to
+  the compiler's 2²⁰-instruction module budget, but a graph may hold 1,000
+  modules, which the linker merges into the one module the VM runs. The
+  running total is now checked with
+  `twig_ir_compiler::budgets::check_linked_instructions` as each module is
+  compiled (so an oversized graph stops early, naming the module that took
+  it over), and the linked module is checked again as a backstop.
 
 ### Tests
 
 - `source_bytes_budget_applies_to_every_file`: a file of exactly 1 MiB
   compiles; one byte more is a `Compile` error naming it.
+- `read_source_checks_the_file_size_before_reading`: a sparse 1 GiB file is
+  refused by its size; a file of exactly the budget is read whole.
+- `read_source_bounds_a_file_that_is_longer_than_its_size_says` (Unix):
+  `/dev/zero` (size 0, endless) is refused by the bounded read.
+- `read_source_reports_invalid_utf8_as_invalid_data`.
+- `linked_program_is_held_to_the_module_instruction_budget`: two modules
+  (≈ 610,000 and ≈ 409,000 instructions, each under the budget) padded to a
+  linked total of exactly 2²⁰ link; one instruction more is refused at
+  `lib.tw`.
+
+### Changed
+
+- `private_library_function_gets_no_string_param_inference` had been
+  failing since #18432 with `unbound name "strlen"`: it called `lib`'s
+  *private* `strlen` from `main`, which #18432 rightly forbids, so it never
+  reached its assertion. `lib` now exports `strlen`. The property is
+  unchanged: a function other modules can call with a non-string gets no
+  `str` parameter type from its own module's string calls. All 103 tests
+  pass with `code/packages/twig/compiler/` checked out.
 
 ## Unreleased — #18438: an imported function shadows a builtin
 

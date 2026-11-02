@@ -361,12 +361,13 @@ instruction that went over.
 
 | Budget | Limit | Checked | Reason |
 |--------|-------|---------|--------|
-| source bytes | 1 MiB | `compile_source`, `compile_typed_source`, and each file of a `twig-module-driver` graph, before lexing | LANG84 C5's trusted ceiling; the repo's largest Twig file is 29 KB |
+| source bytes | 1 MiB | `compile_source`, `compile_typed_source` before lexing; files (the `twig-vm` CLI, each file of a `twig-module-driver` graph) by size before reading, then through a reader that stops at 1 MiB + 1 bytes | LANG84 C5's trusted ceiling ("file runners bound while reading"); the repo's largest Twig file is 29 KB |
 | CST items (nodes + tokens) | 2²⁰ | every `compile_ast*` entry and `Compiler::compile`, iteratively, before any other walk | ordinary Twig is ~0.6 items per byte, so 1 MiB of it fits |
 | tree depth | 256 | `check_cst`, `MAX_COMPILE_DEPTH` (unchanged) | stack safety |
 | registers per function | 2¹⁶ | each finished function: `params.len()` + distinct non-param `dest`s | the frame limit of both twig-vm (`MAX_REGISTERS_PER_FRAME`) and vm-core (`VMFrame::MAX_FRAME_REGISTERS`), pinned by tests on both sides |
 | IIR instructions per function | 2¹⁸ | each finished function | four per register at the register limit |
 | IIR instructions per module | 2²⁰ | running total as each function is added | twig-vm's profile-slot cap; bounds `(record …)`, whose n accessors are ≈ n²/2 instructions |
+| IIR instructions per linked program | 2²⁰ (the same) | `twig-module-driver`: running total as each module is compiled, and the linked result | the linker merges up to 1,000 modules into the one module the VM runs |
 
 A function is checked once it is finished: lowering one function is linear
 in the (already bounded) tree, so this wastes at most one function's work.
