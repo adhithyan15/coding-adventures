@@ -1,5 +1,15 @@
 # Changelog — vm-runtime
 
+## Unreleased
+
+### Fixed (`Value::Symbol` exhaustiveness)
+
+- `VmResult::from_value` handles `vm-core`'s new `Value::Symbol(id)` (#18470:
+  a symbol is an interned atom, no longer an integer in a reserved range). The
+  C ABI has no symbol tag, so it is returned as `VmResultTag::Str` with the
+  symbol id as payload — an interned name, never a `U64` that would make a
+  symbol look like a number again. Test: `from_value_symbol_is_not_an_integer`.
+
 ## [0.1.2] — 2026-08-02
 
 ### Fixed (`Value::HeapRef` exhaustiveness)

@@ -163,8 +163,10 @@ src/
   lower.rs    — legacy simple lowering pass (kept for historical reference)
   heap.rs, dyn_repr.rs, dyn_repr_structural.rs, … — the heap / value-model passes
   lisp_semantics.rs — Lisp's value rules as compiler-emitted IIR (LANG83 PR7f-2)
+  vm_lisp.rs  — the same rules for the generic VM, over vm-core's dyn_* primitives (#18470)
 tests/
   test_lowering.rs  — 50 integration tests
+  vm_lisp_on_vm.rs  — vm_lisp's output executed on vm-core (dev-dependency)
 ```
 
 ## The tagged-word path and the dynamic-value primitives (LANG83 PR7f)
@@ -194,6 +196,35 @@ names are left alone: the pass runs on Nib's and ALGOL's modules too.
 ```rust
 let mut module = /* IIR from a frontend */;
 iir_builtin_lowering::lower_dyn_repr(&mut module)?; // Err if the program spells `__lisp_equal`
+```
+
+## The generic VM path (`vm_lisp`, #18470 / #18493)
+
+The `lang_matrix` VM and JIT columns run the *structural* lowering on
+`vm-core`, whose values already carry their kind (`Int`, `Bool`, `Null`,
+`Symbol`, `HeapRef`, …), so the tagged-word rules above do not apply there.
+`lower_lisp_for_vm` writes the same Lisp rules for that VM, over the five
+`dyn_*` primitives `vm-core` lowers (`dyn_tag`, `dyn_is_nil`, `dyn_is_pair`,
+`dyn_nil`, `dyn_symbol`):
+
+| In | Out |
+|----|-----|
+| nil literal / symbol literal | `dyn_nil` / `dyn_symbol "name"` — neither is an integer any more |
+| `is_null x`, `pair?` | `dyn_is_nil x`, `dyn_is_pair x` |
+| a branch on a non-`bool` | TW00 truthiness first: `(dyn_tag c \| 2) ≠ 3` (only nil and `#f` fold to 3), so `(if 0 1 2)` is 1 |
+| `not`, `number?`, `symbol?`, `boolean?` | inline tag tests |
+| `list?` | an inline walk down the rest fields |
+| `/`, `quotient`, `remainder`, `modulo` | `div`, `div`, `mod`, `i64_mod_floor` (twig-vm's rounding) |
+
+Call it on a Lisp-family module only — it rewrites every branch — after
+`lower_closures_to_heap` and `lower_heap_builtins`.
+
+```rust
+let mut module = twig_ir_compiler::compile_source("(if 0 1 2)", "main")?;
+iir_builtin_lowering::lower_global_io(&mut module);
+iir_builtin_lowering::lower_closures_to_heap(&mut module)?;
+iir_builtin_lowering::lower_heap_builtins(&mut module)?;
+iir_builtin_lowering::lower_lisp_for_vm(&mut module); // now vm-core answers 1
 ```
 
 ### Helper names belong to the pass

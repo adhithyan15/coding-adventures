@@ -12,4 +12,5 @@ path = "src/lib.rs"
 interpreter-ir = { path = "../interpreter-ir" }
 
 [dev-dependencies]
-# none needed — all helpers are in this crate's own test utilities
+# `tests/vm_lisp_on_vm.rs` runs `vm_lisp`'s output on the VM it targets.
+vm-core = { path = "../vm-core" }

@@ -1,5 +1,46 @@
 # Changelog — vm-core
 
+## Unreleased — #18470 / #18493 — nil, booleans and symbols are kinds of their own; five `dyn_*` primitives
+
+- **New `Value::Symbol(u32)`**, an interned atom. On this VM a symbol used to
+  be `Int(2^29 + id)` (`intern_symbols_structural`), so `'a` equalled the
+  integer 536870912, `number?` could not be written and `(< 'a 1)` compared an
+  id. A symbol now has no numeric view: `as_i64` / `as_f64` are `None`, so an
+  ordering or arithmetic op on one is a type error. `Display` is `symbol#id`.
+  `is_truthy` is true; `iir_type_name` is `"any"`.
+- **Five LANG83 PR7f `Dynamic` primitives are default builtins**, lowered over
+  `Value`'s kinds (`op_support` now says `Lowered` for them):
+  `dyn_tag` (0 integer, 1 nil, 2 symbol, 3 `#f`, 5 `#t`, 7 pair; −1 for a
+  `Float` or `Str`, which the tagged word has no tag for), `dyn_is_nil`
+  (`Null` or a null `HeapRef`; **never** `Int(0)`), `dyn_is_pair` (the
+  `pair?` answer), `dyn_nil` (`Null`) and `dyn_symbol "name"` (one id per name
+  for the registry's life, capped at `MAX_SYMBOLS` = 2^20 distinct names). The
+  other five (`dyn_box_int`, `dyn_unbox_int`, `dyn_pair_new` / `_first` /
+  `_rest`) stay `Refused`: cells here are built with `alloc` / `field_*`.
+  None of the Lisp *rules* (`not`, `number?`, `symbol?`, `boolean?`, `list?`,
+  truthiness) is registered — they are compiler-emitted IIR over these
+  (`iir-builtin-lowering::vm_lisp`), as LANG83 PR7 requires.
+- **A GC field holds nil, booleans and symbols.** `gc_field_store` used to
+  refuse anything but an `Int` or a `HeapRef`, so `(cons #t '())`, a list of
+  symbols and a closure capturing `#f` all stopped with "unsupported value
+  kind" — and nil, being `Int(0)`, came back from a field as the integer 0.
+  They now get the tagged-word spellings (`1` nil, `3` `#f`, `5` `#t`,
+  `(id << 32) | 0b010` a symbol), decoded back by tag (`decode_field_word`);
+  a word no store writes is refused. No new word has tag `111`, so the
+  collector's view of references is unchanged. `Float` and `Str` are still
+  refused.
+- `is_null` also answers `#t` for `Value::Null`. Its `Int(0)` arm is kept for
+  modules that still spell nil `const 0 : ref<LispyPair>`; a Lisp module asks
+  `dyn_is_nil` instead, which says `#f` for 0.
+- `Value::is_truthy` is unchanged (it is the machine's branch rule); its docs
+  now say a language with another rule writes it as IIR before the branch.
+- Tests: `builtins.rs` gains seven unit tests (every kind's tag, nil vs 0,
+  `dyn_is_pair` = `pair?`, `dyn_nil`, interning, the table cap, and that no
+  Lisp predicate is a builtin); `value.rs` one (`Symbol` is not a number);
+  `op_support.rs` one (exactly five `Dynamic` primitives lowered); new
+  `tests/dyn_values.rs` runs them through `VMCore::execute` across a cell
+  (four tests that failed before, two that pin what did not change).
+
 ## Unreleased — #18463 — the dynamic comparison builtins and `pair?`
 
 - **New default builtins `<`, `<=`, `>`, `>=`** (`dyn_compare`). Twig emits

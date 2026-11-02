@@ -193,6 +193,11 @@ impl VmResult {
             Value::Bool(b) => VmResult::from_bool(b),
             Value::Str(_) => VmResult { tag: VmResultTag::Str, payload: 0 }, // intern idx TBD
             Value::HeapRef(r) => VmResult::from_ref(r.addr() as u64),
+            // vm-core #18470: a symbol is an interned name. The ABI has no
+            // symbol tag, so it travels as an interned string whose payload is
+            // the VM's symbol id (not a string-pool index) — never as an
+            // integer, which is the confusion the new variant removes.
+            Value::Symbol(id) => VmResult { tag: VmResultTag::Str, payload: u64::from(id) },
             Value::Null => VmResult::void(),
         }
     }
@@ -314,6 +319,14 @@ mod tests {
         let r = VmResult::from_value(Value::Bool(true));
         assert_eq!(r.tag, VmResultTag::Bool);
         assert_eq!(r.as_bool(), Some(true));
+    }
+
+    #[test]
+    fn from_value_symbol_is_not_an_integer() {
+        let r = VmResult::from_value(Value::Symbol(3));
+        assert_eq!(r.tag, VmResultTag::Str);
+        assert_eq!(r.payload, 3);
+        assert_eq!(r.as_i64(), None);
     }
 
     #[test]

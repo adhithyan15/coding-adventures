@@ -39,11 +39,33 @@
 //! `twig-vm`, whose `dynval-runtime` rejects a non-integer operand of `<`
 //! ("`<` expects integers").
 //!
-//! **Known gap (#18470):** on this VM nil and interned symbols are themselves
-//! `Value::Int`s (nil is `Int(0)`, a symbol is `Int(SYMBOL_ID_BASE + id)`), so
-//! they reach the integer arm: `(< '() 1)` is `#t` here where `twig-vm` raises.
-//! Closing that needs a representation for nil and symbols that is not an
-//! integer, the same decision `number?` / `symbol?` are waiting on.
+//! A nil or a symbol that reaches one of these is a type error too, now that
+//! each is a kind of its own (`Value::Null`, `Value::Symbol`; #18470): before,
+//! both were `Value::Int`s and `(< '() 1)` answered `#t` here where `twig-vm`
+//! raises. That only holds for a module whose nil and symbol literals were
+//! lowered to the primitives below.
+//!
+//! ## The dynamic-value primitives (LANG83 PR7f, #18470)
+//!
+//! `number?`, `symbol?`, `boolean?`, `not`, `list?` and a branch's truthiness
+//! are each *one language's* rule, so none of them is registered here (LANG83
+//! PR7: no builtin carries one language's semantics). A Lisp-family compiler
+//! writes them as IIR over five of the registry's language-neutral `Dynamic`
+//! primitives, which this VM lowers over its own [`Value`] kinds
+//! (`iir-builtin-lowering::vm_lisp` is that compiler-side code for Twig):
+//!
+//! | Name | Accepts | Result |
+//! |------|---------|--------|
+//! | `"dyn_tag"` | any one value | `Int`: the PR7f tag number of its kind — 0 integer, 1 nil, 2 symbol, 3 `#f`, 5 `#t`, 7 pair (any non-null `HeapRef`); `-1` for a `Float` or `Str`, which the tagged word has no tag for |
+//! | `"dyn_is_nil"` | any one value | `Bool`: is it nil (`Null`, or a null `HeapRef`)? Never `Int(0)` |
+//! | `"dyn_is_pair"` | any one value | `Bool`: the `pair?` answer below |
+//! | `"dyn_nil"` | nothing | `Null` |
+//! | `"dyn_symbol"` | one `Str`, the name | `Symbol(id)`: the same id for the same name, for the life of this registry |
+//!
+//! The other five (`dyn_box_int`, `dyn_unbox_int`, `dyn_pair_new`,
+//! `dyn_pair_first`, `dyn_pair_rest`) stay unregistered: a cell on this VM is
+//! built with the structural `alloc` / `field_*` ops, so they have nothing to
+//! do yet, and `op_support` says so.
 //!
 //! There is no float writer. LANG83 PR6a's `write_f64_py` / `write_f64_js`
 //! (a float in Python's / JavaScript's layout) were removed in PR7e, because
@@ -190,9 +212,10 @@ fn dyn_compare(sym: &str, args: &[Value]) -> Result<Value, VMError> {
 ///
 /// On this VM a cons cell is what `iir-builtin-lowering::lower_heap_builtins`
 /// turns `cons` into: an `alloc` + two `field_store`s, so a cell is a
-/// [`Value::HeapRef`]. Nil is the null reference (or the integer `0` a
-/// `const 0 : ref<LispyPair>` produces — the same two shapes `is_null` accepts),
-/// and every atom (`Int`, `Float`, `Bool`, `Str`) is not a cell at all.
+/// [`Value::HeapRef`]. Nil is `Value::Null` (`dyn_nil`, #18470), the null
+/// reference, or — for a module still spelling it `const 0 : ref<LispyPair>`
+/// — the integer `0`; every atom (`Int`, `Float`, `Bool`, `Str`, `Symbol`) is
+/// not a cell at all.
 ///
 /// | argument                     | `pair?` |
 /// |------------------------------|---------|
@@ -211,13 +234,124 @@ fn dyn_compare(sym: &str, args: &[Value]) -> Result<Value, VMError> {
 /// a closure, or another record type — and the accessor after it reads that
 /// cell's fields (bounds-checked, so a wrong answer, not an unsafe read).
 fn dyn_is_pair(args: &[Value]) -> Result<Value, VMError> {
+    let v = one_arg("pair?` / `dyn_is_pair", args)?;
+    Ok(Value::Bool(matches!(v, Value::HeapRef(r) if !r.is_null())))
+}
+
+/// The single argument of a one-argument builtin, or an arity error naming it.
+fn one_arg<'a>(name: &str, args: &'a [Value]) -> Result<&'a Value, VMError> {
     match args {
-        [v] => Ok(Value::Bool(matches!(v, Value::HeapRef(r) if !r.is_null()))),
+        [v] => Ok(v),
         _ => Err(VMError::Custom(format!(
-            "`pair?` requires exactly 1 argument, got {}",
+            "`{name}` requires exactly 1 argument, got {}",
             args.len()
         ))),
     }
+}
+
+/// The tag numbers `dyn_tag` answers (LANG83 PR7f: the low three bits of the
+/// tagged word). vm-core holds a value as a [`Value`], not a word, so it
+/// answers the number of the value's *kind*.
+pub const DYN_TAG_INT: i64 = 0;
+/// `dyn_tag` of nil.
+pub const DYN_TAG_NIL: i64 = 1;
+/// `dyn_tag` of a symbol.
+pub const DYN_TAG_SYMBOL: i64 = 2;
+/// `dyn_tag` of `#f`.
+pub const DYN_TAG_FALSE: i64 = 3;
+/// `dyn_tag` of `#t`.
+pub const DYN_TAG_TRUE: i64 = 5;
+/// `dyn_tag` of a pair (on this VM: any non-null heap reference).
+pub const DYN_TAG_PAIR: i64 = 7;
+/// `dyn_tag` of a `Float` or a `Str`. The tagged word has no tag for either
+/// (LANG85 §11.2 leaves the string tag open), so this VM answers a number no
+/// tag test can match: every Lisp rule written over `dyn_tag` then treats
+/// them as "some other atom" — truthy, not a number, not a symbol.
+pub const DYN_TAG_NONE: i64 = -1;
+
+/// `dyn_tag x` on the generic VM — the PR7f tag number of `x`'s kind.
+///
+/// | `x`                         | answer |
+/// |-----------------------------|--------|
+/// | `Int(n)`                    | 0      |
+/// | `Null`, null `HeapRef`      | 1      |
+/// | `Symbol(id)`                | 2      |
+/// | `Bool(false)`               | 3      |
+/// | `Bool(true)`                | 5      |
+/// | non-null `HeapRef`          | 7      |
+/// | `Float`, `Str`              | -1     |
+///
+/// The integer `0` answers 0, not nil's 1 — which is exactly what lets a
+/// compiler write "only `#f` and nil are false" for Twig (#18493).
+fn dyn_tag(args: &[Value]) -> Result<Value, VMError> {
+    let tag = match one_arg("dyn_tag", args)? {
+        Value::Int(_) => DYN_TAG_INT,
+        Value::Null => DYN_TAG_NIL,
+        Value::HeapRef(r) if r.is_null() => DYN_TAG_NIL,
+        Value::Symbol(_) => DYN_TAG_SYMBOL,
+        Value::Bool(false) => DYN_TAG_FALSE,
+        Value::Bool(true) => DYN_TAG_TRUE,
+        Value::HeapRef(_) => DYN_TAG_PAIR,
+        Value::Float(_) | Value::Str(_) => DYN_TAG_NONE,
+    };
+    Ok(Value::Int(tag))
+}
+
+/// `dyn_is_nil x` — is `x` nil? `Null` and a null `HeapRef` are; the integer
+/// `0` is not (it is the integer zero, whatever `is_null` says of it).
+fn dyn_is_nil(args: &[Value]) -> Result<Value, VMError> {
+    let nil = matches!(one_arg("dyn_is_nil", args)?, Value::Null)
+        || matches!(args[0], Value::HeapRef(r) if r.is_null());
+    Ok(Value::Bool(nil))
+}
+
+/// The most distinct symbol names one registry will intern. A name comes from
+/// a `dyn_symbol` operand, so a program can only reach this by calling it on
+/// strings it builds at run time; the cap turns that into an error instead of
+/// unbounded growth of the table.
+pub const MAX_SYMBOLS: usize = 1 << 20;
+
+/// The `dyn_symbol` handler: intern `name`, answering the same
+/// [`Value::Symbol`] id for the same name every time.
+///
+/// ```text
+///   dyn_symbol "a"  →  Symbol(0)      first name seen
+///   dyn_symbol "b"  →  Symbol(1)
+///   dyn_symbol "a"  →  Symbol(0)      same name, same symbol
+/// ```
+///
+/// The table lives in the registry (one per `VMCore`), behind a mutex because
+/// a builtin must be `Send + Sync`. Ids are dense from 0, so `Symbol(id)` packs
+/// into a field word as `(id << 32) | 0b010`.
+fn intern_symbol(
+    table: &std::sync::Mutex<HashMap<String, u32>>,
+    args: &[Value],
+) -> Result<Value, VMError> {
+    let name = match one_arg("dyn_symbol", args)? {
+        Value::Str(name) => name,
+        other => {
+            return Err(VMError::TypeError {
+                expected: "str (the symbol's name)".into(),
+                actual: other.iir_type_name().into(),
+                context: "dyn_symbol".into(),
+            })
+        }
+    };
+    let mut table = table
+        .lock()
+        .map_err(|_| VMError::Custom("dyn_symbol: symbol table poisoned".into()))?;
+    if let Some(id) = table.get(name) {
+        return Ok(Value::Symbol(*id));
+    }
+    if table.len() >= MAX_SYMBOLS {
+        return Err(VMError::Custom(format!(
+            "dyn_symbol: more than {MAX_SYMBOLS} distinct symbols"
+        )));
+    }
+    // `MAX_SYMBOLS` is far below `u32::MAX`, so the conversion cannot fail.
+    let id = u32::try_from(table.len()).expect("MAX_SYMBOLS fits in u32");
+    table.insert(name.clone(), id);
+    Ok(Value::Symbol(id))
 }
 
 impl BuiltinRegistry {
@@ -334,9 +468,9 @@ impl BuiltinRegistry {
             Ok(Value::Bool(args[0] == args[1]))
         });
 
-        // `equal?` — the lisp-family spelling of dynamic value equality. Symbol
-        // literals are interned before the generic VM sees them, so same-name
-        // symbols are the same `Value::Int` and distinct names are different ints.
+        // `equal?` — the lisp-family spelling of dynamic value equality. A
+        // symbol is a `Value::Symbol` interned by name (`dyn_symbol`, #18470),
+        // so same-name symbols are equal and a symbol never equals an integer.
         // Keeping this beside `=` also makes the VM reusable by any frontend that
         // emits the Scheme spelling instead of requiring a language-specific runner.
         reg.register("equal?", |args| {
@@ -375,12 +509,31 @@ impl BuiltinRegistry {
         // leaves as a `call_builtin`: `null?` becomes the `is_null` opcode and
         // `car`/`cdr`/`cons` become field ops, but `pair?` survives, and a Twig
         // record's `<name>?` predicate is compiled to it. See [`dyn_is_pair`].
-        // `number?`, `symbol?`, `not` and `list?` survive too but stay
-        // unregistered: on this VM a symbol and nil are both `Int`s, so each
-        // needs a value-representation decision, not just a handler.
-        // `boolean?`, which the shared lowering does not handle for any
-        // backend, waits with them.
+        // `number?`, `symbol?`, `not`, `list?` and `boolean?` are NOT
+        // registered: each is a language's rule, which the compiler writes
+        // over the `dyn_*` primitives below (#18470, LANG83 PR7).
         reg.register("pair?", dyn_is_pair);
+
+        // The LANG83 PR7f dynamic-value primitives this VM can lower over its
+        // own `Value` kinds (#18470) — see "The dynamic-value primitives" in
+        // the module docs. Every Lisp rule (truthiness, `not`, `number?`,
+        // `symbol?`, `boolean?`, `list?`) is compiler-emitted IIR over these;
+        // none is registered here.
+        reg.register("dyn_tag", dyn_tag);
+        reg.register("dyn_is_nil", dyn_is_nil);
+        reg.register("dyn_is_pair", dyn_is_pair);
+        reg.register("dyn_nil", |args: &[Value]| {
+            if args.is_empty() {
+                Ok(Value::Null)
+            } else {
+                Err(VMError::Custom(format!(
+                    "`dyn_nil` takes no arguments, got {}",
+                    args.len()
+                )))
+            }
+        });
+        let symbols = std::sync::Mutex::new(HashMap::new());
+        reg.register("dyn_symbol", move |args: &[Value]| intern_symbol(&symbols, args));
 
         reg
     }
@@ -605,8 +758,122 @@ mod tests {
         for atom in [Value::Int(42), Value::Bool(true), Value::Str("s".into()), Value::Float(1.5), Value::Null] {
             assert_eq!(pair(atom.clone()), Value::Bool(false), "{atom:?}");
         }
+        assert_eq!(pair(Value::Symbol(0)), Value::Bool(false), "a symbol is an atom");
         assert!(reg.call("pair?", &[]).is_err(), "pair? needs its argument");
         assert!(reg.call("pair?", &[Value::Int(1), Value::Int(2)]).is_err());
+    }
+
+    // ── #18470: the LANG83 PR7f dynamic-value primitives ─────────────────
+    //
+    // Each of these failed before the change with `UnknownOpcode("builtin
+    // \"dyn_tag\"")` (etc.): vm-core refused the whole `Dynamic` family.
+
+    /// `dyn_tag` answers the kind, and the integer 0 is *not* nil — the one
+    /// fact Twig's truthiness needs (#18493).
+    #[test]
+    fn dyn_tag_numbers_every_kind() {
+        let reg = BuiltinRegistry::new();
+        let tag = |v: Value| reg.call("dyn_tag", &[v]).unwrap();
+        let sym = reg.call("dyn_symbol", &[Value::Str("a".into())]).unwrap();
+        let cases = [
+            (Value::Int(0), DYN_TAG_INT),
+            (Value::Int(-7), DYN_TAG_INT),
+            (Value::Null, DYN_TAG_NIL),
+            (Value::HeapRef(gc_core::HeapRef::NULL), DYN_TAG_NIL),
+            (sym, DYN_TAG_SYMBOL),
+            (Value::Bool(false), DYN_TAG_FALSE),
+            (Value::Bool(true), DYN_TAG_TRUE),
+            (Value::HeapRef(gc_core::HeapRef::new(0x1000)), DYN_TAG_PAIR),
+            (Value::Float(0.0), DYN_TAG_NONE),
+            (Value::Str(String::new()), DYN_TAG_NONE),
+        ];
+        for (v, want) in cases {
+            assert_eq!(tag(v.clone()), Value::Int(want), "dyn_tag {v:?}");
+        }
+        // The numbers are the registry's (LANG83 PR7f table), not new ones.
+        assert_eq!((DYN_TAG_INT, DYN_TAG_NIL, DYN_TAG_SYMBOL), (0, 1, 2));
+        assert_eq!((DYN_TAG_FALSE, DYN_TAG_TRUE, DYN_TAG_PAIR), (3, 5, 7));
+        assert!(reg.call("dyn_tag", &[]).is_err());
+        assert!(reg.call("dyn_tag", &[Value::Int(1), Value::Int(2)]).is_err());
+    }
+
+    /// `dyn_is_nil`: nil is `Null` (or a null ref); the integer 0 is not nil,
+    /// which is what makes `(null? 0)` `#f`.
+    #[test]
+    fn dyn_is_nil_is_true_only_for_nil() {
+        let reg = BuiltinRegistry::new();
+        let nil = |v: Value| reg.call("dyn_is_nil", &[v]).unwrap();
+        assert_eq!(nil(Value::Null), Value::Bool(true));
+        assert_eq!(nil(Value::HeapRef(gc_core::HeapRef::NULL)), Value::Bool(true));
+        for v in [Value::Int(0), Value::Bool(false), Value::Symbol(0), Value::Str(String::new())] {
+            assert_eq!(nil(v.clone()), Value::Bool(false), "{v:?}");
+        }
+        assert!(reg.call("dyn_is_nil", &[]).is_err());
+    }
+
+    /// `dyn_is_pair` is `pair?`'s answer under the registry's name.
+    #[test]
+    fn dyn_is_pair_matches_pair_p() {
+        let reg = BuiltinRegistry::new();
+        for v in [Value::HeapRef(gc_core::HeapRef::new(0x1000)), Value::Null, Value::Int(0), Value::Symbol(1)] {
+            assert_eq!(
+                reg.call("dyn_is_pair", std::slice::from_ref(&v)).unwrap(),
+                reg.call("pair?", std::slice::from_ref(&v)).unwrap(),
+                "{v:?}"
+            );
+        }
+    }
+
+    /// `dyn_nil` is `Null` and takes nothing.
+    #[test]
+    fn dyn_nil_is_null() {
+        let reg = BuiltinRegistry::new();
+        assert_eq!(reg.call("dyn_nil", &[]).unwrap(), Value::Null);
+        assert!(reg.call("dyn_nil", &[Value::Int(0)]).is_err());
+    }
+
+    /// `dyn_symbol`: one id per name, stable for the registry's life, and a
+    /// non-string operand is a type error.
+    #[test]
+    fn dyn_symbol_interns_by_name() {
+        let reg = BuiltinRegistry::new();
+        let sym = |n: &str| reg.call("dyn_symbol", &[Value::Str(n.into())]).unwrap();
+        let a = sym("a");
+        let b = sym("b");
+        assert_eq!(a, Value::Symbol(0));
+        assert_eq!(b, Value::Symbol(1));
+        assert_eq!(sym("a"), a, "the same name is the same symbol");
+        assert_ne!(a, b);
+        assert_ne!(a, Value::Int(0), "a symbol is not the integer its id happens to be");
+        assert!(matches!(
+            reg.call("dyn_symbol", &[Value::Int(0)]),
+            Err(VMError::TypeError { .. })
+        ));
+        assert!(reg.call("dyn_symbol", &[]).is_err());
+        // A second registry has its own table.
+        let other = BuiltinRegistry::new();
+        assert_eq!(other.call("dyn_symbol", &[Value::Str("b".into())]).unwrap(), Value::Symbol(0));
+    }
+
+    /// The table is capped, so a program cannot grow it without bound by
+    /// interning strings it builds at run time.
+    #[test]
+    fn dyn_symbol_table_is_capped() {
+        let table = std::sync::Mutex::new(HashMap::new());
+        for i in 0..MAX_SYMBOLS {
+            table.lock().unwrap().insert(format!("s{i}"), i as u32);
+        }
+        assert!(intern_symbol(&table, &[Value::Str("s0".into())]).is_ok(), "an old name still resolves");
+        assert!(intern_symbol(&table, &[Value::Str("new".into())]).is_err());
+    }
+
+    /// The Lisp rules themselves are never builtins here (LANG83 PR7).
+    #[test]
+    fn lisp_predicates_are_not_vm_builtins() {
+        let reg = BuiltinRegistry::new();
+        for name in ["number?", "symbol?", "boolean?", "list?", "not", "null?"] {
+            assert!(!reg.has(name), "{name} is a language's rule, emitted by its compiler");
+        }
     }
 
     #[test]
