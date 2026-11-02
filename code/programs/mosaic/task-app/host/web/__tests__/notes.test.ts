@@ -7,7 +7,9 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { taskNameKey, trimWhiteSpace } from "../src/controller";
 import { makeController } from "../src/main";
+import taskNameVectors from "../../../fixtures/task-name-matching-v1.json";
 // @ts-expect-error JavaScript ABI accessor has no source declaration file.
 import { createTaskEngine } from "../../../../../../packages/rust/task-wasm/js/task-engine.mjs";
 
@@ -158,5 +160,78 @@ describe("Notes on the web host", () => {
     expect(props(controller).noteDeleteLabel).toBe("Delete");
     send(controller, "newNote");
     expect(props(controller).noteDeleteLabel).toBe("");
+  });
+});
+
+// Matching the typed task name (backlog 6e2; addendum v1.4). The cases are
+// shared with task-mosaic-app's `typed_task_names_match_by_the_shared_vectors`,
+// which runs the same file natively; a case that passes on one host and fails
+// on the other is the bug. Before 6e2 this host already lowercased with
+// toLowerCase(), so the cases it changes here are the tie (the last task used
+// to win) and the U+0085 / U+FEFF trims (`.trim()` disagrees with Rust's).
+type TaskNameCase = { name: string; tasks: string[]; typed: string; attachesTo: number | null };
+const tasksOf = (engine: any): Record<string, any> => engine.workspace().data.projects.project.tasks ?? {};
+
+describe("Matching a note's typed task name (shared vectors)", () => {
+  it("reads the vectors it shares with task-mosaic-app", () => {
+    expect(taskNameVectors.schemaVersion).toBe(1);
+    expect(taskNameVectors.cases.length).toBeGreaterThan(0);
+  });
+
+  for (const testCase of taskNameVectors.cases as TaskNameCase[]) {
+    it(testCase.name, () => {
+      const engine = createTaskEngine(wasm);
+      const controller = makeController(engine);
+      // The id each task got, in the order the case lists them.
+      const ids: string[] = [];
+      for (const task of testCase.tasks) {
+        const before = new Set(Object.keys(tasksOf(engine)));
+        send(controller, "newTaskNameChange", { value: task });
+        send(controller, "addTask");
+        const added = Object.keys(tasksOf(engine)).filter((id) => !before.has(id));
+        expect(added).toHaveLength(1);
+        ids.push(added[0]);
+      }
+      // The tie rule is "first by id"; the vectors say "first listed". They
+      // agree only while ids ascend in creation order (as strings, the
+      // engine's order), so pin that, as the native test does.
+      for (let i = 1; i < ids.length; i++) expect(ids[i - 1] < ids[i]).toBe(true);
+
+      send(controller, "showNotes");
+      send(controller, "newNote");
+      send(controller, "noteTaskNameChange", { value: testCase.typed });
+      send(controller, "saveNote");
+
+      const notes = Object.values(notesOf(engine)) as any[];
+      if (testCase.attachesTo === null) {
+        expect(props(controller).noteError).toBe(NOT_FOUND);
+        expect(notes).toHaveLength(0);
+      } else {
+        expect(props(controller).noteError).toBe("");
+        expect(notes).toHaveLength(1);
+        expect(notes[0].attachedTask).toBe(ids[testCase.attachesTo]);
+      }
+    });
+  }
+
+  it("lowercases without a locale, exactly as Rust's to_lowercase does", () => {
+    // The byte-level results the native side produces for the same input
+    // (checked against `str::to_lowercase` when 6e2 was written).
+    expect(taskNameKey("ΣΑΣ")).toBe("σας");
+    expect(taskNameKey("ΑΣ'Β")).toBe("ασ'β"); // ' is case-ignorable: Σ is not final
+    expect(taskNameKey("İ")).toBe("i\u0307");
+    expect(taskNameKey("ẞ")).toBe("ß");
+    expect(taskNameKey("ß")).toBe("ß");
+    expect(taskNameKey("Ǆ")).toBe("ǆ");
+    expect(taskNameKey("ǅ")).toBe("ǆ");
+    expect(taskNameKey("\u212a")).toBe("k");
+  });
+
+  it("trims Unicode White_Space, as Rust's str::trim does", () => {
+    expect(trimWhiteSpace(" \t\u00a0Groceries\u3000\n")).toBe("Groceries");
+    expect(trimWhiteSpace("Groceries\u0085")).toBe("Groceries");
+    expect(trimWhiteSpace("\ufeffGroceries")).toBe("\ufeffGroceries");
+    expect(trimWhiteSpace("Gro ceries")).toBe("Gro ceries");
+    expect(trimWhiteSpace("   ")).toBe("");
   });
 });

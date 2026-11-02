@@ -2121,8 +2121,8 @@ impl TaskMosaicApp {
 
     /// Commit the note draft, or refuse it and say why.
     ///
-    /// The typed task name resolves against the active project's tasks
-    /// (case-insensitive, exact). The outcomes:
+    /// The typed task name resolves against the active project's tasks by
+    /// [`task_named`] (Unicode lowercasing, exact; see there). The outcomes:
     ///
     ///   task field        match?   result
     ///   blank             —        saved, unattached
@@ -2138,19 +2138,13 @@ impl TaskMosaicApp {
         let Some(id) = self.state.selected_note_id.clone() else {
             return Ok(self.update());
         };
-        let attached = if self.state.note_task_name.trim().is_empty() {
+        let typed = self.state.note_task_name.trim();
+        let attached = if typed.is_empty() {
             None
         } else {
-            self.active_project()
-                .tasks
-                .values()
-                .find(|task| {
-                    task.name
-                        .eq_ignore_ascii_case(self.state.note_task_name.trim())
-                })
-                .map(|task| task.id.clone())
+            task_named(self.active_project(), typed)
         };
-        if !self.state.note_task_name.trim().is_empty() && attached.is_none() {
+        if !typed.is_empty() && attached.is_none() {
             self.state.note_error = NOTE_TASK_NOT_FOUND.to_string();
             return Ok(self.announced_update(NOTE_TASK_NOT_FOUND));
         }
@@ -2334,6 +2328,57 @@ fn item_count_label(items: usize) -> String {
         1 => "1 item".to_string(),
         n => format!("{n} items"),
     }
+}
+
+// ── Matching a typed task name (task-app-notes-ui-v1.md, addendum v1.4) ──
+//
+// The Notes editor's "Attach to task" field holds a task's NAME, which Save
+// turns back into the task's id. The web host does the same in
+// `controller.ts`, and the two must agree on every input: a note that
+// attaches on one platform and is refused on the other is the bug this
+// rule exists to prevent (backlog 6e2; this used `eq_ignore_ascii_case`,
+// which folds only A-Z, while the web lowercased all of Unicode).
+//
+// The rule, applied by `save_note` and `task_named`:
+//
+//   step  what                                  Rust              JavaScript
+//   1     trim the typed text (White_Space)     str::trim         \p{White_Space} regex
+//   2     blank -> no attachment                is_empty          !typed
+//   3     lowercase both names                  str::to_lowercase toLowerCase
+//   4     equal lowercased strings match        ==                Map lookup
+//   5     a tie -> the first task by id         BTreeMap order    first-set wins
+//
+// Lowercasing is Unicode's default full mapping: locale-independent, one
+// character may become several (`İ` -> `i` + U+0307), and Greek capital
+// sigma becomes final `ς` at the end of a word. It is NOT case folding, so
+// a few pairs a person might expect to match do not:
+//
+//   task       typed      result    why
+//   Écrire     écrire     attaches  É lowercases to é
+//   ΣΑΣ        σας        attaches  the last Σ becomes final ς
+//   ΣΑΣ        σασ        refused   σ is not ς (folding would equate them)
+//   Straße     STRASSE    refused   ß lowercases to itself (folding: ss)
+//   İstanbul   istanbul   refused   İ lowercases to i + U+0307
+//
+// Nor are names Unicode-normalized: É as U+00C9 and as E + U+0301 are
+// different names. `std` has no normalization and this crate takes no
+// dependency for it; normalizing on one host only would break the parity.
+// The shared cases are `programs/mosaic/task-app/fixtures/
+// task-name-matching-v1.json`, run by a test here and by the web host's.
+
+/// The task in `project` whose name matches `typed`, by the rule above.
+///
+/// `typed` is expected already trimmed and non-empty; `save_note` handles
+/// the blank case, which means "no attachment" rather than "no match".
+/// `project.tasks` is a `BTreeMap` keyed by id, so `find` returns the
+/// first matching task in ascending id order, which is step 5's tie rule.
+fn task_named(project: &task_core::ProjectState, typed: &str) -> Option<TaskId> {
+    let wanted = typed.to_lowercase();
+    project
+        .tasks
+        .values()
+        .find(|task| task.name.to_lowercase() == wanted)
+        .map(|task| task.id.clone())
 }
 
 /// RecordList draws a row's title as its button: never let it be empty.
@@ -3932,6 +3977,151 @@ mod tests {
         let notes = &app.active_project().notes;
         assert_eq!(notes.len(), 1);
         assert!(notes.values().next().unwrap().attached_task.is_none());
+    }
+
+    // ── Matching the typed task name (6e2; addendum v1.4) ─────────────────
+
+    /// One case of the shared task-name vectors. The web host's
+    /// `__tests__/notes.test.ts` reads the same file into the same shape.
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct TaskNameCase {
+        name: String,
+        tasks: Vec<String>,
+        typed: String,
+        /// Index into `tasks` of the task the note attaches to; `None`
+        /// means the Save is refused.
+        attaches_to: Option<usize>,
+    }
+
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct TaskNameVectors {
+        schema_version: u32,
+        cases: Vec<TaskNameCase>,
+    }
+
+    /// Every shared case, end to end: add the tasks, type the name, press
+    /// Save, and check where the note went. Before 6e2 the accented,
+    /// Greek, German, Kelvin and trim cases that attach were all refused
+    /// here (ASCII-only `eq_ignore_ascii_case`), while the web attached
+    /// them.
+    #[test]
+    fn typed_task_names_match_by_the_shared_vectors() {
+        let vectors: TaskNameVectors = serde_json::from_str(include_str!(
+            "../../../../programs/mosaic/task-app/fixtures/task-name-matching-v1.json"
+        ))
+        .expect("valid task-name vectors");
+        assert_eq!(vectors.schema_version, 1);
+        assert!(!vectors.cases.is_empty());
+
+        for case in vectors.cases {
+            let mut app = TaskMosaicApp::with_clock(fixed_clock);
+            app.start(context()).unwrap();
+            // The ids each task got, in the order the case lists them.
+            let mut ids: Vec<TaskId> = Vec::new();
+            for task in &case.tasks {
+                let before: BTreeSet<TaskId> = app.active_project().tasks.keys().cloned().collect();
+                send(&mut app, "newTaskNameChange", json!({ "value": task }));
+                send(&mut app, "addTask", json!({}));
+                let added: Vec<TaskId> = app
+                    .active_project()
+                    .tasks
+                    .keys()
+                    .filter(|id| !before.contains(*id))
+                    .cloned()
+                    .collect();
+                assert_eq!(added.len(), 1, "{}: one task per addTask", case.name);
+                ids.push(added[0].clone());
+            }
+            // The tie rule is "first by id"; the vectors say "first listed".
+            // They agree only while ids ascend in creation order, so pin it.
+            assert!(
+                ids.windows(2).all(|w| w[0] < w[1]),
+                "{}: ids ascend",
+                case.name
+            );
+
+            send(&mut app, "showNotes", json!({}));
+            send(&mut app, "newNote", json!({}));
+            send(
+                &mut app,
+                "noteTaskNameChange",
+                json!({ "value": case.typed }),
+            );
+            let props = send(&mut app, "saveNote", json!({}));
+
+            let notes = &app.active_project().notes;
+            match case.attaches_to {
+                Some(index) => {
+                    assert_eq!(props["note-error"], "", "{}: not refused", case.name);
+                    assert_eq!(notes.len(), 1, "{}: saved", case.name);
+                    let note = notes.values().next().unwrap();
+                    assert_eq!(
+                        note.attached_task.as_ref(),
+                        Some(&ids[index]),
+                        "{}: attached to task {index}",
+                        case.name
+                    );
+                }
+                None => {
+                    assert_eq!(
+                        props["note-error"], NOTE_TASK_NOT_FOUND,
+                        "{}: refused",
+                        case.name
+                    );
+                    assert!(notes.is_empty(), "{}: nothing written", case.name);
+                }
+            }
+        }
+    }
+
+    /// The two standard-library calls the rule is built on, pinned on the
+    /// edge cases where lowercasing is easy to get wrong. The web host's
+    /// `notes.test.ts` asserts the same outputs for `toLowerCase()` and its
+    /// `trimWhiteSpace`, so a change in either platform shows up on both.
+    #[test]
+    fn lowercasing_and_trimming_agree_with_the_web_host() {
+        assert_eq!("ΣΑΣ".to_lowercase(), "σας"); // word-final sigma
+        assert_eq!("ΑΣ'Β".to_lowercase(), "ασ'β"); // ' is case-ignorable
+        assert_eq!("İ".to_lowercase(), "i\u{0307}"); // one char becomes two
+        assert_eq!("ẞ".to_lowercase(), "ß");
+        assert_eq!("ß".to_lowercase(), "ß"); // not "ss": no folding
+        assert_eq!("Ǆ".to_lowercase(), "ǆ");
+        assert_eq!("ǅ".to_lowercase(), "ǆ");
+        assert_eq!("\u{212A}".to_lowercase(), "k"); // KELVIN SIGN
+
+        assert_eq!(" \t\u{00A0}Groceries\u{3000}\n".trim(), "Groceries");
+        assert_eq!("Groceries\u{0085}".trim(), "Groceries");
+        assert_eq!("\u{FEFF}Groceries".trim(), "\u{FEFF}Groceries");
+        assert_eq!("Gro ceries".trim(), "Gro ceries");
+        assert_eq!("   ".trim(), "");
+    }
+
+    /// The tie rule directly, without going through events: of two tasks
+    /// whose names lowercase alike, the lower id wins, whichever was typed
+    /// exactly and whichever was inserted first.
+    #[test]
+    fn task_named_breaks_a_tie_by_ascending_id() {
+        let mut app = TaskMosaicApp::with_clock(fixed_clock);
+        app.start(context()).unwrap();
+        let project_id = app.state.active_project.clone();
+        for (id, name) in [("task-b", "ÉCRIRE"), ("task-a", "écrire")] {
+            app.state
+                .workspace
+                .create_task(&project_id, TaskId::from_raw(id), name.to_string(), None)
+                .unwrap();
+        }
+        let project = app.active_project();
+        assert_eq!(
+            task_named(project, "ÉCRIRE"),
+            Some(TaskId::from_raw("task-a"))
+        );
+        assert_eq!(
+            task_named(project, "Écrire"),
+            Some(TaskId::from_raw("task-a"))
+        );
+        assert_eq!(task_named(project, "ecrire"), None);
     }
 
     // ── Notes 0.3.0 on RecordList and DraftEditor (E3) ────────────────────

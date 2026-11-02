@@ -4,6 +4,20 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed — a note's task name matches as task-mosaic-app matches it (6e2)
+
+The *Attach to task* name already matched with `toLowerCase()`, and
+task-mosaic-app now matches with Rust's `to_lowercase()`, the same Unicode
+default lowercasing (`task-app-notes-ui-v1.md`, addendum v1.4). Two smaller
+differences between the hosts are closed here too. `tasksByName()` let the
+last of two tasks whose names lowercase alike win; the first, in the
+engine's ascending-id order, now wins, as natively. And the typed name was
+trimmed with `.trim()`, which strips U+FEFF and keeps U+0085, unlike Rust's
+`str::trim`; it is now trimmed of Unicode `White_Space` by the new exported
+`trimWhiteSpace`. The new `taskNameKey` is the lowercasing, in one place.
+`__tests__/notes.test.ts` runs every case of TaskApp's new
+`fixtures/task-name-matching-v1.json`, which the native adapter runs too.
+
 ### Changed — Notes 0.3.0 rows, and Delete only for a saved note (E3)
 
 `noteRows()` builds the toolkit RecordList's six-field rows, `[id, "",
