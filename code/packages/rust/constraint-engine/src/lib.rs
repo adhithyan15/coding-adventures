@@ -440,16 +440,20 @@ impl Engine {
     /// 3. If SAT and there are Bool-only predicates, verify them
     ///    consistently using the SAT tactic.
     fn solve_lia(&self, _has_bool: bool) -> SolverResult {
-        let int_vars: Vec<String> = self.sort_env
+        // Sorted, so the search order (and so any Unknown) is reproducible
+        // run to run rather than following HashMap iteration.
+        let mut int_vars: Vec<String> = self.sort_env
             .iter()
             .filter(|(_, s)| matches!(s, Sort::Int))
             .map(|(n, _)| n.clone())
             .collect();
-        let bool_vars: Vec<String> = self.sort_env
+        int_vars.sort();
+        let mut bool_vars: Vec<String> = self.sort_env
             .iter()
             .filter(|(_, s)| matches!(s, Sort::Bool))
             .map(|(n, _)| n.clone())
             .collect();
+        bool_vars.sort();
 
         let result = lia::LiaTactic::solve(&self.assertions, &int_vars, &bool_vars);
 

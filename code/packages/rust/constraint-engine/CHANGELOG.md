@@ -20,6 +20,14 @@ search (LANG24, "LIA as built, and its soundness contract").
   `Unknown`. A sub-search's `Unknown` is remembered instead of being
   treated as a failed candidate.
 
+- **A value left assigned after a failed equality branch.** This predates
+  the PR. When `x = k` pinned a variable and the branch failed, the value
+  stayed in the assignment. A later branch then judged constraints over it
+  "ground", which gave a false `Unsat` (`z = x + 10 ∧ x + z > 10`, boxed).
+  The branch now restores the assignment unless it found the model. The
+  engine also orders search variables by name, so results are
+  reproducible, not dependent on `HashMap` iteration.
+
 ### Added
 
 - **Interval propagation** over the top-level linear atoms, including
@@ -28,7 +36,9 @@ search (LANG24, "LIA as built, and its soundness contract").
   and `__v = x ∧ 0 ≤ x < 256` boxes `__v`. Derived bounds are consequences
   of the constraints, so they keep every answer the same and only let the
   search be exhaustive. This is what keeps `lang-refinement-checker`'s
-  `clamp_byte` proof a real proof.
+  `clamp_byte` proof a real proof. Each atom costs work linear in its terms
+  per round (minimum sum computed once). Total work is capped at 64 rounds
+  and 2 million term visits; stopping early is sound.
 - **Conjunctions are flattened** before the search, and variables no
   constraint mentions are not searched (they get 0 / false).
 - Sampling without bounds looks both ways: a window centred on 0, or a

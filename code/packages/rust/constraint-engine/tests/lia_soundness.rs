@@ -292,3 +292,88 @@ fn propagation_proves_what_enumeration_cannot() {
     ];
     assert!(!engine(&a).check_sat().is_sat());
 }
+
+/// Three Int variables boxed to ±6, with top-level equalities `v = expr`
+/// (which pin a variable during the search). This shape exposed a value
+/// left assigned after a failed equality branch, and with it false UNSATs.
+#[test]
+fn equality_pinned_variables_are_never_answered_wrongly() {
+    let names = ["x", "y", "z"];
+    let term = |rng: &mut Rng| -> Predicate {
+        let leaf = |rng: &mut Rng| match rng.below(4) {
+            0 => Predicate::Int(rng.below(13) as i128 - 6),
+            k => var(names[(k - 1) as usize]),
+        };
+        match rng.below(4) {
+            0 => Predicate::Add(vec![leaf(rng), leaf(rng)]),
+            1 => Predicate::Sub(b(leaf(rng)), b(leaf(rng))),
+            2 => Predicate::Mul { coef: rng.below(5) as i128 - 2, term: b(leaf(rng)) },
+            _ => leaf(rng),
+        }
+    };
+    let eval3 = |p: &Predicate, v: [i128; 3]| -> Option<bool> {
+        // Reuse the 2-variable evaluator by renaming z → p's slot is not
+        // possible, so evaluate directly.
+        fn ev(p: &Predicate, v: [i128; 3]) -> Option<i128> {
+            Some(match p {
+                Predicate::Int(n) => *n,
+                Predicate::Var(n) => v[["x", "y", "z"].iter().position(|m| m == n)?],
+                Predicate::Add(ps) => ps.iter().try_fold(0i128, |a, q| a.checked_add(ev(q, v)?))?,
+                Predicate::Sub(a, c) => ev(a, v)?.checked_sub(ev(c, v)?)?,
+                Predicate::Mul { coef, term } => coef.checked_mul(ev(term, v)?)?,
+                _ => return None,
+            })
+        }
+        Some(match p {
+            Predicate::Le(a, c) => ev(a, v)? <= ev(c, v)?,
+            Predicate::Lt(a, c) => ev(a, v)? < ev(c, v)?,
+            Predicate::Ge(a, c) => ev(a, v)? >= ev(c, v)?,
+            Predicate::Gt(a, c) => ev(a, v)? > ev(c, v)?,
+            Predicate::Eq(a, c) => ev(a, v)? == ev(c, v)?,
+            Predicate::NEq(a, c) => ev(a, v)? != ev(c, v)?,
+            _ => return None,
+        })
+    };
+    let (mut unsat, mut sat) = (0, 0);
+    for seed in 1..=3u64 {
+        let mut rng = Rng(0x0000_E0A1_17E5_0000 + seed);
+        for round in 0..1500 {
+            let mut asserts: Vec<Predicate> = names
+                .iter()
+                .flat_map(|n| [Predicate::Ge(b(var(n)), b(Predicate::Int(-6))), Predicate::Le(b(var(n)), b(Predicate::Int(6)))])
+                .collect();
+            for _ in 0..1 + rng.below(3) {
+                let (l, r) = (term(&mut rng), term(&mut rng));
+                asserts.push(match rng.below(6) {
+                    0 | 1 => Predicate::Eq(b(var(names[rng.below(3) as usize])), b(r)),
+                    2 => Predicate::Gt(b(l), b(r)),
+                    3 => Predicate::Le(b(l), b(r)),
+                    4 => Predicate::NEq(b(l), b(r)),
+                    _ => Predicate::Lt(b(l), b(r)),
+                });
+            }
+            let holds = |v: [i128; 3]| asserts.iter().all(|a| eval3(a, v) == Some(true));
+            let truth = (-6..=6).any(|x| (-6..=6).any(|y| (-6..=6).any(|z| holds([x, y, z]))));
+            let mut e = Engine::new();
+            for n in names {
+                e.declare_var(n, Sort::Int);
+            }
+            for a in &asserts {
+                e.assert(a.clone());
+            }
+            match e.check_sat() {
+                SolverResult::Sat(m) => {
+                    let g = |n: &str| m.get(n).and_then(Value::as_int).unwrap();
+                    assert!(holds([g("x"), g("y"), g("z")]), "seed {seed} round {round}: bad model {asserts:?}");
+                    sat += 1;
+                }
+                SolverResult::Unsat => {
+                    assert!(!truth, "seed {seed} round {round}: false UNSAT {asserts:?}");
+                    unsat += 1;
+                }
+                SolverResult::Unknown(_) => {}
+            }
+        }
+    }
+    assert!(sat > 1000 && unsat > 500, "sat={sat} unsat={unsat}");
+}

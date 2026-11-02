@@ -275,7 +275,15 @@ fn eliminate_all(
             return EliminationResult::Unsat;
         }
         assignment.insert(var.clone(), first);
-        return eliminate_all(constraints, rest, bools, assignment, budget);
+        let result = eliminate_all(constraints, rest, bools, assignment, budget);
+        // Leave the assignment as it was found unless this is the model.
+        // A value left behind after a failed branch would make a later
+        // branch judge constraints "ground" under a stale value: a false
+        // UNSAT.
+        if !matches!(result, EliminationResult::Sat) {
+            assignment.remove(var);
+        }
+        return result;
     }
 
     // Step 3: decide which values to try, and whether trying them all is a
@@ -474,28 +482,52 @@ enum Propagated {
 }
 
 /// Derive the bounds the top-level linear atoms of `constraints` imply.
+///
+/// Per atom and round the work is linear in its terms: the minimum of the
+/// whole sum is computed once (a finite part plus a count of unbounded
+/// terms), and each variable's bound subtracts its own term back out. A
+/// global cap on term visits bounds the total; stopping early is sound.
 fn propagate_intervals(constraints: &[Predicate], ints: &HashSet<&str>) -> Propagated {
     const MAX_ROUNDS: usize = 64;
+    const MAX_TERM_VISITS: usize = 2_000_000;
     let atoms: Vec<Linear> = constraints.iter().flat_map(|c| atoms_le_zero(c, ints)).collect();
     // Interval per variable: (lower, upper); None is unbounded.
     let mut iv: HashMap<String, (Option<i128>, Option<i128>)> = HashMap::new();
-    for _ in 0..MAX_ROUNDS {
+    let mut visits = 0usize;
+    'rounds: for _ in 0..MAX_ROUNDS {
         let mut changed = false;
         for atom in &atoms {
-            for (xj, &aj) in &atom.terms {
-                if aj == 0 {
-                    continue;
-                }
-                // S = Σ_{i≠j} min(aᵢ·xᵢ); give up on xⱼ if some term is unbounded.
-                let mut s: Option<i128> = Some(atom.constant);
-                for (xi, &ai) in &atom.terms {
-                    if xi == xj || ai == 0 {
-                        continue;
-                    }
-                    let (lo, hi) = iv.get(xi).copied().unwrap_or((None, None));
-                    let min_term = if ai > 0 { lo.and_then(|l| ai.checked_mul(l)) } else { hi.and_then(|h| ai.checked_mul(h)) };
-                    s = s.zip(min_term).and_then(|(acc, m)| acc.checked_add(m));
-                }
+            visits = visits.saturating_add(2 * atom.terms.len());
+            if visits > MAX_TERM_VISITS {
+                break 'rounds;
+            }
+            // min(aᵢ·xᵢ) for each term, or None when that term is unbounded
+            // below (or overflows).
+            let min_of = |x: &str, a: i128, iv: &HashMap<String, (Option<i128>, Option<i128>)>| {
+                let (lo, hi) = iv.get(x).copied().unwrap_or((None, None));
+                if a > 0 { lo.and_then(|l| a.checked_mul(l)) } else { hi.and_then(|h| a.checked_mul(h)) }
+            };
+            let mins: Vec<(&String, i128, Option<i128>)> =
+                atom.terms.iter().filter(|(_, &a)| a != 0).map(|(x, &a)| (x, a, min_of(x, a, &iv))).collect();
+            let unbounded = mins.iter().filter(|(_, _, m)| m.is_none()).count();
+            if unbounded > 1 {
+                continue; // every variable has another unbounded term beside it
+            }
+            // c + Σ of the finite minimums.
+            let Some(finite) = mins
+                .iter()
+                .filter_map(|(_, _, m)| *m)
+                .try_fold(atom.constant, |acc, m| acc.checked_add(m))
+            else {
+                continue;
+            };
+            for &(xj, aj, min_j) in &mins {
+                // S = Σ_{i≠j} min(aᵢ·xᵢ) + c
+                let s = match (unbounded, min_j) {
+                    (0, Some(m)) => finite.checked_sub(m),
+                    (1, None) => Some(finite), // xⱼ is the one unbounded term
+                    _ => None,                 // another term is unbounded
+                };
                 // aⱼ·xⱼ ≤ −S
                 let Some(rhs) = s.and_then(|v| v.checked_neg()) else { continue };
                 let entry = iv.entry(xj.clone()).or_insert((None, None));
@@ -1098,6 +1130,45 @@ mod tests {
         assert!(matches!(solve(&[cmp(Predicate::Ge, "x", 0), cmp(Predicate::Le, "x", 2), over_x], &["x"]), SolverResult::Unknown(_)));
         // `true` constrains nothing.
         assert!(solve(&[Predicate::Bool(true), cmp(Predicate::Ge, "x", 4)], &["x"]).is_sat());
+    }
+
+    #[test]
+    fn a_failed_equality_branch_leaves_no_stale_value() {
+        // x ∈ [0,1], y ∈ [0,0], z = x + 10, x + z > 10. Model: x=1, y=0, z=11.
+        // With the order x, y, z: x=0 → y=0 → z=10 (by equality) fails, and
+        // z = 10 used to stay assigned, so for x=1 the constraint z = x + 10
+        // looked ground and false while y was eliminated: a false UNSAT.
+        let z_eq = Predicate::Eq(Box::new(vi("z")), Box::new(Predicate::Add(vec![vi("x"), lit(10)])));
+        let sum_gt = Predicate::Gt(Box::new(Predicate::Add(vec![vi("x"), vi("z")])), Box::new(lit(10)));
+        let a = [
+            cmp(Predicate::Ge, "x", 0),
+            cmp(Predicate::Le, "x", 1),
+            cmp(Predicate::Ge, "y", 0),
+            cmp(Predicate::Le, "y", 0),
+            z_eq,
+            sum_gt,
+        ];
+        let m = sat_model(&a, &["x", "y", "z"]);
+        assert_eq!(m.get("z").unwrap().as_int(), Some(11));
+    }
+
+    #[test]
+    fn propagation_on_wide_sums_is_cheap_and_capped() {
+        // One 3000-term sum and a cycle that tightens a bound every round:
+        // must finish quickly (linear per atom, capped overall) and stay
+        // sound (the cycle x < y < x is UNSAT, but nothing here may claim a
+        // wrong answer).
+        let names: Vec<String> = (0..3000).map(|i| format!("v{i}")).collect();
+        let sum = Predicate::Add(names.iter().map(|n| vi(n)).collect());
+        let mut a = vec![Predicate::Le(Box::new(sum), Box::new(lit(0)))];
+        a.push(cmp(Predicate::Ge, "a", 0));
+        a.push(Predicate::Lt(Box::new(vi("a")), Box::new(vi("b"))));
+        a.push(Predicate::Lt(Box::new(vi("b")), Box::new(vi("a"))));
+        let ints: HashSet<&str> = names.iter().map(String::as_str).chain(["a", "b"]).collect();
+        let start = std::time::Instant::now();
+        let r = propagate_intervals(&a, &ints);
+        assert!(start.elapsed().as_secs() < 10, "propagation took {:?}", start.elapsed());
+        assert!(matches!(r, Propagated::Bounds(_) | Propagated::Contradiction));
     }
 
     #[test]
