@@ -830,22 +830,62 @@ pub unsafe extern "C" fn __gc_collect_incremental_step(budget: i64) -> i64 {
     })
 }
 
-/// **Finish** an in-progress incremental cycle: sweep the unreachable (white) objects and end
-/// the phase (spec §6). Returns the number of objects reclaimed. Marking must be complete
-/// (drive [`__gc_collect_incremental_step`] to `1` first). If no phase is in progress, returns
-/// `0` without sweeping — so an untrustworthy-stack cycle reclaims nothing.
+/// **Finish** an in-progress incremental cycle: re-mark from the **current** roots, sweep the
+/// unreachable (white) objects and end the phase (spec §6). Returns the number of objects
+/// reclaimed. Marking must be complete (drive [`__gc_collect_incremental_step`] to `1`
+/// first). If no phase is in progress, returns `0` without sweeping — so an
+/// untrustworthy-stack cycle reclaims nothing.
+///
+/// **Why the rescan.** `start` snapshots the roots once, and the write barrier shades only
+/// what the mutator stores into a *heap* object. A store into a root — a stack slot, a
+/// register, or a program global (`global_store` has no barrier) — is invisible to it, so an
+/// object the mutator moved out of the heap and into a root during the phase would be swept
+/// while the root still names it. So this entry is a frame-building trampoline like `start`:
+/// it walks the stack again, adds the registered global slots and the spilled registers, and
+/// hands them to `FlatHeap::incremental_rescan_roots` before the sweep. If the stack cannot be
+/// trusted now, the cycle is **abandoned** (`FlatHeap::incremental_abandon`): nothing is
+/// freed, rather than sweeping on the stale snapshot.
 ///
 /// # Safety
-/// Single-threaded; no other collection mid-cycle; called only after marking is complete.
+/// Single-threaded; no other collection mid-cycle; called only after marking is complete;
+/// the calling thread owns its stack.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __gc_collect_incremental_finish() -> i64 {
-    with_heap(|h| {
-        if !h.incremental_in_progress() {
-            return 0; // no phase → nothing collected (no sweep)
-        }
-        h.incremental_finish().freed as i64
-    })
+    anchor_trampoline!(__gc_collect_incremental_finish, collect_incremental_finish_from)
+}
+
+#[inline(never)]
+pub(crate) unsafe extern "C" fn collect_incremental_finish_from(fp: usize) -> i64 {
+    if !with_heap(|h| h.incremental_in_progress()) {
+        return 0; // no phase → nothing collected (no sweep)
+    }
+    let mut regs = [0usize; SPILL_SLOTS];
+    let sp = spill_and_sp(regs.as_mut_ptr());
+    let base = stack_base();
+
+    let freed = if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
+        let mut slots: Vec<usize> = Vec::new();
+        let mut regions: Vec<(*const u8, usize)> = Vec::new();
+        crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        crate::global_roots::extend_slots(&mut slots); // globals (#18765)
+        regions.push((
+            regs.as_ptr() as *const u8,
+            SPILL_SLOTS * core::mem::size_of::<usize>(),
+        ));
+        with_heap(|h| {
+            h.incremental_rescan_roots(&slots, &regions);
+            h.incremental_finish().freed as i64
+        })
+    } else {
+        // Cannot enumerate today's roots: freeing on the start-of-cycle snapshot alone could
+        // drop an object the mutator moved into a root. Leak this cycle instead.
+        with_heap(|h| h.incremental_abandon());
+        0
+    };
+
+    core::hint::black_box(&regs);
+    freed
 }
 
 /// A full **moving/compacting** collection rooted precisely at this thread's stack —
@@ -1551,6 +1591,7 @@ mod tests {
             __gc_reset();
             let kind = movable_leaf_kind();
             let mut globals = vec![0i64; GLOBAL_BATCH];
+            let _reset = crate::global_roots::ResetOnDrop; // after `globals`: drops first
             let n = GLOBAL_BATCH as i64;
             assert_eq!(unsafe { crate::__gc_register_global_roots(globals.as_mut_ptr(), n) }, n);
             assert_eq!(crate::__gc_global_root_count(), n);
@@ -1572,6 +1613,7 @@ mod tests {
         __gc_reset();
         let kind = movable_leaf_kind();
         let mut globals = vec![0i64; GLOBAL_BATCH];
+        let _reset = crate::global_roots::ResetOnDrop;
         let n = GLOBAL_BATCH as i64;
         assert_eq!(unsafe { crate::__gc_register_global_roots(globals.as_mut_ptr(), n) }, n);
         let originals = park_in_globals(&mut globals, kind);
@@ -1590,6 +1632,98 @@ mod tests {
              rewritten (moved {moved} of {GLOBAL_BATCH})"
         );
         crate::__gc_global_roots_reset();
+        __gc_reset();
+    }
+
+    /// The two root-taking public entries root the registered globals too (as
+    /// `gc_core.h` says every collection does): with a block registered, objects parked
+    /// only there survive `__gc_collect_roots` (no roots passed) and `__gc_collect_region`
+    /// (a null region); with the block unregistered, the same calls free them.
+    #[test]
+    fn collect_roots_and_collect_region_root_the_globals() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        type Collect = fn() -> i64;
+        let entries: [(&str, Collect); 2] = [
+            ("collect_roots", || unsafe { crate::__gc_collect_roots(core::ptr::null(), 0) }),
+            ("collect_region", || unsafe { crate::__gc_collect_region(core::ptr::null(), 0) }),
+        ];
+        for (name, collect) in entries {
+            for registered in [false, true] {
+                __gc_reset();
+                let kind = movable_leaf_kind();
+                let mut globals = vec![0i64; GLOBAL_BATCH];
+                let _reset = crate::global_roots::ResetOnDrop;
+                if registered {
+                    let n = GLOBAL_BATCH as i64;
+                    let got = unsafe { crate::__gc_register_global_roots(globals.as_mut_ptr(), n) };
+                    assert_eq!(got, n);
+                }
+                park_in_globals(&mut globals, kind);
+                // No stack scan here at all: nothing but the globals can root the batch.
+                let freed = collect();
+                let want = if registered { 0 } else { GLOBAL_BATCH as i64 };
+                assert_eq!(freed, want, "{name} registered={registered}");
+            }
+        }
+        __gc_reset();
+    }
+
+    /// Allocate [`GLOBAL_BATCH`] movable leaves as the elements of one traced parent
+    /// array, park the parent in `globals[0]`, and return the children's addresses in
+    /// a Rust-heap `Vec` (scanned by nothing).
+    #[inline(never)]
+    fn park_children_behind_a_parent(globals: &mut [i64], kind: u16) -> Vec<i64> {
+        let parent_kind = unsafe { crate::__gc_register_ref_array_kind(core::ptr::null(), 0, 0) };
+        let parent = crate::__gc_alloc_kind(8 * GLOBAL_BATCH as i64, parent_kind as u16);
+        assert!(parent != 0);
+        let mut children = Vec::with_capacity(GLOBAL_BATCH);
+        for i in 0..GLOBAL_BATCH {
+            let c = crate::__gc_alloc_kind(16, kind);
+            unsafe { *((parent as *mut i64).add(i)) = c };
+            children.push(c);
+        }
+        globals[0] = parent;
+        children
+    }
+
+    /// Move every child out of the heap and into the global block: `globals[i + 1] = child`,
+    /// then clear the parent's slot (a heap store of 0 — nothing for the barrier to shade).
+    #[inline(never)]
+    fn move_children_into_globals(globals: &mut [i64], children: &[i64]) {
+        let parent = globals[0];
+        for (i, &c) in children.iter().enumerate() {
+            globals[i + 1] = c;
+            unsafe { *((parent as *mut i64).add(i)) = 0 };
+        }
+    }
+
+    /// **Incremental cycles re-scan the roots at `finish`.** The start snapshot sees the
+    /// children only through their parent. During the phase the mutator moves every child
+    /// into a global (a root store: no barrier) and clears the parent. `finish` must
+    /// re-scan the roots — here the registered global slots — or it sweeps all of them
+    /// while the globals still name them. A batch, as elsewhere, so stray stack words
+    /// cannot make the test pass by accident: before the re-scan existed nearly all
+    /// `GLOBAL_BATCH` children were freed.
+    #[test]
+    fn incremental_finish_rescans_roots_stored_during_the_phase() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        let kind = movable_leaf_kind();
+        let mut globals = vec![0i64; GLOBAL_BATCH + 1];
+        let _reset = crate::global_roots::ResetOnDrop;
+        let n = globals.len() as i64;
+        assert_eq!(unsafe { crate::__gc_register_global_roots(globals.as_mut_ptr(), n) }, n);
+        let children = park_children_behind_a_parent(&mut globals, kind);
+
+        unsafe { __gc_collect_incremental_start() };
+        move_children_into_globals(&mut globals, &children);
+        while unsafe { __gc_collect_incremental_step(1_000) } == 0 {}
+        let freed = unsafe { __gc_collect_incremental_finish() };
+
+        assert_eq!(freed, 0, "every child is named by a global, so none may be swept");
+        for (i, &c) in children.iter().enumerate() {
+            assert_eq!(unsafe { crate::__gc_kind_of(c) }, kind as i64, "child {i} is still live");
+        }
         __gc_reset();
     }
 

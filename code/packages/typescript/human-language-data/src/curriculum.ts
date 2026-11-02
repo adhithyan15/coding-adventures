@@ -229,9 +229,22 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
     const lessonLanguage = new Map(
       lessons.map((lesson) => [lesson.realization.lessonId, lesson.language]),
     );
+    // Every per-curriculum check below looks at "this track's lessons, in corpus
+    // order". Filtering the whole corpus (~60k lessons) once per curriculum, and
+    // again inside the per-node loop, is what made this block cost seconds. One
+    // pass groups the corpus by language instead. A bucket keeps the corpus's own
+    // order, so every list derived from it -- and so every issue raised while
+    // walking it -- comes out in exactly the order the full-corpus filter gave.
+    const lessonsByLanguage = new Map<string, ParsedLesson[]>();
+    for (const lesson of lessons) {
+      const bucket = lessonsByLanguage.get(lesson.language);
+      if (bucket) bucket.push(lesson);
+      else lessonsByLanguage.set(lesson.language, [lesson]);
+    }
 
     for (const curriculum of input.curricula) {
       if (!languageIds.has(curriculum.language)) continue;
+      const trackLessons = lessonsByLanguage.get(curriculum.language) ?? [];
       const segmentById = new Map<string, LanguageCurriculum["path"][number]>();
       const lessonPlacement = new Map<string, { node: string; position: number }>();
       let position = 0;
@@ -286,14 +299,44 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       // node being checked, so they are gathered once per curriculum. Inside
       // the node loop this was a full scan of every lesson per node.
       const realizedConcepts = new Set(
-        lessons
-          .filter(
-            (lesson) =>
-              lesson.language === curriculum.language &&
-              REALIZING_TYPES.has(lesson.realization.type),
-          )
+        trackLessons
+          .filter((lesson) => REALIZING_TYPES.has(lesson.realization.type))
           .map((lesson) => lesson.realization.concept),
       );
+      // "Which path segments sit on node N?" is asked once per spine node. A
+      // filter over the whole path per node is nodes x segments; grouping the
+      // path by `spine_node` once answers every node with a lookup. Segments are
+      // pushed in path order, so each group is exactly what the filter returned.
+      const segmentIdsByNode = new Map<string, string[]>();
+      for (const segment of curriculum.path ?? []) {
+        const group = segmentIdsByNode.get(segment.spine_node);
+        if (group) group.push(segment.id);
+        else segmentIdsByNode.set(segment.spine_node, [segment.id]);
+      }
+      // The relocation ledger asks, per spine node, for this track's content
+      // lessons whose concept the node owns but whose explicit `spine_node`
+      // names a DIFFERENT canonical node. Written as a filter over the corpus
+      // inside the node loop, that was curricula x nodes x ~60k lessons -- about
+      // a tenth of the whole validation. Two of the filter's conditions do not
+      // depend on the node (content type; explicit node present and canonical),
+      // so they are applied once here, and the survivors are indexed by concept.
+      // A node then visits only the lessons of its own concepts.
+      //
+      // The index stores each lesson's POSITION in `trackLessons`, not the
+      // lesson, so a node owning several concepts can merge its buckets and sort
+      // them back into corpus order. Order is load-bearing: the ledger is built
+      // with Object.fromEntries, where a later entry for the same concept
+      // overwrites an earlier one, so the merged list must replay the original
+      // filter's sequence exactly.
+      const relocatableByConcept = new Map<string, number[]>();
+      trackLessons.forEach((lesson, index) => {
+        if (!CONTENT_TYPES.has(lesson.realization.type)) return;
+        const declaredNode = stringValue(lesson.frontmatter.spine_node);
+        if (declaredNode === "" || !nodeIds.has(declaredNode)) return;
+        const bucket = relocatableByConcept.get(lesson.realization.concept);
+        if (bucket) bucket.push(index);
+        else relocatableByConcept.set(lesson.realization.concept, [index]);
+      });
       for (const node of spine.nodes) {
         const realization = curriculum.spine?.[node.id];
         if (!realization) {
@@ -303,9 +346,7 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
           );
           continue;
         }
-        const actualSegments = (curriculum.path ?? [])
-          .filter((segment) => segment.spine_node === node.id)
-          .map((segment) => segment.id);
+        const actualSegments = segmentIdsByNode.get(node.id) ?? [];
         if (JSON.stringify(realization.segments) !== JSON.stringify(actualSegments)) {
           error(
             "curriculum-segment-ledger-drift",
@@ -343,22 +384,21 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
             `${curriculum.language}: ${node.id} omissions must be ${expectedOmits.join(", ") || "empty"}`,
           );
         }
-        const expectedRelocations = Object.fromEntries(
-          lessons
-            .filter(
-              (lesson) =>
-                lesson.language === curriculum.language &&
-                CONTENT_TYPES.has(lesson.realization.type) &&
-                node.concepts.includes(lesson.realization.concept) &&
-                stringValue(lesson.frontmatter.spine_node) !== "" &&
-                stringValue(lesson.frontmatter.spine_node) !== node.id &&
-                nodeIds.has(stringValue(lesson.frontmatter.spine_node)),
-            )
-            .map((lesson) => [
-              lesson.realization.concept,
-              stringValue(lesson.frontmatter.spine_node),
-            ]),
-        );
+        // A Set of the node's concepts, because `includes` matched a lesson at
+        // most once however often the node listed its concept: a repeated
+        // concept must not pull the same bucket in twice.
+        const candidatePositions: number[] = [];
+        for (const concept of new Set(node.concepts)) {
+          for (const index of relocatableByConcept.get(concept) ?? []) candidatePositions.push(index);
+        }
+        candidatePositions.sort((left, right) => left - right);
+        const relocationEntries: [string, string][] = [];
+        for (const index of candidatePositions) {
+          const lesson = trackLessons[index]!;
+          const declaredNode = stringValue(lesson.frontmatter.spine_node);
+          if (declaredNode !== node.id) relocationEntries.push([lesson.realization.concept, declaredNode]);
+        }
+        const expectedRelocations = Object.fromEntries(relocationEntries);
         if (JSON.stringify(realization.relocates) !== JSON.stringify(expectedRelocations)) {
           error(
             "curriculum-relocation-ledger-drift",
@@ -375,7 +415,7 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
         }
       }
 
-      for (const lesson of lessons.filter((item) => item.language === curriculum.language)) {
+      for (const lesson of trackLessons) {
         const lessonId = lesson.realization.lessonId;
         const canonicalOwner = conceptOwner.get(lesson.realization.concept);
         const explicitNode = stringValue(lesson.frontmatter.spine_node);
@@ -431,6 +471,11 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       }
 
       const extensionById = new Map<string, LanguageCurriculum["extensions"][number]>();
+      // An extension may require any extension of its track, including one
+      // declared after it, so this is the full id list up front rather than the
+      // `extensionById` map still being filled below. It replaces a linear
+      // `.some` scan of every extension per prerequisite with one Set lookup.
+      const declaredExtensionIds = new Set((curriculum.extensions ?? []).map((item) => item.id));
       for (const extension of curriculum.extensions ?? []) {
         if (extensionById.has(extension.id)) {
           error(
@@ -459,7 +504,7 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
           );
         }
         for (const prerequisite of extension.prerequisites ?? []) {
-          if (!nodeIds.has(prerequisite) && !(curriculum.extensions ?? []).some((item) => item.id === prerequisite)) {
+          if (!nodeIds.has(prerequisite) && !declaredExtensionIds.has(prerequisite)) {
             error(
               "unknown-curriculum-extension-prerequisite",
               `${curriculum.language}: ${extension.id} requires unknown '${prerequisite}'`,
@@ -840,27 +885,54 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       stack.pop();
     }
   };
-  const prerequisiteKnowledge = (lesson: ParsedLesson): Set<string> => {
+  // The memo made the closure cheap to COMPUTE, but this function used to hand
+  // it back as a fresh Set<string> -- every atom the learner knows, peeled out
+  // of the bitset one by one -- and the checks below then copied that Set twice
+  // more (`available`, `blockFrontier`). Late in a track a learner knows
+  // thousands of atoms, so each lesson built three sets of thousands of strings
+  // to answer a handful of membership questions: lessons x atoms work, plus the
+  // garbage collector cleaning up after it. Profiling put that at well over
+  // half of the remaining validation time.
+  //
+  // All any caller ever asks of the closure is "is atom A known?", so that is
+  // all it returns. known(lesson) is the OR of its prerequisites' closures, and
+  // a bit is set in an OR exactly when it is set in one of the operands, so the
+  // question never needs the OR built at all:
+  //
+  //     at = index(A)
+  //     known(A)  <=>  some same-language prerequisite p has bit `at` in closure(p)
+  //
+  // That is one Map lookup plus a bit test per prerequisite (a lesson has one
+  // to three), instead of a fresh Uint32Array per lesson. An atom absent from
+  // the language's index was never introduced by any lesson of that language,
+  // so no closure can contain it: `undefined` means "not known", which is what
+  // the materialised Set answered too. The plain walk already produces a Set,
+  // and a Set satisfies this interface as is.
+  interface KnownAtoms {
+    has(atom: string): boolean;
+  }
+  const prerequisiteKnowledge = (lesson: ParsedLesson): KnownAtoms => {
     if (!memoIsExact) return walkPrerequisiteKnowledge(lesson);
-    for (const prerequisite of sameLanguagePrerequisites(lesson)) memoiseClosures(prerequisite);
-    const atoms = atomsByLanguage.get(lesson.language) ?? [];
-    const bits = knownBits(lesson);
-    const known = new Set<string>();
-    for (let word = 0; word < bits.length; word++) {
-      // Peel set bits lowest-first: `x & -x` isolates the lowest one, and
-      // 31 - clz32 turns it back into its position within the word.
-      let remaining = bits[word];
-      while (remaining !== 0) {
-        const low = remaining & -remaining;
-        known.add(atoms[(word << 5) + 31 - Math.clz32(low)]);
-        remaining ^= low;
-      }
-    }
-    return known;
+    const sources = sameLanguagePrerequisites(lesson);
+    for (const prerequisite of sources) memoiseClosures(prerequisite);
+    const closures = sources.map((prerequisite) => closureBits.get(prerequisite)!);
+    const index = atomIndexByLanguage.get(lesson.language);
+    return {
+      has: (atom: string): boolean => {
+        const at = index?.get(atom);
+        if (at === undefined) return false;
+        const word = at >>> 5;
+        const mask = 1 << (at & 31);
+        // `!== 0`, not `> 0`: bit 31 makes the masked word negative.
+        return closures.some((bits) => (bits[word]! & mask) !== 0);
+      },
+    };
   };
   for (const lesson of schema2Lessons) {
     const id = lesson.realization.lessonId;
     const known = prerequisiteKnowledge(lesson);
+    const lessonIntroduces = new Set(stringList(lesson.frontmatter["introduces.knowledge"]));
+    const lessonPractises = new Set(stringList(lesson.frontmatter["practises.knowledge"]));
     const languageAtoms = atomOwner.get(lesson.language) ?? new Map<string, string>();
     for (const atom of stringList(lesson.frontmatter["requires.knowledge"])) {
       if (!known.has(atom)) {
@@ -870,10 +942,10 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
         );
       }
     }
-    const available = new Set([
-      ...known,
-      ...stringList(lesson.frontmatter["introduces.knowledge"]),
-    ]);
+    // What a lesson may practise: everything already known, plus what this very
+    // lesson introduces. Asked as a union of two lookups rather than built as a
+    // copied Set (see `KnownAtoms` above for why the copy was the hot spot).
+    const isAvailable = (atom: string): boolean => known.has(atom) || lessonIntroduces.has(atom);
     const unknownPractisedAtoms = new Set<string>();
     for (const atom of stringList(lesson.frontmatter["practises.knowledge"])) {
       if (!languageAtoms.has(atom)) {
@@ -884,7 +956,7 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
         );
         continue;
       }
-      if (!available.has(atom)) {
+      if (!isAvailable(atom)) {
         error(
           "schema-v2-practice-before-introduction",
           `${id}: practised atom '${atom}' is not yet available`,
@@ -892,10 +964,14 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       }
     }
 
-    const lessonIntroduces = new Set(stringList(lesson.frontmatter["introduces.knowledge"]));
-    const lessonPractises = new Set(stringList(lesson.frontmatter["practises.knowledge"]));
-    const blockFrontier = new Set(known);
+    // The block frontier is what a block may assess: the prerequisite closure
+    // plus every atom an EARLIER block of this lesson introduced. It used to be
+    // `new Set(known)`, grown by each block's introductions -- and those
+    // introductions are exactly what `introducedInBlocks` records, added at the
+    // same moment. So the frontier is the union of the two, asked as two
+    // lookups, and the per-lesson copy of the whole closure disappears.
     const introducedInBlocks = new Set<string>();
+    const inBlockFrontier = (atom: string): boolean => known.has(atom) || introducedInBlocks.has(atom);
     const assessedInBlocks = new Set<string>();
     for (const block of lesson.blocks) {
       if (block.knowledgeDirectiveError) {
@@ -928,7 +1004,7 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
             `${id}: block '${block.title}' assesses '${atom}' without declaring it in practises.knowledge`,
           );
         }
-        if (!blockFrontier.has(atom)) {
+        if (!inBlockFrontier(atom)) {
           error(
             "schema-v2-block-knowledge-not-closed",
             `${id}: block '${block.title}' assesses '${atom}' before it is available`,
@@ -975,7 +1051,6 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
           );
         }
         introducedInBlocks.add(atom);
-        blockFrontier.add(atom);
       }
     }
     for (const atom of lessonIntroduces) {
@@ -997,14 +1072,18 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
     }
   }
 
+  // One pass collects every language with at least one spine realization, in
+  // place of a `.some` scan of the whole corpus per registered language (which
+  // ran to the end of the corpus for any language that has none).
   const spineConcepts = new Set(conceptOwner.keys());
+  const languagesRealizingSpine = new Set<string>();
+  for (const lesson of lessons) {
+    if (CONTENT_TYPES.has(lesson.realization.type) && spineConcepts.has(lesson.realization.concept)) {
+      languagesRealizingSpine.add(lesson.language);
+    }
+  }
   for (const language of registry.languages) {
-    const hasSpineRealization = lessons.some(
-      (lesson) =>
-        lesson.language === language.id &&
-        CONTENT_TYPES.has(lesson.realization.type) &&
-        spineConcepts.has(lesson.realization.concept),
-    );
+    const hasSpineRealization = languagesRealizingSpine.has(language.id);
     if (!hasSpineRealization) {
       error("language-without-spine-realization", `${language.id}: no lesson realizes the shared spine`);
     }

@@ -1,5 +1,52 @@
 # Changelog
 
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### The Go tests use a build cache nothing else deletes (root cause of a flake)
+
+`tests/twig_pairs_and_closures.rs` failed twice in one run with a Go
+"compile error" and then passed fifteen reruns.  The cause was not the
+program: `go run` compiles against standard-library export data in the build
+cache (`~/.cache/go-build`, shared by every Go command on the machine), and a
+`go clean -cache` from another session deleted entries between the go
+command finding them and the compiler or linker opening them:
+
+```text
+# command-line-arguments
+.../link: cannot open file $GOCACHE/06/067a…-d: no such file or directory
+```
+
+Running the test binary while a loop cleans the cache it uses fails 9 runs
+out of 9.  Every `go` these tests run now comes from
+`sir_test_scratch::go_command()`, whose `GOCACHE` is
+`<target>/<profile>/sir-go-build-cache`: safe for any number of concurrent
+`go` processes, and known to nothing outside this checkout's tests.  The
+same stress (three copies at `--test-threads=16`, the cache under the test
+environment's `GOCACHE` cleaned every 2.5 s) now passes 24 runs out of 24.
+
+### Constants and the renamed `main` (follow-ups to #18485)
+
+From the security review of #18788.  Nothing to rename here, now pinned by
+tests: a constant is never a Go identifier (the `raise` class operand, the
+only constant this backend accepts, is emitted as its name *string*, and
+every other constant use is refused before emit), so a constant spelled like
+a function cannot shadow it; and no user name can spell `_sir_user_main`,
+the renamed SIR `main`, because `sanitize_ident` reserves every `_sir…` name
+(#18466).
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
 ## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
 
 The execution tests named their temp files from the process id alone, or (in

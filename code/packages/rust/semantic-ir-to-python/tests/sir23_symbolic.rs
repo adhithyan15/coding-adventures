@@ -164,9 +164,10 @@ fn run_symbolic_program(m: &Module) -> Option<String> {
     let pythonpath = symbolic_pythonpath();
 
     let nonce = SEQ.fetch_add(1, Ordering::Relaxed);
-    let file = std::env::temp_dir()
+    let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
+    let file = scratch.path()
         .join(format!("sir_py_symbolic_{}_{}.py", std::process::id(), nonce));
-    std::fs::write(&file, &source).expect("write temp python");
+    sir_test_scratch::write_new(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
         .env("PYTHONPATH", &pythonpath)
@@ -297,9 +298,10 @@ fn depth_limit_guard_raises_a_clean_error_instead_of_crashing() {
         }
     };
     let pythonpath = symbolic_pythonpath();
-    let file = std::env::temp_dir()
+    let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
+    let file = scratch.path()
         .join(format!("sir_py_symbolic_depth_{}.py", unique_suffix()));
-    std::fs::write(&file, &source).expect("write temp python");
+    sir_test_scratch::write_new(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
         .env("PYTHONPATH", &pythonpath)
@@ -379,9 +381,10 @@ fn deep_rule_rhs_reports_depth_limit_error_not_a_crash_even_with_a_shallow_targe
         }
     };
     let pythonpath = symbolic_pythonpath();
-    let file = std::env::temp_dir()
+    let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
+    let file = scratch.path()
         .join(format!("sir_py_symbolic_rule_depth_{}.py", unique_suffix()));
-    std::fs::write(&file, &source).expect("write temp python");
+    sir_test_scratch::write_new(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
         .env("PYTHONPATH", &pythonpath)

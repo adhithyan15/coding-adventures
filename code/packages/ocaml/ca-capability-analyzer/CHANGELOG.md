@@ -2,6 +2,22 @@
 
 All notable changes to this package are recorded here.
 
+## Unreleased
+
+### Added
+
+- D21's nondeterminism categories (VER00 §6.3). Manifests accept the 25-pair
+  taxonomy, including `rand:read`, `thread:spawn`, `thread:message`,
+  `ui:read`, `ui:write` and `ui:event`, and still reject every cross-pair.
+- `Random.self_init` and `Random.State.make_self_init` are detected as
+  `rand:read:*`, and `Thread.create` and `Domain.spawn` as `thread:spawn:*`,
+  through aliases, opens and first-class references like every other rule.
+  Default-state draws such as `Random.int`, and generators seeded by the
+  caller (`Random.full_init`, `Random.State.make`), are deterministic in
+  OCaml 5 and are not reported.
+- Four shared behaviour fixture cases cover the new rules and the seeded,
+  pure case.
+
 ## 0.1.0 — 2026-09-07
 
 ### Added

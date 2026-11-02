@@ -792,6 +792,172 @@ func TestWriteStdout_AllowedCallsBackend(t *testing.T) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// 10b. SecureRand and SecureThread wrappers (D21 nondeterminism categories)
+// ─────────────────────────────────────────────────────────────────────────────
+
+func TestReadRandom_DeniedReturnsViolation(t *testing.T) {
+	called := false
+	restore := cage.WithBackend(&fakeBackend{
+		readRandomFn: func(p []byte) (int, error) { called = true; return len(p), nil },
+	})
+	defer restore()
+
+	_, err := cage.ReadRandom(cage.EmptyManifest, make([]byte, 4))
+	if !isViolation(err) {
+		t.Errorf("expected CapabilityViolationError, got %T: %v", err, err)
+	}
+	if called {
+		t.Error("backend must not be reached when rand:read is not declared")
+	}
+}
+
+func TestReadRandom_AllowedReturnsBackendBytes(t *testing.T) {
+	// The fake plays the simulated host: a fixed stream, so the "random"
+	// bytes are the same on every run.
+	restore := cage.WithBackend(&fakeBackend{
+		readRandomFn: func(p []byte) (int, error) {
+			for i := range p {
+				p[i] = byte(i + 1)
+			}
+			return len(p), nil
+		},
+	})
+	defer restore()
+
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryRand, Action: cage.ActionRead,
+			Target: "*", Justification: "test"},
+	})
+	buf := make([]byte, 3)
+	n, err := cage.ReadRandom(m, buf)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if n != 3 || buf[0] != 1 || buf[2] != 3 {
+		t.Errorf("unexpected random read: n=%d buf=%v", n, buf)
+	}
+}
+
+func TestReadRandom_BackendErrorPropagates(t *testing.T) {
+	restore := cage.WithBackend(&fakeBackend{
+		readRandomFn: func(p []byte) (int, error) { return 0, errors.New("entropy unavailable") },
+	})
+	defer restore()
+
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryRand, Action: cage.ActionRead,
+			Target: "*", Justification: "test"},
+	})
+	if _, err := cage.ReadRandom(m, make([]byte, 1)); err == nil || isViolation(err) {
+		t.Errorf("expected the backend error, got %v", err)
+	}
+}
+
+func TestReadRandom_OpenBackendFillsBuffer(t *testing.T) {
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryRand, Action: cage.ActionRead,
+			Target: "*", Justification: "test"},
+	})
+	buf := make([]byte, 32)
+	n, err := cage.ReadRandom(m, buf)
+	if err != nil || n != len(buf) {
+		t.Fatalf("OpenBackend.ReadRandom: n=%d err=%v", n, err)
+	}
+}
+
+func TestSpawn_DeniedReturnsViolation(t *testing.T) {
+	spawned := false
+	restore := cage.WithBackend(&fakeBackend{
+		spawnFn: func(role string, body func()) { spawned = true },
+	})
+	defer restore()
+
+	err := cage.Spawn(cage.EmptyManifest, "decode-pool", func() {})
+	if !isViolation(err) {
+		t.Errorf("expected CapabilityViolationError, got %T: %v", err, err)
+	}
+	if spawned {
+		t.Error("backend must not spawn when thread:spawn is not declared")
+	}
+}
+
+func TestSpawn_TargetIsTheRole(t *testing.T) {
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryThread, Action: cage.ActionSpawn,
+			Target: "decode-pool", Justification: "test"},
+	})
+	var roles []string
+	restore := cage.WithBackend(&fakeBackend{
+		// Run the body synchronously, as a deterministic scheduler would.
+		spawnFn: func(role string, body func()) { roles = append(roles, role); body() },
+	})
+	defer restore()
+
+	ran := 0
+	if err := cage.Spawn(m, "decode-pool", func() { ran++ }); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if ran != 1 || len(roles) != 1 || roles[0] != "decode-pool" {
+		t.Errorf("expected one decode-pool spawn, got ran=%d roles=%v", ran, roles)
+	}
+	if err := cage.Spawn(m, "network-poller", func() { ran++ }); !isViolation(err) {
+		t.Errorf("an undeclared role must be denied, got %v", err)
+	}
+	if ran != 1 {
+		t.Error("the undeclared role's body must not run")
+	}
+}
+
+func TestSpawn_NilBodyIsAnError(t *testing.T) {
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryThread, Action: cage.ActionSpawn,
+			Target: "*", Justification: "test"},
+	})
+	if err := cage.Spawn(m, "any", nil); err == nil || isViolation(err) {
+		t.Errorf("expected a nil-body error, got %v", err)
+	}
+}
+
+func TestSpawn_OpenBackendRunsBodyConcurrently(t *testing.T) {
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryThread, Action: cage.ActionSpawn,
+			Target: "worker", Justification: "test"},
+	})
+	done := make(chan struct{})
+	if err := cage.Spawn(m, "worker", func() { close(done) }); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	select {
+	case <-done:
+	case <-time.After(5 * time.Second):
+		t.Fatal("spawned body never ran")
+	}
+}
+
+func TestNewCategoriesHaveNoWildcardPair(t *testing.T) {
+	// D21: no category or action stands for "all". A manifest cannot hold
+	// thread:* or ui:all, so it cannot be constructed.
+	for _, pair := range [][2]string{
+		{cage.CategoryThread, "*"},
+		{cage.CategoryUI, "all"},
+		{"all", cage.ActionRead},
+		{cage.CategoryRand, cage.ActionWrite},
+		{cage.CategoryProc, cage.ActionSpawn},
+	} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("NewManifest accepted %s:%s", pair[0], pair[1])
+				}
+			}()
+			cage.NewManifest([]cage.Capability{{
+				Category: pair[0], Action: pair[1], Target: "*", Justification: "test",
+			}})
+		}()
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // 11. Error message format
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -986,18 +1152,20 @@ type fakeBackend struct {
 	sleepFn       func(d time.Duration)
 	writeStdoutFn func(p []byte) (int, error)
 	readStdinFn   func(p []byte) (int, error)
+	readRandomFn  func(p []byte) (int, error)
+	spawnFn       func(role string, body func())
 }
 
 func (f *fakeBackend) ReadFile(path string) ([]byte, error) { return nil, nil }
 func (f *fakeBackend) WriteFile(path string, data []byte, perm os.FileMode) error {
 	return nil
 }
-func (f *fakeBackend) CreateFile(path string) error             { return nil }
-func (f *fakeBackend) DeleteFile(path string) error             { return nil }
-func (f *fakeBackend) ListDir(path string) ([]string, error)    { return nil, nil }
-func (f *fakeBackend) Getenv(key string) string                 { return "" }
-func (f *fakeBackend) Setenv(key, value string) error           { return nil }
-func (f *fakeBackend) Now() time.Time                           { return time.Time{} }
+func (f *fakeBackend) CreateFile(path string) error          { return nil }
+func (f *fakeBackend) DeleteFile(path string) error          { return nil }
+func (f *fakeBackend) ListDir(path string) ([]string, error) { return nil, nil }
+func (f *fakeBackend) Getenv(key string) string              { return "" }
+func (f *fakeBackend) Setenv(key, value string) error        { return nil }
+func (f *fakeBackend) Now() time.Time                        { return time.Time{} }
 func (f *fakeBackend) Command(name string, args ...string) *exec.Cmd {
 	return exec.Command(name, args...)
 }
@@ -1048,6 +1216,19 @@ func (f *fakeBackend) WriteStdout(p []byte) (int, error) {
 		return f.writeStdoutFn(p)
 	}
 	return len(p), nil
+}
+
+func (f *fakeBackend) ReadRandom(p []byte) (int, error) {
+	if f.readRandomFn != nil {
+		return f.readRandomFn(p)
+	}
+	return len(p), nil
+}
+
+func (f *fakeBackend) Spawn(role string, body func()) {
+	if f.spawnFn != nil {
+		f.spawnFn(role, body)
+	}
 }
 
 // Ensure fakeBackend satisfies Backend.

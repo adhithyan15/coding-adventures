@@ -15,3 +15,5 @@ semantic-ir-to-go = { path = "../semantic-ir-to-go" }
 semantic-ir-to-rust = { path = "../semantic-ir-to-rust" }
 semantic-ir-to-c = { path = "../semantic-ir-to-c" }
 semantic-ir-to-ruby = { path = "../semantic-ir-to-ruby" }
+# Private per-run scratch directories and an isolated Go build cache.
+sir-test-scratch = { path = "../sir-test-scratch" }

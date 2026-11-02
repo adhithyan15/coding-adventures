@@ -992,6 +992,18 @@ input/EOF programs cover all seven standard columns. The JIT matrix uses its
 normal interpreter/compiled pipeline; a separate direct test explicitly
 compiles and executes the peek callback to prove the compiled path too.
 
+### Twig's value rules on VM and JIT (#18470, #18493)
+
+The LANG matrix runs `iir-builtin-lowering::lower_lisp_for_vm` on every Twig
+module before VMCore sees it. TW00 truthiness (only `#f` and nil are false, so
+`(if 0 1 2)` is 1), `not`, `number?`, `symbol?`, `boolean?`, `list?`, a
+`null?` that is `#f` for 0, and dynamic `/` / `quotient` / `remainder` /
+`modulo` are written as IIR over the `dyn_*` primitives vm-core lowers; nil
+and symbols are `Value::Null` and `Value::Symbol`, not integers. Other
+languages are not touched (their branch on 0 must still jump). A `Null`
+result exits 0. NativeAot, LLVM and WASM still take the else branch of
+`(if 0 1 2)`, because a raw 0 reaches them untagged (LANG85 §5.5).
+
 ### Encoded CLR call validation (VM-060a)
 
 The focused `mccarthy_encoded_clr_corpus_executes` conformance test executes

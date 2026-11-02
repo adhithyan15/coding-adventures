@@ -24,7 +24,7 @@
     },
     "categories": {
       "type": "object",
-      "required": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout"],
+      "required": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout", "rand", "thread", "ui"],
       "additionalProperties": false,
       "properties": {
         "fs": {
@@ -50,6 +50,15 @@
         },
         "stdout": {
           "$ref": "#/$defs/actions"
+        },
+        "rand": {
+          "$ref": "#/$defs/actions"
+        },
+        "thread": {
+          "$ref": "#/$defs/actions"
+        },
+        "ui": {
+          "$ref": "#/$defs/actions"
         }
       }
     },
@@ -58,11 +67,11 @@
     },
     "expected_valid_pair_count": {
       "type": "integer",
-      "const": 19
+      "const": 25
     },
     "expected_invalid_cross_pair_count": {
       "type": "integer",
-      "const": 93
+      "const": 162
     }
   },
   "$defs": {
@@ -86,7 +95,10 @@
           "signal",
           "call",
           "load",
-          "sleep"
+          "sleep",
+          "spawn",
+          "message",
+          "event"
         ]
       }
     }

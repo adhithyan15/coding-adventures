@@ -169,6 +169,34 @@
       "source": "let make path = Unix.mkdir path 0o700\nlet remove path = Sys.remove path\n",
       "expected_capabilities": ["fs:create:*", "fs:delete:*"],
       "expected_banned": []
+    },
+    {
+      "id": "randomness-self-init",
+      "source_kind": "implementation",
+      "source": "let () = Random.self_init ()\nlet roll () = Random.int 6\nlet fresh () = Random.State.make_self_init ()\n",
+      "expected_capabilities": ["rand:read:*"],
+      "expected_banned": []
+    },
+    {
+      "id": "seeded-randomness-is-pure",
+      "source_kind": "implementation",
+      "source": "let state = Random.State.make [| 42 |]\nlet roll () = Random.State.int state 6\nlet () = Random.full_init [| 7 |]\nlet draw () = Random.int 10\n",
+      "expected_capabilities": [],
+      "expected_banned": []
+    },
+    {
+      "id": "thread-and-domain-spawn",
+      "source_kind": "implementation",
+      "source": "let start work = Thread.create work ()\nlet run work = Domain.spawn work\n",
+      "expected_capabilities": ["thread:spawn:*"],
+      "expected_banned": []
+    },
+    {
+      "id": "nondeterminism-aliases-and-opens",
+      "source_kind": "implementation",
+      "source": "module R = Random\nlet () = R.self_init ()\nlet workers jobs =\n  let open Domain in\n  List.map spawn jobs\n",
+      "expected_capabilities": ["rand:read:*", "thread:spawn:*"],
+      "expected_banned": []
     }
   ]
 }

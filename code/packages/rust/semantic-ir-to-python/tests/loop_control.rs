@@ -138,9 +138,10 @@ fn run_via_python(m: &Module, tag: &str) -> Option<String> {
     .expect("join PYTHONPATH");
 
     let nonce = SEQ.fetch_add(1, Ordering::Relaxed);
+    let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
     let file =
-        std::env::temp_dir().join(format!("sir_py_lc_{tag}_{}_{}.py", std::process::id(), nonce));
-    std::fs::write(&file, &source).expect("write temp python");
+        scratch.path().join(format!("sir_py_lc_{tag}_{}_{}.py", std::process::id(), nonce));
+    sir_test_scratch::write_new(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
         .env("PYTHONPATH", &pythonpath)

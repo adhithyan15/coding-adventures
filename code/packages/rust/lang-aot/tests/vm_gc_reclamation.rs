@@ -30,6 +30,9 @@ fn lower_dynamic_for_generic_engine(module: &mut IIRModule) {
     iir_builtin_lowering::lower_global_io(module);
     iir_builtin_lowering::lower_closures_to_heap(module).expect("closure lowering");
     iir_builtin_lowering::lower_heap_builtins(module).expect("heap lowering");
+    // Twig's value rules and nil / symbol literals (#18470): every module here
+    // is Twig, as in `lang_matrix`'s Twig cells.
+    iir_builtin_lowering::lower_lisp_for_vm(module);
 }
 
 /// A real Twig program that builds a 100-element list (100 real `cons`
