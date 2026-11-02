@@ -1175,10 +1175,14 @@ LLVM column now links `twig_runtime.c` whenever a module calls
 - The "edges" and "ordered stream" rows of the case table are covered only by
   the opaque `str_index` at `len − 1` and `str_slice` `[len, len)` cases; the
   rest come with PR5b's byte cases.
-- `twig-vm`, which is not a matrix column, keeps its own `VMError::Custom`
-  string errors.
-- PR5a touches `interpreter-ir` (and, through the struct-literal update,
-  `twig-ir-compiler` and `twig-vm`), so the local Miri script applies.
+- `twig-vm` is not a matrix column, but it runs the same E4 ops, so PR5a
+  gives it the same contract: `RunError::Trap { kind }` (new), `Trap.Bounds`
+  for an out-of-range `str_index` / `str_slice` (was an untyped `TypeError`),
+  and `Trap.Overflow` past the module's ceiling. A twig-vm integer is a
+  tagged word narrower than `i64`, so its tests use `±2⁴⁰` for the extremes.
+- PR5a touches `interpreter-ir` and `twig-vm` (and, through the
+  struct-literal update, `twig-ir-compiler`), so the local Miri script
+  applies.
 
 ### Owner decisions (2026-11-02)
 

@@ -387,6 +387,19 @@ pub enum RunError {
         /// Human-readable description of what was received.
         received: String,
     },
+
+    /// A LANG83 registered trap: the program stopped with a kind from the
+    /// closed table in `interpreter_ir::exception_kind` (`Trap.Bounds`,
+    /// `Trap.Overflow`, …), the twin of `vm-core`'s `VMError::Trap`.
+    ///
+    /// Since LANG83 PR5a the E4 string ops raise it: an out-of-range
+    /// `str_index` / `str_slice` is `Trap.Bounds`, and a `str_concat` past
+    /// the module's string ceiling is `Trap.Overflow`. Before, both were an
+    /// untyped `Runtime(TypeError(..))` that named no kind.
+    Trap {
+        /// The registered kind, e.g. `"Trap.Bounds"`.
+        kind: String,
+    },
 }
 
 impl std::fmt::Display for RunError {
@@ -415,6 +428,7 @@ impl std::fmt::Display for RunError {
             RunError::HostArgType { function, received } => {
                 write!(f, "host/{function}: expected integer, got {received}")
             }
+            RunError::Trap { kind } => write!(f, "trap: {kind}"),
         }
     }
 }
@@ -1127,7 +1141,7 @@ fn dispatch(
                 pc += 1;
             }
             "str_concat" => {
-                exec_str_concat(instr, &mut frame)?;
+                exec_str_concat(instr, &mut frame, module.str_ceiling())?;
                 pc += 1;
             }
             "str_eq" => {
@@ -1513,24 +1527,43 @@ fn exec_str_len(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     Ok(())
 }
 
+/// The LANG83 trap `kind` as a [`RunError`] (PR5a).
+fn trap(kind: &str) -> RunError {
+    RunError::Trap { kind: kind.to_string() }
+}
+
+/// `str_index dest, s, i [i64]` — byte `i` of `s`, zero-extended.
+///
+/// LANG83 PR5a: `Trap.Bounds` unless `0 <= i < len(s)`. The index is
+/// converted with `usize::try_from` (which rejects a negative value) before
+/// it is compared, so no value is ever cast past the check: `2^32 + 1` is
+/// out of range on every host, not byte 1.
 fn exec_str_index(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     let dest = e4_dest(instr, "str_index")?;
     let bytes = e4_string_arg("str_index", instr, frame, 0)?;
     let idx = e4_int_arg("str_index", instr, frame, 1)?;
-    if idx < 0 || idx as usize >= bytes.len() {
-        return Err(RunError::Runtime(RuntimeError::TypeError(format!(
-            "str_index: index {idx} out of bounds for string of length {}",
-            bytes.len()
-        ))));
-    }
-    frame.set(dest.clone(), LispyValue::int(i64::from(bytes[idx as usize])))?;
+    let byte = usize::try_from(idx)
+        .ok()
+        .and_then(|i| bytes.get(i).copied())
+        .ok_or_else(|| trap(interpreter_ir::exception_kind::TRAP_BOUNDS))?;
+    frame.set(dest.clone(), LispyValue::int(i64::from(byte)))?;
     Ok(())
 }
 
-fn exec_str_concat(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+/// `str_concat dest, a, b [str]` — a fresh string, `a`'s bytes then `b`'s.
+///
+/// LANG83 PR5a: `Trap.Overflow` when the result would be longer than
+/// `ceiling`, the module's `IIRModule::str_ceiling()`. Checked before the
+/// result is built, written `lb > ceiling || la > ceiling - lb` so that it
+/// cannot overflow.
+fn exec_str_concat(instr: &IIRInstr, frame: &mut Frame, ceiling: u32) -> Result<(), RunError> {
     let dest = e4_dest(instr, "str_concat")?;
     let mut bytes = e4_string_arg("str_concat", instr, frame, 0)?;
     let rhs = e4_string_arg("str_concat", instr, frame, 1)?;
+    let ceiling = ceiling as usize;
+    if rhs.len() > ceiling || bytes.len() > ceiling - rhs.len() {
+        return Err(trap(interpreter_ir::exception_kind::TRAP_OVERFLOW));
+    }
     bytes.extend_from_slice(&rhs);
     frame.set(dest.clone(), dynval_runtime::heap::alloc_string(&bytes))?;
     Ok(())
@@ -1585,9 +1618,11 @@ fn exec_str_cmp(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
 /// 0 <= start <= end <= len(s)
 /// ```
 ///
-/// and, when `s` is UTF-8, both ends must fall on character boundaries so
-/// the result is UTF-8 too; anything else is a `TypeError`, never a panic
-/// or an out-of-bounds read.  Until #18453 twig-vm had no `str_slice` arm,
+/// or the op raises `Trap.Bounds` (LANG83 PR5a; it was a `TypeError`).
+/// When `s` is UTF-8, both ends must also fall on character boundaries so
+/// the result is UTF-8 too; a split character is still a `TypeError` until
+/// LANG83 PR5b makes strings plain bytes. Never a panic or an out-of-bounds
+/// read.  Until #18453 twig-vm had no `str_slice` arm,
 /// so even `(substring "abcde" 1 3)` stopped with
 /// `UnsupportedOpcode("str_slice")`.
 fn exec_str_slice(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
@@ -1595,12 +1630,7 @@ fn exec_str_slice(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     let bytes = e4_string_arg("str_slice", instr, frame, 0)?;
     let start = e4_int_arg("str_slice", instr, frame, 1)?;
     let end = e4_int_arg("str_slice", instr, frame, 2)?;
-    let out_of_range = || {
-        RunError::Runtime(RuntimeError::TypeError(format!(
-            "str_slice: range {start}..{end} out of bounds for string of length {}",
-            bytes.len()
-        )))
-    };
+    let out_of_range = || trap(interpreter_ir::exception_kind::TRAP_BOUNDS);
     // `usize::try_from` rejects a negative `start`; the comparisons then
     // order the range and bound it by the length.
     let lo = usize::try_from(start).map_err(|_| out_of_range())?;
@@ -4417,7 +4447,7 @@ mod tests {
     #[test]
     fn str_slice_rejects_a_bad_range() {
         // Hand-built, so the range reaches `str_slice` unchecked.
-        for (start, end) in [(-1, 2), (2, 1), (0, 4), (4, 4), (1, 1 << 40)] {
+        for (start, end) in [(-1, 2), (2, 1), (0, 4), (4, 4), (1, 1 << 40), (1 << 32, (1 << 32) + 3), (-(1 << 40), 0)] {
             let instrs = vec![
                 IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("abc".into())], "str"),
                 IIRInstr::new("const", Some("a".into()), vec![Operand::Int(start)], "i64"),
@@ -4431,7 +4461,8 @@ mod tests {
                 IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "str"),
             ];
             let e = run(&module_with_main(instrs, 4)).expect_err(&format!("{start}..{end}"));
-            assert!(format!("{e:?}").contains("str_slice"), "{start}..{end}: {e:?}");
+            // LANG83 PR5a: the registered kind, not an untyped TypeError.
+            assert_eq!(e, RunError::Trap { kind: "Trap.Bounds".into() }, "{start}..{end}");
         }
         // A range that splits a UTF-8 character is rejected too.
         let instrs = vec![
@@ -6436,6 +6467,62 @@ mod tests {
             IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "any"),
         ];
         assert_eq!(run(&module_with_main(instrs, 5)).unwrap().as_int(), Some(6));
+    }
+
+    /// LANG83 PR5a: every out-of-range `str_index` is the registered
+    /// `Trap.Bounds`, including `2^32 + 1` (byte 1 after a 32-bit narrowing)
+    /// and large values of either sign. (`i64::MIN` / `MAX` cannot be built:
+    /// a twig-vm integer is a tagged word with a narrower range, so the
+    /// extremes here are `±2^40`.) Before PR5a each was an untyped
+    /// `Runtime(TypeError("… out of bounds …"))`.
+    #[test]
+    fn e4_str_index_out_of_range_is_trap_bounds() {
+        for i in [-1, 3, 1 << 40, -(1 << 40), (1 << 32) + 1] {
+            let instrs = vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(i)], "i64"),
+                IIRInstr::new(
+                    "str_index",
+                    Some("b".into()),
+                    vec![Operand::Var("s".into()), Operand::Var("i".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "any"),
+            ];
+            let e = run(&module_with_main(instrs, 4)).expect_err(&format!("ABC[{i}]"));
+            assert_eq!(e, RunError::Trap { kind: "Trap.Bounds".into() }, "ABC[{i}]");
+            assert_eq!(e.to_string(), "trap: Trap.Bounds");
+        }
+        // The Twig spelling reaches the same op.
+        assert_eq!(
+            run_source(r#"(string-ref "ABC" 3)"#).unwrap_err(),
+            RunError::Trap { kind: "Trap.Bounds".into() }
+        );
+    }
+
+    /// LANG83 PR5a: `str_concat` past the module's string ceiling is
+    /// `Trap.Overflow`; exactly at it, and under the registry ceiling, the
+    /// same program runs. Before PR5a twig-vm had no ceiling at all.
+    #[test]
+    fn e4_str_concat_past_the_module_ceiling_is_trap_overflow() {
+        let program = |ceiling: Option<u32>| {
+            let mut m = module_with_main(
+                vec![
+                    IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("01234567".into())], "str"),
+                    IIRInstr::new("str_concat", Some("b".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+                    IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("b".into())], "i64"),
+                    IIRInstr::new("str_const", Some("x".into()), vec![Operand::Str("x".into())], "str"),
+                    IIRInstr::new("str_concat", Some("c".into()), vec![Operand::Var("b".into()), Operand::Var("x".into())], "str"),
+                    IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "any"),
+                ],
+                6,
+            );
+            m.str_max_bytes = ceiling;
+            m
+        };
+        assert_eq!(run(&program(Some(16))).unwrap_err(), RunError::Trap { kind: "Trap.Overflow".into() });
+        assert_eq!(run(&program(Some(17))).unwrap().as_int(), Some(16));
+        assert_eq!(run(&program(None)).unwrap().as_int(), Some(16));
     }
 
     #[test]
