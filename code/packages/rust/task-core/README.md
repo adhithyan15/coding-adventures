@@ -74,7 +74,10 @@ rollups, formula values — is **computed, never stored as source of truth**.
 - **The operations API** (`ops`): every mutation as a validated `ProjectState` method
   (`create_task`, `reparent`, `link_dependency`, `assign`, `add_calendar_exception`, …)
   returning `Result<(), OpError>` — no command/dispatch. Pure, and the single trust
-  boundary enforcing invariants (percent clamp, interval bounds, cycle rejection).
+  boundary enforcing invariants (percent clamp, interval bounds, cycle rejection,
+  and the task-name limit: `MAX_TASK_NAME_CHARS`, 512 Unicode scalar values, which
+  `create_task` enforces and `rename_task` enforces on any rename that grows a name;
+  see `task_name_fits`).
 - **View projections** (`projections`): pure `&self` queries that render the primitives
   from the one model — `checklist()` (decision-aware), `todos()`, `kanban(workflow)`,
   `gantt(start)`, `flowchart()` — each returning plain serde-friendly data.
