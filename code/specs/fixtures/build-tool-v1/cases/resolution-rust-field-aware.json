@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "resolution/rust-field-aware",
   "domain": "resolution",
-  "summary": "Rust resolution reads path entries in dependencies and build-dependencies, their target forms and sub-tables, honoring package renames and bare or quoted field keys; dev-dependencies, patch, registry entries, features, case-variant keys and comments add no edge.",
+  "summary": "Rust resolution reads path entries in dependencies, build-dependencies, their target forms and sub-tables, with package renames and quoted field keys; dev-dependencies, patch, registry entries, features and comments add no edge.",
   "platforms": [
     "darwin",
     "linux",
