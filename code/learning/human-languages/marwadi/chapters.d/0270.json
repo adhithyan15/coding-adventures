@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Saying Sorry",
+  "label": "ch:mw-saying-sorry",
+  "canDo": "I can say sorry and ask someone not to be cross.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-C270-khijno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say sorry and ask someone not to be cross.",
+    "assesses": [
+      "MW-LEX-C270-MAPHI270-03",
+      "MW-LEX-C270-MAPHI270-04",
+      "MW-LEX-C270-MAPHI270-05"
+    ]
+  }
+}

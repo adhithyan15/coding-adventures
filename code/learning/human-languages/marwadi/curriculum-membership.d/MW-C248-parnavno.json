@@ -1,0 +1,11 @@
+{
+  "id": "MW-C248-parnavno",
+  "pathSegment": "MW-PATH-248-MEHDI248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-248-MEHDI248",
+      "order": 1
+    }
+  ]
+}

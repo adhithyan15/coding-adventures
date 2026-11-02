@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C243-khosno",
+    "language": "marwadi",
+    "chapter": 243,
+    "sequence": 17120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc7c59e8b7ba6445"
+  },
+  "findings": []
+}

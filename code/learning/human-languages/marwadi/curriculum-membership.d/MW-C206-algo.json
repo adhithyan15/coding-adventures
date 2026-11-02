@@ -1,0 +1,11 @@
+{
+  "id": "MW-C206-algo",
+  "pathSegment": "MW-PATH-206-LANE206",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-206-LANE206",
+      "order": 4
+    }
+  ]
+}

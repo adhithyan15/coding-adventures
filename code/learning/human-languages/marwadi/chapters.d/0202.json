@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Turn and Go Back",
+  "label": "ch:mw-turn-and-go-back",
+  "canDo": "I can follow a turn and find my way back.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-C202-tirchho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can follow a turn and find my way back.",
+    "assesses": [
+      "MW-LEX-C202-WAY202-03",
+      "MW-LEX-C202-WAY202-04",
+      "MW-LEX-C202-WAY202-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:66be6991ffbc4cf8",
+  "lessonIds": [
+    "MW-C254-vaid",
+    "MW-C254-goli",
+    "MW-C254-sujno",
+    "MW-C254-aram",
+    "MW-C254-alas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch254.txt",
+  "json": "marwadi/narration/ch254.json",
+  "textHash": "fnv1a64:cc78c7a7405c7072",
+  "jsonHash": "fnv1a64:58bfd0a6fa7cf01d",
+  "findings": []
+}

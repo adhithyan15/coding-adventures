@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 286,
+  "title": "Test Day",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d9986c90b3bee4b7",
+  "lessons": [
+    {
+      "id": "MW-C286-imtihan",
+      "sequence": 20030,
+      "title": "इम्तिहान (imtihān) — an exam",
+      "headword": "इम्तिहान",
+      "romanization": "imtihān",
+      "gloss": "an exam",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e99b619bc30c63e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to learn by heart, then the Marwadi for to pronounce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इम्तिहान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इम्तिहान — imtihān — \"an exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काल इम्तिहान है। kāl imtihān hai. There's an exam tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इम्तिहान (imtihān) is usually traced, through Persian imtihān, to Arabic imtiḥān, \"a test, a trial\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imtihān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imtihān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imtihān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imtihān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl imtihān hai. — There's an exam tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl imtihān hai.* — There's an exam tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to learn by heart, then the Marwadi for to pronounce, then say imtihān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to learn by heart, then the Marwadi for to pronounce, then say *imtihān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इम्तिहान (imtihān) mean? (\"An exam\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C286-imtihan-type",
+              "prompt": "Say the Marwadi for 'an exam'.",
+              "assesses": [
+                "MW-LEX-C286-IMTIHAN286-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "इम्तिहान",
+                "imtihān"
+              ],
+              "feedback": {
+                "correct": "Right: इम्तिहान (imtihān) is 'an exam'.",
+                "incorrect": "'an exam' is इम्तिहान (imtihān)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C286-hisab",
+      "sequence": 20040,
+      "title": "हिसाब (hisāb) — sums",
+      "headword": "हिसाब",
+      "romanization": "hisāb",
+      "gloss": "sums",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df3c0ceb0231f5b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to pronounce, then the Marwadi for an exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिसाब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिसाब — hisāb — \"sums\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हिसाब दोरो कोनी। hisāb doro konī. Sums aren't hard."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिसाब (hisāb) is usually traced, through Persian hisāb, to Arabic ḥisāb, \"reckoning\": sums at school, and the reckoning of money."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hisāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hisāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hisāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hisāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hisāb doro konī. — Sums aren't hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hisāb doro konī.* — Sums aren't hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to pronounce, then the Marwadi for an exam, then say hisāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to pronounce, then the Marwadi for an exam, then say *hisāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिसाब (hisāb) mean? (\"Sums\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C286-hisab-type",
+              "prompt": "Say the Marwadi for 'sums'.",
+              "assesses": [
+                "MW-LEX-C286-IMTIHAN286-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हिसाब",
+                "hisāb"
+              ],
+              "feedback": {
+                "correct": "Right: हिसाब (hisāb) is 'sums'.",
+                "incorrect": "'sums' is हिसाब (hisāb)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C286-natijo",
+      "sequence": 20050,
+      "title": "नतीजो (natījo) — a result",
+      "headword": "नतीजो",
+      "romanization": "natījo",
+      "gloss": "a result",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd3a62b7770c75a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an exam, then the Marwadi for sums."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नतीजो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नतीजो — natījo — \"a result\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो नतीजो चोखो है। mhāro natījo chokho hai. My result is good."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नतीजो (natījo) is usually traced, through Persian natīja, to Arabic natīja, \"a result, an outcome\"; Marwadi gives it the -ो ending of a masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natījo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natījo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natījo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natījo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro natījo chokho hai. — My result is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro natījo chokho hai.* — My result is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an exam, then the Marwadi for sums, then say natījo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an exam, then the Marwadi for sums, then say *natījo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नतीजो (natījo) mean? (\"A result\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C286-natijo-type",
+              "prompt": "Say the Marwadi for 'a result'.",
+              "assesses": [
+                "MW-LEX-C286-IMTIHAN286-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नतीजो",
+                "natījo"
+              ],
+              "feedback": {
+                "correct": "Right: नतीजो (natījo) is 'a result'.",
+                "incorrect": "'a result' is नतीजो (natījo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C286-darjo",
+      "sequence": 20060,
+      "title": "दरजो (darjo) — a class at school",
+      "headword": "दरजो",
+      "romanization": "darjo",
+      "gloss": "a class at school",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64fb63602450c183",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for sums, then the Marwadi for a result."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दरजो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरजो — darjo — \"a class at school\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो दरजो बड़ो है। yo darjo baṛo hai. This class is big."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरजो (darjo) is usually traced, through Persian darja, to Arabic daraja, \"a step, a degree\"; Marwadi gives it the -ो ending of a masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darjo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darjo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darjo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darjo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo darjo baṛo hai. — This class is big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo darjo baṛo hai.* — This class is big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for sums, then the Marwadi for a result, then say darjo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for sums, then the Marwadi for a result, then say *darjo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दरजो (darjo) mean? (\"A class at school\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C286-darjo-type",
+              "prompt": "Say the Marwadi for 'a class at school'.",
+              "assesses": [
+                "MW-LEX-C286-IMTIHAN286-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दरजो",
+                "darjo"
+              ],
+              "feedback": {
+                "correct": "Right: दरजो (darjo) is 'a class at school'.",
+                "incorrect": "'a class at school' is दरजो (darjo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C286-akno",
+      "sequence": 20070,
+      "title": "आंकणो (ā̃kṇo) — to mark schoolwork; to assess",
+      "headword": "आंकणो",
+      "romanization": "ā̃kṇo",
+      "gloss": "to mark schoolwork; to assess",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fad51cc35dd96385",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a result, then the Marwadi for a class at school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आंकणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आंकणो — ā̃kṇo — \"to mark schoolwork; to assess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मास्टर हिसाब आंकै है। māsṭar hisāb ā̃kai hai. The teacher marks the sums."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं हिसाब आंक्यो, mhaĩ hisāb ā̃kyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आंकणो (ā̃kṇo) is inherited from Sanskrit aṅkayati, \"marks, brands\"; CDIAL gives no Marwari form in this entry, but lists Gujarati ā̃kvũ and Hindi ā̃knā, both \"to mark, appraise\" (CDIAL 104)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃kṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃kṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃kṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃kṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsṭar hisāb ā̃kai hai. — The teacher marks the sums.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsṭar hisāb ā̃kai hai.* — The teacher marks the sums.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a result, then the Marwadi for a class at school, then say ā̃kṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a result, then the Marwadi for a class at school, then say *ā̃kṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आंकणो (ā̃kṇo) mean? (\"To mark schoolwork; to assess\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C286-akno-type",
+              "prompt": "Say the Marwadi for 'to mark schoolwork'.",
+              "assesses": [
+                "MW-LEX-C286-IMTIHAN286-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "आंकणो",
+                "ā̃kṇo"
+              ],
+              "feedback": {
+                "correct": "Right: आंकणो (ā̃kṇo) is 'to mark schoolwork; to assess'.",
+                "incorrect": "'to mark schoolwork' is आंकणो (ā̃kṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C264-suthar",
+    "language": "marwadi",
+    "chapter": 264,
+    "sequence": 18220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5057a2c73b2b74a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:dfc14a67a3342338",
+  "lessonIds": [
+    "MW-C238-bovno",
+    "MW-C238-khodno",
+    "MW-C238-ropno",
+    "MW-C238-hali",
+    "MW-C238-bij"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch238.txt",
+  "json": "marwadi/narration/ch238.json",
+  "textHash": "fnv1a64:75fa338509ff49ee",
+  "jsonHash": "fnv1a64:ee42515a79f912fb",
+  "findings": []
+}

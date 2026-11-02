@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:354fa974c9e1ae38",
+  "lessonIds": [
+    "MW-C221-meh",
+    "MW-C221-barasno",
+    "MW-C221-bijli",
+    "MW-C221-gajno",
+    "MW-C221-jhari"
+  ],
+  "tex": "marwadi/book/chapters/ch221-rain-to-come.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C227-rahat",
+    "language": "marwadi",
+    "chapter": 227,
+    "sequence": 15590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5fa3663d48ad4ef"
+  },
+  "findings": []
+}

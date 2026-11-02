@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-220-PLAN220",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say my plan is settled, or that I will put it off or change it.",
+  "prerequisites": []
+}

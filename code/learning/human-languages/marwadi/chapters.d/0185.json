@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Spices",
+  "label": "ch:mw-spices",
+  "canDo": "I can name the spices in my kitchen.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C185-saumph",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can name the spices in my kitchen.",
+    "assesses": [
+      "MW-LEX-C185-MASALO185-03",
+      "MW-LEX-C185-MASALO185-04",
+      "MW-LEX-C185-MASALO185-05"
+    ]
+  }
+}

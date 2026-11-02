@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Sun and Shade",
+  "label": "ch:mw-sun-and-shade",
+  "canDo": "I can say when the sun rises and where the sun and the shade are.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C168-sichno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say when the sun rises and where the sun and the shade are.",
+    "assesses": [
+      "MW-LEX-C168-SURAJ168-03",
+      "MW-LEX-C168-SURAJ168-04",
+      "MW-LEX-C168-SURAJ168-05"
+    ]
+  }
+}

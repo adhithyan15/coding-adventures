@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:f6ee51205734a127",
+  "lessonIds": [
+    "MW-C228-lukho",
+    "MW-C228-tapno",
+    "MW-C228-pasino",
+    "MW-C228-silo",
+    "MW-C228-sukno",
+    "MW-R228-review-223-228"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch228.txt",
+  "json": "marwadi/narration/ch228.json",
+  "textHash": "fnv1a64:6bc63c9f63ab5cfa",
+  "jsonHash": "fnv1a64:64272b6b05c1838f",
+  "findings": []
+}

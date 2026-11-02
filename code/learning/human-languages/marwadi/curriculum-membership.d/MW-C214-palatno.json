@@ -1,0 +1,11 @@
+{
+  "id": "MW-C214-palatno",
+  "pathSegment": "MW-PATH-214-RETURN214",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-214-RETURN214",
+      "order": 3
+    }
+  ]
+}

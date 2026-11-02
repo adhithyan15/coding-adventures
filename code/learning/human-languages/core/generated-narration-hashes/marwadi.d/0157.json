@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:f30dd0a40603a4ac",
+  "lessonIds": [
+    "MW-C157-koni",
+    "MW-C157-mat",
+    "MW-C157-samajhno",
+    "MW-W47-jha",
+    "MW-R157-not-today"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch157.txt",
+  "json": "marwadi/narration/ch157.json",
+  "textHash": "fnv1a64:dec83a082169ddf9",
+  "jsonHash": "fnv1a64:43c4c4f13075a1a9",
+  "findings": []
+}

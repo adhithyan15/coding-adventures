@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Making Rotis",
+  "label": "ch:mw-making-rotis",
+  "canDo": "I can say how the dough is kneaded and the food is cooked.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C169-chakhno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say how the dough is kneaded and the food is cooked.",
+    "assesses": [
+      "MW-LEX-C169-ROTI169-03",
+      "MW-LEX-C169-ROTI169-04",
+      "MW-LEX-C169-ROTI169-05"
+    ]
+  }
+}

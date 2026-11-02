@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C271-galat",
+    "language": "marwadi",
+    "chapter": 271,
+    "sequence": 19260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c24749b71b999398"
+  },
+  "findings": []
+}

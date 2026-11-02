@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C274-saharo",
+    "language": "marwadi",
+    "chapter": 274,
+    "sequence": 19430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fed8d9540907314"
+  },
+  "findings": []
+}

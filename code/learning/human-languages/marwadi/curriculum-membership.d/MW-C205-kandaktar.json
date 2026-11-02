@@ -1,0 +1,11 @@
+{
+  "id": "MW-C205-kandaktar",
+  "pathSegment": "MW-PATH-205-BUS205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-205-BUS205",
+      "order": 4
+    }
+  ]
+}

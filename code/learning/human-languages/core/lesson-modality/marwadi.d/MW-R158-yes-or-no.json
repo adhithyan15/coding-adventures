@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R158-yes-or-no",
+    "language": "marwadi",
+    "chapter": 158,
+    "sequence": 9810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:448bc06783ba0df3"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-227-WELL227",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "MW-EXT-227-WELL227"
+  ],
+  "after": []
+}

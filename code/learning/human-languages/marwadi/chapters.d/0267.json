@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "May I Go?",
+  "label": "ch:mw-may-i-go",
+  "canDo": "I can ask for permission and ask someone to wait.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-C267-thamno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can ask for permission and ask someone to wait.",
+    "assesses": [
+      "MW-LEX-C267-RAJA267-03",
+      "MW-LEX-C267-RAJA267-04",
+      "MW-LEX-C267-RAJA267-05"
+    ]
+  }
+}

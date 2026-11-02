@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:921ac13a9f23f89b",
+  "lessonIds": [
+    "MW-C179-sil",
+    "MW-C179-kutno",
+    "MW-C179-dalno",
+    "MW-C179-chhilno",
+    "MW-C179-phatakno"
+  ],
+  "tex": "marwadi/book/chapters/ch179-grain-and-spice.tex"
+}

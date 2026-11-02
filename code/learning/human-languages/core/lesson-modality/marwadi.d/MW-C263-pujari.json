@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C263-pujari",
+    "language": "marwadi",
+    "chapter": 263,
+    "sequence": 18130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:274eec3b52b0056a"
+  },
+  "findings": []
+}

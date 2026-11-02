@@ -1,0 +1,21 @@
+{
+  "chapter": 158,
+  "title": "Yes or No?",
+  "label": "ch:mw-a2-yes-or-no",
+  "canDo": "I can ask a yes-or-no question, answer it politely, ask when, and say that I recognise something.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-R158-yes-or-no",
+    "kind": "production",
+    "summary": "Complete MW-R158-yes-or-no: ask and answer yes-or-no questions politely, ask when, and recognise a song.",
+    "assesses": [
+      "MW-GRAMMAR-C158-POLAR-01",
+      "MW-GRAMMAR-C158-ANSWER-01",
+      "MW-LEX-C158-ASK158-01",
+      "MW-LEX-C158-VERB158-01",
+      "MW-SCRIPT-C158-O-01"
+    ]
+  }
+}

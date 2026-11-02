@@ -1,0 +1,11 @@
+{
+  "id": "MW-C184-tabo",
+  "pathSegment": "MW-PATH-184-OKHLI184",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-184-OKHLI184",
+      "order": 3
+    }
+  ]
+}

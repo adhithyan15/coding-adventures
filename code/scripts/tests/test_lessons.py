@@ -406,5 +406,134 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual(len(titles), len(set(titles)))
 
 
+
+GOOD_QUIRK = """\
+---
+package: rust/ct-compare
+lane: rust
+rung: E4
+status: open
+---
+
+# A toolchain hides an early exit
+
+The optimiser can reintroduce an early exit; the lane checks its IR.
+"""
+
+
+def write_quirks(tmp: Path, shards: dict[str, str]) -> Path:
+    directory = tmp / "quirks.d"
+    directory.mkdir()
+    (directory / "_meta.md").write_text("# Quirks\n", encoding="utf-8")
+    for name, text in shards.items():
+        (directory / name).write_text(text, encoding="utf-8")
+    return directory
+
+
+class QuirkValidationTests(unittest.TestCase):
+    """`quirks.d/` shares the lesson layout but has closed, required frontmatter
+    and must never carry reproducing material (VER00 section 7.3)."""
+
+    def validate(self, text: str, name: str = "a-toolchain-hides-an-early-exit.md"):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = write_quirks(Path(tmp), {name: text})
+            return run(lessons.cmd_validate_quirks, directory)
+
+    def test_a_well_formed_quirk_passes(self):
+        code, out, err = self.validate(GOOD_QUIRK)
+        self.assertEqual(code, 0, err)
+        self.assertIn("1 shards, 0 problem(s)", out)
+
+    def test_every_field_is_required(self):
+        for field in ("package", "lane", "rung", "status"):
+            with self.subTest(field=field):
+                text = "\n".join(
+                    line for line in GOOD_QUIRK.splitlines() if not line.startswith(field + ":")
+                )
+                code, _, err = self.validate(text + "\n")
+                self.assertEqual(code, 1)
+                self.assertIn(f"missing required field {field!r}", err)
+
+    def test_unknown_fields_and_values_are_rejected(self):
+        cases = {
+            "category: Rust\n---": "unknown field",
+            "rung: E9": "rung 'E9'",
+            "status: fixed": "status 'fixed'",
+        }
+        for replacement, message in cases.items():
+            with self.subTest(replacement=replacement):
+                if replacement.startswith("category"):
+                    text = GOOD_QUIRK.replace("status: open\n---", "status: open\n" + replacement, 1)
+                elif replacement.startswith("rung"):
+                    text = GOOD_QUIRK.replace("rung: E4", replacement)
+                else:
+                    text = GOOD_QUIRK.replace("status: open", replacement)
+                code, _, err = self.validate(text)
+                self.assertEqual(code, 1)
+                self.assertIn(message, err)
+
+    def test_reproducing_material_is_rejected(self):
+        for leak in (
+            "seed: 0x1234",
+            "- tape = 1 2 3",
+            "Counterexample: left=00 right=01",
+            "reproducer: see attached",
+            "The failing input was 00112233445566778899aabbccddeeff.",
+            "seed 0x00112233445566778899aabbccddeeff00112233",
+            "id 0011-2233-4455-6677-8899-aabb-ccdd",
+            "The run used 1234567890123456 as its seed.",
+            "`seed`: 1",
+            "**Seed** - 7",
+            "tape 3 4 5",
+        ):
+            with self.subTest(leak=leak):
+                code, _, err = self.validate(GOOD_QUIRK + "\n" + leak + "\n")
+                self.assertEqual(code, 1)
+                self.assertIn("reproducing input", err)
+
+    def test_a_duplicate_frontmatter_key_is_rejected(self):
+        text = GOOD_QUIRK.replace("status: open", "status: bogus\nstatus: open")
+        code, _, err = self.validate(text)
+        self.assertEqual(code, 1)
+        self.assertIn("duplicate frontmatter key 'status'", err)
+
+    def test_the_keyword_pattern_is_linear_on_blank_lines(self):
+        import time
+
+        start = time.perf_counter()
+        lessons.QUIRK_SECRET_LINE.search("\n" * 20000 + "x")
+        self.assertLess(time.perf_counter() - start, 0.5)
+
+    def test_the_new_quirk_placeholder_must_be_replaced(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = write_quirks(Path(tmp), {})
+            code, _, _ = run(
+                lessons.cmd_new_quirk, directory, "A toolchain hides an early exit",
+                "rust/ct-compare", "rust", "E4", "open",
+            )
+            self.assertEqual(code, 0)
+            code, _, err = run(lessons.cmd_validate_quirks, directory)
+            self.assertEqual(code, 1)
+            self.assertIn("placeholder", err)
+
+    def test_new_quirk_rejects_bad_values_and_duplicates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = write_quirks(Path(tmp), {})
+            args = (directory, "A toolchain hides an early exit", "*", "*")
+            self.assertEqual(run(lessons.cmd_new_quirk, *args, "E9", "open")[0], 1)
+            self.assertEqual(run(lessons.cmd_new_quirk, *args, "E4", "done")[0], 1)
+            self.assertEqual(run(lessons.cmd_new_quirk, *args, "E4", "open")[0], 0)
+            self.assertEqual(run(lessons.cmd_new_quirk, *args, "E4", "open")[0], 1)
+
+    def test_the_filename_must_derive_from_the_title(self):
+        code, _, err = self.validate(GOOD_QUIRK, name="something-else.md")
+        self.assertEqual(code, 1)
+        self.assertIn("title slugs to", err)
+
+    def test_the_repository_quirks_store_is_valid(self):
+        code, _, err = run(lessons.cmd_validate_quirks, lessons.QUIRKS_DIR)
+        self.assertEqual(code, 0, err)
+
+
 if __name__ == "__main__":
     unittest.main()

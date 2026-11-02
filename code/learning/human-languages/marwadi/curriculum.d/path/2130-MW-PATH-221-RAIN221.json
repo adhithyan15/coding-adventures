@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-221-RAIN221",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "MW-EXT-221-RAIN221"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-276-BANSLI276",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "before": [],
+  "inline": [
+    "MW-EXT-276-BANSLI276"
+  ],
+  "after": []
+}

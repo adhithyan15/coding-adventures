@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Songs and Dancing",
+  "label": "ch:mw-songs-and-dancing",
+  "canDo": "I can say which songs and dances I enjoy.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "MW-C277-rijhno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say which songs and dances I enjoy.",
+    "assesses": [
+      "MW-LEX-C277-BHAJAN277-03",
+      "MW-LEX-C277-BHAJAN277-04",
+      "MW-LEX-C277-BHAJAN277-05"
+    ]
+  }
+}

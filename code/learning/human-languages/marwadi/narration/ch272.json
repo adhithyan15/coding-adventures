@@ -1,0 +1,943 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 272,
+  "title": "Only This, and Me Too",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2744f17329a9c9b4",
+  "lessons": [
+    {
+      "id": "MW-C272-phagat",
+      "sequence": 19300,
+      "title": "फगत (phagat) — only",
+      "headword": "फगत",
+      "romanization": "phagat",
+      "gloss": "only",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ed11deba5b68f72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a witness, then the Marwadi for an oath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फगत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फगत — phagat — \"only\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं फगत चाय पीऊं हूं। hū̃ phagat chāy pīū̃ hū̃. I only drink tea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फगत (phagat) is usually traced, through Persian faqat, to Arabic faqaṭ, \"only\". It goes right before the thing it limits."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phagat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phagat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phagat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phagat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ phagat chāy pīū̃ hū̃. — I only drink tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ phagat chāy pīū̃ hū̃.* — I only drink tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a witness, then the Marwadi for an oath, then say phagat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a witness, then the Marwadi for an oath, then say *phagat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फगत (phagat) mean? (\"Only\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C272-phagat-type",
+              "prompt": "Say the Marwadi for 'only'.",
+              "assesses": [
+                "MW-LEX-C272-PHAGAT272-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फगत",
+                "phagat"
+              ],
+              "feedback": {
+                "correct": "Right: फगत (phagat) is 'only'.",
+                "incorrect": "'only' is फगत (phagat)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C272-bi",
+      "sequence": 19310,
+      "title": "बी (bī) — also",
+      "headword": "बी",
+      "romanization": "bī",
+      "gloss": "also",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7e5708df4e73d74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an oath, then the Marwadi for only."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बी — bī — \"also\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं बी आसूं। hū̃ bī āsū̃. I'll come too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बी (bī) is inherited from Sanskrit api ca, \"and also\"; CDIAL lists Old Marwari bī, \"also\" (CDIAL 486). It follows the word it adds."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ bī āsū̃. — I'll come too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ bī āsū̃.* — I'll come too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an oath, then the Marwadi for only, then say bī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an oath, then the Marwadi for only, then say *bī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बी (bī) mean? (\"Also\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C272-bi-type",
+              "prompt": "Say the Marwadi for 'also'.",
+              "assesses": [
+                "MW-LEX-C272-PHAGAT272-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बी",
+                "bī"
+              ],
+              "feedback": {
+                "correct": "Right: बी (bī) is 'also'.",
+                "incorrect": "'also' is बी (bī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C272-jarur",
+      "sequence": 19320,
+      "title": "जरूर (jarūr) — certainly",
+      "headword": "जरूर",
+      "romanization": "jarūr",
+      "gloss": "certainly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0299836def502edc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for only, then the Marwadi for also."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जरूर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जरूर — jarūr — \"certainly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं जरूर आसूं। hū̃ jarūr āsū̃. I'll certainly come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जरूर (jarūr) is usually traced, through Persian zarūr, \"necessary; certainly\", to Arabic ḍarūra, \"necessity\". जरूरी, necessary, and जरूरत, a need, come from the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ jarūr āsū̃. — I'll certainly come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ jarūr āsū̃.* — I'll certainly come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for only, then the Marwadi for also, then say jarūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for only, then the Marwadi for also, then say *jarūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जरूर (jarūr) mean? (\"Certainly\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C272-jarur-type",
+              "prompt": "Say the Marwadi for 'certainly'.",
+              "assesses": [
+                "MW-LEX-C272-PHAGAT272-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जरूर",
+                "jarūr"
+              ],
+              "feedback": {
+                "correct": "Right: जरूर (jarūr) is 'certainly'.",
+                "incorrect": "'certainly' is जरूर (jarūr)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C272-besak",
+      "sequence": 19330,
+      "title": "बेसक (besak) — of course",
+      "headword": "बेसक",
+      "romanization": "besak",
+      "gloss": "of course",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b5293b64c9875d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for also, then the Marwadi for certainly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बेसक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेसक — besak — \"of course\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बेसक, हूं आसूं। besak, hū̃ āsū̃. Of course I'll come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेसक (besak) is usually traced to Persian bē-shakk, \"without doubt\", built from Persian bē, \"without\", and shakk, \"doubt\", which Persian took from Arabic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "besak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *besak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "besak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *besak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "besak, hū̃ āsū̃. — Of course I'll come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *besak, hū̃ āsū̃.* — Of course I'll come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for also, then the Marwadi for certainly, then say besak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for also, then the Marwadi for certainly, then say *besak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बेसक (besak) mean? (\"Of course\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C272-besak-type",
+              "prompt": "Say the Marwadi for 'of course'.",
+              "assesses": [
+                "MW-LEX-C272-PHAGAT272-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बेसक",
+                "besak"
+              ],
+              "feedback": {
+                "correct": "Right: बेसक (besak) is 'of course'.",
+                "incorrect": "'of course' is बेसक (besak)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C272-manjur",
+      "sequence": 19340,
+      "title": "मंजूर (mañjūr) — agreed",
+      "headword": "मंजूर",
+      "romanization": "mañjūr",
+      "gloss": "agreed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:907f0a2d9aea0bc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for certainly, then the Marwadi for of course."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मंजूर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंजूर — mañjūr — \"agreed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो भाव मंजूर है। yo bhāv mañjūr hai. This price is agreed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंजूर (mañjūr) is usually traced, through Persian manzūr, to Arabic manẓūr, \"looked at\", hence \"approved\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañjūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañjūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañjūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañjūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo bhāv mañjūr hai. — This price is agreed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo bhāv mañjūr hai.* — This price is agreed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for certainly, then the Marwadi for of course, then say mañjūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for certainly, then the Marwadi for of course, then say *mañjūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मंजूर (mañjūr) mean? (\"Agreed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C272-manjur-type",
+              "prompt": "Say the Marwadi for 'agreed'.",
+              "assesses": [
+                "MW-LEX-C272-PHAGAT272-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मंजूर",
+                "mañjūr"
+              ],
+              "feedback": {
+                "correct": "Right: मंजूर (mañjūr) is 'agreed'.",
+                "incorrect": "'agreed' is मंजूर (mañjūr)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R272-review-266-272",
+      "sequence": 19350,
+      "title": "Looking back: from Please Come In to Only This, and Me Too",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Please Come In to Only This, and Me Too",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a8afea2cac2b19a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for at your service and help."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at your service, help, a kindness, a petition, a blessing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at your service, help, a kindness, a petition, a blessing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "permission, leave to go, an order, waiting, to hold on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: permission, leave to go, an order, waiting, to hold on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to say, to recite, counsel, a meaning, a good word for someone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to say, to recite, counsel, a meaning, a good word for someone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an excuse, a refusal, to dig in one's heels, stubbornness, to interrupt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an excuse, a refusal, to dig in one's heels, stubbornness, to interrupt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardon, a wrongdoing, to regret, to smash, to get cross",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pardon, a wrongdoing, to regret, to smash, to get cross]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "correct, wrong, proof, a witness, an oath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: correct, wrong, proof, a witness, an oath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "only, also, certainly, of course, agreed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: only, also, certainly, of course, agreed]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At your service? (हाजर, hājar.) Help? (मदद, madad.) A kindness? (मेहरबानी, meharbānī.) A petition? (अरज, araj.) A blessing? (आसीस, āsīs.) Permission? (इजाजत, ijājat.) Leave to go? (रजा, rajā.) An order? (हुकम, hukam.) Waiting? (इंतजार, intjār.) To hold on? (थमणो, thamṇo.) To say? (कैवणो, kaivṇo.) To recite? (सुणावणो, suṇāvṇo.) Counsel? (सलाह, salāh.) A meaning? (मतलब, matlab.) A good word for someone? (सिफारस, siphāras.) An excuse? (बहानो, bahāno.) A refusal? (इनकार, inkār.) To dig in one's heels? (अड़णो, aṛṇo.) Stubbornness? (जिद, jid.) To interrupt? (टोकणो, ṭokṇo.) Pardon? (माफी, māphī.) A wrongdoing? (कसूर, kasūr.) To regret? (पछताणो, pachhtāṇo.) To smash? (फोड़णो, phoṛṇo.) To get cross? (खीजणो, khījṇo.) Correct? (खरो, kharo.) Wrong? (गलत, galat.) Proof? (सबूत, sabūt.) A witness? (साखी, sākhī.) An oath? (कसम, kasam.) Only? (फगत, phagat.) Also? (बी, bī.) Certainly? (जरूर, jarūr.) Of course? (बेसक, besak.) Agreed? (मंजूर, mañjūr.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R272-review-266-272-type",
+              "prompt": "Say the Marwadi for 'at your service'.",
+              "assesses": [
+                "MW-LEX-C266-HAJAR266-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हाजर",
+                "hājar"
+              ],
+              "feedback": {
+                "correct": "Right: हाजर (hājar) is 'present; at your service'.",
+                "incorrect": "'at your service' is हाजर (hājar)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

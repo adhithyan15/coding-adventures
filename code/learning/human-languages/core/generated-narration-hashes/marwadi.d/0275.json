@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:f01affb1592d0796",
+  "lessonIds": [
+    "MW-C275-saravno",
+    "MW-C275-sabas",
+    "MW-C275-inam",
+    "MW-C275-jas",
+    "MW-C275-ray"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch275.txt",
+  "json": "marwadi/narration/ch275.json",
+  "textHash": "fnv1a64:6013ed516b35c9f6",
+  "jsonHash": "fnv1a64:d63ed743b798f265",
+  "findings": []
+}

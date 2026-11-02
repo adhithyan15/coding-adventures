@@ -1,0 +1,11 @@
+{
+  "id": "MW-C175-dhovno",
+  "pathSegment": "MW-PATH-175-PANI175",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-175-PANI175",
+      "order": 2
+    }
+  ]
+}

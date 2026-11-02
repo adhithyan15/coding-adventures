@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Teachers and Pupils",
+  "label": "ch:mw-teachers-and-pupils",
+  "canDo": "I can say who teaches me and what I can learn.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C287-akharo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say who teaches me and what I can learn.",
+    "assesses": [
+      "MW-LEX-C287-GURU287-03",
+      "MW-LEX-C287-GURU287-04",
+      "MW-LEX-C287-GURU287-05"
+    ]
+  }
+}

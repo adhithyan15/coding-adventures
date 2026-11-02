@@ -1,0 +1,11 @@
+{
+  "id": "MW-C201-thano",
+  "pathSegment": "MW-PATH-201-TOWN201",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-201-TOWN201",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C189-chaubaro",
+    "language": "marwadi",
+    "chapter": 189,
+    "sequence": 12220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df043dd92e1a80f3"
+  },
+  "findings": []
+}

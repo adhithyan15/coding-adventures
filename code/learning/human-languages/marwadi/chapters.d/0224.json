@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Fun at the Fair",
+  "label": "ch:mw-fun-at-the-fair",
+  "canDo": "I can say what I will do and eat at the fair.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C224-nagaro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say what I will do and eat at the fair.",
+    "assesses": [
+      "MW-LEX-C224-FUN224-03",
+      "MW-LEX-C224-FUN224-04",
+      "MW-LEX-C224-FUN224-05"
+    ]
+  }
+}

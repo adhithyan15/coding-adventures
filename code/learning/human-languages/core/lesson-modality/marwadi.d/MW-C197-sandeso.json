@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C197-sandeso",
+    "language": "marwadi",
+    "chapter": 197,
+    "sequence": 13330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a562d1c4bb6e7c2"
+  },
+  "findings": []
+}

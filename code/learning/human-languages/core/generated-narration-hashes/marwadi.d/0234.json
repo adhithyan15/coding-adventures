@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:3023fa95b81eaad9",
+  "lessonIds": [
+    "MW-C234-evaliyo",
+    "MW-C234-lathi",
+    "MW-C234-charno",
+    "MW-C234-hakno",
+    "MW-C234-sambhalno",
+    "MW-R234-review-229-234"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch234.txt",
+  "json": "marwadi/narration/ch234.json",
+  "textHash": "fnv1a64:ae6b570e7e13c826",
+  "jsonHash": "fnv1a64:c529e47cee84313a",
+  "findings": []
+}

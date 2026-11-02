@@ -1,0 +1,11 @@
+{
+  "id": "MW-C284-pati",
+  "pathSegment": "MW-PATH-284-BASTO284",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-284-BASTO284",
+      "order": 1
+    }
+  ]
+}

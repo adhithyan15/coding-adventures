@@ -1,0 +1,11 @@
+{
+  "id": "MW-C164-band",
+  "pathSegment": "MW-PATH-164-NOTICE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-164-NOTICE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C250-rolo",
+    "language": "marwadi",
+    "chapter": 250,
+    "sequence": 17500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3f29de2e3b27f83"
+  },
+  "findings": []
+}

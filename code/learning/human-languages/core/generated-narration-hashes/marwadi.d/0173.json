@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:dd47e87b6a02a7df",
+  "lessonIds": [
+    "MW-C173-phukno",
+    "MW-C173-dhuvo",
+    "MW-C173-idhan",
+    "MW-C173-bujhavno",
+    "MW-C173-sekno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch173.txt",
+  "json": "marwadi/narration/ch173.json",
+  "textHash": "fnv1a64:1f80f737d8aeca94",
+  "jsonHash": "fnv1a64:4ddec2da415c476e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C226-thal",
+    "language": "marwadi",
+    "chapter": 226,
+    "sequence": 15540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:112b25b7d7488c2d"
+  },
+  "findings": []
+}

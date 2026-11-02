@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Neighbours Come to Call",
+  "label": "ch:mw-neighbours-come-to-call",
+  "canDo": "I can say who came and who greeted whom.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-C245-badhai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say who came and who greeted whom.",
+    "assesses": [
+      "MW-LEX-C245-TEDNO245-03",
+      "MW-LEX-C245-TEDNO245-04",
+      "MW-LEX-C245-TEDNO245-05"
+    ]
+  }
+}

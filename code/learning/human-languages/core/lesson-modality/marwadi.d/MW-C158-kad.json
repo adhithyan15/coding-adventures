@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C158-kad",
+    "language": "marwadi",
+    "chapter": 158,
+    "sequence": 9780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94a1cee6b9dcfbeb"
+  },
+  "findings": []
+}

@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 253,
+  "title": "Colds, Coughs and a Long Life",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0fb8bf32a357b2e1",
+  "lessons": [
+    {
+      "id": "MW-C253-sardi",
+      "sequence": 17610,
+      "title": "सरदी (sardī) — a cold (the illness)",
+      "headword": "सरदी",
+      "romanization": "sardī",
+      "gloss": "a cold (the illness)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3d6a6bb3d19635f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to chew, then the Marwadi for an ache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सरदी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सरदी — sardī — \"a cold (the illness)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बेटो बीमार है, सरदी है। beṭo bīmār hai, sardī hai. My son is ill; he has a cold."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सरदी (sardī) is usually traced to Persian sardī, \"coldness\"; in Marwari it names the illness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṭo bīmār hai, sardī hai. — My son is ill; he has a cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṭo bīmār hai, sardī hai.* — My son is ill; he has a cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to chew, then the Marwadi for an ache, then say sardī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to chew, then the Marwadi for an ache, then say *sardī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सरदी (sardī) mean? (\"A cold (the illness)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C253-sardi-type",
+              "prompt": "Say the Marwadi for 'a cold (the illness)'.",
+              "assesses": [
+                "MW-LEX-C253-SARDI253-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सरदी",
+                "sardī"
+              ],
+              "feedback": {
+                "correct": "Right: सरदी (sardī) is 'a cold (the illness)'.",
+                "incorrect": "'a cold (the illness)' is सरदी (sardī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C253-khasi",
+      "sequence": 17620,
+      "title": "खांसी (khā̃sī) — a cough",
+      "headword": "खांसी",
+      "romanization": "khā̃sī",
+      "gloss": "a cough",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e2117460f50882f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an ache, then the Marwadi for a cold (the illness)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खांसी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खांसी — khā̃sī — \"a cough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात मांय घणी खांसी आवै है। rāt mā̃y ghaṇī khā̃sī āvai hai. I cough a lot at night."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खांसी (khā̃sī) is inherited from Sanskrit kāsā, \"a cough\". CDIAL gives no Marwari form in this entry; it lists Hindi and Gujarati khā̃sī (CDIAL 3138)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khā̃sī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khā̃sī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khā̃sī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khā̃sī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt mā̃y ghaṇī khā̃sī āvai hai. — I cough a lot at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt mā̃y ghaṇī khā̃sī āvai hai.* — I cough a lot at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an ache, then the Marwadi for a cold (the illness), then say khā̃sī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an ache, then the Marwadi for a cold (the illness), then say *khā̃sī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खांसी (khā̃sī) mean? (\"A cough\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C253-khasi-type",
+              "prompt": "Say the Marwadi for 'a cough'.",
+              "assesses": [
+                "MW-LEX-C253-SARDI253-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खांसी",
+                "khā̃sī"
+              ],
+              "feedback": {
+                "correct": "Right: खांसी (khā̃sī) is 'a cough'.",
+                "incorrect": "'a cough' is खांसी (khā̃sī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C253-jivno",
+      "sequence": 17630,
+      "title": "जीवणो (jīvṇo) — to be alive; to live (a span of years)",
+      "headword": "जीवणो",
+      "romanization": "jīvṇo",
+      "gloss": "to be alive; to live (a span of years)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66f30902a44a2e89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a cold (the illness), then the Marwadi for a cough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जीवणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जीवणो — jīvṇo — \"to be alive; to live (a span of years)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो काको अस्सी बरस जीयो। mhāro kāko assī baras jīyo. My father's brother lived to eighty."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो सो बरस जीयो, vo so baras jīyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जीवणो (jīvṇo) is inherited from Sanskrit jīvati, \"is alive\"; CDIAL lists Old Marwari jīvaï, \"to live\", under it (CDIAL 5241)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro kāko assī baras jīyo. — My father's brother lived to eighty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro kāko assī baras jīyo.* — My father's brother lived to eighty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a cold (the illness), then the Marwadi for a cough, then say jīvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a cold (the illness), then the Marwadi for a cough, then say *jīvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जीवणो (jīvṇo) mean? (\"To be alive; to live (a span of years)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C253-jivno-type",
+              "prompt": "Say the Marwadi for 'to be alive'.",
+              "assesses": [
+                "MW-LEX-C253-SARDI253-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जीवणो",
+                "jīvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: जीवणो (jīvṇo) is 'to be alive; to live (a span of years)'.",
+                "incorrect": "'to be alive' is जीवणो (jīvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C253-dharakno",
+      "sequence": 17640,
+      "title": "धड़कणो (dhaṛakṇo) — to throb; to pound (of the heart)",
+      "headword": "धड़कणो",
+      "romanization": "dhaṛakṇo",
+      "gloss": "to throb; to pound (of the heart)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1a0381824dfb221",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a cough, then the Marwadi for to be alive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धड़कणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धड़कणो — dhaṛakṇo — \"to throb; to pound (of the heart)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो दिल घणो धड़कै है। mhāro dil ghaṇo dhaṛakai hai. My heart is pounding hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो दिल धड़क्यो, vo dil dhaṛakyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धड़कणो (dhaṛakṇo) is inherited from a reconstructed dhaḍ, \"throb, beat\". CDIAL gives no Marwari form in this entry; it lists Hindi dhaṛaknā, \"to throb\" (CDIAL 6711)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhaṛakṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhaṛakṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhaṛakṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhaṛakṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro dil ghaṇo dhaṛakai hai. — My heart is pounding hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro dil ghaṇo dhaṛakai hai.* — My heart is pounding hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a cough, then the Marwadi for to be alive, then say dhaṛakṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a cough, then the Marwadi for to be alive, then say *dhaṛakṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धड़कणो (dhaṛakṇo) mean? (\"To throb; to pound (of the heart)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C253-dharakno-type",
+              "prompt": "Say the Marwadi for 'to throb'.",
+              "assesses": [
+                "MW-LEX-C253-SARDI253-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धड़कणो",
+                "dhaṛakṇo"
+              ],
+              "feedback": {
+                "correct": "Right: धड़कणो (dhaṛakṇo) is 'to throb; to pound (of the heart)'.",
+                "incorrect": "'to throb' is धड़कणो (dhaṛakṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C253-dukhno",
+      "sequence": 17650,
+      "title": "दूखणो (dūkhṇo) — to ache; to hurt",
+      "headword": "दूखणो",
+      "romanization": "dūkhṇo",
+      "gloss": "to ache; to hurt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c990785edb3b496a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to be alive, then the Marwadi for to throb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दूखणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूखणो — dūkhṇo — \"to ache; to hurt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो माथो दूखै है। mhāro mātho dūkhai hai. My head aches."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो दांत दूख्यो, vo dānt dūkhyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूखणो (dūkhṇo) is inherited from Sanskrit duḥkhati, \"pains\". CDIAL gives no Marwari form in this entry; it lists Hindi dūkhnā (CDIAL 6376)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūkhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūkhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūkhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūkhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro mātho dūkhai hai. — My head aches.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro mātho dūkhai hai.* — My head aches.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to be alive, then the Marwadi for to throb, then say dūkhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to be alive, then the Marwadi for to throb, then say *dūkhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दूखणो (dūkhṇo) mean? (\"To ache; to hurt\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C253-dukhno-type",
+              "prompt": "Say the Marwadi for 'to ache'.",
+              "assesses": [
+                "MW-LEX-C253-SARDI253-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दूखणो",
+                "dūkhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: दूखणो (dūkhṇo) is 'to ache; to hurt'.",
+                "incorrect": "'to ache' is दूखणो (dūkhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R253-review-248-253",
+      "sequence": 17660,
+      "title": "Looking back: from Henna and Wedding Finery to Colds, Coughs and a Long Life",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Henna and Wedding Finery to Colds, Coughs and a Long Life",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:591897c039ab346d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for henna and to marry off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "henna, to marry off, a dowry, to dress up, a bridegroom's garland",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: henna, to marry off, a dowry, to dress up, a bridegroom's garland]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Holi, coloured powder for Holi, a good omen, Diwali, worship",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Holi, coloured powder for Holi, a good omen, Diwali, worship]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to celebrate, festive dishes, festive joy, the waving of a lamp in worship, an uproar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to celebrate, festive dishes, festive joy, the waving of a lamp in worship, an uproar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the neck, a shoulder, the chest, an elbow, the waist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the neck, a shoulder, the chest, an elbow, the waist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bone, breath, to pant, to chew, an ache",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bone, breath, to pant, to chew, an ache]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cold (the illness), a cough, to be alive, to throb, to ache",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cold (the illness), a cough, to be alive, to throb, to ache]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Henna? (मेंहदी, mẽhdī.) To marry off? (परणावणो, parṇāvṇo.) A dowry? (दायजो, dāyjo.) To dress up? (सजणो, sajṇo.) A bridegroom's garland? (सेहरो, sehro.) Holi? (होळी, hoḷī.) Coloured powder for Holi? (गुलाल, gulāl.) A good omen? (सुगन, sugan.) Diwali? (दिवाळी, divāḷī.) Worship? (पूजा, pūjā.) To celebrate? (मनावणो, manāvṇo.) Festive dishes? (पकवान, pakvān.) Festive joy? (उछाव, uchhāv.) The waving of a lamp in worship? (आरती, ārtī.) An uproar? (रोळो, roḷo.) The neck? (गरदन, gardan.) A shoulder? (कांधो, kā̃dho.) The chest? (छाती, chhātī.) An elbow? (कोहणी, kohṇī.) The waist? (कमर, kamar.) A bone? (हाड, hāḍ.) Breath? (सांस, sā̃s.) To pant? (हांफणो, hā̃phṇo.) To chew? (चाबणो, chābṇo.) An ache? (पीड़, pīṛ.) A cold (the illness)? (सरदी, sardī.) A cough? (खांसी, khā̃sī.) To be alive? (जीवणो, jīvṇo.) To throb? (धड़कणो, dhaṛakṇo.) To ache? (दूखणो, dūkhṇo.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R253-review-248-253-type",
+              "prompt": "Say the Marwadi for 'henna'.",
+              "assesses": [
+                "MW-LEX-C248-MEHDI248-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मेंहदी",
+                "mẽhdī"
+              ],
+              "feedback": {
+                "correct": "Right: मेंहदी (mẽhdī) is 'henna'.",
+                "incorrect": "'henna' is मेंहदी (mẽhdī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

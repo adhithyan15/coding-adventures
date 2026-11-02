@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C177-pallo",
+    "language": "marwadi",
+    "chapter": 177,
+    "sequence": 11600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cffbeb5efccf82cb"
+  },
+  "findings": []
+}

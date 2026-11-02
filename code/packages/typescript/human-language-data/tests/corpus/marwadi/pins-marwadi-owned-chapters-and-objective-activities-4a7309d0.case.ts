@@ -23,12 +23,18 @@ it("pins Marwadi-owned chapters and objective activities", () => {
   // evidence is the retained handwritten attempt, not an objective activity.
   // 897 -> 901, chapter 151: four source-verified joining lessons with one
   // exact objective activity each.
-  expect(lessons).toHaveLength(901);
+  // 901 -> 962, chapters 151 -> 165: the A2 core, 26 grammar, 12 word, 6
+  // letter, 2 reading and 15 review lessons, each with one hand-written
+  // objective activity; all 61 ids are in the hand-authored list below.
+  // 962 -> 1612, chapters 165 -> 290: the A2 vocabulary, 625 word lessons and
+  // 25 reviews, each with the generated typed recall (`<lesson>-type`), so the
+  // tranche pattern below grows to cover chapters 166-290 and their reviews.
+  expect(lessons).toHaveLength(1612);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set(Array.from({ length: 151 }, (unused, index) => index + 1)),
+    new Set(Array.from({ length: 290 }, (unused, index) => index + 1)),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(900);
+  expect(activities).toHaveLength(1611);
   expect(
     lessons.every((lesson) =>
       compileLessonActivities(lesson.blocks).length ===
@@ -36,8 +42,9 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     ),
   ).toBe(true);
   const vocabularyTranche =
-    /^MW-(C(4[4-9]|[5-9][0-9]|1[0-4][0-9])|R66|R89|R99|R109|R119|R129|R139|R149)-.+-type$/;
-  expect(activities.filter((activity) => vocabularyTranche.test(activity.id))).toHaveLength(546);
+    /^MW-(C(4[4-9]|[5-9][0-9]|1[0-4][0-9]|16[6-9]|1[7-9][0-9]|2[0-8][0-9]|290)|R66|R89|R99|R109|R119|R129|R139|R149|R17[28]|R184|R190|R197|R203|R209|R215|R222|R228|R234|R240|R247|R253|R259|R265|R272|R278|R284|R290)-.+-type$/;
+  // 546 -> 1196: the A2 vocabulary's 625 word and 25 review activities.
+  expect(activities.filter((activity) => vocabularyTranche.test(activity.id))).toHaveLength(1196);
   expect(
     activities
       .map((activity) => activity.id)
@@ -146,6 +153,29 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C151-ar-together-link",
     "MW-C151-kyunkai-reason-frame",
     "MW-C151-pan-contrast-turn",
+    "MW-C152-vo-contrast",
+    "MW-C152-yo-vo-choice",
+    "MW-C153-aap-ho-here",
+    "MW-C153-hu-hai-here-there",
+    "MW-C153-unt-type",
+    "MW-C154-bolai-hai-reads",
+    "MW-C154-bolo-ho-what",
+    "MW-C154-bolu-hu-songs",
+    "MW-C155-dudh-type",
+    "MW-C155-jau-javai-market",
+    "MW-C155-khau-pivai-tea",
+    "MW-C156-maay-mathai-kitchen",
+    "MW-C156-mhari-cow",
+    "MW-C156-su-where-from",
+    "MW-C157-koni-tea",
+    "MW-C157-mat-go",
+    "MW-C157-samajhno-type",
+    "MW-C158-answer-no",
+    "MW-C158-kad-type",
+    "MW-C158-olakhno-type",
+    "MW-C158-polar-tea",
+    "MW-C159-gayo-mother",
+    "MW-C159-gharai-home",
     "MW-C16-bas-dictation",
     "MW-C16-gaadi-dictation",
     "MW-C16-hear-bas-meaning",
@@ -153,6 +183,23 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C16-hear-thela-meaning",
     "MW-C16-thela-dictation",
     "MW-C16-transport-three-payoff",
+    "MW-C160-ayo-ram",
+    "MW-C160-uthyo-mother",
+    "MW-C161-kadhno-type",
+    "MW-C161-kiyo-liyo-milk",
+    "MW-C161-mhai-roti",
+    "MW-C162-jasu-market",
+    "MW-C162-kal-yesterday",
+    "MW-C162-koni-jasu-tomorrow",
+    "MW-C163-pher-type",
+    "MW-C163-plan-market",
+    "MW-C163-sayad-type",
+    "MW-C164-band-type",
+    "MW-C164-dairy-notice-tuesday",
+    "MW-C164-khulo-type",
+    "MW-C164-tai-type",
+    "MW-C165-mistri-type",
+    "MW-C165-repair-note-home",
     "MW-C17-ghodo-dictation",
     "MW-C17-hear-ghodo-meaning",
     "MW-C17-hear-riksha-meaning",
@@ -298,8 +345,23 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-R14-shopping-new-two-recall",
     "MW-R15-shopping-close-recall",
     "MW-R15-shopping-new-two-recall",
+    "MW-R152-he-and-that-turn",
+    "MW-R153-am-is-are-three",
+    "MW-R154-every-day-three",
+    "MW-R155-eat-drink-go-come-milk",
+    "MW-R156-mine-in-from-roti",
+    "MW-R157-not-today-understand",
+    "MW-R158-yes-or-no-song",
+    "MW-R159-went-home-all",
     "MW-R16-transport-close-recall",
     "MW-R16-transport-three-recall",
+    "MW-R160-came-and-got-up-reached",
+    "MW-R161-what-i-did-water",
+    "MW-R162-tomorrow-two-days",
+    "MW-R163-plans-again",
+    "MW-R164-dairy-monday",
+    "MW-R165-first-pass-plans-and-notices-mechanic",
+    "MW-R165-second-pass-the-whole-core-day",
     "MW-R17-script-close-recall",
     "MW-R17-transport-new-two-recall",
     "MW-R18-food-close-recall",
@@ -398,12 +460,18 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W38-lla-recall",
     "MW-W38-u-recall",
     "MW-W43-ma-recall",
+    "MW-W45-uu-recall",
+    "MW-W46-dha-recall",
+    "MW-W47-jha-recall",
+    "MW-W48-o-recall",
+    "MW-W49-ddha-recall",
+    "MW-W50-pha-recall",
   ]);
 
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 901,
+    lessonCount: 1612,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

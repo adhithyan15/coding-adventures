@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:22c566493938976b",
+  "lessonIds": [
+    "MW-C236-gadho",
+    "MW-C236-kukro",
+    "MW-C236-un",
+    "MW-C236-sig",
+    "MW-C236-khur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch236.txt",
+  "json": "marwadi/narration/ch236.json",
+  "textHash": "fnv1a64:6e980022b94a24f3",
+  "jsonHash": "fnv1a64:d9fc32aaf87f15ac",
+  "findings": []
+}

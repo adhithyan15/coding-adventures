@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Missing the Bus",
+  "label": "ch:mw-missing-the-bus",
+  "canDo": "I can ask the fare and say I missed the bus or got stuck.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-C205-kandaktar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can ask the fare and say I missed the bus or got stuck.",
+    "assesses": [
+      "MW-LEX-C205-BUS205-03",
+      "MW-LEX-C205-BUS205-04",
+      "MW-LEX-C205-BUS205-05"
+    ]
+  }
+}

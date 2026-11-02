@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C180-chhiko",
+    "language": "marwadi",
+    "chapter": 180,
+    "sequence": 11750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21ebd6ee5570b692"
+  },
+  "findings": []
+}

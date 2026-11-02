@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C239-badhno-grow",
+    "language": "marwadi",
+    "chapter": 239,
+    "sequence": 16210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1c7153ddb4d336a"
+  },
+  "findings": []
+}

@@ -65,8 +65,16 @@ module CodingAdventures
     # reader moving between them is not left wondering what the difference is.
     def ct_eq_fixed(left, right) = ct_eq(left, right)
 
-    # Select +left+ when +choice+ is true, otherwise +right+, without branching
-    # on +choice+.
+    # Select +left+ when +choice+ is 1, otherwise +right+ (when it is 0),
+    # without branching on +choice+.
+    #
+    # Why an Integer and not true/false: Ruby has no branch-free way to turn a
+    # boolean into a number. Every conversion is a branch on the secret bit
+    # (+choice ? 0xFF : 0x00+), which CT01 forbids. Even the old validation
+    # leaked it: +[true, false].include?(choice)+ stops at its first match, so
+    # it did one comparison for +true+ and two for +false+. The bit is
+    # therefore an Integer that must be exactly 0 or 1, as Go's
+    # +crypto/subtle+ does.
     #
     # The trick is arithmetic rather than control flow: a mask of all-ones or
     # all-zeros turns the selection into XOR, so both inputs are read and the
@@ -83,16 +91,17 @@ module CodingAdventures
         raise ArgumentError, "ct_select_bytes requires equal-length byte strings"
       end
 
-      # Reject non-boolean choice rather than leaning on Ruby truthiness. In
-      # Ruby `0` is truthy and would select LEFT; in Python it is falsy and
-      # selects RIGHT. A call site ported from another language passing 0/1
-      # would silently take the opposite branch -- which, in a constant-time
-      # select, means the wrong key. Elixir guards with is_boolean; so do we.
-      unless [true, false].include?(choice)
-        raise ArgumentError, "ct_select_bytes requires choice to be true or false"
+      # Only an Integer 0 or 1 is a valid choice. The type check is public; the
+      # range check clears bit 0 and tests for zero, a single computation whose
+      # result is the same for both valid values, so a valid call takes the
+      # same path whichever bit is secret. (true/false are rejected: they are
+      # not Integers.)
+      unless choice.is_a?(Integer) && (choice & ~1).zero?
+        raise ArgumentError, "ct_select_bytes requires choice to be 0 or 1"
       end
 
-      mask = choice ? 0xFF : 0x00
+      # 0 -> -0 & 0xFF = 0x00 (right);  1 -> -1 & 0xFF = 0xFF (left)
+      mask = -choice & 0xFF
       output = +"".b
       index = 0
       while index < left_bytes.bytesize

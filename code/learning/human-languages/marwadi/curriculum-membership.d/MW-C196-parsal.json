@@ -1,0 +1,11 @@
+{
+  "id": "MW-C196-parsal",
+  "pathSegment": "MW-PATH-196-POST196",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-196-POST196",
+      "order": 2
+    }
+  ]
+}

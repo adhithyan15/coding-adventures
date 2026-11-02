@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:10817f00f5743203",
+  "lessonIds": [
+    "MW-C182-jhatakno",
+    "MW-C182-gholno",
+    "MW-C182-milavno",
+    "MW-C182-bagharno",
+    "MW-C182-purasno"
+  ],
+  "tex": "marwadi/book/chapters/ch182-shake-stir-and-serve.tex"
+}

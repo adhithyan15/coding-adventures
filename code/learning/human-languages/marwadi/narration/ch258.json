@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 258,
+  "title": "Worry and Patience",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2e46bcdec1ef30f0",
+  "lessons": [
+    {
+      "id": "MW-C258-chinta",
+      "sequence": 17870,
+      "title": "चिंता (chintā) — worry",
+      "headword": "चिंता",
+      "romanization": "chintā",
+      "gloss": "worry",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdc7fc534fd60929",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a sigh, then the Marwadi for a reproach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चिंता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिंता — chintā — \"worry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चिंता मत करो। chintā mat karo. Don't worry."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिंता (chintā) is a tatsama, the Sanskrit cintā, \"thought, care\", taken over unchanged (CDIAL 4816)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chintā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chintā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chintā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chintā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chintā mat karo. — Don't worry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chintā mat karo.* — Don't worry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a sigh, then the Marwadi for a reproach, then say chintā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a sigh, then the Marwadi for a reproach, then say *chintā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चिंता (chintā) mean? (\"Worry\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C258-chinta-type",
+              "prompt": "Say the Marwadi for 'worry'.",
+              "assesses": [
+                "MW-LEX-C258-CHINTA258-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चिंता",
+                "chintā"
+              ],
+              "feedback": {
+                "correct": "Right: चिंता (chintā) is 'worry'.",
+                "incorrect": "'worry' is चिंता (chintā)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C258-bharoso",
+      "sequence": 17880,
+      "title": "भरोसो (bharoso) — trust; confidence",
+      "headword": "भरोसो",
+      "romanization": "bharoso",
+      "gloss": "trust; confidence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63a6733edf55c2b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a reproach, then the Marwadi for worry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भरोसो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भरोसो — bharoso — \"trust; confidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भाई माथै म्हारो पूरो भरोसो है। bhāī māthai mhāro pūro bharoso hai. I trust my brother completely."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भरोसो (bharoso) is inherited from a reconstructed bharavaśya, \"dependence on support\"; CDIAL lists Marwari bharoso, \"confidence\", under it (CDIAL 9398)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharoso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharoso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharoso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharoso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāī māthai mhāro pūro bharoso hai. — I trust my brother completely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāī māthai mhāro pūro bharoso hai.* — I trust my brother completely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a reproach, then the Marwadi for worry, then say bharoso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a reproach, then the Marwadi for worry, then say *bharoso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भरोसो (bharoso) mean? (\"Trust; confidence\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C258-bharoso-type",
+              "prompt": "Say the Marwadi for 'trust'.",
+              "assesses": [
+                "MW-LEX-C258-CHINTA258-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भरोसो",
+                "bharoso"
+              ],
+              "feedback": {
+                "correct": "Right: भरोसो (bharoso) is 'trust; confidence'.",
+                "incorrect": "'trust' is भरोसो (bharoso)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C258-dhiraj",
+      "sequence": 17890,
+      "title": "धीरज (dhīraj) — patience",
+      "headword": "धीरज",
+      "romanization": "dhīraj",
+      "gloss": "patience",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d49fbdd2237bac0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for worry, then the Marwadi for trust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धीरज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धीरज — dhīraj — \"patience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धीरज राखो। dhīraj rākho. Be patient."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धीरज (dhīraj) goes back to Sanskrit dhairya, \"firmness, patience\" (Monier-Williams), in a spoken shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhīraj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhīraj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhīraj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhīraj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhīraj rākho. — Be patient.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhīraj rākho.* — Be patient.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for worry, then the Marwadi for trust, then say dhīraj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for worry, then the Marwadi for trust, then say *dhīraj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धीरज (dhīraj) mean? (\"Patience\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C258-dhiraj-type",
+              "prompt": "Say the Marwadi for 'patience'.",
+              "assesses": [
+                "MW-LEX-C258-CHINTA258-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धीरज",
+                "dhīraj"
+              ],
+              "feedback": {
+                "correct": "Right: धीरज (dhīraj) is 'patience'.",
+                "incorrect": "'patience' is धीरज (dhīraj)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C258-sahno",
+      "sequence": 17900,
+      "title": "सहणो (sahṇo) — to bear; to put up with",
+      "headword": "सहणो",
+      "romanization": "sahṇo",
+      "gloss": "to bear; to put up with",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee73e937e6f601de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for trust, then the Marwadi for patience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सहणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहणो — sahṇo — \"to bear; to put up with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं दरद सहूं हूं। hū̃ darad sahū̃ hū̃. I bear the pain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दरद सह्यो, mhaĩ darad sahyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहणो (sahṇo) is inherited from Sanskrit sahate, \"bears, suffers\"; CDIAL lists Old Marwari sahaï, \"bears\", under it (CDIAL 13304)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ darad sahū̃ hū̃. — I bear the pain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ darad sahū̃ hū̃.* — I bear the pain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for trust, then the Marwadi for patience, then say sahṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for trust, then the Marwadi for patience, then say *sahṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सहणो (sahṇo) mean? (\"To bear; to put up with\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C258-sahno-type",
+              "prompt": "Say the Marwadi for 'to bear (pain)'.",
+              "assesses": [
+                "MW-LEX-C258-CHINTA258-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सहणो",
+                "sahṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सहणो (sahṇo) is 'to bear; to put up with'.",
+                "incorrect": "'to bear (pain)' is सहणो (sahṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C258-hiyo",
+      "sequence": 17910,
+      "title": "हियो (hiyo) — the heart (as the seat of feeling)",
+      "headword": "हियो",
+      "romanization": "hiyo",
+      "gloss": "the heart (as the seat of feeling)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc95ba7383a34e0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for patience, then the Marwadi for to bear (pain)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हियो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हियो — hiyo — \"the heart (as the seat of feeling)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज म्हारो हियो राजी है। āj mhāro hiyo rājī hai. My heart is glad today."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हियो (hiyo) is inherited from Sanskrit hṛdaya, \"heart\"; CDIAL lists Marwari hīyo under it (CDIAL 14152)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiyo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiyo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiyo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj mhāro hiyo rājī hai. — My heart is glad today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj mhāro hiyo rājī hai.* — My heart is glad today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for patience, then the Marwadi for to bear (pain), then say hiyo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for patience, then the Marwadi for to bear (pain), then say *hiyo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हियो (hiyo) mean? (\"The heart (as the seat of feeling)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C258-hiyo-type",
+              "prompt": "Say the Marwadi for 'the heart (as the seat of feeling)'.",
+              "assesses": [
+                "MW-LEX-C258-CHINTA258-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हियो",
+                "hiyo"
+              ],
+              "feedback": {
+                "correct": "Right: हियो (hiyo) is 'the heart (as the seat of feeling)'.",
+                "incorrect": "'the heart (as the seat of feeling)' is हियो (hiyo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

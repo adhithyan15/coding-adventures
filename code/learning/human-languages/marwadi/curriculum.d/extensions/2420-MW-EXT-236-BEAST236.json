@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-236-BEAST236",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a donkey and a rooster, and wool, horns and hooves.",
+  "prerequisites": []
+}

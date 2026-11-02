@@ -1,0 +1,11 @@
+{
+  "id": "MW-C229-ujlo",
+  "pathSegment": "MW-PATH-229-LIGHT229",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-229-LIGHT229",
+      "order": 1
+    }
+  ]
+}

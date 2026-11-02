@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-205-BUS205",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask the fare and say I missed the bus or got stuck.",
+  "prerequisites": []
+}

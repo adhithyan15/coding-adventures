@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Clay, Wood and Mud",
+  "label": "ch:mw-clay-wood-and-mud",
+  "canDo": "I can name the potter's and the carver's work.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "MW-C281-bhatti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can name the potter's and the carver's work.",
+    "assesses": [
+      "MW-LEX-C281-CHAK281-03",
+      "MW-LEX-C281-CHAK281-04",
+      "MW-LEX-C281-CHAK281-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:e445445744c7277d",
+  "lessonIds": [
+    "MW-C224-phirno",
+    "MW-C224-kathputli",
+    "MW-C224-ladu",
+    "MW-C224-uchhalno",
+    "MW-C224-nagaro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch224.txt",
+  "json": "marwadi/narration/ch224.json",
+  "textHash": "fnv1a64:872dc80c4eb5cc75",
+  "jsonHash": "fnv1a64:9cbcaf7a017f4ed3",
+  "findings": []
+}

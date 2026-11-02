@@ -1,0 +1,11 @@
+{
+  "id": "MW-C246-marno-die",
+  "pathSegment": "MW-PATH-246-PIHAR246",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-246-PIHAR246",
+      "order": 4
+    }
+  ]
+}

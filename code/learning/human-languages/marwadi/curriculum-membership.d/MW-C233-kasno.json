@@ -1,0 +1,11 @@
+{
+  "id": "MW-C233-kasno",
+  "pathSegment": "MW-PATH-233-GEAR233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-233-GEAR233",
+      "order": 3
+    }
+  ]
+}

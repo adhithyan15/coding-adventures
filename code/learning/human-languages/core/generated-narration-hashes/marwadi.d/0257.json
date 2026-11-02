@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:99566dc0261d211e",
+  "lessonIds": [
+    "MW-C257-ris",
+    "MW-C257-rusno",
+    "MW-C257-laj",
+    "MW-C257-nisaso",
+    "MW-C257-olmo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch257.txt",
+  "json": "marwadi/narration/ch257.json",
+  "textHash": "fnv1a64:3fc0a6481ddad88e",
+  "jsonHash": "fnv1a64:7d0a5f17313ab46c",
+  "findings": []
+}

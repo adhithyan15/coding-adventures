@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-170-DHOVO170",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-170-DHOVO170"
+  ],
+  "after": []
+}

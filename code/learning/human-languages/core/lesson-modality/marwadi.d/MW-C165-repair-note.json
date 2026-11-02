@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C165-repair-note",
+    "language": "marwadi",
+    "chapter": 165,
+    "sequence": 10080,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1057ecc141d0e13d"
+  },
+  "findings": []
+}

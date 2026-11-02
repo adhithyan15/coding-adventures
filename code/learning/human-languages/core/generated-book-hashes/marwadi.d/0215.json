@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:8a9c6d8c1e8a2486",
+  "lessonIds": [
+    "MW-C215-lapetno",
+    "MW-C215-kagad",
+    "MW-C215-potli",
+    "MW-C215-ochho",
+    "MW-C215-khutno",
+    "MW-R215-review-210-215",
+    "MW-R215-review-final-215"
+  ],
+  "tex": "marwadi/book/chapters/ch215-wrapping-up.tex"
+}

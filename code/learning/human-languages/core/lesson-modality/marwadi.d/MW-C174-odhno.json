@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C174-odhno",
+    "language": "marwadi",
+    "chapter": 174,
+    "sequence": 11410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6527c1c2fc094a98"
+  },
+  "findings": []
+}

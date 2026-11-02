@@ -1,0 +1,11 @@
+{
+  "id": "MW-C207-nako",
+  "pathSegment": "MW-PATH-207-GARDEN207",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-207-GARDEN207",
+      "order": 2
+    }
+  ]
+}

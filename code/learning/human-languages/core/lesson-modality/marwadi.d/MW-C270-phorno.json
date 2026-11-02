@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C270-phorno",
+    "language": "marwadi",
+    "chapter": 270,
+    "sequence": 19230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f63768ca997b4d87"
+  },
+  "findings": []
+}

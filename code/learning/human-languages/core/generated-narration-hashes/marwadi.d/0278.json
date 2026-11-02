@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:11799f7cc3e37ca9",
+  "lessonIds": [
+    "MW-C278-kahani",
+    "MW-C278-paheli",
+    "MW-C278-michno",
+    "MW-C278-putli",
+    "MW-C278-lukno",
+    "MW-R278-review-273-278"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch278.txt",
+  "json": "marwadi/narration/ch278.json",
+  "textHash": "fnv1a64:3350a0cea5f5e588",
+  "jsonHash": "fnv1a64:e450054340b72194",
+  "findings": []
+}

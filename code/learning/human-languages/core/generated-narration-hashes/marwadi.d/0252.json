@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:6b4890b29e7a54ba",
+  "lessonIds": [
+    "MW-C252-had",
+    "MW-C252-sas",
+    "MW-C252-haphno",
+    "MW-C252-chabno",
+    "MW-C252-pir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch252.txt",
+  "json": "marwadi/narration/ch252.json",
+  "textHash": "fnv1a64:aa7898aa05cab87d",
+  "jsonHash": "fnv1a64:d113876fd17124df",
+  "findings": []
+}

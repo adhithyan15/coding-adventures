@@ -1,0 +1,21 @@
+{
+  "chapter": 278,
+  "title": "Stories and Riddles",
+  "label": "ch:mw-stories-and-riddles",
+  "canDo": "I can say I like stories, riddles and hiding games.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "MW-R278-review-273-278",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say I like stories, riddles and hiding games.",
+    "assesses": [
+      "MW-LEX-C278-KAHANI278-01",
+      "MW-LEX-C278-KAHANI278-02",
+      "MW-LEX-C278-KAHANI278-03",
+      "MW-LEX-C278-KAHANI278-04",
+      "MW-LEX-C278-KAHANI278-05"
+    ]
+  }
+}
