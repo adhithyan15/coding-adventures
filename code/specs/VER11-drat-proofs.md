@@ -186,8 +186,9 @@ Both crates are pure computation over strings and in-memory data. Their
    hostile proof can make it slow: one RAT step costs a RUP check per
    partner clause, and a 75 KB formula plus a short repeating proof ran for
    minutes. Every literal visit is now charged against `Limits::max_work`
-   (default 2³²). Exhaustion makes checks answer "no conflict", so it can
+   (default 2³²), including building RAT resolvents and walking the trail.
+   Exhaustion makes checks answer "no conflict", so it can
    only reject (`ResourceLimit`), never accept. Soundness is untouched.
-4. **Kernel size.** `check.rs` is 373 lines before its tests, about a
+4. **Kernel size.** `check.rs` is 385 lines before its tests, about a
    third of them comments, inside the "few hundred lines" VER00 §7.5 asks
    for. The readers in `parse.rs` are about 200 more.
