@@ -1041,9 +1041,11 @@ never as a pass at run time. None removes anything a frontend still emits.
    - JVM and CLR adopt one char per byte: `__iir_print_str` /
      `__iir_write_bytes`, `input_str` read as ISO-8859-1. The CLR `putchar`
      path is fixed for bytes ≥ 0x80 too.
-   - The UTF-8 literal, lone-byte and byte-table cases.
-   - Touches `interpreter-ir` only if the validator's literal check lives
-     there.
+   - `Operand::Bytes` (owner decision, Q4): a raw-byte literal operand
+     beside `Operand::Str`, accepted by `str_const` and lowered byte-exactly
+     on every backend. It lives in `interpreter-ir`, so this PR runs the
+     twig-vm Miri script.
+   - The UTF-8 literal, raw-byte literal, lone-byte and byte-table cases.
 3. **PR5c — `i64_to_str`.** Registered (`introduced_by: "LANG83 PR5c"`,
    family `String`, `i64 → str`, no trap) and lowered on eight columns. The JIT
    declares it `Refused(INTERPRETER_TIER_ONLY)` like the other string ops, and
@@ -1078,6 +1080,25 @@ and JavaScript 6f need tokens their pairs mostly have, plus one counting
 helper each. Ruby waits for its lexer. Every compiler that emits a helper
 reserves the helper's name in its own namespace and refuses a program that
 defines or calls it, as Twig does since the PR7f-2 security review.
+
+### Owner decisions (2026-11-02)
+
+The owner settled four of the open questions below:
+
+- **Q2, the trap past the ceiling:** reuse `Trap.Overflow`. No new kind is added.
+- **Q3, JVM and CLR:** keep the host `String`, one char per byte, as proposed.
+- **Q4, byte literals:** add `Operand::Bytes` now. A literal can carry any byte
+  sequence, so Perl's `"\xff"` and Python `bytes` literals are exact from the
+  first slice. PR5b introduces the operand (in `interpreter-ir`, so the Miri
+  script applies) and lowers it byte-exactly on every backend next to
+  `Operand::Str`. A `str_const` takes either operand. Perl 4d therefore accepts
+  `\x{80}`–`\x{ff}` without `use utf8`, rather than refusing them.
+- **Q9, vm-core:** `Value::Str` becomes `Rc<[u8]>` in place. Every in-repo
+  caller (the `lang_matrix` harness sinks and the `input_str` closures) is
+  updated in the same PR; there is no parallel `Value::Bytes`.
+
+Questions 1, 5, 6, 7 and 8 stay open and use the proposed answers unless the
+owner says otherwise.
 
 ### Open questions
 
