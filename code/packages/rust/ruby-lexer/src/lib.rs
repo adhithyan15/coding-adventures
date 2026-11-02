@@ -1395,12 +1395,14 @@ impl RubyLexer {
     /// statement starts; elsewhere (`x = yield`) the grammar reads them as
     /// a bare keyword value, which takes no arguments.
     ///
-    /// A name or statement keyword must be where a statement starts: first
-    /// on its line, after a token that ends an expression
-    /// ([`Self::ends_expression`]), a `;` from step 2, the `|` that closes
-    /// block parameters, `{`, or one of `do`, `then`, `else`, `begin`,
-    /// `ensure`.  After `,`, `(`, `=` or an operator it is the rest of an
-    /// expression and is left alone.  No `;` goes in when the next line
+    /// A name or statement keyword must be where a statement starts: right
+    /// after a token that opens one ([`Self::opens_statement`]: `{`, the
+    /// `|` that closes block parameters, `do`, `then`, `else`, `begin`,
+    /// `ensure`, `rescue`, a step-2 `;`), on the same line or not; or first
+    /// on its line after a token that ends an expression
+    /// ([`Self::ends_expression`]).  So `{ |x| foo; bar }` and `begin foo;
+    /// bar end` end `foo`, as in Ruby.  After `,`, `(`, `=`, `or` or an
+    /// operator it is the rest of an expression and is left alone.  No `;` goes in when the next line
     /// cannot be an argument anyway: it starts with `end`, another clause
     /// keyword, a closing bracket, or a `.` that continues a method chain.
     fn end_lone_names(&mut self) {
@@ -1461,19 +1463,18 @@ impl RubyLexer {
                     || (pt.type_ == TokenType::Keyword
                         && matches!(pt.value.as_str(), "def" | "alias" | "undef")))
             }
-        } else if p == i && i > 0 {
-            false // something precedes it on its own line
+        } else if p == 0 {
+            true // the first token of the file
+        } else if p < i {
+            // First on its line: the line before ended a statement, or
+            // opened one (`do` ⏎ `foo`).
+            self.ends_expression(p - 1) || self.opens_statement(p - 1, closing_bars)
         } else {
-            p == 0 || {
-                let prev = p - 1;
-                let pt = &self.tokens[prev];
-                self.ends_expression(prev)
-                    || pt.type_ == TokenType::Semicolon
-                    || pt.type_ == TokenType::LBrace
-                    || (pt.type_ == TokenType::Keyword
-                        && matches!(pt.value.as_str(), "do" | "then" | "else" | "begin" | "ensure"))
-                    || closing_bars.contains(&prev)
-            }
+            // Something precedes it on its own line, so it starts a
+            // statement only right after a token that opens one:
+            // `{ |x| foo; bar }`, `begin foo; bar end`, `then return; x`.
+            // Anything else (`x = foo`, `a or return`) is mid-expression.
+            self.opens_statement(i - 1, closing_bars)
         };
         if !placed {
             return false;
@@ -1497,6 +1498,34 @@ impl RubyLexer {
         }
     }
 
+    /// Whether a statement starts right after `tokens[j]`, wherever the
+    /// next token is: the one rule for step 4, shared by lone names and the
+    /// line-ending keywords (#18798 re-review).
+    ///
+    /// | token                                   | example                         |
+    /// |-----------------------------------------|---------------------------------|
+    /// | `{` (a block, a `->` body)              | `xs.each { foo; bar }`          |
+    /// | the `|` that closes block parameters    | `{ \|x\| next; bar }`           |
+    /// | `do` `then` `else` `begin` `ensure` `rescue` | `begin foo; bar end`, `when 1 then foo; bar` |
+    /// | a synthetic `;` (step 2)                | `rescue` ;  ⏎ `note`            |
+    ///
+    /// A line break, or a source `;` (a `Newline` since step 1), after a
+    /// complete expression also ends a statement; that case is
+    /// [`Self::ends_expression`], checked by the caller only when a line
+    /// break sits between.  `elsif c then` is covered by `then`.
+    fn opens_statement(&self, j: usize, closing_bars: &HashSet<usize>) -> bool {
+        let t = &self.tokens[j];
+        match t.type_ {
+            TokenType::Semicolon | TokenType::LBrace => true,
+            TokenType::Keyword => matches!(
+                t.value.as_str(),
+                "do" | "then" | "else" | "begin" | "ensure" | "rescue"
+            ),
+            TokenType::Name => closing_bars.contains(&j),
+            _ => false,
+        }
+    }
+
     /// Whether `tokens[j]` can end an expression: a literal, a name, a
     /// closing bracket, or one of the value keywords.  Shared by the
     /// modifier-keyword pass and [`Self::mark_statement_ends`].
@@ -1513,9 +1542,12 @@ impl RubyLexer {
             | TokenType::RBracket
             | TokenType::RBrace => true,
             TokenType::Name => is_identifier_like(&self.tokens[j].value),
+            // `super` and `yield` are values too (`x = super`), so a `-`,
+            // `+`, `(` or `[` on the next line starts a new statement after
+            // them (#18798 re-review: `super` ⏎ `-1` read as `super - 1`).
             TokenType::Keyword => matches!(
                 self.tokens[j].value.as_str(),
-                "nil" | "true" | "false" | "self" | "end"
+                "nil" | "true" | "false" | "self" | "end" | "super" | "yield"
             ),
             _ => false,
         }
@@ -5244,6 +5276,57 @@ mod tests {
             ("a or return\nputs 1", "return"),
         ] {
             assert_ne!(after(src, kw), ended, "{src:?}");
+        }
+    }
+
+    #[test]
+    fn a_statement_starts_after_an_opener_on_the_same_line() {
+        // `(source, token)`: the token must be followed by a synthetic `;`.
+        // Each of these read the next statement as its argument (#18798
+        // re-review): the opener is on the token's own line.
+        for (src, tok) in [
+            ("xs.each { |x| foo; bar }", "foo"),
+            ("wrap { yield; cleanup }", "yield"),
+            ("xs.each { |x| next; bar }", "next"),
+            ("begin foo; bar end", "foo"),
+            ("loop do foo; bar end", "foo"),
+            ("l = -> { foo; bar }", "foo"),
+            ("[1].each { puts; puts 2 }", "puts"),
+            ("if c then return; x end", "return"),
+            ("case a\nwhen 1 then foo; bar\nend", "foo"),
+            ("if a\n  1\nelse foo; bar\nend", "foo"),
+            ("begin\nensure foo; bar\nend", "foo"),
+            ("x = 1\nreturn\n-1", "return"),
+        ] {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            let at = toks.iter().position(|t| t.value == tok).unwrap_or_else(|| panic!("{src:?}"));
+            assert!(
+                toks[at + 1].type_ == TokenType::Semicolon && source_spelling(&toks[at + 1]).is_none(),
+                "{src:?}: {toks:?}"
+            );
+        }
+        // Mid-expression on its line: left alone.
+        for (src, tok) in [("x = foo; bar", "foo"), ("a or return; puts 1", "return"), ("f(a, b; c)", "b")] {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            let at = toks.iter().position(|t| t.value == tok).unwrap();
+            assert_ne!(toks[at + 1].type_, TokenType::Semicolon, "{src:?}: {toks:?}");
+        }
+    }
+
+    #[test]
+    fn super_and_yield_end_an_expression() {
+        // `x = super` ⏎ `-1` read as `x = super - 1`, ⏎ `[1]` as `super[1]`.
+        for (src, tag) in [
+            ("x = super\n-1", LINE_START_MINUS),
+            ("x = super\n[1]", LINE_START_LBRACKET),
+            ("x = super\n(1)", LINE_START_LPAREN),
+            ("x = yield\n-1", LINE_START_MINUS),
+            ("x = yield\n+1", LINE_START_PLUS),
+        ] {
+            assert!(
+                tokenize_ruby_for_version(src, "3.0").unwrap().iter().any(|t| t.value == tag),
+                "{src:?}"
+            );
         }
     }
 

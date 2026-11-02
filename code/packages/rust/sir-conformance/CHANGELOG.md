@@ -6,6 +6,10 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ### Added (#18798)
 
+- Re-review follow-up: 3 more programs — statements after a block opener
+  on one line (`{ |x| foo; bar }`, `do |x| foo; bar end`, `{ |x| puts;
+  puts 2 }`), `then` after a condition, and a `-`/`[` line after
+  `x = super`.
 - Security review follow-up: 5 more programs — `super` ending its line,
   `super; setup` and `x = super` ⏎ `puts x`, `yield` ending its line,
   a bare `puts` before a modifier `if`, and a `rescue` binding the clause

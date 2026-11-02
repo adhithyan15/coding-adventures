@@ -4,6 +4,22 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
 
 ## Unreleased — a newline or `;` ends a statement before `-`, `+`, `(` and after a lone name or a `rescue` list (#18798)
 
+### Fixed (re-review of #18798)
+
+- **A statement starts after an opener on the same line too.**  Step 4
+  only ended a name or keyword that was first on its line, so `xs.each {
+  |x| foo; bar }`, `wrap { yield; cleanup }`, `{ |x| next; bar }`, `begin
+  foo; bar end`, `loop do foo; bar end`, `-> { foo; bar }`, `[1].each {
+  puts; puts 2 }` and `if c then return; x end` silently read the second
+  statement as the first one's argument.  One predicate,
+  `opens_statement` (`{`, a block's closing `|`, `do`, `then`, `else`,
+  `begin`, `ensure`, `rescue`, a step-2 `;`), now decides for lone names
+  and the line-ending keywords alike.  Test
+  `a_statement_starts_after_an_opener_on_the_same_line`.
+- **`super` and `yield` end an expression**, so a `-`, `+`, `(` or `[`
+  that starts the next line is a new statement (`x = super` ⏎ `-1` read
+  as `super - 1`).  Test `super_and_yield_end_an_expression`.
+
 ### Fixed (security review of #18798)
 
 - **A keyword that ends its line ends its argument list.**  `super`,

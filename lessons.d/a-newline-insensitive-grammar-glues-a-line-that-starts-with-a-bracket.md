@@ -54,3 +54,10 @@ its security review found the keywords that take one — `super`, `yield`,
 (`return; 42` read as `return 42`).  And a pass that inserts tokens must
 splice them in one rebuild: one `Vec::insert` per insertion made the pass
 quadratic on a file of short statements.
+
+And "where a statement starts" is not "first on its line": the re-review
+found `{ |x| foo; bar }`, `begin foo; bar end` and `if c then return; x
+end` gluing, because the rule only looked across a line break.  Write
+"this token opens a statement" once (`{`, a block's closing `|`, `do`,
+`then`, `else`, `begin`, `ensure`, `rescue`) and use it on both sides of
+a line break, for every kind of token the rule ends.

@@ -298,6 +298,27 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "begin\n  raise \"q\"\nrescue => e\n  e = 5\n  puts e\nend\n",
         "5",
     ),
+    // ── #18798 re-review: a statement after an opener on the same line ──
+    // `{ |x| foo; bar }` read as `foo(bar)`; `{ puts; puts 2 }` as
+    // `puts(puts 2)`; `do |x| foo; bar end` likewise.
+    (
+        "rb_statements_after_a_block_opener_on_one_line",
+        "def foo\n  puts \"foo\"\nend\ndef bar\n  puts \"bar\"\nend\n[1].each { |x| foo; bar }\n[1].each do |x| foo; bar end\n[1].each { |x| puts; puts 2 }\n",
+        "foo\nbar\nfoo\nbar\n\n2",
+    ),
+    // `then` after a condition (it was read as a call of the next
+    // statement).
+    (
+        "rb_then_after_a_condition",
+        "c = true\nif c then puts 1; puts 2 end\nx = 2\nunless x == 3 then puts 3 end\n",
+        "1\n2\n3",
+    ),
+    // `x = super` ⏎ `-1` was `super - 1`; ⏎ `[1]` was `super[1]`.
+    (
+        "rb_sign_or_bracket_line_after_super",
+        "class A\n  def v\n    7\n  end\nend\nclass B < A\n  def v\n    x = super\n    -1\n    y = super\n    [1]\n    x + y\n  end\nend\nputs B.new.v\n",
+        "14",
+    ),
     // A store into an outer local inside `begin`/`rescue` (Rust declared
     // the local immutable).
     (

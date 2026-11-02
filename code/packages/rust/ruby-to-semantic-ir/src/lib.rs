@@ -10335,6 +10335,74 @@ b = "y"
         );
     }
 
+    /// #18798 re-review — a name or keyword ends its statement after a
+    /// token that opens one on the SAME line too (`{`, a block's closing
+    /// `|`, `do`, `then`, `begin`, …).  Each of these read the second
+    /// statement as the first one's argument, silently; before the `;`
+    /// became a line break they were refused at the `;`.  Ruby (3.3.6)
+    /// runs both statements in each.
+    #[test]
+    fn a_statement_after_an_opener_on_the_same_line_takes_nothing_from_the_next() {
+        let defs = "def foo\n  puts \"foo\"\nend\ndef bar\n  puts \"bar\"\nend\ndef cleanup\n  1\nend\ndef wrap\n  yield\nend\n";
+        // Every call of `name` in `dbg` passes no argument.
+        let only_bare_calls = |dbg: &str, name: &str| {
+            let needle = format!("fn_name: \"{name}\", args: [");
+            let mut found = 0;
+            for (at, _) in dbg.match_indices(&needle) {
+                assert_eq!(&dbg[at + needle.len()..at + needle.len() + 1], "]", "{name} got an argument");
+                found += 1;
+            }
+            found
+        };
+        for (src, names) in [
+            ("[1].each { |x| foo; bar }\n", &["foo", "bar"][..]),
+            ("begin foo; bar end\n", &["foo", "bar"][..]),
+            ("loop do foo; bar end\n", &["foo", "bar"][..]),
+            ("[1].each do |x| foo; bar end\n", &["foo", "bar"][..]),
+            ("l = -> { foo; bar }\n", &["foo", "bar"][..]),
+            ("[1].each { |x| next; bar }\n", &["bar"][..]),
+            ("def t\n  wrap { yield; cleanup }\nend\n", &["cleanup"][..]),
+            ("case 1\nwhen 1 then foo; bar\nend\n", &["foo", "bar"][..]),
+        ] {
+            let m = lower(&format!("{defs}{src}"));
+            let dbg = format!("{m:?}");
+            for name in names {
+                assert!(only_bare_calls(&dbg, name) >= 1, "{src:?}: no call of {name}");
+            }
+        }
+        // `next;` / `return;` / `yield;` carry no value of their own.
+        let m = lower(&format!("{defs}[1].each {{ |x| next; bar }}\n"));
+        assert!(format!("{m:?}").contains("name: \"next\", args: [NilLit"), "{m:?}");
+        let m = lower("def f(c)\n  if c then return; 5 end\n  6\nend\n");
+        assert!(format!("{m:?}").contains("name: \"return\", args: [NilLit"), "{m:?}");
+        // (`yield` lowers to a call of the method's block parameter.)
+        let m = lower(&format!("{defs}def t\n  wrap {{ yield; cleanup }}\nend\n"));
+        let dbg = format!("{m:?}");
+        let yields: Vec<&str> = dbg.split("IndirectCall {").skip(1).collect();
+        assert!(!yields.is_empty(), "{dbg}");
+        for y in yields {
+            let call = &y[..y.find("effects").expect("an IndirectCall has effects")];
+            assert!(call.ends_with("args: [], "), "`yield` took an argument: {call}");
+        }
+        // `puts; puts 2` in a block: a newline, then 2.
+        let m = lower("[1].each { |x| puts; puts 2 }\n");
+        let dbg = format!("{m:?}");
+        assert_eq!(dbg.matches("name: \"__sys_write__\"").count(), 2, "{dbg}");
+        assert_valid(&m);
+    }
+
+    /// #18798 re-review — `super` (and `yield`) is a value, so a `-`, `+`,
+    /// `(` or `[` that starts the next line starts a new statement: `x =
+    /// super` ⏎ `-1` read as `x = super - 1`, and ⏎ `[1]` as `super[1]`.
+    #[test]
+    fn a_sign_or_bracket_after_super_starts_a_new_statement() {
+        let m = lower("class A\n  def v\n    7\n  end\nend\nclass B < A\n  def v\n    x = super\n    -1\n    y = super\n    [1]\n    x + y\n  end\nend\nputs B.new.v\n");
+        let dbg = format!("{m:?}");
+        assert!(!dbg.contains("name: \"-\""), "no subtraction: {dbg}");
+        assert!(!dbg.contains("\"[]\""), "no index: {dbg}");
+        assert_valid(&m);
+    }
+
     /// #18798 (security review) — only a `puts` that is a whole statement
     /// prints a newline.  As a value (`x = puts`, `f(puts)`) it stays a
     /// reference to an unknown name, which the validator refuses.

@@ -4,6 +4,8 @@
 
 ### Changed
 
+- Regenerated again for the #18798 re-review: `if`, `elsif`, `unless`,
+  `when` and `in` take an optional `then` after the condition.
 - Regenerated again for the #18798 security review: `super`, `yield`,
   `return`, `break` and `next` may take a `;` in place of their argument
   list (a source `;` here, so `return; 42` no longer reads `return 42`),

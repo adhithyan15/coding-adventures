@@ -3636,6 +3636,23 @@ mod tests {
         assert!(find_descendant(&ast, "expression").is_some());
     }
 
+    /// #18798 re-review — an optional `then` after a condition, so `then`
+    /// is never read as a keyword-led call of the next statement.
+    #[test]
+    fn test_parse_then_after_a_condition() {
+        for (src, rule) in [
+            ("if c then foo; bar end", "if_statement"),
+            ("unless c then foo end", "unless_statement"),
+            ("if a\n  1\nelsif b then 2\nend", "elsif_clause"),
+            ("case a\nwhen 1 then foo; bar\nend", "when_clause"),
+        ] {
+            let ast = parse_ruby(src);
+            let node = find_descendant(&ast, rule).unwrap_or_else(|| panic!("{src:?}"));
+            assert!(tree_has_token_value(node, "then"), "{src:?}");
+            assert!(find_descendant(&ast, "method_call_no_paren").is_none(), "{src:?}");
+        }
+    }
+
     /// #18798 — `rescue Boom` ⏎ `puts 40`: the class list ends at the line
     /// break (it read `Boom(puts 40)`), and `;` separates statements.
     #[test]

@@ -364,10 +364,13 @@ params       = "..." | param { COMMA param } ;
 # the two are disjoint on their first token so order is not load-bearing,
 # but keeping keyword-first mirrors the call-side `call_arg` ordering below.
 param        = [ "*" | "**" ] NAME [ COLON [ expression ] | EQUALS expression ] ;
-if_statement = "if" expression { !"else" !"elsif" !"end" statement } { elsif_clause } [ else_clause ] "end" ;
-elsif_clause = "elsif" expression { !"else" !"elsif" !"end" statement } ;
+# #18798 re-review — an optional `then` after a condition (`if c then x
+# end`, `when 1 then foo; bar`).  Without it `then` was read as a
+# keyword-led paren-less call taking the next statement as its argument.
+if_statement = "if" expression [ "then" ] { !"else" !"elsif" !"end" statement } { elsif_clause } [ else_clause ] "end" ;
+elsif_clause = "elsif" expression [ "then" ] { !"else" !"elsif" !"end" statement } ;
 else_clause  = "else" { !"end" statement } ;
-unless_statement = "unless" expression { !"else" !"end" statement } [ else_clause ] "end" ;
+unless_statement = "unless" expression [ "then" ] { !"else" !"end" statement } [ else_clause ] "end" ;
 while_statement = "while" expression { !"end" statement } "end" ;
 until_statement = "until" expression { !"end" statement } "end" ;
 # #18778 — `for NAME in expression [do] … end`.  Unlike a block, a `for`
@@ -401,7 +404,7 @@ for_statement = "for" NAME "in" expression [ "do" ] { !"end" statement } "end" ;
 #   - `when *splat` argument splat in the value list — deferred
 #     (the grammar accepts only positional values via `expression`).
 case_statement = "case" expression { when_clause | in_clause } [ else_clause ] "end" ;
-when_clause    = "when" expression { COMMA expression } { !"when" !"in" !"else" !"end" statement } ;
+when_clause    = "when" expression { COMMA expression } [ "then" ] { !"when" !"in" !"else" !"end" statement } ;
 # Phase 7d — Ruby 3.0 case/in pattern matching.
 #
 # `case/in` is structurally similar to `case/when` — the same scrutinee
@@ -423,7 +426,7 @@ when_clause    = "when" expression { COMMA expression } { !"when" !"in" !"else" 
 # Order matters: array/hash come first so their `[`/`{` openers shadow
 # the literal/binding forms; literal comes before binding so concrete
 # constants don't get swallowed as bindings.
-in_clause      = "in" pattern { !"when" !"in" !"else" !"end" statement } ;
+in_clause      = "in" pattern [ "then" ] { !"when" !"in" !"else" !"end" statement } ;
 pattern        = array_pattern | hash_pattern | class_pattern | pin_pattern | literal_pattern | binding_pattern ;
 literal_pattern   = NUMBER | STRING | symbol_literal | KEYWORD ;
 binding_pattern   = NAME ;

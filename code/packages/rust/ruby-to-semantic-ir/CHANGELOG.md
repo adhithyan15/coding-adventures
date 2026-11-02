@@ -4,6 +4,14 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ## Unreleased — newline gluing, `rescue Klass` ⏎, bare `puts`, method-level `rescue` value (#18798)
 
+### Fixed (re-review of #18798)
+
+- A statement after `{`, a block's `|`, `do`, `then`, `begin`, … on the
+  same line no longer takes the next statement as its argument, and a
+  `-`/`[` line after `x = super` starts a new statement (see ruby-lexer).
+  Tests `a_statement_after_an_opener_on_the_same_line_takes_nothing_from_the_next`
+  and `a_sign_or_bracket_after_super_starts_a_new_statement`.
+
 ### Fixed (security review of #18798)
 
 - **`super` ⏎ `puts "hi"`** printed a blank line, passed `nil` up and

@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
 
 ## Unreleased — statement ends before `-`, `+`, `(`, after a lone name and a `rescue` list (#18798)
 
+### Fixed (re-review of #18798)
+
+- Regenerated: `if`, `elsif`, `unless`, `when` and `in` take an optional
+  `then` after the condition (`if c then x end`, `when 1 then foo; bar`);
+  `then` was read as a keyword-led call of the next statement.  Test
+  `test_parse_then_after_a_condition`.
+
 ### Fixed (security review of #18798)
 
 - Regenerated: `super_expr`, `yield_statement`, `return_statement`,
