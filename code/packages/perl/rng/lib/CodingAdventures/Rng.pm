@@ -171,20 +171,26 @@ my $_TWO_64  = Math::BigInt->new('18446744073709551616');
 
 sub _rejection_sample {
     my ($next_u32_fn, $min, $max) = @_;
+    # Each bound is stringified exactly once, and that one string is both
+    # checked and parsed: an object with "" overloading could otherwise pass
+    # the check with one string and be parsed from another.
+    my @text;
     for my $bound ($min, $max) {
+        my $string = defined $bound ? "$bound" : '';
         # Two checks, because a float's string form is rounded to 15
         # significant digits: 0.9999999999999999 prints as "1" and would pass
         # the pattern alone. The second compares the number with its own
         # integer part, which differs for any non-integer float. (Comparing
         # with Math::BigInt does not work: its constructor stringifies too.)
         Carp::croak('next_int_in_range bounds must be integers')
-            unless defined $bound
-            && "$bound" =~ /\A-?[0-9]+\z/
+            unless $string =~ /\A-?[0-9]+\z/
             && (ref($bound) || $bound == int($bound));
+        push @text, $string;
     }
-    my ($lo, $hi) = (Math::BigInt->new("$min"), Math::BigInt->new("$max"));
+    my ($lo, $hi) = map { Math::BigInt->new($_) } @text;
     Carp::croak("next_int_in_range needs signed 64-bit bounds with min <= max, got [$lo, $hi]")
-        if $lo < $_I64_MIN || $hi > $_I64_MAX || $lo > $hi;
+        if $lo->is_nan || $hi->is_nan
+        || $lo < $_I64_MIN || $hi > $_I64_MAX || $lo > $hi;
 
     my $span = $hi - $lo + 1;
     my $next_u64 = sub {
@@ -206,6 +212,8 @@ sub _rejection_sample {
             return ($lo + ($r % $span))->numify if $r >= $threshold;
         }
     }
+    # Only the whole domain is left; anything else is a bug, not a draw.
+    Carp::croak("next_int_in_range: unexpected span $span") unless $span == $_TWO_64;
     return ($lo + $next_u64->())->numify;
 }
 

@@ -104,4 +104,16 @@ subtest 'invalid bounds croak without drawing' => sub {
     }
 };
 
+subtest 'a bound is stringified once, so it cannot change between check and use' => sub {
+    package Flaky {
+        use overload '""' => sub { my $self = shift; $self->{n}++ ? '1.5' : '1' }, fallback => 1;
+        sub new { bless { n => 0 }, shift }
+    }
+    my $g = CodingAdventures::Rng::LCG->new(1);
+    for (1 .. 50) {
+        my $v = $g->next_int_in_range(0, Flaky->new);
+        ok($v >= 0 && $v <= 1, "in range: $v") or last;
+    }
+};
+
 done_testing;
