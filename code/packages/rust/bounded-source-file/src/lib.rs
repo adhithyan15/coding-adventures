@@ -17,8 +17,9 @@
 //! ```text
 //!   1. fs::metadata(path).is_file()     a FIFO, device or directory is refused
 //!                                       before `open`, which would block on a FIFO
-//!   2. open, with O_NONBLOCK on Unix    if the path was swapped for a FIFO or tty
-//!                                       between 1 and 2, `open` still returns
+//!   2. open, with O_NONBLOCK and        if the path was swapped for a FIFO or tty
+//!      O_NOCTTY on Unix                 between 1 and 2, `open` still returns, and
+//!                                       a tty does not become the controlling one
 //!   3. file.metadata() on the handle    the file measured is the file read:
 //!        is_file(), len() <= limit      refuse a swap, refuse a file too big now
 //!   4. read through take(limit + 1)     refuse a file that grew after step 3,
@@ -89,7 +90,11 @@ fn open_without_blocking(path: &Path) -> io::Result<File> {
     use std::os::unix::fs::OpenOptionsExt;
     std::fs::OpenOptions::new()
         .read(true)
-        .custom_flags(libc::O_NONBLOCK)
+        // O_NONBLOCK: `open` of a writerless FIFO returns instead of
+        // waiting.  O_NOCTTY: opening a terminal device never makes it this
+        // process's controlling terminal (step 3 refuses it anyway, but the
+        // open itself must have no side effect).
+        .custom_flags(libc::O_NONBLOCK | libc::O_NOCTTY)
         .open(path)
 }
 

@@ -374,6 +374,8 @@ instruction that went over.
 | generated name bytes | 1 MiB | record/union predicate and accessor names, `(|name| + 1) + Σ (|name| + 1 + |field|)`, by arithmetic before any is formatted: `extract_program`, the type checker, the compiler's pre-pass | a long name × many fields was ≈ 30 GB of names before any other budget counted |
 | source bytes per import graph | 4 MiB | `twig-module-driver`, as each file is read | four maximum-size files; past ~2 MiB of the densest code a graph could not link anyway |
 | imported names per import graph | 2²⁰ | `twig-module-driver`: export-clause lengths summed over import edges, before any copying | bounds the edges × exports merge |
+| imported name bytes per import graph | 16 MiB | the same edges, charged each export clause's bytes | every name is cloned into the importer's type-checker globals |
+| type-checker diagnostics | 256, 4 KiB each, 1 MiB in all; lists name 8 items | `type_checker_protocol::bounded`, in both Twig type checkers | a non-exhaustive match listed every missing variant: ~60,000 variants × ~50,000 matches was ~33 GB of messages |
 
 A function is checked once it is finished: lowering one function is linear
 in the (already bounded) tree, so this wastes at most one function's work.

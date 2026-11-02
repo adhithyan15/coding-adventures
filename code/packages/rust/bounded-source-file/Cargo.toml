@@ -6,7 +6,8 @@ description = "Read a source file without ever holding more than a byte budget: 
 
 [dependencies]
 
-# `O_NONBLOCK` for the open, so a FIFO or tty swapped in after the
-# regular-file check cannot block the open (see src/lib.rs).
+# `O_NONBLOCK | O_NOCTTY` for the open, so a FIFO or tty swapped in after
+# the regular-file check can neither block the open nor become the
+# controlling terminal (see src/lib.rs).
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"

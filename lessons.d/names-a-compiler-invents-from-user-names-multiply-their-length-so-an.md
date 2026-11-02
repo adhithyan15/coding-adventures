@@ -41,3 +41,17 @@ through:
 - **Don't stop at the work you were asked to bound.** Measure what an
   attacker can make each phase *allocate*, not just the instructions it
   emits.
+
+**Same trap, one layer over (re-review).** The fix above still missed one
+case. The type checker's *diagnostics* had the same shape: a
+non-exhaustive `match` listed every unmatched variant, so each one-arm
+match on a 60,000-variant union cost ~600 KB of message, and 50,000
+matches cost ~33 GB. Every message that describes a *type* (a list of
+variants, fields or overloads) costs the size of that type, once per
+error. Bound three things:
+- each list (`type_checker_protocol::bounded::name_list`: 8 names, then
+  "… and K more");
+- each message (4 KiB);
+- the number and total bytes of diagnostics (256, 1 MiB, then one note).
+
+Then skip building a diagnostic that would be dropped.

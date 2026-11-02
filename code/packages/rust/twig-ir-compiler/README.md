@@ -337,7 +337,7 @@ cannot run, before anything reaches a backend (#18474, `src/budgets.rs`):
 | `MAX_FUNCTIONS_PER_MODULE` | 2¹⁶ | twig-vm's per-run function caps (`MAX_PROFILED_FUNCTIONS`, `MAX_IC_FUNCTIONS`) |
 | `MAX_NAME_BYTES` | 256 | from `twig-parser`; checked by the lexer, and by `check_cst_items` for a hand-built tree |
 | `MAX_GENERATED_NAME_BYTES` | 1 MiB | from `twig-parser`; a record's invented accessor names are charged before one is formatted, so a long name × many fields cannot cost tens of GB |
-| `MAX_PROGRAM_SOURCE_BYTES`, `MAX_IMPORTED_NAMES` | 4 MiB, 2²⁰ | used by `twig-module-driver` across an import graph |
+| `MAX_PROGRAM_SOURCE_BYTES`, `MAX_IMPORTED_NAMES`, `MAX_IMPORTED_NAME_BYTES` | 4 MiB, 2²⁰, 16 MiB | used by `twig-module-driver` across an import graph |
 
 A breach is a `TwigCompileError` naming the budget, the function, and the
 source of the instruction that went over:

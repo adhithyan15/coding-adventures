@@ -39,6 +39,7 @@
 //! | generated name bytes | 1 MiB | record and union predicate/accessor names, by arithmetic before any is formatted: here in the pre-pass, in `twig_parser::extract_program` and in the type checker | a long record name × many fields was ≈ 30 GB of names before any other budget counted (#18474 security review) |
 //! | source bytes per program | 4 MiB | `twig-module-driver`, summed as each file is read | [`MAX_PROGRAM_SOURCE_BYTES`] |
 //! | imported names per program | 2²⁰ | `twig-module-driver`, summed over import edges before merging | [`MAX_IMPORTED_NAMES`] |
+//! | imported name bytes per program | 16 MiB | the same edges, charged each exported name's length: every name is cloned into the importer | [`MAX_IMPORTED_NAME_BYTES`] |
 //!
 //! ## Registers: the stricter of two VM frames
 //!
@@ -137,6 +138,14 @@ pub const MAX_PROGRAM_SOURCE_BYTES: usize = 4 << 20;
 /// instructions.
 pub const MAX_IMPORTED_NAMES: usize = 1 << 20;
 
+/// Bytes of imported names a `twig-module-driver` graph may merge, summed
+/// over every import edge: 16 MiB.  [`MAX_IMPORTED_NAMES`] counts names, but
+/// each one is *cloned* into the importer's type-checker globals, so the
+/// cost is names × name length, and a name may be 256 bytes.  16 MiB is the
+/// names budget at a 16-byte average name (the repo's Twig averages about
+/// 10), so ordinary graphs reach the name count first.
+pub const MAX_IMPORTED_NAME_BYTES: usize = 16 << 20;
+
 pub use twig_parser::{MAX_GENERATED_NAME_BYTES, MAX_NAME_BYTES, MAX_TOKENS};
 
 /// A budget error.  `which` is the budget's name as the table above
@@ -190,6 +199,15 @@ pub fn check_graph_source_bytes(total: u64) -> Result<(), TwigCompileError> {
 pub fn check_imported_names(total: usize) -> Result<(), TwigCompileError> {
     if total > MAX_IMPORTED_NAMES {
         return Err(breach("imported names per program", MAX_IMPORTED_NAMES, None, (1, 1)));
+    }
+    Ok(())
+}
+
+/// Refuse an import graph whose import edges, summed, would clone more than
+/// [`MAX_IMPORTED_NAME_BYTES`] bytes of exported names.
+pub fn check_imported_name_bytes(total: usize) -> Result<(), TwigCompileError> {
+    if total > MAX_IMPORTED_NAME_BYTES {
+        return Err(breach("imported name bytes per program", MAX_IMPORTED_NAME_BYTES, None, (1, 1)));
     }
     Ok(())
 }

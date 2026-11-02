@@ -1,5 +1,17 @@
 # Changelog — twig-vm
 
+## Unreleased — #18474 re-review: capability manifest
+
+- `required_capabilities.json` was in the legacy string-list shape, which
+  fails the v1 schema, and it declared no file access. It now declares,
+  in schema-valid form:
+  - `stdout` write (the `print` builtin);
+  - `fs` read (the CLI and `run_file` read the source and its imports,
+    through `bounded-source-file`);
+  - `net` listen on `127.0.0.1:*` (`--debug-port`).
+
+  It is removed from the shrink-only invalid-manifest ledger.
+
 ## Unreleased — #18474 security review: the CLI never blocks on a file
 
 ### Fixed

@@ -555,24 +555,31 @@ pub fn compile_module_tree(
     // export clause is the right charge: `extract_module_exports` and
     // `visible_imports` each walk exactly that list per edge.
     {
-        let clause_len: std::collections::HashMap<&Path, usize> = discovered
+        //
+        // Each edge is charged twice: the clause's name *count* against
+        // `MAX_IMPORTED_NAMES`, and its name *bytes* against
+        // `MAX_IMPORTED_NAME_BYTES`, since every name is cloned into the
+        // importer's type-checker globals and a name may be 256 bytes.
+        let clause: std::collections::HashMap<&Path, (usize, usize)> = discovered
             .iter()
             .map(|(path, program, _)| {
-                let len = program.module_info.as_ref().map_or(0, |info| info.exports.len());
-                (path.as_path(), len)
+                let exports = program.module_info.as_ref().map_or(&[][..], |info| &info.exports[..]);
+                let bytes = exports.iter().map(String::len).sum();
+                (path.as_path(), (exports.len(), bytes))
             })
             .collect();
-        let mut imported_names: usize = 0;
+        let (mut imported_names, mut imported_bytes) = (0_usize, 0_usize);
         for (path, _, _) in &discovered {
             for (_, dep) in adjacency.get(path).map(Vec::as_slice).unwrap_or(&[]) {
-                let charge = clause_len.get(dep.as_path()).copied().unwrap_or(0);
-                imported_names = imported_names.saturating_add(charge);
-                twig_ir_compiler::budgets::check_imported_names(imported_names).map_err(
-                    |error| ModuleDriverError::Compile {
+                let (names, bytes) = clause.get(dep.as_path()).copied().unwrap_or((0, 0));
+                imported_names = imported_names.saturating_add(names);
+                imported_bytes = imported_bytes.saturating_add(bytes);
+                twig_ir_compiler::budgets::check_imported_names(imported_names)
+                    .and_then(|()| twig_ir_compiler::budgets::check_imported_name_bytes(imported_bytes))
+                    .map_err(|error| ModuleDriverError::Compile {
                         path: path.clone(),
                         error,
-                    },
-                )?;
+                    })?;
             }
         }
     }
@@ -1500,6 +1507,35 @@ mod tests {
                 );
             }
             other => panic!("expected the imported-names budget, got {other:?}"),
+        }
+    }
+
+    /// The edges are also charged the bytes of the names they clone:
+    /// `MAX_IMPORTED_NAME_BYTES` (16 MiB).  `lib` lists 1,024 exports of 256
+    /// bytes each (256 KiB) and `main` imports it 64 times: exactly 16 MiB,
+    /// well under the 2^20 name count, compiles.  A 65th import is refused
+    /// by bytes, not by count.
+    #[test]
+    fn imported_name_bytes_budget_charges_name_length() {
+        use twig_ir_compiler::{MAX_IMPORTED_NAMES, MAX_IMPORTED_NAME_BYTES};
+        let dir = make_tempdir("imported_name_bytes");
+        let exports: String = (0..1024).map(|i| format!(" {:e>256}", format!("x{i}"))).collect();
+        write_temp(&dir, "lib.tw", &format!("(module lib (export{exports}))\n1\n"));
+        let root = |imports: usize| {
+            write_temp(&dir, "main.tw", &format!("(module main (import{}))\n1\n", " lib".repeat(imports)))
+        };
+        assert_eq!(64 * 1024 * 256, MAX_IMPORTED_NAME_BYTES);
+        const { assert!(65 * 1024 < MAX_IMPORTED_NAMES, "the count budget is not what refuses") };
+        compile_module_tree(&root(64), &[dir.as_path()]).expect("exactly 16 MiB of imported names");
+        match compile_module_tree(&root(65), &[dir.as_path()]) {
+            Err(ModuleDriverError::Compile { path, error }) => {
+                assert!(path.ends_with("main.tw"), "{path:?}");
+                assert_eq!(
+                    error.message,
+                    format!("imported name bytes per program exceeds the limit of {MAX_IMPORTED_NAME_BYTES}")
+                );
+            }
+            other => panic!("expected the imported-name-bytes budget, got {other:?}"),
         }
     }
 

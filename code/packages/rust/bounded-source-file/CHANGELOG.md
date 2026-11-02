@@ -2,6 +2,10 @@
 
 ## Unreleased — 0.1.0, #18474 security review
 
+- The open also passes `O_NOCTTY` (re-review): opening a terminal device
+  can never make it the process's controlling terminal, even in the window
+  before the handle check refuses it.
+
 ### Added
 
 - `read_to_string(path, limit)`: refuses anything but a regular file

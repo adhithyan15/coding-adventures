@@ -14,7 +14,7 @@ share.
 | Step | Catches |
 |------|---------|
 | `fs::metadata(path).is_file()` | a FIFO, tty, device or directory, before `open` |
-| open with `O_NONBLOCK` (Unix) | a path swapped for a FIFO or tty after that check: `open` still returns |
+| open with `O_NONBLOCK \| O_NOCTTY` (Unix) | a path swapped for a FIFO or tty after that check: `open` still returns, and a tty never becomes the controlling terminal |
 | the open handle's `is_file()` and `len()` | the swap, and a file too big now, before a byte is read |
 | reading through `take(limit + 1)` and counting | a file that grew after the size check |
 

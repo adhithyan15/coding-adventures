@@ -1,5 +1,14 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18474 re-review: imported name bytes; pre-pass test
+
+- `MAX_IMPORTED_NAME_BYTES` (16 MiB) and `check_imported_name_bytes`, for
+  `twig-module-driver`'s per-edge byte charge.
+- Test `the_compiler_pre_pass_charges_generated_names_itself`: a
+  `parse_to_ast` tree (never extracted) given to `Compiler::compile` is
+  refused by the pre-pass's own charge, at the union *variant* that went
+  over (line 125). One variant fewer compiles.
+
 ## Unreleased — #18474 security review: names, functions, driver budgets
 
 ### Added

@@ -1,5 +1,27 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18474 re-review: imported name bytes; a BUILD at last
+
+### Fixed
+
+- **The imported-names budget counted names, not bytes.** Each exported
+  name is cloned into every importer's type-checker globals, and a name may
+  be 256 bytes. Each edge is now also charged its export clause's bytes,
+  against `MAX_IMPORTED_NAME_BYTES` (16 MiB).
+- **None of this crate's tests ran in CI.** There was no BUILD, and it was
+  listed `PENDING` in `code/BUILD-EXEMPTIONS` "until verified on Linux".
+  All 108 lib tests pass on Linux, so it now has a `BUILD`
+  (`cargo test -p twig-module-driver`) and the exemption is gone. Its
+  `BUILD_windows` skips, naming the reason that kept it exempt: the
+  self-compile tests reserve 768 MiB / 3 GiB thread stacks, which fail to
+  spawn on Windows hosts.
+
+### Tests
+
+- `imported_name_bytes_budget_charges_name_length`: 64 imports of a module
+  listing 1,024 256-byte exports (exactly 16 MiB) compile; 65 are refused
+  by bytes while still far under the name count.
+
 ## Unreleased — #18474 security review: graph budgets, non-regular files
 
 ### Changed

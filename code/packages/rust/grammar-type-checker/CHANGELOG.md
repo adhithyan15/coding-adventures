@@ -1,5 +1,15 @@
 # Changelog — grammar-type-checker
 
+## Unreleased — #18474 security review: bounded diagnostics
+
+- The exhaustiveness message names at most 8 unmatched variants, then
+  "… and K more", instead of joining every one. All three diagnostic sites
+  push through `type_checker_protocol::bounded::push_bounded`: at most 256
+  diagnostics and 1 MiB in all, then one note. The exhaustiveness check is
+  skipped once diagnostics are closed.
+- Test `generic_match_lists_at_most_max_listed_names`: 8 missing variants
+  are listed, 9 are summarised, and 50,000 give a message under 200 bytes.
+
 ## [0.1.0] — 2026-05-14
 
 ### Added (LANG50 — Generic Grammar Type Checker)

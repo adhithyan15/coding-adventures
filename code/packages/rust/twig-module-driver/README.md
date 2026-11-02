@@ -157,7 +157,8 @@ root.tw  →  BFS discovery
   tree budget (`check_cst_items`) right after parsing; the parser itself
   caps names at 256 bytes and invented record names at 1 MiB.  Before any
   export list is copied over an import edge, the edges' export clauses are
-  summed against `MAX_IMPORTED_NAMES` (2²⁰).  The modules' instructions and
+  summed against `MAX_IMPORTED_NAMES` (2²⁰) and their bytes against
+  `MAX_IMPORTED_NAME_BYTES` (16 MiB).  The modules' instructions and
   functions, summed as each is compiled, are held to one module's budgets
   (2²⁰ and 2¹⁶), because the linker merges them into the one module the VM
   runs.  A breach is `ModuleDriverError::Compile` naming the file.  The

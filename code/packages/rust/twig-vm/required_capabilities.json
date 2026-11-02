@@ -2,6 +2,25 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/twig-vm",
-  "capabilities": ["stdout"],
-  "justification": "Inherits the `print` builtin from lispy-runtime (writes to stdout). No filesystem, network, process, or environment access."
+  "capabilities": [
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The `print` builtin inherited from lispy-runtime writes program output to stdout."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "The twig-vm CLI and run_file/run_module_tree read the Twig source file the user names, and the files it imports, through bounded-source-file (regular files only, within the 1 MiB source budget)."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "127.0.0.1:*",
+      "justification": "`twig-vm --debug-port N` binds a loopback TCP listener and accepts one DAP adapter connection."
+    }
+  ],
+  "justification": "A Twig interpreter and its CLI: it writes program output, reads the source files it is asked to run, and in debug mode listens on loopback for one debugger."
 }

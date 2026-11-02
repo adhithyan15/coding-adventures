@@ -1,5 +1,28 @@
 # Changelog — twig-type-checker
 
+## Unreleased — #18474 security review: bounded diagnostics
+
+### Fixed
+
+- **A non-exhaustive `match` listed every unmatched variant.** On a union
+  of ~60,000 variants each match formatted ~600 KB, and ~50,000 matches
+  asked for ~33 GB of messages before any compile budget applied. The
+  message now names at most 8 variants, then "… and K more". The count
+  takes one pass with no allocation, and the check is skipped once
+  diagnostics are closed.
+- **Diagnostics were unbounded.** Every diagnostic (unresolved name, arity,
+  refinement, exhaustiveness) now goes through
+  `type_checker_protocol::bounded::push_bounded`: at most 256 kept, 4 KiB
+  each, 1 MiB in all, then one truncation note.
+
+### Tests
+
+- `tests/diagnostics.rs`: 8 missing variants are all named and 9 are
+  summarised; exactly 256 diagnostics are kept and 257 add one note, for
+  exhaustiveness and for unresolved names, through both `check_program`
+  and `type_check_source`'s grammar checker; 20,000 variants × 5,000
+  matches stay within 1 MiB.
+
 ## Unreleased — #18474 security review: generated-name budget before Pass 1
 
 ### Fixed

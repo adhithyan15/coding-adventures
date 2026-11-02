@@ -258,7 +258,9 @@ that went over. Twig, which is not a LANG84 release-path frontend and has no
 #18474: 1 MiB of source, 2²⁰ CST items, 65,536 registers and 2¹⁸
 instructions per function, 2²⁰ instructions per module and per linked
 multi-module program, 2¹⁶ functions per module, 256-byte names and 1 MiB of
-generated record/union names (TW00 "Compile-time budgets"); its file
+generated record/union names, and bounded type-checker diagnostics
+(`type_checker_protocol::bounded`: 256 kept, lists of at most 8 names)
+(TW00 "Compile-time budgets"); its file
 runners, and `lang-aot`'s, read through `bounded-source-file`: regular files
 only, never blocking, size checked before reading, at most the budget plus
 one byte read. Its register budget is the stricter of twig-vm's and vm-core's
