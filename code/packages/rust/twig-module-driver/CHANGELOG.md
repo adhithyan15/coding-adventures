@@ -2,6 +2,8 @@
 
 ## Unreleased — #18474 re-review: imported name bytes; a BUILD at last
 
+- `BUILD` sets `RUST_MIN_STACK=64 MiB` for libtest's threads. The tests that interpret the Twig compiler without their own large-stack thread overflowed the default 2 MiB stack on macOS arm64 (`tw05h_tests::emit_program_two_fns`, SIGABRT), now that the crate's tests run in CI.
+
 ### Fixed
 
 - **The imported-names budget counted names, not bytes.** Each exported
