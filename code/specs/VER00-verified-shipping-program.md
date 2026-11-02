@@ -1,7 +1,7 @@
 # VER00 — The Verified Shipping Program
 
 **Status:** Draft umbrella spec. Nothing here is implemented. Child specs
-(VER01–VER17, listed in §11) are written one at a time before their code.
+(VER01–VER19, listed in §11) are written one at a time before their code.
 
 **Layer:** Repository-wide policy and tooling.
 
@@ -123,9 +123,11 @@ the shipping configuration*, at the tagged commit.
 | **E6** | Native/UI tests | Does the shipped surface work on the real platform? | `scenario` blocks tagged `[ui]` |
 | — | Microbenchmarks | Does it meet its stated cost? | `budget` blocks |
 
-Formal verification is **required everywhere** (E5 is not optional), with
-the honest caveat in §7.5 about what "verified" means for code written in
-22 languages. Microbenchmarks are evidence, not a rung: they gate only the
+Formal verification is **required everywhere** (E5 is not optional). The
+general question of what "verified" means for code written in 22 languages
+is **deferred** (§7.5). In the meantime E5 is discharged by SAT-backed
+proof wherever the code already has a precise formal meaning (§7.6), and
+the assurance report labels exactly what each proof covers. Microbenchmarks are evidence, not a rung: they gate only the
 packages that state a budget.
 
 Rungs switch on **one at a time** as the tooling for each lands (§10). Once a
@@ -496,9 +498,148 @@ honest options:
   Hand-written code in each language shrinks to thin bindings. This plays
   to the repo's strength, which is compilers.
 
-The recommendation is **(c) as the destination, with (a) as the interim**,
-and with E5 reporting honestly which one discharged each claim. This
-decision belongs to the project owner and is recorded in §12.
+**This decision is deferred** (§12). The current leaning is (c) as the
+destination, with (a) as the interim. Until it is made, §7.6 governs: prove
+with SAT wherever a formal meaning already exists, and label everything
+else honestly.
+
+### 7.6 SAT first: prove what already has a formal meaning
+
+A SAT solver answers one question: can this Boolean formula be made true?
+That one question becomes a proof technique through a single trick.
+
+**Proof by unsatisfiability.** To prove that an implementation `impl` always
+agrees with its specification `spec`, build a formula that says "there is
+an input where they disagree":
+
+```
+    ∃ x.  impl(x) ≠ spec(x)
+```
+
+Encode it as Boolean clauses and ask the solver. If it answers **SAT**, it
+hands back the `x`: a concrete counterexample, which becomes a permanent
+unit test. If it answers **UNSAT**, no such `x` exists among *all* inputs,
+and the answer comes with a certificate the trusted kernel checks (§7.5,
+step 3). For a 32-bit adder that is 2^64 input pairs proved at once,
+something no amount of testing can match.
+
+The one requirement is that `impl` has a precise formal meaning that can be
+turned into clauses. In this repository that is already true in more places
+than it first appears, and §7.6.1–§7.6.4 take them in order of how complete
+the resulting proof is.
+
+#### 7.6.1 Hardware: complete proofs — VER18
+
+Gate-level netlists *are* Boolean formulas, so there is no semantics to
+build. The repository has a full hardware stack to apply this to:
+
+- `logic-gates` and `arithmetic` (adders, ALU);
+- about 45 gate-level CPU models (`*-gatelevel`);
+- `gate-netlist-format` (HNL), `hdl-ir`, `synthesis`, and Verilog and VHDL
+  parsers.
+
+| Target | Proof | Completeness |
+|---|---|---|
+| Combinational blocks (adders, ALUs, multiplexers, decoders) | **Equivalence checking**: build a "miter" circuit that is true exactly when the netlist and the Warrant spec (`sum == (a + b) mod 2^n`) disagree, and show it is UNSAT | Complete: every input |
+| Synthesis | **Translation validation per run**: the HIR going in and the HNL coming out are proved equivalent every time `synthesis` runs, so a synthesis bug cannot reach a netlist silently | Complete, per run |
+| Gate-level CPUs, one cycle | The next-state function of the gate-level CPU equals the Warrant ISA model, for every state and every instruction | Complete for one step |
+| Gate-level CPUs, over time | **k-induction**: an invariant that holds at reset and is preserved by every step holds forever. Where induction fails, bounded model checking proves it up to `k` cycles. | Complete when induction succeeds; otherwise bounded, and labelled |
+
+The 31 existing gate-level vs functional differential tests become the
+fallback and the cross-check. This is the most complete proof available
+anywhere in the program, which makes it the first target.
+
+#### 7.6.2 Code that lowers to semantic-ir: bounded and complete proofs — VER19
+
+`semantic-ir` (SIR10) is the repository's narrow-waist IR. Front ends
+already lower Python, JavaScript, Ruby, Java, C and Twig into it, and SIR21
+pins its integer semantics. That gives code in those languages a formal
+meaning. It is the meaning of the SIR lowering, which the assurance report
+names as such.
+
+The pipeline:
+
+1. **Symbolic execution of SIR.** Run the function on symbolic inputs instead
+   of concrete ones, collecting every path as a formula.
+2. **Bit-blasting.** Fixed-width integer operations become circuits, so
+   arithmetic, comparisons and overflow are exact rather than approximated.
+3. **Loops.** A loop with a Warrant invariant is proved by induction
+   (complete). A loop without one is unrolled `k` times (bounded, and
+   labelled `bounded(k)`).
+4. **Claims.** Warrant claims about the function become the formula's goal.
+
+Two further uses come cheaply:
+
+- **Translation validation of the SIR back ends.** Lower SIR to C, read the C
+  back through `c-to-semantic-ir`, and prove the two SIR modules equivalent.
+  Every generated C file is then checked, not just the generator in general.
+- **Trust in the front ends** comes from differential testing: SIR
+  interpretation versus the real language runtime on the same inputs, run
+  continuously by the property engine.
+
+#### 7.6.3 Warrant specs themselves: in every language, immediately
+
+These checks need no code semantics at all, so they apply to every package
+in every language from the day Warrant exists (VER04, VER05):
+
+- **Vacuity**: a claim whose precondition can never be true passes every
+  test and proves nothing. The solver finds it, as it does an `example`
+  that contradicts a `claim`. The repository has already learned this lesson
+  the hard way (`lessons.d/a-substring-check-is-vacuous-for-the-shortest-member-of-the-set.md`).
+- **Consistency**: the claims of a package can all be true at once. A spec
+  that contradicts itself is rejected before anyone implements it.
+- **Model-level proofs**: claims about the Warrant `model` are proved
+  outright. That covers rung (a) of §7.5 and needs nothing else.
+- **Solver-generated test inputs**: the solver finds inputs that satisfy
+  awkward refinements (`i < 2^20 ∧ popcount(s) == 7`). It also finds
+  inputs that take every branch of the model and that sit exactly on every
+  boundary. These become unit and property cases in every language lane, so
+  SAT strengthens testing even where it cannot prove.
+
+#### 7.6.4 Repository configuration
+
+The repository's own control data has a precise meaning:
+
+- `ci-gates.json`;
+- capability manifests and their closure;
+- the build tool's shard plans;
+- dependency graphs.
+
+The solver can prove the properties that today are checked by example or
+not at all. For instance: every path a gate claims maps to a gate that
+runs; every shard contains all its prerequisites; and the capability
+closure the release gate computes really is the union over the dependency
+graph.
+
+#### 7.6.5 Labels
+
+Every E5 result in the assurance report carries exactly one label, and the
+gate never rounds a weaker one up:
+
+| Label | Meaning |
+|---|---|
+| `proved` | UNSAT with a checked certificate, over all inputs |
+| `proved-per-run` | Translation validation: this artifact, not the tool in general |
+| `bounded(k)` | No counterexample within `k` cycles, unrollings or steps |
+| `proved-over-sir` | Proved about the SIR lowering of the code |
+| `proved-over-model` | Proved about the Warrant model; the implementation is tied by tests |
+| `not-yet-provable` | No formal meaning available yet; allowed only until the §7.5 decision |
+
+#### 7.6.6 The solver work this needs
+
+All of it is in-house and builds on `constraint-engine`:
+
+1. **CDCL**: watched literals, clause learning, non-chronological
+   backtracking and restarts (VER09).
+2. **DRAT certificate checker**: tens of lines, and the first piece of the
+   trusted kernel (VER11).
+3. **Encodings**: Tseitin transformation, and-inverter graphs for hardware,
+   and a bit-blaster for fixed-width arithmetic (VER10).
+4. **Incremental solving**, so bounded model checking and k-induction reuse
+   learned clauses between steps.
+5. **Differential testing of the solver itself**: brute force on small random
+   formulas, and the standard SAT competition benchmarks, with known answers
+   from established solvers, as a development-time oracle only.
 
 ## 8. Security audit (E0)
 
@@ -636,7 +777,7 @@ machine-readable report:
   ],
   "claims": [
     { "id": "insert_adds", "example": "pass", "property": { "cases": 100000, "status": "pass" },
-      "fuzz": null, "proof": { "status": "proved", "via": "model" } }
+      "fuzz": null, "proof": { "label": "proved-over-model", "certificate": "drat:<hash>" } }
   ],
   "rungs": { "E0": "pass", "E1": "pass", "E2": "pass", "E3": "pass", "E4": "n/a", "E5": "pass" },
   "public_symbols_without_claims": []
@@ -686,8 +827,12 @@ ends with its rung **live and blocking**.
 | 3 | Warrant v0 (examples, claims, models) with TypeScript and Rust backends; property engine | E3 | VER04, VER05 |
 | 4 | Fuzz engine; `input` blocks | E4 | VER06 |
 | 5 | Microbench harness; `budget` blocks | (budgets only) | VER07 |
-| 6 | CDCL, SMT, certificates and kernel, VC generation | E5 via (a) | VER09–VER12 |
-| 7 | Verified core language and translation validation | E5 via (c) | VER13–VER14 |
+| S1 | CDCL, DRAT checker, Tseitin/AIG encodings, bit-blaster, incremental solving | — | VER09–VER11 |
+| S2 | Hardware equivalence checking, synthesis translation validation, CPU k-induction | E5 for hardware | VER18 |
+| S3 | Vacuity, consistency and model proofs; solver-generated inputs (needs Warrant v0) | E5 `proved-over-model` | VER04, VER05 |
+| S4 | SIR symbolic execution, bounded and inductive proofs, back-end translation validation | E5 `proved-over-sir` | VER19 |
+| 6 | SMT theories, VC generation | E5 widening | VER10, VER12 |
+| 7 | Deferred: the general meaning of E5 (§7.5) | E5 everywhere | VER13–VER14 |
 | — | Native/UI lanes per platform, when each app ships | E6 | per platform |
 
 Each phase builds its tool's **reference lanes** first, TypeScript and
@@ -695,6 +840,11 @@ Rust, to settle the design. The remaining lanes follow against the same
 conformance corpus (§2.1). A rung goes live per language as each lane
 passes. Phases 1, 2 and 2b are independent of each other, and so are
 phases 4 and 5.
+
+The **S track** (SAT first, §7.6) depends on nothing in the testing phases
+and starts immediately, in parallel with phase 0. S1 and S2 need only
+`constraint-engine` and the hardware crates. S3 waits for Warrant v0, and
+S4 for S1.
 
 ## 11. Child specs
 
@@ -717,11 +867,13 @@ phases 4 and 5.
 | VER15 | Weakness registry (CWE inventory) and per-package weakness matrix |
 | VER16 | Native attack harness: checked allocator, checked C interpreter, attack corpora |
 | VER17 | Chaos injection on the real host |
+| VER18 | Hardware equivalence checking, synthesis translation validation, k-induction |
+| VER19 | SIR symbolic execution and bit-precise proofs |
 
 ## 12. Open decisions
 
-1. **The meaning of E5** (§7.5): (a), (b) or (c), or (c) with (a) as the
-   interim (recommended).
+1. **The meaning of E5** (§7.5): **deferred** by the project owner. SAT-backed
+   proof (§7.6) proceeds meanwhile, wherever a formal meaning already exists.
 2. **Warrant syntax family**: an ML-style syntax like the §4.3 sketch, or one
    closer to an existing in-repo language (Twig, Nib) so the tooling can be
    reused.
