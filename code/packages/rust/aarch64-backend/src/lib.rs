@@ -257,11 +257,14 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // Lexicographic byte comparison normalized to -1/0/1 by `__twig_str_cmp`.
     BuiltinSig { name: "str_cmp", n_args: 2, returns: true },
     // E4-dyn runtime string concatenation.  `int64_t __twig_str_concat(int64_t a,
-    // int64_t b)` reads both `[i64 len][bytes]` headers and returns a handle to a
-    // fresh joined block.  Same 2-arg / returns-i64 shape as `str_eq` (both operand
-    // handles ride x0/x1, the result handle rides x0), so the generic `call_builtin`
-    // marshaller needs no new codegen — only this table entry.
-    BuiltinSig { name: "str_concat", n_args: 2, returns: true },
+    // int64_t b, int64_t max)` reads both `[i64 len][bytes]` headers and returns a
+    // handle to a fresh joined block.  LANG83 PR5a added `max`, the module's string
+    // ceiling (`twig-aot` passes `IIRModule::str_ceiling()` as an immediate): past
+    // it the helper raises `Trap.Overflow` through `__twig_trap`.  Same 3-arg /
+    // returns-i64 shape as `str_slice` (the arguments ride x0/x1/x2, the result
+    // handle the return register), so the generic `call_builtin` marshaller needs
+    // no new codegen — only this table entry.
+    BuiltinSig { name: "str_concat", n_args: 3, returns: true },
     // Length-prefixed substring handle; the shared helper checks [start, end).
     BuiltinSig { name: "str_slice", n_args: 3, returns: true },
     // Checked byte read from a length-prefixed string and a live integer index.

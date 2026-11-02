@@ -806,15 +806,17 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
-    // Twig — E4 literal `string-ref` out-of-bounds trap. This proves the same
-    // runtime fail-closed contract on every backend: native/LLVM lower the
-    // compile-known OOB literal to a trap path, WASM/VM/JIT use their shared bounds
-    // checks, and JVM/CLR surface their managed string index exceptions.
+    // Twig — E4 literal `string-ref` out-of-bounds trap. LANG83 PR5a: every
+    // column now reports the registered `Trap.Bounds` (native/LLVM through the
+    // trap sequence a folded out-of-range read compiles to, WASM through
+    // `env.__trap(1)`, JVM/CLR through their 64-bit guards, BEAM as the
+    // `'Trap.Bounds'` reason, VM/JIT as `VMError::Trap`). Before PR5a this was a
+    // data-less `Expect::Trap`, which every column passed by failing *somehow*.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(string-ref \"ABC\" 3)",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.Bounds"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
         release: None,
         case: None,
@@ -10806,6 +10808,8 @@ fn main() { out(1, VALUE); }\n",
         case: None,
     },
     // COBOL reference modification: a runtime end past item width must trap.
+    // The frontend leaves the range to `str_slice`, so since LANG83 PR5a the
+    // kind is the registered `Trap.Bounds` on every column.
     Prog {
         lang: Language::Cobol60,
         ext: "cob",
@@ -10820,12 +10824,13 @@ fn main() { out(1, VALUE); }\n",
                000000 MAIN.\n\
                000000 DISPLAY WS(J:K).\n\
                000000 STOP RUN.",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.Bounds"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
         release: None,
         case: None,
     },
-    // COBOL reference modification: a runtime zero start must trap after one-based conversion.
+    // COBOL reference modification: a runtime zero start must trap after one-based
+    // conversion (`str_slice` with start −1: `Trap.Bounds` since LANG83 PR5a).
     Prog {
         lang: Language::Cobol60,
         ext: "cob",
@@ -10839,7 +10844,7 @@ fn main() { out(1, VALUE); }\n",
                000000 MAIN.\n\
                000000 DISPLAY WS(J:2).\n\
                000000 STOP RUN.",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.Bounds"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
         release: None,
         case: None,
@@ -12241,9 +12246,11 @@ const PRINT_RUNTIME_C: &str =
 void __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n\
 void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n";
 
-/// The standalone `__twig_input_i64`/`__twig_input_str`/`__twig_str_concat`/
+/// The standalone `__twig_input_i64`/`__twig_input_str`/
 /// `__twig_str_eq`/`__twig_str_cmp` substitute for `twig_runtime.c`'s own
-/// definitions of the identical five symbols — used only when `twig_runtime.c`
+/// definitions of the identical four symbols (LANG83 PR5a dropped its
+/// `__twig_str_concat`: a program that concatenates at run time links the
+/// production helper, which enforces the string ceiling) — used only when `twig_runtime.c`
 /// itself isn't already being linked (see `uses_gc_runtime` in `run_llvm`),
 /// since linking both is a duplicate-symbol error.
 const MISC_IO_RUNTIME_C: &str =
@@ -12255,14 +12262,6 @@ int64_t __twig_input_str(void){char buf[4096];int i=0;int c;\
 while((c=getchar())!=EOF&&c!='\\n'&&i<4095){buf[i++]=(char)c;}\
 int64_t* h=(int64_t*)malloc(8+(size_t)i);if(!h)return 0;\
 h[0]=(int64_t)i;if(i>0)memcpy((char*)h+8,buf,(size_t)i);\
-return (int64_t)(intptr_t)h;}\n\
-int64_t __twig_str_concat(int64_t a,int64_t b){\
-int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
-if(la<0)la=0;if(lb<0)lb=0;\
-int64_t* h=(int64_t*)malloc(8+(size_t)(la+lb));if(!h)return 0;\
-h[0]=la+lb;\
-if(la>0)memcpy((char*)h+8,(const char*)(intptr_t)a+8,(size_t)la);\
-if(lb>0)memcpy((char*)h+8+la,(const char*)(intptr_t)b+8,(size_t)lb);\
 return (int64_t)(intptr_t)h;}\n\
 int64_t __twig_str_eq(int64_t a,int64_t b){\
 int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
@@ -12338,6 +12337,10 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
         || ll.contains("@__twig_gc_live_bytes")
         // Runtime slices must execute the production bounds-checked helper.
         || ll.contains("@__twig_str_slice")
+        // LANG83 PR5a: so must runtime concatenation, whose production helper
+        // takes the module's string ceiling and traps `Trap.Overflow` past it
+        // (the standalone substitute below no longer defines it).
+        || ll.contains("@__twig_str_concat")
         || ll.contains("@__twig_str_index")
         || ll.contains("@__twig_input_more");
     if uses_gc_runtime {
@@ -12365,7 +12368,7 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     // started referencing `@__twig_alloc_bytes`).
     if !uses_gc_runtime
         && (ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
-            || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq")
+            || ll.contains("@__twig_str_eq")
             || ll.contains("@__twig_str_cmp"))
     {
         let rt_path = dir.path().join("misc_io_rt.c");
@@ -30211,13 +30214,17 @@ fn twig_beam_string_ops() {
         executed += 1;
     }
 
-    // The out-of-bounds string-ref trap — a separate `Expect::Trap` case.
+    // The out-of-bounds string-ref trap — a separate `StdoutThenTrap` case
+    // (LANG83 PR5a: the reason is the `'Trap.Bounds'` atom).
     let trap_src = "(string-ref \"ABC\" 3)";
     let trap_program = PROGRAMS.iter()
         .find(|p| p.lang == Language::Twig && p.src == trap_src)
         .unwrap_or_else(|| panic!("Twig row with src {trap_src:?} not found"));
     assert!(trap_program.backends.contains(&Beam), "selected Twig row must declare Beam");
-    assert!(matches!(trap_program.expect, Expect::Trap), "selected Twig expectation changed");
+    assert!(
+        matches!(trap_program.expect, Expect::StdoutThenTrap("", "Trap.Bounds")),
+        "selected Twig expectation changed"
+    );
     let trap_result = run_beam(trap_program).expect("detected erl must execute Twig");
     assert_cell(Beam, trap_program, trap_result);
     executed += 1;

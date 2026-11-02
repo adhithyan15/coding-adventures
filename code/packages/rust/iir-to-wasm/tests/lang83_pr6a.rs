@@ -114,6 +114,7 @@ fn module(body: Vec<IIRInstr>) -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -276,6 +277,7 @@ fn digit_queries() -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 

@@ -487,6 +487,23 @@ mod tests {
         assert_eq!(opt.len(), 2);
     }
 
+    /// LANG83 PR5a: an unused string read may still trap (`Trap.Bounds` out of
+    /// range, `Trap.Overflow` past the ceiling), so DCE keeps it. Before PR5a
+    /// all three were pure and this stream shrank to the `ret_void`.
+    #[test]
+    fn dce_keeps_unused_trapping_string_ops() {
+        let cir = vec![
+            CIRInstr::new("str_index", Some("b"), vars(&["s", "i"]), "i64"),
+            CIRInstr::new("str_slice", Some("t"), vars(&["s", "i", "j"]), "str"),
+            CIRInstr::new("str_concat", Some("u"), vars(&["s", "s"]), "str"),
+            CIRInstr::new("str_len", Some("n"), vars(&["s"]), "i64"),
+            CIRInstr::new("ret_void", None::<&str>, vec![], "void"),
+        ];
+        let ops: Vec<String> = CIROptimizer::new().run(cir).into_iter().map(|i| i.op).collect();
+        // `str_len` cannot trap, so it is still removable.
+        assert_eq!(ops, ["str_index", "str_slice", "str_concat", "ret_void"]);
+    }
+
     #[test]
     fn fold_float_add() {
         // Same chain: a=1.5 + b=2.5 → z=4.0 → z propagated into ret → z dead.

@@ -190,7 +190,11 @@ As of 0.29.0 the textual `.il` path emits the **E4 literal string** foothold:
 `String::get_Chars(int32)`, direct-literal `str_eq` calls
 `String::Equals(string,string)`, direct-literal `str_cmp` calls
 `String::CompareOrdinal(string,string)` plus `Math::Sign(int32)`, and direct-literal `str_concat` calls
-`String::Concat(string,string)`. This proves Dartmouth BASIC `PRINT "HELLO"` plus
+`String::Concat(string,string)`. Since LANG83 PR5a every bound is checked on
+the full `int64` before the narrowing to `int32` (`str_index`: one `blt.un`
+against `get_Length`; `str_slice`: `end >u len`, then `start >u end`), a
+failure raises `Trap.Bounds` through the flush-then-throw trap sequence, and
+`str_concat` raises `Trap.Overflow` past the module's string ceiling. This proves Dartmouth BASIC `PRINT "HELLO"` plus
 Twig `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
 `(string=? "HELLO" "HELLO")`, `(string<? "ALPHA" "BETA")`, and
 `(string-length (string-append "AB" "CDE"))`
