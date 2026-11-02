@@ -153,6 +153,18 @@ pre-binds the parameters to registers `0..n` in declaration order, and its
 future frontend reuses with zero per-language code. (Before v0.4.0 `run`
 ignored its `args`, so such a function read its parameter as `0`.)
 
+Each parameter's prologue checks its argument against the declared type and
+fails the call closed on a mismatch: `PARAM_I64` takes only an `Int`,
+`PARAM_BOOL` a `Bool` (or an `Int`), `PARAM_F64` a `Float`. A register holds
+an `i64` and cannot say whether it was an integer, `#f`, nil or a symbol, so
+`GenericCirJit` refuses to compile a function whose parameter or result is
+declared `any`, `str`, `symbol` or another kind it would lose (#18470): such a
+function stays on the interpreter tier. Integer widths, `bool`, `f64` and a
+`ref<…>` word (the tagged-word pipelines' values) compile as before.
+A builtin call hands its arguments over the same way the interpreter would:
+a boolean register (a `bool` parameter, a comparison's result) as
+`Value::Bool`, through `CALL_BUILTIN_KINDS`, and an integer as `Value::Int`.
+
 ### Functions too big for a frame
 
 vm-core refuses a module containing a function with more than 65,536 frame

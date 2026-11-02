@@ -5647,4 +5647,64 @@ mod tests {
         assert_ne!(var_ident("__sir_esc_lf"), var_ident("f"));
         FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
+
+    // ── constants and the renamed `main` (follow-ups to #18485) ──────
+
+    /// A constant is never an identifier in this backend: the one place it
+    /// is accepted, the class operand of `raise`, emits its *name string*,
+    /// and every other constant use is refused before emit.  So a constant
+    /// spelled like a function cannot shadow it.  `def Boom; 40; end` plus
+    /// `raise Boom, "m"`: the function keeps its name and the class is the
+    /// string `"Boom"`.
+    #[test]
+    fn a_constant_named_like_a_function_is_a_string_not_an_identifier() {
+        let boom = Function {
+            name: "Boom".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::IntLit { value: 40, span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let raise = Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![
+                Expr::VarRef { name: "Boom".into(), scope: Scope::Const, span: s() },
+                Expr::StrLit { value: "m".into(), span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut main = boom.clone();
+        main.name = "main".into();
+        main.body.value = raise;
+        let m = Module {
+            name: "consts".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![boom, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(out.contains("__sir::raise(\"Boom\", "), "{out}");
+    }
+
+    /// SIR's `main` is emitted as `__sir_user_main`; no user name -- of a
+    /// function or a variable -- can produce that spelling, so a user
+    /// function spelled `__sir_user_main` and the renamed `main` never meet.
+    #[test]
+    fn no_user_name_spells_the_renamed_main() {
+        let lookalike = "__sir_user_main";
+        FUNCTION_NAMES.with(|t| *t.borrow_mut() = [lookalike.to_string()].into_iter().collect());
+        for spelling in [function_emit_name(lookalike), var_ident(lookalike), sanitize_ident(lookalike)] {
+            assert_ne!(spelling, function_emit_name("main"), "{spelling}");
+            assert!(spelling.starts_with("__sir_esc_"), "{spelling}");
+        }
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
+    }
 }

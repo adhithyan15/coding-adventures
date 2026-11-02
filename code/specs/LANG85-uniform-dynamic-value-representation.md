@@ -642,6 +642,13 @@ natives disagreeing with the VM on `(= 0 #f)` through a parameter.
 Before PR5's gate counts such a program, the oracle's answer has to be
 settled (§11.1, decision 4: false).
 
+*Status (#18493).* The VM and JIT columns answer false: Twig's `=` on a
+parameter is the `=` builtin, which compares `Value`s (`Int(0)` ≠
+`Bool(false)`), never through `as_i64`. A `lang_matrix` row pins
+`(define (f x y) (if (= x y) 1 2)) (f 0 #f)` → 2 on Vm and Jit. NativeAot,
+LLVM and WASM answer 1 (both arguments reach them as a raw 0), which is this
+spec's PR5 problem, not the VM's.
+
 ### 5.2 Signed order is preserved
 
 For fixnums `a` and `b`, `a << 3` is `8a`, and `8a` cannot overflow `i64`.
@@ -746,8 +753,39 @@ TW00 says only `#f` and nil are false. So `repr_truthy` is `__lisp_truthy`:
 
 The generic VM's `Value::is_truthy` treats `Int(0)` as false, which
 disagrees with TW00. `ref.py` refuses non-boolean conditions, so the fuzz
-gate cannot see this. It is a `vm-core` divergence, recorded in §6 and not
-changed here.
+gate cannot see this.
+
+*Fixed for the VM and JIT columns in #18493, in the frontend's lowering
+(§11.1 decision 4).* `vm-core` keeps its machine rule. Before a Twig module
+reaches it, `iir-builtin-lowering::vm_lisp` writes TW00's rule ahead of every
+branch on a non-`bool`, over the LANG83 PR7f primitive `dyn_tag`, which the
+VM now lowers over its own value kinds:
+
+```text
+  t = call_builtin dyn_tag, c     ; 0 int, 1 nil, 2 symbol, 3 #f, 5 #t, 7 pair, -1 str/float
+  k = cmp_ne (or t, 2), 3         ; only nil (1) and #f (3) fold to 3
+  jmp_if_false k, L
+```
+
+That needed nil and the integer 0 to be different values on the VM, which
+they were not: nil was `const 0 : ref<LispyPair>`, i.e. `Int(0)`. The same
+pass rewrites nil to `dyn_nil` (`Value::Null`) and a symbol to `dyn_symbol`
+(the new `Value::Symbol`, #18470), and `vm-core`'s cells now store nil, the
+booleans and symbols as their tagged-word spellings (1, 3 / 5,
+`(id << 32) | 010`). `(if 0 1 2)` and `(if "" 1 2)` are 1 on Vm and Jit.
+
+The JIT column needed one more change. `GenericCirJit` holds every value in
+an `i64` register, so a promoted `(define (id x) x)` handed `#f` back as
+`Int(0)` — true under the new rule. It now refuses to compile a function
+whose parameter or result is declared `any` (or another kind a register
+cannot carry), and its integer prologue takes only an `Int`; such a function
+stays on the interpreter tier (#18470 review).
+
+NativeAot, LLVM and WASM still answer 2 for `(if 0 1 2)` and for
+`(define (f x) (if x 1 2)) (f 0)`: the integer reaches their branch as a raw,
+untagged machine 0, so the tagged rule never runs. Only a 0 that went
+through a cell (`(car (cons 0 '()))`) is tagged there. That is the
+representation split this spec's PR5 removes.
 
 ---
 
@@ -758,7 +796,7 @@ changed here.
 | **NativeAot** (x86-64 Linux / Windows, AArch64 macOS; `twig-aot`) | tagged words + `dynval_runtime.c` | **yes** | The target. `prepare_module_for_aot` switches to `lower_uniform_repr` (PR5). Wrong answers and crashes from mixed representations go away (§8). `dyn` parameters become GC roots. |
 | **LLVM** (`lang-aot::compile_iir_to_llvm` → `iir-to-llvm`) | tagged words + `dynval_runtime.c` | **yes** | Same switch, same result. PR8 needs `shl` / `shr` lowering for the inline untag. |
 | **JIT** (`lang_matrix` `Jit`: vm-core + `GenericCirJit`) | `vm_core::Value` after the structural heap pass | no for Twig; **yes for McCarthy Lisp** (`jit_lisp::run_mccarthy_on_jit` runs the tagged passes with `dynval-runtime` builtins) | Twig: must accept `dyn` (PR4). McCarthy-on-JIT switches to `lower_uniform_repr` in PR5. Its frontend already declares `ref<any>`, so nothing changes observably. |
-| **VM** (vm-core generic VM; also `twig-vm`) | `vm_core::Value` / `LispyValue` inside the runtime | no (not in the IIR) | The reference oracle. Must accept `dyn` (PR4). Known divergences it keeps: `Int(0)` is falsy (§5.5); full `i64` range (§5.4). |
+| **VM** (vm-core generic VM; also `twig-vm`) | `vm_core::Value` / `LispyValue` inside the runtime | no (not in the IIR) | The reference oracle. Must accept `dyn` (PR4). Known divergence it keeps: full `i64` range (§5.4). `Int(0)` is no longer falsy for Twig (§5.5, #18493): nil, booleans and symbols are distinct `Value` kinds and Twig's truthiness is compiler-emitted (`vm_lisp`). |
 | **WASM** (`iir-to-wasm`) | uniform-anyref (`i31ref`) for "lisp functions", `i64` for scalar ones | no | Unchanged; accepts `dyn` as `any` (PR4). It has the same *kind* of problem (a partition by heuristic, `lisp_functions`), but a mismatch there is a validation error or a trap, not a silent wrong word. |
 | **JVM** (`iir-to-jvm-class-file`) | `Integer` / `Object` boxing | no | Same as WASM. #18451 item 3 (record arithmetic) stays open. |
 | **CLR** (`iir-to-cil-bytecode`) | boxed `int32` / `object` | no | Same as WASM. A CLR mismatch has crashed with `AccessViolationException` (see `is_tagged_boundary_param` in `lang-aot`), so the managed follow-up (§10) is not cosmetic. |
@@ -1027,7 +1065,10 @@ record the same history from the implementer's side. They live on the
    false. Integer 0 is truthy, as TW00 says. The VM's Twig lowering and
    `ref.py` must be fixed to agree (#18493) before PR5's gate. The fix
    belongs in the frontend's lowering; `vm-core` itself stays
-   language-neutral.
+   language-neutral. *VM side landed* (§5.5): the rule is
+   `iir-builtin-lowering::vm_lisp`, over primitives `vm-core` lowers with no
+   language rule of its own. `ref.py` is not in this repository's checkout
+   yet (PR1 moves it in) and still has to follow.
 
 ### 11.2 Still open
 

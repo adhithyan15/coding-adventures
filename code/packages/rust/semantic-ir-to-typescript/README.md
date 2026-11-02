@@ -49,7 +49,13 @@ The TypeScript backend accepts these SIR features:
   A *variable* whose SIR name is also one of the module's functions' names
   is emitted as `_$sir_esc_l<sanitize_ident(name)>` (`var_ident`), so it
   cannot shadow the function: SIR keeps the two namespaces apart, and
-  Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485).
+  Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485).  The same
+  holds for SIR's other two namespaces: a module global spelled like a
+  function is `_$sir_esc_g<name>` (`global_ident`; `let f` beside
+  `function f` was a redeclaration), a variable spelled like a global is
+  renamed like one spelled like a function, and a constant spelled like a
+  function or a global is `_$sir_esc_c<name>` (`const_ident`) at its
+  `const` declaration and every read.
 - `Pairs` — lowered to `__Sir.Pair` in the inlined runtime.
 - `Symbols` — interned strings via `__Sir.intern`.
 - `Strings` — TypeScript `string`.

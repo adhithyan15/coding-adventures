@@ -1,5 +1,16 @@
 # Changelog — riscv-backend
 
+## Unreleased — the 2^31 edge of a 64-bit compare (#18463 item 2)
+
+- Test only. `wide_bool_compare_orders_values_either_side_of_two_to_the_31`
+  pins the two-word RV32 compare at the boundary #18463 asked for: values
+  that need bit 31 but not the high word (2^31 against 2^31 − 1, −2^31 − 1
+  against −2^31, 2^31 against −1). Their low words are negative as `i32`, so
+  a signed low-word compare orders them backwards; the lowering compares the
+  high words signed and only then the low words unsigned. The lowering itself
+  landed with #18453's fix (#18464), which also added the 2^32 cases; this
+  test passes on main and guards that edge.
+
 ## Unreleased — a `bool`-typed comparison is signed (#18453)
 
 ### Fixed

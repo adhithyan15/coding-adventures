@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
 ## Unreleased — Temp files in the tests are unique per call and removed (#18485 follow-up)
 
 The execution tests named their temp files from the process id alone, or (in

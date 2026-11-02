@@ -8,5 +8,8 @@ description = "Semantic IR → self-contained JavaScript source code (SIR18). Fi
 semantic-ir = { path = "../semantic-ir" }
 
 [dev-dependencies]
+# Private scratch directories and an isolated Go build cache for the
+# execution tests (see sir-test-scratch's README).
+sir-test-scratch = { path = "../sir-test-scratch" }
 twig-to-semantic-ir = { path = "../twig-to-semantic-ir" }
 wolfram-to-semantic-ir = { path = "../wolfram-to-semantic-ir" }

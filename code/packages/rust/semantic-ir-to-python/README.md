@@ -181,7 +181,11 @@ functions is emitted as `sir_esc_l<sanitize_ident(name)>` (`var_ident`), so
 it cannot shadow the function: SIR keeps the two namespaces apart, and
 Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485). Functions keep
 their names, because callers append code that calls them; a keyword argument
-is renamed with the parameter it names.
+to a user function is renamed with the parameter it names, while a keyword to
+a runtime function keeps its own name.  A constant (`Scope::Const`) spelled
+like a function is `sir_esc_c<sanitize_ident(name)>` (`const_ident`), so
+Ruby's `def F; 40; end; F = 2; F() + F` is 42 too.  SIR's `main` is emitted
+as `_sir_user_main`, a name no user identifier can spell.
 
 ## Capability declaration
 
