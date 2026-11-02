@@ -6,6 +6,10 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Changed
 
+- `vitest.config.ts` sets `testTimeout: 30_000`. The tests that start real
+  processes (git in `tests/gitdiff.test.ts`, the CLI through node + tsx in
+  `tests/resolver.test.ts`, which already gives that child 30 s) ran 5.2 s on
+  `windows-2025` and failed vitest's 5 s default with no assertion failing.
 - Rust dependency names are deduplicated with a set rather than a list scan,
   so a manifest naming many crates costs time linear in its size (security
   review, round 2).
