@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.42.3 — Call operands run left to right (#18482 review)
+
+C leaves the order in which a call's arguments are evaluated unspecified,
+and gcc on x86-64 evaluates them right to left.  `is_simple` treated a call
+whose operands were all simple as one inline C expression, so nested calls
+ran in gcc's order.  Python's `self.n += self.bump()` (where `bump` sets
+`self.n`) printed 105 instead of 6, and Ruby's `[@n, bump, @n]` read the
+ivar after `bump` had changed it.
+
+- New `is_atom`: a literal, a local / parameter / capture / builtin
+  reference, `__self__()`, or a list / map / string / closure built only
+  from atoms.  Evaluating one runs no code and reads no state a call can
+  change.
+- New `operands_simple`: a call's (or sequence / map / string literal's,
+  or closure's) operands render inline only when each is simple and **at
+  most one is not an atom**.  Otherwise the expression is not simple and
+  the existing hoist paths put every operand in a temporary, in order.
+  `f(g(x), 1)` and `_sir_plus(_sir_times(a, b), c)` are unchanged.
+- The OOP dispatch builtins (`__method__`, `__new__`, …) keep the old rule,
+  since they have no hoisted emit path and a non-simple one is refused.
+  Two code-running operands of one dispatch call still evaluate in C's
+  order; the expression *around* a dispatch is ordered.
+- `tests/compile_and_run.rs` gains `operands_left_to_right` (Ruby source),
+  which printed `105` / `100001` before and prints `6` / `1100` now.
+
 ## 0.42.2 — Every `MakeClosure` gets its thunk
 
 `collect_closure_targets` decides which functions need a

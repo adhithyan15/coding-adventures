@@ -4,7 +4,7 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [0.29.0] - Python statement forms (#18482)
 
-Adds `tests/python_statement_forms.rs`: 23 Python programs covering the
+Adds `tests/python_statement_forms.rs`: 29 Python programs covering the
 statement forms `python-to-semantic-ir` 0.13.0 fixed, each run on Python,
 JavaScript, Go, Rust, C and Ruby and compared with CPython's output:
 
@@ -16,7 +16,13 @@ JavaScript, Go, Rust, C and Ruby and compared with CPython's output:
 - a `for` over an already-bound variable, including a zero-trip loop;
 - falling off the end of a function, a call or `print` just before a tail
   `return`, and one-line bodies;
-- a user `def main`, called and used as a value.
+- a user `def main`, called and used as a value, and a variable spelled
+  like its escaped name;
+- `pass` everywhere, an expression statement last in a loop body, a loop
+  body that assigns its own loop variable, and an inner loop that rebinds
+  the outer loop's variable;
+- `self.n += self.bump()` where `bump` changes `self.n`, which tells the
+  evaluation order apart (CPython: 6).
 
 `programs_lower_and_validate` checks every program passes the validator.
 `programs_print_cpythons_output_on_every_backend` first checks each
@@ -25,6 +31,11 @@ expectation against a real `python3` (when present), then runs every
 
 Against `python-to-semantic-ir` 0.12.0, every program fails on at least
 four of the six backends, by printing the wrong value or not lowering.
+The six programs added after the security review fail against the first
+commit of this change (and its backends): `pass` was refused; the C
+backend printed 105 for the evaluation-order program; JavaScript printed
+`10` once for the loop-variable program, Rust refused it, and C and Ruby
+printed nothing for any loop whose last statement was a `print`.
 (Rebinding a parameter or loop variable happened to work on the Python
 and Ruby backends, whose emitted code has no block scope.)  `while` loops carry a guard counter so
 the old endless-loop lowering fails instead of hanging.

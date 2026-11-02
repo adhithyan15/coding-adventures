@@ -193,7 +193,12 @@ the loop, as in Python: the IR loop binds a temporary `__for_N`, and the
 body starts with `Assign i = __for_N`.  A **loop `else:`** clause is
 refused (it used to be dropped).  A **one-line body** (`if c: x = 1`,
 `while c: n -= 1`) is lowered like an indented one; it is a bare
-`simple_stmt` in the grammar, and used to be dropped whole.
+`simple_stmt` in the grammar, and used to be dropped whole.  `pass`
+lowers to no statement.  A loop body has no value: a trailing expression
+statement in it (a `print`, an `if`) is kept as a statement, since the C
+and Ruby backends never emit a loop body's value and used to drop it.
+Inside a method, `for self in …` is refused, like `self = …`, since a
+bare `self` always reads the receiver there.
 
 **Scoping.**  The loop variable (`i` / `x`) is a `Scope::Local` bound
 **inside the body only**, and a name first bound inside a loop or
@@ -233,7 +238,10 @@ function `main`.  The escape is one-to-one: `main` becomes `__py_main`, a
 name that already starts with `__py_` gains another `__py_`, and every
 other name is unchanged.  It applies where a name is written into the IR
 (`Function.name`, `DirectCall`, `MakeClosure`), so `main()` and `h = main`
-in the source still resolve.
+in the source still resolve.  A *variable* whose name starts with `__py_`
+gets the same extra prefix (`__py_main` → `__py___py_main`), because the
+backends keep functions and variables in one namespace: otherwise a local
+spelled `__py_main` would shadow the escaped `main`.
 
 **Two-pass design.**  A first pass collects **every** function name
 (top-level and nested) into a flat table, so a call to a function defined
@@ -475,8 +483,7 @@ Everything past M5 / C2 / the OOP surface above returns a clear positioned
 - tuple / multi-target `for` (`for k, v in …`), tuple / unpacking
   assignment (`a, b = …`, `x = 1,`), non-`self` attribute targets, augmented
   assignment to a subscript, bitwise operators, the power operator (`**`),
-  floor division (`//`) and their augmented forms, loop `else:` clauses,
-  `pass`
+  floor division (`//`) and their augmented forms, loop `else:` clauses
 - `@classmethod`/class methods, class variables, `super()` calls, mixins
   (`include`/`extend`), exceptions, generators, non-class decorators,
   `with` / `try`, `async`, imports, `global` / `nonlocal`, f-strings.

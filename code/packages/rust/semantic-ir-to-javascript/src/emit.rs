@@ -730,7 +730,10 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             );
             let _ = writeln!(out, "{body_pad}let {v} = __sir_i_{id};");
             emit_block_as_stmts(out, body, inner + 2);
-            let _ = writeln!(out, "{body_pad}__sir_i_{id} = __sir_i_{id} + __sir_step_{id};");
+            let _ = writeln!(
+                out,
+                "{body_pad}__sir_i_{id} = __sir_i_{id} + __sir_step_{id};"
+            );
             let _ = writeln!(out, "{inner_pad}}}");
             let _ = writeln!(out, "{pad}}}");
         }
@@ -3423,7 +3426,10 @@ mod tests {
         );
         assert!(out.contains("let i = __sir_i_0;"), "got {out}");
         assert!(out.contains(r#"__Sir.write("stdout", "once", false, i);"#), "got {out}");
-        assert!(out.contains("__sir_i_0 = __sir_i_0 + __sir_step_0;"), "got {out}");
+        assert!(
+            out.contains("__sir_i_0 = __sir_i_0 + __sir_step_0;"),
+            "got {out}"
+        );
     }
 
     /// The loop counts with a hidden counter, so a body that assigns the
@@ -3450,10 +3456,17 @@ mod tests {
             span: s(),
         };
         let out = emit_s(&st);
-        assert!(!out.contains("i = i +"), "the variable must not be the counter: {out}");
-        let bind = out.find("let i = __sir_i_0;").expect("binds i from the counter");
+        assert!(
+            !out.contains("i = i +"),
+            "the variable must not be the counter: {out}"
+        );
+        let bind = out
+            .find("let i = __sir_i_0;")
+            .expect("binds i from the counter");
         let store = out.find("i = 10;").expect("the body's store");
-        let step = out.find("__sir_i_0 = __sir_i_0 + __sir_step_0;").expect("steps the counter");
+        let step = out
+            .find("__sir_i_0 = __sir_i_0 + __sir_step_0;")
+            .expect("steps the counter");
         assert!(bind < store && store < step, "got {out}");
     }
 

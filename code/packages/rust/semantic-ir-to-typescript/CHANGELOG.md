@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.15.1 — `ForRange` counts with a hidden counter (#18482 review)
+
+The loop used its own variable as the counter, so a body that assigned it
+changed the number of iterations (`for i in range(3): i += 10` ran once).
+It now counts with `__sir_i_<id>` and binds the variable from it at the top
+of each iteration (`let i: __Sir.Val = __sir_i_<id>;`), as the JavaScript,
+C, Go, Rust and Ruby backends do.  The `lib.rs` ForRange test pins the new
+shape.
+
 ## 0.15.0 — Accept `Feature::LoopControl` (task #63)
 
 Second backend (after `semantic-ir-to-javascript`, task #62) to accept

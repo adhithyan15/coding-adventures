@@ -1855,7 +1855,9 @@ fn is_atom(e: &Expr) -> bool {
         // Building a value out of atoms runs no user code and reads no
         // mutable state: a fresh list, map, string or closure.
         Expr::SeqLit { items, .. } => items.iter().all(is_atom),
-        Expr::MapLit { entries, .. } => entries.iter().all(|e| is_atom(&e.key) && is_atom(&e.value)),
+        Expr::MapLit { entries, .. } => {
+            entries.iter().all(|e| is_atom(&e.key) && is_atom(&e.value))
+        }
         Expr::StrConcat { parts, .. } => parts.iter().all(is_atom),
         Expr::MakeClosure { captures, .. } => captures.iter().all(|c| is_atom(&c.value)),
         _ => false,
@@ -1950,9 +1952,7 @@ fn is_simple(e: &Expr) -> bool {
         {
             false
         }
-        Expr::BuiltinCall { name, args, .. } if is_oop_dispatch(name) => {
-            args.iter().all(is_simple)
-        }
+        Expr::BuiltinCall { name, args, .. } if is_oop_dispatch(name) => args.iter().all(is_simple),
         Expr::DirectCall { args, .. }
         | Expr::IndirectCall { args, .. }
         | Expr::BuiltinCall { args, .. } => operands_simple(args),

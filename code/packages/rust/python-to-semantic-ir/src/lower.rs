@@ -5527,10 +5527,7 @@ fn has_colon_token(node: &GrammarASTNode) -> bool {
 fn loop_body(mut body: Block) -> Block {
     if !matches!(body.value, Expr::NilLit { .. }) {
         let span = body.value.span().clone();
-        let value = std::mem::replace(
-            &mut body.value,
-            Expr::NilLit { span: span.clone() },
-        );
+        let value = std::mem::replace(&mut body.value, Expr::NilLit { span: span.clone() });
         body.stmts.push(Stmt::ExprStmt { expr: value, span });
     }
     body

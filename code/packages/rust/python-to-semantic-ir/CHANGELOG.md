@@ -76,9 +76,38 @@ one where they are written into the IR (`sir_function_name`): `main` →
 - **`self = …` in a method** stored into a local that no read could see
   (`self` always reads the receiver).  Refused.
 
-**Tests.** New `tests/statement_forms.rs` (35 tests, each of which fails
-against 0.12.0).  `sir-conformance`'s `python_statement_forms.rs` runs
-the programs on all six backends against CPython's output.
+**Security-review fixes (same release):**
+
+- **`pass` is lowered** (to no statement).  It was refused everywhere; a
+  one-line `def f(): pass` had compiled only because one-line suites were
+  dropped, so the suite fix above had turned it into a refusal.
+- **A loop body has no value.**  A loop body's trailing expression
+  statement became the body block's value, which the C and Ruby backends
+  never emit: `for i in range(3): print(i)` printed nothing there, and
+  neither did a trailing `if`.  New `loop_body` moves it into the
+  statements.
+- **`for self in …` inside a method is refused**, like `self = …`: `self`
+  always reads the receiver there.
+- **Variables spelled with the escape marker are escaped too**
+  (`sir_var_name`): a local `__py_main` became `__py___py_main`, so it no
+  longer shadows the escaped `def main` (`__py_main`) in the backends'
+  shared namespace.  Applied to locals, parameters, captures, loop
+  variables and keyword-argument names alike.
+- Doc comments: `lower_augmented` now says which backends order the read
+  before the right-hand side and how (C needed a fix, `semantic-ir-to-c`
+  0.42.3); `lower_annotated` spells out the module-level divergence
+  (CPython evaluates a module-level annotation, with its side effects and
+  `NameError`s; this frontend never does).
+- Backend fixes found by the new end-to-end programs: JavaScript and
+  TypeScript `ForRange` counted with the loop variable itself (now a hidden
+  counter); Rust bound an assigned loop variable immutably (now `mut`); C
+  evaluated call operands in unspecified order (now hoisted in order when
+  it matters).
+
+**Tests.** New `tests/statement_forms.rs` (40 tests; the first 35 fail
+against 0.12.0, the last 5 against the first commit of this release).
+`sir-conformance`'s `python_statement_forms.rs` runs the programs on all
+six backends against CPython's output.
 
 ## 0.12.0 — A closure that names itself or a sibling keeps its captures (#18468)
 

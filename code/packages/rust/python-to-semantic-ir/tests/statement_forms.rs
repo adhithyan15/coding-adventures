@@ -794,7 +794,8 @@ fn for_self_in_a_method_is_refused() {
 /// escaped too, one to one.
 #[test]
 fn a_variable_spelled_like_an_escaped_function_is_escaped() {
-    let m = lower("def main(): return 1\ndef g():\n    __py_main = 5\n    return main() + __py_main\n");
+    let m =
+        lower("def main(): return 1\ndef g():\n    __py_main = 5\n    return main() + __py_main\n");
     let g = func(&m, "g");
     match &g.body.stmts[0] {
         Stmt::LetStarBinding { name, .. } => assert_eq!(name, "__py___py_main"),
@@ -818,7 +819,11 @@ fn escaped_variable_names_agree_across_params_keywords_and_captures() {
     let f = func(&m, "f");
     let params: Vec<&str> = f.params.iter().map(|p| p.name.as_str()).collect();
     assert_eq!(params, ["__py___py_a", "__py___py_k"]);
-    let caps: Vec<&str> = func(&m, "g").captures.iter().map(|c| c.name.as_str()).collect();
+    let caps: Vec<&str> = func(&m, "g")
+        .captures
+        .iter()
+        .map(|c| c.name.as_str())
+        .collect();
     assert_eq!(caps, ["__py___py_a", "__py___py_k"]);
     let main = main_body(&m);
     let print_arg = match &main.stmts[0] {

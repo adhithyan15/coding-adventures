@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.44.2 — A loop variable the body assigns is bound `mut` (#18482 review)
+
+`ForRange` bound its variable with `let`, and `ForEach` with a plain
+`for x in`, even when the body assigned it.  rustc then refused the program
+(`cannot assign twice to immutable variable`).  Python's `for i in
+range(3): i += 10` lowers to exactly that.  Both now consult
+`MUTABLE_NAMES`, like `LetBinding` does (`let mut i` / `for mut x in`).  The
+hidden counter still decides the next value.  New unit test
+`a_loop_variable_the_body_assigns_is_bound_mut`.
+
 ## 0.44.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

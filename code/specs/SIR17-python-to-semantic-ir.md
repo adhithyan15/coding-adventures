@@ -230,6 +230,11 @@ expression IS the return value.  Lowering:
 - A suite written on its header's line (`def f(x): return x`) is a bare
   `simple_stmt` in the grammar, with no `statement` wrapper, and is
   lowered exactly like an indented suite.  (Before #18482 it was dropped.)
+- `pass` lowers to no statement.
+- A loop body (`while`, `for`) is a block of statements whose value is
+  always `NilLit`: a trailing expression statement stays a statement.
+  Backends need not emit a loop body's value, and the C and Ruby
+  backends do not.
 - A function with early returns: this requires lifting to a control-
   flow shape the IR can express.  For the v0 MVP, **early returns
   are not supported** — frontends reject programs with non-tail
@@ -384,6 +389,12 @@ becomes `__py_main`, a name starting with `__py_` gains another `__py_`
 prefix, and every other name is unchanged.  No source name maps to
 `main`, and no two map to the same name.  (#18482)
 
+Variables share that namespace in every backend, so a variable whose name
+starts with `__py_` (local, parameter, capture, loop variable, keyword
+argument name) gets the same extra prefix; `main` as a variable is left
+alone.  So a local spelled `__py_main` becomes `__py___py_main` and cannot
+shadow the escaped `def main`.
+
 ```text
 SIR Module {
     functions: [
@@ -418,7 +429,8 @@ Errors:
 - Augmented assignment with an operator whose binary form is not lowered,
   to a subscript, or to a name not bound in the current scope
 - An annotation with no value on a target other than a bare name
-- A loop `else:` clause; assignment to `self` inside a method
+- A loop `else:` clause; assignment to `self` (or `for self in …`) inside
+  a method
 - Mismatched arity on builtins (`range` with > 3 args, `len` with > 1 arg)
 
 ## Manifest computation

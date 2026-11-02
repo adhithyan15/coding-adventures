@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.54.2 — `ForRange` counts with a hidden counter (#18482 review)
+
+`ForRange` used its own variable as the counter (`i = i + step`), so a
+body that assigned the variable changed the iteration count:
+`for i in range(3): i += 10` printed `10` once instead of `10 11 12`, and
+an inner loop that stored into an outer loop's variable ended the outer
+loop early.  Python's `for` over a bound variable, and `+=`, made this
+reachable from ordinary code.  The loop now counts with `__sir_i_<id>` and
+binds `let var = __sir_i_<id>;` at the top of each iteration, matching the
+C, Go, Rust and Ruby backends.  The ForRange unit test pins the new shape,
+and `emit_for_range_counts_with_a_hidden_counter` checks the increment
+never reads the variable.
+
 ## Unreleased — tests: Twig name resolution runs end to end (#18456)
 
 Test-only; the emitted JavaScript is unchanged.
