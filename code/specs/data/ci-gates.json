@@ -456,6 +456,7 @@
         "code/specs/OCAML06-capability-analyzer.md",
         "code/specs/schemas/capability_taxonomy.schema.json",
         "code/specs/schemas/required_capabilities.schema.json",
+        "code/specs/data/required-capabilities-v1-invalid-ledger.json",
         "code/specs/schemas/agent_manifest.schema.json",
         "code/scripts/tests/test_capability_taxonomy.py",
         "code/scripts/tests/test_ocaml_capability_gate.py",

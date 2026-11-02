@@ -237,6 +237,47 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                 ):
                     self.assertIn(pair, allowed)
 
+    def test_v1_manifests_validate_except_the_shrink_only_ledger(self) -> None:
+        """Every manifest that declares the v1 schema must validate against it.
+
+        A known set of legacy manifests does not yet. They are listed in a
+        ledger that may only shrink: a new invalid manifest fails this test,
+        and so does a listed manifest that has been fixed but not removed
+        from the ledger (so the ledger never goes stale).
+        """
+        ledger_path = REPO_ROOT / "code/specs/data/required-capabilities-v1-invalid-ledger.json"
+        ledger = set(json.loads(ledger_path.read_text(encoding="utf-8"))["invalid_manifests"])
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["required"])
+        invalid = set()
+        for manifest_path in sorted(REPO_ROOT.glob("code/**/required_capabilities.json")):
+            parts = manifest_path.parts
+            if "node_modules" in parts or "target" in parts:
+                continue
+            try:
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(manifest, dict):
+                continue
+            if "schemas/required_capabilities.schema.json" not in str(manifest.get("$schema", "")):
+                continue
+            if list(validator.iter_errors(manifest)):
+                invalid.add(manifest_path.relative_to(REPO_ROOT).as_posix())
+        self.assertEqual(sorted(invalid - ledger), [], "new invalid manifests")
+        self.assertEqual(sorted(ledger - invalid), [], "fixed manifests still in the ledger")
+
+    def test_c_and_cpp_package_names_are_accepted(self) -> None:
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["required"])
+        for package in ("c/ct-compare", "cpp/ct-compare"):
+            manifest = {
+                "version": 1,
+                "package": package,
+                "capabilities": [],
+                "justification": "Pure computation.",
+            }
+            with self.subTest(package=package):
+                self.assertEqual(list(validator.iter_errors(manifest)), [])
+
     def test_camera_media_authority_free_manifest_is_schema_valid(self) -> None:
         manifest_path = (
             REPO_ROOT
