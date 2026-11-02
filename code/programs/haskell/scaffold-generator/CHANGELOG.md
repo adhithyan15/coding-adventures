@@ -8,6 +8,16 @@
   rejected control characters and Unicode line separators before descriptions
   reach Cabal metadata.
 - Added golden tests for both capability profiles.
+- Generated packages' `BUILD` now selects the Command Line Tools linker on
+  macOS: the two-line explanation, then
+  `if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; `
+  in front of the unchanged `command -v cabal` guard. GHC 9.4.8's macOS bindist
+  hardcodes a CLT SDK sysroot that an older default Xcode linker cannot read
+  (`arm64e.x1`), and `build-tool --validate-build-files` rejects a Haskell
+  BUILD without the selection. The generated `BUILD_windows` keeps its skip
+  record and never carries the POSIX prefix. Both are exported
+  (`buildFileContents`, `buildWindowsFileContents`) and pinned by tests
+  (spec section 5.8).
 
 ## 0.1.0
 
