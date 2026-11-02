@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "A Notice on the Door",
+  "label": "ch:mw-a-notice-on-the-door",
+  "canDo": "I can understand a shop's notice and its rules.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-C191-manno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can understand a shop's notice and its rules.",
+    "assesses": [
+      "MW-LEX-C191-NOTICE191-03",
+      "MW-LEX-C191-NOTICE191-04",
+      "MW-LEX-C191-NOTICE191-05"
+    ]
+  }
+}

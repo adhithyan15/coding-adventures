@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C252-chabno",
+    "language": "marwadi",
+    "chapter": 252,
+    "sequence": 17590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceb377c17cbe238e"
+  },
+  "findings": []
+}

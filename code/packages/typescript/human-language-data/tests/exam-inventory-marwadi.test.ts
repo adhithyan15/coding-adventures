@@ -10,7 +10,7 @@
 //
 // WHAT THIS SUITE HAS TO GUARD THAT THE OTHERS DO NOT
 // This track began as a market transaction and for 257 lessons taught no
-// numeral. It now has 901 direct lesson owners through chapter 151. That is the
+// numeral. It now has 1612 direct lesson owners through chapter 290. That is the
 // kind of moving corpus an inventory can silently fall behind: chapters 44–149
 // added hundreds of exact atoms while this file still reported many as absent.
 //
@@ -86,9 +86,14 @@ describe("the committed Marwadi A1 inventory", () => {
   it("pins the direct-owner snapshot behind the reconciliation", () => {
     const marwadiLessons = lessons.filter((lesson) => lesson.language === "marwadi");
     const marwadiChapters = loadTrackChapters().find((track) => track.language === "marwadi");
-    expect(marwadiLessons).toHaveLength(901);
-    expect(marwadiChapters?.chapters).toHaveLength(151);
-    expect(trackIntroducedAtoms(lessons, "marwadi").size).toBe(838);
+    // 901 / 151 / 838 -> 962 / 165 / 887: the A2 core, chapters 152-165, adds
+    // 61 lessons and 49 introduced atoms; no inventory point moves.
+    // 962 / 165 / 887 -> 1612 / 290 / 1512: the A2 vocabulary, chapters
+    // 166-290, adds 650 lessons (625 words and 25 reviews) and 625 introduced
+    // atoms, one per word; no inventory point moves.
+    expect(marwadiLessons).toHaveLength(1612);
+    expect(marwadiChapters?.chapters).toHaveLength(290);
+    expect(trackIntroducedAtoms(lessons, "marwadi").size).toBe(1512);
   });
 
   it("keeps every point's probe key, and never an empty probe", () => {
@@ -165,7 +170,7 @@ describe("the committed Marwadi A1 inventory", () => {
 
   it("records the exam-levels caveat as STALE rather than deferring to it", () => {
     // The caveat says the mapping "does not claim that the current starter
-    // chapter reaches it". The track has 901 lessons across 151 chapters, an
+    // chapter reaches it". The track has 1612 lessons across 290 chapters, an
     // assessment spec, task shapes, and 31 scored performance atoms.
     // A caveat that has been overtaken is recorded as overtaken — the same
     // treatment a sibling track's OVERSTATED caveat got, in the other direction.

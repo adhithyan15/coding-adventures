@@ -1,0 +1,11 @@
+{
+  "id": "MW-C269-arno",
+  "pathSegment": "MW-PATH-269-BAHANO269",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-269-BAHANO269",
+      "order": 2
+    }
+  ]
+}

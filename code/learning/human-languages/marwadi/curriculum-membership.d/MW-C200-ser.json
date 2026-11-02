@@ -1,0 +1,11 @@
+{
+  "id": "MW-C200-ser",
+  "pathSegment": "MW-PATH-200-WEIGH200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-200-WEIGH200",
+      "order": 1
+    }
+  ]
+}

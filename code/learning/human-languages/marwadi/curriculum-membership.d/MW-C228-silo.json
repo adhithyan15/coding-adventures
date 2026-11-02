@@ -1,0 +1,11 @@
+{
+  "id": "MW-C228-silo",
+  "pathSegment": "MW-PATH-228-HEAT228",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-228-HEAT228",
+      "order": 3
+    }
+  ]
+}

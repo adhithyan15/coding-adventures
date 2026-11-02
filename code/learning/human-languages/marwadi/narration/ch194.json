@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 194,
+  "title": "Earning and Spending",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8e64db91e0cbdb29",
+  "lessons": [
+    {
+      "id": "MW-C194-kamavno",
+      "sequence": 13150,
+      "title": "कमावणो (kamāvṇo) — to earn",
+      "headword": "कमावणो",
+      "romanization": "kamāvṇo",
+      "gloss": "to earn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ff27a312cd099ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for in cash, then the Marwadi for to pay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कमावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमावणो — kamāvṇo — \"to earn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां हाट मांय पैसा कमावै है। mā̃ hāṭ mā̃y paisā kamāvai hai. Mother earns money at the weekly market."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं सो रुपिया कमाया, mhaĩ so rupiyā kamāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमावणो (kamāvṇo) is inherited from a reconstructed karmāpayati, \"works, earns\". CDIAL gives no Marwari form in this entry, but lists Hindi kamānā, \"earns\" (CDIAL 2897)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ hāṭ mā̃y paisā kamāvai hai. — Mother earns money at the weekly market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ hāṭ mā̃y paisā kamāvai hai.* — Mother earns money at the weekly market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for in cash, then the Marwadi for to pay, then say kamāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for in cash, then the Marwadi for to pay, then say *kamāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कमावणो (kamāvṇo) mean? (\"To earn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C194-kamavno-type",
+              "prompt": "Say the Marwadi for 'to earn'.",
+              "assesses": [
+                "MW-LEX-C194-EARN194-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कमावणो",
+                "kamāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: कमावणो (kamāvṇo) is 'to earn'.",
+                "incorrect": "'to earn' is कमावणो (kamāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C194-kharchno",
+      "sequence": 13160,
+      "title": "खरचणो (kharchṇo) — to spend",
+      "headword": "खरचणो",
+      "romanization": "kharchṇo",
+      "gloss": "to spend",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29091c7ae70b1308",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to pay, then the Marwadi for to earn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खरचणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खरचणो — kharchṇo — \"to spend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं बाजार मांय घणा पैसा खरचूं हूं। hū̃ bājār mā̃y ghaṇā paisā kharchū̃ hū̃. I spend a lot of money at the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दस रुपिया खरच्या, mhaĩ das rupiyā kharchyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खरचणो (kharchṇo) is a verb made on kharch, \"expense\", which is usually traced, through Persian, to Arabic kharj, \"expenditure\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharchṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharchṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharchṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharchṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ bājār mā̃y ghaṇā paisā kharchū̃ hū̃. — I spend a lot of money at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ bājār mā̃y ghaṇā paisā kharchū̃ hū̃.* — I spend a lot of money at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to pay, then the Marwadi for to earn, then say kharchṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to pay, then the Marwadi for to earn, then say *kharchṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खरचणो (kharchṇo) mean? (\"To spend\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C194-kharchno-type",
+              "prompt": "Say the Marwadi for 'to spend'.",
+              "assesses": [
+                "MW-LEX-C194-EARN194-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खरचणो",
+                "kharchṇo"
+              ],
+              "feedback": {
+                "correct": "Right: खरचणो (kharchṇo) is 'to spend'.",
+                "incorrect": "'to spend' is खरचणो (kharchṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C194-tankha",
+      "sequence": 13170,
+      "title": "तनखा (tankhā) — a salary",
+      "headword": "तनखा",
+      "romanization": "tankhā",
+      "gloss": "a salary",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:746577a8d0b10fd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to earn, then the Marwadi for to spend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तनखा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तनखा — tankhā — \"a salary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी तनखा घणी कोनी। mhārī tankhā ghaṇī konī. My salary isn't large."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तनखा (tankhā) is usually traced to Persian tankhwāh, \"salary\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tankhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tankhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tankhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tankhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī tankhā ghaṇī konī. — My salary isn't large.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī tankhā ghaṇī konī.* — My salary isn't large.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to earn, then the Marwadi for to spend, then say tankhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to earn, then the Marwadi for to spend, then say *tankhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तनखा (tankhā) mean? (\"A salary\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C194-tankha-type",
+              "prompt": "Say the Marwadi for 'a salary'.",
+              "assesses": [
+                "MW-LEX-C194-EARN194-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तनखा",
+                "tankhā"
+              ],
+              "feedback": {
+                "correct": "Right: तनखा (tankhā) is 'a salary'.",
+                "incorrect": "'a salary' is तनखा (tankhā)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C194-napho",
+      "sequence": 13180,
+      "title": "नफो (napho) — a profit",
+      "headword": "नफो",
+      "romanization": "napho",
+      "gloss": "a profit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78ecbd5674378b76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to spend, then the Marwadi for a salary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नफो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नफो — napho — \"a profit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज दुकान मांय नफो कोनी। āj dukān mā̃y napho konī. The shop made no profit today."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नफो (napho) is usually traced, through Persian, to Arabic nafʿ, \"profit, benefit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "napho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *napho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "napho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *napho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj dukān mā̃y napho konī. — The shop made no profit today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj dukān mā̃y napho konī.* — The shop made no profit today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to spend, then the Marwadi for a salary, then say napho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to spend, then the Marwadi for a salary, then say *napho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नफो (napho) mean? (\"A profit\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C194-napho-type",
+              "prompt": "Say the Marwadi for 'a profit'.",
+              "assesses": [
+                "MW-LEX-C194-EARN194-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नफो",
+                "napho"
+              ],
+              "feedback": {
+                "correct": "Right: नफो (napho) is 'a profit'.",
+                "incorrect": "'a profit' is नफो (napho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C194-udhar",
+      "sequence": 13190,
+      "title": "उधार (udhār) — credit; a loan",
+      "headword": "उधार",
+      "romanization": "udhār",
+      "gloss": "credit; a loan",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28cf63d9c2d0bb63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a salary, then the Marwadi for a profit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उधार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उधार — udhār — \"credit; a loan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अठै उधार कोनी। aṭhai udhār konī. No credit here."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उधार (udhār) is inherited from Sanskrit uddhāra, \"raising; a loan\". CDIAL gives no Marwari form in this entry, but lists Hindi udhār, \"debt\", and Gujarati udhāro, \"credit account\" (CDIAL 2018)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭhai udhār konī. — No credit here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭhai udhār konī.* — No credit here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a salary, then the Marwadi for a profit, then say udhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a salary, then the Marwadi for a profit, then say *udhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उधार (udhār) mean? (\"Credit; a loan\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C194-udhar-type",
+              "prompt": "Say the Marwadi for 'credit'.",
+              "assesses": [
+                "MW-LEX-C194-EARN194-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उधार",
+                "udhār"
+              ],
+              "feedback": {
+                "correct": "Right: उधार (udhār) is 'credit; a loan'.",
+                "incorrect": "'credit' is उधार (udhār)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

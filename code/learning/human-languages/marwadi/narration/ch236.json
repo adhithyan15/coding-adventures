@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 236,
+  "title": "Farm Animals",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:22c566493938976b",
+  "lessons": [
+    {
+      "id": "MW-C236-gadho",
+      "sequence": 16030,
+      "title": "गधो (gadho) — a donkey",
+      "headword": "गधो",
+      "romanization": "gadho",
+      "gloss": "a donkey",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69893456c446cab3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to rear (animals), then the Marwadi for chaff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गधो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गधो — gadho — \"a donkey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गधो भारी बोझ उठावै है। gadho bhārī bojh uṭhāvai hai. The donkey carries a heavy load."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गधो (gadho) is inherited from Sanskrit gardabha, \"an ass\"; CDIAL lists Hindi gadahā and a Gujarati cousin. CDIAL gives no Marwari form in this entry (CDIAL 4054)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gadho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gadho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gadho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gadho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gadho bhārī bojh uṭhāvai hai. — The donkey carries a heavy load.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gadho bhārī bojh uṭhāvai hai.* — The donkey carries a heavy load.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to rear (animals), then the Marwadi for chaff, then say gadho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to rear (animals), then the Marwadi for chaff, then say *gadho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गधो (gadho) mean? (\"A donkey\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C236-gadho-type",
+              "prompt": "Say the Marwadi for 'a donkey'.",
+              "assesses": [
+                "MW-LEX-C236-BEAST236-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गधो",
+                "gadho"
+              ],
+              "feedback": {
+                "correct": "Right: गधो (gadho) is 'a donkey'.",
+                "incorrect": "'a donkey' is गधो (gadho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C236-kukro",
+      "sequence": 16040,
+      "title": "कूकड़ो (kūkṛo) — a rooster",
+      "headword": "कूकड़ो",
+      "romanization": "kūkṛo",
+      "gloss": "a rooster",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afcc401dbff8246d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for chaff, then the Marwadi for a donkey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कूकड़ो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कूकड़ो — kūkṛo — \"a rooster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कूकड़ो तड़कै बोलै है। kūkṛo taṛkai bolai hai. The rooster crows at daybreak."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कूकड़ो (kūkṛo) is inherited from Sanskrit kukkuṭa, \"a cock\", a word CDIAL takes to imitate its call; CDIAL lists Hindi kukṛā. CDIAL gives no Marwari form in this entry (CDIAL 3208)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkṛo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkṛo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkṛo taṛkai bolai hai. — The rooster crows at daybreak.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkṛo taṛkai bolai hai.* — The rooster crows at daybreak.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for chaff, then the Marwadi for a donkey, then say kūkṛo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for chaff, then the Marwadi for a donkey, then say *kūkṛo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कूकड़ो (kūkṛo) mean? (\"A rooster\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C236-kukro-type",
+              "prompt": "Say the Marwadi for 'a rooster'.",
+              "assesses": [
+                "MW-LEX-C236-BEAST236-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कूकड़ो",
+                "kūkṛo"
+              ],
+              "feedback": {
+                "correct": "Right: कूकड़ो (kūkṛo) is 'a rooster'.",
+                "incorrect": "'a rooster' is कूकड़ो (kūkṛo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C236-un",
+      "sequence": 16050,
+      "title": "ऊन (ūn) — wool",
+      "headword": "ऊन",
+      "romanization": "ūn",
+      "gloss": "wool",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20549d25b639ad54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a donkey, then the Marwadi for a rooster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऊन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊन — ūn — \"wool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भेड़ ऊन देवै है। bheṛ ūn devai hai. Sheep give wool."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊन (ūn) is inherited from Sanskrit ūrṇā, \"wool\"; CDIAL lists Hindi and Gujarati ūn. CDIAL gives no Marwari form in this entry (CDIAL 2424)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bheṛ ūn devai hai. — Sheep give wool.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bheṛ ūn devai hai.* — Sheep give wool.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a donkey, then the Marwadi for a rooster, then say ūn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a donkey, then the Marwadi for a rooster, then say *ūn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ऊन (ūn) mean? (\"Wool\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C236-un-type",
+              "prompt": "Say the Marwadi for 'wool'.",
+              "assesses": [
+                "MW-LEX-C236-BEAST236-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ऊन",
+                "ūn"
+              ],
+              "feedback": {
+                "correct": "Right: ऊन (ūn) is 'wool'.",
+                "incorrect": "'wool' is ऊन (ūn)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C236-sig",
+      "sequence": 16060,
+      "title": "सींग (sī̃g) — a horn",
+      "headword": "सींग",
+      "romanization": "sī̃g",
+      "gloss": "a horn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b045cce3921bddef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a rooster, then the Marwadi for wool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सींग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सींग — sī̃g — \"a horn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हिरण माथै सींग है। hiraṇ māthai sī̃g hai. The deer has horns on its head."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सींग (sī̃g) is inherited from Sanskrit śṛṅga, \"a horn\"; CDIAL lists Hindi sī̃g, \"a horn\", and a Gujarati cousin. CDIAL gives no Marwari form in this entry (CDIAL 12583)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sī̃g",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sī̃g*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sī̃g, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sī̃g*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiraṇ māthai sī̃g hai. — The deer has horns on its head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiraṇ māthai sī̃g hai.* — The deer has horns on its head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a rooster, then the Marwadi for wool, then say sī̃g again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a rooster, then the Marwadi for wool, then say *sī̃g* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सींग (sī̃g) mean? (\"A horn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C236-sig-type",
+              "prompt": "Say the Marwadi for 'a horn'.",
+              "assesses": [
+                "MW-LEX-C236-BEAST236-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सींग",
+                "sī̃g"
+              ],
+              "feedback": {
+                "correct": "Right: सींग (sī̃g) is 'a horn'.",
+                "incorrect": "'a horn' is सींग (sī̃g)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C236-khur",
+      "sequence": 16070,
+      "title": "खुर (khur) — a hoof",
+      "headword": "खुर",
+      "romanization": "khur",
+      "gloss": "a hoof",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fde84bad7a5d0567",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for wool, then the Marwadi for a horn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खुर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुर — khur — \"a hoof\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खुर कड़क है। khur kaṛak hai. The hoof is hard."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुर (khur) is inherited from Sanskrit khura, \"a hoof\"; CDIAL lists Hindi and Gujarati khur, \"a hoof\". CDIAL gives no Marwari form in this entry (CDIAL 3906)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khur kaṛak hai. — The hoof is hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khur kaṛak hai.* — The hoof is hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for wool, then the Marwadi for a horn, then say khur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for wool, then the Marwadi for a horn, then say *khur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खुर (khur) mean? (\"A hoof\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C236-khur-type",
+              "prompt": "Say the Marwadi for 'a hoof'.",
+              "assesses": [
+                "MW-LEX-C236-BEAST236-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खुर",
+                "khur"
+              ],
+              "feedback": {
+                "correct": "Right: खुर (khur) is 'a hoof'.",
+                "incorrect": "'a hoof' is खुर (khur)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

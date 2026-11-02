@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:fd77a039e928a933",
+  "lessonIds": [
+    "MW-C211-map",
+    "MW-C211-napno",
+    "MW-C211-moklo",
+    "MW-C211-tang",
+    "MW-C211-samavno"
+  ],
+  "tex": "marwadi/book/chapters/ch211-roomy-or-tight.tex"
+}

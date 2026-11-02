@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C207-phatak",
+    "language": "marwadi",
+    "chapter": 207,
+    "sequence": 13850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f6441d7e1575015"
+  },
+  "findings": []
+}

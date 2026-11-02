@@ -1,0 +1,11 @@
+{
+  "id": "MW-C202-tirchho",
+  "pathSegment": "MW-PATH-202-WAY202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-202-WAY202",
+      "order": 4
+    }
+  ]
+}

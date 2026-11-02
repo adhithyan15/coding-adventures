@@ -1,0 +1,11 @@
+{
+  "id": "MW-C250-rolo",
+  "pathSegment": "MW-PATH-250-UCHHAV250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-250-UCHHAV250",
+      "order": 4
+    }
+  ]
+}

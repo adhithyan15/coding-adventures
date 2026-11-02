@@ -1,0 +1,774 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 164,
+  "title": "A Notice at the Dairy",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:09d3412b49a08e95",
+  "lessons": [
+    {
+      "id": "MW-C164-khulo",
+      "sequence": 10020,
+      "title": "खुलो (khulo) — open",
+      "headword": "खुलो",
+      "romanization": "khulo",
+      "gloss": "open",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b3c22e75c0e5a95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say to open, खोलणो. Then a house and a shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खुलो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुलो — khulo — \"open\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घर खुलो है। ghar khulo hai. — The house is open."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुलो (khulo) is inherited: CDIAL lists Old Marwari khulo, \"open\", in the same entry as खोलणो, under a reconstructed khōll, \"to open\" (CDIAL 3945)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुलो (khulo) ends like छोरो and changes the same way, to agree with what is open: घर खुलो (khulo) है।, but दुकान खुली है। (dukān khulī hai.), the shop is open."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khulo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khulo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "दुकान आज खुली है? — dukān āj khulī hai? — Is the shop open today?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **दुकान आज खुली है?** — *dukān āj khulī hai?* — Is the shop open today?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हां सा, दुकान खुली है। — hā̃ sā, dukān khulī hai. — Yes, the shop is open.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हां सा, दुकान खुली है।** — *hā̃ sā, dukān khulī hai.* — Yes, the shop is open.]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खुलो (khulo) mean? (\"Open\".) The shop is open? (दुकान खुली है।)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C164-khulo-type",
+              "prompt": "Say the Marwadi for 'open'.",
+              "assesses": [
+                "MW-LEX-C164-NOTICE164-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खुलो",
+                "khulo"
+              ],
+              "feedback": {
+                "correct": "Right: खुलो (khulo) is 'open'.",
+                "incorrect": "'open' is खुलो (khulo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C164-band",
+      "sequence": 10030,
+      "title": "बंद (band) — closed",
+      "headword": "बंद",
+      "romanization": "band",
+      "gloss": "closed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47be963d94175c95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the shop is open. Then Monday and Sunday: सोमवार, रविवार."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बंद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बंद — band — \"closed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सोमवार दुकान बंद है। somvār dukān band hai. — On Monday the shop is closed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बंद (band) is a loan, usually traced to Persian band, \"shut, bound\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बंद (band) does not change: घर बंद (band) है।, दुकान बंद (band) है। Its opposite does: खुलो (khulo), खुली."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "band",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *band*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "दुकान बंद है पण घर खुलो है। — dukān band hai paṇ ghar khulo hai. — The shop is closed, but the house is open.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **दुकान बंद है पण घर खुलो है।** — *dukān band hai paṇ ghar khulo hai.* — The shop is closed, but the house is open.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "दुकान आज बंद कोनी। — dukān āj band konī. — The shop isn't closed today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **दुकान आज बंद कोनी।** — *dukān āj band konī.* — The shop isn't closed today.]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बंद (band) mean? (\"Closed\".) Does it change for a shop? (No.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C164-band-type",
+              "prompt": "Say the Marwadi for 'closed'.",
+              "assesses": [
+                "MW-LEX-C164-NOTICE164-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बंद",
+                "band"
+              ],
+              "feedback": {
+                "correct": "Right: बंद (band) is 'closed'.",
+                "incorrect": "'closed' is बंद (band)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C164-tai",
+      "sequence": 10040,
+      "title": "तांई (tā̃ī) — until",
+      "headword": "तांई",
+      "romanization": "tā̃ī",
+      "gloss": "until",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afb9cf202c92c0c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say he comes from the market. Then the shop is closed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तांई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तांई — tā̃ī — \"until\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दुकान दिनूगै ६ सूं १० तांई खुली है। dukān dinūgai chha sū̃ das tā̃ī khulī hai. — The shop is open in the morning from six until ten."
+            },
+            {
+              "kind": "speech",
+              "text": "सूं opens the stretch of time, and तांई (tā̃ī) closes it. The hours are digits, read as numbers: ६ is chha, १० is das."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तांई (tā̃ī) is probably inherited from Sanskrit tāvat, \"so long\". CDIAL gives no Marwari form in this entry, but it lists an Old Gujarati word for \"up till\" there (CDIAL 5804)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूं … तांई (tā̃ī) frames any stretch: आथण ५ सूं ८ तांई (tā̃ī), in the evening from five until eight."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā̃ī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā̃ī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आथण ५ सूं ८ तांई — āthaṇ pāṅch sū̃ āṭh tā̃ī — in the evening, from five until eight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आथण ५ सूं ८ तांई** — *āthaṇ pāṅch sū̃ āṭh tā̃ī* — in the evening, from five until eight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say from the market, then tā̃ī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *from the market*, then *tā̃ī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तांई (tā̃ī) mean? (\"Until\".) From six until ten? (६ सूं १० तांई (tā̃ī).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C164-tai-type",
+              "prompt": "Say the Marwadi for 'until'.",
+              "assesses": [
+                "MW-LEX-C164-NOTICE164-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तांई",
+                "tā̃ī",
+                "tai"
+              ],
+              "feedback": {
+                "correct": "Right: तांई (tā̃ī) is 'until'.",
+                "incorrect": "'until' is तांई (tā̃ī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C164-dairy-notice",
+      "sequence": 10050,
+      "title": "(reading) (dukān roj dinūgai chha sū̃ das tā̃ī khulī hai.) — a notice at the dairy",
+      "headword": "(reading)",
+      "romanization": "dukān roj dinūgai chha sū̃ das tā̃ī khulī hai.",
+      "gloss": "a dairy's notice, read for when you can go",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:13d11824015d096c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say open, closed and until."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nobody is talking to anybody here. A notice says what you may do, and when."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूध, दही अर छाछ दुकान रोज दिनूगै ६ सूं १० तांई (tā̃ī) खुली है। आथण दुकान ५ सूं ८ तांई (tā̃ī) खुली है। रविवार दुकान दिनूगै ६ सूं १२ तांई (tā̃ī) खुली है। दोपार अर रात दुकान बंद (band) है। सोमवार दुकान बंद (band) है। भाव: दूध ५४। आज घी कोनी। दही घणो आछो है! आभार।."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice once, straight through, without translating",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice once, straight through, without translating]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it a second time, and find every line that says when",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it a second time, and find every line that says *when*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Most lines open on a when: रोज, आथण, रविवार, दोपार, सोमवार. Each stretch of hours runs सूं … तांई (tā̃ī). भाव is the price, written in digits. The line with! is an advert, set into the notice to bring you in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "is the shop open on Monday? (No: सोमवार दुकान बंद (band) है।)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: is the shop open on Monday? (No: **सोमवार दुकान बंद है।**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "until when is it open on Sunday morning? (Until twelve: १२ तांई (tā̃ī).)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: until when is it open on Sunday morning? (Until twelve: **१२ तांई**.)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "is there ghee today? (No: आज घी कोनी।)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: is there ghee today? (No: **आज घी कोनी।**)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which day is the shop closed all day? (सोमवार, Monday.) When is it closed every day? (दोपार अर रात, midday and night.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C164-dairy-notice-tuesday",
+              "prompt": "On Tuesday you work from seven in the morning until four in the afternoon. When can you buy milk that day?",
+              "assesses": [
+                "MW-SKILL-C164-READ-NOTICE-01",
+                "MW-LEX-C164-NOTICE164-03"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "आथण ५ सूं ८ तांई",
+                "āthaṇ 5 sū̃ 8 tā̃ī",
+                "in the evening, from 5 until 8",
+                "evening, 5 to 8",
+                "in the evening"
+              ],
+              "feedback": {
+                "correct": "Right: the morning hours end at ten, so the evening, five until eight.",
+                "incorrect": "The morning stretch ends at ten; the evening line says ५ सूं ८ तांई."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R164-dairy",
+      "sequence": 10060,
+      "title": "A notice at the dairy — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "review of open, closed, until and the dairy notice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9e0f2f5d4a5f0bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the shop is open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the house is open; the shop is open; the shop is closed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the house is open*; *the shop is open*; *the shop is closed*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "from six until ten; in the evening, from five until eight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *from six until ten*; *in the evening, from five until eight*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on Monday the shop is closed; there is no ghee today",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *on Monday the shop is closed*; *there is no ghee today*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "in the notice, when can you buy milk on a Sunday morning? (From six until twelve.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: in the notice, when can you buy milk on a Sunday morning? (From six until twelve.)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Open? (खुलो (khulo), खुली.) Closed? (बंद (band).) Until? (तांई (tā̃ī).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R164-dairy-monday",
+              "prompt": "Say: on Monday the shop is closed, but on Sunday it is open.",
+              "assesses": [
+                "MW-LEX-C164-NOTICE164-02",
+                "MW-LEX-C164-NOTICE164-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "सोमवार दुकान बंद है पण रविवार दुकान खुली है।",
+                "somvār dukān band hai paṇ ravivār dukān khulī hai",
+                "somvar dukan band hai pan ravivar dukan khuli hai"
+              ],
+              "feedback": {
+                "correct": "Right: बंद stays as it is; खुली agrees with the shop.",
+                "incorrect": "बंद for Monday, खुली for the shop on Sunday."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

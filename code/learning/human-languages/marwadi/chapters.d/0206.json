@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "The Third House, Upstairs",
+  "label": "ch:mw-the-third-house-upstairs",
+  "canDo": "I can say which house, which lane and which floor.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-C206-algo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say which house, which lane and which floor.",
+    "assesses": [
+      "MW-LEX-C206-LANE206-03",
+      "MW-LEX-C206-LANE206-04",
+      "MW-LEX-C206-LANE206-05"
+    ]
+  }
+}

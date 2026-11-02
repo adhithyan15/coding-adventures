@@ -1,5 +1,39 @@
 # Changelog
 
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 4 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
+## Unreleased — A variable never shadows a function of the same name (#18485)
+
+SIR keeps functions and variables in separate namespaces, and Ruby relies on
+it: `def f; 40; end; f = 2; puts f() + f` prints 42. This backend emitted
+the local as `f` next to the function `f`, so the local shadowed the
+function and the call failed with `TypeError: f is not a function`. A
+*variable* (local, parameter, capture, loop variable, `rescue` binding)
+whose SIR name is also a function's name is now emitted through `var_ident`
+as `_$sir_esc_l` + `sanitize_ident(name)`; every other variable, and every
+function, keeps its spelling, because callers append code that calls the
+emitted functions by name. The new `l` tag sits beside `sanitize_ident`'s
+`v` and `e`, so the renamed form can equal no other identifier. New unit
+tests `a_local_named_like_a_function_is_renamed_and_the_function_is_not` and
+`var_ident_renames_exactly_the_names_of_functions`;
+`tests/twig_generated_names.rs` adds
+`a_variable_named_like_a_function_does_not_shadow_it`, which runs the
+TypeScript output under `node` (this backend is not one of
+`sir-conformance`'s targets). A keyword parameter destructures as `key:
+local` when the two spellings differ. Module globals keep their spelling
+(`scoped_ident`): they are module-level bindings like the functions, and a
+`Global` reference is how a hand-built module reaches a function's handle
+(`run_with_node.rs`'s `runtime_rejects_constructor_gadget`).
+
 ## Unreleased — `ForRange` counts with a hidden counter (#18482 review)
 
 The loop used its own variable as the counter, so a body that assigned it

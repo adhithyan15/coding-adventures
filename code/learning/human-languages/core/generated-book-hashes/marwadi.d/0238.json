@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:9150f87b88c75d3c",
+  "lessonIds": [
+    "MW-C238-bovno",
+    "MW-C238-khodno",
+    "MW-C238-ropno",
+    "MW-C238-hali",
+    "MW-C238-bij"
+  ],
+  "tex": "marwadi/book/chapters/ch238-sowing.tex"
+}

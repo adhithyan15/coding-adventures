@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C216-musaphar",
+    "language": "marwadi",
+    "chapter": 216,
+    "sequence": 15030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58502a2aa5422d26"
+  },
+  "findings": []
+}

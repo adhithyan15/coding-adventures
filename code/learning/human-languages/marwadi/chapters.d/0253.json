@@ -1,0 +1,21 @@
+{
+  "chapter": 253,
+  "title": "Colds, Coughs and a Long Life",
+  "label": "ch:mw-colds-coughs-and-a-long-life",
+  "canDo": "I can say what is wrong when I feel ill.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-R253-review-248-253",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say what is wrong when I feel ill.",
+    "assesses": [
+      "MW-LEX-C253-SARDI253-01",
+      "MW-LEX-C253-SARDI253-02",
+      "MW-LEX-C253-SARDI253-03",
+      "MW-LEX-C253-SARDI253-04",
+      "MW-LEX-C253-SARDI253-05"
+    ]
+  }
+}

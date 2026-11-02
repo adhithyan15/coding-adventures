@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C275-jas",
+    "language": "marwadi",
+    "chapter": 275,
+    "sequence": 19490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ceb0488e2109b36"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C195-karaj",
+  "pathSegment": "MW-PATH-195-BANK195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-195-BANK195",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:ffc1e06f0a034faf",
+  "lessonIds": [
+    "MW-C286-imtihan",
+    "MW-C286-hisab",
+    "MW-C286-natijo",
+    "MW-C286-darjo",
+    "MW-C286-akno"
+  ],
+  "tex": "marwadi/book/chapters/ch286-test-day.tex"
+}

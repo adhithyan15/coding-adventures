@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 155,
+  "title": "Eat, Drink, Go, Come",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:49941e7e66adbff1",
+  "lessons": [
+    {
+      "id": "MW-C155-jau-javai",
+      "sequence": 9620,
+      "title": "हूं जाऊं हूं — a stem that ends in a vowel",
+      "headword": "जाऊं · जावै",
+      "romanization": "jāū̃ · jāvai",
+      "gloss": "I go, he goes: a stem that ends in a vowel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8af69e97235e2d5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to go, जाणो. Then I listen to songs and he listens to songs. And the market, बाजार."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: जा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाणो leaves जा, a stem that ends in a vowel. For I, its ending is the full letter ऊं:"
+            },
+            {
+              "kind": "speech",
+              "text": "हूं रोज बाजार जाऊं हूं। hū̃ roj bājār jāū̃ hū̃. — I go to the market every day."
+            },
+            {
+              "kind": "speech",
+              "text": "For वो, a व comes in before -ै:"
+            },
+            {
+              "kind": "speech",
+              "text": "वो रोज बाजार जावै है। vo roj bājār jāvai hai. — He goes to the market every day."
+            },
+            {
+              "kind": "speech",
+              "text": "After आप, the व stays: आप जावो हो, the ending of the request लावो. CDIAL lists Old Marwari jāvaï, \"to go\", with the same -aï (CDIAL 10452). जाऊं is central Marwari as this book writes it; other districts differ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं रोज बाजार जाऊं हूं। — hū̃ roj bājār jāū̃ hū̃. — I go to the market every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं रोज बाजार जाऊं हूं।** — *hū̃ roj bājār jāū̃ hū̃.* — I go to the market every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "मां रोज बाजार जावै है। — mā̃ roj bājār jāvai hai. — Mother goes to the market every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **मां रोज बाजार जावै है।** — *mā̃ roj bājār jāvai hai.* — Mother goes to the market every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आप बाजार जावो हो। — āp bājār jāvo ho. — You go to the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आप बाजार जावो हो।** — *āp bājār jāvo ho.* — You go to the market.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I go? (जाऊं हूं.) He goes? (जावै है.) You go, to आप? (जावो हो.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C155-jau-javai-market",
+              "prompt": "Say that he goes to the market every day.",
+              "assesses": [
+                "MW-GRAMMAR-C155-VSTEM-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "वो रोज बाजार जावै है।",
+                "vo roj bājār jāvai hai",
+                "vo roj bajar javai hai"
+              ],
+              "feedback": {
+                "correct": "Right: जा, then व, then -ै है.",
+                "incorrect": "For वो, जा takes a व before -ै: जावै है."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C155-khau-pivai",
+      "sequence": 9630,
+      "title": "खा, पी, आ — three more vowel stems",
+      "headword": "खाऊं · पीवै · आवै",
+      "romanization": "khāū̃ · pīvai · āvai",
+      "gloss": "eat, drink, come: three more vowel stems that go like जा",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0216f556d2fee35c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I go to the market every day. Then to eat, to drink, to come: खाणो, पीणो, आवणो."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the same three endings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खा, पी and आ end in vowels, and go exactly like जा:"
+            },
+            {
+              "kind": "speech",
+              "text": "हूं रोज दिनूगै चाय पीऊं हूं। hū̃ roj dinūgai chāy pīū̃ hū̃. — I drink tea early every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "राम रोटी खावै है। rām roṭī khāvai hai. — Ram eats roti."
+            },
+            {
+              "kind": "speech",
+              "text": "आप रोज आवो हो। āp roj āvo ho. — You come every day."
+            },
+            {
+              "kind": "speech",
+              "text": "आवणो leaves आव, but its present follows जा: आऊं, आवै, आवो. Old Marwari had āvaï, \"comes\" (CDIAL 1200)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every cell of the present, now that each one is taught:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "बोल-",
+                "जा-"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "who: हूं. बोल-: बोलूं हूं. जा-: जाऊं हूं.",
+                "who: वो. बोल-: बोलै है. जा-: जावै है.",
+                "who: आप. बोल-: बोलो हो. जा-: जावो हो."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं रोटी खाऊं हूं। — hū̃ roṭī khāū̃ hū̃. — I eat roti.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं रोटी खाऊं हूं।** — *hū̃ roṭī khāū̃ hū̃.* — I eat roti.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "वो चाय पीवै है। — vo chāy pīvai hai. — He drinks tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **वो चाय पीवै है।** — *vo chāy pīvai hai.* — He drinks tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "वो रोज आवै है। — vo roj āvai hai. — He comes every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **वो रोज आवै है।** — *vo roj āvai hai.* — He comes every day.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "He eats? (खावै है.) I come? (आऊं हूं.) You drink, to आप? (पीवो हो.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C155-khau-pivai-tea",
+              "prompt": "Say that you drink tea early every morning.",
+              "assesses": [
+                "MW-GRAMMAR-C155-VSTEM-MORE-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "हूं रोज दिनूगै चाय पीऊं हूं।",
+                "hū̃ roj dinūgai chāy pīū̃ hū̃",
+                "hu roj dinugai chay piu hu"
+              ],
+              "feedback": {
+                "correct": "Right: पी, then ऊं, then हूं.",
+                "incorrect": "पी goes like जा: पीऊं हूं."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C155-dudh",
+      "sequence": 9640,
+      "title": "दूध (dūdh) — milk",
+      "headword": "दूध",
+      "romanization": "dūdh",
+      "gloss": "milk",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f98b720488a77979",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say tea, water and yoghurt. (चाय, पाणी, दही.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दूध",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूध — dūdh — \"milk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं रोज दूध पीऊं हूं। hū̃ roj dūdh pīū̃ hū̃. — I drink milk every day."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends on a letter you have not written yet: dh, a द with a breath after it. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूध (dūdh) is inherited from Sanskrit dugdha, \"milk\", a word built on the verb for milking. CDIAL lists Marwari dūdh, masculine (CDIAL 6391)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूध is masculine: दूध गरम है। (dūdh garam hai.), the milk is hot."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūdh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūdh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "वो दूध पीवै है। — vo dūdh pīvai hai. — He drinks milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **वो दूध पीवै है।** — *vo dūdh pīvai hai.* — He drinks milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tea, then dūdh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tea*, then *dūdh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दूध (dūdh) mean? (\"Milk\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C155-dudh-type",
+              "prompt": "Say the Marwadi for 'milk'.",
+              "assesses": [
+                "MW-LEX-C155-FOOD155-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दूध",
+                "dūdh",
+                "dudh"
+              ],
+              "feedback": {
+                "correct": "Right: दूध (dūdh) is 'milk'.",
+                "incorrect": "'milk' is दूध (dūdh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W46-dha",
+      "sequence": 9650,
+      "title": "ध (dha) — the letter that ends दूध (dūdh)",
+      "headword": "ध",
+      "romanization": "dha",
+      "gloss": "dha — the letter that ends दूध",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:00e328b5838bcf7e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ध",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ध, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write द once, and name it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say दूध (dūdh), \"milk\". It opens on द and ends on a द with a breath after it: dh. This lesson puts that letter in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ध",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ध — dha, the breathed d."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends दूध (dūdh). It sits beside द as घ sits beside ग: the same place in the mouth, with a breath. On the page it is an upper spiral that ends in a shoulder, a lower bowl, and a right stem under the headline."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ध",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the upper spiral's inner crossing, curl around the small opening, widen left and down around the outer loop, then sweep right through the shoulder."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, turn back left along the shoulder to the left waist."
+            },
+            {
+              "kind": "speech",
+              "text": "3. sweep down and around the lower bowl to its right junction."
+            },
+            {
+              "kind": "speech",
+              "text": "4. climb up the right stem to the headline."
+            },
+            {
+              "kind": "speech",
+              "text": "5. descend the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "6. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; native writers draw ध (dha) as two pen-down strokes (81% of HP Labs India's native-writer samples, 64 of 79). This ductus follows the four movements in order and direction, lifting only before the headline: after the shoulder the pen turns back along it into the lower bowl, then climbs the right stem before descending it."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order; hands and teachers vary. Source: Opiaterein, ‘Deva-ध (dha)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at दूध (dūdh) and point at ध (dha) at its end",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **दूध** and point at ध at its end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ध (dha) three times, saying dh as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ध three times, saying *dh* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "द, then ध (dha), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: द, then ध, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "दूध (dūdh) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दूध** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ध? (dha, the breathed d.) Which word did it come from? (दूध, dūdh, \"milk\".)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MW-W46-dha-recall",
+              "prompt": "Write the letter that ends dūdh (milk).",
+              "assesses": [
+                "MW-SCRIPT-C155-DHA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ध"
+              ],
+              "feedback": {
+                "correct": "Yes: ध, from dūdh.",
+                "incorrect": "The letter is ध. Find it at the end of दूध and write it once more."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R155-eat-drink-go-come",
+      "sequence": 9660,
+      "title": "Eat, drink, go, come — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "review of the vowel stems, milk and the letter ध",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb3f77439cba9895",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I go to the market every day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I eat roti; he eats roti; you eat roti, to आप",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I eat roti*; *he eats roti*; *you eat roti*, to **आप**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I drink milk; mother drinks milk every day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I drink milk*; *mother drinks milk every day*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I come every day; he comes every day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I come every day*; *he comes every day*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he goes to the market; you go to the market",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *he goes to the market*; *you go to the market*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "दूध (dūdh), and name its last letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दूध**, and name its last letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "जाऊं, and name the letter after जा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **जाऊं**, and name the letter after **जा**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I eat? (खाऊं हूं.) He drinks? (पीवै है.) You come? (आवो हो.) Milk? (दूध (dūdh).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R155-eat-drink-go-come-milk",
+              "prompt": "Say that mother drinks milk every day.",
+              "assesses": [
+                "MW-GRAMMAR-C155-VSTEM-MORE-01",
+                "MW-LEX-C155-FOOD155-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "मां रोज दूध पीवै है।",
+                "mā̃ roj dūdh pīvai hai",
+                "ma roj dudh pivai hai"
+              ],
+              "feedback": {
+                "correct": "Right: पी, then व, then -ै है.",
+                "incorrect": "For mother, पी takes व before -ै: पीवै है."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

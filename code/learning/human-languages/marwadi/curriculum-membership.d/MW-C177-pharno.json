@@ -1,0 +1,11 @@
+{
+  "id": "MW-C177-pharno",
+  "pathSegment": "MW-PATH-177-PHAD177",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-177-PHAD177",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C198-samjhavno",
+  "pathSegment": "MW-PATH-198-OFFICE198",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-198-OFFICE198",
+      "order": 4
+    }
+  ]
+}

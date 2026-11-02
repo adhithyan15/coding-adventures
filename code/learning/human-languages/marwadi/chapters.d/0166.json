@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Up at Daybreak",
+  "label": "ch:mw-up-at-daybreak",
+  "canDo": "I can say when I wake up, rinse my mouth and lie down.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C166-sajh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say when I wake up, rinse my mouth and lie down.",
+    "assesses": [
+      "MW-LEX-C166-JAG166-03",
+      "MW-LEX-C166-JAG166-04",
+      "MW-LEX-C166-JAG166-05"
+    ]
+  }
+}

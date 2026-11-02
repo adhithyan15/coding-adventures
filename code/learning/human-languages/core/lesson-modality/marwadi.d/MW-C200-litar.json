@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C200-litar",
+    "language": "marwadi",
+    "chapter": 200,
+    "sequence": 13500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ce57696be342ec2"
+  },
+  "findings": []
+}

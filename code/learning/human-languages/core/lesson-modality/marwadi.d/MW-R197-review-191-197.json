@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R197-review-191-197",
+    "language": "marwadi",
+    "chapter": 197,
+    "sequence": 13350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5df989a3e7363e2d"
+  },
+  "findings": []
+}

@@ -132,7 +132,7 @@ fn rustc_available() -> bool {
 /// linker (a skip, never a failure).
 fn compile_and_run(source: &str, tag: &str) -> Option<(String, bool)> {
     let dir = std::env::temp_dir();
-    let nonce = format!("{}_{}", std::process::id(), tag);
+    let nonce = format!("{}_{}", unique_suffix(), tag);
     let src_path = dir.join(format!("sir_exc_{nonce}.rs"));
     let bin_path = dir.join(format!("sir_exc_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
     std::fs::write(&src_path, source).expect("write temp source");
@@ -378,4 +378,15 @@ fn string_plus_rescued_exception_raises_rescuable_type_error() {
     let Some((stdout, ok)) = compile_and_run(&src, "str_plus_exc") else { return };
     assert!(ok, "TypeError must be rescuable (exit 0), not an uncatchable panic");
     assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["caught"], "got {stdout:?}");
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

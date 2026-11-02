@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 209,
+  "title": "Shopkeeper and Customer",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2c9064c30108bf36",
+  "lessons": [
+    {
+      "id": "MW-C209-baniyo",
+      "sequence": 13920,
+      "title": "बाणियो (bāṇiyo) — a trader; a shopkeeper",
+      "headword": "बाणियो",
+      "romanization": "bāṇiyo",
+      "gloss": "a trader; a shopkeeper",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f22f461836b3318",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a court of law, then the Marwadi for to come open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाणियो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाणियो — bāṇiyo — \"a trader; a shopkeeper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बाणियो दिनूगै दुकान खोलै है। bāṇiyo dinūgai dukān kholai hai. The trader opens the shop early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाणियो (bāṇiyo) is inherited from Sanskrit vāṇija, \"trader\"; CDIAL lists Marwari bā̃ṇyõ, \"trader\" (CDIAL 11484)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṇiyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṇiyo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṇiyo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṇiyo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṇiyo dinūgai dukān kholai hai. — The trader opens the shop early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṇiyo dinūgai dukān kholai hai.* — The trader opens the shop early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a court of law, then the Marwadi for to come open, then say bāṇiyo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a court of law, then the Marwadi for to come open, then say *bāṇiyo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाणियो (bāṇiyo) mean? (\"A trader; a shopkeeper\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C209-baniyo-type",
+              "prompt": "Say the Marwadi for 'a trader'.",
+              "assesses": [
+                "MW-LEX-C209-SHOP209-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बाणियो",
+                "bāṇiyo"
+              ],
+              "feedback": {
+                "correct": "Right: बाणियो (bāṇiyo) is 'a trader; a shopkeeper'.",
+                "incorrect": "'a trader' is बाणियो (bāṇiyo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C209-gahak",
+      "sequence": 13930,
+      "title": "गाहक (gāhak) — a customer",
+      "headword": "गाहक",
+      "romanization": "gāhak",
+      "gloss": "a customer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33aee16e4a4ab58b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to come open, then the Marwadi for a trader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गाहक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाहक — gāhak — \"a customer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाहक भाव पूछै है। gāhak bhāv pūchhai hai. The customer asks the price."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine or feminine noun, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाहक (gāhak) is a tadbhava of Sanskrit grāhaka, \"one who takes; a purchaser\" (Monier-Williams), with the r lost."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāhak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāhak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāhak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāhak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāhak bhāv pūchhai hai. — The customer asks the price.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāhak bhāv pūchhai hai.* — The customer asks the price.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to come open, then the Marwadi for a trader, then say gāhak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to come open, then the Marwadi for a trader, then say *gāhak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गाहक (gāhak) mean? (\"A customer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C209-gahak-type",
+              "prompt": "Say the Marwadi for 'a customer'.",
+              "assesses": [
+                "MW-LEX-C209-SHOP209-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गाहक",
+                "gāhak"
+              ],
+              "feedback": {
+                "correct": "Right: गाहक (gāhak) is 'a customer'.",
+                "incorrect": "'a customer' is गाहक (gāhak)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C209-seth",
+      "sequence": 13940,
+      "title": "सेठ (seṭh) — a merchant",
+      "headword": "सेठ",
+      "romanization": "seṭh",
+      "gloss": "a merchant",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59e2e6b80f65578d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a trader, then the Marwadi for a customer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सेठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेठ — seṭh — \"a merchant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सेठ हवेली मांय रैवै है। seṭh havelī mā̃y raivai hai. The merchant lives in a mansion."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेठ (seṭh) is inherited from Sanskrit śreṣṭhin, \"a distinguished man; the head of a guild\". CDIAL gives no Marwari form in this entry, but lists Hindi seṭh, \"merchant, banker\" (CDIAL 12726)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seṭh havelī mā̃y raivai hai. — The merchant lives in a mansion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seṭh havelī mā̃y raivai hai.* — The merchant lives in a mansion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a trader, then the Marwadi for a customer, then say seṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a trader, then the Marwadi for a customer, then say *seṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सेठ (seṭh) mean? (\"A merchant\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C209-seth-type",
+              "prompt": "Say the Marwadi for 'a merchant'.",
+              "assesses": [
+                "MW-LEX-C209-SHOP209-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सेठ",
+                "seṭh"
+              ],
+              "feedback": {
+                "correct": "Right: सेठ (seṭh) is 'a merchant'.",
+                "incorrect": "'a merchant' is सेठ (seṭh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C209-saudo",
+      "sequence": 13950,
+      "title": "सौदो (saudo) — a deal; shopping",
+      "headword": "सौदो",
+      "romanization": "saudo",
+      "gloss": "a deal; shopping",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07184eb6ceaabe1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a customer, then the Marwadi for a merchant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सौदो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सौदो — saudo — \"a deal; shopping\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हैं बाजार मांय सौदो कियो। mhaĩ bājār mā̃y saudo kiyo. I did the shopping at the market."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सौदो (saudo) is usually traced to Persian saudā, \"trade, a bargain\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saudo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saudo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saudo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saudo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaĩ bājār mā̃y saudo kiyo. — I did the shopping at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhaĩ bājār mā̃y saudo kiyo.* — I did the shopping at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a customer, then the Marwadi for a merchant, then say saudo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a customer, then the Marwadi for a merchant, then say *saudo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सौदो (saudo) mean? (\"A deal; shopping\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C209-saudo-type",
+              "prompt": "Say the Marwadi for 'a deal'.",
+              "assesses": [
+                "MW-LEX-C209-SHOP209-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सौदो",
+                "saudo"
+              ],
+              "feedback": {
+                "correct": "Right: सौदो (saudo) is 'a deal; shopping'.",
+                "incorrect": "'a deal' is सौदो (saudo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C209-mangavno",
+      "sequence": 13960,
+      "title": "मंगावणो (maṅgāvṇo) — to order; to have brought",
+      "headword": "मंगावणो",
+      "romanization": "maṅgāvṇo",
+      "gloss": "to order; to have brought",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a551d7eee2ea9dfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a merchant, then the Marwadi for a deal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मंगावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंगावणो — maṅgāvṇo — \"to order; to have brought\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं होटल सूं रोटी मंगाऊं हूं। hū̃ hoṭal sū̃ roṭī maṅgāū̃ hū̃. I order flatbread from the hotel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं चाय मंगाई, mhaĩ chāy maṅgāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंगावणो (maṅgāvṇo) is the causative of मांगणो, \"to ask for\": to ask for a thing to be brought. Both are inherited from Sanskrit mārgati, \"seeks, requests\"; CDIAL lists Old Marwari māgaï, \"asks for\" (CDIAL 10074)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṅgāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṅgāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṅgāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṅgāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ hoṭal sū̃ roṭī maṅgāū̃ hū̃. — I order flatbread from the hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ hoṭal sū̃ roṭī maṅgāū̃ hū̃.* — I order flatbread from the hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a merchant, then the Marwadi for a deal, then say maṅgāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a merchant, then the Marwadi for a deal, then say *maṅgāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मंगावणो (maṅgāvṇo) mean? (\"To order; to have brought\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C209-mangavno-type",
+              "prompt": "Say the Marwadi for 'to order'.",
+              "assesses": [
+                "MW-LEX-C209-SHOP209-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मंगावणो",
+                "maṅgāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: मंगावणो (maṅgāvṇo) is 'to order; to have brought'.",
+                "incorrect": "'to order' is मंगावणो (maṅgāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R209-review-204-209",
+      "sequence": 13970,
+      "title": "Looking back: from Out and About to Shopkeeper and Customer",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Out and About to Shopkeeper and Customer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:946fc28d79e9c008",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for to stroll and a crowd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stroll, a crowd, an open ground, an edge, a map",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stroll, a crowd, an open ground, an edge, a map]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ticket, to miss, a fare, to get stuck, a bus conductor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ticket, to miss, a fare, to get stuck, a bus conductor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "third, fourth, upstairs, on the other side, separate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: third, fourth, upstairs, on the other side, separate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a garden, a water tank, a checkpoint, a big gate, a tower",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a garden, a water tank, a checkpoint, a big gate, a tower]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hospital, a sub-district office, a factory, a court of law, to come open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hospital, a sub-district office, a factory, a court of law, to come open]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a trader, a customer, a merchant, a deal, to order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a trader, a customer, a merchant, a deal, to order]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To stroll? (घूमणो, ghūmṇo.) A crowd? (भीड़, bhīṛ.) An open ground? (मैदान, maidān.) An edge? (किनारो, kināro.) A map? (नक्सो, nakso.) A ticket? (टिकट, ṭikaṭ.) To miss? (चूकणो, chūkṇo.) A fare? (भाड़ो, bhāṛo.) To get stuck? (अटकणो, aṭakṇo.) A bus conductor? (कंडक्टर, kaṇḍakṭar.) Third? (तीजो, tījo.) Fourth? (चौथो, chautho.) Upstairs? (ऊपर, ūpar.) On the other side? (पार, pār.) Separate? (अळगो, aḷgo.) A garden? (बगीचो, bagīcho.) A water tank? (कुंड, kuṇḍ.) A checkpoint? (नाको, nāko.) A big gate? (फाटक, phāṭak.) A tower? (बुरज, buraj.) A hospital? (अस्पताल, aspatāl.) A sub-district office? (तहसील, tahsīl.) A factory? (कारखानो, kārkhāno.) A court of law? (अदालत, adālat.) To come open? (खुलणो, khulṇo.) A trader? (बाणियो, bāṇiyo.) A customer? (गाहक, gāhak.) A merchant? (सेठ, seṭh.) A deal? (सौदो, saudo.) To order? (मंगावणो, maṅgāvṇo.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R209-review-204-209-type",
+              "prompt": "Say the Marwadi for 'to stroll'.",
+              "assesses": [
+                "MW-LEX-C204-OUT204-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "घूमणो",
+                "ghūmṇo"
+              ],
+              "feedback": {
+                "correct": "Right: घूमणो (ghūmṇo) is 'to stroll; to go round'.",
+                "incorrect": "'to stroll' is घूमणो (ghūmṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 244,
+  "title": "A Quarrel Next Door",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc759788dc380936",
+  "lessons": [
+    {
+      "id": "MW-C244-jhagro",
+      "sequence": 17150,
+      "title": "झगड़ो (jhagṛo) — a quarrel",
+      "headword": "झगड़ो",
+      "romanization": "jhagṛo",
+      "gloss": "a quarrel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82d6c6c8da25cc88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to go missing, then the Marwadi for to cheat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झगड़ो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झगड़ो — jhagṛo — \"a quarrel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "झगड़ो मत करो। jhagṛo mat karo. Don't quarrel."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झगड़ो (jhagṛo) is inherited from a reconstructed jhagaḍ, \"quarrel\"; CDIAL lists Marwari jhagṛo under it (CDIAL 5321)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhagṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhagṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhagṛo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhagṛo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhagṛo mat karo. — Don't quarrel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhagṛo mat karo.* — Don't quarrel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to go missing, then the Marwadi for to cheat, then say jhagṛo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to go missing, then the Marwadi for to cheat, then say *jhagṛo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झगड़ो (jhagṛo) mean? (\"A quarrel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C244-jhagro-type",
+              "prompt": "Say the Marwadi for 'a quarrel'.",
+              "assesses": [
+                "MW-LEX-C244-JHAGRO244-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "झगड़ो",
+                "jhagṛo"
+              ],
+              "feedback": {
+                "correct": "Right: झगड़ो (jhagṛo) is 'a quarrel'.",
+                "incorrect": "'a quarrel' is झगड़ो (jhagṛo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C244-larno",
+      "sequence": 17160,
+      "title": "लड़णो (laṛṇo) — to fight; to quarrel",
+      "headword": "लड़णो",
+      "romanization": "laṛṇo",
+      "gloss": "to fight; to quarrel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6528d54d783b4d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to cheat, then the Marwadi for a quarrel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लड़णो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लड़णो — laṛṇo — \"to fight; to quarrel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरो अर छोरी काल लड़्या। chhoro ar chhorī kāl laṛyā. The boy and the girl had a fight yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो पाड़ोसी लड़्यो, vo pāṛosī laṛyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लड़णो (laṛṇo) is inherited from a reconstructed laḍ, \"fight\". CDIAL gives no Marwari form in this entry; it lists Hindi laṛnā, \"to fight\" (CDIAL 10920)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṛṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṛṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṛṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṛṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoro ar chhorī kāl laṛyā. — The boy and the girl had a fight yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoro ar chhorī kāl laṛyā.* — The boy and the girl had a fight yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to cheat, then the Marwadi for a quarrel, then say laṛṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to cheat, then the Marwadi for a quarrel, then say *laṛṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लड़णो (laṛṇo) mean? (\"To fight; to quarrel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C244-larno-type",
+              "prompt": "Say the Marwadi for 'to fight'.",
+              "assesses": [
+                "MW-LEX-C244-JHAGRO244-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लड़णो",
+                "laṛṇo"
+              ],
+              "feedback": {
+                "correct": "Right: लड़णो (laṛṇo) is 'to fight; to quarrel'.",
+                "incorrect": "'to fight' is लड़णो (laṛṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C244-jhuth",
+      "sequence": 17170,
+      "title": "झूठ (jhūṭh) — a lie; a falsehood",
+      "headword": "झूठ",
+      "romanization": "jhūṭh",
+      "gloss": "a lie; a falsehood",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3051da37383bb21d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a quarrel, then the Marwadi for to fight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झूठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झूठ — jhūṭh — \"a lie; a falsehood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "झूठ मत बोलो। jhūṭh mat bolo. Don't tell lies."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झूठ (jhūṭh) is inherited from a reconstructed jhūṭṭha, \"false\"; CDIAL lists Marwari jhūṭh, \"lie\", under it (CDIAL 5407)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhūṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhūṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhūṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhūṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhūṭh mat bolo. — Don't tell lies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhūṭh mat bolo.* — Don't tell lies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a quarrel, then the Marwadi for to fight, then say jhūṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a quarrel, then the Marwadi for to fight, then say *jhūṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झूठ (jhūṭh) mean? (\"A lie; a falsehood\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C244-jhuth-type",
+              "prompt": "Say the Marwadi for 'a lie'.",
+              "assesses": [
+                "MW-LEX-C244-JHAGRO244-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "झूठ",
+                "jhūṭh"
+              ],
+              "feedback": {
+                "correct": "Right: झूठ (jhūṭh) is 'a lie; a falsehood'.",
+                "incorrect": "'a lie' is झूठ (jhūṭh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C244-dos",
+      "sequence": 17180,
+      "title": "दोस (dos) — a fault; blame",
+      "headword": "दोस",
+      "romanization": "dos",
+      "gloss": "a fault; blame",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6932a118fb4bdd91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to fight, then the Marwadi for a lie."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दोस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोस — dos — \"a fault; blame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो म्हारो दोस कोनी। yo mhāro dos konī. This is not my fault."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोस (dos) is inherited from Sanskrit doṣa, \"fault\"; CDIAL lists Marwari dos, \"fault, blame\", under it (CDIAL 6587)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dos, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dos*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo mhāro dos konī. — This is not my fault.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo mhāro dos konī.* — This is not my fault.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to fight, then the Marwadi for a lie, then say dos again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to fight, then the Marwadi for a lie, then say *dos* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दोस (dos) mean? (\"A fault; blame\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C244-dos-type",
+              "prompt": "Say the Marwadi for 'a fault'.",
+              "assesses": [
+                "MW-LEX-C244-JHAGRO244-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दोस",
+                "dos"
+              ],
+              "feedback": {
+                "correct": "Right: दोस (dos) is 'a fault; blame'.",
+                "incorrect": "'a fault' is दोस (dos)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C244-dhamki",
+      "sequence": 17190,
+      "title": "धमकी (dhamkī) — a threat",
+      "headword": "धमकी",
+      "romanization": "dhamkī",
+      "gloss": "a threat",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1b6ba954a511ad2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a lie, then the Marwadi for a fault."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धमकी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धमकी — dhamkī — \"a threat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धमकी मत दो। dhamkī mat do. Don't make threats."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धमकी (dhamkī) is inherited from a reconstructed dhammakka, \"threat\". CDIAL gives no Marwari form in this entry; it lists Hindi and Gujarati dhamkī (CDIAL 6736)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamkī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamkī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamkī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamkī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamkī mat do. — Don't make threats.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamkī mat do.* — Don't make threats.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a lie, then the Marwadi for a fault, then say dhamkī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a lie, then the Marwadi for a fault, then say *dhamkī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धमकी (dhamkī) mean? (\"A threat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C244-dhamki-type",
+              "prompt": "Say the Marwadi for 'a threat'.",
+              "assesses": [
+                "MW-LEX-C244-JHAGRO244-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धमकी",
+                "dhamkī"
+              ],
+              "feedback": {
+                "correct": "Right: धमकी (dhamkī) is 'a threat'.",
+                "incorrect": "'a threat' is धमकी (dhamkī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

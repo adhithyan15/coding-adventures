@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C173-dhuvo",
+    "language": "marwadi",
+    "chapter": 173,
+    "sequence": 11370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:380a677ac2d3cb4f"
+  },
+  "findings": []
+}

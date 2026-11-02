@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 248,
+  "title": "Henna and Wedding Finery",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ff28aa72067444bf",
+  "lessons": [
+    {
+      "id": "MW-C248-mehdi",
+      "sequence": 17360,
+      "title": "मेंहदी (mẽhdī) — henna",
+      "headword": "मेंहदी",
+      "romanization": "mẽhdī",
+      "gloss": "henna",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5e30f5533c0b870",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a bride, then the Marwadi for a wedding pavilion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेंहदी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेंहदी — mẽhdī — \"henna\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बहन हाथ माथै मेंहदी लगावै है। bahan hāth māthai mẽhdī lagāvai hai. My sister puts henna on her hands."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेंहदी (mẽhdī) is inherited from Sanskrit mendhī, the henna plant. CDIAL gives no Marwari form in this entry; it lists Hindi mẽhdī (CDIAL 10328)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mẽhdī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mẽhdī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mẽhdī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mẽhdī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahan hāth māthai mẽhdī lagāvai hai. — My sister puts henna on her hands.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahan hāth māthai mẽhdī lagāvai hai.* — My sister puts henna on her hands.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a bride, then the Marwadi for a wedding pavilion, then say mẽhdī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a bride, then the Marwadi for a wedding pavilion, then say *mẽhdī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेंहदी (mẽhdī) mean? (\"Henna\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C248-mehdi-type",
+              "prompt": "Say the Marwadi for 'henna'.",
+              "assesses": [
+                "MW-LEX-C248-MEHDI248-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मेंहदी",
+                "mẽhdī"
+              ],
+              "feedback": {
+                "correct": "Right: मेंहदी (mẽhdī) is 'henna'.",
+                "incorrect": "'henna' is मेंहदी (mẽhdī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C248-parnavno",
+      "sequence": 17370,
+      "title": "परणावणो (parṇāvṇo) — to give in marriage; to marry off",
+      "headword": "परणावणो",
+      "romanization": "parṇāvṇo",
+      "gloss": "to give in marriage; to marry off",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2f60bb24e88c310",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a wedding pavilion, then the Marwadi for henna."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परणावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परणावणो — parṇāvṇo — \"to give in marriage; to marry off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हैं म्हारी बेटी परणाई। mhaĩ mhārī beṭī parṇāī. I gave my daughter in marriage."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं बेटो परणायो, mhaĩ beṭo parṇāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परणावणो (parṇāvṇo) is inherited from Sanskrit pariṇāpayati, \"causes a man to marry\"; CDIAL lists Old Marwari paraṇāi, \"to give in marriage\", under it (CDIAL 7821)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parṇāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parṇāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parṇāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parṇāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaĩ mhārī beṭī parṇāī. — I gave my daughter in marriage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhaĩ mhārī beṭī parṇāī.* — I gave my daughter in marriage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a wedding pavilion, then the Marwadi for henna, then say parṇāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a wedding pavilion, then the Marwadi for henna, then say *parṇāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परणावणो (parṇāvṇo) mean? (\"To give in marriage; to marry off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C248-parnavno-type",
+              "prompt": "Say the Marwadi for 'to marry off'.",
+              "assesses": [
+                "MW-LEX-C248-MEHDI248-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "परणावणो",
+                "parṇāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: परणावणो (parṇāvṇo) is 'to give in marriage; to marry off'.",
+                "incorrect": "'to marry off' is परणावणो (parṇāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C248-dayjo",
+      "sequence": 17380,
+      "title": "दायजो (dāyjo) — a dowry",
+      "headword": "दायजो",
+      "romanization": "dāyjo",
+      "gloss": "a dowry",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:902474ea297bb5bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for henna, then the Marwadi for to marry off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दायजो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दायजो — dāyjo — \"a dowry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हैं दायजो कोनी लियो। mhaĩ dāyjo konī liyo. I took no dowry."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दायजो (dāyjo) is inherited from Sanskrit dāyādya, \"an inheritance\"; CDIAL lists Marwari dāyajo, \"dowry\", under it (CDIAL 6290). A dowry is probably named as the bride's share of the family's goods."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāyjo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāyjo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāyjo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāyjo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaĩ dāyjo konī liyo. — I took no dowry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhaĩ dāyjo konī liyo.* — I took no dowry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for henna, then the Marwadi for to marry off, then say dāyjo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for henna, then the Marwadi for to marry off, then say *dāyjo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दायजो (dāyjo) mean? (\"A dowry\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C248-dayjo-type",
+              "prompt": "Say the Marwadi for 'a dowry'.",
+              "assesses": [
+                "MW-LEX-C248-MEHDI248-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दायजो",
+                "dāyjo"
+              ],
+              "feedback": {
+                "correct": "Right: दायजो (dāyjo) is 'a dowry'.",
+                "incorrect": "'a dowry' is दायजो (dāyjo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C248-sajno",
+      "sequence": 17390,
+      "title": "सजणो (sajṇo) — to dress up; to be adorned",
+      "headword": "सजणो",
+      "romanization": "sajṇo",
+      "gloss": "to dress up; to be adorned",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:402632e4f043440c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to marry off, then the Marwadi for a dowry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सजणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सजणो — sajṇo — \"to dress up; to be adorned\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ब्याव मांय सगळा सजै है। byāv mā̃y sagḷā sajai hai. At a wedding everyone dresses up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो छोरो सज्यो, vo chhoro sajyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सजणो (sajṇo) is probably inherited from Sanskrit sajjyate, \"is made ready\"; for a bride or a house, being made ready is being adorned. CDIAL gives no Marwari form in this entry; it lists Hindi sājnā, \"to be prepared\" (CDIAL 13093)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byāv mā̃y sagḷā sajai hai. — At a wedding everyone dresses up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byāv mā̃y sagḷā sajai hai.* — At a wedding everyone dresses up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to marry off, then the Marwadi for a dowry, then say sajṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to marry off, then the Marwadi for a dowry, then say *sajṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सजणो (sajṇo) mean? (\"To dress up; to be adorned\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C248-sajno-type",
+              "prompt": "Say the Marwadi for 'to dress up'.",
+              "assesses": [
+                "MW-LEX-C248-MEHDI248-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सजणो",
+                "sajṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सजणो (sajṇo) is 'to dress up; to be adorned'.",
+                "incorrect": "'to dress up' is सजणो (sajṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C248-sehro",
+      "sequence": 17400,
+      "title": "सेहरो (sehro) — a bridegroom's garland",
+      "headword": "सेहरो",
+      "romanization": "sehro",
+      "gloss": "a bridegroom's garland",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e558d693a7cb0a23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a dowry, then the Marwadi for to dress up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सेहरो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेहरो — sehro — \"a bridegroom's garland\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सेहरो पीळो अर लाल है। sehro pīḷo ar lāl hai. The bridegroom's garland is yellow and red."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेहरो (sehro) is inherited from Sanskrit śekhara, \"a chaplet\". CDIAL gives no Marwari form in this entry; it lists Hindi sehrā, \"a garland worn at a wedding\" (CDIAL 12604)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehro pīḷo ar lāl hai. — The bridegroom's garland is yellow and red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehro pīḷo ar lāl hai.* — The bridegroom's garland is yellow and red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a dowry, then the Marwadi for to dress up, then say sehro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a dowry, then the Marwadi for to dress up, then say *sehro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सेहरो (sehro) mean? (\"A bridegroom's garland\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C248-sehro-type",
+              "prompt": "Say the Marwadi for 'a bridegroom's garland'.",
+              "assesses": [
+                "MW-LEX-C248-MEHDI248-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सेहरो",
+                "sehro"
+              ],
+              "feedback": {
+                "correct": "Right: सेहरो (sehro) is 'a bridegroom's garland'.",
+                "incorrect": "'a bridegroom's garland' is सेहरो (sehro)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

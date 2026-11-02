@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Better or Worse",
+  "label": "ch:mw-better-or-worse",
+  "canDo": "I can say whether my health got better.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C255-kapno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say whether my health got better.",
+    "assesses": [
+      "MW-LEX-C255-TABIYAT255-03",
+      "MW-LEX-C255-TABIYAT255-04",
+      "MW-LEX-C255-TABIYAT255-05"
+    ]
+  }
+}

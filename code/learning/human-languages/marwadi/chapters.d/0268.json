@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Telling and Explaining",
+  "label": "ch:mw-telling-and-explaining",
+  "canDo": "I can say what someone tells, explains and advises.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-C268-sipharas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say what someone tells, explains and advises.",
+    "assesses": [
+      "MW-LEX-C268-KAIVNO268-03",
+      "MW-LEX-C268-KAIVNO268-04",
+      "MW-LEX-C268-KAIVNO268-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C224-nagaro",
+  "pathSegment": "MW-PATH-224-FUN224",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-224-FUN224",
+      "order": 4
+    }
+  ]
+}

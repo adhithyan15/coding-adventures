@@ -1,0 +1,14 @@
+{
+  "language": "marwadi",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:9911e9c2ea96a328",
+  "lessonIds": [
+    "MW-C278-kahani",
+    "MW-C278-paheli",
+    "MW-C278-michno",
+    "MW-C278-putli",
+    "MW-C278-lukno",
+    "MW-R278-review-273-278"
+  ],
+  "tex": "marwadi/book/chapters/ch278-stories-and-riddles.tex"
+}

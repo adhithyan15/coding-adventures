@@ -49,6 +49,10 @@
 \tolerance=2000
 \emergencystretch=3em
 \tcbset{before upper=\raggedright}
+% HL-C88: quote blocks set ragged right, as the tcolorboxes are, so a
+% Devanagari quote line never stretches its word spaces.
+\let\hlorigquote\quote
+\def\quote{\hlorigquote\raggedright}
 
 \newtcolorbox{cousinweb}{
   breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,

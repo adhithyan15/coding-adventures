@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:5e06e310aa00be5a",
+  "lessonIds": [
+    "MW-C246-pihar",
+    "MW-C246-sasro",
+    "MW-C246-nuto",
+    "MW-C246-bitno",
+    "MW-C246-marno-die"
+  ],
+  "tex": "marwadi/book/chapters/ch246-news-from-home.tex"
+}

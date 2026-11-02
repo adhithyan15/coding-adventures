@@ -1,0 +1,11 @@
+{
+  "id": "MW-C223-dhol",
+  "pathSegment": "MW-PATH-223-FAIR223",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-223-FAIR223",
+      "order": 2
+    }
+  ]
+}

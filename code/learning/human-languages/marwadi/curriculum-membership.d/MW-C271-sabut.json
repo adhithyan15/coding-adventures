@@ -1,0 +1,11 @@
+{
+  "id": "MW-C271-sabut",
+  "pathSegment": "MW-PATH-271-SAHI271",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-271-SAHI271",
+      "order": 2
+    }
+  ]
+}

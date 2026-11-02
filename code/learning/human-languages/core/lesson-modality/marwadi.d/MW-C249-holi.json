@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C249-holi",
+    "language": "marwadi",
+    "chapter": 249,
+    "sequence": 17410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9f86fbcd8d40f35"
+  },
+  "findings": []
+}

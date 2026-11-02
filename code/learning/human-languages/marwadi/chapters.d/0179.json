@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Grain and Spice",
+  "label": "ch:mw-grain-and-spice",
+  "canDo": "I can say how grain is cleaned and ground and spice pounded.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C179-phatakno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say how grain is cleaned and ground and spice pounded.",
+    "assesses": [
+      "MW-LEX-C179-PISO179-03",
+      "MW-LEX-C179-PISO179-04",
+      "MW-LEX-C179-PISO179-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Shake, Stir and Serve",
+  "label": "ch:mw-shake-stir-and-serve",
+  "canDo": "I can say how I shake out a sheet, stir, mix and serve.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C182-purasno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say how I shake out a sheet, stir, mix and serve.",
+    "assesses": [
+      "MW-LEX-C182-JHATKO182-03",
+      "MW-LEX-C182-JHATKO182-04",
+      "MW-LEX-C182-JHATKO182-05"
+    ]
+  }
+}

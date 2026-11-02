@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:0782b36f67f8d954",
+  "lessonIds": [
+    "MW-C204-ghumno",
+    "MW-C204-bhir",
+    "MW-C204-maidan",
+    "MW-C204-kinaro",
+    "MW-C204-nakso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch204.txt",
+  "json": "marwadi/narration/ch204.json",
+  "textHash": "fnv1a64:fabbed3b99d24d1e",
+  "jsonHash": "fnv1a64:1a7e477e528a3822",
+  "findings": []
+}

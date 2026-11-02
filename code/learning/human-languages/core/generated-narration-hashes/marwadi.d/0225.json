@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:4d298c0f5f7df317",
+  "lessonIds": [
+    "MW-C225-gathri",
+    "MW-C225-jholi",
+    "MW-C225-masak",
+    "MW-C225-bistar",
+    "MW-C225-kamli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch225.txt",
+  "json": "marwadi/narration/ch225.json",
+  "textHash": "fnv1a64:9475cbb5ff091ee0",
+  "jsonHash": "fnv1a64:e100b1592e4bf99e",
+  "findings": []
+}

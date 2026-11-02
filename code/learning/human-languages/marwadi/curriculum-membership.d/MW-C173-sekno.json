@@ -1,0 +1,11 @@
+{
+  "id": "MW-C173-sekno",
+  "pathSegment": "MW-PATH-173-CHULHO173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-173-CHULHO173",
+      "order": 4
+    }
+  ]
+}

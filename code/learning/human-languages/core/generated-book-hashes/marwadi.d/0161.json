@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:cbc998964a78bcdb",
+  "lessonIds": [
+    "MW-C161-mhai",
+    "MW-C161-kiyo-liyo",
+    "MW-C161-kadhno",
+    "MW-W49-ddha",
+    "MW-R161-what-i-did"
+  ],
+  "tex": "marwadi/book/chapters/ch161-what-i-did.tex"
+}

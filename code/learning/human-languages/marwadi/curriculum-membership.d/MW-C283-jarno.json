@@ -1,0 +1,11 @@
+{
+  "id": "MW-C283-jarno",
+  "pathSegment": "MW-PATH-283-MOTI283",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-283-MOTI283",
+      "order": 2
+    }
+  ]
+}

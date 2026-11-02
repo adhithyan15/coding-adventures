@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:d29c5e46986fccaa",
+  "lessonIds": [
+    "MW-C218-rel",
+    "MW-C218-savari",
+    "MW-C218-draivar",
+    "MW-C218-chhutno",
+    "MW-C218-pugavno"
+  ],
+  "tex": "marwadi/book/chapters/ch218-bus-and-train.tex"
+}

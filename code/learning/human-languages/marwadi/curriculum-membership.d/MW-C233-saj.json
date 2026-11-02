@@ -1,0 +1,11 @@
+{
+  "id": "MW-C233-saj",
+  "pathSegment": "MW-PATH-233-GEAR233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-233-GEAR233",
+      "order": 2
+    }
+  ]
+}

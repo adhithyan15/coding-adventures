@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 242,
+  "title": "Fire, Water and a Broken Pot",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f15226b66a6271c1",
+  "lessons": [
+    {
+      "id": "MW-C242-jalno",
+      "sequence": 17050,
+      "title": "जळणो (jaḷṇo) — to get burnt; to burn",
+      "headword": "जळणो",
+      "romanization": "jaḷṇo",
+      "gloss": "to get burnt; to burn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a9fa8ad1811636c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to get broken, then the Marwadi for to slip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जळणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जळणो — jaḷṇo — \"to get burnt; to burn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रसोई मांय म्हारो हाथ जळ्यो। rasoī mā̃y mhāro hāth jaḷyo. My hand got burnt in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो पापड़ जळ्यो, vo pāpaṛ jaḷyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जळणो (jaḷṇo) is inherited from Sanskrit jvalati, \"burns brightly\"; CDIAL lists Old Marwari jalaï, \"burns\", under it (CDIAL 5306)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaḷṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaḷṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasoī mā̃y mhāro hāth jaḷyo. — My hand got burnt in the kitchen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasoī mā̃y mhāro hāth jaḷyo.* — My hand got burnt in the kitchen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to get broken, then the Marwadi for to slip, then say jaḷṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to get broken, then the Marwadi for to slip, then say *jaḷṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जळणो (jaḷṇo) mean? (\"To get burnt; to burn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C242-jalno-type",
+              "prompt": "Say the Marwadi for 'to get burnt'.",
+              "assesses": [
+                "MW-LEX-C242-FIRE242-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जळणो",
+                "jaḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: जळणो (jaḷṇo) is 'to get burnt; to burn'.",
+                "incorrect": "'to get burnt' is जळणो (jaḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C242-bujhno",
+      "sequence": 17060,
+      "title": "बुझणो (bujhṇo) — to go out (of a flame)",
+      "headword": "बुझणो",
+      "romanization": "bujhṇo",
+      "gloss": "to go out (of a flame)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b9283ad12c44724",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to slip, then the Marwadi for to get burnt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुझणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुझणो — bujhṇo — \"to go out (of a flame)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात मांय दीयो बुझ्यो। rāt mā̃y dīyo bujhyo. The lamp went out in the night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो चूल्हो बुझ्यो, vo chūlho bujhyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुझणो (bujhṇo) is inherited from a reconstructed vijjhāyati, \"is burnt out, is extinguished\"; CDIAL lists the Old Marwari partner bujhāvaï, \"to extinguish\", under it (CDIAL 11703)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt mā̃y dīyo bujhyo. — The lamp went out in the night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt mā̃y dīyo bujhyo.* — The lamp went out in the night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to slip, then the Marwadi for to get burnt, then say bujhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to slip, then the Marwadi for to get burnt, then say *bujhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुझणो (bujhṇo) mean? (\"To go out (of a flame)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C242-bujhno-type",
+              "prompt": "Say the Marwadi for 'to go out (of a flame)'.",
+              "assesses": [
+                "MW-LEX-C242-FIRE242-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बुझणो",
+                "bujhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बुझणो (bujhṇo) is 'to go out (of a flame)'.",
+                "incorrect": "'to go out (of a flame)' is बुझणो (bujhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C242-phutno",
+      "sequence": 17070,
+      "title": "फूटणो (phūṭṇo) — to crack open; to burst",
+      "headword": "फूटणो",
+      "romanization": "phūṭṇo",
+      "gloss": "to crack open; to burst",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3651638da2f9395",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to get burnt, then the Marwadi for to go out (of a flame)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फूटणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फूटणो — phūṭṇo — \"to crack open; to burst\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो मटको फूट्यो। mhāro maṭko phūṭyo. My big clay pot cracked."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो नारेळ फूट्यो, vo nāreḷ phūṭyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फूटणो (phūṭṇo) is inherited from a reconstructed sphuṭyati, \"is burst open\". CDIAL gives no Marwari form in this entry; it lists Hindi phūṭnā, \"to split, burst\" (CDIAL 13845)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūṭṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūṭṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūṭṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūṭṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro maṭko phūṭyo. — My big clay pot cracked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro maṭko phūṭyo.* — My big clay pot cracked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to get burnt, then the Marwadi for to go out (of a flame), then say phūṭṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to get burnt, then the Marwadi for to go out (of a flame), then say *phūṭṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फूटणो (phūṭṇo) mean? (\"To crack open; to burst\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C242-phutno-type",
+              "prompt": "Say the Marwadi for 'to crack open'.",
+              "assesses": [
+                "MW-LEX-C242-FIRE242-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फूटणो",
+                "phūṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: फूटणो (phūṭṇo) is 'to crack open; to burst'.",
+                "incorrect": "'to crack open' is फूटणो (phūṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C242-thikro",
+      "sequence": 17080,
+      "title": "ठीकरो (ṭhīkro) — a potsherd; a shard of a broken pot",
+      "headword": "ठीकरो",
+      "romanization": "ṭhīkro",
+      "gloss": "a potsherd; a shard of a broken pot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec178caeec566053",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to go out (of a flame), then the Marwadi for to crack open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठीकरो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठीकरो — ṭhīkro — \"a potsherd; a shard of a broken pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ठीकरो तीखो है। ṭhīkro tīkho hai. The shard of the pot is sharp."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठीकरो (ṭhīkro) is inherited from a reconstructed ṭhīkkara, \"potsherd\"; CDIAL lists Marwari ṭhīkro, \"potsherd\", under it (CDIAL 5504)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhīkro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhīkro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhīkro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhīkro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhīkro tīkho hai. — The shard of the pot is sharp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhīkro tīkho hai.* — The shard of the pot is sharp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to go out (of a flame), then the Marwadi for to crack open, then say ṭhīkro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to go out (of a flame), then the Marwadi for to crack open, then say *ṭhīkro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठीकरो (ṭhīkro) mean? (\"A potsherd; a shard of a broken pot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C242-thikro-type",
+              "prompt": "Say the Marwadi for 'a potsherd'.",
+              "assesses": [
+                "MW-LEX-C242-FIRE242-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ठीकरो",
+                "ṭhīkro"
+              ],
+              "feedback": {
+                "correct": "Right: ठीकरो (ṭhīkro) is 'a potsherd; a shard of a broken pot'.",
+                "incorrect": "'a potsherd' is ठीकरो (ṭhīkro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C242-dubno",
+      "sequence": 17090,
+      "title": "डूबणो (ḍūbṇo) — to sink; to drown",
+      "headword": "डूबणो",
+      "romanization": "ḍūbṇo",
+      "gloss": "to sink; to drown",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06022fa17707a4f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to crack open, then the Marwadi for a potsherd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डूबणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डूबणो — ḍūbṇo — \"to sink; to drown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नदी मांय नाव डूबी। nadī mā̃y nāv ḍūbī. The boat sank in the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो भाटो डूब्यो, vo bhāṭo ḍūbyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डूबणो (ḍūbṇo) is inherited from a reconstructed ḍubb, \"sink\". CDIAL gives no Marwari form in this entry; it lists Hindi ḍūbnā, \"to sink\" (CDIAL 5561)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍūbṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍūbṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍūbṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍūbṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadī mā̃y nāv ḍūbī. — The boat sank in the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadī mā̃y nāv ḍūbī.* — The boat sank in the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to crack open, then the Marwadi for a potsherd, then say ḍūbṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to crack open, then the Marwadi for a potsherd, then say *ḍūbṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डूबणो (ḍūbṇo) mean? (\"To sink; to drown\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C242-dubno-type",
+              "prompt": "Say the Marwadi for 'to sink'.",
+              "assesses": [
+                "MW-LEX-C242-FIRE242-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "डूबणो",
+                "ḍūbṇo"
+              ],
+              "feedback": {
+                "correct": "Right: डूबणो (ḍūbṇo) is 'to sink; to drown'.",
+                "incorrect": "'to sink' is डूबणो (ḍūbṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

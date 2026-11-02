@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 260,
+  "title": "Married Into the Family",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fc651c02bad0caa6",
+  "lessons": [
+    {
+      "id": "MW-C260-bahu",
+      "sequence": 17980,
+      "title": "बहू (bahū) — a daughter-in-law; a young wife of the house",
+      "headword": "बहू",
+      "romanization": "bahū",
+      "gloss": "a daughter-in-law; a young wife of the house",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c61bee61b5c407e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a husband's sister, then the Marwadi for a husband (in his wife's words)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बहू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहू — bahū — \"a daughter-in-law; a young wife of the house\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी बहू घणी हुसियार है। mhārī bahū ghaṇī husiyār hai. My daughter-in-law is very clever."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहू (bahū) is inherited from Sanskrit vadhū, \"a bride, a young wife\". CDIAL gives no Marwari form in this entry; it lists Hindi bahū, \"son's wife\" (CDIAL 11250)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī bahū ghaṇī husiyār hai. — My daughter-in-law is very clever.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī bahū ghaṇī husiyār hai.* — My daughter-in-law is very clever.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a husband's sister, then the Marwadi for a husband (in his wife's words), then say bahū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a husband's sister, then the Marwadi for a husband (in his wife's words), then say *bahū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बहू (bahū) mean? (\"A daughter-in-law; a young wife of the house\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C260-bahu-type",
+              "prompt": "Say the Marwadi for 'a daughter-in-law'.",
+              "assesses": [
+                "MW-LEX-C260-BAHU260-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बहू",
+                "bahū"
+              ],
+              "feedback": {
+                "correct": "Right: बहू (bahū) is 'a daughter-in-law; a young wife of the house'.",
+                "incorrect": "'a daughter-in-law' is बहू (bahū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C260-javai",
+      "sequence": 17990,
+      "title": "जंवाई (jãvāī) — a son-in-law",
+      "headword": "जंवाई",
+      "romanization": "jãvāī",
+      "gloss": "a son-in-law",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a070f953ca0824c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a husband (in his wife's words), then the Marwadi for a daughter-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जंवाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जंवाई — jãvāī — \"a son-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जंवाई काल आयो। jãvāī kāl āyo. Our son-in-law came yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जंवाई (jãvāī) is inherited from Sanskrit jāmātṛ, \"a daughter's husband\". CDIAL gives no Marwari form in this entry; it lists Hindi jãwāī (CDIAL 5198)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jãvāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jãvāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jãvāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jãvāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jãvāī kāl āyo. — Our son-in-law came yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jãvāī kāl āyo.* — Our son-in-law came yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a husband (in his wife's words), then the Marwadi for a daughter-in-law, then say jãvāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a husband (in his wife's words), then the Marwadi for a daughter-in-law, then say *jãvāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जंवाई (jãvāī) mean? (\"A son-in-law\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C260-javai-type",
+              "prompt": "Say the Marwadi for 'a son-in-law'.",
+              "assesses": [
+                "MW-LEX-C260-BAHU260-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जंवाई",
+                "jãvāī"
+              ],
+              "feedback": {
+                "correct": "Right: जंवाई (jãvāī) is 'a son-in-law'.",
+                "incorrect": "'a son-in-law' is जंवाई (jãvāī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C260-bhavaj",
+      "sequence": 18000,
+      "title": "भावज (bhāvaj) — a brother's wife",
+      "headword": "भावज",
+      "romanization": "bhāvaj",
+      "gloss": "a brother's wife",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08d97d5dcb7b26f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a daughter-in-law, then the Marwadi for a son-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भावज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भावज — bhāvaj — \"a brother's wife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी भावज रोटी पकावै है। mhārī bhāvaj roṭī pakāvai hai. My brother's wife is cooking flatbread."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भावज (bhāvaj) is inherited from Sanskrit bhrātṛjāyā, \"a brother's wife\"; CDIAL lists Old Marwari bhāvaja under it (CDIAL 9660)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvaj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvaj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvaj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvaj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī bhāvaj roṭī pakāvai hai. — My brother's wife is cooking flatbread.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī bhāvaj roṭī pakāvai hai.* — My brother's wife is cooking flatbread.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a daughter-in-law, then the Marwadi for a son-in-law, then say bhāvaj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a daughter-in-law, then the Marwadi for a son-in-law, then say *bhāvaj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भावज (bhāvaj) mean? (\"A brother's wife\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C260-bhavaj-type",
+              "prompt": "Say the Marwadi for 'a brother's wife'.",
+              "assesses": [
+                "MW-LEX-C260-BAHU260-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भावज",
+                "bhāvaj"
+              ],
+              "feedback": {
+                "correct": "Right: भावज (bhāvaj) is 'a brother's wife'.",
+                "incorrect": "'a brother's wife' is भावज (bhāvaj)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C260-bahnoi",
+      "sequence": 18010,
+      "title": "बहनोई (bahnoī) — a sister's husband",
+      "headword": "बहनोई",
+      "romanization": "bahnoī",
+      "gloss": "a sister's husband",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55bd1b760bf9f7c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a son-in-law, then the Marwadi for a brother's wife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बहनोई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहनोई — bahnoī — \"a sister's husband\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो बहनोई मास्टर है। mhāro bahnoī māsṭar hai. My sister's husband is a teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहनोई (bahnoī) is inherited from Sanskrit bhaginīpati, \"a sister's husband\"; CDIAL lists Old Marwari bahaṇeu under it (CDIAL 9350)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahnoī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahnoī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahnoī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahnoī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro bahnoī māsṭar hai. — My sister's husband is a teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro bahnoī māsṭar hai.* — My sister's husband is a teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a son-in-law, then the Marwadi for a brother's wife, then say bahnoī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a son-in-law, then the Marwadi for a brother's wife, then say *bahnoī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बहनोई (bahnoī) mean? (\"A sister's husband\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C260-bahnoi-type",
+              "prompt": "Say the Marwadi for 'a sister's husband'.",
+              "assesses": [
+                "MW-LEX-C260-BAHU260-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बहनोई",
+                "bahnoī"
+              ],
+              "feedback": {
+                "correct": "Right: बहनोई (bahnoī) is 'a sister's husband'.",
+                "incorrect": "'a sister's husband' is बहनोई (bahnoī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C260-salo",
+      "sequence": 18020,
+      "title": "साळो (sāḷo) — a wife's brother",
+      "headword": "साळो",
+      "romanization": "sāḷo",
+      "gloss": "a wife's brother",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:510cb29deca101f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a brother's wife, then the Marwadi for a sister's husband."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: साळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साळो — sāḷo — \"a wife's brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो साळो पुलिस मांय है। mhāro sāḷo pulis mā̃y hai. My wife's brother is in the police."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साळो (sāḷo) is inherited from Sanskrit syāla, \"a wife's brother\". CDIAL gives no Marwari form in this entry; it lists Gujarati sāḷo, with this book's ळ (CDIAL 13871)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro sāḷo pulis mā̃y hai. — My wife's brother is in the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro sāḷo pulis mā̃y hai.* — My wife's brother is in the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a brother's wife, then the Marwadi for a sister's husband, then say sāḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a brother's wife, then the Marwadi for a sister's husband, then say *sāḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does साळो (sāḷo) mean? (\"A wife's brother\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C260-salo-type",
+              "prompt": "Say the Marwadi for 'a wife's brother'.",
+              "assesses": [
+                "MW-LEX-C260-BAHU260-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "साळो",
+                "sāḷo"
+              ],
+              "feedback": {
+                "correct": "Right: साळो (sāḷo) is 'a wife's brother'.",
+                "incorrect": "'a wife's brother' is साळो (sāḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

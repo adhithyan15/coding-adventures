@@ -1,0 +1,11 @@
+{
+  "id": "MW-C203-dag",
+  "pathSegment": "MW-PATH-203-STEPS203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-203-STEPS203",
+      "order": 1
+    }
+  ]
+}

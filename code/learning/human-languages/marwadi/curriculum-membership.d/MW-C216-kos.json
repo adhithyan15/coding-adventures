@@ -1,0 +1,11 @@
+{
+  "id": "MW-C216-kos",
+  "pathSegment": "MW-PATH-216-OUT216",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-216-OUT216",
+      "order": 2
+    }
+  ]
+}

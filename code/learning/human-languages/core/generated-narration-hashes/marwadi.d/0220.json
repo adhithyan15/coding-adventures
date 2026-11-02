@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:543152fbf993cdeb",
+  "lessonIds": [
+    "MW-C220-pakko",
+    "MW-C220-tyar",
+    "MW-C220-taalno",
+    "MW-C220-badalno",
+    "MW-C220-sodhno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch220.txt",
+  "json": "marwadi/narration/ch220.json",
+  "textHash": "fnv1a64:a1ff4e167faf5649",
+  "jsonHash": "fnv1a64:6a8cc5d2e6d56dcf",
+  "findings": []
+}

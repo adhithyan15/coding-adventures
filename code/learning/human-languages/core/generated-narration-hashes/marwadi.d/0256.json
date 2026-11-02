@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:d5a70a5350e59180",
+  "lessonIds": [
+    "MW-C256-darno",
+    "MW-C256-dukh",
+    "MW-C256-sukh",
+    "MW-C256-anand",
+    "MW-C256-umang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch256.txt",
+  "json": "marwadi/narration/ch256.json",
+  "textHash": "fnv1a64:7eca11af204bf40a",
+  "jsonHash": "fnv1a64:dfa9d23e75266e1d",
+  "findings": []
+}

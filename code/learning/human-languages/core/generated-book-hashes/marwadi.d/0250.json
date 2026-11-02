@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:04f9eec25377419a",
+  "lessonIds": [
+    "MW-C250-manavno",
+    "MW-C250-pakvan",
+    "MW-C250-uchhav",
+    "MW-C250-arti",
+    "MW-C250-rolo"
+  ],
+  "tex": "marwadi/book/chapters/ch250-lamps-and-festive-dishes.tex"
+}

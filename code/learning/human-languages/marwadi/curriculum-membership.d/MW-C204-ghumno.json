@@ -1,0 +1,11 @@
+{
+  "id": "MW-C204-ghumno",
+  "pathSegment": "MW-PATH-204-OUT204",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-204-OUT204",
+      "order": 0
+    }
+  ]
+}

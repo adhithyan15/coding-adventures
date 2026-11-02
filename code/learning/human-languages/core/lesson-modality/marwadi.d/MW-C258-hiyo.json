@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C258-hiyo",
+    "language": "marwadi",
+    "chapter": 258,
+    "sequence": 17910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc95ba7383a34e0a"
+  },
+  "findings": []
+}

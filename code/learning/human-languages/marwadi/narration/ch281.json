@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 281,
+  "title": "Clay, Wood and Mud",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:997be5c54a06c115",
+  "lessons": [
+    {
+      "id": "MW-C281-chak",
+      "sequence": 19770,
+      "title": "चाक (chāk) — a potter's wheel",
+      "headword": "चाक",
+      "romanization": "chāk",
+      "gloss": "a potter's wheel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cddf74ad44833c44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a target, then the Marwadi for to take aim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चाक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाक — chāk — \"a potter's wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चाक घणो भारी है। chāk ghaṇo bhārī hai. The potter's wheel is very heavy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाक (chāk) is inherited from Sanskrit cakra, \"a wheel; a potter's wheel\"; CDIAL gives no Marwari form in this entry, but lists Hindi cāk, \"any kind of wheel\", and Gujarati cāk, \"wheel, potter's wheel\" (CDIAL 4538)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāk ghaṇo bhārī hai. — The potter's wheel is very heavy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāk ghaṇo bhārī hai.* — The potter's wheel is very heavy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a target, then the Marwadi for to take aim, then say chāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a target, then the Marwadi for to take aim, then say *chāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चाक (chāk) mean? (\"A potter's wheel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C281-chak-type",
+              "prompt": "Say the Marwadi for 'a potter's wheel'.",
+              "assesses": [
+                "MW-LEX-C281-CHAK281-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चाक",
+                "chāk"
+              ],
+              "feedback": {
+                "correct": "Right: चाक (chāk) is 'a potter's wheel'.",
+                "incorrect": "'a potter's wheel' is चाक (chāk)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C281-ghumavno",
+      "sequence": 19780,
+      "title": "घुमावणो (ghumāvṇo) — to turn (a wheel); to spin",
+      "headword": "घुमावणो",
+      "romanization": "ghumāvṇo",
+      "gloss": "to turn (a wheel); to spin",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cc10e74a2b04212",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to take aim, then the Marwadi for a potter's wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घुमावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घुमावणो — ghumāvṇo — \"to turn (a wheel); to spin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काको चाक घुमावै है। kāko chāk ghumāvai hai. My uncle turns the potter's wheel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं चाक घुमायो, mhaĩ chāk ghumāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घुमावणो (ghumāvṇo) is the causative of घूमणो, to go round: it is built on that verb and means \"to make go round\". CDIAL gives no Marwari form in this entry, but lists Hindi ghumnā, \"to revolve\", under a reconstructed ghummati (CDIAL 4485)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghumāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghumāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghumāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghumāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāko chāk ghumāvai hai. — My uncle turns the potter's wheel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāko chāk ghumāvai hai.* — My uncle turns the potter's wheel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to take aim, then the Marwadi for a potter's wheel, then say ghumāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to take aim, then the Marwadi for a potter's wheel, then say *ghumāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घुमावणो (ghumāvṇo) mean? (\"To turn (a wheel); to spin\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C281-ghumavno-type",
+              "prompt": "Say the Marwadi for 'to spin a wheel'.",
+              "assesses": [
+                "MW-LEX-C281-CHAK281-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "घुमावणो",
+                "ghumāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: घुमावणो (ghumāvṇo) is 'to turn (a wheel); to spin'.",
+                "incorrect": "'to spin a wheel' is घुमावणो (ghumāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C281-thapno",
+      "sequence": 19790,
+      "title": "थापणो (thāpṇo) — to pat into shape",
+      "headword": "थापणो",
+      "romanization": "thāpṇo",
+      "gloss": "to pat into shape",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd8a4c84ccfc18f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a potter's wheel, then the Marwadi for to spin a wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थापणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थापणो — thāpṇo — \"to pat into shape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां छाणो थापै है। mā̃ chhāṇo thāpai hai. Mother pats out a dung cake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं छाणो थाप्यो, mhaĩ chhāṇo thāpyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थापणो (thāpṇo) is inherited from a reconstructed thapp, \"slap, pat\"; CDIAL gives no Marwari form in this entry, but lists Hindi thāpnā, \"to pat\", and Gujarati thāpvũ, \"to flatten by patting\" (CDIAL 6091)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāpṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāpṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāpṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāpṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ chhāṇo thāpai hai. — Mother pats out a dung cake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ chhāṇo thāpai hai.* — Mother pats out a dung cake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a potter's wheel, then the Marwadi for to spin a wheel, then say thāpṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a potter's wheel, then the Marwadi for to spin a wheel, then say *thāpṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does थापणो (thāpṇo) mean? (\"To pat into shape\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C281-thapno-type",
+              "prompt": "Say the Marwadi for 'to pat into shape'.",
+              "assesses": [
+                "MW-LEX-C281-CHAK281-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "थापणो",
+                "thāpṇo"
+              ],
+              "feedback": {
+                "correct": "Right: थापणो (thāpṇo) is 'to pat into shape'.",
+                "incorrect": "'to pat into shape' is थापणो (thāpṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C281-korno",
+      "sequence": 19800,
+      "title": "कोरणो (korṇo) — to carve",
+      "headword": "कोरणो",
+      "romanization": "korṇo",
+      "gloss": "to carve",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c8f04d1ac532407",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to spin a wheel, then the Marwadi for to pat into shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कोरणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोरणो — korṇo — \"to carve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काको लकड़ी कोरै है। kāko lakṛī korai hai. My uncle carves wood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं लकड़ी कोरी, mhaĩ lakṛī korī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोरणो (korṇo) is inherited from a reconstructed kōrati, \"scrapes\"; CDIAL gives no Marwari form in this entry, but lists Hindi kornā, \"to scrape or scoop out\", and Gujarati korvũ, \"to scoop, carve\" (CDIAL 3530)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāko lakṛī korai hai. — My uncle carves wood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāko lakṛī korai hai.* — My uncle carves wood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to spin a wheel, then the Marwadi for to pat into shape, then say korṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to spin a wheel, then the Marwadi for to pat into shape, then say *korṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कोरणो (korṇo) mean? (\"To carve\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C281-korno-type",
+              "prompt": "Say the Marwadi for 'to carve'.",
+              "assesses": [
+                "MW-LEX-C281-CHAK281-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कोरणो",
+                "korṇo"
+              ],
+              "feedback": {
+                "correct": "Right: कोरणो (korṇo) is 'to carve'.",
+                "incorrect": "'to carve' is कोरणो (korṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C281-bhatti",
+      "sequence": 19810,
+      "title": "भट्टी (bhaṭṭī) — a kiln",
+      "headword": "भट्टी",
+      "romanization": "bhaṭṭī",
+      "gloss": "a kiln",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6058d6b41490678d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to pat into shape, then the Marwadi for to carve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भट्टी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भट्टी — bhaṭṭī — \"a kiln\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भट्टी घणी गरम है। bhaṭṭī ghaṇī garam hai. The kiln is very hot."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भट्टी (bhaṭṭī) is inherited from Sanskrit bhrāṣṭra, \"a frying pan\"; CDIAL gives no Marwari form in this entry, but lists Marathi bhaṭṭī, \"forge\", Sindhi baṭhī, \"distilling furnace\", and Hindi bhaṭṭhā, \"kiln\" (CDIAL 9656)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṭṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṭṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṭṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṭṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṭṭī ghaṇī garam hai. — The kiln is very hot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṭṭī ghaṇī garam hai.* — The kiln is very hot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to pat into shape, then the Marwadi for to carve, then say bhaṭṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to pat into shape, then the Marwadi for to carve, then say *bhaṭṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भट्टी (bhaṭṭī) mean? (\"A kiln\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C281-bhatti-type",
+              "prompt": "Say the Marwadi for 'a kiln'.",
+              "assesses": [
+                "MW-LEX-C281-CHAK281-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भट्टी",
+                "bhaṭṭī"
+              ],
+              "feedback": {
+                "correct": "Right: भट्टी (bhaṭṭī) is 'a kiln'.",
+                "incorrect": "'a kiln' is भट्टी (bhaṭṭī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

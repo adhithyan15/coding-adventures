@@ -759,12 +759,33 @@ struct Lowerer {
     /// name.  Used after lowering to detect [`Feature::MutualRecursion`]
     /// (a cycle of length ≥ 2 — two functions that call each other).
     call_graph: Vec<(String, HashSet<String>)>,
-    /// Every `NAME` token spelled anywhere in the source file, collected
-    /// once by [`Self::lower_file`].  A temporary the lowerer invents (see
-    /// [`Self::fresh_temp_name`]) must not be one of these, or it would
-    /// shadow a user variable of the same spelling.
-    source_names: HashSet<String>,
-    /// Counter for temporaries' names (`__chain_<N>`, `__for_<N>`).
+    /// Every name that is spoken for: every `NAME` token spelled anywhere
+    /// in the source file (seeded once by [`Self::lower_file`]), plus every
+    /// name the lowerer has **invented** so far, added the moment it is
+    /// invented (see [`Self::try_claim_name`]).
+    ///
+    /// The lowerer invents four kinds of name, and every backend puts a
+    /// function's locals and the module's functions in one namespace, so
+    /// all four must be distinct from each other and from the source:
+    ///
+    /// | invented name            | kind      | made by                       |
+    /// |--------------------------|-----------|-------------------------------|
+    /// | `__param_<p>_<N>`        | local     | [`Self::param_copy_prologue`] |
+    /// | `__chain_<N>`, `__for_<N>` | local   | chained assignment, `for`     |
+    /// | `__lambda_<N>`           | function  | [`Self::fresh_lambda_name`]   |
+    /// | `<Class>__<method>`      | function  | [`Self::hoisted_method_name`] |
+    ///
+    /// They used to be drawn from separate pools: temporaries skipped only
+    /// source names, and synthesised functions skipped source names and
+    /// other functions.  So a temporary and a function could coincide
+    /// (#18771): the copy of parameter `a__b` is `__param_a__b_0`, and so is
+    /// method `b_0` of a class `__param_a`.  Inside the function that held
+    /// both, the local shadowed the method, and JavaScript failed with
+    /// `TypeError: __param_a__b_0 is not a function`.  One shared set makes
+    /// that impossible whatever order the names are invented in.
+    used_names: HashSet<String>,
+    /// Counter for temporaries' names (`__chain_<N>`, `__for_<N>`,
+    /// `__param_<p>_<N>`).
     temp_counter: usize,
 }
 
@@ -781,7 +802,7 @@ impl Lowerer {
             def_facts: std::collections::HashMap::new(),
             claimed_names: HashSet::new(),
             call_graph: Vec::new(),
-            source_names: HashSet::new(),
+            used_names: HashSet::new(),
             temp_counter: 0,
         }
     }
@@ -828,7 +849,7 @@ impl Lowerer {
         }
 
         // ── Pass 1: collect all function names (top-level + nested). ──
-        self.source_names = collect_source_names(file);
+        self.used_names = collect_source_names(file);
         for child in &file.children {
             if let ASTNodeOrToken::Node(stmt) = child {
                 self.collect_function_names(stmt, MODULE_OWNER, 0)?;
@@ -1888,17 +1909,32 @@ impl Lowerer {
 
     /// A fresh name for a temporary local, `__<stem>_<N>`.
     ///
-    /// It is never spelled anywhere in the source (`source_names`), so it
-    /// cannot shadow or be shadowed by a user variable, and the counter
-    /// keeps two temporaries apart.
+    /// It is taken from the shared pool (see [`Self::used_names`]), so it
+    /// is never spelled in the source, never equals another temporary, and
+    /// never equals a function the lowerer synthesised before or after it.
     fn fresh_temp_name(&mut self, stem: &str) -> String {
         loop {
             let name = format!("__{stem}_{}", self.temp_counter);
             self.temp_counter += 1;
-            if !self.source_names.contains(&name) {
+            if self.try_claim_name(&name) {
                 return name;
             }
         }
+    }
+
+    /// Claim `name` for something the lowerer invents, if it is free.
+    ///
+    /// Free means: not in [`Self::used_names`] (no source name and no name
+    /// invented earlier), not a user `def` or `class`, and not a function
+    /// already pushed (see [`Self::name_taken`]).  A claimed name joins
+    /// `used_names` at once, so nothing invented later -- temporary or
+    /// function -- can take it.  Every invented name passes through here.
+    fn try_claim_name(&mut self, name: &str) -> bool {
+        if self.name_taken(name) {
+            return false;
+        }
+        self.used_names.insert(name.to_string());
+        true
     }
 
     /// If `node` is an expression that is *just* a bare `Name` atom,
@@ -3355,33 +3391,38 @@ impl Lowerer {
     /// zero-capture closure for a lambda that declares captures.)  `N`
     /// also skips any name a user `def` or class already uses, so the
     /// synthesised function never collides with one.
-    /// Is `name` unavailable for a function the lowerer synthesises?
+    /// Is `name` unavailable for a name the lowerer invents?
     ///
-    /// Taken means: a user `def` or `class` name, a function already pushed,
-    /// or **any name spelled in the source**.  The last matters because
-    /// every backend keeps functions and variables in one namespace: a local
-    /// spelled `__lambda_0` used to shadow the synthesised lambda of that
-    /// name, and JavaScript then failed with `TypeError: __lambda_0 is not a
-    /// function` (#18482 review).
-    fn function_name_taken(&self, name: &str) -> bool {
-        self.function_names.contains(name)
+    /// Taken means: **any name spelled in the source** or invented earlier
+    /// ([`Self::used_names`]), a user `def` or `class` name, or a function
+    /// already pushed.  Source names matter because every backend keeps
+    /// functions and variables in one namespace: a local spelled
+    /// `__lambda_0` used to shadow the synthesised lambda of that name, and
+    /// JavaScript then failed with `TypeError: __lambda_0 is not a
+    /// function` (#18482 review).  Invented names matter for the same
+    /// reason (#18771; see [`Self::used_names`]).
+    fn name_taken(&self, name: &str) -> bool {
+        self.used_names.contains(name)
+            || self.function_names.contains(name)
             || self.class_names.contains(name)
             || self.claimed_names.contains(name)
-            || self.source_names.contains(name)
     }
 
     /// The name of the function hoisted from method `method` of class
     /// `class`: `{class}__{method}`, or, if that is taken (see
-    /// [`Self::function_name_taken`]: `class C: def m` next to a variable or
-    /// `def` spelled `C__m`), the first free `{class}__{method}_{N}`.
-    fn hoisted_method_name(&self, class: &str, method: &str) -> String {
+    /// [`Self::name_taken`]: `class C: def m` next to a variable or `def`
+    /// spelled `C__m`, or a temporary that already holds the name), the
+    /// first free `{class}__{method}_{N}`.  The name is claimed here, before
+    /// the method body is lowered, so no temporary inside the body can take
+    /// it either.
+    fn hoisted_method_name(&mut self, class: &str, method: &str) -> String {
         let base = format!("{class}__{method}");
-        if !self.function_name_taken(&base) {
+        if self.try_claim_name(&base) {
             return base;
         }
         (1..)
             .map(|n| format!("{base}_{n}"))
-            .find(|n| !self.function_name_taken(n))
+            .find(|n| self.try_claim_name(n))
             .expect("an unbounded range always yields a free name")
     }
 
@@ -3389,7 +3430,7 @@ impl Lowerer {
         loop {
             let name = format!("__lambda_{}", self.lambda_counter);
             self.lambda_counter += 1;
-            if !self.function_name_taken(&name) {
+            if self.try_claim_name(&name) {
                 return name;
             }
         }

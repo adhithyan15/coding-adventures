@@ -1,0 +1,11 @@
+{
+  "id": "MW-C223-tamaso",
+  "pathSegment": "MW-PATH-223-FAIR223",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-223-FAIR223",
+      "order": 4
+    }
+  ]
+}

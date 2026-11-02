@@ -1,0 +1,11 @@
+{
+  "id": "MW-C219-padharno",
+  "pathSegment": "MW-PATH-219-GUEST219",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-219-GUEST219",
+      "order": 0
+    }
+  ]
+}

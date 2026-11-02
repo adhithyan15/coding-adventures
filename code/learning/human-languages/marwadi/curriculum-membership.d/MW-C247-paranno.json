@@ -1,0 +1,11 @@
+{
+  "id": "MW-C247-paranno",
+  "pathSegment": "MW-PATH-247-BYAV247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-247-BYAV247",
+      "order": 2
+    }
+  ]
+}

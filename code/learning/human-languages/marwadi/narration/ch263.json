@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 263,
+  "title": "The Priest, the Gardener and the Goldsmith",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3a8fc9ee7023e0e8",
+  "lessons": [
+    {
+      "id": "MW-C263-pujari",
+      "sequence": 18130,
+      "title": "पुजारी (pujārī) — a temple priest",
+      "headword": "पुजारी",
+      "romanization": "pujārī",
+      "gloss": "a temple priest",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:274eec3b52b0056a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a village headman, then the Marwadi for a craftsman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुजारी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुजारी — pujārī — \"a temple priest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुजारी मंदिर मांय पूजा करै है। pujārī mandir mā̃y pūjā karai hai. The priest performs worship in the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुजारी (pujārī) is inherited from Sanskrit pūjākara, \"performing worship\". CDIAL gives no Marwari form in this entry; it lists Hindi pujerī, \"temple priest\" (CDIAL 8317a)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujārī mandir mā̃y pūjā karai hai. — The priest performs worship in the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujārī mandir mā̃y pūjā karai hai.* — The priest performs worship in the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a village headman, then the Marwadi for a craftsman, then say pujārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a village headman, then the Marwadi for a craftsman, then say *pujārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुजारी (pujārī) mean? (\"A temple priest\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C263-pujari-type",
+              "prompt": "Say the Marwadi for 'a temple priest'.",
+              "assesses": [
+                "MW-LEX-C263-TELI263-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पुजारी",
+                "pujārī"
+              ],
+              "feedback": {
+                "correct": "Right: पुजारी (pujārī) is 'a temple priest'.",
+                "incorrect": "'a temple priest' is पुजारी (pujārī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C263-mali",
+      "sequence": 18140,
+      "title": "माळी (māḷī) — a gardener",
+      "headword": "माळी",
+      "romanization": "māḷī",
+      "gloss": "a gardener",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0535f791ca211dad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a craftsman, then the Marwadi for a temple priest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: माळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माळी — māḷī — \"a gardener\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माळी रूंख लगावै है। māḷī rū̃kh lagāvai hai. The gardener plants trees."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माळी (māḷī) is inherited from Sanskrit mālin, \"garlanded; a gardener\"; CDIAL lists Old Marwari mālī under it (CDIAL 10094)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷī rū̃kh lagāvai hai. — The gardener plants trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷī rū̃kh lagāvai hai.* — The gardener plants trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a craftsman, then the Marwadi for a temple priest, then say māḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a craftsman, then the Marwadi for a temple priest, then say *māḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does माळी (māḷī) mean? (\"A gardener\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C263-mali-type",
+              "prompt": "Say the Marwadi for 'a gardener'.",
+              "assesses": [
+                "MW-LEX-C263-TELI263-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "माळी",
+                "māḷī"
+              ],
+              "feedback": {
+                "correct": "Right: माळी (māḷī) is 'a gardener'.",
+                "incorrect": "'a gardener' is माळी (māḷī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C263-teli",
+      "sequence": 18150,
+      "title": "तेली (telī) — an oil-presser",
+      "headword": "तेली",
+      "romanization": "telī",
+      "gloss": "an oil-presser",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2d18ea73016584d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a temple priest, then the Marwadi for a gardener."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तेली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तेली — telī — \"an oil-presser\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तेली तेल बेचै है। telī tel bechai hai. The oil-presser sells oil."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तेली (telī) is inherited from Sanskrit tailika, \"oilman\"; CDIAL lists Marwari telī under it (CDIAL 5963)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "telī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *telī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "telī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *telī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "telī tel bechai hai. — The oil-presser sells oil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *telī tel bechai hai.* — The oil-presser sells oil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a temple priest, then the Marwadi for a gardener, then say telī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a temple priest, then the Marwadi for a gardener, then say *telī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तेली (telī) mean? (\"An oil-presser\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C263-teli-type",
+              "prompt": "Say the Marwadi for 'an oil-presser'.",
+              "assesses": [
+                "MW-LEX-C263-TELI263-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तेली",
+                "telī"
+              ],
+              "feedback": {
+                "correct": "Right: तेली (telī) is 'an oil-presser'.",
+                "incorrect": "'an oil-presser' is तेली (telī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C263-dhobi",
+      "sequence": 18160,
+      "title": "धोबी (dhobī) — a washerman",
+      "headword": "धोबी",
+      "romanization": "dhobī",
+      "gloss": "a washerman",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43a68f0e77152fe7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a gardener, then the Marwadi for an oil-presser."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धोबी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धोबी — dhobī — \"a washerman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धोबी नदी कनै रैवै है। dhobī nadī kanai raivai hai. The washerman lives near the river."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धोबी (dhobī) is inherited from a reconstructed dhauvati, \"washes\"; CDIAL lists Marwari dhoṇo, \"washes\", and Hindi dhobī, \"washerman\", under it (CDIAL 6886)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhobī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhobī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhobī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhobī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhobī nadī kanai raivai hai. — The washerman lives near the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhobī nadī kanai raivai hai.* — The washerman lives near the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a gardener, then the Marwadi for an oil-presser, then say dhobī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a gardener, then the Marwadi for an oil-presser, then say *dhobī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धोबी (dhobī) mean? (\"A washerman\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C263-dhobi-type",
+              "prompt": "Say the Marwadi for 'a washerman'.",
+              "assesses": [
+                "MW-LEX-C263-TELI263-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धोबी",
+                "dhobī"
+              ],
+              "feedback": {
+                "correct": "Right: धोबी (dhobī) is 'a washerman'.",
+                "incorrect": "'a washerman' is धोबी (dhobī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C263-sunar",
+      "sequence": 18170,
+      "title": "सुनार (sunār) — a goldsmith",
+      "headword": "सुनार",
+      "romanization": "sunār",
+      "gloss": "a goldsmith",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ac1a41bfe5f4dbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an oil-presser, then the Marwadi for a washerman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुनार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुनार — sunār — \"a goldsmith\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुनार चूड़ी अर नथ बेचै है। sunār chūṛī ar nath bechai hai. The goldsmith sells bangles and nose rings."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुनार (sunār) is inherited from Sanskrit suvarṇakāra, \"goldsmith\". CDIAL gives no Marwari form in this entry; it lists Hindi sunār (CDIAL 13520)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sunār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sunār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunār chūṛī ar nath bechai hai. — The goldsmith sells bangles and nose rings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sunār chūṛī ar nath bechai hai.* — The goldsmith sells bangles and nose rings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an oil-presser, then the Marwadi for a washerman, then say sunār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an oil-presser, then the Marwadi for a washerman, then say *sunār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुनार (sunār) mean? (\"A goldsmith\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C263-sunar-type",
+              "prompt": "Say the Marwadi for 'a goldsmith'.",
+              "assesses": [
+                "MW-LEX-C263-TELI263-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सुनार",
+                "sunār"
+              ],
+              "feedback": {
+                "correct": "Right: सुनार (sunār) is 'a goldsmith'.",
+                "incorrect": "'a goldsmith' is सुनार (sunār)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

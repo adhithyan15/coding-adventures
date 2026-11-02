@@ -1,0 +1,11 @@
+{
+  "id": "MW-C226-suno",
+  "pathSegment": "MW-PATH-226-DUNE226",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-226-DUNE226",
+      "order": 2
+    }
+  ]
+}

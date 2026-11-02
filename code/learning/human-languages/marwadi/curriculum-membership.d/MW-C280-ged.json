@@ -1,0 +1,11 @@
+{
+  "id": "MW-C280-ged",
+  "pathSegment": "MW-PATH-280-MAIDAN280",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-280-MAIDAN280",
+      "order": 1
+    }
+  ]
+}

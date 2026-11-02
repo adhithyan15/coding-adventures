@@ -1,0 +1,11 @@
+{
+  "id": "MW-C206-tijo",
+  "pathSegment": "MW-PATH-206-LANE206",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-206-LANE206",
+      "order": 0
+    }
+  ]
+}

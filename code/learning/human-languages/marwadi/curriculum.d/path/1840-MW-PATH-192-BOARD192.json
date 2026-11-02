@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-192-BOARD192",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "MW-EXT-192-BOARD192"
+  ],
+  "after": []
+}

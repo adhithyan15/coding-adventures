@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 177,
+  "title": "Torn and Mended",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1e0e62108b3123bf",
+  "lessons": [
+    {
+      "id": "MW-C177-pharno",
+      "sequence": 11560,
+      "title": "फाड़णो (phāṛṇo) — to tear",
+      "headword": "फाड़णो",
+      "romanization": "phāṛṇo",
+      "gloss": "to tear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cbcde0a3951ab8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a door chain, then the Marwadi for to hang up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फाड़णो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फाड़णो — phāṛṇo — \"to tear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरो चिट्ठी फाड़ै है। chhoro chiṭṭhī phāṛai hai. The boy tears up the letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं चिट्ठी फाड़ी, mhaĩ chiṭṭhī phāṛī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फाड़णो (phāṛṇo) is inherited from Sanskrit sphāṭayati, \"causes to split\"; CDIAL lists Old Marwari phāḍaï, \"to split\" (CDIAL 13825)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phāṛṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phāṛṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phāṛṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phāṛṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoro chiṭṭhī phāṛai hai. — The boy tears up the letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoro chiṭṭhī phāṛai hai.* — The boy tears up the letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a door chain, then the Marwadi for to hang up, then say phāṛṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a door chain, then the Marwadi for to hang up, then say *phāṛṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फाड़णो (phāṛṇo) mean? (\"To tear\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C177-pharno-type",
+              "prompt": "Say the Marwadi for 'to tear'.",
+              "assesses": [
+                "MW-LEX-C177-PHAD177-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फाड़णो",
+                "phāṛṇo"
+              ],
+              "feedback": {
+                "correct": "Right: फाड़णो (phāṛṇo) is 'to tear'.",
+                "incorrect": "'to tear' is फाड़णो (phāṛṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C177-batan",
+      "sequence": 11570,
+      "title": "बटण (baṭaṇ) — a button",
+      "headword": "बटण",
+      "romanization": "baṭaṇ",
+      "gloss": "a button",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46347412d6c88aef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to hang up, then the Marwadi for to tear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बटण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बटण — baṭaṇ — \"a button\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी कमीज माथै नुवो बटण है। mhārī kamīj māthai nuvo baṭaṇ hai. There's a new button on my shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बटण (baṭaṇ) is borrowed from English button."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī kamīj māthai nuvo baṭaṇ hai. — There's a new button on my shirt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī kamīj māthai nuvo baṭaṇ hai.* — There's a new button on my shirt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to hang up, then the Marwadi for to tear, then say baṭaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to hang up, then the Marwadi for to tear, then say *baṭaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बटण (baṭaṇ) mean? (\"A button\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C177-batan-type",
+              "prompt": "Say the Marwadi for 'a button'.",
+              "assesses": [
+                "MW-LEX-C177-PHAD177-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बटण",
+                "baṭaṇ"
+              ],
+              "feedback": {
+                "correct": "Right: बटण (baṭaṇ) is 'a button'.",
+                "incorrect": "'a button' is बटण (baṭaṇ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C177-takno",
+      "sequence": 11580,
+      "title": "टांकणो (ṭā̃kṇo) — to stitch on",
+      "headword": "टांकणो",
+      "romanization": "ṭā̃kṇo",
+      "gloss": "to stitch on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4eaa38f0292242a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to tear, then the Marwadi for a button."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टांकणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टांकणो — ṭā̃kṇo — \"to stitch on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां कमीज माथै बटण टांकै है। mā̃ kamīj māthai baṭaṇ ṭā̃kai hai. Mother stitches a button onto the shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं बटण टांक्यो, mhaĩ baṭaṇ ṭā̃kyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टांकणो (ṭā̃kṇo) is inherited from Sanskrit ṭaṅkati, \"ties\"; CDIAL lists Hindi ṭā̃knā, \"to stitch, join\" (CDIAL 5432). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭā̃kṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭā̃kṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭā̃kṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭā̃kṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ kamīj māthai baṭaṇ ṭā̃kai hai. — Mother stitches a button onto the shirt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ kamīj māthai baṭaṇ ṭā̃kai hai.* — Mother stitches a button onto the shirt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to tear, then the Marwadi for a button, then say ṭā̃kṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to tear, then the Marwadi for a button, then say *ṭā̃kṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टांकणो (ṭā̃kṇo) mean? (\"To stitch on\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C177-takno-type",
+              "prompt": "Say the Marwadi for 'to stitch on'.",
+              "assesses": [
+                "MW-LEX-C177-PHAD177-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "टांकणो",
+                "ṭā̃kṇo"
+              ],
+              "feedback": {
+                "correct": "Right: टांकणो (ṭā̃kṇo) is 'to stitch on'.",
+                "incorrect": "'to stitch on' is टांकणो (ṭā̃kṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C177-theglo",
+      "sequence": 11590,
+      "title": "थेगळो (thegḷo) — a patch (of cloth)",
+      "headword": "थेगळो",
+      "romanization": "thegḷo",
+      "gloss": "a patch (of cloth)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83a87dbbf1e823fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a button, then the Marwadi for to stitch on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थेगळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थेगळो — thegḷo — \"a patch (of cloth)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां थेगळो सीवै है। mā̃ thegḷo sīvai hai. Mother sews on a patch."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थेगळो (thegḷo) comes from a reconstructed thigga, \"a rag\"; CDIAL lists Hindi theglī, \"a patch of cloth\" (CDIAL 6096). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thegḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thegḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thegḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thegḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ thegḷo sīvai hai. — Mother sews on a patch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ thegḷo sīvai hai.* — Mother sews on a patch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a button, then the Marwadi for to stitch on, then say thegḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a button, then the Marwadi for to stitch on, then say *thegḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does थेगळो (thegḷo) mean? (\"A patch (of cloth)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C177-theglo-type",
+              "prompt": "Say the Marwadi for 'a patch'.",
+              "assesses": [
+                "MW-LEX-C177-PHAD177-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "थेगळो",
+                "thegḷo"
+              ],
+              "feedback": {
+                "correct": "Right: थेगळो (thegḷo) is 'a patch (of cloth)'.",
+                "incorrect": "'a patch' is थेगळो (thegḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C177-pallo",
+      "sequence": 11600,
+      "title": "पल्लो (pallo) — the end of a sari; the loose end of a head-cloth",
+      "headword": "पल्लो",
+      "romanization": "pallo",
+      "gloss": "the end of a sari; the loose end of a head-cloth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cffbeb5efccf82cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to stitch on, then the Marwadi for a patch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पल्लो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पल्लो — pallo — \"the end of a sari; the loose end of a head-cloth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो पल्लो गीलो है। mhāro pallo gīlo hai. The end of my head-cloth is wet."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पल्लो (pallo) is inherited from Sanskrit pallava, \"a strip of cloth\"; CDIAL lists Old Marwari palā, \"the corners of a garment\" (CDIAL 7970). It is a different word from pallava, \"a sprout\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pallo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pallo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pallo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pallo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro pallo gīlo hai. — The end of my head-cloth is wet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro pallo gīlo hai.* — The end of my head-cloth is wet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to stitch on, then the Marwadi for a patch, then say pallo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to stitch on, then the Marwadi for a patch, then say *pallo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पल्लो (pallo) mean? (\"The end of a sari; the loose end of a head-cloth\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C177-pallo-type",
+              "prompt": "Say the Marwadi for 'the end of a sari'.",
+              "assesses": [
+                "MW-LEX-C177-PHAD177-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पल्लो",
+                "pallo"
+              ],
+              "feedback": {
+                "correct": "Right: पल्लो (pallo) is 'the end of a sari; the loose end of a head-cloth'.",
+                "incorrect": "'the end of a sari' is पल्लो (pallo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

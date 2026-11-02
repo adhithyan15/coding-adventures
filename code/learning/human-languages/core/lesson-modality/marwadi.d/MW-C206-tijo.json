@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C206-tijo",
+    "language": "marwadi",
+    "chapter": 206,
+    "sequence": 13770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3c0d2233953c739"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C173-dhuvo",
+  "pathSegment": "MW-PATH-173-CHULHO173",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-173-CHULHO173",
+      "order": 1
+    }
+  ]
+}

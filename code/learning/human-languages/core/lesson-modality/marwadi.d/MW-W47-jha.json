@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "MW-W47-jha",
+    "language": "marwadi",
+    "chapter": 157,
+    "sequence": 9740,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b66b63ef48536057",
+    "detachableSegments": [
+      "Script you'll notice: झ",
+      "Writing: झ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

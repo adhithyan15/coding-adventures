@@ -1,0 +1,11 @@
+{
+  "id": "MW-C196-thikano",
+  "pathSegment": "MW-PATH-196-POST196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-196-POST196",
+      "order": 3
+    }
+  ]
+}

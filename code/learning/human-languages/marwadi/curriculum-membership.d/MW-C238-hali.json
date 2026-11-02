@@ -1,0 +1,11 @@
+{
+  "id": "MW-C238-hali",
+  "pathSegment": "MW-PATH-238-SOW238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-238-SOW238",
+      "order": 3
+    }
+  ]
+}

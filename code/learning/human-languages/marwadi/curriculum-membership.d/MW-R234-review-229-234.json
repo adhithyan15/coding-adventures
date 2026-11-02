@@ -1,0 +1,11 @@
+{
+  "id": "MW-R234-review-229-234",
+  "pathSegment": "MW-PATH-234-HERD234",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-234-HERD234",
+      "order": 5
+    }
+  ]
+}
