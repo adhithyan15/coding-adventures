@@ -2456,6 +2456,20 @@ fn lower_function(
                         type_hint: "str".to_string(),
                     });
                 }
+                // LANG83 PR5a: the module's string ceiling, checked before the
+                // new string exists. The lengths are widened to `long` before
+                // the add, so the sum cannot wrap:
+                //   aload a; length; i2l; aload b; length; i2l; ladd
+                //   ldc2_w ceiling; lcmp; ifle +ok; <trap Trap.Overflow>
+                let overflow = lang83_trap_bytes(cp, interpreter_ir::exception_kind::TRAP_OVERFLOW);
+                emit_string_length_as_long(&mut code, cp, left_slot);
+                emit_string_length_as_long(&mut code, cp, right_slot);
+                code.push(LADD);
+                code.push(LDC2_W);
+                code.extend_from_slice(&cp.add_long(i64::from(module.str_ceiling())).to_be_bytes());
+                code.push(LCMP);
+                emit_skip_if(&mut code, IFLE, overflow.len());
+                code.extend_from_slice(&overflow);
                 emit_aload(&mut code, left_slot);
                 emit_aload(&mut code, right_slot);
                 let concat_ref = cp.add_methodref(
@@ -2514,6 +2528,29 @@ fn lower_function(
                         type_hint: "str_slice".to_string(),
                     });
                 }
+                // LANG83 PR5a: `0 <= a <= b <= len`, on the full 64-bit values,
+                // BEFORE the `l2i` below. Narrowing first was a silent wrong read:
+                // `substring(2^32, 2^32 + 3)` became `substring(0, 3)`.
+                //   a >= 0      : <a as long>; lconst_0; lcmp; ifge +ok; <trap>
+                //   b >= a      : <b>; <a>; lcmp; ifge +ok; <trap>
+                //   len >= b    : aload s; length; i2l; <b>; lcmp; ifge +ok; <trap>
+                let bounds = lang83_trap_bytes(cp, interpreter_ir::exception_kind::TRAP_BOUNDS);
+                emit_load_as_long(&mut code, start_slot, start_type);
+                code.push(LCONST_0);
+                code.push(LCMP);
+                emit_skip_if(&mut code, IFGE, bounds.len());
+                code.extend_from_slice(&bounds);
+                emit_load_as_long(&mut code, end_slot, end_type);
+                emit_load_as_long(&mut code, start_slot, start_type);
+                code.push(LCMP);
+                emit_skip_if(&mut code, IFGE, bounds.len());
+                code.extend_from_slice(&bounds);
+                emit_string_length_as_long(&mut code, cp, src_slot);
+                emit_load_as_long(&mut code, end_slot, end_type);
+                code.push(LCMP);
+                emit_skip_if(&mut code, IFGE, bounds.len());
+                code.extend_from_slice(&bounds);
+                // Both offsets now lie in [0, len], so `l2i` is exact.
                 emit_aload(&mut code, src_slot);
                 emit_typed_load(&mut code, start_slot, start_type);
                 if start_type == JvmType::Long {
@@ -2606,6 +2643,22 @@ fn lower_function(
                         type_hint: instr.type_hint.clone(),
                     });
                 }
+                // LANG83 PR5a: `0 <= i < len` on the full 64-bit index, BEFORE
+                // the `l2i` below (`charAt(l2i(2^32 + 1))` read `s[1]`):
+                //   <i as long>; lconst_0; lcmp; ifge +ok; <trap Trap.Bounds>
+                //   <i as long>; aload s; length; i2l; lcmp; iflt +ok; <trap>
+                let bounds = lang83_trap_bytes(cp, interpreter_ir::exception_kind::TRAP_BOUNDS);
+                emit_load_as_long(&mut code, idx_slot, idx_type);
+                code.push(LCONST_0);
+                code.push(LCMP);
+                emit_skip_if(&mut code, IFGE, bounds.len());
+                code.extend_from_slice(&bounds);
+                emit_load_as_long(&mut code, idx_slot, idx_type);
+                emit_string_length_as_long(&mut code, cp, src_slot);
+                code.push(LCMP);
+                emit_skip_if(&mut code, IFLT, bounds.len());
+                code.extend_from_slice(&bounds);
+                // The index now lies in [0, len), so `l2i` is exact.
                 emit_aload(&mut code, src_slot);
                 emit_typed_load(&mut code, idx_slot, idx_type);
                 if idx_type == JvmType::Long {
@@ -5418,6 +5471,24 @@ fn lang83_trap_bytes(cp: &mut ConstantPoolBuilder, kind: &str) -> Vec<u8> {
     b.push(ATHROW);
     debug_assert_eq!(b.len(), 17);
     b
+}
+
+/// Push the `int` or `long` local `slot` as a `long` (LANG83 PR5a): a string
+/// bound is compared on its full 64-bit value before anything narrows it.
+fn emit_load_as_long(code: &mut Vec<u8>, slot: u16, ty: JvmType) {
+    emit_typed_load(code, slot, ty);
+    if ty == JvmType::Int {
+        code.push(I2L);
+    }
+}
+
+/// Push `((String) local[slot]).length()` as a `long` (LANG83 PR5a).
+fn emit_string_length_as_long(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, slot: u16) {
+    emit_aload(code, slot);
+    let length_ref = cp.add_methodref("java/lang/String", "length", "()I");
+    code.push(INVOKEVIRTUAL);
+    code.extend_from_slice(&length_ref.to_be_bytes());
+    code.push(I2L);
 }
 
 /// `ifne +(3 + skip)` — jump over the next `skip` bytes when TOS int != 0.
