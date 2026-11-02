@@ -10,6 +10,7 @@ import struct
 import sys
 import tempfile
 import unittest
+import unittest.mock
 import zipfile
 from pathlib import Path
 
@@ -153,6 +154,298 @@ class ComposeLinuxStateGateTests(unittest.TestCase):
             "code/programs/mosaic/engram-app/**",
         ):
             self.assertIn(f"      - {path}\n", paths)
+
+
+def _job(workflow: str, name: str) -> str:
+    """The text of one job, from ``  <name>:`` to the next top-level job."""
+
+    start = workflow.index(f"\n  {name}:\n") + 1
+    following = [
+        index
+        for index in (workflow.find(f"\n  {other}:\n", start) for other in _JOBS)
+        if index > start
+    ]
+    return workflow[start : min(following)] if following else workflow[start:]
+
+
+_JOBS = (
+    "validate",
+    "build-web",
+    "build-desktop",
+    "build-compose",
+    "build-swiftui",
+    "build-flutter",
+    "build-qt",
+    "build-xaml",
+    "publish",
+)
+
+FIXTURE_LINE = (
+    'fixture="code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"'
+)
+POWERSHELL_FIXTURE_LINE = (
+    "$fixture = 'code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json'"
+)
+
+
+class EveryPayloadStateGateTests(unittest.TestCase):
+    """Every Engram payload whose host writes the envelope runs the gate.
+
+    mosaic-release-state-gate-v1.md, "Engram's release lane". Compose Linux
+    is pinned in detail above; this pins the other seven, each against the
+    launcher its runner needs and the live path its host really resolves.
+    """
+
+    # (job, step, leg condition or None, live state path as written, launcher)
+    BASH_MACOS = (
+        (
+            "build-compose",
+            "Verify upgrade and corrupt-state recovery on the macOS payload",
+            "if: matrix.platform == 'macos'",
+            'state="$HOME/Library/Application Support/engram-app/mosaic-state.v1.json"',
+            'bash "$launcher" 15 "$work/launch-$name.log" "$app"',
+        ),
+        (
+            "build-swiftui",
+            "Verify upgrade and corrupt-state recovery on the SwiftUI payload",
+            None,
+            'state="$HOME/Library/Application Support/engram-app/mosaic-state.v1.json"',
+            'bash "$launcher" 10 "$work/launch-$name.log" "$app"',
+        ),
+        (
+            "build-flutter",
+            "Verify upgrade and corrupt-state recovery on the macOS payload",
+            "if: matrix.platform == 'macos'",
+            'state="$state_home/Library/Application Support/engram-app/mosaic-state.v1.json"',
+            'bash "$launcher" 15 "$work/launch-$name.log" "$app"',
+        ),
+        (
+            "build-qt",
+            "Verify upgrade and corrupt-state recovery on the Qt payload",
+            None,
+            'state="$HOME/Library/Application Support/Engram/engram-app/mosaic-state.v1.json"',
+            'bash "$launcher" 10 "$work/launch-$name.log" "$app"',
+        ),
+    )
+    POWERSHELL_WINDOWS = (
+        ("build-compose", "compose"),
+        ("build-flutter", "flutter"),
+    )
+    WINDOWS_STEP = "Verify upgrade and corrupt-state recovery on the Windows payload"
+
+    def setUp(self) -> None:
+        self.workflow = WORKFLOW.read_text(encoding="utf-8")
+
+    def _gate(self, job: str, step: str) -> tuple[str, str]:
+        text = _job(self.workflow, job)
+        return text, _step(text, step)
+
+    def _assert_in_order(self, step: str, needles: list[str]) -> None:
+        positions = [step.index(needle) for needle in needles]
+        self.assertEqual(positions, sorted(positions), needles)
+
+    def _assert_between_archive_and_upload(self, job_text: str, step_name: str) -> None:
+        archive = job_text.index("- name: Archive the artifact for publication\n")
+        gate = job_text.index(f"- name: {step_name}\n")
+        upload = job_text.index("- name: Upload the ")
+        self.assertLess(archive, gate)
+        self.assertLess(gate, upload)
+
+    def test_each_macos_payload_runs_both_halves_through_the_shared_launcher(self) -> None:
+        for job, name, condition, state, launch in self.BASH_MACOS:
+            job_text, step = self._gate(job, name)
+            with self.subTest(job=job):
+                self._assert_between_archive_and_upload(job_text, name)
+                if condition is not None:
+                    self.assertIn(condition, step)
+                self.assertIn("set -euo pipefail", step)
+                self.assertIn(FIXTURE_LINE, step)
+                self.assertIn(
+                    'launcher="$GITHUB_WORKSPACE/code/scripts/mosaic-release-launch.sh"', step
+                )
+                self.assertIn("env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH", step)
+                self.assertIn(state, step)
+                self.assertIn(launch, step)
+                self.assertIn("engram_release.py payload-name", step)
+                self.assertIn('unzip -q "$archive"', step)
+                self.assertIn("-mindepth 2 -maxdepth 2 -type d -name '*.app'", step)
+                self.assertNotIn("${{", step[step.index("run: |") :])
+                self._assert_in_order(
+                    step,
+                    [
+                        'python "$gate" materialize --fixture "$fixture" --output "$state"',
+                        "launch upgrade",
+                        'python "$gate" verify --fixture "$fixture" --state "$state"',
+                        "printf 'invalid Engram state\\n' > \"$state\"",
+                        'cp "$state" "$probe"',
+                        "launch recovery",
+                        (
+                            'python "$gate" verify-quarantine --app engram'
+                            ' --state "$state" --probe "$probe"'
+                        ),
+                    ],
+                )
+
+    def test_flutter_on_macos_follows_the_app_into_its_sandbox_container(self) -> None:
+        _, step = self._gate(
+            "build-flutter", "Verify upgrade and corrupt-state recovery on the macOS payload"
+        )
+        self.assertIn("PlistBuddy -c 'Print :CFBundleIdentifier'", step)
+        self.assertIn('codesign -d --entitlements - "$app"', step)
+        self.assertIn("*com.apple.security.app-sandbox*", step)
+        self.assertIn('state_home="$HOME/Library/Containers/$bundle_id/Data"', step)
+        self.assertIn('state_home="$HOME"', step)
+        # The bundle id becomes a path, so it is checked before use.
+        self.assertIn('if [[ ! "$bundle_id" =~ ^[A-Za-z0-9][A-Za-z0-9.-]*$ ]]; then', step)
+        # macOS must create the container before the gate writes into it.
+        self._assert_in_order(step, ["launch container", "clear_state\n", "materialize"])
+
+    def test_flutter_on_linux_runs_like_compose_on_linux(self) -> None:
+        job_text, step = self._gate(
+            "build-flutter", "Verify upgrade and corrupt-state recovery on the Linux payload"
+        )
+        self._assert_between_archive_and_upload(
+            job_text, "Verify upgrade and corrupt-state recovery on the Linux payload"
+        )
+        self.assertIn("if: matrix.platform == 'linux'", step)
+        self.assertIn('state="$state_root/engram-app/mosaic-state.v1.json"', step)
+        self.assertIn('XDG_DATA_HOME="$state_root"', step)
+        self.assertIn('run-under-xvfb.sh" timeout 15s "$launcher"', step)
+        self.assertIn('if [[ "$status" -ne 124 ]]; then', step)
+        self.assertIn("-mindepth 3 -maxdepth 3 -type f -perm -111", step)
+        self.assertIn("env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH", step)
+        self._assert_in_order(
+            step,
+            [
+                'python "$gate" materialize',
+                "launch upgrade",
+                'python "$gate" verify --fixture',
+                "launch recovery",
+                'python "$gate" verify-quarantine --app engram',
+            ],
+        )
+        self.assertIn("libglu1-mesa pkg-config xvfb unzip", job_text)
+
+    def test_each_windows_payload_runs_both_halves_through_the_shared_launcher(self) -> None:
+        for job, backend in self.POWERSHELL_WINDOWS:
+            job_text, step = self._gate(job, self.WINDOWS_STEP)
+            with self.subTest(job=job):
+                self._assert_between_archive_and_upload(job_text, self.WINDOWS_STEP)
+                self.assertIn("if: matrix.platform == 'windows'", step)
+                self.assertIn("shell: pwsh", step)
+                self.assertIn("$ErrorActionPreference = 'Stop'", step)
+                self.assertIn(POWERSHELL_FIXTURE_LINE, step)
+                self.assertIn(f"--backend {backend} --version $env:RELEASE_VERSION", step)
+                self.assertIn("$launcher = 'code/scripts/mosaic-release-launch.ps1'", step)
+                self.assertIn("-ExePath $executable -Seconds 15 -Label $Name", step)
+                self.assertIn("Remove-Item Env:MOSAIC_APP_LIBRARY", step)
+                self.assertIn("Remove-Item Env:MOSAIC_APP_STATE_PATH", step)
+                self.assertIn(
+                    "$state = Join-Path $env:LOCALAPPDATA 'engram-app/mosaic-state.v1.json'", step
+                )
+                self.assertNotIn("${{", step[step.index("run: |") :])
+                # Every native command's status is checked: PowerShell does not
+                # stop on a failing exe by itself.
+                self.assertEqual(step.count("python $gate"), step.count("throw 'The Windows")
+                                 + step.count("throw 'Could not materialize"))
+                self._assert_in_order(
+                    step,
+                    [
+                        "python $gate materialize --fixture $fixture --output $state",
+                        "Invoke-Launch 'upgrade'",
+                        "python $gate verify --fixture $fixture --state $state",
+                        "invalid Engram state",
+                        "Copy-Item $state $probe",
+                        "Invoke-Launch 'recovery'",
+                        "python $gate verify-quarantine --app engram --state $state --probe $probe",
+                    ],
+                )
+
+    def test_compose_windows_launches_the_engram_app_exe(self) -> None:
+        _, step = self._gate("build-compose", self.WINDOWS_STEP)
+        self.assertIn("-Filter 'engram_app.exe'", step)
+        self.assertIn("$env:JAVA_TOOL_OPTIONS = '-Dmosaic.app.debug=true'", step)
+
+    def test_xaml_gates_recovery_only_and_says_why(self) -> None:
+        job_text = _job(self.workflow, "build-xaml")
+        name = "Verify corrupt-state recovery on the XAML payload"
+        step = _step(job_text, name)
+        archive = job_text.index("- name: Verify the payload the archiver would publish\n")
+        self.assertLess(archive, job_text.index(f"- name: {name}\n"))
+        # The hand-written host's own path and format: no envelope, so no
+        # materialize/verify -- that half is a named gap in the spec.
+        self.assertIn(
+            "$state = Join-Path ([Environment]::GetFolderPath('UserProfile'))"
+            " '.engram/mosaic-snapshot.v1.json'",
+            step,
+        )
+        self.assertNotIn("materialize", step)
+        self.assertNotIn("--fixture", step)
+        self.assertIn("Remove-Item Env:ENGRAM_SNAPSHOT_PATH", step)
+        self.assertIn("*.runtimeconfig.json", step)
+        self.assertIn("-ExePath $executable -Seconds 15 -Label 'recovery'", step)
+        self.assertIn(
+            "python $gate verify-quarantine --app engram --state $state --probe $probe", step
+        )
+        self.assertIn("continue-on-error: true", job_text)
+
+    def test_the_gated_payload_set_is_exactly_the_spec_table(self) -> None:
+        # Seven envelope payloads here plus Compose Linux above; Electron and
+        # web are named gaps. A new native job must either gate or be added
+        # to the spec's gap table -- this count makes that a conscious edit.
+        self.assertEqual(
+            self.workflow.count("- name: Verify upgrade and corrupt-state recovery on the "), 8
+        )
+        self.assertEqual(self.workflow.count("- name: Verify corrupt-state recovery on the "), 1)
+        self.assertNotIn("mosaic_release_state_gate", _job(self.workflow, "build-desktop"))
+        self.assertNotIn("mosaic_release_state_gate", _job(self.workflow, "build-web"))
+
+    def test_a_change_to_any_gated_host_template_runs_this_lane(self) -> None:
+        paths = self.workflow[
+            self.workflow.index("    paths:\n") : self.workflow.index("  workflow_dispatch:\n")
+        ]
+        for backend in ("compose", "flutter", "qt", "swiftui"):
+            self.assertIn(
+                f"      - code/packages/rust/mosaic-app-bindings/templates/{backend}/**\n", paths
+            )
+
+    def test_the_validate_job_runs_the_launcher_suite(self) -> None:
+        self.assertIn("-p 'test_mosaic_release_launch.py'", _job(self.workflow, "validate"))
+
+
+class PayloadNameTests(unittest.TestCase):
+    def test_names_each_native_backend_like_its_archiver(self) -> None:
+        for backend, platform, expected in (
+            ("compose", "windows", "engram-compose-windows-v1.2.3.zip"),
+            ("flutter", "linux", "engram-flutter-linux-v1.2.3.zip"),
+            ("qt", "macos", "engram-qt-macos-v1.2.3.zip"),
+            ("swiftui", "macos", "engram-swiftui-macos-v1.2.3.zip"),
+            ("xaml", "windows", "engram-xaml-windows-v1.2.3.zip"),
+        ):
+            with self.subTest(backend=backend):
+                self.assertEqual(
+                    engram_release.PAYLOAD_NAMERS[backend]("1.2.3", platform), expected
+                )
+
+    def test_the_cli_prints_the_name(self) -> None:
+        with unittest.mock.patch("builtins.print") as printed:
+            status = engram_release.main(
+                ["payload-name", "--backend", "flutter", "--version", "1.2.3", "--platform", "macos"]
+            )
+        self.assertEqual(status, 0)
+        printed.assert_called_once_with("engram-flutter-macos-v1.2.3.zip")
+
+    def test_the_cli_refuses_a_platform_the_backend_does_not_ship(self) -> None:
+        status = engram_release.main(
+            ["payload-name", "--backend", "qt", "--version", "1.2.3", "--platform", "linux"]
+        )
+        self.assertEqual(status, 1)
+
+    def test_the_cli_refuses_an_unknown_backend(self) -> None:
+        with self.assertRaises(SystemExit):
+            engram_release.main(
+                ["payload-name", "--backend", "electron", "--version", "1.2.3", "--platform", "linux"]
+            )
 
 
 class ValidateIdentifiersTests(unittest.TestCase):
