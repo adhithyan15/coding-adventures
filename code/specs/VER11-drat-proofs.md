@@ -92,7 +92,7 @@ empty clause is added, the original formula was unsatisfiable.
 | An added lemma is neither RUP nor RAT | rejected, naming the step and line |
 | A deleted clause is not present | rejected |
 | The proof never adds the empty clause | rejected: incomplete |
-| A variable index above the limit (default 2²⁴) | rejected |
+| A variable index above the limit (default 2²⁰) | rejected |
 | The empty clause is added and passes RUP | **accepted**; later steps are not checked |
 
 Deleting a clause the proof never added and the formula never had is a
@@ -175,4 +175,12 @@ Both crates are pure computation over strings and in-memory data. Their
 
 ## 7. Divergences
 
-None yet.
+1. **Default variable cap 2^20, not 2^24.** The VER09 security review
+   measured the per-variable cost of a 2^24 cap at about 2 GB of solver
+   state. The kernel costs about 60 bytes per variable, so it follows the
+   solver down to 2^20 (about 60 MB). Explicit limits stay available.
+2. **`enable_proof` returns `false` once a clause has been added**, rather
+   than starting a proof with level-0 simplifications already missing.
+3. **Kernel size.** `check.rs` is 324 lines before its tests, 94 of them
+   comments, inside the "few hundred lines" VER00 §7.5 asks for. The
+   readers in `parse.rs` are about 200 more.

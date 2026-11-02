@@ -48,6 +48,7 @@
 use crate::heap::VarHeap;
 use crate::lit::{LBool, Lit, Var};
 use crate::luby::luby;
+use crate::proof::{DratProof, ProofStep};
 
 // ---------------------------------------------------------------------------
 // Public result and statistics types
@@ -231,6 +232,13 @@ pub struct Solver {
     /// Remaining conflicts allowed, if the caller set a budget.
     conflict_budget: Option<u64>,
     stats: Stats,
+
+    // --- proof logging (VER11 §4) ---
+    /// The DRAT proof being recorded, if logging is on.
+    proof: Option<DratProof>,
+    /// Whether any clause has ever been added. Logging must start before
+    /// the first one, or level-0 simplifications would go unrecorded.
+    touched: bool,
 }
 
 impl Default for Solver {
@@ -269,6 +277,8 @@ impl Solver {
             failed: Vec::new(),
             conflict_budget: None,
             stats: Stats::default(),
+            proof: None,
+            touched: false,
         }
     }
 
@@ -325,6 +335,50 @@ impl Solver {
         self.ok
     }
 
+    /// Start recording a DRAT proof (VER11 §4). Must be called before the
+    /// first clause is added, because simplifications made while adding
+    /// clauses are part of the proof; returns `false` (and records nothing)
+    /// if clauses were already added.
+    ///
+    /// ```
+    /// use cdcl_sat::{Solver, SolveResult, Var};
+    ///
+    /// let mut s = Solver::new();
+    /// assert!(s.enable_proof());
+    /// let x = Var::from_index(0);
+    /// s.add_clause(&[x.positive()]);
+    /// s.add_clause(&[x.negative()]);
+    /// assert_eq!(s.solve(), SolveResult::Unsat);
+    /// assert_eq!(s.proof().unwrap().to_drat_text(), "0\n");
+    /// ```
+    pub fn enable_proof(&mut self) -> bool {
+        if self.touched {
+            return false;
+        }
+        self.proof.get_or_insert_with(DratProof::default);
+        true
+    }
+
+    /// The DRAT proof recorded so far, if logging was enabled. After an
+    /// `Unsat` answer without assumptions it ends with the empty clause and
+    /// `drat-check` can certify it against the clauses added.
+    pub fn proof(&self) -> Option<&DratProof> {
+        self.proof.as_ref()
+    }
+
+    /// Take the recorded proof out of the solver. Logging continues into a
+    /// fresh, empty proof.
+    pub fn take_proof(&mut self) -> Option<DratProof> {
+        self.proof.as_mut().map(std::mem::take)
+    }
+
+    /// Record a lemma, if logging.
+    fn log_add(&mut self, lits: &[Lit]) {
+        if let Some(p) = self.proof.as_mut() {
+            p.steps.push(ProofStep::Add(lits.to_vec()));
+        }
+    }
+
     /// Limit the number of conflicts the **next** `solve` calls may use in
     /// total. `None` removes the limit. When the budget runs out, `solve`
     /// returns [`SolveResult::Unknown`] and the solver remains usable.
@@ -361,6 +415,7 @@ impl Solver {
     pub fn add_clause(&mut self, lits: &[Lit]) -> bool {
         // Clauses are only added between searches, at level 0.
         self.cancel_until(0);
+        self.touched = true;
         if !self.ok {
             return false;
         }
@@ -384,6 +439,13 @@ impl Solver {
                 LBool::Undef => kept.push(l),
             }
         }
+        // The checker sees the clause as given. If level-0 facts shortened
+        // it, the shorter clause is a lemma (RUP: the dropped literals are
+        // false by units the checker can propagate too). An empty result is
+        // the empty clause, whether or not anything was dropped.
+        if kept.len() < c.len() || kept.is_empty() {
+            self.log_add(&kept);
+        }
 
         match kept.len() {
             0 => {
@@ -396,6 +458,7 @@ impl Solver {
                 // before the next clause is simplified against them.
                 if self.propagate().is_some() {
                     self.ok = false;
+                    self.log_add(&[]);
                 }
                 self.ok
             }
@@ -731,6 +794,7 @@ impl Solver {
     /// already backjumped to the level where the clause is unit.
     fn record_learnt(&mut self, learnt: Vec<Lit>, lbd: u32) {
         self.stats.learned += 1;
+        self.log_add(&learnt);
         if learnt.len() == 1 {
             self.enqueue(learnt[0], NO_REASON);
         } else {
@@ -867,6 +931,9 @@ impl Solver {
             let c = &self.clauses[cref as usize];
             let deletable = removed < target && c.lbd > 2 && c.lits.len() > 2 && !self.locked(cref);
             if deletable {
+                if let Some(p) = self.proof.as_mut() {
+                    p.steps.push(ProofStep::Delete(self.clauses[cref as usize].lits.clone()));
+                }
                 self.clauses[cref as usize].deleted = true;
                 removed += 1;
             } else {
@@ -912,6 +979,7 @@ impl Solver {
                 if self.decision_level() == 0 {
                     // A conflict with nothing guessed: the formula is UNSAT.
                     self.ok = false;
+                    self.log_add(&[]);
                     return LBool::False;
                 }
                 let (learnt, backjump, lbd) = self.analyze(confl);
@@ -1229,6 +1297,84 @@ mod tests {
         assert_eq!(s.solve(), SolveResult::Unsat);
         assert!(s.stats().deleted > 0, "{:?}", s.stats());
         assert!(s.num_learnts() > 0);
+    }
+
+    /// The clauses a test added, as DIMACS text for the checker.
+    fn dimacs_of(clauses: &[Vec<i64>], vars: usize) -> String {
+        let mut t = format!("p cnf {vars} {}\n", clauses.len());
+        for c in clauses {
+            for l in c {
+                t.push_str(&format!("{l} "));
+            }
+            t.push_str("0\n");
+        }
+        t
+    }
+
+    #[test]
+    fn reduce_db_deletions_appear_in_a_checked_proof() {
+        let holes = 7;
+        let pigeons = holes + 1;
+        let mut clauses: Vec<Vec<i64>> = Vec::new();
+        let x = |p: usize, h: usize| (p * holes + h + 1) as i64;
+        for p in 0..pigeons {
+            clauses.push((0..holes).map(|h| x(p, h)).collect());
+        }
+        for h in 0..holes {
+            for p in 0..pigeons {
+                for q in p + 1..pigeons {
+                    clauses.push(vec![-x(p, h), -x(q, h)]);
+                }
+            }
+        }
+        let mut s = Solver::new();
+        assert!(s.enable_proof());
+        for c in &clauses {
+            add(&mut s, c);
+        }
+        s.max_learnts = 10.0;
+        s.num_original = 0;
+        assert_eq!(s.solve(), SolveResult::Unsat);
+        let proof = s.proof().unwrap();
+        assert!(proof.steps.iter().any(|st| matches!(st, ProofStep::Delete(_))));
+        let ok = drat_check::check(&dimacs_of(&clauses, pigeons * holes), &proof.to_drat_text())
+            .expect("the kernel accepts the solver's proof");
+        assert!(ok.deletions > 0);
+    }
+
+    #[test]
+    fn proof_logging_switches() {
+        let mut s = Solver::new();
+        assert!(s.proof().is_none());
+        assert!(s.take_proof().is_none());
+        add(&mut s, &[1, 2]);
+        assert!(!s.enable_proof(), "too late: a clause was added");
+        assert!(s.proof().is_none());
+
+        let mut s = Solver::new();
+        assert!(s.enable_proof());
+        assert!(s.enable_proof()); // idempotent before any clause
+        add(&mut s, &[1]);
+        add(&mut s, &[-1, 2]); // shortened to (2): logged
+        let taken = s.take_proof().unwrap();
+        assert_eq!(taken.steps, vec![ProofStep::Add(vec![Lit::from_dimacs(2).unwrap()])]);
+        assert_eq!(s.proof().unwrap().steps, vec![]);
+        // Empty input clause: the empty clause is logged.
+        add(&mut s, &[]);
+        assert!(s.proof().unwrap().derives_empty_clause());
+    }
+
+    #[test]
+    fn unit_conflict_while_adding_is_logged() {
+        let clauses = vec![vec![-1, 2], vec![-2, 3], vec![1], vec![-3]];
+        let mut s = Solver::new();
+        s.enable_proof();
+        for c in &clauses {
+            add(&mut s, c);
+        }
+        assert_eq!(s.solve(), SolveResult::Unsat);
+        let text = s.proof().unwrap().to_drat_text();
+        drat_check::check(&dimacs_of(&clauses, 3), &text).expect("certified");
     }
 
     #[test]
