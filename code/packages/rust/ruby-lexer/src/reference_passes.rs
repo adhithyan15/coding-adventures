@@ -11,10 +11,16 @@
 //!
 //! Test-only: this module is compiled under `#[cfg(test)]` and nothing in
 //! the shipped crate calls it.
+//!
+//! The #18814 review added `ref_finalize_heredoc`, the old heredoc
+//! finalizer, which also removed one token per heredoc with `Vec::remove`.
 
 use lexer::token::{Token, TokenType};
 
-use super::{is_integer_lexeme, is_radix_integer_body, is_unsigned_exponent_lexeme, RubyLexer};
+use super::{
+    is_integer_lexeme, is_radix_integer_body, is_unsigned_exponent_lexeme, strip_common_leading_whitespace,
+    HeredocVariant, PendingHeredoc, RubyLexer,
+};
 
 impl RubyLexer {
     /// The pre-#18814 `apply_era_token_fusions`, step for step, calling the
@@ -574,6 +580,41 @@ impl RubyLexer {
                 };
             }
             i += 1;
+        }
+    }
+
+    /// The pre-#18814 `finalize_heredoc`, verbatim: it removed the tag
+    /// `Name` at once with `Vec::remove`, shifting the tail once per
+    /// heredoc.  Used when `reference_heredocs` is set.
+    pub(crate) fn ref_finalize_heredoc(&mut self, h: PendingHeredoc) {
+        let body = match h.variant {
+            HeredocVariant::Plain | HeredocVariant::DashIndent => h.body.clone(),
+            HeredocVariant::TildeIndent => strip_common_leading_whitespace(&h.body),
+        };
+        let prefix = match h.variant {
+            HeredocVariant::Plain => "<<",
+            HeredocVariant::DashIndent => "<<-",
+            HeredocVariant::TildeIndent => "<<~",
+        };
+        let value = format!("{prefix}{}\n{body}{}", h.tag, h.tag);
+        // Remove the tag Name first (higher index) so op_idx stays
+        // valid.  Both indices were captured at emit time and the
+        // tokens between them have not moved (body capture inserts
+        // no tokens).
+        if h.tag_idx < self.tokens.len() {
+            self.tokens.remove(h.tag_idx);
+        }
+        if h.op_idx < self.tokens.len() {
+            let line = self.tokens[h.op_idx].line;
+            let column = self.tokens[h.op_idx].column;
+            self.tokens[h.op_idx] = Token {
+                type_: TokenType::String,
+                value,
+                line,
+                column,
+                type_name: None,
+                flags: None, cv: None,
+            };
         }
     }
 }

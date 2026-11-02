@@ -197,3 +197,30 @@ fn repeated_stream_matches_lexing_the_repeated_source() {
         );
     }
 }
+
+/// #18814 review — heredocs: `finalize_heredoc` removed each tag `Name`
+/// with `Vec::remove`, so `k` heredocs opened on one line and closed on the
+/// next `k` lines cost O(k²) (80 000 took 30 s in a release build).  Tags
+/// are now removed in one sweep at the end.  This one has to run the whole
+/// lexer, since the heredoc work happens while the source is fed; 150 000
+/// heredocs is 900 KB, inside [`super::MAX_SOURCE_BYTES`].
+#[test]
+fn many_heredocs_on_one_line_lex_in_linear_time() {
+    const HEREDOCS: usize = 150_000;
+    let source = format!("foo({}1)\n{}", "<<A,".repeat(HEREDOCS), "A\n".repeat(HEREDOCS));
+    assert!(source.len() <= super::MAX_SOURCE_BYTES);
+    let mut lexer = RubyLexer::new("3.3").unwrap();
+    let start = Instant::now();
+    lexer.push(&source).unwrap();
+    lexer.finish().unwrap();
+    let tokens = lexer.drain_tokens();
+    let elapsed = start.elapsed();
+    eprintln!("#18814 {HEREDOCS} heredocs on one line: lexing took {elapsed:?}");
+    assert!(
+        elapsed < BOUND,
+        "#18814: {HEREDOCS} heredocs took {elapsed:?} (bound {BOUND:?}); heredoc finalization has gone quadratic again"
+    );
+    let heredocs = tokens.iter().filter(|t| t.type_ == TokenType::String && t.value == "<<A\nA").count();
+    assert_eq!(heredocs, HEREDOCS);
+    assert!(!tokens.iter().any(|t| t.type_ == TokenType::Name && t.value == "A"), "a tag survived");
+}

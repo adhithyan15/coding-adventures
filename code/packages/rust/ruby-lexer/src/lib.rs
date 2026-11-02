@@ -194,6 +194,16 @@ pub struct RubyLexer {
     /// - otherwise the candidate is cleared and the `<<` stays as a
     ///   plain left-shift operator.
     heredoc_op_candidate: Option<usize>,
+    /// #18814 review: indices of the heredoc tag `Name` tokens that
+    /// [`RubyLexer::finalize_heredoc`] has retired but not yet removed.
+    /// They are all removed together, in one sweep, by
+    /// [`RubyLexer::remove_retired_heredoc_tags`] — see there for why.
+    retired_heredoc_tags: Vec<usize>,
+    /// Test-only: finalize heredocs with the pre-#18814 body, which
+    /// removed each tag at once (`reference_passes.rs`), so the
+    /// differential tests can compare the two.
+    #[cfg(test)]
+    reference_heredocs: bool,
     /// Phase 4b: the Ruby era this lexer is targeting.  Drives the
     /// post-pass token-stream rewriter (see
     /// [`RubyLexer::apply_era_token_fusions`]) which folds adjacent
@@ -307,6 +317,9 @@ impl RubyLexer {
             interp_brace_depth: 0,
             pending_heredocs: VecDeque::new(),
             heredoc_op_candidate: None,
+            retired_heredoc_tags: Vec::new(),
+            #[cfg(test)]
+            reference_heredocs: false,
             era: canonical_era.to_string(),
             whitespace_before_token: Vec::new(),
             whitespace_pending: false,
@@ -496,10 +509,17 @@ impl RubyLexer {
                 }
             }
         }
-        // Apply token replacements in descending order so earlier
-        // indices remain valid as later tokens are removed.
+        // Apply token replacements in descending order.  (Only the
+        // pre-#18814 reference, which removed each tag at once, needs it:
+        // removing a later index first kept the earlier ones valid.
+        // `finalize_heredoc` removes nothing, so its order is free.)
         finalized.sort_by_key(|h| std::cmp::Reverse(h.op_idx));
         for h in finalized {
+            #[cfg(test)]
+            if self.reference_heredocs {
+                self.ref_finalize_heredoc(h);
+                continue;
+            }
             self.finalize_heredoc(h);
         }
         Ok(i)
@@ -528,12 +548,17 @@ impl RubyLexer {
             HeredocVariant::TildeIndent => "<<~",
         };
         let value = format!("{prefix}{}\n{body}{}", h.tag, h.tag);
-        // Remove the tag Name first (higher index) so op_idx stays
-        // valid.  Both indices were captured at emit time and the
-        // tokens between them have not moved (body capture inserts
-        // no tokens).
+        // #18814 review: retire the tag `Name` instead of removing it.
+        // `Vec::remove` here shifted every token after the tag, once per
+        // heredoc, so `k` heredocs on one line (`foo(<<A, <<A, …)` then
+        // `A` ⏎ × k) cost O(k²) — 80 000 of them took 30 s in a release
+        // build.  Nothing moves now, so every index captured at emit time
+        // (this `op_idx`, later openers' indices, the
+        // `heredoc_op_candidate`) stays valid, and
+        // `remove_retired_heredoc_tags` takes all the tags out in one
+        // sweep before anyone reads the stream.
         if h.tag_idx < self.tokens.len() {
-            self.tokens.remove(h.tag_idx);
+            self.retired_heredoc_tags.push(h.tag_idx);
         }
         if h.op_idx < self.tokens.len() {
             let line = self.tokens[h.op_idx].line;
@@ -555,8 +580,43 @@ impl RubyLexer {
     /// token-stream fusions (Phase 4b+).
     pub fn finish(&mut self) -> Result<(), String> {
         self.drain_machine()?;
+        self.remove_retired_heredoc_tags();
         self.apply_era_token_fusions();
         Ok(())
+    }
+
+    /// #18814 review — remove every heredoc tag `Name` that
+    /// [`Self::finalize_heredoc`] retired, in one O(tokens) sweep.
+    ///
+    /// The heredoc `<<TAG` lexes as two tokens, the `<<` opener and the
+    /// `TAG` name; once the body is captured the opener becomes the
+    /// `String` and the name must go.  Removing each name the moment its
+    /// heredoc closed cost a shift of the whole tail per heredoc; retiring
+    /// them and removing them all here costs one pass however many there
+    /// are.  The indices are into the stream as emitted (nothing is
+    /// removed before this runs), so a sorted list walked alongside
+    /// `Vec::retain` finds each one.
+    ///
+    /// Runs before anything reads the stream: at the end of lexing
+    /// ([`Self::finish`], before the fusion passes) and in
+    /// [`Self::drain_tokens`] (for a caller that drains without finishing,
+    /// or after an error).
+    fn remove_retired_heredoc_tags(&mut self) {
+        if self.retired_heredoc_tags.is_empty() {
+            return;
+        }
+        let mut retired = std::mem::take(&mut self.retired_heredoc_tags);
+        retired.sort_unstable();
+        retired.dedup();
+        let mut next = retired.into_iter().peekable();
+        let mut idx = 0;
+        self.tokens.retain(|_| {
+            let retire = next.next_if_eq(&idx).is_some();
+            idx += 1;
+            !retire
+        });
+        // The whitespace flags are left as they are, exactly as the
+        // pre-#18814 code left them (it removed the token, not its flag).
     }
 
     /// Feed end-of-input to the engine until it reaches its final state,
@@ -1753,6 +1813,7 @@ impl RubyLexer {
 
     /// Take ownership of all tokens emitted so far.
     pub fn drain_tokens(&mut self) -> Vec<Token> {
+        self.remove_retired_heredoc_tags();
         std::mem::take(&mut self.tokens)
     }
 

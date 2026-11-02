@@ -54,6 +54,7 @@ pub(crate) fn prefusion(source: &str) -> Option<(Vec<Token>, Vec<bool>)> {
     let mut lexer = RubyLexer::new("1.8").ok()?;
     lexer.push(source).ok()?;
     lexer.drain_machine().ok()?;
+    lexer.remove_retired_heredoc_tags();
     Some((lexer.tokens, lexer.whitespace_before_token))
 }
 
@@ -334,22 +335,34 @@ fn corpus_files() -> Vec<(String, String)> {
 // ---------------------------------------------------------------------------
 
 /// The pieces the soups are built from: the halves of every fused pair,
-/// the whole fused spellings, and the separators that must block a fusion
-/// (space, tab, line break, `;`).
+/// the whole fused spellings, heredoc openers and terminators, and the
+/// separators that must block a fusion (space, tab, line break, `;`).
+#[rustfmt::skip]
 const FRAGMENTS: &[&str] = &[
     // radix integers
-    "0", "x1F", "b101", "o17", "d10", "xZZ", "0x1F", // floats and exponents
-    "1", "5", "1_000", ".", "e", "E", "e10", "E5", "1.5", "1e+3", "2.5e-3", // ranges
-    "..", "...", // shifts and comparisons
-    ">", ">=", ">>", ">>=", "<", "<<", "<=", // compound assignment halves
+    "0", "x1F", "b101", "o17", "d10", "xZZ", "0x1F",
+    // floats and exponents
+    "1", "5", "1_000", ".", "e", "E", "e10", "E5", "1.5", "1e+3", "2.5e-3",
+    // ranges
+    "..", "...",
+    // shifts and comparisons
+    ">", ">=", ">>", ">>=", "<", "<<", "<=",
+    // compound assignment halves
     "=", "+", "-", "*", "/", "%", "**", "&", "|", "^", "||", "&&",
     // lambda, safe navigation, numeric suffixes
-    "->", "&.", "r", "i", "2r", "3i", // brackets and punctuation
-    "(", ")", "[", "]", "{", "}", ",", ";", ":", "::", // names, keywords, numbered params
-    "a", "b", "foo", "puts", "x", "_1", "_2", "if", "unless", "while", "until", "end", "do", "|x|",
-    "then", "else", "begin", "rescue", "super", "yield", "return", "nil", "true", "def",
+    "->", "&.", "r", "i", "2r", "3i",
+    // brackets and punctuation
+    "(", ")", "[", "]", "{", "}", ",", ";", ":", "::",
+    // names, keywords, numbered params
+    "a", "b", "foo", "puts", "x", "_1", "_2", "if", "unless", "while", "until",
+    "end", "do", "|x|", "then", "else", "begin", "rescue", "super", "yield",
+    "return", "nil", "true", "def",
     // literals
-    "\"s\"", "'t'", ":sym", "%w[a b]", // separators: the near misses
+    "\"s\"", "'t'", ":sym", "%w[a b]",
+    // heredocs: openers (after `x = ` / `(` so they are openers, not `<<`)
+    // and terminator lines (#18814 review)
+    "x = <<A", "(<<A", ",<<~B", "x = <<-A", "\nA\n", "\n  B\n", "\nbody\n",
+    // separators: the near misses
     " ", " ", " ", "\t", "\n", "\n", "\n\n",
 ];
 
@@ -503,4 +516,72 @@ fn dropping_the_engine_trace_never_changes_the_stream() {
             "dropping the engine trace changed the lexing of {src:?}"
         );
     }
+}
+
+// ---------------------------------------------------------------------------
+// Heredoc tags: removed in one sweep (#18814 review).
+// ---------------------------------------------------------------------------
+
+/// What a whole lex leaves behind: the tokens, the whitespace flags (the
+/// fusion passes read them, so they are part of the result), and the
+/// diagnostics, or the error.
+type WholeLex = Result<(Vec<Token>, Vec<bool>, Vec<super::Diagnostic>), String>;
+
+/// Lex `source` under `era` from start to finish, finalizing heredocs with
+/// the pre-#18814 body (`reference`) or the production one.
+fn whole_lex(source: &str, era: &str, reference: bool) -> WholeLex {
+    let mut lexer = RubyLexer::new(era).unwrap();
+    lexer.reference_heredocs = reference;
+    lexer.push(source).map_err(|e| e.to_string())?;
+    lexer.finish()?;
+    let tokens = lexer.drain_tokens();
+    Ok((tokens, lexer.whitespace_before_token.clone(), lexer.diagnostics.clone()))
+}
+
+/// Inputs that put many heredocs, of every variant, in many positions.
+fn heredoc_inputs() -> Vec<String> {
+    let mut v: Vec<String> = [
+        "x = <<A\nbody\nA\nputs x\n",
+        "foo(<<A, <<B)\na\nA\nb\nB\nx&.y\n",
+        "foo(<<A,<<A,<<A)\nA\nA\nA\n1..2\n",
+        "a = <<~X\n    one\n  two\n  X\nb = <<-Y\n  y\n  Y\nc = 1.5e-3\n",
+        "x = <<A\nunterminated\n",
+        "x = <<A; y = <<B\nA\nB\nf = ->(z) { z }\n",
+        "x = <<END\nEND\na >>= 2\n",
+    ]
+    .iter()
+    .map(|s| s.to_string())
+    .collect();
+    // k openers on one line, then k terminators: the shape that was
+    // quadratic.
+    for k in [1, 2, 3, 7, 50] {
+        v.push(format!("foo({}1)\n{}x&.y\n", "<<A,".repeat(k), "A\n".repeat(k)));
+    }
+    v
+}
+
+/// Removing the heredoc tags in one sweep at the end lexes exactly what
+/// removing each one at once (the pre-#18814 code) did: same tokens, same
+/// whitespace flags, same diagnostics.
+///
+/// Only inputs that contain `<<` can open a heredoc, so the others are
+/// skipped (both paths are the same code for them).  One era is enough:
+/// heredocs are lexed before any era-gated pass runs, and 3.3 runs all of
+/// those passes over the result.
+#[test]
+fn batched_heredoc_tag_removal_matches_reference() {
+    let mut inputs = heredoc_inputs();
+    inputs.extend(lib_rs_literals());
+    inputs.extend(corpus_files().into_iter().map(|(_, src)| src));
+    inputs.extend((0..1000).map(soup));
+    let mut with_heredocs = 0;
+    for src in inputs.iter().filter(|s| s.contains("<<")) {
+        let new = whole_lex(src, "3.3", false);
+        let old = whole_lex(src, "3.3", true);
+        assert_eq!(new, old, "#18814: heredoc tag removal changed the lexing of {src:?}");
+        if new.as_ref().is_ok_and(|(t, _, _)| t.iter().any(|t| t.value.starts_with("<<") && t.value.contains('\n'))) {
+            with_heredocs += 1;
+        }
+    }
+    assert!(with_heredocs > 50, "only {with_heredocs} inputs had a heredoc");
 }
