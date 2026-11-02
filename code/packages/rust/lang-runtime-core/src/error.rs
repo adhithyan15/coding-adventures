@@ -47,6 +47,7 @@
 //! | [`RuntimeError::NoSuchProperty`] | `load_property` / `store_property` on missing key (when language treats as error) | JS strict mode `ReferenceError`; Python `AttributeError` |
 //! | [`RuntimeError::TypeError`] | builtin operand type mismatch | language-specific TypeError |
 //! | [`RuntimeError::Custom`] | binding-defined message-based error | language passes through as-is |
+//! | [`RuntimeError::Trap`] | a builtin hit a LANG83 trap (`Trap.Bounds`, `Trap.Overflow`, …) | the VM raises the same trap its own ops raise (twig-vm: `RunError::Trap`) |
 
 use crate::value::SymbolId;
 
@@ -92,6 +93,28 @@ pub enum RuntimeError {
     /// runtime; the binding controls both the format and the
     /// downstream interpretation.
     Custom(String),
+
+    /// A builtin hit one of the LANG83 standard traps — the closed set of
+    /// kinds in `interpreter_ir::exception_kind` (`Trap.Bounds`,
+    /// `Trap.Overflow`, …) — rather than a type mismatch.
+    ///
+    /// It is the shared-runtime twin of vm-core's `VMError::Trap` and
+    /// twig-vm's `RunError::Trap`, and exists so that a builtin which does
+    /// the same job as a LANG83 op fails the same way.  `dynval-runtime`'s
+    /// `string-ref` / `substring` out of range are `Trap.Bounds`, like the
+    /// `str_index` / `str_slice` ops, and `string-append` past the string
+    /// ceiling is `Trap.Overflow`, like `str_concat` (#18800).  Before this
+    /// variant the builtins could only say `TypeError`, so the same Twig
+    /// expression failed with a different error depending on whether it
+    /// compiled to the op or to the builtin.
+    ///
+    /// `kind` is the trap's registered name, e.g. `"Trap.Bounds"`.  This
+    /// crate does not check it against the registry (it does not depend on
+    /// `interpreter-ir`); the VM that receives it does.
+    Trap {
+        /// The registered trap kind, e.g. `"Trap.Bounds"`.
+        kind: String,
+    },
 }
 
 impl std::fmt::Display for RuntimeError {
@@ -106,6 +129,8 @@ impl std::fmt::Display for RuntimeError {
             }
             RuntimeError::TypeError(msg) => write!(f, "type error: {msg}"),
             RuntimeError::Custom(msg) => write!(f, "{msg}"),
+            // The same words as vm-core's and twig-vm's trap errors.
+            RuntimeError::Trap { kind } => write!(f, "trap: {kind}"),
         }
     }
 }
@@ -144,6 +169,14 @@ mod tests {
     fn custom_passes_through_message() {
         let e = RuntimeError::Custom("anything".into());
         assert_eq!(format!("{e}"), "anything");
+    }
+
+    #[test]
+    fn trap_displays_like_the_vms_traps() {
+        let e = RuntimeError::Trap { kind: "Trap.Bounds".into() };
+        assert_eq!(format!("{e}"), "trap: Trap.Bounds");
+        assert_ne!(e, RuntimeError::Trap { kind: "Trap.Overflow".into() });
+        assert_eq!(e.clone(), e);
     }
 
     #[test]

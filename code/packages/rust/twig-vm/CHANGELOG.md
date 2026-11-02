@@ -1,5 +1,12 @@
 # Changelog — twig-vm
 
+## Unreleased — LANG83 PR5a follow-up (#18800): the string builtins trap like the ops
+
+### Fixed
+
+- Every path that runs a `dynval-runtime` builtin (`call_builtin`, and a builtin closure through `apply_closure`, `call_closure` or a higher-order list operation's `invoke_closure_value`) now goes through one helper, `call_lispy_builtin`. It turns the builtins' new `RuntimeError::Trap { kind }` into `RunError::Trap { kind }`, so `call_builtin "string-ref"` / `"substring"` out of range are `trap: Trap.Bounds` like the `str_index` / `str_slice` ops (they were `Runtime(TypeError(..))`), and it runs `"string-append"` under the module's `str_ceiling()` (`string_append_within`), so past it the builtin raises `Trap.Overflow` like `str_concat` (it had no ceiling).
+- Tests `builtin_string_ref_and_substring_out_of_range_are_trap_bounds`, `builtin_string_append_past_the_module_ceiling_is_trap_overflow` (also pins `dynval_runtime::builtins::STR_MAX_BYTES == interpreter_ir::STR_MAX_BYTES`) and `a_builtin_closure_gets_the_module_ceiling_and_the_trap_too` (`fold-left string-append`). All three fail without the change.
+
 ## Unreleased — LANG83 PR5a: string failures are registered traps
 
 ### Added

@@ -9,7 +9,7 @@
 | [`value`](src/value.rs) | `LispyValue` — tagged i64 (immediate ints / nil / true / false / symbols + heap-tagged pointers) |
 | [`heap`](src/heap.rs) | `ConsCell`, `Closure`, `LangString` — `#[repr(C)]` with the LANG20 16-byte header. `alloc_cons`, `alloc_closure`, `alloc_string`, `car`, `cdr`, `is_*`, `as_closure`, `string_bytes` |
 | [`intern`](src/intern.rs) | Process-global symbol intern table with `intern(name)` / `name_of(id)` |
-| [`builtins`](src/builtins.rs) | TW00 builtin handlers: `+ - * / = < >`, `cons car cdr`, `null? pair? number? symbol?`, `print`; **LANG47** string builtins: `string?`, `string-length`, `string-ref`, `substring`, `string-append`, `make-string`, `string=?`, `string<?`, `string>?`, `number->string`, `string->number`, `string->symbol`, `symbol->string`, and all `char-*` predicates/converters |
+| [`builtins`](src/builtins.rs) | TW00 builtin handlers: `+ - * / = < >`, `cons car cdr`, `null? pair? number? symbol?`, `print`; **LANG47** string builtins: `string?`, `string-length`, `string-ref`, `substring`, `string-append` (out of range: `Trap.Bounds`; past the string ceiling `STR_MAX_BYTES`, or a module's via `string_append_within`: `Trap.Overflow`, #18800), `make-string`, `string=?`, `string<?`, `string>?`, `number->string`, `string->number`, `string->symbol`, `symbol->string`, and all `char-*` predicates/converters |
 | [`binding`](src/binding.rs) | `LispyBinding` — full `LangBinding` impl + `LispyClass` + `LispyICEntry` |
 | [`abi`](src/abi.rs) | `extern "C"` surface: `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_symbol` (the LANG83 PR7f registry names; `lispy_cons` … before DVAL01, `dyn_cons` … before PR7f), plus the closure entry points |
 

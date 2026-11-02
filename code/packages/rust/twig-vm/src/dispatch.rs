@@ -1532,6 +1532,40 @@ fn trap(kind: &str) -> RunError {
     RunError::Trap { kind: kind.to_string() }
 }
 
+/// Run a `dynval-runtime` builtin that `resolve_builtin` returned for `name`,
+/// with the LANG83 string contract (#18800).
+///
+/// Every path that calls a builtin goes through here: `call_builtin`, and a
+/// builtin closure reached by `apply_closure`, `call_closure` or a
+/// higher-order list operation (`invoke_closure_value`). Two things differ
+/// from calling `builtin(args)` directly:
+///
+/// | | direct call | here |
+/// |---|---|---|
+/// | `string-append` | the registry ceiling, 2³⁰ − 64 bytes | the **module's** ceiling, `IIRModule::str_ceiling()`, as `str_concat` uses |
+/// | `RuntimeError::Trap { kind }` | `RunError::Runtime(..)` | `RunError::Trap { kind }`, as the ops' own traps |
+///
+/// So Twig's `(string-ref s 3)` on a 3-character string raises
+/// `trap: Trap.Bounds` whether the compiler emitted the `str_index` op or a
+/// `call_builtin "string-ref"`, and `(string-append a b)` past a lowered
+/// ceiling raises `Trap.Overflow` either way.
+fn call_lispy_builtin(
+    module: &IIRModule,
+    name: &str,
+    builtin: lang_runtime_core::BuiltinFn<LispyBinding>,
+    args: &[LispyValue],
+) -> Result<LispyValue, RunError> {
+    let result = if name == "string-append" {
+        dynval_runtime::builtins::string_append_within(args, module.str_ceiling() as usize)
+    } else {
+        builtin(args)
+    };
+    result.map_err(|e| match e {
+        RuntimeError::Trap { kind } => RunError::Trap { kind },
+        other => RunError::Runtime(other),
+    })
+}
+
 /// `str_index dest, s, i [i64]` — byte `i` of `s`, zero-extended.
 ///
 /// LANG83 PR5a: `Trap.Bounds` unless `0 <= i < len(s)`. The index is
@@ -1937,7 +1971,7 @@ fn exec_call_builtin(
         call_args.push(v);
     }
 
-    let result = builtin(&call_args).map_err(RunError::Runtime)?;
+    let result = call_lispy_builtin(module, name, builtin, &call_args)?;
     if let Some(d) = &instr.dest {
         frame.set(d.clone(), result)?;
     }
@@ -2153,7 +2187,7 @@ fn exec_apply_closure(
         })?;
         let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
             .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
-        builtin(&user_args).map_err(RunError::Runtime)?
+        call_lispy_builtin(module, &name_str, builtin, &user_args)?
     } else {
         // User-fn closure: prepend captures, look up function,
         // recurse into dispatch.
@@ -2398,7 +2432,7 @@ fn exec_call_closure(
         })?;
         let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
             .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
-        builtin(&user_args).map_err(RunError::Runtime)?
+        call_lispy_builtin(module, &name_str, builtin, &user_args)?
     } else {
         // User-fn closure: prepend captures to args then recurse.
         //
@@ -2918,7 +2952,7 @@ fn invoke_closure_value(
         })?;
         let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
             .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
-        builtin(&args).map_err(RunError::Runtime)
+        call_lispy_builtin(module, &name_str, builtin, &args)
     } else {
         // User-fn closure: prepend captures to args then recurse into dispatch.
         //
@@ -6523,6 +6557,77 @@ mod tests {
         assert_eq!(run(&program(Some(16))).unwrap_err(), RunError::Trap { kind: "Trap.Overflow".into() });
         assert_eq!(run(&program(Some(17))).unwrap().as_int(), Some(16));
         assert_eq!(run(&program(None)).unwrap().as_int(), Some(16));
+    }
+
+    // ── #18800 item 3: the dynval string builtins follow the LANG83 contract ──
+
+    /// `main` = `r = call_builtin name, args…; ret r`, under `ceiling`.
+    fn builtin_call(name: &str, args: Vec<Operand>, ceiling: Option<u32>) -> IIRModule {
+        let mut instrs = Vec::new();
+        let mut srcs = vec![Operand::Var(name.into())];
+        for (k, arg) in args.into_iter().enumerate() {
+            let reg = format!("a{k}");
+            let ty = if matches!(arg, Operand::Str(_)) { "string" } else { "int" };
+            instrs.push(IIRInstr::new("const", Some(reg.clone()), vec![arg], ty));
+            srcs.push(Operand::Var(reg));
+        }
+        instrs.push(IIRInstr::new("call_builtin", Some("r".into()), srcs, "any"));
+        instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"));
+        let mut m = module_with_main(instrs, 6);
+        m.str_max_bytes = ceiling;
+        m
+    }
+
+    /// `call_builtin "string-ref"` / `"substring"` out of range raise the
+    /// same `Trap.Bounds` as the `str_index` / `str_slice` ops. Before #18800
+    /// they were `RunError::Runtime(TypeError(..))`.
+    #[test]
+    fn builtin_string_ref_and_substring_out_of_range_are_trap_bounds() {
+        let bounds = RunError::Trap { kind: "Trap.Bounds".into() };
+        for i in [-1, 3, 1 << 40] {
+            let m = builtin_call("string-ref", vec![Operand::Str("ABC".into()), Operand::Int(i)], None);
+            assert_eq!(run(&m).unwrap_err(), bounds, "ABC[{i}]");
+        }
+        for (a, b) in [(-1, 1), (2, 1), (0, 4)] {
+            let m = builtin_call("substring", vec![Operand::Str("ABC".into()), Operand::Int(a), Operand::Int(b)], None);
+            assert_eq!(run(&m).unwrap_err(), bounds, "ABC[{a}..{b})");
+        }
+        let m = builtin_call("string-ref", vec![Operand::Str("ABC".into()), Operand::Int(2)], None);
+        assert_eq!(run(&m).unwrap().as_int(), Some(67));
+        // A type error is still a type error.
+        let m = builtin_call("string-ref", vec![Operand::Int(1), Operand::Int(0)], None);
+        assert!(matches!(run(&m).unwrap_err(), RunError::Runtime(RuntimeError::TypeError(_))));
+    }
+
+    /// `call_builtin "string-append"` checks the **module's** ceiling, as
+    /// `str_concat` does, and raises `Trap.Overflow` past it. Before #18800 it
+    /// had no ceiling.
+    #[test]
+    fn builtin_string_append_past_the_module_ceiling_is_trap_overflow() {
+        let append = |ceiling| builtin_call("string-append", vec![Operand::Str("ab".into()), Operand::Str("cde".into())], ceiling);
+        assert_eq!(run(&append(Some(4))).unwrap_err(), RunError::Trap { kind: "Trap.Overflow".into() });
+        for ceiling in [Some(5), None] {
+            let v = run(&append(ceiling)).unwrap();
+            // SAFETY: v was produced by alloc_string.
+            assert_eq!(unsafe { dynval_runtime::string_bytes(v) }, Some(&b"abcde"[..]), "{ceiling:?}");
+        }
+        // The twig-vm ceiling and the builtin's registry ceiling are one value.
+        assert_eq!(dynval_runtime::builtins::STR_MAX_BYTES as u64, u64::from(interpreter_ir::STR_MAX_BYTES));
+    }
+
+    /// The same contract when the builtin is called as a closure value: here
+    /// `fold-left` calls `string-append` through `invoke_closure_value`.
+    #[test]
+    fn a_builtin_closure_gets_the_module_ceiling_and_the_trap_too() {
+        let program = |ceiling: Option<u32>| {
+            let mut m = compile_source(r#"(string-length (fold-left string-append "" (list "abc" "de")))"#, "t")
+                .expect("compiles");
+            m.str_max_bytes = ceiling;
+            m
+        };
+        assert_eq!(run(&program(None)).unwrap().as_int(), Some(5));
+        assert_eq!(run(&program(Some(5))).unwrap().as_int(), Some(5));
+        assert_eq!(run(&program(Some(4))).unwrap_err(), RunError::Trap { kind: "Trap.Overflow".into() });
     }
 
     #[test]

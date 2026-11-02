@@ -1,5 +1,11 @@
 # Changelog — dynval-runtime
 
+## Unreleased — LANG83 PR5a follow-up (#18800) — the string builtins name LANG83 traps
+
+- `string-ref` with an index outside `0 ≤ i < length`, and `substring` with a range outside `0 ≤ start ≤ end ≤ length`, return `RuntimeError::Trap { kind: "Trap.Bounds" }` (new in `lang-runtime-core`), the trap the `str_index` / `str_slice` ops raise. They returned `TypeError`. Indices go through `usize::try_from`, not `as usize`, so a huge index cannot wrap into range on a 32-bit host. A wrong-type operand is still a `TypeError`.
+- `string-append` has a ceiling: a result longer than `STR_MAX_BYTES` (new public const, 2³⁰ − 64, equal to `interpreter_ir::STR_MAX_BYTES`) is `Trap { kind: "Trap.Overflow" }`, checked before allocating (`len b > ceiling || len a > ceiling − len b`, which cannot overflow). New `string_append_within(args, ceiling)` takes a module's lower ceiling (clamped to `STR_MAX_BYTES`); twig-vm uses it.
+- Tests `string_ref_out_of_range_is_trap_bounds`, `substring_out_of_range_is_trap_bounds` (UTF-8 and byte-mode paths, every edge) and `string_append_past_the_ceiling_is_trap_overflow`, plus a doc example. Miri: `cargo +nightly miri test -p dynval-runtime` passes.
+
 ## Unreleased — #18417 — the pair refusal's text is public
 
 - New `abi::not_a_pair_message(op, word)` returns the refusal text, for an implementation that reports the error instead of panicking (`lang-aot`'s JIT callbacks), for example `dyn_pair_first: argument with tag 0 (int) is not a pair`. The private `not_a_pair` panic uses it.
