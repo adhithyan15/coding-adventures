@@ -1,5 +1,3 @@
-# Changelog
-
 ## [Unreleased]
 
 ### Fixed
@@ -14,16 +12,5 @@
   `cabal test all`, because `cmd /C` cannot parse the POSIX prefix. Windows
   previously ran the plain `BUILD`, so its behaviour is unchanged. Tests pin
   both files exactly (spec section 5.8).
-
-## [1.0.1] - 2026-04-18
-
-### Fixed
-
-- recognize git worktrees where `.git` is a file instead of a directory
-
-## [1.0.0] - 2026-03-21
-
-### Added
-
-- Initial Python implementation of scaffold-generator
-- Full parity with Go implementation
+- The changelog is now sharded under `CHANGELOG.d/` (one file per entry), so
+  concurrent branches no longer collide on a shared `CHANGELOG.md`.

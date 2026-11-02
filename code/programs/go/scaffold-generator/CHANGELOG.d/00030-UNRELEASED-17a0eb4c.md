@@ -1,7 +1,3 @@
-# Changelog
-
-All notable changes to this program will be documented in this file.
-
 ## [Unreleased]
 
 ### Added
@@ -23,14 +19,6 @@ All notable changes to this program will be documented in this file.
 
 ### Fixed
 
-- Haskell scaffolds now emit a `BUILD` that selects the Command Line Tools
-  linker on macOS: the two-line explanation, then
-  `if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; cabal test`.
-  GHC 9.4.8's macOS bindist hardcodes a CLT SDK sysroot that an older default
-  Xcode linker cannot read (`arm64e.x1`), and `build-tool --validate-build-files`
-  rejects a Haskell BUILD without the selection. `BUILD_windows` keeps its
-  existing skip record and never carries the POSIX prefix; the test now pins
-  both files exactly (spec section 5.8).
 - OCaml dependency pins now scope checksum bypass to local worktree ingestion
   while subsequent registry dependency installs retain strict checksums.
 - Lua dependency discovery is now restricted to the rockspec `dependencies`
@@ -61,28 +49,3 @@ All notable changes to this program will be documented in this file.
   description and include a category, README, and changelog metadata.
 - Cabal generation now treats descriptions containing percent signs as plain
   text instead of accidentally reusing generated content as a format string.
-
-## [1.1.0] - 2026-03-25
-
-### Added
-
-- Language templates generate `required_capabilities.json` alongside their
-  package-specific metadata.
-- New schema-supported packages scaffold with empty capabilities and a "pure
-  computation" default justification.
-- Template tests verify generated capability JSON includes the required
-  package identity and fields.
-
-## [1.0.0] - 2026-03-21
-
-### Added
-
-- Initial implementation of scaffold-generator in Go
-- CLI parsing via cli-builder with scaffold-generator.json spec
-- Name normalization (kebab-case to snake_case, CamelCase, joinedlower)
-- Dependency resolution: transitive closure via BFS, topological sort via Kahn's algorithm
-- File generation for all 6 languages: Python, Go, Ruby, TypeScript, Rust, Elixir
-- Automatic Rust workspace Cargo.toml member list updates
-- Dry-run mode for previewing generated files
-- Input validation (kebab-case names, known languages, existing dependencies)
-- Comprehensive test suite covering name normalization, dep resolution, file generation
