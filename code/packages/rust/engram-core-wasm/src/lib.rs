@@ -3263,12 +3263,19 @@ fn insert_note_editor_props(
         "note-editor-selected-field-index".to_string(),
         selected_field_index.map_or(Value::from(-1), |index| Value::from(index as i64)),
     );
+    // The focused field's visible label, and also its accessible name:
+    // NoteEditor 0.2.0 mounts DraftEditor for this field, which binds the
+    // body's `a11y-label` to this same slot. So it must never be "", or a
+    // screen reader would announce an unnamed text area. With no field
+    // selected (a note type with no fields) it says "Field", and the
+    // placeholder below says what to do about it (E4, D2 of
+    // mosaic-editor-convergence-audit-v1.md §8).
     props.insert(
         "note-editor-selected-field-label".to_string(),
         Value::String(
             selected_field
                 .map(|field| field.name.clone())
-                .unwrap_or_default(),
+                .unwrap_or_else(|| "Field".to_string()),
         ),
     );
     props.insert(
@@ -7339,6 +7346,29 @@ mod tests {
         .unwrap();
         assert_eq!(value["ok"], true, "{value}");
         assert_eq!(value["state"]["decks"][0]["name"], "Parent::Child");
+    }
+
+    /// The focused note field always has a name (E4).
+    ///
+    /// NoteEditor 0.2.0 mounts DraftEditor for the focused field, and
+    /// DraftEditor uses the field's visible label as its accessible name. An
+    /// empty collection has no note type and so no field to select; the label
+    /// used to be "" there, which would leave a screen reader announcing an
+    /// unnamed text area. It is "Field" now, and the placeholder still says
+    /// what to do.
+    #[test]
+    fn the_focused_note_field_is_named_even_with_no_field_selected() {
+        let session = EngramSession::new();
+        let props: Value = serde_json::from_str(&session.engram_app_props("", NOW)).unwrap();
+        assert_eq!(props["ok"], true, "{props}");
+        let props = &props["props"];
+        assert_eq!(props["note-editor-selected-field-index"], -1);
+        assert_eq!(props["note-editor-selected-field-label"], "Field");
+        assert_eq!(
+            props["note-editor-selected-field-placeholder"],
+            "Select a field"
+        );
+        assert_eq!(props["note-editor-selected-field-value"], "");
     }
 
     #[test]

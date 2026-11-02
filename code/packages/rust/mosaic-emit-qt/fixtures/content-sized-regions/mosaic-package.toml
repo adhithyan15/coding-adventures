@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-pkg-qt-content-sized-regions-fixture"
+version = "0.1.0"
+description = "Qt fixture: scrolled content whose height comes only from a padded styled Box and a multi-child If body (UI21 §2.2, rules 6 and 7)"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Shell"]
+
+[dependencies]
+
+[kernel]
+version = "1"
