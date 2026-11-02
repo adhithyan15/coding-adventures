@@ -1,5 +1,12 @@
 # Changelog — iir-to-beam
 
+## Unreleased — LANG83 PR5a — strings fail closed
+
+- `str_index` guards `is_integer`, `idx >= 0` and `idx < length(src)` before `lists:nth`, and raises `erlang:error('Trap.Bounds')` on failure. Before, `lists:nth` failed with `function_clause`, which names no kind.
+- `str_slice` raises `'Trap.Bounds'` instead of `badarg`, and tests `is_integer` on both offsets before its range compares (Erlang orders `1.5` between `1` and `2`).
+- `str_concat` compares `length(A) + length(B)` with the module's string ceiling before `++` and raises `erlang:error('Trap.Overflow')` past it.
+- New `tests/lang83_pr5a.rs` pins the guards, their order, the reasons and the ceiling operand. CI's BEAM `lang_matrix` column executes the Twig `string-ref` trap row.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: BEAM holds dynamic values as Erlang terms (through `lang-aot`'s structural lowering) and links no tagged-word runtime.
