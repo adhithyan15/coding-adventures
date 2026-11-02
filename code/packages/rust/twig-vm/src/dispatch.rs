@@ -3663,6 +3663,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::UnsupportedOpcode(s) if s == "not_a_real_opcode"));
@@ -3693,6 +3694,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::FellOffEnd(s) if s == "main"));
@@ -3734,6 +3736,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::UnknownFunction(s) if s == "ghost"));
@@ -3769,6 +3772,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let mut budget = ExecutionBudget::new();
         let mut globals = Globals::new();
@@ -4623,6 +4627,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::NotCallable(_)));
@@ -4673,6 +4678,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let err = run(&module).unwrap_err();
         match err {
@@ -4773,6 +4779,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -5312,6 +5319,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
 
         // First call.  load_property errors with NoSuchProperty
@@ -5969,6 +5977,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -6066,6 +6075,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let result = run(&module).unwrap();
         assert_eq!(result.as_int(), Some(42), "expected 42, got {result}");
@@ -6222,6 +6232,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let result = run(&module).unwrap();
         assert_eq!(result.as_int(), Some(12), "expected 12, got {result}");
@@ -6261,6 +6272,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let err = run(&module).unwrap_err();
         assert!(
@@ -6303,6 +6315,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::NotCallable(_)));

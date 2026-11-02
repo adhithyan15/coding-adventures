@@ -136,6 +136,7 @@ fn many_str_concat_calls_module(iterations: i64) -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 

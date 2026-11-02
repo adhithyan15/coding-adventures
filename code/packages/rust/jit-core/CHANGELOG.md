@@ -5,6 +5,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — LANG83 PR5a — trapping string ops survive DCE
+
+- `CIRInstr::is_pure` treats `str_index`, `str_slice` and `str_concat` as impure: the first two may trap `Trap.Bounds` and the third `Trap.Overflow`, so `CIROptimizer`'s dead-code elimination (which `aot-core` runs at opt levels 1 and 2) keeps them when their result is unused. New test `dce_keeps_unused_trapping_string_ops`. The generic JIT still refuses every string op (`INTERPRETER_TIER_ONLY`) until LANG83 PR5d.
+
 ## Unreleased — #18417 — a builtin callback can fail the run
 
 - `GenericCirJit`'s `CALL_BUILTIN` stops the run right after a callback that has recorded an error in the error slot. A callback captures `error_handle()` to do that, since it returns a plain `Value` and cannot return an `Err`. Before, the run went on with the callback's placeholder result, and the error only surfaced when `JITCore` drained the slot at the end. The check is one mutex lock per builtin call. `error_handle`'s doc states the contract. New test `a_callback_that_records_an_error_stops_the_run`. `lang-aot`'s McCarthy `car` / `cdr` use it to fail on a non-pair.

@@ -60,6 +60,7 @@ fn dispatch_loop_function_ending_in_a_bare_conditional_jump_terminates() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
 
     let config = IIRWasmConfig::default();
@@ -102,6 +103,7 @@ fn unreachable_value_dispatch_fallthrough_validates() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
 
     let wasm_module = lower_iir_to_wasm(&module, &IIRWasmConfig::default())

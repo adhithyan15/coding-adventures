@@ -143,6 +143,7 @@ pub fn compile_to_iir(ast: &GrammarASTNode, module_name: &str) -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 

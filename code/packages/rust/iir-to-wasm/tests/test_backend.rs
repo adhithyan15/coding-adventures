@@ -44,6 +44,7 @@ fn module_one(
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -71,6 +72,7 @@ fn module_multi(fns: Vec<(&str, Vec<(&str, &str)>, &str, Vec<IIRInstr>)>) -> IIR
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -96,6 +98,7 @@ fn validate_empty_module_produces_error() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let errs = validate_for_wasm(&m);
     assert!(!errs.is_empty(), "empty module must produce errors");
@@ -931,6 +934,7 @@ fn validation_failure_propagated() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
     assert!(

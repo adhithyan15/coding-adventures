@@ -73,6 +73,7 @@
 //!     exports: vec![],
 //!     imports: vec![],
 //!     release: None,
+//!     str_max_bytes: None,
 //! };
 //!
 //! let ll = lower_iir_to_llvm(&module, &IIRLlvmConfig::default())

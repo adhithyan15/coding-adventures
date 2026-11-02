@@ -1,5 +1,12 @@
 # Changelog — vm-core
 
+## Unreleased — LANG83 PR5a — string failures are registered traps
+
+- `str_index` out of range and `str_slice` out of range return `VMError::Trap { kind: "Trap.Bounds" }`, not `VMError::Custom`. The predicates (`0 ≤ i < len`, `0 ≤ a ≤ b ≤ len`) are evaluated on the full `i64`.
+- `str_concat` returns `VMError::Trap { kind: "Trap.Overflow" }` when the result would exceed the module's string ceiling (`IIRModule::str_ceiling`, carried in the new `DispatchCtx::str_max_bytes`). The check (`len a > ceiling − len b`) comes before the allocation.
+- `str_slice` still refuses a range that splits a UTF-8 character (`Value::Str` is a `String`); LANG83 PR5b makes it `Rc<[u8]>`.
+- New tests in `tests/e4_strings.rs`: every out-of-range edge of `str_index` (−1, `len`, `i64::MAX`, `i64::MIN`, 2³² + 1) and `str_slice`, and the ceiling (16 traps at 17 bytes; 17 and the registry ceiling do not).
+
 ## Unreleased — #18463 — the dynamic comparison builtins and `pair?`
 
 - **New default builtins `<`, `<=`, `>`, `>=`** (`dyn_compare`). Twig emits

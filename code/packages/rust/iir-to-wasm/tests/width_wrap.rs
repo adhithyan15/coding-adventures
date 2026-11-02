@@ -23,6 +23,7 @@ fn module(ty: &str, instrs: Vec<IIRInstr>) -> Vec<u8> {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let wasm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
     encode_module(&wasm).expect("encoding failed")

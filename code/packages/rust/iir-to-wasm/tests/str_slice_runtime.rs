@@ -68,6 +68,7 @@ fn try_slice_eq(src: &str, start: i64, end: i64, expected: &str) -> Result<i64, 
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).map_err(|e| format!("{e:?}"))?;
     let bytes = encode_module(&wasm).map_err(|e| format!("{e:?}"))?;

@@ -101,6 +101,7 @@
 //!     exports: vec![],
 //!     imports: vec![],
 //!     release: None,
+//!     str_max_bytes: None,
 //! };
 //!
 //! let errors = lower_builtins(&mut module);
@@ -297,6 +298,7 @@ pub fn lower_builtins(module: &mut IIRModule) -> Vec<BuiltinLoweringError> {
 ///     exports: vec![],
 ///     imports: vec![],
 ///     release: None,
+///     str_max_bytes: None,
 /// };
 ///
 /// let (lowered, errors) = lower_builtins_cloned(&original);
