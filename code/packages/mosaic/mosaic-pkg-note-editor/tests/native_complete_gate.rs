@@ -24,15 +24,60 @@
 //! so the assertion is zero and an allowlist would only be somewhere for a
 //! regression to hide.
 //!
-//! ## Style drops: zero, on the three backends that report them
+//! ## Style drops: pinned exactly, in both directions
 //!
 //! Also measured rather than assumed. `style_degradations` sits outside
-//! `native_complete` by design — some drops are accepted platform limits — and
-//! this package currently has none, so the strictest assertion is the true one.
+//! `native_complete` by design — some drops are accepted platform limits — so
+//! each one this package has is pinned, an unpinned one fails, and a pin that
+//! stops occurring fails too. When this gate was written the package had none
+//! on the three backends that then reported drops; Qt and Flutter reporting
+//! later found one (Flutter `font-weight`), and 0.2.0 added four more.
 //!
 //! The style-drop half covers all five native backends: XAML, SwiftUI, Compose,
 //! Qt and Flutter each populate `style_degradations`. The capability assertion
 //! above is independently backend-generic.
+//!
+//! ## 0.2.0: what mounting DraftEditor costs, measured (E4)
+//!
+//! Since 0.2.0 the focused field is a body-only
+//! `pkg::mosaic-pkg-draft-editor::DraftEditor`. DraftEditor's own gate is
+//! clean at its own root, and the editor convergence audit's R2 found that
+//! that does NOT certify it when nested: mounted inside NoteEditor it loses
+//! something its own gate never sees. So this gate measures the composed
+//! package, and its pins name the **part** as well as the backend and
+//! property, as `mosaic-pkg-notes`' E2 gate does. A `(SwiftUI, "gap")` pin
+//! would license every part of the package to drop `gap`.
+//!
+//! The measured set, identical in both themes (0.1.0 had only the first):
+//!
+//! ```text
+//!                  font-weight    gap                    min-height
+//!                  editor-title   draft-editor-          draft-editor-body
+//!                                 title-group
+//!   SwiftUI                         x                                     1
+//!   Qt                                                    x               1
+//!   Xaml                                                                  0
+//!   Flutter          x                                    x               2
+//!   Compose                                                               0
+//!                                                                        --
+//!                                                                         4
+//! ```
+//!
+//! Before #18467 Flutter also dropped `width: 100%` on `draft-editor-body`:
+//! the field sat under NoteEditor's `Row [ editor-body ]`, which gave it no
+//! bounded width. That emitter fix wraps such a child in `Expanded`, so the
+//! width now lowers and its pin is gone.
+//!
+//! Why each is pinned rather than fixed (audit §8, D4):
+//!
+//! - **SwiftUI `gap` on `draft-editor-title-group`** is a reporting artifact.
+//!   `title-label : ""` makes the title group's `If` a constant, so the
+//!   package inliner folds it away and the part never appears in the emitted
+//!   Swift. The SwiftUI reporter counts the style of a part with no
+//!   occurrence as "not lowered". Nothing on screen is missing.
+//! - **Qt and Flutter `min-height` on `draft-editor-body`** is the drop
+//!   DraftEditor's own gate pins: neither lowers `min-height` on a text
+//!   field yet.
 
 use mosaic_package_artifact_builder::{
     analyze_package_degradations, Backend, BuildOptions, BuildProfile,
@@ -47,13 +92,21 @@ use tempfile::TempDir;
 /// failure rather than guard against one.
 const NATIVE_BACKENDS: &[Backend] = &Backend::NATIVE;
 
-/// Style properties this package is currently known to lose, by backend.
-/// Every entry is measured and the inverse-ratchet test rejects stale pins.
-const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
-    // ---- Flutter (#12022) ----
-    // These pre-existing losses became measurable when Flutter gained drop
-    // reporting. Each pin is checked below and must disappear with its gap.
-    (Backend::Flutter, "font-weight"),
+/// Style properties this package is currently known to lose, by backend,
+/// property and part. Every entry is measured (both themes), and the
+/// inverse-ratchet test rejects stale pins.
+const ALLOWED_STYLE_DROPS: &[(Backend, &str, &str)] = &[
+    // ---- NoteEditor's own parts (#12022) ----
+    // This pre-existing loss became measurable when Flutter gained drop
+    // reporting: the heading's weight (800) has no lowering on that text.
+    (Backend::Flutter, "font-weight", "editor-title"),
+    // ---- The focused field, mounted DraftEditor (0.2.0, E4) ----
+    // A part that is folded away at compile time (title-label is ""),
+    // reported as unlowered. See the header: nothing on screen is missing.
+    (Backend::SwiftUI, "gap", "draft-editor-title-group"),
+    // DraftEditor's own pinned gap: no `min-height` on a text field.
+    (Backend::Qt, "min-height", "draft-editor-body"),
+    (Backend::Flutter, "min-height", "draft-editor-body"),
 ];
 
 fn package_root() -> PathBuf {
@@ -72,6 +125,19 @@ fn package_root() -> PathBuf {
 /// and therefore cover one theme each. Noted separately rather than widened
 /// here.
 const THEMES: &[Option<&str>] = &[None, Some("light")];
+
+fn theme_name(theme: Option<&str>) -> &str {
+    theme.unwrap_or("dark")
+}
+
+/// The part a style drop was reported on.
+///
+/// The analyzer names a style drop's location `$style.<part>`. Anything else
+/// returns `None`, so it cannot match a pin and stays unexpected rather than
+/// slipping through.
+fn part_of(layout_path: &str) -> Option<&str> {
+    layout_path.strip_prefix("$style.")
+}
 
 fn report_for(
     backend: Backend,
@@ -102,7 +168,7 @@ fn the_package_is_native_complete_on_every_backend() {
             for entry in &report_for(backend, theme).degradations {
                 failures.push(format!(
                     "  {backend:?} ({}): {} — {} at {}",
-                    theme.unwrap_or("dark"),
+                    theme_name(theme),
                     entry.component,
                     entry.code,
                     entry.layout_path
@@ -130,18 +196,18 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
     for &backend in NATIVE_BACKENDS {
         for &theme in THEMES {
             for entry in &report_for(backend, theme).style_degradations {
-                // A drop that does not name its property cannot be matched
-                // against the list, so it stays unexpected rather than
-                // slipping through.
-                let allowed = entry.primitive.as_deref().is_some_and(|property| {
-                    ALLOWED_STYLE_DROPS
+                // A drop that does not name its property or its part cannot
+                // be matched against the list, so it stays unexpected.
+                let allowed = match (entry.primitive.as_deref(), part_of(&entry.layout_path)) {
+                    (Some(property), Some(part)) => ALLOWED_STYLE_DROPS
                         .iter()
-                        .any(|(b, p)| *b == backend && *p == property)
-                });
+                        .any(|(b, p, q)| *b == backend && *p == property && *q == part),
+                    _ => false,
+                };
                 if !allowed {
                     unexpected.push(format!(
                         "  {backend:?} ({}): {} at {} — {}",
-                        theme.unwrap_or("dark"),
+                        theme_name(theme),
                         entry.primitive.as_deref().unwrap_or("<unnamed>"),
                         entry.layout_path,
                         entry.reason
@@ -161,7 +227,7 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
     );
 }
 
-/// Every pinned drop is still a drop.
+/// Every pinned drop is still a drop, in every theme.
 ///
 /// The test above runs one way: it catches a NEW drop and cannot catch a pinned
 /// one that stopped happening. A fixed-but-still-listed entry is not untidy —
@@ -169,37 +235,60 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
 /// gate green. Engram's own copy of this pattern had 11 of 21 pins in exactly
 /// that state before it was checked.
 ///
-/// Vacuous when the list is empty, which is the correct behaviour: an empty
-/// list licenses nothing, so there is nothing to go stale.
+/// Checked per theme, not over the union of both: the four drops occur in each
+/// theme today, so a pin that one theme stopped producing is already a change
+/// worth seeing.
 #[test]
 fn no_pinned_style_drop_has_silently_been_fixed() {
-    let mut observed: Vec<(Backend, String)> = Vec::new();
-    for &backend in NATIVE_BACKENDS {
-        for &theme in THEMES {
+    let mut stale = Vec::new();
+
+    for &theme in THEMES {
+        let mut observed: Vec<(Backend, String, String)> = Vec::new();
+        for &backend in NATIVE_BACKENDS {
             for entry in &report_for(backend, theme).style_degradations {
-                if let Some(property) = entry.primitive.as_deref() {
-                    observed.push((backend, property.to_string()));
+                if let (Some(property), Some(part)) =
+                    (entry.primitive.as_deref(), part_of(&entry.layout_path))
+                {
+                    observed.push((backend, property.to_string(), part.to_string()));
                 }
+            }
+        }
+
+        for (backend, property, part) in ALLOWED_STYLE_DROPS {
+            let still_dropped = observed
+                .iter()
+                .any(|(b, p, q)| b == backend && p == property && q == part);
+            if !still_dropped {
+                stale.push(format!(
+                    "  {backend:?} ({}): {property} on {part}",
+                    theme_name(theme)
+                ));
             }
         }
     }
 
-    let stale: Vec<String> = ALLOWED_STYLE_DROPS
-        .iter()
-        .filter(|(backend, property)| {
-            !observed
-                .iter()
-                .any(|(seen, seen_property)| seen == backend && seen_property == property)
-        })
-        .map(|(backend, property)| format!("  {backend:?}: {property}"))
-        .collect();
-
     assert!(
         stale.is_empty(),
         "{} pinned style drop(s) no longer occur:\n{}\n\nThe emitter learned \
-         the mapping, so delete these — left in place they stop recording a \
-         known gap and start licensing its return.",
+         the mapping (or the layout stopped asking for it), so delete these — \
+         left in place they stop recording a known gap and start licensing its \
+         return.",
         stale.len(),
         stale.join("\n")
     );
+}
+
+/// The pin list itself has no duplicates, so its length is the drop count.
+///
+/// Together with the two tests above this makes `ALLOWED_STYLE_DROPS.len()`
+/// the package's exact per-theme drop count: 1 in 0.1.0, 4 since E4 mounted
+/// DraftEditor. That is the number an emitter fix for any of them moves.
+#[test]
+fn the_pin_list_names_each_drop_once() {
+    for (i, pin) in ALLOWED_STYLE_DROPS.iter().enumerate() {
+        assert!(
+            !ALLOWED_STYLE_DROPS[i + 1..].contains(pin),
+            "{pin:?} is pinned twice"
+        );
+    }
 }
