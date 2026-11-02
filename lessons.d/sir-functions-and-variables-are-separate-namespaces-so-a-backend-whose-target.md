@@ -24,6 +24,16 @@ one-to-one.  A first version renamed JS globals too, and broke a test that
 reaches a function's handle through a `Global` reference: check what else
 already relies on the shared namespace before splitting it.
 
+**Follow-up (security review of #18788).**  The fix listed two of SIR's
+four namespaces.  Globals and constants are namespaces too: JavaScript and
+TypeScript declared a global spelled like a function twice (`SyntaxError`)
+and let a local hide a global from a `Global` read; Python and TypeScript
+bound a constant spelled like a function over it.  And the Python
+keyword-argument rename was applied to *runtime* callees, whose parameters
+no user function renames.  Each backend now also has `global_ident` and
+`const_ident` (JavaScript/TypeScript) or `const_ident` (Python), with tags
+`g` and `c` beside `l`, and only a `DirectCall` renames its keywords.
+
 **Do differently.** When a backend maps an IR with several namespaces onto a
 target with fewer, list every IR namespace and decide, per pair, which side
 gets escaped.  Then route *every* emission site of that kind through one

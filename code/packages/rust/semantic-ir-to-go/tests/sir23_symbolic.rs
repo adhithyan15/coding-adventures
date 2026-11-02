@@ -102,7 +102,7 @@ fn symbolic_module(stmts: Vec<Stmt>) -> Module {
 }
 
 fn go_available() -> bool {
-    std::process::Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -122,14 +122,15 @@ fn run_symbolic_program(m: &Module) -> Option<String> {
         return None;
     }
     let source = compile(m).expect("go emit").source;
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let path = dir.join(format!(
         "sir_go_symbolic_{}_{}.go",
         std::process::id(),
         SEQ.fetch_add(1, Ordering::Relaxed)
     ));
-    std::fs::write(&path, &source).expect("write temp source");
-    let out = std::process::Command::new("go")
+    sir_test_scratch::write_new(&path, &source).expect("write temp source");
+    let out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&path)
         .output()
@@ -256,10 +257,11 @@ fn depth_limit_guard_panics_instead_of_crashing_the_go_stack() {
         return;
     }
     let source = compile(&m).expect("go emit").source;
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let path = dir.join(format!("sir_go_symbolic_depth_{}.go", unique_suffix()));
-    std::fs::write(&path, &source).expect("write temp source");
-    let out = std::process::Command::new("go")
+    sir_test_scratch::write_new(&path, &source).expect("write temp source");
+    let out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&path)
         .output()

@@ -137,9 +137,10 @@ fn run_module(module: &Module, tag: &str) -> Option<String> {
         eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
         return None;
     }
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node")
         .arg(&path)
         .output()
@@ -534,9 +535,10 @@ fn run_module_expecting_failure(module: &Module, tag: &str, expected_stderr_subs
         eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
         return;
     }
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node")
         .arg(&path)
         .output()

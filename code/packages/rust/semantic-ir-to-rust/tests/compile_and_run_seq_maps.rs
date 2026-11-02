@@ -218,14 +218,15 @@ fn sequences_and_maps_compile_and_run() {
     let artifact = compile(&demo_module()).expect("module should compile to Rust source");
 
     // 2. Write the source to a unique temp file.
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_seq_maps_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_seq_maps_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     // 3. Compile with rustc.  `--edition 2021` is required (raw idents +
     //    2018+ closure capture).  A host whose default linker is absent

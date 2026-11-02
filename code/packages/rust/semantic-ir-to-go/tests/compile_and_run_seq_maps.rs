@@ -16,7 +16,6 @@
 //! tool should never redden a build for reasons unrelated to the change
 //! (mirrors `compile_and_run_loops.rs`).
 
-use std::process::Command;
 
 use semantic_ir::nodes::MapEntry;
 use semantic_ir::{
@@ -173,7 +172,7 @@ fn demo_module() -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -192,13 +191,14 @@ fn sequences_and_maps_compile_and_run() {
 
     // 2. Write the source to a unique temp file.  `go run` requires a
     //    `.go` extension.
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_seq_maps_{nonce}.go"));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     // 3. Compile + run with `go run` (arg vector — no shell).
-    let run_out = Command::new("go")
+    let run_out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&src_path)
         .output()

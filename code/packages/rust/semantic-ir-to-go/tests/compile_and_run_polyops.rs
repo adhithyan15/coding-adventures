@@ -25,7 +25,6 @@
 //! Gates on `go` being available; logs a skip rather than failing when the
 //! toolchain is absent (mirrors `compile_and_run_puts.rs`).
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module,
@@ -118,7 +117,7 @@ fn demo_module() -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -134,12 +133,13 @@ fn polymorphic_ops_compile_and_match_ruby_output() {
 
     let artifact = compile(&demo_module()).expect("module should compile to Go source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_polyops_{nonce}.go"));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
-    let run_out = Command::new("go").arg("run").arg(&src_path).output().expect("invoke go run");
+    let run_out = sir_test_scratch::go_command().arg("run").arg(&src_path).output().expect("invoke go run");
 
     if !run_out.status.success() {
         let stderr = String::from_utf8_lossy(&run_out.stderr);
