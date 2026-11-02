@@ -47,13 +47,21 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/rng", Language: "python"},
 		{Name: "rust/rng", Language: "rust"},
+		{Name: "go/rng", Language: "go"},
+		{Name: "c/rng", Language: "c"},
+		{Name: "cpp/rng", Language: "cpp"},
+		{Name: "swift/rng", Language: "swift"},
 	}
 	corpus := []string{"code/specs/fixtures/rng-v1/cases.json"}
 	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want := map[string]bool{"python/rng": true, "rust/rng": true}; !reflect.DeepEqual(got, want) {
+	want := map[string]bool{
+		"python/rng": true, "rust/rng": true, "go/rng": true,
+		"c/rng": true, "cpp/rng": true, "swift/rng": true,
+	}
+	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
 	if got, _ := repositoryInputConsumersForChange(corpus, packages, "rust"); !reflect.DeepEqual(got, map[string]bool{"rust/rng": true}) {
