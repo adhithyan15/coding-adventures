@@ -217,6 +217,26 @@ Getting a record *wrong* is worse than emitting none, so these are obligations:
    recursive call's result held in a `let`, and `if` joins of the parameter with a
    literal and with a fresh pair; a 4 MiB allocation-pressure run; and a valgrind
    memcheck run) and the `gc_param_root_tests` unit tests.
+   **Every GC allocation is a root, whatever type it was given (#18766).** The
+   copy rule above seeds only from instructions that are already root-typed, and
+   the string lowering types `alloc_bytes` `i64` (a buffer address is "an integer"
+   to the byte stores around it). The buffer is a gc-core block, so its slot and
+   the `mov` alias that is the string variable were in no stack map, and a
+   precise or compacting collection freed the buffer. A conservative scan does
+   not cover for an unnamed slot: in a frame with a stack map the walker trusts
+   the map and scans nothing else. `root_heap_word_copies` therefore first sets
+   `ty = "any"` on every instruction that allocates a GC block and carries a
+   machine-scalar type: the `alloc_bytes` and `alloc_array` ops, and
+   `call_builtin` of `alloc_bytes`, `str_concat`, `str_slice`, `input_str` and
+   `dyn_pair_new` (each checked against its runtime entry). The raw `gc_alloc`
+   builtin is left to its declared type on purpose: no compiler emits it, and the
+   precise-GC differentials use an `i64`-typed `gc_alloc` result as the
+   non-reference look-alike a precise collection must reclaim. The copy rule then
+   roots their copies. Only `ty` changes; no backend reads it on
+   these instructions except for the stack map, so the code bytes are unchanged.
+   (`dyn_pair_new` is on the list because `infer_types` keys types by variable
+   name: a cons result whose destination is also written by an integer `const`
+   takes the integer's `i64`.)
 3. **Declare only reference-typed slots.** Declaring a slot that holds a plain
    integer is not free. Under a non-moving collection the word goes through the
    validated lookup, so an integer that happens to name a block only keeps it alive
@@ -237,7 +257,84 @@ Getting a record *wrong* is worse than emitting none, so these are obligations:
    that a word's tag alone says whether it is a reference.
 
 Naming a slot the executed path has not written yet is safe: every slot word goes
-through the same validated candidate-pointer lookup as a conservative scan.
+through the same validated candidate-pointer lookup as a conservative scan. (It is
+not *precise*: frames are not zeroed, so such a slot can hold a stale copy of a
+reference from an earlier, deeper call and keep a dead object alive for a cycle.
+That stale copy is also why the bugs in §4.2 survived non-moving tests.)
+
+### 4.2 Roots outside the stack: globals (#18765)
+
+Stack maps describe frames. A compiled program's **globals** — every top-level
+Twig `define` that a function reads — live in the `_twig_globals` data block (slot
+`k` at byte `8·k`, addressed by `global_load` / `global_store`), which no stack map
+names and no stack scan reaches. Until #18765 no collector rooted them:
+
+| collector | an object only a global names |
+|-----------|-------------------------------|
+| precise (`gc_collect_precise`) | not marked → **freed**; the global dangles |
+| compacting (`gc_collect_compacting`, or `__gc_safepoint` choosing to compact) | if a stack slot also names it (`main`'s slot for the `define`'s value does), **moved** and that slot rewritten; the global keeps the from-space address, which the sweep frees |
+| conservative (`__gc_collect`, allocation-triggered) | not marked → **freed** |
+
+Non-moving collections usually got away with it, because a stale word in some
+named-but-unwritten frame slot (§4.1) held the address too. Compaction moves the
+object and rewrites only the stack words, so it exposes the bug every time.
+
+**Rule G (global roots).** At start-up the image registers its whole globals block
+with gc-core-capi:
+
+```text
+__gc_register_global_roots(&_twig_globals, n_globals)
+```
+
+and every collection entry — `__gc_collect`, `__gc_collect_minor`, the precise,
+minor-precise, incremental-start, compacting and minor-compacting bodies (so also
+`__gc_safepoint` and the `__twig_gc_*` aliases) — appends the address of every
+registered slot to the **precise root slots** it hands the heap, next to the
+stack walk's. A global slot is thus treated exactly like a stack-map slot: its
+word is marked, and a compacting collection writes a moved object's new address
+back into it.
+
+- **Emission.** The generated `__gc_init_stackmaps` makes the call, before its
+  stack-map registrations, when the module has at least one global. The block's
+  address is the one argument the system linker relocates, with the same reloc a
+  `global_load` uses: `ADRP`+`ADD` (`ARM64_RELOC_PAGE21`/`PAGEOFF12`) on AArch64,
+  `lea reg, [rip + _twig_globals]` (`PcRel32`) on x86-64. SysV passes `rdi`/`rsi`;
+  Win64 passes `rcx`/`rdx` inside a 32-byte shadow-space reservation. User
+  function code is unchanged; only `__gc_init_stackmaps` gains these instructions.
+- **Why precise slots, not a conservative region.** A conservative root pins its
+  target and, through the pinning wave, everything reachable from it, so a global
+  holding a large list would never be compacted. Precise slots keep it movable. The
+  price is the §4.1 item 3 known limit, now also for globals: a global holding a
+  plain integer equal to a moved object's address (or a tagged form of it) is
+  rewritten.
+- **Why every slot.** Rooting only globals "that may hold a heap word" would make
+  soundness depend on every store into a global being typed correctly — the
+  property #18492 and #18766 showed does not hold. All slots are registered.
+- **Registry contract.** `__gc_register_global_roots(base, count)` rejects a null
+  or misaligned base, `count <= 0` or `> 2²⁴`, a wrapping range, and a range that
+  overlaps a different registered block; registering the same block again is a
+  no-op. The block must stay readable and writable while registered (a data
+  section does). `__gc_reset` does not clear it (like stack maps);
+  `__gc_global_roots_reset` does, for tests.
+- **Minor and incremental collections.** A store into a global has no write
+  barrier, so the global slots are roots of every minor cycle (that is how a young
+  object only a global names is found). An incremental cycle roots them at `start`
+  with the stack roots and **re-scans** both at `finish` before sweeping, because a
+  `global_store` (like any root store) has no barrier (`AOT00-T4` §6).
+- **Every public collect entry.** `__gc_collect_roots` adds each global slot's current
+  word to the caller's root words; `__gc_collect_region` passes the slots as precise
+  roots beside the caller's region.
+- **Registration cannot fail silently.** twig-aot refuses at compile time a module with
+  more globals than `MAX_GLOBAL_ROOT_SLOTS` (2²⁴), and the generated init traps if
+  `__gc_register_global_roots` returns anything other than the count.
+
+Regression tests: `twig-aot/tests/gc_global_and_buffer_roots.rs` (compacting and
+precise collections spliced in front of the global read, with `main`'s copy kept
+and cleared, for a pair, a list of pairs and a second global slot; a 4 MiB
+allocation-pressure run; valgrind memcheck; and the #18766 string-buffer cases),
+and gc-core-capi's `registered_global_slots_are_roots_of_every_collector`, which
+parks objects where no stack word can reach them and checks the conservative,
+precise and compacting collectors against an unregistered control.
 
 ---
 
@@ -274,7 +371,8 @@ __gc_register_stackmap(func_start, func_len, n_records,
 `gc-core-capi/src/lib.rs` :244.) `func_start`/`func_len` come from the linker's symbol
 for the function; the parallel arrays live in `.rodata`. A single generated
 constructor (or an explicit `__gc_init_stackmaps()` the runtime start-up calls) walks
-the module's function table and registers each.
+the module's function table and registers each. Before the first function it
+registers the module's globals block with `__gc_register_global_roots` (§4.2).
 
 ---
 

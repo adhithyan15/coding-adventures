@@ -1,5 +1,12 @@
 # Changelog — gc-core
 
+## Unreleased — incremental cycles can re-scan the roots before the sweep
+
+- **New `FlatHeap::incremental_rescan_roots(root_slots, regions)`.** The insertion barrier shades only stores into heap objects, and `incremental_start` snapshots the roots once. A store into a root (a stack slot, a register, a program global) is invisible to both. So an object the mutator moved out of the heap and into a root during the phase was swept while the root still named it. This method greys everything the *current* roots reach and drains the worklist completely; call it once marking is otherwise done and before any sweeping (it panics if a stepped sweep has started). It is the root half of a Dijkstra collector.
+- **New `FlatHeap::incremental_abandon()`.** Ends an in-progress phase without freeing anything (marks cleared, snapshot dropped). It is for a driver that cannot enumerate the current roots at `finish`. A no-op outside a phase.
+- Tests: `incremental_rescan_keeps_an_object_moved_into_a_root`: with the re-scan the object survives; without it, it is swept. `incremental_abandon_frees_nothing`.
+- Not in twig-vm's dependency graph (`cargo tree -p twig-vm` lists no gc-core), so the twig-vm Miri gate does not apply.
+
 ## 0.37.0 — 2026-10-27 — `payload_size_at_base`: a size lookup that refuses non-base addresses (#18471)
 
 - **New `FlatHeap::payload_size_at_base(addr) -> Option<usize>`.** Returns the

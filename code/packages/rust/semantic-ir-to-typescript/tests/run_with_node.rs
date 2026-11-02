@@ -122,7 +122,7 @@ fn run_exc_module(module: &Module, tag: &str) -> Option<(bool, String)> {
     }
     let js = ts_to_runnable_js_with_exceptions(&artifact.source);
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_ts_exc_{}_{}.js", tag, std::process::id()));
+    path.push(format!("sir_ts_exc_{}_{}.js", tag, unique_suffix()));
     std::fs::write(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
@@ -509,7 +509,7 @@ fn end_to_end_oop_new_and_dispatch_executes_ts() {
     }
     let js = ts_to_runnable_js_oop(&artifact.source);
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_ts_oop_{}.js", std::process::id()));
+    path.push(format!("sir_ts_oop_{}.js", unique_suffix()));
     std::fs::write(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
@@ -581,7 +581,7 @@ fn run_module(module: &Module, tag: &str) -> Option<String> {
     }
     let js = ts_to_runnable_js(&artifact.source);
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_ts_kw_{}_{}.js", tag, std::process::id()));
+    path.push(format!("sir_ts_kw_{}_{}.js", tag, unique_suffix()));
     std::fs::write(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
@@ -978,7 +978,7 @@ fn end_to_end_ruby_oop_new_and_dispatch_executes_ts() {
     }
     let js = ruby_p1_ts_to_runnable_js(&artifact.source);
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_ts_oop_p1_{}.js", std::process::id()));
+    path.push(format!("sir_ts_oop_p1_{}.js", unique_suffix()));
     std::fs::write(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
@@ -1074,7 +1074,7 @@ fn end_to_end_ruby_puts_executes_ts() {
     }
     let js = ruby_puts_ts_to_runnable_js(&artifact.source);
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_ts_ruby_puts_{}.js", std::process::id()));
+    path.push(format!("sir_ts_ruby_puts_{}.js", unique_suffix()));
     std::fs::write(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
@@ -1241,7 +1241,7 @@ fn run_t2_module(module: &Module, tag: &str) -> Option<String> {
     }
     let js = ts_to_runnable_js_t2(&artifact.source);
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_ts_t2_{}_{}.js", tag, std::process::id()));
+    path.push(format!("sir_ts_t2_{}_{}.js", tag, unique_suffix()));
     std::fs::write(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
@@ -1569,7 +1569,7 @@ fn run_mixin_source(src: &str, tag: &str) -> Option<String> {
     }
     let js = ruby_mixin_ts_to_runnable_js(&artifact.source);
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_ts_mixin_{}_{}.js", tag, std::process::id()));
+    path.push(format!("sir_ts_mixin_{}_{}.js", tag, unique_suffix()));
     std::fs::write(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
@@ -1727,7 +1727,7 @@ fn run_loop_control_module(module: &Module, tag: &str) -> Option<String> {
     }
     let js = ts_to_runnable_js_loop_control(&artifact.source);
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_ts_lc_{}_{}.js", tag, std::process::id()));
+    path.push(format!("sir_ts_lc_{}_{}.js", tag, unique_suffix()));
     std::fs::write(&path, &js).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
@@ -1900,4 +1900,15 @@ fn for_each_loop_break_stops_iteration_before_the_matching_element_ts() {
     if let Some(stdout) = run_loop_control_module(&module, "loop_control_foreach_ts") {
         assert_eq!(stdout, "3");
     }
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

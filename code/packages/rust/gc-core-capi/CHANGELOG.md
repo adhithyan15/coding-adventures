@@ -2,6 +2,22 @@
 
 All notable changes to this crate are documented here.
 
+## Unreleased — review follow-ups to the global roots (#18785)
+
+- **`__gc_collect_incremental_finish` re-scans the roots.** It is now a frame-building trampoline like `start`, and so is its `__twig_gc_collect_incremental_finish` alias. It walks the stack again, adds the spilled registers and the registered global slots, and calls `FlatHeap::incremental_rescan_roots` before the sweep. The barrier covers only heap stores, and `global_store` and stack writes have none. So before this, an object the mutator moved into a root during the phase was swept while the root still named it. If the stack cannot be trusted at `finish`, the cycle is abandoned and nothing is freed. Test: `incremental_finish_rescans_roots_stored_during_the_phase` moves 64 children from a traced parent into registered globals mid-phase; without the re-scan all 64 were freed.
+- **`__gc_collect_roots` and `__gc_collect_region` root the registered globals**, as `gc_core.h` says every collection does: the former adds each slot's current word to the caller's roots, the latter passes the slots as precise roots beside the region. A null region now frees everything *except* what the globals reach. Test: `collect_roots_and_collect_region_root_the_globals`.
+- **New `pub const MAX_GLOBAL_ROOT_SLOTS`** (2²⁴), so a code generator can refuse a module with more globals than `__gc_register_global_roots` accepts.
+- Tests: a `ResetOnDrop` guard clears the global-root registry when a test that registered a block ends, even by a failed assertion, so no later test collects through a dangling registration.
+
+## Unreleased — global roots: `__gc_register_global_roots` (#18765)
+
+- **New `__gc_register_global_roots(base, count)`**, plus `__gc_global_root_count()` and `__gc_global_roots_reset()`, in a new `global_roots` module. A native image registers its globals block (a data section no stack map names and no stack scan reaches) once at start-up; every collection entry then appends each registered slot's address to the precise root slots it hands the heap. So a global's object is marked by every collector and, under compaction, moved with the global rewritten in place — exactly how a stack-map slot is treated. Before this, an object only a global referred to was freed by a precise or conservative collection, and a compacting one left the global naming the freed from-space copy (twig-aot #18765).
+- **Every entry roots them.** `__gc_collect` and `__gc_collect_minor` now call `collect_mixed` / `collect_minor_mixed` with the global slots beside the stack region (identical to `collect_region` / `collect_minor_region` when none are registered); `collect_precise_from`, `collect_minor_precise_from`, `collect_incremental_start_from`, `collect_compacting_from` and `collect_minor_compacting_from` append them after the stack walk. `__gc_safepoint` and the `__twig_gc_*` aliases reach them through those bodies.
+- **Contract.** Rejects (returns `0`) a null or non-8-aligned `base`, `count <= 0` or `> 2^24`, a wrapping range, and a range that overlaps a different registered block; registering the same block again returns `count` without duplicating it. The range must stay readable and writable while registered. `__gc_reset` does not clear the registry (like stack maps).
+- **Why slots, not a conservative region:** a conservative root pins its target and everything reachable from it, so a global holding a large list would never compact; precise slots keep it movable, at the cost already accepted for dynamic stack slots (an integer equal to a moved object's address is rewritten).
+- **Tests.** `registered_global_slots_are_roots_of_every_collector` parks 64 movable objects whose only lasting reference is a registered block outside the stack: the conservative and precise collectors free none of them (and free nearly all in an unregistered control), and a compacting collection moves nearly all of them and rewrites the block. Fails if the entries do not append the global slots. `global_roots` unit tests cover registration, idempotence and every rejection. Header `include/gc_core.h` and the README list the new entries.
+- Not in twig-vm's dependency graph (`cargo tree -p twig-vm -i gc-core-capi` finds nothing), so the twig-vm Miri gate does not apply.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - Doc comments name `__dyn_pair_new`, the runtime symbol that was `__dyn_cons` before LANG83 PR7f. No code change.

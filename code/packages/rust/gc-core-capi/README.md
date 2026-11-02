@@ -52,6 +52,9 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | `int64_t __gc_register_stackmap(func_start, func_len, num_records, pc_offsets, frame_sizes, callee_masks, slot_counts, slots_flat)` | register a function's stack maps (code range + per-safepoint live-ref records) for precise-root resolution; returns records stored, `0` if rejected |
 | `int64_t __gc_stackmap_count(void)` | number of functions registered |
 | `void __gc_stackmap_reset(void)` | drop all registered stack maps (tests / teardown) |
+| `int64_t __gc_register_global_roots(int64_t *base, int64_t count)` | register `count` word slots at `base` (a program's globals) as precise roots of every collection — marked, and rewritten by a compaction; returns `count`, `0` if rejected |
+| `int64_t __gc_global_root_count(void)` | number of global root slots registered |
+| `void __gc_global_roots_reset(void)` | drop all registered global roots (tests / teardown) |
 | `int64_t __gc_collect_precise(void)` | full collect rooted precisely at this thread's stack — walks the frame-pointer chain (stack-mapped frames precise, rest conservative); returns objects freed |
 
 `__gc_alloc` returns a **real, 16-byte-aligned pointer** to memory the caller reads
@@ -111,6 +114,17 @@ sorted, non-overlapping registry, so an internal `resolve(return_address)` can
 map any unwound return address to the `StackMapRecord` live there in `O(log n)`.
 That is the code-address analogue of `__gc_register_kind` (object-layout map) —
 together, the two maps a precise collector needs.
+
+**Global roots** (#18765). A compiled program's globals live in a data section
+that no stack map names and no stack scan reaches, so an image registers its
+globals block once at start-up with `__gc_register_global_roots(base, count)`
+(twig-aot's generated `__gc_init_stackmaps` does). Every collection entry —
+conservative, precise, minor, incremental (at `start` and again at `finish`) and
+compacting, plus `__gc_collect_roots` / `__gc_collect_region` — appends each
+registered slot's address to its precise root slots, so a global's object is
+marked and, under compaction, moved with the global rewritten in place. Slots
+rather than a conservative region, so global-reachable data stays movable; see
+`src/global_roots.rs`.
 
 The precise stack walk is now wired end-to-end: `precise_walk::build_precise_roots`
 unwinds the frame-pointer chain into precise slots (`frame_root_slots`) for mapped

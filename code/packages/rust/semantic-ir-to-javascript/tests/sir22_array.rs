@@ -138,7 +138,7 @@ fn run_module(module: &Module, tag: &str) -> Option<String> {
         return None;
     }
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_js_{}_{}.js", tag, std::process::id()));
+    path.push(format!("sir_js_{}_{}.js", tag, unique_suffix()));
     std::fs::write(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node")
         .arg(&path)
@@ -535,7 +535,7 @@ fn run_module_expecting_failure(module: &Module, tag: &str, expected_stderr_subs
         return;
     }
     let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_js_{}_{}.js", tag, std::process::id()));
+    path.push(format!("sir_js_{}_{}.js", tag, unique_suffix()));
     std::fs::write(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node")
         .arg(&path)
@@ -657,4 +657,15 @@ fn range_with_a_nan_bound_throws_instead_of_silently_returning_empty() {
         "range_nan",
         "range: start/stop/step must be finite numbers",
     );
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

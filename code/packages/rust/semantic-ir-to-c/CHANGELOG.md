@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased — Temp files in the tests are unique per call and removed (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Hashing the source (the earlier fix for a CI flake)
+did not help two tests that compile the *same* source. Every such name in 23
+test files now carries a per-call `unique_suffix()` (process id plus a
+per-file atomic counter), the scheme `sir-conformance`'s `temp_path` uses.
+Test-only; no emitted code changes. Because every call now gets fresh names,
+the 23 hash-named helpers, which never deleted their `.c` and executable,
+would have left a new pair in the temp directory on every run instead of
+overwriting the last one, and 12 counter-named helpers already did.  All 35
+files are fixed. Each helper now holds its files in a
+`RemoveOnDrop` guard; the three `compile_and_link` helpers that hand their
+executable back drop the `.c` once linked, and each caller guards the
+executable it runs. Two back-to-back runs of the suite now leave nothing
+behind.
+
 ## Unreleased — Call operands run left to right (#18482 review)
 
 C leaves the order in which a call's arguments are evaluated unspecified,

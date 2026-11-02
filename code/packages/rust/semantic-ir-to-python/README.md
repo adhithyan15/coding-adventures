@@ -176,6 +176,12 @@ defaulted parameter is wrapped without a count and binds the default.
 `len`, `list`, `range`, plus `__debug__` — so a user `def` can no longer
 replace one (SIR10 "Generated names", issue #18466).  Non-finite floats are
 emitted as `1e999`-style literal arithmetic.
+A *variable* whose SIR name is also the name of one of the module's
+functions is emitted as `sir_esc_l<sanitize_ident(name)>` (`var_ident`), so
+it cannot shadow the function: SIR keeps the two namespaces apart, and
+Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485). Functions keep
+their names, because callers append code that calls them; a keyword argument
+is renamed with the parameter it names.
 
 ## Capability declaration
 

@@ -81,7 +81,10 @@ let valid_capability_pair category action =
   | "ffi", ("call" | "load")
   | "time", ("read" | "sleep")
   | "stdin", "read"
-  | "stdout", "write" ->
+  | "stdout", "write"
+  | "rand", "read"
+  | "thread", ("spawn" | "message")
+  | "ui", ("read" | "write" | "event") ->
       true
   | _ -> false
 
@@ -372,6 +375,17 @@ let rules =
     rule "Printf" "eprintf" [ capability "stdout" "write" ];
     rule "Format" "printf" [ capability "stdout" "write" ];
     rule "Format" "eprintf" [ capability "stdout" "write" ];
+    (* D21's nondeterminism categories (VER00 6.3). OCaml 5 seeds the default
+       Random state with a fixed value, so Random.int and friends are
+       deterministic until self_init draws ambient entropy. Random.full_init
+       and Random.State.make take the seed from the caller and are pure.
+       A qualified call resolves to its innermost module, so
+       Random.State.make_self_init is matched as State.make_self_init; only a
+       canonical root (here Random) can produce that path. *)
+    rule "Random" "self_init" [ capability "rand" "read" ];
+    rule "State" "make_self_init" [ capability "rand" "read" ];
+    rule "Thread" "create" [ capability "thread" "spawn" ];
+    rule "Domain" "spawn" [ capability "thread" "spawn" ];
     rule "Dynlink" "loadfile" [ capability "ffi" "load" ];
     rule "Dynlink" "loadfile_private" [ capability "ffi" "load" ];
   ]
@@ -434,6 +448,9 @@ let canonical_modules =
       "Format";
       "In_channel";
       "Out_channel";
+      "Random";
+      "Thread";
+      "Domain";
     ]
 
 let rec longident_segments = function

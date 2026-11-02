@@ -104,6 +104,30 @@ never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
   word typed `any` for the stack map while its mnemonic stays `mov_i64`.
   `tests/gc_param_roots.rs` reproduces each case end to end.
 
+- **String buffers and other allocations** — `alloc_bytes` (the buffer behind
+  every runtime string) is typed `i64` by the string lowering, but it is a GC
+  block, and in a stack-mapped frame an unnamed slot is invisible to the
+  collector. `root_heap_word_copies` therefore first gives every GC allocation —
+  the `alloc_bytes` / `alloc_array` ops and `call_builtin` of `alloc_bytes`,
+  `str_concat`, `str_slice`, `input_str` and `dyn_pair_new` — a root type, and
+  then roots its copies (#18766). Only `ty` changes; the code bytes do not.
+
+- **Globals** — a top-level `define` that a function reads lives in the
+  `_twig_globals` data block, not on the stack, so no stack map can name it.
+  `__gc_init_stackmaps` therefore registers the whole block with gc-core-capi's
+  `__gc_register_global_roots` before its stack maps, and every collection
+  treats each global slot as a precise root: marked, and rewritten when a
+  compaction moves its object (#18765). `tests/gc_global_and_buffer_roots.rs`
+  reproduces both cases end to end. Design: `code/specs/AOT00-T1-stackmap-emission.md`
+  §4.2. A module with more globals than the runtime can root is refused at compile
+  time, and the init traps if registration is refused.
+
+- **Arrays of references** — an `alloc_array` whose element type is a reference
+  (BASIC `DIM A$(n)`: string handles) is rewritten to `alloc_ref_array` before
+  specialisation erases the element type, and the native backends lower it to
+  `__twig_alloc_ref_array_bytes`, whose heap kind traces every element. Scalar
+  arrays keep the untraced `__twig_alloc_bytes` blob.
+
 LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
 `call_builtin "print_string"`, so source-level BASIC `PRINT "HELLO"` runs through

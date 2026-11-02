@@ -2,6 +2,44 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- **Temp files are unique per call (#18485).**  `temp_path` named a run's
+  source and binary after the program, the target and the process id.
+  Tests in one test binary share the process id and run on parallel
+  threads, so two tests compiling the same program for the same target
+  overwrote or deleted each other's files (`--test arithmetic` failed this
+  way once).  The name now ends in a process-wide atomic counter.  Unit
+  tests `temp_paths_are_unique_within_one_process` and
+  `temp_paths_are_unique_across_threads`.
+- **Temp files are removed on every path.**  `run_python` returned
+  `Skipped` when the `sir-runtime-*` packages were missing *after* writing
+  its `.py`, and left it behind.  Every `run_*` function now holds its
+  source and binary in a `TempFile` guard that deletes them on drop, and
+  `run_python` looks for the runtimes before writing anything.  Unit test
+  `a_temp_file_guard_removes_its_file_on_every_path`.
+
+### Added
+
+- **`tests/local_shadows_function.rs` (#18485).**  A variable named like a
+  function must not shadow it.  Five Ruby programs (a `main` local, a method
+  local, a parameter, a `rescue` binding, and a recursive method whose
+  parameter spells its own name) are checked against real `ruby` and run
+  on all six backends; four hand-built SIR modules cover what the Ruby
+  frontend cannot spell yet (a `for` range variable, a `for each`
+  variable, a closure capture and a keyword parameter).  Python,
+  JavaScript, Go and Rust failed every one; C and Ruby already named their
+  functions `sir_fn_<name>`.
+- **Two #18771 programs in `tests/python_statement_forms.rs`**: a
+  parameter copy and a hoisted method that the frontend used to give the
+  same name, in both orders, checked against CPython.  The new
+  `KNOWN_GAPS` table marks their Ruby cells, which fail for an unrelated
+  reason (the Ruby backend cannot define a class named `__param_a`, which
+  is not a Ruby constant); a gap cell that starts passing fails the test so
+  its entry is removed.
+
 ## [0.29.0] - Python statement forms (#18482)
 
 Adds `tests/python_statement_forms.rs`: 33 Python programs covering the

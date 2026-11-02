@@ -575,6 +575,12 @@ thread_local! {
     /// closure's `ArgumentError` (see [`emit_strict_closure`]).  Set at the
     /// start of every `emit_module`.
     static EXCEPTIONS_IMPORTED: Cell<bool> = const { Cell::new(false) };
+
+    /// The SIR name of every function in the module being emitted.  A
+    /// *variable* spelled like one of them is renamed by [`var_ident`] so
+    /// it cannot shadow the function (#18485).  Filled at the start of
+    /// every `emit_module`, for the same reason as [`STRICT_ARITY`].
+    static FUNCTION_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 fn fresh_loop_id() -> usize {
@@ -594,6 +600,11 @@ pub fn emit_module(m: &Module) -> String {
         let mut t = t.borrow_mut();
         t.clear();
         t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
+    FUNCTION_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().map(|f| f.name.clone()));
     });
     let mut out = String::new();
     emit_banner(&mut out, m);
@@ -738,7 +749,7 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&c.name));
+        let _ = write!(out, "{}: __Sir.Val", var_ident(&c.name));
     }
     // KW3 — keyword parameters lower to a single trailing "options object".
     //
@@ -791,12 +802,12 @@ fn emit_function(out: &mut String, f: &Function) {
         // call-position treatment.)
         match p.kind {
             ParamKind::Rest => {
-                let _ = write!(out, "...{}: __Sir.Val[]", sanitize_ident(&p.name));
+                let _ = write!(out, "...{}: __Sir.Val[]", var_ident(&p.name));
             }
             // Keyword handled above (skipped); this arm covers positionals and
             // the KwRest object fallback.
             ParamKind::Required | ParamKind::KwRest | ParamKind::Keyword => {
-                let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&p.name));
+                let _ = write!(out, "{}: __Sir.Val", var_ident(&p.name));
                 // P2b default parameters.  A SIR default is evaluated
                 // per-call in the callee's parameter scope and may reference
                 // EARLIER params — exactly TypeScript's native default-value
@@ -843,7 +854,16 @@ fn emit_function(out: &mut String, f: &Function) {
             if i > 0 {
                 out.push_str(", ");
             }
-            out.push_str(&sanitize_ident(&p.name));
+            // The object key is what the call site writes,
+            // `sanitize_ident(name)`; the bound local is `var_ident(name)`,
+            // which differs only when a function has the same name (#18485).
+            let key = sanitize_ident(&p.name);
+            let local = var_ident(&p.name);
+            if key == local {
+                out.push_str(&local);
+            } else {
+                let _ = write!(out, "{key}: {local}");
+            }
             if let Some(default) = &p.default {
                 out.push_str(" = ");
                 emit_expr(out, default, 2);
@@ -1196,7 +1216,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 "{}{} {}: __Sir.Val = ",
                 pad,
                 keyword,
-                sanitize_ident(name)
+                var_ident(name)
             );
             emit_expr(out, value, indent);
             out.push_str(";\n");
@@ -1263,8 +1283,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             value,
             ..
         } => {
-            let _ = scope; // identifier is the same for all four
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, scoped_ident(name, *scope));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -1326,7 +1345,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let id = fresh_loop_id();
-            let v = sanitize_ident(var);
+            let v = var_ident(var);
             let inner = indent + 2;
             let inner_pad = " ".repeat(inner);
             let body_pad = " ".repeat(inner + 2);
@@ -1367,7 +1386,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             } else {
                 "const"
             };
-            let _ = write!(out, "{}for ({} {} of ((", pad, kw, sanitize_ident(var));
+            let _ = write!(out, "{}for ({} {} of ((", pad, kw, var_ident(var));
             emit_expr(out, iter, indent);
             out.push_str(") as __Sir.Val[])) {\n");
             emit_block_as_stmts(out, body, indent + 2);
@@ -1513,7 +1532,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                             out,
                             "{}  const {}: __Sir.Val = __exc;",
                             ipad,
-                            sanitize_ident(bind)
+                            var_ident(bind)
                         );
                     }
                     emit_stmt_block(out, &r.body, inner + 2);
@@ -2143,7 +2162,7 @@ fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
 fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
     match scope {
         Scope::Local | Scope::Param | Scope::Capture | Scope::Global => {
-            let _ = write!(out, "{}", sanitize_ident(name));
+            let _ = write!(out, "{}", scoped_ident(name, scope));
         }
         Scope::Builtin => {
             let _ = write!(out, "__Sir.builtinClosure({})", quote_ts_string(name));
@@ -2786,6 +2805,60 @@ const TAG_VERBATIM: &str = "v";
 /// escaping — a no-op on an all-legal reserved word), or the empty-input
 /// sentinel.
 const TAG_ESCAPED: &str = "e";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a *variable* renamed
+/// because a function of the module has the same SIR name (see
+/// [`var_ident`]).  Distinct from [`TAG_VERBATIM`] and [`TAG_ESCAPED`], so a
+/// renamed variable can never equal any output of [`sanitize_ident`].
+const TAG_LOCAL: &str = "l";
+
+/// The TypeScript identifier for the SIR *variable* `name`: a local,
+/// parameter, capture, loop variable or `rescue` binding (a global keeps
+/// its spelling; see [`scoped_ident`]).
+///
+/// SIR keeps functions and variables in two namespaces, and a source
+/// language may use both spellings at once (Ruby: `def f; 40; end; f = 2;
+/// f() + f` is 42).  TypeScript has one, so a variable emitted as `f`
+/// shadowed the function `f` (#18485).  The functions keep their names --
+/// callers append code that calls them -- and a variable that collides
+/// with one is renamed instead:
+///
+/// | SIR variable | module has a function of that name? | TypeScript     |
+/// |--------------|-------------------------------------|----------------|
+/// | `x`          | no                                  | `x`            |
+/// | `f`          | yes                                 | `_$sir_esc_lf` |
+///
+/// The renamed form is [`ESCAPE_MARKER`], [`TAG_LOCAL`], then
+/// `sanitize_ident(name)`: one-to-one because `sanitize_ident` is, and
+/// disjoint from every `sanitize_ident` output, which either lacks the
+/// marker or follows it with another tag.  It depends only on the name, so
+/// a variable's binding and every use of it agree.  (The JavaScript backend
+/// has the same rule; see its `var_ident` for the full argument.)
+fn var_ident(name: &str) -> String {
+    if FUNCTION_NAMES.with(|t| t.borrow().contains(name)) {
+        format!("{ESCAPE_MARKER}{TAG_LOCAL}{}", sanitize_ident(name))
+    } else {
+        sanitize_ident(name)
+    }
+}
+
+
+/// The identifier for the variable `name` of `scope`: a module global keeps
+/// its [`sanitize_ident`] spelling, and a function's variable goes through
+/// [`var_ident`].
+///
+/// Globals are left alone because they are module-level bindings, like the
+/// functions, and code reaches a function through a `Global` reference in
+/// this backend (a hand-built module may name a function `id` as
+/// `VarRef { scope: Global }` to get its handle).  A *local* is what can
+/// shadow a function, inside the function that binds it (#18485).
+fn scoped_ident(name: &str, scope: Scope) -> String {
+    if scope == Scope::Global {
+        sanitize_ident(name)
+    } else {
+        var_ident(name)
+    }
+}
 
 /// Sanitize a SIR identifier for TypeScript.
 ///
@@ -4022,7 +4095,105 @@ mod tests {
         );
         assert!(out.contains("break;\n"), "got {out}");
         assert!(!out.contains("=>"), "must not route through an arrow-function IIFE: {out}");
-        assert!(!out.contains('?'), "must not route through the value-position ternary: {out}");
+        assert!(!out.contains("?"), "must not route through the value-position ternary: {out}");
         assert!(out.contains("} else {"), "got {out}");
+    }
+
+    // ── a variable never shadows a function (#18485) ─────────────────
+
+    /// `def f; 40; end` and a `main` whose local is also named `f`:
+    /// `let f = 2; f() + f`, which a source language with separate
+    /// namespaces (Ruby) evaluates to 42.
+    fn local_named_like_a_function() -> Module {
+        let sp = Span::synthetic;
+        let func = |name: &str, body: semantic_ir::Block| semantic_ir::Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let f = func(
+            "f",
+            semantic_ir::Block {
+                stmts: vec![],
+                value: Expr::IntLit { value: 40, span: sp() },
+                span: sp(),
+            },
+        );
+        let main = func(
+            "main",
+            semantic_ir::Block {
+                stmts: vec![Stmt::LetStarBinding {
+                    name: "f".to_string(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![
+                        Expr::DirectCall {
+                            fn_name: "f".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                        Expr::VarRef {
+                            name: "f".to_string(),
+                            scope: Scope::Local,
+                            span: sp(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+        );
+        Module {
+            name: "shadow".to_string(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    #[test]
+    fn a_local_named_like_a_function_is_renamed_and_the_function_is_not() {
+        let out = emit_module(&local_named_like_a_function());
+        // The function keeps its own spelling.  Everything from its
+        // definition on is the user's code (the inlined runtime comes
+        // first, and binds names of its own).
+        let at = out.find("function f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let out = &out[at..];
+        // The local is bound, and read, under its renamed spelling...
+        assert!(out.contains(" _$sir_esc_lf: __Sir.Val = "), "{out}");
+        assert!(out.contains("_$sir_esc_lf"), "{out}");
+        // ...never under the function's own spelling, which the call keeps.
+        assert!(!out.contains(" f: __Sir.Val = "), "{out}");
+        assert!(out.contains("f()"), "{out}");
+    }
+
+    #[test]
+    fn var_ident_renames_exactly_the_names_of_functions() {
+        FUNCTION_NAMES.with(|t| {
+            let mut t = t.borrow_mut();
+            t.clear();
+            t.insert("f".to_string());
+        });
+        assert_eq!(var_ident("f"), "_$sir_esc_lf");
+        assert_eq!(var_ident("x"), sanitize_ident("x"));
+        // A user variable spelled like the renamed form takes the verbatim
+        // escape, so the two stay apart.
+        assert_ne!(var_ident("_$sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
 }

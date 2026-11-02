@@ -96,7 +96,7 @@ fn go_available() -> bool {
 
 fn run_go(source: &str, tag: &str) -> std::process::Output {
     let dir = std::env::temp_dir();
-    let path = dir.join(format!("sir_go_{}_{}.go", tag, std::process::id()));
+    let path = dir.join(format!("sir_go_{}_{}.go", tag, unique_suffix()));
     std::fs::write(&path, source).expect("write temp source");
     let out = Command::new("go").arg("run").arg(&path).output().expect("invoke go run");
     let _ = std::fs::remove_file(&path);
@@ -164,4 +164,15 @@ fn fetch_non_integer_index_raises_type_error_not_native_panic() {
         !stderr.contains("expected int"),
         "the type guard must replace the raw _sir_as_int panic; stderr:\n{stderr}"
     );
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }
