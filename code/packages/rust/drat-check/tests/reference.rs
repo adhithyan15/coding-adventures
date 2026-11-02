@@ -11,7 +11,7 @@
 //! shows are satisfiable, no proof may ever be accepted, however it was
 //! built.
 
-use drat_check::{check, Rejection};
+use drat_check::{check, check_with_limits, Limits, Rejection};
 
 /// xorshift64, deterministic and dependency-free.
 struct Rng(u64);
@@ -176,6 +176,7 @@ fn kernel_check(vars: u64, formula: &[Vec<i64>], proof: &[RefStep]) -> Verdict {
         Err(Rejection::DeleteAbsent { step, .. }) => Verdict::DeleteAbsent(step),
         Err(Rejection::NoEmptyClause) => Verdict::NoEmptyClause,
         Err(Rejection::Parse(e)) => panic!("generated input failed to parse: {e}"),
+        Err(Rejection::ResourceLimit { .. }) => panic!("a tiny proof exhausted the default work budget"),
     }
 }
 
@@ -275,5 +276,34 @@ fn no_proof_is_accepted_for_a_satisfiable_formula() {
             formula_text(vars, &formula),
             proof_text(&proof)
         );
+    }
+}
+
+/// The security review's slow-proof construction: a RAT lemma whose pivot
+/// has thousands of partner clauses, added and deleted over and over. With
+/// no budget this ran for minutes; with one it is cut off and rejected.
+#[test]
+fn a_proof_built_to_be_slow_hits_the_work_budget() {
+    let n = 2000;
+    let mut formula = String::new();
+    let mut clauses = 0;
+    let mut body = String::new();
+    for i in 0..n {
+        body.push_str(&format!("{} 0\n", 3 + i)); // filler units
+        clauses += 1;
+    }
+    body.push_str("2 0\n"); // the unit (u)
+    clauses += 1;
+    for i in 0..n {
+        body.push_str(&format!("-1 2 {} 0\n", 3 + n + i)); // (¬p ∨ u ∨ y_i)
+        clauses += 1;
+    }
+    formula.push_str(&format!("p cnf {} {clauses}\n", 2 + 2 * n));
+    formula.push_str(&body);
+    let proof = "1 0\nd 1 0\n".repeat(1000);
+    let limits = Limits { max_work: 50_000_000, ..Limits::default() };
+    match check_with_limits(&formula, &proof, limits) {
+        Err(Rejection::ResourceLimit { step, .. }) => assert!(step < 2000),
+        other => panic!("expected the work budget to stop it, got {other:?}"),
     }
 }

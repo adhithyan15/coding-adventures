@@ -93,6 +93,7 @@ empty clause is added, the original formula was unsatisfiable.
 | A deleted clause is not present | rejected |
 | The proof never adds the empty clause | rejected: incomplete |
 | A variable index above the limit (default 2²⁰) | rejected |
+| Checking needs more than the work budget (default 2³² literal visits) | rejected: resource limit, naming the step |
 | The empty clause is added and passes RUP | **accepted**; later steps are not checked |
 
 Deleting a clause the proof never added and the formula never had is a
@@ -181,6 +182,12 @@ Both crates are pure computation over strings and in-memory data. Their
    solver down to 2^20 (about 60 MB). Explicit limits stay available.
 2. **`enable_proof` returns `false` once a clause has been added**, rather
    than starting a proof with level-0 simplifications already missing.
-3. **Kernel size.** `check.rs` is 324 lines before its tests, 94 of them
-   comments, inside the "few hundred lines" VER00 §7.5 asks for. The
-   readers in `parse.rs` are about 200 more.
+3. **A work budget** (security review). Checking is polynomial, but a
+   hostile proof can make it slow: one RAT step costs a RUP check per
+   partner clause, and a 75 KB formula plus a short repeating proof ran for
+   minutes. Every literal visit is now charged against `Limits::max_work`
+   (default 2³²). Exhaustion makes checks answer "no conflict", so it can
+   only reject (`ResourceLimit`), never accept. Soundness is untouched.
+4. **Kernel size.** `check.rs` is 373 lines before its tests, about a
+   third of them comments, inside the "few hundred lines" VER00 §7.5 asks
+   for. The readers in `parse.rs` are about 200 more.

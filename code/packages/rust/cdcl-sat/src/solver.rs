@@ -340,6 +340,12 @@ impl Solver {
     /// clauses are part of the proof; returns `false` (and records nothing)
     /// if clauses were already added.
     ///
+    /// The proof lives in memory and keeps every learned clause and a copy
+    /// of every deleted one, so it grows with the search even when database
+    /// reduction keeps the solver itself small. On input that may be
+    /// hostile, pair logging with [`Solver::set_conflict_budget`], which
+    /// bounds both.
+    ///
     /// ```
     /// use cdcl_sat::{Solver, SolveResult, Var};
     ///

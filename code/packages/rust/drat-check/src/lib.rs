@@ -59,7 +59,33 @@ pub use parse::ParseError;
 /// and a value), so a hostile input can make it allocate at most about
 /// 60 MB before checking a single step. Callers with bigger formulas raise
 /// the limit with [`check_with_limit`].
+///
+/// Raising it is a memory trade-off: tables are sized by the largest
+/// variable index either input mentions, so a limit of `n` lets a few bytes
+/// of hostile proof cost about `60·n` bytes.
 pub const DEFAULT_MAX_VARS: usize = 1 << 20;
+
+/// The default work budget, in literal visits: 2^32. That is seconds to a
+/// minute of checking, which covers every proof this repository's tests
+/// produce many times over, while a hostile proof designed to be slow (RAT
+/// steps with many partners, repeated over a large database) is cut off
+/// instead of running for hours. Running out only ever rejects.
+pub const DEFAULT_MAX_WORK: u64 = 1 << 32;
+
+/// Bounds on what a check may cost.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Limits {
+    /// Highest variable index accepted (capped at [`parse::MAX_VAR_LIMIT`]).
+    pub max_vars: usize,
+    /// Most work, in literal visits, before the check gives up and rejects.
+    pub max_work: u64,
+}
+
+impl Default for Limits {
+    fn default() -> Self {
+        Limits { max_vars: DEFAULT_MAX_VARS, max_work: DEFAULT_MAX_WORK }
+    }
+}
 
 /// A proof that passed: the formula is unsatisfiable.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -72,6 +98,8 @@ pub struct Accepted {
     pub deletions: usize,
     /// Proof line of the empty clause.
     pub empty_clause_line: usize,
+    /// Work spent, in literal visits (compare [`Limits::max_work`]).
+    pub work: u64,
 }
 
 /// Why a proof was not accepted.
@@ -95,6 +123,14 @@ pub enum Rejection {
     },
     /// The proof never adds the empty clause.
     NoEmptyClause,
+    /// The work budget ran out while checking a step. The proof may be
+    /// valid; it was not shown to be within the budget.
+    ResourceLimit {
+        /// 0-based step index.
+        step: usize,
+        /// Proof line.
+        line: usize,
+    },
 }
 
 impl fmt::Display for Rejection {
@@ -108,6 +144,9 @@ impl fmt::Display for Rejection {
                 write!(f, "proof line {line}: deletion (step {step}) of a clause that is not present")
             }
             Rejection::NoEmptyClause => write!(f, "the proof never derives the empty clause"),
+            Rejection::ResourceLimit { step, line } => {
+                write!(f, "proof line {line}: work budget exhausted while checking step {step}")
+            }
         }
     }
 }
@@ -115,15 +154,22 @@ impl fmt::Display for Rejection {
 impl std::error::Error for Rejection {}
 
 /// Check a DRAT `proof` against a DIMACS `formula`, with the default
-/// variable limit.
+/// [`Limits`].
 pub fn check(formula: &str, proof: &str) -> Result<Accepted, Rejection> {
-    check_with_limit(formula, proof, DEFAULT_MAX_VARS)
+    check_with_limits(formula, proof, Limits::default())
 }
 
-/// Check a DRAT `proof` against a DIMACS `formula`, rejecting any variable
-/// index above `max_vars` (itself capped at [`parse::MAX_VAR_LIMIT`]).
+/// Check with a custom variable limit and the default work budget.
 pub fn check_with_limit(formula: &str, proof: &str, max_vars: usize) -> Result<Accepted, Rejection> {
-    let max_vars = max_vars.min(parse::MAX_VAR_LIMIT);
+    check_with_limits(formula, proof, Limits { max_vars, ..Limits::default() })
+}
+
+/// Check a DRAT `proof` against a DIMACS `formula` within `limits`:
+/// variable indices above `limits.max_vars` (itself capped at
+/// [`parse::MAX_VAR_LIMIT`]) are rejected, and so is a proof whose check
+/// needs more than `limits.max_work`.
+pub fn check_with_limits(formula: &str, proof: &str, limits: Limits) -> Result<Accepted, Rejection> {
+    let max_vars = limits.max_vars.min(parse::MAX_VAR_LIMIT);
     let f = parse::parse_formula(formula, max_vars).map_err(Rejection::Parse)?;
     let steps = parse::parse_proof(proof, max_vars).map_err(Rejection::Parse)?;
     // Size the tables for every variable either input mentions.
@@ -134,13 +180,15 @@ pub fn check_with_limit(formula: &str, proof: &str, max_vars: usize) -> Result<A
         .max()
         .unwrap_or(0);
     let num_vars = f.num_vars.max(proof_vars);
-    match check::run(num_vars, &f.clauses, &steps) {
-        Outcome::Refuted { step, lemmas, rat_lemmas, deletions } => Ok(Accepted {
+    match check::run(num_vars, &f.clauses, &steps, limits.max_work) {
+        Outcome::Refuted { step, lemmas, rat_lemmas, deletions, work } => Ok(Accepted {
             lemmas,
             rat_lemmas,
             deletions,
             empty_clause_line: steps[step].line,
+            work,
         }),
+        Outcome::ResourceLimit { step } => Err(Rejection::ResourceLimit { step, line: steps[step].line }),
         Outcome::NotImplied { step } => Err(Rejection::NotImplied { step, line: steps[step].line }),
         Outcome::DeleteAbsent { step } => Err(Rejection::DeleteAbsent { step, line: steps[step].line }),
         Outcome::NoEmptyClause => Err(Rejection::NoEmptyClause),
@@ -156,7 +204,13 @@ mod tests {
     #[test]
     fn accepts_and_reports() {
         let ok = check(XOR_UNSAT, "c proof\n1 0\nd 1 2 0\n0\n").unwrap();
-        assert_eq!(ok, Accepted { lemmas: 2, rat_lemmas: 0, deletions: 1, empty_clause_line: 4 });
+        assert_eq!(ok, Accepted { lemmas: 2, rat_lemmas: 0, deletions: 1, empty_clause_line: 4, work: ok.work });
+        assert!(ok.work > 0);
+        let tight = Limits { max_work: ok.work - 1, ..Limits::default() };
+        assert_eq!(
+            check_with_limits(XOR_UNSAT, "c proof\n1 0\nd 1 2 0\n0\n", tight),
+            Err(Rejection::ResourceLimit { step: 2, line: 4 })
+        );
     }
 
     #[test]
@@ -193,7 +247,9 @@ mod tests {
             Rejection::DeleteAbsent { step: 1, line: 2 }.to_string(),
             Rejection::NoEmptyClause.to_string(),
             Rejection::Parse(ParseError::Truncated { line: 9 }).to_string(),
+            Rejection::ResourceLimit { step: 4, line: 5 }.to_string(),
         ];
+        assert!(msgs[4].contains("budget"));
         assert!(msgs[0].contains("line 7") && msgs[0].contains("step 3"));
         assert!(msgs[1].contains("not present"));
         assert!(msgs[2].contains("empty clause"));

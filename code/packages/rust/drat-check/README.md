@@ -44,7 +44,9 @@ variables over the limit, and proofs that never add the empty clause.
 - **Forward and stateless between steps.** Each RUP check starts from an
   empty assignment and undoes everything afterwards.
 - **Bounded input.** Variable indices are capped (default 2^20), so hostile
-  input cannot force a huge allocation.
+  input cannot force a huge allocation. Work is capped too (default 2^32
+  literal visits, `Limits::max_work`). A proof built to be slow is cut off
+  with `ResourceLimit`. Running out can only reject, never accept.
 
 ## Usage
 

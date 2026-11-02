@@ -50,6 +50,16 @@
 //! watched literals. Then it unassigns everything. There is no trail kept
 //! between checks, so deleting a clause can never leave a stale implication
 //! behind. That costs some speed, and buys a kernel with no tricky state.
+//!
+//! ## A work budget, which can only reject
+//!
+//! Both inputs may be hostile, and checking is polynomial but not cheap:
+//! one RAT step costs a RUP check per partner clause. So every unit of work
+//! (a watch visited, a literal scanned, a unit re-assigned) is counted
+//! against a budget. When it runs out, every further check answers "no
+//! conflict", which can only make lemmas fail, and the run ends with
+//! `ResourceLimit`. Running out can turn an acceptance into a rejection,
+//! never the other way round, so the budget cannot touch soundness.
 
 use std::collections::HashMap;
 
@@ -80,6 +90,10 @@ pub(crate) struct Database {
     value: Vec<i8>,
     /// Literals made true during the current check, in order.
     trail: Vec<Lit>,
+    /// Work done so far, in literal visits.
+    work: u64,
+    /// The most work allowed.
+    max_work: u64,
 }
 
 /// The truth value of `lit` under `value`: 1 true, -1 false, 0 unassigned.
@@ -101,13 +115,26 @@ fn content_key(lits: &[Lit]) -> Vec<Lit> {
 }
 
 impl Database {
-    /// An empty database over variables `0..num_vars`.
-    pub(crate) fn new(num_vars: usize) -> Database {
+    /// An empty database over variables `0..num_vars` that may do at most
+    /// `max_work` units of work.
+    pub(crate) fn new(num_vars: usize, max_work: u64) -> Database {
         Database {
             watches: vec![Vec::new(); 2 * num_vars],
             value: vec![0; num_vars],
+            max_work,
             ..Database::default()
         }
+    }
+
+    /// Charge `units` of work. Returns false once the budget is exhausted.
+    fn spend(&mut self, units: usize) -> bool {
+        self.work = self.work.saturating_add(units as u64);
+        self.work <= self.max_work
+    }
+
+    /// Whether the work budget has run out.
+    pub(crate) fn exhausted(&self) -> bool {
+        self.work > self.max_work
     }
 
     /// Put a clause in the database.
@@ -146,7 +173,8 @@ impl Database {
         self.trail.push(lit);
     }
 
-    /// Unit propagation from the current trail. Returns true on conflict.
+    /// Unit propagation from the current trail. Returns true on conflict,
+    /// and false when there is none **or the work budget ran out**.
     ///
     /// For each true literal `p`, visit the clauses watching `¬p`, which
     /// just became false. A clause keeps watching `¬p` only if no other
@@ -160,9 +188,14 @@ impl Database {
             let mut ws = std::mem::take(&mut self.watches[false_lit as usize]);
             let mut keep = 0;
             let mut conflict = false;
+            let mut out_of_work = false;
             let mut i = 0;
             while i < ws.len() {
                 let id = ws[i];
+                if !self.spend(1 + self.clauses[id].len()) {
+                    out_of_work = true;
+                    break;
+                }
                 i += 1;
                 if !self.alive[id] {
                     continue; // deleted: drop the watch
@@ -201,6 +234,9 @@ impl Database {
             if conflict {
                 return true;
             }
+            if out_of_work {
+                return false;
+            }
         }
         false
     }
@@ -219,7 +255,7 @@ impl Database {
                 _ => self.assign(neg(l)),
             }
         }
-        if !conflict {
+        if !conflict && self.spend(self.units.len()) {
             self.units.retain(|&id| self.alive[id]);
             for k in 0..self.units.len() {
                 let u = self.clauses[self.units[k]][0];
@@ -233,7 +269,7 @@ impl Database {
                 }
             }
         }
-        if !conflict {
+        if !conflict && !self.exhausted() {
             conflict = self.propagate();
         }
         for &l in &self.trail {
@@ -249,6 +285,10 @@ impl Database {
         let Some(&pivot) = lemma.first() else {
             return false; // the empty clause has no pivot
         };
+        let scan: usize = self.clauses.iter().map(|c| 1 + c.len()).sum();
+        if !self.spend(scan) {
+            return false;
+        }
         let partners: Vec<ClauseId> = (0..self.clauses.len())
             .filter(|&id| self.alive[id] && self.clauses[id].contains(&neg(pivot)))
             .collect();
@@ -273,6 +313,13 @@ pub(crate) enum Outcome {
         rat_lemmas: usize,
         /// Deletions performed.
         deletions: usize,
+        /// Work spent.
+        work: u64,
+    },
+    /// The work budget ran out while checking step `step`.
+    ResourceLimit {
+        /// Index of the step being checked.
+        step: usize,
     },
     /// Step `step` adds a lemma that is neither RUP nor RAT.
     NotImplied {
@@ -288,9 +335,9 @@ pub(crate) enum Outcome {
     NoEmptyClause,
 }
 
-/// Replay `steps` against `formula` (VER11 §3.1).
-pub(crate) fn run(num_vars: usize, formula: &[Vec<Lit>], steps: &[Step]) -> Outcome {
-    let mut db = Database::new(num_vars);
+/// Replay `steps` against `formula` (VER11 §3.1), within `max_work`.
+pub(crate) fn run(num_vars: usize, formula: &[Vec<Lit>], steps: &[Step], max_work: u64) -> Outcome {
+    let mut db = Database::new(num_vars, max_work);
     for clause in formula {
         db.add(clause);
     }
@@ -309,11 +356,13 @@ pub(crate) fn run(num_vars: usize, formula: &[Vec<Lit>], steps: &[Step]) -> Outc
                 } else if db.is_rat(&s.lits) {
                     lemmas += 1;
                     rat_lemmas += 1;
+                } else if db.exhausted() {
+                    return Outcome::ResourceLimit { step };
                 } else {
                     return Outcome::NotImplied { step };
                 }
                 if s.lits.is_empty() {
-                    return Outcome::Refuted { step, lemmas, rat_lemmas, deletions };
+                    return Outcome::Refuted { step, lemmas, rat_lemmas, deletions, work: db.work };
                 }
                 db.add(&s.lits);
             }
@@ -343,7 +392,7 @@ mod tests {
 
     #[test]
     fn module_rup_example() {
-        let mut db = Database::new(3);
+        let mut db = Database::new(3, u64::MAX);
         for cl in [&[1, 2][..], &[-2, 3], &[-1, 3]] {
             db.add(&c(cl));
         }
@@ -356,7 +405,7 @@ mod tests {
 
     #[test]
     fn module_rat_example() {
-        let mut db = Database::new(2);
+        let mut db = Database::new(2, u64::MAX);
         db.add(&c(&[-1, 2]));
         assert!(!db.is_rup(&c(&[1])));
         assert!(!db.is_rat(&c(&[1])));
@@ -367,7 +416,7 @@ mod tests {
 
     #[test]
     fn tautologies_and_repeated_literals_are_rup() {
-        let mut db = Database::new(2);
+        let mut db = Database::new(2, u64::MAX);
         assert!(db.is_rup(&c(&[1, -1])));
         db.add(&c(&[1, 2]));
         assert!(db.is_rup(&c(&[1, 1, 2])));
@@ -375,7 +424,7 @@ mod tests {
 
     #[test]
     fn units_and_empty_clauses_in_the_database() {
-        let mut db = Database::new(2);
+        let mut db = Database::new(2, u64::MAX);
         db.add(&c(&[1]));
         db.add(&c(&[-1]));
         assert!(db.is_rup(&[])); // the two units clash
@@ -390,7 +439,7 @@ mod tests {
 
     #[test]
     fn deletion_matches_sets_and_removes_one_copy() {
-        let mut db = Database::new(3);
+        let mut db = Database::new(3, u64::MAX);
         db.add(&c(&[1, 2, 3]));
         db.add(&c(&[3, 2, 1]));
         assert!(db.delete(&c(&[2, 3, 1, 1])));
@@ -401,7 +450,7 @@ mod tests {
 
     #[test]
     fn deleted_clauses_stop_propagating() {
-        let mut db = Database::new(2);
+        let mut db = Database::new(2, u64::MAX);
         db.add(&c(&[1, 2]));
         db.add(&c(&[1, -2]));
         assert!(db.is_rup(&c(&[1])));
@@ -416,8 +465,8 @@ mod tests {
         let f = vec![c(&[1, 2]), c(&[1, -2]), c(&[-1, 2]), c(&[-1, -2])];
         let proof = vec![add(&[1]), del(&[1, 2]), add(&[]), add(&[5])];
         assert_eq!(
-            run(2, &f, &proof),
-            Outcome::Refuted { step: 2, lemmas: 2, rat_lemmas: 0, deletions: 1 }
+            run(2, &f, &proof, u64::MAX),
+            Outcome::Refuted { step: 2, lemmas: 2, rat_lemmas: 0, deletions: 1, work: 13 }
         );
     }
 
@@ -426,10 +475,27 @@ mod tests {
         let f = vec![c(&[1, 2]), c(&[-1, 2])];
         // (x1) would pass: it is RAT, because its only resolvent (x1 ∨ x2) is
         // already a clause. (¬x2) is neither RUP nor RAT.
-        assert_eq!(run(2, &f, &[add(&[-2])]), Outcome::NotImplied { step: 0 });
-        assert_eq!(run(2, &f, &[add(&[2]), add(&[])]), Outcome::NotImplied { step: 1 });
-        assert_eq!(run(2, &f, &[del(&[1, -2])]), Outcome::DeleteAbsent { step: 0 });
-        assert_eq!(run(2, &f, &[add(&[2])]), Outcome::NoEmptyClause);
+        assert_eq!(run(2, &f, &[add(&[-2])], u64::MAX), Outcome::NotImplied { step: 0 });
+        assert_eq!(run(2, &f, &[add(&[2]), add(&[])], u64::MAX), Outcome::NotImplied { step: 1 });
+        assert_eq!(run(2, &f, &[del(&[1, -2])], u64::MAX), Outcome::DeleteAbsent { step: 0 });
+        assert_eq!(run(2, &f, &[add(&[2])], u64::MAX), Outcome::NoEmptyClause);
+    }
+
+    #[test]
+    fn running_out_of_work_rejects_and_never_accepts() {
+        let f = vec![c(&[1, 2]), c(&[1, -2]), c(&[-1, 2]), c(&[-1, -2])];
+        let proof = vec![add(&[1]), add(&[])];
+        // The full budget accepts; the exact cost reproduces it.
+        let Outcome::Refuted { work, .. } = run(2, &f, &proof, u64::MAX) else { panic!() };
+        assert_eq!(run(2, &f, &proof, work), run(2, &f, &proof, u64::MAX));
+        // Any less and the same valid proof is rejected, never accepted.
+        for budget in 0..work {
+            assert!(matches!(run(2, &f, &proof, budget), Outcome::ResourceLimit { .. }), "budget {budget}");
+        }
+        // A RAT step charges its partner scan.
+        let f = vec![c(&[-1, 2]), c(&[2])];
+        assert!(matches!(run(2, &f, &[add(&[1])], 1), Outcome::ResourceLimit { step: 0 }));
+        assert_eq!(run(2, &f, &[add(&[1])], u64::MAX), Outcome::NoEmptyClause);
     }
 
     #[test]
@@ -439,13 +505,13 @@ mod tests {
         let f = vec![c(&[1]), c(&[-1])];
         let proof = vec![add(&[3, 1]), add(&[-3, -1]), add(&[])];
         assert_eq!(
-            run(3, &f, &proof),
-            Outcome::Refuted { step: 2, lemmas: 3, rat_lemmas: 0, deletions: 0 }
+            run(3, &f, &proof, u64::MAX),
+            Outcome::Refuted { step: 2, lemmas: 3, rat_lemmas: 0, deletions: 0, work: 6 }
         );
         let f = vec![c(&[1, 2])];
         let proof = vec![add(&[3, 1]), add(&[-3, -1])];
-        assert_eq!(run(3, &f, &proof), Outcome::NoEmptyClause);
-        let mut db = Database::new(3);
+        assert_eq!(run(3, &f, &proof, u64::MAX), Outcome::NoEmptyClause);
+        let mut db = Database::new(3, u64::MAX);
         db.add(&c(&[1, 2]));
         assert!(db.is_rat(&c(&[3, 1])));
     }
