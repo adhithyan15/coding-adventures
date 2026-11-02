@@ -213,8 +213,9 @@ warrant bitset
     bytes.immutable
   -- Environment assumptions are the caller's side of the contract.
   -- Never about hostile input: that is checked, not assumed (§7.5.2).
+  -- Formal, so the solver can use it; prose assumptions prove nothing.
   assume environment:
-    save.dir : not shared with another writer
+    save : no_concurrent_writer(dir)
 
   -- E1: a concrete example, compiled to a pure unit test.
   example insert_into_empty:
@@ -271,6 +272,19 @@ unchecked. So the gate never trusts the binding's own idea of the API. The
 language analyzer reads the **real exports** of the shipped artifact
 independently. Every exported symbol must be bound, and every binding
 target must be an exported symbol (§9.1).
+
+The binding's hand-written generators and abstraction function could also
+make claims hold trivially. An abstraction function that maps every value
+to the same model value satisfies any equality, for example. So E1 and E3
+include **negative checks on the binding itself**:
+
+- the generators must produce values that map to distinct model values;
+- the abstraction function must distinguish values that the model
+  distinguishes;
+- deliberately corrupted implementations, in a small built-in mutation set,
+  must make at least one claim fail.
+
+A binding that cannot fail these checks fails the gate.
 
 ### 4.5 Generated tests are committed
 
@@ -495,12 +509,21 @@ generation-based fuzzing driven by Warrant types. That is weaker, and the
 assurance report says so. Every crash becomes a committed regression
 example in the package's Warrant file.
 
-**A crash is not committed before its fix.** In a public repository, a
-minimized crashing input for a memory-safety, denial-of-service or
-injection class is a working exploit. Crashes in those classes go through a
-private security advisory, and the regression example is committed together
-with the fix, or after it. This matters most when the affected package has
-already been published.
+**A crash is not published before its fix.** In a public repository, a
+minimized crashing input is often a working exploit. So is a replay seed,
+because deterministic replay makes a seed a complete reproducer. The class
+of a crash is usually unknown when it is found, so the rule cannot wait for
+classification:
+
+- **Every** fuzz, chaos or property failure is private until triaged. Public
+  CI logs never print failing seeds or inputs. They print an opaque failure
+  ID, and the reproducer is uploaded as a restricted-access artifact.
+- Long fuzz and chaos campaigns run in a private context, not as public
+  nightly jobs.
+- Triage defaults to the private security advisory path. A failure leaves
+  it only once someone has classified it as not security-relevant.
+- The regression example is committed together with the fix, or after it.
+  This matters most when the affected package has already been published.
 
 ### 7.4 Bounds, timing and microbenchmarks — VER07, VER20
 
@@ -542,6 +565,17 @@ How they are proved:
    and ask the solver for a pair whose step counts or memory addresses
    differ. UNSAT means no such pair exists: the code's timing reveals nothing
    about the secret, under the cost model.
+
+   **The cost model is not the machine.** On a third-party runtime, a
+   SIR-level constant-time proof says nothing about real timing: JIT
+   compilers, data-dependent bignum arithmetic, caches and branch
+   prediction all sit between SIR steps and the clock. Using the proof
+   there would require a catalogue assumption that "SIR step count
+   determines timing", and **the catalogue holds no such entry** for JIT or
+   managed runtimes (V8, the JVM, .NET, CPython, BEAM). On those runtimes
+   the timing-side-channel weakness row is therefore `not-yet-provable` and
+   needs an approved exemption. Only a `proved-to-<layer>` proof that
+   reaches the gate-level CPU (§7.4.2) discharges it without conditions.
 
 Bounds are **required**, not optional, for every operation that accepts a
 `hostile` input. Proving them is how the denial-of-service classes in the
@@ -595,7 +629,10 @@ that proofs cannot do:
 
 1. **Calibrate timing assumptions.** The harness measures `t_step` per
    platform, which turns a proved step bound into a time estimate (§7.4.2).
-   Calibration is labelled `measured`, never `proved`.
+   Calibration is labelled `measured`, never `proved`, and so is any time
+   bound derived from it. A measured median is not a worst case, so nothing
+   may size a denial-of-service timeout from it. On third-party platforms
+   the only worst-case guarantee is the proved step bound itself.
 2. **Check that proved bounds are honest.** If an observed count ever
    exceeds a proved bound, the proof, the cost model or the front end is
    wrong. The gate treats that as a failure of the proof, not of the
@@ -684,16 +721,30 @@ Every Warrant file has an `assume` section (§4.3), in two kinds:
   caller must keep.
 
 **Hostile input is never assumed about.** An attacker does not keep a
-contract. So an environment assumption may not constrain an input marked
-`hostile`: "the input is at most 2^20 bytes" cannot be assumed of bytes
-that come off the network. Such a limit must instead be a `rejects` clause.
-The code enforces it, and the proof shows the code rejects every violating
-input. The gate enforces two rules:
+contract. So an environment assumption may not constrain a hostile input:
+"the input is at most 2^20 bytes" cannot be assumed of bytes that come off
+the network. Such a limit must instead be a `rejects` clause. The code
+enforces it, and the proof shows the code rejects every violating input.
 
-- the Warrant compiler refuses an environment assumption on a `hostile`
+**Every input is hostile unless approved otherwise.** If hostility were an
+annotation the author adds, leaving it off would quietly switch off every
+protection that depends on it: the ban above, the mandatory bounds of
+§7.4.1, and E4. So the default is reversed. Every parameter of every
+exported symbol is `hostile`. The analyzer also marks as hostile any value
+that data flow traces back to a `net`, `fs`, `stdin`, `env` or IPC
+capability, wherever it ends up. Marking an input `trusted` is a
+downgrade, and it is an exemption (§9.1) that someone other than the author
+must approve.
+
+The gate enforces three rules:
+
+- the Warrant compiler refuses an environment assumption on a hostile
   input;
 - a weakness-matrix row (§8.2) is never discharged by a proof that
-  relies on an environment assumption about attacker-controlled data.
+  relies on an environment assumption about attacker-controlled data;
+- every environment assumption that a proof uses must be a **formal**
+  predicate the solver can read, not prose. Prose assumptions may document
+  a package, but no proof may rest on one.
 
 The assurance report lists, for every proved claim, the exact assumptions
 the proof used. An assumption no proof uses is flagged for removal.
@@ -874,16 +925,18 @@ in every language from the day Warrant exists (VER04, VER05):
 
 - **Vacuity**: a claim whose precondition can never be true passes every
   test and proves nothing. The solver finds it, as it does an `example`
-  that contradicts a `claim`. The repository has already learned this lesson
+  that contradicts a `claim`, and either one **fails the gate**. The repository has already learned this lesson
   the hard way (`lessons.d/a-substring-check-is-vacuous-for-the-shortest-member-of-the-set.md`).
 - **Consistency**: the claims of a package can all be true at once. A spec
   that contradicts itself is rejected before anyone implements it.
 - **Model-level proofs**: claims about the Warrant `model` are proved
   outright, before any implementation exists.
 - **Assumption hygiene**: the solver checks that the `assume` section is
-  itself consistent, and flags an assumption strong enough to make a claim
+  itself consistent, and finds any assumption strong enough to make a claim
   trivially true. An assumption like `len <= 0` proves everything and
-  guarantees nothing.
+  guarantees nothing. An inconsistent or trivializing assumption **fails
+  the gate**. It is not merely flagged, because a proof that rests on one
+  would otherwise ship labelled `proved`.
 - **Solver-generated test inputs**: the solver finds inputs that satisfy
   awkward refinements (`i < 2^20 ∧ popcount(s) == 7`). It also finds
   inputs that take every branch of the model and that sit exactly on every
@@ -972,7 +1025,8 @@ have one. What is missing is the audit:
    - **Approval comes from someone other than the author**, through a
      protected review: a CODEOWNERS approval or a protected deployment
      environment. It is recorded alongside the assurance report, not in
-     release notes the releaser writes.
+     release notes the releaser writes. §9.1 ties each approval to the
+     exact change it approves.
 
 ### 8.2 The weakness registry — VER15
 
@@ -1082,7 +1136,7 @@ machine-readable report:
   ],
   "claims": [
     { "id": "insert_adds", "example": "pass", "property": { "cases": 100000, "status": "pass" },
-      "fuzz": null, "proof": { "label": "proved-over-model", "certificate": "drat:<hash>" } }
+      "fuzz": null, "proof": { "label": "proved", "assumptions": ["u64.wraps"], "certificate": "drat:<hash>" } }
   ],
   "rungs": { "E0": "pass", "E1": "pass", "E2": "pass", "E3": "pass", "E4": "pass", "E5": "pass" },
   "public_symbols_without_claims": [],
@@ -1107,14 +1161,42 @@ So every exemption is treated like a new capability (§8.1, rule 4): it
 blocks the release until someone other than the author approves it through
 a protected review, and the approval is recorded with the report.
 
+**Label floors.** "Pass" is not left to interpretation. Each rung and
+each weakness class has a **minimum proof label** (§7.6.5), held in the
+gate's policy data (§9.2.1). Anything below the floor is a computed
+exemption. For example:
+
+- **E5** needs `proved` or `proved-to-<layer>` for every claim.
+  `proved-over-model` means the implementation was never linked to the
+  proof, so it is below the floor.
+- **Denial-of-service classes** (CWE-400, 409, 674, 1333) need `proved`, or
+  `bounded(n)` with `n` at least the input limit the code enforces with
+  `rejects`. A bound checked only up to a size smaller than what the code
+  accepts proves nothing about the inputs that matter.
+- **Timing side channels** need `proved-to-<layer>` reaching the gate-level
+  CPU (§7.4.1).
+
+**Approvals are tied to what they approve.** Each approval of a capability
+change or an exemption is bound to a hash of the package, the version and
+the exact capability delta or exemption set. It is invalid for any other
+release, and a merge-time CODEOWNERS approval of unrelated code does not
+count. "Someone other than the author" excludes everyone who authored a
+change to the shipped closure since the baseline, and also whoever triggers
+the release. The protected environment enforces it with "prevent self-review".
+
 ### 9.2 One gate, every release path
 
 Every publish, release and deploy workflow calls a single reusable
 `ship-gate.yml` and cannot publish without it passing. Today that means
 `publish.yml` plus about 30 `release-*` and `deploy-*` workflows. The gate:
 
-1. resolves the package's shipped closure from the build tool's dependency
-   graph;
+1. resolves the package's shipped closure from the **shipped artifact's
+   real contents and imports**. The build tool's declared dependency graph
+   is a cross-check, and any mismatch between the two fails the gate.
+   Third-party runtime dependencies are part of the closure too. Under B06,
+   shipped closures should have none. Any that remain are treated as
+   holding **unbounded** capabilities, must be pinned by hash in a lockfile,
+   and are exemptions needing approval;
 2. re-runs, or fetches trusted cached results for, every live rung on that
    closure at the tagged commit (§9.2.1);
 3. runs the capability audit and the capability diff;
@@ -1133,6 +1215,17 @@ analyzer or a BUILD file. So:
   tool, the analyzers, the Warrant compiler, the solver and the proof kernel
   all run from the default branch at a pinned SHA, never from the release
   commit. The release commit supplies only the code being judged.
+- **The release commit cannot choose its judge.** The pin is not written
+  in the release commit: if it were, an old commit could name an old,
+  weaker gate. Both the pin and a **minimum gate version** live in a
+  protected configuration that only maintainers can change, outside any
+  workflow file a release commit carries. The gate rejects any pin not
+  reachable from current `main`, and any pin older than the minimum.
+- **The judge's rules come from the protected ref too.** The gate reads
+  all of its policy data from the protected ref, never from the release
+  commit: the weakness registry, the assumption catalogue, coverage floors,
+  label floors and CODEOWNERS. A release of an old commit is judged
+  against **today's** registry. Policy data is part of every cache key.
 - **Only reviewed code can be released.** The tagged commit must be reachable
   from protected `main`, and release tags are protected, so only maintainers
   can create them.
@@ -1144,15 +1237,32 @@ analyzer or a BUILD file. So:
   only if trusted CI on a protected ref wrote it; fork and pull-request runs
   can read the cache but never write to it. The cache key is a content hash
   of everything the result depends on: the whole shipped closure, every
-  tool and solver binary, the Warrant files, the bindings and the
-  assumption catalogue. Change any one, and the result is recomputed.
+  tool and solver binary, the Warrant files, the bindings, the assumption
+  catalogue and the gate's policy data. Change any one, and the result is
+  recomputed.
 - **Certificates are re-checked, not looked up.** The report records a
   certificate's hash for identification, but at release the trusted kernel
   re-checks every certificate itself. A matching hash proves nothing about
   whether the proof is valid.
-- **The release's own report is stored immutably**, for example as a
-  release asset produced by the protected workflow, because it becomes the
-  next release's capability baseline (§8.1).
+- **The judged bytes are the published bytes.** The gate itself builds the
+  artifact in the shipping configuration, records its digest in the report
+  and signs a provenance attestation with the gate workflow's identity. The
+  publish step publishes **only that digest** and never rebuilds, because a
+  rebuild could differ: other features or `cfg` flags (bringing the
+  simulated host back), or different dependency resolution.
+- **Only the gate can publish.** Registry credentials exist only in a
+  protected environment that requires the gate job. Publishing uses OIDC
+  trusted publishing scoped to the single `ship-gate.yml` workflow
+  identity, so a new `release-*.yml` merged later cannot reach a registry
+  on its own.
+- **The release's own report is stored immutably and signed**, because it
+  becomes the next release's capability baseline (§8.1). Plain release
+  assets are not enough, since anyone with write access can replace them.
+  The store must be append-only (immutable releases or a transparency log),
+  and the report is attested with the protected workflow's identity, which
+  is verified whenever the report is used as a baseline. A package that
+  has shipped before but whose baseline is missing or fails verification
+  **fails the gate**. It is never treated as a first release.
 
 ### 9.3 Coverage, centrally
 
@@ -1180,7 +1290,7 @@ ends with its rung **live and blocking**.
 | 5 | Microbench harness in every lane; `budget` blocks; timing calibration | (budgets only) | VER07 |
 | S1 | CDCL, DRAT checker, Tseitin/AIG encodings, bit-blaster, incremental solving | — | VER09–VER11 |
 | S2 | Hardware equivalence checking, synthesis translation validation, CPU k-induction | E5 for hardware | VER18 |
-| S3 | Vacuity, consistency and model proofs; solver-generated inputs (needs Warrant v0) | E5 `proved-over-model` | VER04, VER05 |
+| S3 | Vacuity, consistency and model proofs; solver-generated inputs (needs Warrant v0) | `proved-over-model` (below the E5 floor; spec-level only) | VER04, VER05 |
 | S4 | SIR symbolic execution, bounded and inductive proofs, back-end translation validation | E5 `proved` / `bounded(k)` under assumptions | VER19 |
 | S5 | SIR cost semantics, ranking functions, `bound` proofs, constant-time self-composition; gate-level WCET | E5 bounds | VER20 |
 | 6 | SMT theories, VC generation | E5 widening | VER10, VER12 |
