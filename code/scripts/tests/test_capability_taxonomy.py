@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+import subprocess
 import unittest
 from pathlib import Path
 from typing import Any
@@ -236,6 +238,60 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                     pair=pair,
                 ):
                     self.assertIn(pair, allowed)
+
+    def test_v1_manifests_validate_except_the_shrink_only_ledger(self) -> None:
+        """Every tracked manifest must validate against the v1 schema.
+
+        Validity is decided from the file itself, never from its own
+        `$schema` field: a manifest cannot opt out of the check by omitting
+        or misspelling that field. Files are enumerated with `git ls-files`,
+        so untracked build output is never read and no directory name is
+        skipped by accident.
+
+        A known set of legacy manifests does not validate yet. They are listed
+        in a ledger that may only shrink, and each entry is frozen by the
+        SHA-256 of its exact bytes:
+        - a manifest outside the ledger that is invalid fails the test;
+        - a listed manifest that now validates must be removed from the ledger;
+        - a listed manifest whose bytes changed fails the test, so an invalid
+          manifest cannot quietly gain capabilities while it waits to be fixed.
+        """
+        ledger_path = REPO_ROOT / "code/specs/data/required-capabilities-v1-invalid-ledger.json"
+        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))["invalid_manifests"]
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["required"])
+        tracked = subprocess.run(
+            ["git", "ls-files", "-z", "--", "code/*required_capabilities.json"],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            check=True,
+        ).stdout.decode("utf-8").split("\0")
+        invalid: dict[str, str] = {}
+        for relative in filter(None, tracked):
+            raw = (REPO_ROOT / relative).read_bytes()
+            try:
+                manifest = json.loads(raw)
+                valid = isinstance(manifest, dict) and not list(validator.iter_errors(manifest))
+            except json.JSONDecodeError:
+                valid = False
+            if not valid:
+                invalid[relative] = hashlib.sha256(raw).hexdigest()
+        self.assertGreater(len(tracked), 3000)
+        self.assertEqual(sorted(set(invalid) - set(ledger)), [], "new invalid manifests")
+        self.assertEqual(sorted(set(ledger) - set(invalid)), [], "fixed manifests still in the ledger")
+        changed = sorted(path for path in invalid.keys() & ledger.keys() if invalid[path] != ledger[path])
+        self.assertEqual(changed, [], "ledgered manifests changed without being fixed")
+
+    def test_c_and_cpp_package_names_are_accepted(self) -> None:
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["required"])
+        for package in ("c/ct-compare", "cpp/ct-compare"):
+            manifest = {
+                "version": 1,
+                "package": package,
+                "capabilities": [],
+                "justification": "Pure computation.",
+            }
+            with self.subTest(package=package):
+                self.assertEqual(list(validator.iter_errors(manifest)), [])
 
     def test_camera_media_authority_free_manifest_is_schema_valid(self) -> None:
         manifest_path = (
