@@ -1,5 +1,21 @@
 # Changelog — gc-core
 
+## Unreleased — objects born during an incremental mark are grey, not black
+
+- **Bug (latent).** `FlatHeap::alloc` marked a block allocated during an incremental mark black. A constructor then writes its initial fields straight into the fresh block, with no write barrier: `__dyn_pair_new`'s car/cdr, or any record, closure or array built in C. A black block is never scanned again, so a field could hide a white object. The losing sequence:
+  1. `W` is reachable only via `R.f`.
+  2. `N = pair_new(W, nil)` is allocated mid-mark.
+  3. `R.f = other`; the barrier shades `other`, not `W`.
+  4. `N` is published to a root.
+  5. The finish re-scan stops at the black `N`.
+  6. `W` is swept while `N.car` names it.
+- **Fix, at the allocator.** While marking (not during a stepped sweep), `alloc` also pushes the newborn onto the grey worklist. It is scanned when the worklist reaches it, which is always after its constructor has written the fields (steps and re-scans run between mutator slices). One rule covers every constructor in every runtime. `incremental_finish` now drains newborns queued after the last step before it sweeps; the old "worklist must be empty" assertion applies only once a stepped sweep has begun.
+- Tests:
+  - `incremental_newborn_fields_are_traced` replays the sequence above. With newborns black, `W` was freed.
+  - `incremental_finish_traces_newborns_born_after_the_last_step` covers newborns created after the last step.
+- **The first stepped-sweep call ends the mark too.** `incremental_sweep_step` only `debug_assert!`ed that the worklist was empty. So `start → step* (done) → alloc N, N.car = W → sweep_step*` swept without scanning the grey newborn `N` in a release build, freeing `W` (white because the mutator had taken it out of the heap into a local), and `incremental_finish` drains nothing once a stepped sweep has begun. The first `incremental_sweep_step` now drains the worklist before it creates the sweep state, exactly as `finish` does (both through the new private `drain_grey_worklist`), and asserts emptiness after. Test: `incremental_sweep_step_scans_objects_born_after_the_last_step`. With the drain disabled it fails in release (`W` freed) and panics in debug.
+- Not in twig-vm's dependency graph.
+
 ## Unreleased — incremental cycles can re-scan the roots before the sweep
 
 - **New `FlatHeap::incremental_rescan_roots(root_slots, regions)`.** The insertion barrier shades only stores into heap objects, and `incremental_start` snapshots the roots once. A store into a root (a stack slot, a register, a program global) is invisible to both. So an object the mutator moved out of the heap and into a root during the phase was swept while the root still named it. This method greys everything the *current* roots reach and drains the worklist completely; call it once marking is otherwise done and before any sweeping (it panics if a stepped sweep has started). It is the root half of a Dijkstra collector.
