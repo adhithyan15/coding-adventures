@@ -1,7 +1,7 @@
 # VER00 — The Verified Shipping Program
 
 **Status:** Draft umbrella spec. Nothing here is implemented. Child specs
-(VER01–VER23, listed in §11) are written one at a time before their code.
+(VER01–VER24, listed in §11) are written one at a time before their code.
 
 **Layer:** Repository-wide policy and tooling.
 
@@ -1248,7 +1248,15 @@ continue on the strength of its own check**. Either:
   - an **empty set of Linux capabilities** (no `CAP_DAC_OVERRIDE` or
     similar) and `no_new_privs`;
   - **the package's own Landlock domain**, not a sibling built from the
-    same ruleset (the two differ in Landlock's ptrace and signal scoping);
+    same ruleset. There is no way to join an existing domain, so the
+    helper inherits it: the launcher starts the helper after restricting
+    itself and before starting the runtime. Sharing the domain also lets
+    the package reach the helper, so the helper is non-dumpable
+    (`PR_SET_DUMPABLE` set to 0). It is also covered by the integrity
+    rules of §8.5.4: the package may not `ptrace` it, use `pidfd_getfd`
+    on it, or signal it. The helper never holds the notification
+    listener. It hands each descriptor back to the supervisor over
+    `SCM_RIGHTS`, and the supervisor injects it;
   - the same mount namespace;
   - the root and working directory **of the calling thread at the time of
     the call**, read under a `NOTIF_ID_VALID` check. Threads can
@@ -1270,8 +1278,9 @@ Seatbelt denials are silent by default. A package that tries an undeclared
 and in production, outside the box, that attempt succeeds. So every
 denial, at every layer, is recorded as an observation:
 
-- **seccomp.** Denials are preferably delivered as user notifications
-  that the supervisor answers with an error. That is lossless, and it is
+- **seccomp.** Per-target denials (this path, that address) are
+  preferably delivered as user notifications that the supervisor answers
+  with an error. Class denials do not go this way (§8.5.3). That is lossless, and it is
   race-free because it denies rather than continues. Filters that return
   an error or kill directly are installed with `SECCOMP_FILTER_FLAG_LOG`,
   with those actions enabled in `/proc/sys/kernel/seccomp/actions_logged`.
@@ -1336,7 +1345,9 @@ The supervisor runs inside the same guest as the code it watches, so it
 must be protected from that code:
 
 - it runs as a **separate user**;
-- the package is denied `ptrace`, signals to the supervisor, and `vsock`;
+- the package is denied `ptrace`, `pidfd_getfd` and `process_vm_writev`
+  against the supervisor, the broker and the emulation helper, signals to
+  any of them, and `vsock`;
 - the channel to the host accepts **one** connection, opened before the
   package starts, and its listening socket never leaks into the box;
 - a supervisor crash or timeout fails the run, and a call the supervisor
@@ -1590,7 +1601,7 @@ generated (Python lane, abridged):
   - it resolves every path against a directory descriptor pinned at
     start-up from a trusted root, never the working directory;
   - on Linux it uses `openat2` with `RESOLVE_BENEATH` and
-    `RESOLVE_NO_MAGICLINKS`, plus `RESOLVE_NO_SYMLINKS` or
+    `RESOLVE_NO_MAGICLINKS`, plus `RESOLVE_NO_SYMLINKS` and/or
     `RESOLVE_NO_XDEV` where the grant requires;
   - on macOS, which has no `openat2`, it walks the path one component at a
     time with `openat` and `O_NOFOLLOW` (or `O_NOFOLLOW_ANY`);
@@ -1666,9 +1677,17 @@ reached on objects. Exactly three things can be allowed:
 2. **In-repo packages**, each confined in the same way and each passing
    the same gate.
 3. **The language core allowlist.** This is a short, explicit list, per
-   language, of what genuinely cannot be replaced: built-in types,
-   literals and operators, and whatever the runtime forces on every
-   program, such as `java.lang`.
+   language and per member, of what genuinely cannot be replaced:
+   built-in types, literals and operators, and the members every program
+   needs from namespaces the runtime forces on it. In Java, for example,
+   that means `Object`, `String` and the boxed types, but not `System`,
+   `Runtime`, `ProcessBuilder`, `Class`, `ClassLoader` or `Thread`,
+   which stay off unless tamed.
+
+**Third-party packages are not on the list either.** A shipped closure
+should contain none (B06). Where one remains, it can be named only under
+the exemption of §9.2 (step 1), and the package that names it carries the
+label "not language-confined" (§8.6.2, below).
 
 **The standard library is not on the list.** Collections, string
 formatting, JSON, regular expressions, dates and Unicode come from audited
@@ -1686,12 +1705,28 @@ D21 runtime          the ONLY code that touches the real standard library
 language runtime     assumed (§7.5.1), tested per language (§7.5.3)
 ```
 
-**Some languages make this easy.** Rust's `#![no_std]` crates cannot name
-`std::fs` at all, so the compiler does the enforcing. JavaScript's SES
-compartments start with no globals except those handed in. Java's module
-system limits what can be read, though `java.lang` is unavoidable. Other
-languages rely on the allowlist check, backed by replacing the builtins
-at start-up.
+**Some languages offer aids that shrink the surface, but none of them
+enforces the rule on its own.** The after-expansion allowlist check runs
+for **every** language, without exception.
+
+- **Rust.** `#![no_std]` removes the implicit standard library and its
+  prelude. But a `no_std` crate can still write `extern crate std;` and
+  then call `std::fs::read`, which is a common, legal idiom. So the check
+  rejects `extern crate std`, and any other extern crate not on the
+  allowlist, in package crates.
+- **JavaScript.** SES compartments have no *host* globals, such as
+  `process`, `require` or `fetch`, unless they are handed in. They do
+  share the hardened built-in objects (`Object`, `Array`, `JSON`, `Math`,
+  `RegExp` and so on), and each has its own `eval`, `Function` and
+  `Compartment`.
+- **Java.** Every module implicitly reads `java.base`, which exports
+  `java.io`, `java.nio.file`, `java.net`, `java.lang.reflect` and
+  `java.lang.invoke`. So `module-info` cannot keep file, network or
+  reflection APIs out. The unavoidable part is all of `java.base`, not
+  only `java.lang`.
+
+Python and the remaining languages rely on the allowlist check alone,
+backed by replacing the builtins at start-up.
 
 **There is a transitional allowance, and it shrinks to zero.** Until a
 language's in-repo replacements exist, specific standard-library members
@@ -1707,7 +1742,12 @@ all lead to `sys.modules['os']`. So the list is kept at (module, member)
 granularity, the way Joe-E's "taming database" works. The same applies to
 the attributes, properties and methods reachable **on objects** of allowed
 types, which are denied unless listed, exactly as Joe-E tames each member
-of each class. A member is reviewed against **everything reachable from
+of each class. In Python, Ruby and JavaScript the type of an object is
+often unknown at analysis time. VER23 says how taming works there: type
+inference where it succeeds, and otherwise a name-based rule that rejects
+an access when the receiver's type is unknown and the member name is not
+allowed on every type that has it. The field paths inside literal format
+strings are checked against the same taming. A member is reviewed against **everything reachable from
 it**, not just its documented behaviour. Some members that look pure have effects in D21's categories,
 and those are capabilities like any other, usable only through a
 declaration:
@@ -1757,10 +1797,19 @@ with the core allowlist, as defence in depth. **For JavaScript it is a
 required control, not defence in depth.** A computed property access
 (`o[k]`) cannot be banned without banning ordinary indexing, and
 `({})["constr" + "uctor"]["constr" + "uctor"]` survives any syntactic
-rule. Only SES `lockdown` (frozen built-in objects, tamed `Function` and
-`eval`), together with a compartment whose globals are exactly the
-allowlist, closes that route. Code that uses non-literal computed access
-must run that way.
+rule. So:
+
+- **All JavaScript runs under SES `lockdown`**: frozen built-in objects,
+  with tamed `Function` and `eval`. Without it, a library could patch
+  `Array.prototype` through an ordinary literal property access and
+  intercept capability handles other packages pass in (§8.6.4).
+- **Each package's code is evaluated in its own compartment**, whose
+  globals are exactly the allowlist.
+
+Once computed access is allowed, per-member taming of the shared built-in
+objects cannot be checked statically. What remains reachable is then only
+those hardened built-ins, which hold no authority, and that is what makes
+the arrangement sound.
 
 **The check runs on code as it is compiled, not as it is written.**
 Several things never appear in source text:
@@ -1874,18 +1923,102 @@ requirements:
   generated module exports only the capability *types* it accepts, never
   operations it could call on its own. It cannot import any other
   package's generated module.
+- **Exported types are for type checks only; construction is sealed.**
+  In Python, JavaScript and Ruby, exporting a type usually exports its
+  constructor as well, and a library could then build a handle itself
+  (`WriteHandle(path="/")`). Handles can be created only with a private
+  token held by the *program's* generated module, or are verified with a
+  sealer/unsealer brand check.
 - **There is no shared mutable global state** in which a library could
   hide or intercept capabilities. That needs frozen built-in objects (SES)
   and no mutable statics (Joe-E); otherwise patching a prototype would
   intercept handles passed in later.
 
-#### 8.6.5 How the layers fit together
+#### 8.6.5 Capability claims carry their own proof
+
+Everything above rests on one assumption: that the analyzer enforcing the
+rules is itself correct. It is a large program, and it will have bugs. So
+the analyzer does not merely answer "this package uses no file access". It
+also produces the **evidence** for that answer, and a small checker
+verifies the evidence. This is *proof-carrying code*, applied to
+capabilities.
+
+- **The certificate.** For every function reachable from the package's
+  public API, the analyzer emits that function's **effect type**: the set
+  of capabilities it may exercise. It also emits the derivation showing
+  why: the call graph after expansion, the resolution of every name
+  against the allowlists of §8.6.2, and each call into a generated
+  module.
+- **The checker.** A small effect-typing checker re-checks every step
+  locally. Each function's effect set must cover the effects of
+  everything it calls, and every name must resolve to an allowed entry.
+  The checker is written to be read in full, and it sits beside the proof
+  kernel of §7.5 in the trust root (§9.4).
+- **The claim.** The package's capability claim becomes a Warrant claim
+  like any other. For a `sum` package it is `effects(sum) = ∅`, and the
+  gate accepts it only with a certificate that the checker accepts.
+
+The payoff is that a bug in the big analyzer can only cause a false
+*rejection*, which is annoying but safe, and never a false "no effects".
+The analyzer's own correctness drops out of the assumptions behind every
+capability claim. What remains are the language-runtime assumptions of
+§7.5.1, the reviewed allowlists, and the small checker.
+
+#### 8.6.6 Information flow: where data is allowed to go
+
+Capabilities say **what** a package may touch. They do not say **where
+data goes**. Suppose a package is legitimately granted `fs.read` on
+`config/` and `net.connect` to an API server. It can read the config
+file, *and* it can send that file to the server. Each step is declared;
+the combination is the exploit. Information-flow claims close this gap.
+
+- **Flow claims in Warrant.** A package can state, and a reviewer can
+  require, claims such as:
+  - "data read through `fs.read` never reaches `net.connect`";
+  - "the `secret` key never reaches `stdout`, a log, or an error message";
+  - "nothing derived from the request body reaches `proc.exec`
+    arguments".
+
+  Each source and sink is a generated capability function (§8.6.1), so
+  the claims are stated against the same names the code uses.
+- **Proving them.** The SIR symbolic execution of §7.6.2 tracks **taint**
+  alongside values. Every value carries the set of sources it was derived
+  from, and the proof shows that no tainted value reaches a forbidden
+  sink. The constant-time machinery of §7.4.1 is already a special case:
+  "timing does not depend on the secret".
+- **Implicit flows count.** Data can leak through control flow as well as
+  through values: `if secret_bit: connect()` leaks a bit without passing
+  the secret anywhere. Flow claims are therefore proved as
+  **noninterference**: running the program twice, with different values
+  for the protected source, must produce identical observations at the
+  sink. This is the same self-composition technique as constant time.
+- **Declassification is an exemption.** Some flows are intended: a hash
+  of the password may be stored, or an error code may reach the log.
+  Each is a named, reviewed declassification point, and adding one is an
+  exemption needing approval (§9.1).
+- **Defaults for the dangerous combinations.** When a package's effective
+  capabilities include both a source of sensitive data and an outbound
+  sink, the gate *requires* a flow claim between them before it will
+  ship. Examples are `fs.read` together with `net.connect`, or
+  `env.read` together with `stdout.write`. The weakness registry (§8.2)
+  carries these combinations as their own classes, starting with
+  exfiltration (CWE-200) and cleartext logging of sensitive data
+  (CWE-532).
+
+Flow claims are proved under the same assumptions as everything else
+(§7.5.1). The usual limits apply: a flow claim proved over SIR covers the
+package's logic, not covert channels such as cache timing on a
+third-party runtime (§7.4.1).
+
+#### 8.6.7 How the layers fit together
 
 | Layer | Catches | Cannot catch |
 |---|---|---|
 | Generated module + per-member allowlist (§8.6) | Any undeclared effect in code that stays inside the confined subset. It makes S nearly exact | Native code and FFI; memory-safety bugs in the C code behind allowed standard-library modules (CPython is not a security boundary); Go data races that corrupt memory and so forge interfaces (§8.2) |
 | Capability analyzer (§8.1) | Enforces the allowlist and the subset; computes S | Whatever the subset rules miss |
 | Locked box (§8.5) | What the program actually did, including native code | Paths never exercised; a package that detects the box |
+| Effect certificates (§8.6.5) | Bugs in the analyzer that would wrongly report "no effects" | Errors in the allowlists themselves, which are reviewed policy |
+| Information-flow claims (§8.6.6) | Misuse of declared capabilities in combination, such as reading a file and then sending it | Covert channels below the cost model |
 | Weakness registry and proofs (§8.2, E5) | Whole classes of misuse, *within* the declared capabilities | Anything outside their stated assumptions |
 
 **A package is only as confined as its closure.** Its confinement label is
@@ -2514,6 +2647,7 @@ ends with its rung **live and blocking**.
 | 2 | Test tiers, purity and speed enforcement, simulated host, taxonomy extension, chaos injection | E1 purity, E2 | VER02, VER03, VER17 |
 | 2b | Checked allocator, checked C interpreter, native attack corpora | E0 for native code | VER16 |
 | 2c | Locked-box capability check: Linux appliers and the base deny, race-free enforcement, recorded denials, closed system-call mapping, broker log, exact-target baseline, D/S/O cross-check. Live with baseline charging only; attribution is research. Gets most of its reach once phases 3–4 drive the harness. | E0 dynamic (Linux guests) | VER22 |
+| 2d | Effect certificates and checker (with 1b); information-flow claims and noninterference proofs (with S4) | E0 proved | VER24 |
 | 3 | Warrant v0 (examples, claims, models) with TypeScript and Rust backends; property engine | E3 | VER04, VER05 |
 | 4 | Fuzz engine; `input` blocks | E4 | VER06 |
 | 5 | Microbench harness in every lane; `budget` blocks; timing calibration | (budgets only) | VER07 |
@@ -2564,7 +2698,8 @@ S4 for S1.
 | VER20 | Resource-bound and timing proofs: cost semantics, ranking functions, constant time, gate-level WCET |
 | VER21 | Hardware-key release approval: phone approval app, SSHSIG `-sk` verification, P-256, in-house USB HID and CTAP2, `release-approve`, root-key ceremony (shared with VLT-PM51) |
 | VER22 | Locked-box capability check: `capability-os-sandbox` enforce and observe modes, seccomp user-notification supervisor, VM isolation, attribution, D/S/O cross-check |
-| VER23 | Generated capability modules: exact per-package effect modules, target types, closed import allowlists, native shim and binary checks, object-capability passing |
+| VER23 | Generated capability modules: exact per-package effect modules, enforced targets, deny-by-default allowlists with core and transitional lists, native shim and binary checks, object-capability passing |
+| VER24 | Capability proof certificates and information flow: effect-type certificates and their small checker; taint tracking and noninterference proofs over SIR; declassification; required flow claims for dangerous capability combinations |
 
 ## 12. Open decisions
 
