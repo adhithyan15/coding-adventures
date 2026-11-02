@@ -2217,9 +2217,12 @@ fn is_ruby_keyword(s: &str) -> bool {
 /// new statement (its type stays `LBracket`).  The grammar refuses it with
 /// the literal lookahead `!"[ line start"`.  A grammar literal matches a
 /// token's value whatever the token's type, so the tag must be a value no
-/// other token can carry: the spaces rule out every name, keyword, number
-/// and operator.  (The first tag, `lbracket_line_start`, was an identifier,
-/// so `puts lbracket_line_start` stopped parsing.)
+/// name, keyword, number or operator can carry: the spaces rule that out.
+/// (The first tag, `lbracket_line_start`, was an identifier, so `puts
+/// lbracket_line_start` stopped parsing.)  A `String` token's content can
+/// spell anything; the Rust grammar parser never matches a literal against
+/// a `String` token, which is what makes `puts "[ line start"` safe here.
+/// The other languages' grammar parsers have no such guard (#18798).
 pub const LINE_START_LBRACKET: &str = "[ line start";
 
 /// Tokenize Ruby source (Phase-1 = Ruby 1.8 lexer).  Returns the

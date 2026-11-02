@@ -1083,7 +1083,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "expression", is_token: false),
         GT::RuleReference.new(name: "RBRACKET", is_token: true),
       ]),
-      line_number: 916,
+      line_number: 918,
     ),
     GT::GrammarRule.new(
       name: "factor",
@@ -1124,7 +1124,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "index_suffix", is_token: false),
           ])),
       ]),
-      line_number: 917,
+      line_number: 919,
     ),
     GT::GrammarRule.new(
       name: "lambda_literal",
@@ -1137,7 +1137,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "block", is_token: false),
       ]),
-      line_number: 936,
+      line_number: 938,
     ),
     GT::GrammarRule.new(
       name: "unary_minus",
@@ -1145,7 +1145,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "MINUS", is_token: true),
         GT::RuleReference.new(name: "factor", is_token: false),
       ]),
-      line_number: 937,
+      line_number: 939,
     ),
     GT::GrammarRule.new(
       name: "defined_expression",
@@ -1153,7 +1153,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::Literal.new(value: "defined?"),
         GT::RuleReference.new(name: "factor", is_token: false),
       ]),
-      line_number: 948,
+      line_number: 950,
     ),
     GT::GrammarRule.new(
       name: "symbol_literal",
@@ -1165,7 +1165,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
             GT::RuleReference.new(name: "STRING", is_token: true),
           ])),
       ]),
-      line_number: 955,
+      line_number: 957,
     ),
     GT::GrammarRule.new(
       name: "array_literal",
@@ -1180,7 +1180,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "RBRACKET", is_token: true),
       ]),
-      line_number: 956,
+      line_number: 958,
     ),
     GT::GrammarRule.new(
       name: "hash_literal",
@@ -1195,7 +1195,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           ])),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
-      line_number: 957,
+      line_number: 959,
     ),
     GT::GrammarRule.new(
       name: "hash_entry",
@@ -1215,7 +1215,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "expression", is_token: false),
         ]),
       ]),
-      line_number: 958,
+      line_number: 960,
     ),
   ],
 )

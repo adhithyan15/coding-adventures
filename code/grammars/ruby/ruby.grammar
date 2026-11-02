@@ -909,10 +909,12 @@ super_expr   = "super" [ super_args ] ;
 # paren-less call's first argument — from starting there.  Lexers that do
 # not re-tag never produce that value, so for them nothing changes.
 # A literal matches a token's VALUE, whatever its type, so the tag must be a
-# value no other token can carry: it has spaces, which no name, keyword,
-# number or operator does (and a `String` token is never matched by a
-# literal).  The first tag, `lbracket_line_start`, was an identifier, and
-# the lookahead refused `puts lbracket_line_start` (review of #18778).
+# value no name, keyword, number or operator can carry: it has spaces.  The
+# first tag, `lbracket_line_start`, was an identifier, and the lookahead
+# refused `puts lbracket_line_start` (review of #18778).  Only the Rust
+# grammar parser also skips `String` tokens when it matches a literal; the
+# other languages' parsers compare the value alone, so for them
+# `puts "[ line start"` does not parse (as `puts "<"` already does not; #18798).
 index_suffix = !"[ line start" LBRACKET expression RBRACKET ;
 factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution | index_suffix } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.

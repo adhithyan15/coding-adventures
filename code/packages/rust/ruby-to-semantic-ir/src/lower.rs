@@ -2074,7 +2074,7 @@ impl Lowerer {
     /// |------------------------------------|-------------------------------------------------|
     /// | `a...b`                            | `ForRange(a, b, 1)` — counts while `i < b`      |
     /// | `a..b`, `b` an integer literal     | `ForRange(a, b + 1, 1)`                         |
-    /// | `a..b`, any other `b`              | `let s = a; let e = b; while s <= e …; s = s + 1` |
+    /// | `a..b`, any other `b`              | `let s = a; let e = b; while s <= e { x = s; s = s + 1; … }` |
     /// | a `Float` literal start            | refused (Ruby: `can't iterate from Float`)       |
     /// | anything else                      | `ForEach` over the value                        |
     ///
@@ -2132,11 +2132,27 @@ impl Lowerer {
         }) {
             collect_loop_assigned_names(n, &mut names);
         }
+        names.retain(|n| !self.current_params.contains(n) && !self.declared_locals.contains(n));
+        // The iterable was lowered against the scope BEFORE these names
+        // exist, and it is evaluated before the loop runs — but the `nil`
+        // declarations below come first in the output.  An iterable that
+        // reads one of them (`for i in 0...n` with `n` first assigned in the
+        // body) would quietly read that `nil`.  In Ruby it is not a local
+        // there at all (it is parsed before the assignment), so it is a
+        // method call, and `NameError` when there is none: refuse it here,
+        // at compile time, as the validator did before the declarations
+        // existed (review of #18778).
+        if let Some(read) = names.iter().find(|n| {
+            expr_references_any_name(&iter, &std::iter::once((*n).clone()).collect())
+        }) {
+            return Err(err(&format!(
+                "unsupported: the `for` iterable reads `{read}`, which is first assigned \
+                 inside the loop (in Ruby it is not a local yet there)"
+            )));
+        }
         let mut out: Vec<Stmt> = Vec::new();
         for name in names {
-            if self.current_params.contains(&name) || !self.declared_locals.insert(name.clone()) {
-                continue;
-            }
+            self.declared_locals.insert(name.clone());
             out.push(Stmt::LetBinding {
                 name,
                 sir_type: None,
@@ -2215,8 +2231,13 @@ impl Lowerer {
                 } else {
                     // `a..b` with any `b`: count with `<=`.  The counter and
                     // the end are evaluated once, start first, as Ruby builds
-                    // the range before iterating it.
+                    // the range before iterating it.  Both are locals of the
+                    // enclosing scope from here on, so they are recorded in
+                    // `declared_locals`: a later `__for_<n> = …` in the
+                    // program is then an `Assign`, not a second `let`.
                     let stop = self.fresh_for_name();
+                    self.declared_locals.insert(tmp.clone());
+                    self.declared_locals.insert(stop.clone());
                     out.push(Stmt::LetBinding {
                         name: tmp.clone(),
                         sir_type: None,
@@ -2229,7 +2250,12 @@ impl Lowerer {
                         value: end,
                         span: span.clone(),
                     });
-                    body.stmts.push(Stmt::Assign {
+                    // The increment comes right after the store into the
+                    // loop variable, BEFORE the user's statements, so no
+                    // statement of the body can skip it.  (`next` is refused
+                    // today, but a `next` that skipped a trailing increment
+                    // would loop forever.)
+                    body.stmts.insert(1, Stmt::Assign {
                         name: tmp.clone(),
                         scope: Scope::Local,
                         value: Expr::BuiltinCall {

@@ -6,6 +6,10 @@ All notable changes to the Ruby Parser package will be documented in this file.
 
 ### Changed
 
+- Regenerated again after a comment change in `ruby.grammar` (rule line
+  numbers only).  Note: this package's grammar parser compares a literal
+  with a token's value alone, so `puts "[ line start"` does not parse here,
+  the same as `puts "<"` (#18798).
 - `_grammar` regenerated from `code/grammars/ruby/ruby.grammar` (#18778),
   which gained a `for_statement` (`for x in xs [do] … end`), `rescue => e`
   with no class, a guard so a parenthesised call followed by a binary operator

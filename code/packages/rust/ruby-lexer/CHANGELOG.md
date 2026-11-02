@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
 
 ## Unreleased — a `[` that starts a line starts a statement (#18778)
 
+### Changed (re-review of #18778)
+
+- The `LINE_START_LBRACKET` doc comment no longer claims a `String` token
+  can never match the tag: only the Rust grammar parser skips `String`
+  tokens for literals.  The other languages' parsers do not, so there
+  `puts "[ line start"` does not parse, like `puts "<"` (#18798).
+
 ### Changed (review of #18778)
 
 - The tag is now `[ line start` (the public constant `LINE_START_LBRACKET`),

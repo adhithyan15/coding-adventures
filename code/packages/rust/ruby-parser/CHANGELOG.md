@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
 
 ## Unreleased — `for`, `rescue => e`, `f() + f`, line-start `[` (#18778)
 
+### Changed (re-review of #18778)
+
+- Regenerated after a comment change in `ruby.grammar` (line numbers only):
+  the comment on `index_suffix` now says that only the Rust grammar parser
+  keeps a `String` token from matching the `[ line start` literal.
+
 ### Changed (review of #18778)
 
 - Regenerated for the tag's new value, `[ line start`, which no Ruby name

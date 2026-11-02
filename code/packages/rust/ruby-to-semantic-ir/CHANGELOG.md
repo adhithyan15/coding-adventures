@@ -4,6 +4,22 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ## Unreleased — Ruby-on-SIR gaps (#18778)
 
+### Fixed (re-review of #18778)
+
+- **A `for` iterable that reads a body local is refused at compile time.**
+  The body's locals are declared `nil` before the loop, so `for i in 0...n`
+  with `n` first assigned in the body read that `nil` and failed at run
+  time (before the declarations existed, the validator refused it).  The
+  lowerer now refuses it: in Ruby the name is not a local at that point.
+  Test `for_iterable_reading_a_body_local_is_refused`.
+- **The `while` form's counter and end are recorded as locals**, so a later
+  `__for_0 = …` in the program is an `Assign`, not a second `let`.  Test
+  `for_while_form_temporaries_are_declared_locals`.
+- **The `while` form's increment comes right after the store into the loop
+  variable**, before the user's statements, so no statement of the body
+  can skip it (a future `next` would otherwise loop forever).  Pinned in
+  `for_over_an_inclusive_range_with_a_non_integer_end_counts_with_le`.
+
 ### Fixed (review of #18778)
 
 - **`for i in 1..2.5` ran 1, 2 and 3.**  An inclusive range's stop was

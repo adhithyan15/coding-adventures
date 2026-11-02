@@ -1080,7 +1080,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "expression", false},
             {:rule_reference, "RBRACKET", true},
           ]},
-          line_number: 916,
+          line_number: 918,
         },
         %{
           name: "factor",
@@ -1121,7 +1121,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "index_suffix", false},
               ]}},
           ]},
-          line_number: 917,
+          line_number: 919,
         },
         %{
           name: "lambda_literal",
@@ -1134,7 +1134,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "block", false},
           ]},
-          line_number: 936,
+          line_number: 938,
         },
         %{
           name: "unary_minus",
@@ -1142,7 +1142,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:rule_reference, "MINUS", true},
             {:rule_reference, "factor", false},
           ]},
-          line_number: 937,
+          line_number: 939,
         },
         %{
           name: "defined_expression",
@@ -1150,7 +1150,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
             {:literal, "defined?"},
             {:rule_reference, "factor", false},
           ]},
-          line_number: 948,
+          line_number: 950,
         },
         %{
           name: "symbol_literal",
@@ -1162,7 +1162,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
                 {:rule_reference, "STRING", true},
               ]}},
           ]},
-          line_number: 955,
+          line_number: 957,
         },
         %{
           name: "array_literal",
@@ -1177,7 +1177,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "RBRACKET", true},
           ]},
-          line_number: 956,
+          line_number: 958,
         },
         %{
           name: "hash_literal",
@@ -1192,7 +1192,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               ]}},
             {:rule_reference, "RBRACE", true},
           ]},
-          line_number: 957,
+          line_number: 959,
         },
         %{
           name: "hash_entry",
@@ -1212,7 +1212,7 @@ defmodule CodingAdventures.RubyParser.Grammar do
               {:rule_reference, "expression", false},
             ]},
           ]},
-          line_number: 958,
+          line_number: 960,
         },
       ],
       version: 1,

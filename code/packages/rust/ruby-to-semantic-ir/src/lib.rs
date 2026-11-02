@@ -9853,11 +9853,55 @@ b = "y"
         for w in whiles {
             let Stmt::While { cond, body, .. } = w else { unreachable!() };
             assert!(matches!(cond, Expr::BuiltinCall { name, .. } if name == "<="), "got {cond:?}");
-            // `i = counter` first, the counter's increment last.
-            assert!(matches!(body.stmts.last(), Some(Stmt::Assign { value: Expr::BuiltinCall { name, .. }, .. }) if name == "+"));
+            // `i = counter` first, then the counter's increment — before the
+            // user's statements, so none of them can skip it.
+            assert!(matches!(&body.stmts[0], Stmt::Assign { value: Expr::VarRef { .. }, .. }));
+            assert!(matches!(&body.stmts[1], Stmt::Assign { value: Expr::BuiltinCall { name, .. }, .. } if name == "+"));
+            assert!(matches!(body.stmts.last(), Some(Stmt::ExprStmt { .. })), "the `puts` is last");
         }
         assert!(!body.stmts.iter().any(|s| matches!(s, Stmt::ForRange { .. })));
         assert_valid(&m);
+    }
+
+    /// Re-review of #18778: the `while` form's counter and end are locals of
+    /// the enclosing scope, so a later assignment to the same spelling is an
+    /// `Assign`, not a second `let` of the name.
+    #[test]
+    fn for_while_form_temporaries_are_declared_locals() {
+        let m = lower("n = 2\nfor i in 1..n\n  puts i\nend\n__for_0 = 7\n__for_1 = 8\nputs __for_0 + __for_1\n");
+        let body = main_body(&m);
+        let lets: Vec<&str> = body.stmts.iter().filter_map(binding_name).collect();
+        assert_eq!(
+            lets.iter().filter(|n| n.starts_with("__for_")).count(),
+            2,
+            "each temporary is bound once: {lets:?}"
+        );
+        assert_eq!(
+            body.stmts
+                .iter()
+                .filter(|s| matches!(s, Stmt::Assign { name, .. } if name.starts_with("__for_")))
+                .count(),
+            2,
+            "the program's own `__for_0 = …` / `__for_1 = …` reassign them"
+        );
+        assert_valid(&m);
+    }
+
+    /// Re-review of #18778: an iterable that reads a local first assigned
+    /// in the loop body is refused at compile time.  The body's locals are
+    /// declared `nil` before the loop, so it used to read that `nil` and
+    /// fail at run time; in Ruby the name is not a local yet there.
+    #[test]
+    fn for_iterable_reading_a_body_local_is_refused() {
+        for src in [
+            "for i in 0...n\n  n = 3\nend\n",
+            "for x in xs\n  xs = [1]\nend\n",
+        ] {
+            let err = compile_source(src, "test").expect_err(src);
+            assert!(err.message.contains("first assigned"), "{src:?}: {err}");
+        }
+        // A local assigned BEFORE the loop is fine.
+        assert_valid(&lower("n = 3\nfor i in 0...n\n  n = 1\nend\n"));
     }
 
     /// Ruby cannot iterate a range that starts at a Float; that is refused.

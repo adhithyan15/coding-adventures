@@ -1079,7 +1079,7 @@ local function parser_grammar()
         { type="rule_reference", name="expression", is_token=false },
         { type="rule_reference", name="RBRACKET", is_token=true },
       } },
-      line_number=916,
+      line_number=918,
     },
     {
       name="factor",
@@ -1120,7 +1120,7 @@ local function parser_grammar()
             { type="rule_reference", name="index_suffix", is_token=false },
           } } },
       } },
-      line_number=917,
+      line_number=919,
     },
     {
       name="lambda_literal",
@@ -1133,7 +1133,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="block", is_token=false },
       } },
-      line_number=936,
+      line_number=938,
     },
     {
       name="unary_minus",
@@ -1141,7 +1141,7 @@ local function parser_grammar()
         { type="rule_reference", name="MINUS", is_token=true },
         { type="rule_reference", name="factor", is_token=false },
       } },
-      line_number=937,
+      line_number=939,
     },
     {
       name="defined_expression",
@@ -1149,7 +1149,7 @@ local function parser_grammar()
         { type="literal", value="defined?" },
         { type="rule_reference", name="factor", is_token=false },
       } },
-      line_number=948,
+      line_number=950,
     },
     {
       name="symbol_literal",
@@ -1161,7 +1161,7 @@ local function parser_grammar()
             { type="rule_reference", name="STRING", is_token=true },
           } } },
       } },
-      line_number=955,
+      line_number=957,
     },
     {
       name="array_literal",
@@ -1176,7 +1176,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RBRACKET", is_token=true },
       } },
-      line_number=956,
+      line_number=958,
     },
     {
       name="hash_literal",
@@ -1191,7 +1191,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RBRACE", is_token=true },
       } },
-      line_number=957,
+      line_number=959,
     },
     {
       name="hash_entry",
@@ -1211,7 +1211,7 @@ local function parser_grammar()
           { type="rule_reference", name="expression", is_token=false },
         } },
       } },
-      line_number=958,
+      line_number=960,
     },
   }
   g.version = 0

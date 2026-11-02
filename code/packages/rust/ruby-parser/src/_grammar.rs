@@ -2318,7 +2318,7 @@ mod legacy {
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                     GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
                 ] },
-                line_number: 916,
+                line_number: 918,
             },
             GrammarRule {
                 name: r#"factor"#.to_string(),
@@ -2359,7 +2359,7 @@ mod legacy {
                             GrammarElement::RuleReference { name: r#"index_suffix"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 917,
+                line_number: 919,
             },
             GrammarRule {
                 name: r#"lambda_literal"#.to_string(),
@@ -2372,7 +2372,7 @@ mod legacy {
                         ] }) },
                     GrammarElement::RuleReference { name: r#"block"#.to_string() },
                 ] },
-                line_number: 936,
+                line_number: 938,
             },
             GrammarRule {
                 name: r#"unary_minus"#.to_string(),
@@ -2380,7 +2380,7 @@ mod legacy {
                     GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
                     GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                 ] },
-                line_number: 937,
+                line_number: 939,
             },
             GrammarRule {
                 name: r#"defined_expression"#.to_string(),
@@ -2388,7 +2388,7 @@ mod legacy {
                     GrammarElement::Literal { value: r#"defined?"#.to_string() },
                     GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                 ] },
-                line_number: 948,
+                line_number: 950,
             },
             GrammarRule {
                 name: r#"symbol_literal"#.to_string(),
@@ -2400,7 +2400,7 @@ mod legacy {
                             GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 955,
+                line_number: 957,
             },
             GrammarRule {
                 name: r#"array_literal"#.to_string(),
@@ -2415,7 +2415,7 @@ mod legacy {
                         ] }) },
                     GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
                 ] },
-                line_number: 956,
+                line_number: 958,
             },
             GrammarRule {
                 name: r#"hash_literal"#.to_string(),
@@ -2430,7 +2430,7 @@ mod legacy {
                         ] }) },
                     GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
                 ] },
-                line_number: 957,
+                line_number: 959,
             },
             GrammarRule {
                 name: r#"hash_entry"#.to_string(),
@@ -2450,7 +2450,7 @@ mod legacy {
                         GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                     ] },
                 ] },
-                line_number: 958,
+                line_number: 960,
             },
         ],
             version: 1,

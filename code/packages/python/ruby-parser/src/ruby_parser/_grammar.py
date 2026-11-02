@@ -1558,7 +1558,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='expression', is_token=False),
                 RuleReference(name='RBRACKET', is_token=True),
             ]),
-            line_number=916,
+            line_number=918,
         ),
         GrammarRule(
             name='factor',
@@ -1624,7 +1624,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=917,
+            line_number=919,
         ),
         GrammarRule(
             name='lambda_literal',
@@ -1642,7 +1642,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='block', is_token=False),
             ]),
-            line_number=936,
+            line_number=938,
         ),
         GrammarRule(
             name='unary_minus',
@@ -1651,7 +1651,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='MINUS', is_token=True),
                 RuleReference(name='factor', is_token=False),
             ]),
-            line_number=937,
+            line_number=939,
         ),
         GrammarRule(
             name='defined_expression',
@@ -1660,7 +1660,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='defined?'),
                 RuleReference(name='factor', is_token=False),
             ]),
-            line_number=948,
+            line_number=950,
         ),
         GrammarRule(
             name='symbol_literal',
@@ -1675,7 +1675,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=955,
+            line_number=957,
         ),
         GrammarRule(
             name='array_literal',
@@ -1695,7 +1695,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='RBRACKET', is_token=True),
             ]),
-            line_number=956,
+            line_number=958,
         ),
         GrammarRule(
             name='hash_literal',
@@ -1715,7 +1715,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='RBRACE', is_token=True),
             ]),
-            line_number=957,
+            line_number=959,
         ),
         GrammarRule(
             name='hash_entry',
@@ -1736,7 +1736,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='expression', is_token=False),
                 ]),
             ]),
-            line_number=958,
+            line_number=960,
         ),
     ],
 )

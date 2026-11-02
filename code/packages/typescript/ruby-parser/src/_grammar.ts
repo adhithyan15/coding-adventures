@@ -1080,7 +1080,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "expression" },
       { type: "token_reference", name: "RBRACKET" },
     ] },
-    lineNumber: 916,
+    lineNumber: 918,
   },
   {
     name: "factor",
@@ -1121,7 +1121,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "index_suffix" },
         ] } },
     ] },
-    lineNumber: 917,
+    lineNumber: 919,
   },
   {
     name: "lambda_literal",
@@ -1134,7 +1134,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "rule_reference", name: "block" },
     ] },
-    lineNumber: 936,
+    lineNumber: 938,
   },
   {
     name: "unary_minus",
@@ -1142,7 +1142,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "MINUS" },
       { type: "rule_reference", name: "factor" },
     ] },
-    lineNumber: 937,
+    lineNumber: 939,
   },
   {
     name: "defined_expression",
@@ -1150,7 +1150,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "defined?" },
       { type: "rule_reference", name: "factor" },
     ] },
-    lineNumber: 948,
+    lineNumber: 950,
   },
   {
     name: "symbol_literal",
@@ -1162,7 +1162,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "token_reference", name: "STRING" },
         ] } },
     ] },
-    lineNumber: 955,
+    lineNumber: 957,
   },
   {
     name: "array_literal",
@@ -1177,7 +1177,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RBRACKET" },
     ] },
-    lineNumber: 956,
+    lineNumber: 958,
   },
   {
     name: "hash_literal",
@@ -1192,7 +1192,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RBRACE" },
     ] },
-    lineNumber: 957,
+    lineNumber: 959,
   },
   {
     name: "hash_entry",
@@ -1212,7 +1212,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "rule_reference", name: "expression" },
       ] },
     ] },
-    lineNumber: 958,
+    lineNumber: 960,
   },
 ],
 };
