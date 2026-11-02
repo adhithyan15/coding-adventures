@@ -17,7 +17,7 @@ module ResolutionUtf8Spec
     )
 where
 
-import Control.Exception (bracket, try)
+import Control.Exception (bracket, evaluate, try)
 import Control.Monad (forM_)
 import Data.Aeson
     ( FromJSON(..)
@@ -33,6 +33,7 @@ import qualified Data.ByteString as BS
 import qualified Data.ByteString.Base64 as Base64
 import qualified Data.ByteString.Char8 as BS8
 import Data.List (isInfixOf, sort)
+import Data.Maybe (isJust)
 import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
 import qualified DirectedGraph as DG
@@ -45,6 +46,7 @@ import System.Directory
     )
 import System.FilePath ((</>), pathSeparator, takeDirectory)
 import System.IO (hClose, openTempFile)
+import System.Timeout (timeout)
 import Test.Hspec
 
 import BuildTool
@@ -351,7 +353,8 @@ resolutionRustSpec = describe "Rust resolution conformance" $ do
                     [ "rust/beta-helper", "rust/delta", "rust/epsilon", "rust/eta"
                     , "rust/gamma", "rust/iota", "rust/kappa", "rust/lambda"
                     , "rust/mu", "rust/nu", "rust/omicron", "rust/pi"
-                    , "rust/theta", "rust/zeta"
+                    , "rust/rho", "rust/sigma", "rust/tau", "rust/theta"
+                    , "rust/upsilon", "rust/zeta"
                     ]
             DG.nodes graph `shouldBe` ("rust/alpha" : others)
             DG.independentGroups graph `shouldBe` Right [others, ["rust/alpha"]]
@@ -361,6 +364,50 @@ resolutionRustSpec = describe "Rust resolution conformance" $ do
     describe "rustDependencyTokens" $
         forM_ cargoLineRuleCases $ \(label, manifest, expected) ->
             it label $ rustDependencyTokens manifest `shouldBe` expected
+
+    -- Rescanning the growing value for every appended line is quadratic: a
+    -- 20 000-line continuation (about 500 KB) took minutes. The scanner
+    -- state is carried from line to line instead, so this is milliseconds.
+    it "joins a 20000-line continuation in linear time" $ do
+        let manifest =
+                "[dependencies]\na = { path = \"../a\", features = [\n"
+                    ++ concat (replicate 20000 "  \"feature-name-padding\",\n")
+                    ++ "] }\n"
+        result <- timeout 10000000 (evaluate (length (show (rustDependencyTokens manifest))))
+        result `shouldSatisfy` isJust
+        rustDependencyTokens manifest `shouldBe` ["a"]
+
+    it "de-duplicates 20000 candidates without quadratic work" $ do
+        let manifest =
+                "[dependencies]\n"
+                    ++ concat ["c" ++ show index ++ " = { path = \"../c\" }\n" | index <- [1 .. 20000 :: Int]]
+                    ++ "[build-dependencies]\nc1 = { path = \"../c\" }\n"
+        result <- timeout 10000000 (evaluate (length (rustDependencyTokens manifest)))
+        result `shouldBe` Just 20000
+
+    it "rejects a crate that resolves itself as DEPENDENCY_SELF_EDGE" $
+        forM_
+            [ "[dependencies]\napp-dir = { path = \".\" }\n"
+            , "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n"
+            , "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n"
+            ]
+            $ \entry ->
+                withTemporaryDirectory "haskell-build-tool-self-edge" $ \root -> do
+                    let packageRoot = root </> "code" </> "packages" </> "rust" </> "app-dir"
+                    createDirectoryIfMissing True packageRoot
+                    BS8.writeFile (packageRoot </> "BUILD") "echo build\n"
+                    BS8.writeFile
+                        (packageRoot </> "Cargo.toml")
+                        (BS8.pack ("[package]\nname = \"app-crate\"\n\n" ++ entry))
+                    result <- try (resolveFixtureFor "rust" root) :: IO (Either DependencySelfEdgeError DG.DirectedGraph)
+                    case result of
+                        Right _ -> expectationFailure ("a self-edge resolved: " ++ entry)
+                        Left selfEdge -> do
+                            renderDependencySelfEdgeError selfEdge
+                                `shouldBe` "DEPENDENCY_SELF_EDGE: package=rust/app-dir manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir"
+                            renderDependencySelfEdgeError selfEdge `shouldSatisfy` (not . isInfixOf root)
+                    runWithArgs ["--root", root, "--language", "rust", "--force", "--dry-run"]
+                        `shouldReturn` 2
 
 cargoLineRuleCases :: [(String, String, [String])]
 cargoLineRuleCases =
@@ -410,6 +457,17 @@ cargoLineRuleCases =
     , ("unterminated quoted header ends the table", "[dependencies]\n[target.'cfg(unix).dependencies]\nc = { path = \"../c\" }\n", [])
     , ("CRLF and byte-order mark", "\xFEFF[dependencies]\r\na = { path = \"../a\" }\r\n", ["a"])
     , ("a crate named by two tables is listed once", "[dependencies]\na = { path = \"../a\" }\n[build-dependencies]\na = { path = \"../a\" }\n", ["a"])
+    , ("quoted inline path key", "[dependencies]\na = { \"path\" = \"../a\" }\n", ["a"])
+    , ("literal-quoted inline path key", "[dependencies]\na = { 'path' = \"../a\" }\n", ["a"])
+    , ("quoted inline package key renames", "[dependencies]\nx = { \"package\" = \"a\", path = \"../a\" }\n", ["a"])
+    , ("quoted capitalised inline Path key", "[dependencies]\na = { \"Path\" = \"../a\" }\n", [])
+    , ("escaped inline path key is compared verbatim", "[dependencies]\na = { \"pa\\u0074h\" = \"../a\" }\n", [])
+    , ("dotted inline field key", "[dependencies]\na = { path.x = \"../a\" }\n", [])
+    , ("quoted sub-table path key", "[dependencies.a]\n\"path\" = \"../a\"\n", ["a"])
+    , ("quoted sub-table package key", "[dependencies.x]\n'package' = \"a\"\npath = \"../a\"\n", ["a"])
+    , ("quoted capitalised sub-table Path key", "[dependencies.a]\n\"Path\" = \"../a\"\n", [])
+    , ("open string continues across the join", "[dependencies]\na = { path = \"../a\", x = \"q [\n\" }\n", ["a"])
+    , ("line-final backslash escapes the joining space", "[dependencies]\na = { x = \"q\\\n\", path = \"../a\" }\n", ["a"])
     ]
 
 resolutionRubySpec :: Spec

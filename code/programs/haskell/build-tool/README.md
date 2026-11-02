@@ -183,7 +183,10 @@ onto later lines) and as `[dependencies.name]` sub-tables with a
 `path = "..."` key. Renamed dependencies use the `package = "..."` value
 rather than the local source alias. Dev-dependencies in every form,
 `[patch]`, `[replace]`, `[workspace]`, package metadata, features, comments,
-and registry-only dependencies cannot invent graph edges. The line procedure
+and registry-only dependencies cannot invent graph edges. Field and sub-table
+keys may be bare or quoted (`"path" = "..."`), continuation lines are joined
+in linear time, and a crate that resolves itself is a `DEPENDENCY_SELF_EDGE`
+error (exit status 2). The line procedure
 is the Rust paragraph of `code/specs/build-tool-conformance.md`; the shared
 `resolution/rust-field-aware` fixture pins it, and `rustDependencyTokens`
 returns the same dependency names as the Go reference reader for all 1,650
