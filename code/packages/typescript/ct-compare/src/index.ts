@@ -107,24 +107,75 @@ export function ctEqU64(left: bigint | number, right: bigint | number): boolean 
   return folded === 0n;
 }
 
+/*
+ * ## Recognising real byte arrays
+ *
+ * `value instanceof Uint8Array` only checks the prototype chain, which any
+ * object can fake (`Object.setPrototypeOf({ length: 1 }, Uint8Array.prototype)`),
+ * and a subclass or `Proxy` passes it while serving whatever `length` and
+ * elements it likes. So the checks below use the engine's own *intrinsic*
+ * getters, captured once when the module loads, which work only on genuine
+ * objects:
+ *
+ * - `%TypedArray%.prototype[Symbol.toStringTag]` returns `"Uint8Array"` only
+ *   for a real `Uint8Array` (including Node's `Buffer` and arrays from another
+ *   realm), and `undefined` for fakes and proxies;
+ * - `%TypedArray%.prototype.buffer/byteOffset/byteLength` read the internal
+ *   slots, so a subclass's overridden `length` getter is never consulted;
+ * - `ArrayBuffer.prototype.byteLength` throws for anything that is not a real
+ *   `ArrayBuffer`.
+ *
+ * Every accepted input is then read through a *fresh* view built from those
+ * internal slots.
+ */
+const TypedArrayPrototype = Object.getPrototypeOf(Uint8Array.prototype) as object;
+// Every conforming engine defines these accessors, so the descriptors exist.
+const intrinsicGetter = (target: object, key: PropertyKey): ((this: unknown) => unknown) =>
+  Object.getOwnPropertyDescriptor(target, key)!.get!;
+const typedArrayTag = intrinsicGetter(TypedArrayPrototype, Symbol.toStringTag);
+const typedArrayBuffer = intrinsicGetter(TypedArrayPrototype, "buffer");
+const typedArrayByteOffset = intrinsicGetter(TypedArrayPrototype, "byteOffset");
+const typedArrayByteLength = intrinsicGetter(TypedArrayPrototype, "byteLength");
+const arrayBufferByteLength = intrinsicGetter(ArrayBuffer.prototype, "byteLength");
+
+function isRealArrayBuffer(value: unknown): value is ArrayBuffer {
+  try {
+    arrayBufferByteLength.call(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Turn an accepted input into bytes, rejecting anything that would need
- * coercion. A `Uint8Array` (including Node's `Buffer`) and an `ArrayBuffer`
- * are bytes already; a plain array must hold integers 0 to 255 and nothing
- * else. Strings, other typed arrays and arbitrary iterables are rejected.
+ * coercion. A genuine `Uint8Array` (including Node's `Buffer`) and a genuine
+ * `ArrayBuffer` are bytes already; a plain array must hold integers 0 to 255
+ * and nothing else. Strings, other typed arrays, fakes, proxies over typed
+ * arrays, and arbitrary iterables are rejected.
+ *
+ * Note that a whole `ArrayBuffer` is used: `Buffer.from("a").buffer` is Node's
+ * shared allocation pool, not the one byte you meant. Pass the `Buffer` itself.
  */
 function toBytes(value: ByteInput, name: string): Uint8Array {
-  if (value instanceof Uint8Array) {
-    return value;
+  if (typedArrayTag.call(value) === "Uint8Array") {
+    return new Uint8Array(
+      typedArrayBuffer.call(value) as ArrayBuffer,
+      typedArrayByteOffset.call(value) as number,
+      typedArrayByteLength.call(value) as number,
+    );
   }
-  if (value instanceof ArrayBuffer) {
+  if (isRealArrayBuffer(value)) {
     return new Uint8Array(value);
   }
   if (!Array.isArray(value)) {
     throw new TypeError(`${name} must be a Uint8Array, an ArrayBuffer, or an array of byte values`);
   }
-  const bytes = new Uint8Array(value.length);
-  for (let index = 0; index < value.length; index += 1) {
+  // Read the length exactly once. A getter on an element could otherwise
+  // shrink or grow the array while it is being copied.
+  const length: number = value.length;
+  const bytes = new Uint8Array(length);
+  for (let index = 0; index < length; index += 1) {
     const element: unknown = value[index];
     if (typeof element !== "number" || !Number.isInteger(element) || element < 0 || element > 255) {
       throw new RangeError(`${name}[${index}] must be an integer from 0 to 255`);

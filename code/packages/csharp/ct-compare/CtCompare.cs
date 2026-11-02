@@ -13,9 +13,11 @@ namespace CodingAdventures.CtCompare;
 /// becomes an <i>empty</i> span. With only span overloads,
 /// <c>CtEq(null, Array.Empty&lt;byte&gt;())</c> therefore returned
 /// <c>true</c>: a missing value compared equal to an empty one. The array
-/// overloads are chosen first for array arguments (including a <c>null</c>
-/// literal) and reject <c>null</c> with <see cref="ArgumentNullException"/>.
-/// Callers who already hold spans keep the span overloads.
+/// overloads are chosen whenever <i>either</i> argument is an array (including
+/// a <c>null</c> literal): there are array/array, array/span and span/array
+/// forms, so a <c>null</c> array can never reach the span/span form. They
+/// reject <c>null</c> with <see cref="ArgumentNullException"/>. Callers who
+/// hold two spans keep the span/span form; a span cannot be <c>null</c>.
 /// </para>
 /// <para>
 /// <b>Why the selection mask avoids <c>?:</c>.</b> CT01 forbids a branch on
@@ -60,6 +62,22 @@ public static class CtCompare
         return CtEq((ReadOnlySpan<byte>)left, (ReadOnlySpan<byte>)right);
     }
 
+    /// <summary>Compare an array with a span, rejecting a <c>null</c> array.</summary>
+    /// <exception cref="ArgumentNullException"><paramref name="left"/> is <c>null</c>.</exception>
+    public static bool CtEq(byte[] left, ReadOnlySpan<byte> right)
+    {
+        ArgumentNullException.ThrowIfNull(left);
+        return CtEq((ReadOnlySpan<byte>)left, right);
+    }
+
+    /// <summary>Compare a span with an array, rejecting a <c>null</c> array.</summary>
+    /// <exception cref="ArgumentNullException"><paramref name="right"/> is <c>null</c>.</exception>
+    public static bool CtEq(ReadOnlySpan<byte> left, byte[] right)
+    {
+        ArgumentNullException.ThrowIfNull(right);
+        return CtEq(left, (ReadOnlySpan<byte>)right);
+    }
+
     /// <summary>
     /// Compare two same-size byte arrays. Runtime length mismatch returns false.
     /// </summary>
@@ -70,6 +88,14 @@ public static class CtCompare
     /// </summary>
     /// <exception cref="ArgumentNullException">Either array is <c>null</c>.</exception>
     public static bool CtEqFixed(byte[] left, byte[] right) => CtEq(left, right);
+
+    /// <summary>Fixed-size compare of an array with a span, rejecting <c>null</c>.</summary>
+    /// <exception cref="ArgumentNullException"><paramref name="left"/> is <c>null</c>.</exception>
+    public static bool CtEqFixed(byte[] left, ReadOnlySpan<byte> right) => CtEq(left, right);
+
+    /// <summary>Fixed-size compare of a span with an array, rejecting <c>null</c>.</summary>
+    /// <exception cref="ArgumentNullException"><paramref name="right"/> is <c>null</c>.</exception>
+    public static bool CtEqFixed(ReadOnlySpan<byte> left, byte[] right) => CtEq(left, right);
 
     /// <summary>
     /// Select between two same-length byte arrays using a byte mask, returning
@@ -102,6 +128,22 @@ public static class CtCompare
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
         return CtSelectBytes((ReadOnlySpan<byte>)left, (ReadOnlySpan<byte>)right, choice);
+    }
+
+    /// <summary>Select between an array and a span, rejecting a <c>null</c> array.</summary>
+    /// <exception cref="ArgumentNullException"><paramref name="left"/> is <c>null</c>.</exception>
+    public static byte[] CtSelectBytes(byte[] left, ReadOnlySpan<byte> right, bool choice)
+    {
+        ArgumentNullException.ThrowIfNull(left);
+        return CtSelectBytes((ReadOnlySpan<byte>)left, right, choice);
+    }
+
+    /// <summary>Select between a span and an array, rejecting a <c>null</c> array.</summary>
+    /// <exception cref="ArgumentNullException"><paramref name="right"/> is <c>null</c>.</exception>
+    public static byte[] CtSelectBytes(ReadOnlySpan<byte> left, byte[] right, bool choice)
+    {
+        ArgumentNullException.ThrowIfNull(right);
+        return CtSelectBytes(left, (ReadOnlySpan<byte>)right, choice);
     }
 
     /// <summary>

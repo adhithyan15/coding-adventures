@@ -23,6 +23,7 @@ Input                  Result
 ``bytearray``          copied to ``bytes``
 ``memoryview``         copied to ``bytes`` (byte-format views only)
 list/tuple of ints     each must be an ``int`` (not ``bool``) 0-255
+a *subclass* of any    ``TypeError`` (it could lie about its bytes)
 anything else          ``TypeError``
 =====================  ==========================================
 
@@ -46,24 +47,35 @@ _U64_MAX = (1 << 64) - 1
 
 
 def _as_bytes(value: ByteInput, name: str) -> bytes:
-    if isinstance(value, bytes):
+    # Only the exact built-in types are accepted. A *subclass* of list, bytes
+    # or bytearray can override __bytes__, __len__, __getitem__ or __iter__
+    # and show validation one set of bytes and the comparison another, so it
+    # is rejected rather than trusted. Each accepted input is read exactly
+    # once, into a fresh copy, so nothing can change between validation and
+    # use.
+    kind = type(value)
+    if kind is bytes:
         return value
-    if isinstance(value, bytearray):
-        return bytes(value)
-    if isinstance(value, memoryview):
+    if kind is bytearray or kind is memoryview:
+        view = memoryview(value)
         # A view of 32-bit integers, say, is not a byte string; refuse it
         # rather than reinterpret its memory.
-        if value.format not in ("B", "b", "c"):
+        if view.format not in ("B", "b", "c"):
             raise TypeError(f"{name} must be a byte-format memoryview")
-        return value.tobytes()
-    if isinstance(value, list | tuple):
-        for index, element in enumerate(value):
+        return view.tobytes()
+    if kind is list or kind is tuple:
+        # tuple() of an exact list or tuple is a single C-level snapshot.
+        items = tuple(value)
+        out = bytearray(len(items))
+        for index, element in enumerate(items):
             # bool is a subclass of int, so True would otherwise pass as 1.
             if type(element) is not int or not 0 <= element <= 255:
                 raise ValueError(f"{name}[{index}] must be an integer from 0 to 255")
-        return bytes(value)
+            out[index] = element
+        return bytes(out)
     raise TypeError(
-        f"{name} must be bytes, bytearray, memoryview, or a list of byte values"
+        f"{name} must be bytes, bytearray, memoryview, or a list or tuple of "
+        "byte values (subclasses are not accepted)"
     )
 
 

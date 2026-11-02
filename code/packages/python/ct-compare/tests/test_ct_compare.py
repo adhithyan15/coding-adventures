@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+
 import pytest
 
 from coding_adventures_ct_compare import ct_eq, ct_eq_fixed, ct_eq_u64, ct_select_bytes
@@ -97,3 +99,42 @@ def test_ct_eq_u64_handles_edges_and_rejects_out_of_range() -> None:
         ct_eq_u64(-1, 0)
     with pytest.raises(ValueError):
         ct_eq_u64(0, 1 << 64)
+
+
+class _LyingList(list):
+    def __bytes__(self) -> bytes:
+        return b""
+
+
+class _ShiftyList(list):
+    """Shows validation one sequence and a later pass another."""
+
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+        self.calls = 0
+
+    def __iter__(self) -> Iterator[int]:
+        self.calls += 1
+        return iter([1, 2] if self.calls == 1 else [9])
+
+
+class _ShortBytes(bytes):
+    def __len__(self) -> int:
+        return 0
+
+
+class _LyingBytearray(bytearray):
+    def __bytes__(self) -> bytes:
+        return b"\0"
+
+
+def test_subclasses_cannot_lie_about_their_bytes() -> None:
+    # Regression: each of these used to compare equal to the wrong value.
+    with pytest.raises(TypeError):
+        ct_eq(_LyingList([1, 2, 3]), b"")
+    with pytest.raises(TypeError):
+        ct_eq(_ShiftyList([1, 2]), [9])
+    with pytest.raises(TypeError):
+        ct_eq(_ShortBytes(b"secret"), b"")
+    with pytest.raises(TypeError):
+        ct_eq(_LyingBytearray(b"zz"), b"\0")

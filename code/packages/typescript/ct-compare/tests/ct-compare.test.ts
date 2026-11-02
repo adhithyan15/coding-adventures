@@ -79,6 +79,63 @@ describe("input validation (regression: coercion made unequal inputs equal)", ()
   });
 });
 
+describe("input validation (regression: forged, subclassed and proxied inputs)", () => {
+  const call = (left: unknown, right: unknown) => ctEq(left as never, right as never);
+
+  it("rejects an object that only fakes the Uint8Array prototype", () => {
+    const fake = Object.setPrototypeOf({ length: 1 }, Uint8Array.prototype);
+    expect(() => call(fake, [0])).toThrow(TypeError);
+  });
+
+  it("ignores a subclass's overridden length", () => {
+    class Shrunk extends Uint8Array {
+      override get length(): number {
+        return 0;
+      }
+    }
+    // The real contents are [1, 2, 3], so they must not equal [].
+    expect(call(new Shrunk([1, 2, 3]), [])).toBe(false);
+    expect(call(new Shrunk([1, 2, 3]), [1, 2, 3])).toBe(true);
+  });
+
+  it("rejects a Proxy over a real Uint8Array", () => {
+    const proxied = new Proxy(new Uint8Array([1, 2, 3]), {});
+    expect(() => call(proxied, [1, 2, 3])).toThrow(TypeError);
+  });
+
+  it("reads an array's length once, even if a getter changes it", () => {
+    const shrinking = [7, 0, 0];
+    Object.defineProperty(shrinking, 0, {
+      get() {
+        shrinking.length = 1;
+        return 7;
+      },
+    });
+    // Copied as [7, undefined, undefined], which is rejected, never as [7, 0, 0].
+    expect(() => call(shrinking, [7, 0, 0])).toThrow(RangeError);
+  });
+
+  it("rejects a Proxy array whose length lies", () => {
+    const lying = new Proxy([1, 2, 3], {
+      get(target, key, receiver) {
+        return key === "length" ? 0 : Reflect.get(target, key, receiver);
+      },
+    });
+    // The proxy claims to be empty; it is read as empty, consistently.
+    expect(call(lying, [])).toBe(true);
+    expect(call(lying, [1, 2, 3])).toBe(false);
+  });
+
+  it("accepts Node Buffers and respects their offset into the shared pool", () => {
+    expect(ctEq(Buffer.from("a"), Buffer.from("a"))).toBe(true);
+    expect(ctEq(Buffer.from("a"), Buffer.from("b"))).toBe(false);
+  });
+
+  it("rejects a SharedArrayBuffer passed directly", () => {
+    expect(() => call(new SharedArrayBuffer(1), new SharedArrayBuffer(1))).toThrow(TypeError);
+  });
+});
+
 describe("ctSelectBytes output ownership", () => {
   it("returns a fresh copy that later input mutation does not change", () => {
     const left = Uint8Array.from([1, 2, 3]);

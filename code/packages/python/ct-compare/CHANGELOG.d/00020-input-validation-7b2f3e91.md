@@ -11,3 +11,6 @@
   raises `TypeError` instead of being truthiness-tested.
 - `ct_eq_u64` rejects `bool`.
 - Regression tests for every rejected input shape and for fresh-copy output.
+- Only the exact built-in types are accepted; subclasses (which could override
+  `__bytes__`, `__len__`, `__getitem__` or `__iter__`) are rejected, and each
+  input is snapshotted, validated and copied in a single pass.

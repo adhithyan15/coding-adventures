@@ -9,3 +9,5 @@
   with `Unsafe.As<bool, byte>` and normalised to 0x00/0xFF arithmetically.
 - Regression tests for null rejection, overload agreement, non-0/1 stored
   bools, and fresh-copy output.
+- Mixed array/span overloads mean a `null` array is rejected even when the other
+  argument is a span, so it can never fall through to the span/span form.
