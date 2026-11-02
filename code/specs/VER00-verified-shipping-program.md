@@ -524,7 +524,10 @@ because deterministic replay makes a seed a complete reproducer. The class
 of a crash is usually unknown when it is found, so the rule cannot wait for
 classification:
 
-- **Every** fuzz, chaos or property failure is private until triaged. Public
+- **Every** fuzz, chaos or property failure, **every SAT/SMT
+  counterexample** and every failing proof obligation is private until
+  triaged. A solver counterexample is a concrete exploit input, just as a
+  fuzz crash is. Public
   CI logs never print failing seeds or inputs. They print an opaque failure
   ID, and the reproducer goes to a private store outside the repository.
   On a public repository, any signed-in user can download a GitHub Actions
@@ -592,8 +595,16 @@ How they are proved:
    - any value compared against one of those.
 
    Declassifying a value is an exemption needing approval (§9.1). In a
-   package the weakness registry marks as crypto-relevant, a constant-time
-   proof with no secret inputs is vacuous and fails the gate (§7.6.3).
+   crypto-relevant package, a constant-time proof with no secret inputs is
+   vacuous and fails the gate (§7.6.3). Crypto relevance is **computed, not
+   listed**, so a new in-house primitive is covered from its first commit.
+   The analyzer marks a package crypto-relevant if it:
+   - defines or uses key, nonce, MAC or password types;
+   - calls a cryptographic primitive or the `rand` capability;
+   - performs the bit-mixing and table-lookup patterns typical of cipher
+     and hash implementations.
+
+   Opting out is an approved exemption.
 
    **The cost model is not the machine.** On a third-party runtime, a
    SIR-level constant-time proof says nothing about real timing: JIT
@@ -887,8 +898,9 @@ an input where they disagree":
 ```
 
 Encode it as Boolean clauses and ask the solver. If it answers **SAT**, it
-hands back the `x`: a concrete counterexample, which becomes a permanent
-unit test. If it answers **UNSAT**, no such `x` exists among *all* inputs,
+hands back the `x`: a concrete counterexample. It goes through the same
+private triage as a fuzz crash (§7.3), then becomes a permanent unit test.
+If it answers **UNSAT**, no such `x` exists among *all* inputs,
 and the answer comes with a certificate the trusted kernel checks (§7.5,
 step 3). For a 32-bit adder that is 2^64 input pairs proved at once,
 something no amount of testing can match.
@@ -1071,7 +1083,7 @@ repository writes. Each entry records:
 | Field | Example (CWE-416, use after free) |
 |---|---|
 | Class and description | Memory is used after it was freed. |
-| Applies to | C, C++, Rust `unsafe`, any FFI boundary. Not safe Rust, Python, Ruby, TS, JVM, .NET (without `unsafe`), BEAM. Go only conditionally: even without `unsafe`/cgo, a data race on a multi-word value (an interface, slice or string) can corrupt memory. So Go's exclusion holds only once race freedom is discharged (§8.4). |
+| Applies to | C, C++, Rust `unsafe`, any FFI boundary. Not safe Rust, Python, Ruby, TS, JVM, .NET (without `unsafe`), BEAM. Go only conditionally: even without `unsafe`/cgo, a data race on a multi-word value (an interface, slice or string) can corrupt memory. So Go's exclusion holds only once race freedom is discharged. Goroutines are a language construct, not a D21 capability call, so the simulated host's scheduler cannot control them, and §8.4 alone does not apply. VER15 specifies a Go-specific discharge, such as a race-freedom analysis over SIR or a restricted concurrency subset, plus `-race` on all tests. |
 | Why it cannot occur elsewhere | The language has no manual deallocation. The analyzer must prove no `unsafe`, `ffi` or `cgo` is reachable. |
 | Attack patterns | Free then read, free then write, double free, dangling pointer escaping a scope, use after `realloc`. |
 | Required evidence | Attack corpus in the native harness (§8.3), fuzzing with the checked allocator, and a memory-safety proof obligation (E5). |
@@ -1217,6 +1229,19 @@ count. "Someone other than the author" excludes everyone who authored a
 change to the shipped closure since the baseline, and also whoever triggers
 the release. The protected environment enforces it with "prevent self-review".
 
+**Approvers are named, and an approval is a human act.** The eligible
+approvers are listed in the gate's protected policy data, and admin bypass
+is disabled on every protected environment and branch the gate relies on.
+This repository has one human maintainer, and coding agents act under
+that maintainer's account, so "a different GitHub account" cannot be what
+separates approver from author. An approval is therefore a **signature
+made with a key that requires physical presence**, such as a hardware
+security key or a touch-confirmed SSH key. The protected policy data names
+those keys. An agent holding the account's API token cannot produce such a
+signature, so agent-authored changes always reach a human. If the project
+gains a second maintainer, "someone other than the author" then also means
+a different person.
+
 ### 9.2 One gate, every release path
 
 Every release path goes through one gate, and only the gate's trusted
@@ -1270,7 +1295,11 @@ analyzer or a BUILD file. So:
   never used in their place.
 - **Caches are written only by trusted CI.** A cached rung result is usable
   only if trusted CI on a protected ref wrote it; fork and pull-request runs
-  can read the cache but never write to it. The cache key is a content hash
+  can read the cache but never write to it. GitHub Actions' built-in cache
+  cannot enforce this, because every job in a run, including untrusted
+  ones, holds the token that writes it. So the rung-result cache is a
+  **separate store**: the trusted job signs every entry, and the signature
+  is verified on every read. The cache key is a content hash
   of everything the result depends on: the whole shipped closure, every
   tool and solver binary, the Warrant files, the bindings, the assumption
   catalogue and the gate's policy data. Change any one, and the result is
@@ -1280,45 +1309,101 @@ analyzer or a BUILD file. So:
   re-checks every certificate itself. A matching hash proves nothing about
   whether the proof is valid.
 - **The judged bytes are the published bytes.** The gate itself builds the
-  artifact in the shipping configuration, records its digest in the report
-  and signs a provenance attestation with the gate workflow's identity. The
-  publish step publishes **only that digest** and never rebuilds, because a
-  rebuild could differ: other features or `cfg` flags (bringing the
-  simulated host back), or different dependency resolution.
+  artifact in the shipping configuration and records its digest in the
+  report. The publish step publishes **only that digest** and never
+  rebuilds, because a rebuild could differ: other features or `cfg` flags
+  (bringing the simulated host back), or different dependency resolution.
+- **The gate signs a verdict, and only on a pass.** Standard build
+  provenance records *how* an artifact was built, not *that it passed*.
+  So the trusted job signs a dedicated **verdict attestation**, and only
+  when every live rung passes. Its signed predicate binds:
+  - the passing verdict and the full assurance report;
+  - the artifact digest;
+  - the repository and the protected release-tag ref, taken from the OIDC
+    `repository` and `ref` claims;
+  - the commit, which must be reachable from `main`;
+  - the package name, version and registry target.
+
+  A failing or unreviewed build never yields a signature.
 - **Only the current gate can publish.** A workflow that calls the gate is
   read from the release commit, so an old commit could call an old gate,
   and a workflow *name* says nothing about *which version* ran. So
   publishing is not done by anything the release commit triggers directly.
   It is a **separate top-level workflow that runs on `main`**, started by
   the gate's completion (for example `workflow_run` or `repository_dispatch`).
-  It verifies, before doing anything, that:
-  - the attestation came from the gate at exactly the SHA in the protected
-    configuration (the OIDC `job_workflow_sha` claim), at or above the
-    minimum gate version;
-  - the attested artifact digest is the one about to be published.
+  The trigger's payload can be influenced by an attacker, so the publisher
+  trusts nothing in it. It rejects triggers from any other repository or
+  from forks. Before doing anything else, it verifies that:
+  - the verdict attestation came from the gate at exactly the SHA in the
+    protected configuration (the OIDC `job_workflow_sha` claim), at or
+    above the minimum gate version;
+  - the signed predicate is a **passing** verdict, for this repository, a
+    protected release-tag ref, and a commit reachable from `main`;
+  - the package name, version, registry target and artifact digest in the
+    predicate are exactly what is about to be published.
 
-  Registry trusted publishing is bound to that publishing workflow's
-  identity on `main`, which is also the right shape for registries that
-  bind trusted publishing to the calling workflow, such as PyPI. **No
-  long-lived publish secret exists in any environment.** A GitHub
-  environment hands its secrets to any workflow that names it, so a
-  long-lived secret could not be confined to the gate.
+  **Registry credentials are confined to a protected `publish`
+  environment.** Registry trusted publishing (npm, PyPI, crates.io,
+  RubyGems) binds a repository and a workflow *filename*, not a branch. So
+  without more, anyone with write access could push a branch carrying a
+  modified workflow of the same name and get a registry token for arbitrary
+  bytes. The `publish` environment closes that:
+  - its deployment-branch policy allows only `main`;
+  - admin bypass is disabled;
+  - only the publisher workflow names it;
+  - every registry's trusted-publisher configuration requires that
+    environment name, or pins the ref where the registry supports that.
+
+  With OIDC trusted publishing, **no long-lived publish secret exists**.
+  Some targets have no OIDC trusted publishing (Hex, some app stores and
+  extension marketplaces). For those, the secret lives only in the
+  `publish` environment, behind required reviewers, and each such target is
+  a named, approved exemption in the policy data.
+- **The publisher handles the artifact as opaque bytes.** It holds a
+  registry token, so it must never execute anything from the artifact:
+  - no package-manager lifecycle scripts;
+  - no commands that repackage or rebuild, such as `cargo publish`, which
+    runs `build.rs`, or `mix hex.publish`. It uploads the verified bytes
+    through the registry's API;
+  - artifacts are extracted safely, outside the workspace, and the digest
+    is verified before they are used;
+  - every field of the trigger payload is treated as untrusted input.
 - **The judged code never touches the judge's credentials.** §9.2.1 treats
   the release commit as hostile, and running it next to signing rights
   would undo that. The release commit's code includes build scripts
   (`build.rs`, `setup.py`, npm lifecycle hooks), tests and third-party
   install hooks. Following the SLSA Build Level 3 model:
-  - Building the artifact and running every rung happen in **isolated,
-    unprivileged jobs**. Those jobs have no OIDC token, no signing key, no
-    publish credential and no cache-write right.
-  - Verdicts are produced by a harness **outside the process under test**.
-    Test code shares a process with an in-process reporter and could patch
-    it or forge its output. The D21 cage is a language-level wrapper, not
-    an operating-system sandbox, so it cannot prevent this.
+  - **Building** the artifact happens in an isolated, unprivileged job. It
+    has no OIDC token, no signing key, no publish credential and no
+    cache-write right. Its only output is the artifact.
+  - **Static judgments never run where judged code has run.** A build hook
+    runs as the same OS user as anything else in its job. It could replace
+    the analyzer binary or rewrite a results file, and hiding an undeclared
+    `net` capability is exactly what a malicious package would want. So
+    every static judgment runs in the trusted job, or in a fresh job where
+    no judged code has executed, over the artifact bytes and source:
+    - closure and export resolution;
+    - capability and subset analysis;
+    - weakness exclusions;
+    - regenerating tests and proof obligations from Warrant;
+    - certificate checking.
+  - **Proof obligations come from the trusted side.** The trusted job
+    generates every proof obligation itself and checks each certificate
+    against *its own* obligation. A valid certificate for a different,
+    easier formula would otherwise pass the kernel's check.
+  - **Dynamic rungs run the judged code behind an OS or VM boundary** from
+    the harness, so the code under test can neither patch the reporter nor
+    forge its output. The D21 cage is a language-level wrapper, not an
+    operating-system sandbox, so it cannot provide this boundary. The test
+    job receives only the built artifact, and no build hooks run alongside
+    the harness.
   - A separate trusted job, running only protected-ref code, receives the
-    artifact digest and the raw results. It re-derives the verdict itself,
-    then signs, writes the cache and hands off to publishing. Cache writes
-    happen only there.
+    artifact digest, its own static results and the dynamic results. It
+    re-derives the verdict, signs it only on a pass, writes the cache and
+    hands off to publishing. Cache writes and signatures happen only there.
+  - **Runners are ephemeral.** Trusted jobs never share a self-hosted or
+    persistent runner with untrusted jobs, or with jobs defined by the
+    caller in the same run.
 - **The release's own report is stored immutably and signed**, because it
   becomes the next release's capability baseline (§8.1). Plain release
   assets are not enough, since anyone with write access can replace them.
