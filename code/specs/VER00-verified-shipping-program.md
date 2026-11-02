@@ -1743,7 +1743,7 @@ work in VLT-PM51:
 | Piece | Status |
 |---|---|
 | Ed25519, SHA-256/512, HMAC, HKDF, canonical CBOR, base64, DER/ASN.1 | Exist, across many languages (and become trust root under §9.4 rule 4) |
-| SSHSIG verification for `-sk` keys. Signed data is `SHA256(application) ‖ flags ‖ counter (big-endian u32) ‖ SHA-256 or SHA-512 of the SSHSIG blob`, and git defaults to SHA-512. | New. Pure code on top of Ed25519, SHA-256 and SHA-512, and the first thing the gate needs |
+| SSHSIG verification for `-sk` keys. The key signs `SHA256(application) ‖ flags ‖ counter (big-endian u32) ‖ SHA256(SSHSIG signed-data blob)`; the outer hash is always SHA-256. Inside the blob, the message hash is the SSHSIG `hash_algorithm`, `sha512` (git's default) or `sha256`. | New. Pure code on top of Ed25519, SHA-256 and SHA-512, and the first thing the gate needs |
 | P-256 ECDSA | New. Needed for `ecdsa-sk` keys (older security keys support only those) and most WebAuthn and passkey credentials. It also unblocks VLT-PM51's `WebAuthnPrfAuthenticator`, which currently always refuses |
 | USB HID transport: IOKit on macOS, hidraw on Linux, HID APIs on Windows | New. Replaces the `hidapi` dependency of `vault-webauthn-ctap2-hid` |
 | CTAPHID framing and CTAP2 commands (`MakeCredential`, `GetAssertion`) | New. Replaces `ctap-hid-fido2` |
@@ -1833,6 +1833,81 @@ S4 for S1.
 4. **Which packages ship first.** The first package through the full gate
    proves the gate. A small, pure, already well-tested package (`bitset`,
    `logic-gates`) is the candidate.
+
+### 12.1 Open security findings: publishing and approval flow (deferred)
+
+The publishing and approval flow (§9.2.1, §9.4, §9.5) went through seven
+rounds of security review while this spec was drafted. The owner then
+deferred further work on it. The seventh round's findings are recorded
+here so that the child specs (VER01, VER21) address them. **None of §9.4
+or §9.5 may be implemented until they are resolved.**
+
+**MEDIUM**
+
+1. **The approval clients are outside the trust root.** The phone app,
+   `release-approve`, the HID, CTAP2 and P-256 stack, and their in-repo
+   closure all belong in the human-reviewed trust root, along with the
+   phone app's build and install path. The phone must run only an app
+   built from a human-reviewed commit and installed by the maintainer,
+   with updates approved like a pin bump. Otherwise an agent-modified app
+   can show an honest-looking summary while signing the real approval
+   hash.
+2. **The maintainer's computer is in the trust base.** Its GitHub session
+   can review and merge a weakened publisher, which then publishes from
+   `main` without any physical presence. Two possible fixes:
+   - trust-root review comes from a **separate GitHub account** whose
+     device-bound passkey never exists on the daily computer;
+   - the publisher, policy and genesis anchor move to a separate
+     repository only that account can write.
+
+   Until one of these is in place, §9.5.1's claim that a compromised
+   computer gains no signing power is **not true**, and the computer's
+   GitHub session is part of the trust base.
+3. **A reproducible rebuild does not stop a malicious build hook.** A
+   deterministic hook injects the same bytes into both builds, so the
+   digests still match. When the judged commit carries build logic, the
+   protected-ref build option, with judged hooks banned or caged, must be
+   mandatory. Alternatively, proof obligations must come from the shipped
+   artifact, or each build must be translation-validated against the
+   proved source.
+
+**LOW**
+
+- **iOS signatures carry no flags.** Phone (Secure Enclave or StrongBox)
+  signatures prove nothing about biometrics, so user verification must be
+  established at enrollment:
+  - Android: the key-attestation chain, with `userAuthenticationRequired`
+    and per-operation authentication;
+  - iOS: the recorded access-control flags.
+
+  §9.1 must be reworded to match.
+- **Summary verifiers need the full identity check.** The phone and
+  `release-approve` must apply the full §9.2.1 signer-identity check, with
+  the pin taken from the root-signed chain. The dry run needs a defined
+  allowed ref. The phone must sign the hash it recomputes itself. The
+  summary, verdict and cache entry need distinct predicate types.
+- **The harness signature check needs specifying.** It must name the
+  exact file, the pinned SHA, the allowed refs, the environment and the
+  hosted runner.
+- **The root threshold is wrong.** It must be 2-of-3, not 2-of-n with
+  n=2. The offline root credential must never double as an approver
+  plugged into the daily computer.
+- **Phone mode needs its own tag rules.** It must define who creates the
+  tag, which tag checks apply, and the canonical, domain-separated message
+  the phone signs.
+- **An unconfined agent run has lasting effects.** Once one has run, the
+  guarantees do not hold until credentials are rotated and the machine is
+  re-verified.
+- **The USB path's second-device check must use the phone app.** A GitHub
+  page that the computer's session can edit is not a second device.
+
+**INFO**
+
+- The trusted job parses hostile artifacts while able to mint OIDC
+  tokens. So the analyzers must themselves meet E4 and bounds, and must
+  run without access to the token-request variables.
+- Rollback protection needs a mechanism: stored state, TUF-style
+  expiry, or reliance on protected-`main` history.
 
 ## 13. What this does not buy
 
