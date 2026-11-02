@@ -1,0 +1,11 @@
+{
+  "id": "PA-C219-kaddhna",
+  "pathSegment": "PA-PATH-219-A2-PITA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-219-A2-PITA",
+      "order": 4
+    }
+  ]
+}

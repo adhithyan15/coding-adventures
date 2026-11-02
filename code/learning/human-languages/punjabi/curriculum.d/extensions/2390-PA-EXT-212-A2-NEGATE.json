@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-212-A2-NEGATE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that I do not do something, and that something is not so, with nahin before the verb.",
+  "prerequisites": [
+    "PA-EXT-211-A2-VOWEL-STEM"
+  ]
+}

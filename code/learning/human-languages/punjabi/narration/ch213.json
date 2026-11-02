@@ -1,0 +1,775 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 213,
+  "title": "Please Don't Get Up",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:e620882a1970230b",
+  "lessons": [
+    {
+      "id": "PA-C213-request-return",
+      "sequence": 11620,
+      "title": "Return to a familiar request",
+      "headword": "ਮਾਫ਼ ਕਰੋ · ਨਾ",
+      "romanization": "māf karo · nā",
+      "gloss": "retrieve the familiar request ending in ਕਰੋ and ਨਾ by ear",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8527de9502566036",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "māf karo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *māf karo*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਮਾਫ਼ ਕਰੋ, \"excuse me\". Then work with Aman: ਅਮਨ ਨਾਲ ਕੰਮ ਕਰੋ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both requests end in ਕਰੋ, \"do\", said to someone politely. You also know ਨਾ, the short \"no; don't\", and two verbs for the body: ਬੈਠਣਾ, \"to sit\", and ਉੱਠਣਾ, \"to get up\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "don't",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *don't*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਨਾ."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "to sit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *to sit*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਬੈਠਣਾ."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "to get up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *to get up*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉੱਠਣਾ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say excuse me, then don't. Keep both ready."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C213-baitho",
+      "sequence": 11630,
+      "title": "ਬੈਠੋ, ਉੱਠੋ — please sit, please get up",
+      "headword": "ਬੈਠੋ · ਉੱਠੋ",
+      "romanization": "baiṭho · uṭṭho",
+      "gloss": "please sit, please get up: the polite request in -ੋ",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:4c2be90dec1d55ee",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਮਾਫ਼ ਕਰੋ. Then to sit and to get up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: stem + ੋ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਰੋ is the stem ਕਰ with the sign ੋ. Other stems that end in a consonant work the same way:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੈਠ + ੋ becomes ਬੈਠੋ."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇੱਥੇ ਬੈਠੋ। — itthe baiṭho. — Please sit here."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਵੇਰੇ ਜਲਦੀ ਉੱਠੋ। — savere jaldī uṭṭho. — Get up early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਿਤਾਬ ਪੜ੍ਹੋ। — kitāb paṛho. — Read the book."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the polite form, the one you say to ਤੁਸੀਂ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "please sit there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *please sit there*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉੱਥੇ ਬੈਠੋ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "please get up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *please get up*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉੱਠੋ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਇੱਥੇ ਬੈਠੋ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਇੱਥੇ ਬੈਠੋ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ੋ at the end of the request."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬੈਠੋ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬੈਠੋ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Please sit? (ਬੈਠੋ.) Please get up? (ਉੱਠੋ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C213-baitho-review",
+      "sequence": 11640,
+      "title": "Ask politely again",
+      "headword": "ਬੈਠੋ · ਉੱਠੋ",
+      "romanization": "baiṭho · uṭṭho",
+      "gloss": "retrieve please sit and please get up",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cba9e07cb3b7ef2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "baiṭho; uṭṭho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *baiṭho; uṭṭho*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਬੈਠੋ, ਉੱਠੋ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "please sit here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *please sit here*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਇੱਥੇ ਬੈਠੋ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "get up early in the morning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *get up early in the morning*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸਵੇਰੇ ਜਲਦੀ ਉੱਠੋ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉੱਠੋ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉੱਠੋ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say uṭṭho."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਉੱਠੋ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਉੱਠੋ** once]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a guest, politely, to sit."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C213-na-utthho",
+      "sequence": 11650,
+      "title": "ਨਾ ਉੱਠੋ (nā uṭṭho) — please don't get up",
+      "headword": "ਨਾ ਉੱਠੋ",
+      "romanization": "nā uṭṭho",
+      "gloss": "please don't get up: ਨਾ before a request",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0369eabfa8ceb23c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say please get up. Then don't, ਨਾ. Then I don't drink tea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ਨਾ for a request, ਨਹੀਂ for a statement",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A request takes ਨਾ, directly before it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਾ ਉੱਠੋ। — nā uṭṭho. — Please don't get up."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉੱਥੇ ਨਾ ਬੈਠੋ। — utthe nā baiṭho. — Please don't sit there."
+            },
+            {
+              "kind": "speech",
+              "text": "ਹੁਣ ਕੰਮ ਨਾ ਕਰੋ। — huṇ kamm nā karo. — Don't work now."
+            },
+            {
+              "kind": "speech",
+              "text": "A statement keeps ਨਹੀਂ: ਮੈਂ ਚਾਹ ਨਹੀਂ ਪੀਂਦਾ ਹਾਂ. So the short ਨਾ asks, and the long ਨਹੀਂ tells."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "please don't sit there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *please don't sit there*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉੱਥੇ ਨਾ ਬੈਠੋ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "don't work now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *don't work now*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਹੁਣ ਕੰਮ ਨਾ ਕਰੋ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨਾ ਉੱਠੋ (nā uṭṭho)।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨਾ ਉੱਠੋ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਨਾ ਉੱਠੋ (nā uṭṭho) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਨਾ ਉੱਠੋ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Don't get up? (ਨਾ ਉੱਠੋ (nā uṭṭho).) I don't get up? (ਮੈਂ ਨਹੀਂ ਉੱਠਦਾ ਹਾਂ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C213-aje",
+      "sequence": 11660,
+      "title": "ਅਜੇ (aje) — not yet; still",
+      "headword": "ਅਜੇ",
+      "romanization": "aje",
+      "gloss": "not yet; still",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e899fbf7d224dfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say please don't get up, then now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਅਜੇ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਜੇ — aje — \"not yet; still\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਅਜੇ ਘਰ ਵਿੱਚ ਹਾਂ। — maiṁ aje ghar vichch hāṁ. — I am still at home."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਜੇ ਨਾ ਉੱਠੋ। — aje nā uṭṭho. — Don't get up yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਜੇ (aje) is inherited from Sanskrit adyaiva, \"even today\": CDIAL lists Punjabi aje, \"hitherto\" (CDIAL 245). \"Up to today\" is where both of its senses come from: still, and with a no, not yet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying no and asking."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aje*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "I am still at home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *I am still at home*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਮੈਂ ਅਜੇ (aje) ਘਰ ਵਿੱਚ ਹਾਂ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "don't get up yet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *don't get up yet*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਜੇ ਨਾ ਉੱਠੋ। (aje nā uṭṭho.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅਜੇ (aje) once from the model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅਜੇ** once from the model]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਅਜੇ (aje) mean? (\"Not yet; still\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C213-payoff",
+      "sequence": 11670,
+      "title": "Please, and please don't: a four-skill payoff",
+      "headword": "ਅਜੇ ਨਾ ਉੱਠੋ।",
+      "romanization": "aje nā uṭṭho.",
+      "gloss": "ask politely, ask someone not to, and say not yet",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eda7696cd4eab267",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say please sit, then please don't sit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "please sit here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *please sit here*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਇੱਥੇ ਬੈਠੋ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "don't get up yet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *don't get up yet*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਜੇ ਨਾ ਉੱਠੋ। (aje nā uṭṭho.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉੱਥੇ ਨਾ ਬੈਠੋ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉੱਥੇ ਨਾ ਬੈਠੋ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning: please don't sit there."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਅਜੇ ਨਾ ਉੱਠੋ। (aje nā uṭṭho.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਅਜੇ ਨਾ ਉੱਠੋ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Check which no you used: ਨਾ for a request, ਨਹੀਂ for a statement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A guest stands up to leave too early. Ask them, politely, not to get up yet."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

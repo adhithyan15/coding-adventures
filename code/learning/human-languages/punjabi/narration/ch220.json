@@ -1,0 +1,894 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 220,
+  "title": "Aman Bought a Book",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8f9ecd20e17ec0ca",
+  "lessons": [
+    {
+      "id": "PA-C220-ne-return",
+      "sequence": 12040,
+      "title": "Return to the small marker",
+      "headword": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ · ਖ਼ਰੀਦਣਾ",
+      "romanization": "Aman ne kamm kītā · kharīdṇā",
+      "gloss": "retrieve the familiar Aman did the work and to buy by ear",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afaf2a4ce1e5ada3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman ne kamm kītā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman ne kamm kītā*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ, \"Aman did the work\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After a name, the doer of a past like ਕੀਤਾ takes the small marker ਨੇ. After ਮੈਂ it takes nothing: ਮੈਂ ਚਾਹ ਪੀਤੀ. Hold one more verb ready: ਖ਼ਰੀਦਣਾ, \"to buy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman did the work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman did the work*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "I drank tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *I drank tea*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਮੈਂ ਚਾਹ ਪੀਤੀ."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "to buy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *to buy*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਖ਼ਰੀਦਣਾ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does ਨੇ go? (Right after the named doer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C220-aman-ne",
+      "sequence": 12050,
+      "title": "ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ — Aman bought a book",
+      "headword": "ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ।",
+      "romanization": "Aman ne kitāb kharīdī.",
+      "gloss": "Aman bought a book: name + ਨੇ, the verb agreeing with the thing",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:e96788e763ddaf2f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Aman did the work. Then to buy and a book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ਨੇ beyond the work",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The marker works with any verb that is done to something. The past still agrees with the thing: ਕਿਤਾਬ is feminine, so ਖ਼ਰੀਦੀ."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ। — Aman ne kitāb kharīdī. — Aman bought a book."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਚਾਹ ਪੀਤੀ। — Aman ne chāh pītī. — Aman drank tea."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਸੇਬ ਖਾਧਾ। — Aman ne seb khādhā. — Aman ate an apple."
+            },
+            {
+              "kind": "speech",
+              "text": "Going and coming are not done to anything, so they take no ਨੇ: ਅਮਨ ਘਰ ਗਿਆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman ate a roti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman ate a roti*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਰੋਟੀ ਖਾਧੀ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman went to school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman went to school*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਸਕੂਲ ਗਿਆ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ। (Aman ne kitāb kharīdī.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ਨੇ, then to the thing the ending agrees with."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ। (Aman ne kitāb kharīdī.) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ।** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does ਅਮਨ ਘਰ ਗਿਆ take ਨੇ? (No: going is not done to anything.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C220-us-ne",
+      "sequence": 12060,
+      "title": "ਉਸ ਨੇ (us ne) — he or she, before the marker",
+      "headword": "ਉਸ ਨੇ",
+      "romanization": "us ne",
+      "gloss": "he or she, as the doer before ਨੇ",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66d90da5cfda6cf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Aman bought a book. Then he, she, ਉਹ, and the familiar ਉਸ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ਉਹ turns into ਉਸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Before ਨੇ, ਉਹ turns into ਉਸ. The verb still agrees with the thing:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਸ ਨੇ ਦੁੱਧ ਪੀਤਾ। — us ne duddh pītā. — He drank milk; she drank milk."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਸ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ। — us ne kitāb kharīdī. — He bought a book; she bought a book."
+            },
+            {
+              "kind": "speech",
+              "text": "So ਉਸ ਨੇ (us ne) can mean he or she: the sentence does not say which."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "she ate a roti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *she ate a roti*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਸ ਨੇ (us ne) ਰੋਟੀ ਖਾਧੀ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "he drank tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *he drank tea*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਸ ਨੇ (us ne) ਚਾਹ ਪੀਤੀ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਸ ਨੇ (us ne) ਦੁੱਧ ਪੀਤਾ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਸ ਨੇ ਦੁੱਧ ਪੀਤਾ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਉਸ ਨੇ (us ne) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਉਸ ਨੇ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "He before ਨੇ? (ਉਸ.) He went? (ਉਹ ਗਿਆ, with no ਨੇ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C220-ne-review",
+      "sequence": 12070,
+      "title": "Hear and say the doer again",
+      "headword": "ਅਮਨ ਨੇ · ਉਸ ਨੇ",
+      "romanization": "Aman ne · us ne",
+      "gloss": "retrieve a doer with ਨੇ",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11ce2ff72dfbd4d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman ne kitāb kharīdī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman ne kitāb kharīdī*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ। (Aman ne kitāb kharīdī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "she bought a book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *she bought a book*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਸ ਨੇ (us ne) ਕਿਤਾਬ ਖ਼ਰੀਦੀ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman ate an apple",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman ate an apple*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਸੇਬ ਖਾਧਾ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "he went home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *he went home*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਘਰ ਗਿਆ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਸ ਨੇ (us ne) ਚਾਹ ਪੀਤੀ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਸ ਨੇ ਚਾਹ ਪੀਤੀ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਉਸ ਨੇ (us ne) ਦੁੱਧ ਪੀਤਾ। once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਉਸ ਨੇ ਦੁੱਧ ਪੀਤਾ।** once]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three takes no ਨੇ? (Going home.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C220-lia-ditta",
+      "sequence": 12080,
+      "title": "ਲਿਆ, ਦਿੱਤਾ — took, gave",
+      "headword": "ਲਿਆ · ਦਿੱਤਾ",
+      "romanization": "liā · dittā",
+      "gloss": "took, gave: the short pasts of ਲੈਣਾ and ਦੇਣਾ",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:103fd4e932633645",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to take and to give: ਲੈਣਾ, ਦੇਣਾ. Then Aman bought a book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two short pasts",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੈਣਾ and ਦੇਣਾ have short pasts of their own: ਲਿਆ, ਦਿੱਤਾ. They agree with the thing, like every past you have met:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਪਾਣੀ ਲਿਆ। — maiṁ pāṇī liā. — I took water."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਪੈਸਾ ਦਿੱਤਾ। — Aman ne paisā dittā. — Aman gave money."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਅਮਨ ਨੂੰ ਕਿਤਾਬ ਦਿੱਤੀ। — maiṁ Aman nūṁ kitāb dittī. — I gave Aman a book."
+            },
+            {
+              "kind": "speech",
+              "text": "The one who receives takes ਨੂੰ. CDIAL lists Punjabi dittā, \"given\" (CDIAL 6140)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "she gave the book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *she gave the book*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਸ ਨੇ (us ne) ਕਿਤਾਬ ਦਿੱਤੀ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "I took milk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *I took milk*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਮੈਂ ਦੁੱਧ ਲਿਆ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਮੈਂ ਅਮਨ ਨੂੰ ਕਿਤਾਬ ਦਿੱਤੀ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਮੈਂ ਅਮਨ ਨੂੰ ਕਿਤਾਬ ਦਿੱਤੀ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਲਿਆ and ਦਿੱਤਾ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਲਿਆ** and **ਦਿੱਤਾ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Took? (ਲਿਆ.) Gave, a book? (ਦਿੱਤੀ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C220-ki-past",
+      "sequence": 12090,
+      "title": "ਕੀ ਤੁਸੀਂ ਰੋਟੀ ਖਾਧੀ? (kī tusīṁ roṭī khādhī?) — did you eat the roti?",
+      "headword": "ਕੀ ਤੁਸੀਂ ਰੋਟੀ ਖਾਧੀ?",
+      "romanization": "kī tusīṁ roṭī khādhī?",
+      "gloss": "did you eat the roti? ਕੀ in front of a past sentence",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37cd050021455d7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask do you drink tea? Then say you ate a roti."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ਕੀ in the past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੀ turns a past sentence into a question the same way it turns a present one:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਸੀਂ ਰੋਟੀ ਖਾਧੀ? — kī tusīṁ roṭī khādhī? — Did you eat the roti?"
+            },
+            {
+              "kind": "speech",
+              "text": "ਹਾਂ ਜੀ, ਮੈਂ ਰੋਟੀ ਖਾਧੀ। — hāṁ jī, maiṁ roṭī khādhī. — Yes, I ate the roti."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਹੀਂ ਜੀ, ਮੈਂ ਅਜੇ ਰੋਟੀ ਨਹੀਂ ਖਾਧੀ। — nahīṁ jī, maiṁ aje roṭī nahīṁ khādhī. — No, I haven't eaten the roti yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "did you drink tea?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *did you drink tea?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਤੀ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "did Aman buy the book?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *did Aman buy the book?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨਹੀਂ ਜੀ, ਮੈਂ ਅਜੇ ਰੋਟੀ ਨਹੀਂ ਖਾਧੀ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨਹੀਂ ਜੀ, ਮੈਂ ਅਜੇ ਰੋਟੀ ਨਹੀਂ ਖਾਧੀ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੀ ਤੁਸੀਂ ਰੋਟੀ ਖਾਧੀ? (kī tusīṁ roṭī khādhī?) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੀ ਤੁਸੀਂ ਰੋਟੀ ਖਾਧੀ?** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a guest whether they ate the roti. Then answer as the guest."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C220-payoff",
+      "sequence": 12100,
+      "title": "Who did what: a four-skill payoff",
+      "headword": "ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ।",
+      "romanization": "Aman ne kitāb kharīdī.",
+      "gloss": "say and ask what someone bought, gave, took, ate or drank",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dfe2ebb0e827f54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Aman bought a book, then she drank tea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman gave money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman gave money*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਪੈਸਾ ਦਿੱਤਾ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "did he drink milk?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *did he drink milk?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਉਸ ਨੇ (us ne) ਦੁੱਧ ਪੀਤਾ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਸ ਨੇ (us ne) ਕਿਤਾਬ ਲਈ ਪੈਸਾ ਦਿੱਤਾ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਸ ਨੇ ਕਿਤਾਬ ਲਈ ਪੈਸਾ ਦਿੱਤਾ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning: he paid money for the book."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ। (Aman ne kitāb kharīdī.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਅਮਨ ਨੇ ਕਿਤਾਬ ਖ਼ਰੀਦੀ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Check: ਨੇ after the named doer, and the ending after the thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tell what Aman did yesterday: he went to the market, bought a book, and drank tea."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

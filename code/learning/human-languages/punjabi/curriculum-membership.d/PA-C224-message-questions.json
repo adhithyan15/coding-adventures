@@ -1,0 +1,11 @@
+{
+  "id": "PA-C224-message-questions",
+  "pathSegment": "PA-PATH-224-A2-MESSAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-224-A2-MESSAGE",
+      "order": 2
+    }
+  ]
+}

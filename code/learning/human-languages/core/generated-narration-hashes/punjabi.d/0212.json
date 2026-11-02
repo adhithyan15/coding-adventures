@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:c64f0440dedac146",
+  "lessonIds": [
+    "PA-C212-nahin-return",
+    "PA-C212-nahin-pinda",
+    "PA-C212-nahin-review",
+    "PA-C212-not-open",
+    "PA-C212-payoff"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch212.txt",
+  "json": "punjabi/narration/ch212.json",
+  "textHash": "fnv1a64:8918f4cad805b0cb",
+  "jsonHash": "fnv1a64:800321573c2d84e1",
+  "findings": []
+}

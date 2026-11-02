@@ -1,0 +1,11 @@
+{
+  "id": "PA-C214-answers",
+  "pathSegment": "PA-PATH-214-A2-POLAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-214-A2-POLAR",
+      "order": 3
+    }
+  ]
+}

@@ -43,6 +43,21 @@ attempt and do not count as either full mock or human validation.
 
 ## Progress
 
+- **Chapters 211–224 — the A2 core**
+  ([`lessons/PA-C211-*`](./lessons/) … [`lessons/PA-C224-*`](./lessons/),
+  [`lessons/PA-R224-*`](./lessons/)): fourteen short chapters, each opening by
+  ear and closing on a four-skill payoff. The vowel-stem present (**ਜਾਂਦਾ**,
+  **ਖਾਂਦਾ**, **ਪੀਂਦਾ**); saying no with **ਨਹੀਂ** (helper kept) and asking someone
+  not to with **ਨਾ** before a polite -ੋ request; **ਕੀ** yes-or-no questions and
+  their answers; the past of going, coming, getting up and sitting, agreeing with
+  the one who did it, and of drinking, eating, buying, taking and giving,
+  agreeing with the thing after **ਮੈਂ / ਅਸੀਂ / ਤੁਸੀਂ** or a name or **ਉਸ ਨੇ**; the
+  -ਗਾ future; a spoken plan with **ਸ਼ਾਇਦ**; and a short message read for
+  yesterday and tomorrow, then a two-pass review. New words **ਅਜੇ**, **ਕੱਲ੍ਹ**,
+  **ਔਰਤ**, **ਕੱਢਣਾ**, **ਸ਼ਾਇਦ**; new copy-only letters **ਔ** and **ਢ**. The three A2
+  spine nodes `NEGATE-AND-ASK`, `TALK-ABOUT-PAST` and `TALK-ABOUT-FUTURE` are
+  realized here; the A2 vocabulary still has to come before the track attains
+  A2. In the book.
 - **Chapter 210 — Aman Did the Work**
   ([`lessons/PA-C210-*`](./lessons/)): a voice-first return to familiar
   **ਅਮਨ**, **ਕੰਮ**, and **ਕੀਤਾ**, followed by exact standalone agent marker

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C212-not-open",
+    "language": "punjabi",
+    "chapter": 212,
+    "sequence": 11600,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba21b5a5c93a8f18"
+  },
+  "findings": []
+}

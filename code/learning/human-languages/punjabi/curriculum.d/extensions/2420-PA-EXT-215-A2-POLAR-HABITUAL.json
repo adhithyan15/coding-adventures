@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-215-A2-POLAR-HABITUAL",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask whether someone does something every day and answer yes or no in a short exchange.",
+  "prerequisites": [
+    "PA-EXT-214-A2-POLAR"
+  ]
+}

@@ -1,0 +1,604 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 215,
+  "title": "Do You Drink Tea?",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:546b41d87ed750ea",
+  "lessons": [
+    {
+      "id": "PA-C215-ask-return",
+      "sequence": 11730,
+      "title": "Return to asking and saying no",
+      "headword": "ਕੀ ਤੁਸੀਂ ਯਾਤਰੀ ਹੋ? · ਨਹੀਂ ਪੀਂਦਾ ਹਾਂ",
+      "romanization": "kī tusīṁ yātrī ho? · nahīṁ pīndā hāṁ",
+      "gloss": "retrieve a yes-or-no question and a no answer by ear",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d52d35a1666a78cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "are you a traveller?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *are you a traveller?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਤੁਸੀਂ ਯਾਤਰੀ ਹੋ? Then answer: ਹਾਂ ਜੀ, ਮੈਂ ਯਾਤਰੀ ਹਾਂ।."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can also say ਮੈਂ ਚਾਹ ਨਹੀਂ ਪੀਂਦਾ ਹਾਂ and ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ. The next lesson puts ਕੀ in front of the second one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "is the garden open?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *is the garden open?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਬਾਗ਼ ਖੁੱਲ੍ਹਾ ਹੈ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "I don't drink tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *I don't drink tea*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it with the ending that fits you."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "you drink tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *you drink tea*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ।."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask one yes-or-no question, then say one thing you don't do."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C215-ki-pinde",
+      "sequence": 11740,
+      "title": "ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ? (kī tusīṁ chāh pīnde ho?) — do you drink tea?",
+      "headword": "ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ?",
+      "romanization": "kī tusīṁ chāh pīnde ho?",
+      "gloss": "do you drink tea? ਕੀ in front of an every-day sentence",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ee25081e3568485",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say you drink tea. Then are you a traveller?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ਕੀ and the every-day present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new to build: put ਕੀ in front of a present sentence, and let the voice rise."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ? — kī tusīṁ chāh pīnde ho? — Do you drink tea?"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਉਹ ਰੋਜ਼ ਸਕੂਲ ਜਾਂਦੀ ਹੈ? — kī uh roz sakūl jāndī hai? — Does she go to school every day?"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਸੀਂ ਰੋਜ਼ ਕੰਮ ਕਰਦੇ ਹੋ? — kī tusīṁ roz kamm karde ho? — Do you work every day?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "do you eat roti?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *do you eat roti?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਤੁਸੀਂ ਰੋਟੀ ਖਾਂਦੇ ਹੋ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "does he drink milk?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *does he drink milk?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਉਹ ਦੁੱਧ ਪੀਂਦਾ ਹੈ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ? (kī tusīṁ chāh pīnde ho?)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ?**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ? (kī tusīṁ chāh pīnde ho?) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ?** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask someone whether they drink tea, and whether they go to school every day."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C215-ki-review",
+      "sequence": 11750,
+      "title": "Ask do-you questions again",
+      "headword": "ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ?",
+      "romanization": "kī tusīṁ chāh pīnde ho?",
+      "gloss": "retrieve do-you questions in the present",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:110bbd05613abc26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "do you drink tea?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *do you drink tea?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ? (kī tusīṁ chāh pīnde ho?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "does she go to school every day?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *does she go to school every day?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਉਹ ਰੋਜ਼ ਸਕੂਲ ਜਾਂਦੀ ਹੈ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "yes, she goes to school every day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *yes, she goes to school every day*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਹਾਂ ਜੀ, ਉਹ ਰੋਜ਼ ਸਕੂਲ ਜਾਂਦੀ ਹੈ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੀ ਤੁਸੀਂ ਰੋਟੀ ਖਾਂਦੇ ਹੋ?",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੀ ਤੁਸੀਂ ਰੋਟੀ ਖਾਂਦੇ ਹੋ?**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਕੀ ਉਹ ਦੁੱਧ ਪੀਂਦਾ ਹੈ? once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਕੀ ਉਹ ਦੁੱਧ ਪੀਂਦਾ ਹੈ?** once]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask one do-you question and answer it yourself."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C215-exchange",
+      "sequence": 11760,
+      "title": "A short exchange: tea or milk?",
+      "headword": "ਨਹੀਂ ਜੀ, ਮੈਂ ਚਾਹ ਨਹੀਂ ਪੀਂਦੀ ਹਾਂ।",
+      "romanization": "nahīṁ jī, maiṁ chāh nahīṁ pīndī hāṁ.",
+      "gloss": "a four-line exchange: ask, say no, ask again, say yes",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67327b5a48482555",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask do you drink tea? Answer it no, in a whole sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: four lines",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A host and a guest. Hear the turns; each answer repeats the verb."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ? — kī tusīṁ chāh pīnde ho? — Do you drink tea?"
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਹੀਂ ਜੀ, ਮੈਂ ਚਾਹ ਨਹੀਂ ਪੀਂਦੀ ਹਾਂ। — nahīṁ jī, maiṁ chāh nahīṁ pīndī hāṁ. — No, I don't drink tea."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਸੀਂ ਦੁੱਧ ਪੀਂਦੇ ਹੋ? — kī tusīṁ duddh pīnde ho? — Do you drink milk?"
+            },
+            {
+              "kind": "speech",
+              "text": "ਹਾਂ ਜੀ, ਮੈਂ ਦੁੱਧ ਪੀਂਦੀ ਹਾਂ। — hāṁ jī, maiṁ duddh pīndī hāṁ. — Yes, I drink milk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "do you drink tea?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *do you drink tea?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer no as yourself."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "do you drink milk?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *do you drink milk?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer yes as yourself."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the four lines]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both parts aloud."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy the second line once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy the second line once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Play the host: ask both questions. Then play the guest."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C215-payoff",
+      "sequence": 11770,
+      "title": "Tea or milk: a four-skill payoff",
+      "headword": "ਕੀ ਤੁਸੀਂ ਚਾਹ ਪੀਂਦੇ ਹੋ?",
+      "romanization": "kī tusīṁ chāh pīnde ho?",
+      "gloss": "ask and answer do-you questions in a short exchange",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07eefbcc11c8a055",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask do you drink tea? and answer it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "do you go home every day?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *do you go home every day?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਤੁਸੀਂ ਰੋਜ਼ ਘਰ ਜਾਂਦੇ ਹੋ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "no, I don't go home every day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *no, I don't go home every day*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer as yourself."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੀ ਉਹ ਰੋਟੀ ਖਾਂਦੀ ਹੈ?",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੀ ਉਹ ਰੋਟੀ ਖਾਂਦੀ ਹੈ?**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning: does she eat roti?"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਕੀ ਤੁਸੀਂ ਦੁੱਧ ਪੀਂਦੇ ਹੋ?",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਕੀ ਤੁਸੀਂ ਦੁੱਧ ਪੀਂਦੇ ਹੋ?**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hold the whole four-line exchange once more, both parts, without the model."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

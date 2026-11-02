@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C211-verbs-return",
+    "language": "punjabi",
+    "chapter": 211,
+    "sequence": 11500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6073bf5f7cc35b93"
+  },
+  "findings": []
+}

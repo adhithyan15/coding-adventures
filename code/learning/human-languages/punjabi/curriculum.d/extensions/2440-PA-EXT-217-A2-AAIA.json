@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-217-A2-AAIA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say who came, a man, a woman or a group, and tell a man from a woman in the past.",
+  "prerequisites": [
+    "PA-EXT-216-A2-GIA"
+  ]
+}

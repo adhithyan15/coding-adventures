@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C216-kall",
+    "language": "punjabi",
+    "chapter": 216,
+    "sequence": 11810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4581fbb3af57360f"
+  },
+  "findings": []
+}

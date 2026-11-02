@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R224-first-pass-saying-no-and-asking",
+    "language": "punjabi",
+    "chapter": 224,
+    "sequence": 12310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0253d07e7a44e9bb"
+  },
+  "findings": []
+}

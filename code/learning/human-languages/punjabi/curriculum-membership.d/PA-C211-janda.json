@@ -1,0 +1,11 @@
+{
+  "id": "PA-C211-janda",
+  "pathSegment": "PA-PATH-211-A2-VOWEL-STEM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-211-A2-VOWEL-STEM",
+      "order": 1
+    }
+  ]
+}

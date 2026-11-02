@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-213-A2-NA-REQUEST",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "PA-EXT-213-A2-NA-REQUEST"
+  ],
+  "after": []
+}

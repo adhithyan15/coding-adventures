@@ -1,0 +1,11 @@
+{
+  "id": "PA-C213-na-utthho",
+  "pathSegment": "PA-PATH-213-A2-NA-REQUEST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-213-A2-NA-REQUEST",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-222-A2-KARANGA",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "PA-EXT-222-A2-KARANGA"
+  ],
+  "after": []
+}

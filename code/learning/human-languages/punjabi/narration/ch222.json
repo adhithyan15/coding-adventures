@@ -1,0 +1,760 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 222,
+  "title": "What Will You Do Tomorrow?",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:38061fa266b232e1",
+  "lessons": [
+    {
+      "id": "PA-C222-fut-return",
+      "sequence": 12170,
+      "title": "Return to going tomorrow",
+      "headword": "ਜਾਵਾਂਗਾ · ਜਾਵੇਗਾ · ਜਾਵਾਂਗੇ",
+      "romanization": "jāvāṅgā · jāvegā · jāvāṅge",
+      "gloss": "retrieve I will go, he will go and we will go by ear",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55198adbc9fa690d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "jāvāṅgā; jāvegā; jāvāṅge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *jāvāṅgā; jāvegā; jāvāṅge*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਜਾਵਾਂਗਾ, ਜਾਵੇਗਾ, ਜਾਵਾਂਗੇ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Those three futures needed ਵ after the vowel of ਜਾ. The verb ਕਰਨਾ, \"to do\", has a stem that ends in a consonant, ਕਰ. Keep it ready."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "I will go tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *I will go tomorrow*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it with the ending that fits you."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "she will go tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *she will go tomorrow*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਕੱਲ੍ਹ ਜਾਵੇਗੀ."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "to do",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *to do*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕਰਨਾ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say we will go, then to do."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C222-karanga",
+      "sequence": 12180,
+      "title": "ਕਰਾਂਗਾ, ਕਰੇਗਾ — will do",
+      "headword": "ਕਰਾਂਗਾ · ਕਰੇਗਾ",
+      "romanization": "karāṅgā · karegā",
+      "gloss": "I will do, he will do: the future of a consonant stem",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:15c5b814f7f0874f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I will go and he will go. Then to do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending straight on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A consonant stem takes the endings with no ਵ between:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਰ + ਾਂਗਾ becomes ਕਰਾਂਗਾ, ਕਰ + ੇਗਾ becomes ਕਰੇਗਾ."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਕੱਲ੍ਹ ਕੰਮ ਕਰਾਂਗਾ। — maiṁ kallh kamm karāṅgā. — I will work tomorrow (a man speaking)."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਕੱਲ੍ਹ ਕੰਮ ਕਰਾਂਗੀ। — maiṁ kallh kamm karāṅgī. — I will work tomorrow (a woman speaking)."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਕੰਮ ਕਰੇਗਾ। — Aman kamm karegā. — Aman will work."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਰੇਗੀ is for a woman, and ਕਰਾਂਗੇ for ਅਸੀਂ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "she will work tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *she will work tomorrow*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਕੱਲ੍ਹ ਕੰਮ ਕਰੇਗੀ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "we will work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *we will work*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਸੀਂ ਕੰਮ ਕਰਾਂਗੇ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕਰਾਂਗਾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕਰਾਂਗਾ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to the stem ਕਰ, then the ending."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਰਾਂਗਾ and ਕਰੇਗਾ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਰਾਂਗਾ** and **ਕਰੇਗਾ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I will do? (ਕਰਾਂਗਾ or ਕਰਾਂਗੀ.) He will do? (ਕਰੇਗਾ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C222-karoge",
+      "sequence": 12190,
+      "title": "ਕਰੋਗੇ, ਕਰਨਗੇ — you will do, they will do",
+      "headword": "ਕਰੋਗੇ · ਕਰਨਗੇ",
+      "romanization": "karoge · karange",
+      "gloss": "you will do, they will do",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f5a2472df98975b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I will work tomorrow and we will work. Then ਤੁਸੀਂ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two more cells",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With ਤੁਸੀਂ the future of ਕਰਨਾ is ਕਰੋਗੇ; with ਉਹ, for a group, it is ਕਰਨਗੇ:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਤੁਸੀਂ ਕੱਲ੍ਹ ਕੀ ਕਰੋਗੇ? — tusīṁ kallh kī karoge? — What will you do tomorrow?"
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਕੱਲ੍ਹ ਕੰਮ ਕਰਨਗੇ। — uh kallh kamm karange. — They will work tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Here ਕੀ is \"what\": it stands where the answer goes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "what will you do tomorrow?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *what will you do tomorrow?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਤੁਸੀਂ ਕੱਲ੍ਹ ਕੀ ਕਰੋਗੇ? (tusīṁ kallh kī karoge?)"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "I will go to the market",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *I will go to the market*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer it with the ending that fits you."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਹ ਕੱਲ੍ਹ ਕੰਮ ਕਰਨਗੇ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਹ ਕੱਲ੍ਹ ਕੰਮ ਕਰਨਗੇ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਰੋਗੇ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਰੋਗੇ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You will do? (ਕਰੋਗੇ.) They will do? (ਕਰਨਗੇ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C222-karanga-review",
+      "sequence": 12200,
+      "title": "Hear and say will do again",
+      "headword": "ਕਰਾਂਗਾ · ਕਰੇਗਾ · ਕਰੋਗੇ · ਕਰਨਗੇ",
+      "romanization": "karāṅgā · karegā · karoge · karange",
+      "gloss": "retrieve the future of ਕਰਨਾ, cell by cell",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9735c4d343a2796e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "karāṅgā; karegā; karoge; karange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *karāṅgā; karegā; karoge; karange*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say all four."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman will work tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman will work tomorrow*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਕੱਲ੍ਹ ਕੰਮ ਕਰੇਗਾ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "what will you do?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *what will you do?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਤੁਸੀਂ ਕੀ ਕਰੋਗੇ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "we will go home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *we will go home*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਸੀਂ ਘਰ ਜਾਵਾਂਗੇ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਹ ਕੰਮ ਕਰਨਗੇ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਹ ਕੰਮ ਕਰਨਗੇ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਮੈਂ ਕੰਮ ਕਰਾਂਗਾ। or its woman's form",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਮੈਂ ਕੰਮ ਕਰਾਂਗਾ।** or its woman's form]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say what you will do tomorrow."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C222-ki-nahin-future",
+      "sequence": 12210,
+      "title": "ਕੀ ਤੁਸੀਂ ਕੱਲ੍ਹ ਕੰਮ ਕਰੋਗੇ? (kī tusīṁ kallh kamm karoge?) — will you work tomorrow?",
+      "headword": "ਕੀ ਤੁਸੀਂ ਕੱਲ੍ਹ ਕੰਮ ਕਰੋਗੇ?",
+      "romanization": "kī tusīṁ kallh kamm karoge?",
+      "gloss": "will you work tomorrow? asking and saying no in the future",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a0db1d3aa0b5dcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say what will you do tomorrow? Then are you a traveller?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ਕੀ and ਨਹੀਂ with the future",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing moves. ਕੀ goes in front to ask yes or no; ਨਹੀਂ goes before the verb to say no:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਸੀਂ ਕੱਲ੍ਹ ਕੰਮ ਕਰੋਗੇ? — kī tusīṁ kallh kamm karoge? — Will you work tomorrow?"
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਹੀਂ ਜੀ, ਮੈਂ ਕੱਲ੍ਹ ਕੰਮ ਨਹੀਂ ਕਰਾਂਗੀ। — nahīṁ jī, maiṁ kallh kamm nahīṁ karāṅgī. — No, I won't work tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਅਮਨ ਕੱਲ੍ਹ ਆਵੇਗਾ? — kī Aman kallh āvegā? — Will Aman come tomorrow?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "will she go to school tomorrow?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *will she go to school tomorrow?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਉਹ ਕੱਲ੍ਹ ਸਕੂਲ ਜਾਵੇਗੀ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "no, she won't go",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *no, she won't go*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਨਹੀਂ ਜੀ, ਉਹ ਨਹੀਂ ਜਾਵੇਗੀ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੀ ਅਮਨ ਕੱਲ੍ਹ ਆਵੇਗਾ?",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੀ ਅਮਨ ਕੱਲ੍ਹ ਆਵੇਗਾ?**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਨਹੀਂ ਕਰਾਂਗਾ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਨਹੀਂ ਕਰਾਂਗਾ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask will you work tomorrow? and answer it truthfully."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C222-payoff",
+      "sequence": 12220,
+      "title": "Tomorrow's work: a four-skill payoff",
+      "headword": "ਤੁਸੀਂ ਕੱਲ੍ਹ ਕੀ ਕਰੋਗੇ?",
+      "romanization": "tusīṁ kallh kī karoge?",
+      "gloss": "say, ask and deny what people will do tomorrow",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b62642ef13c64c59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask what will you do tomorrow?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "I will work tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *I will work tomorrow*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it with the ending that fits you."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "will they work tomorrow?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *will they work tomorrow?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀ ਉਹ ਕੱਲ੍ਹ ਕੰਮ ਕਰਨਗੇ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨਹੀਂ ਜੀ, ਅਮਨ ਕੱਲ੍ਹ ਨਹੀਂ ਆਵੇਗਾ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨਹੀਂ ਜੀ, ਅਮਨ ਕੱਲ੍ਹ ਨਹੀਂ ਆਵੇਗਾ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning: no, Aman won't come tomorrow."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਤੁਸੀਂ ਕੱਲ੍ਹ ਕੀ ਕਰੋਗੇ? (tusīṁ kallh kī karoge?)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਤੁਸੀਂ ਕੱਲ੍ਹ ਕੀ ਕਰੋਗੇ?**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say one thing you will do tomorrow and one thing you will not."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
