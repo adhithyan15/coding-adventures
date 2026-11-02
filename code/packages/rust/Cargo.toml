@@ -736,6 +736,7 @@ members = [
     "ruby-to-semantic-ir",
     "sir-conformance",
     "sir-bench",
+    "sir-test-scratch",
     "javascript-to-semantic-ir",
     "scytale-cipher",
     "sha256",
