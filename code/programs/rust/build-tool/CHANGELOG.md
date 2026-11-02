@@ -23,6 +23,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. A change to a crate used only by a
+  build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md` in place
+  of the `toml` crate walk: headers are split into dotted-key segments outside
+  strings (quoted cfgs stay one segment, table names compare case-sensitively,
+  `[[...]]` and malformed headers end the table); comments are stripped
+  outside strings; inline values whose arrays continue onto later lines are
+  joined; `path` and `package` field keys must be exact and hold one
+  non-empty string; names are ASCII-lowercased and deduplicated.
+  Dev-dependencies (every form), `[patch]`, `[replace]`, `[workspace]` and
+  registry entries add no edge.
+- The old reader looked up every `[dependencies]` key, path or not, and
+  ignored a `package` rename, so `os-kernel = { package =
+  "os-kernel-simulator", ... }` drew an edge to `os-kernel`. Only path entries
+  count now, named by their rename.
+- A Rust crate is now also known by its directory name next to its declared
+  `[package]` `name`, as the contract and the Go reference require (WASM
+  wrappers stay known only by their declared name), and the duplicated
+  `[package]` read is gone.
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, duplicate collapse, the directory and
+  declared-name aliases, and the shared `resolution-rust-field-aware.json`
+  fixture. The reader returns the same dependency names as the Go reader for
+  all 1,650 tracked `Cargo.toml` files, and on the real repository the forced
+  graph gains 140 Rust/WASM edges and loses that one, after which its edges
+  into Rust and WASM packages equal the Go tool's (bar one TypeScript edge Go
+  draws from its cross-language resolution, which this tool does not have).
+- `resolution-rust-field-aware` now also seeds this front (reader R) in
+  `code/specs/ci-gate-registry.md` and the Go build tool's routing map.
+
 - Accept portable strict-glob `?` as exactly one Unicode scalar and preserve
   DIFF-specific invalid and duplicate package diagnostics.
 - Replace quadratic package-root collision and package-by-path scans with

@@ -272,21 +272,19 @@ fn build_known_names_for_scope(packages: &[Package], scope: &str) -> HashMap<Str
                     }
                 }
             }
-            "rust" | "wasm" => {
-                // For Rust, read the package name from Cargo.toml.
-                // The crate name in dependencies should match this.
-                let cargo_toml = pkg.path.join("Cargo.toml");
-                if let Ok(data) = fs::read_to_string(&cargo_toml) {
-                    if let Ok(parsed) = data.parse::<toml::Table>() {
-                        if let Some(package) = parsed.get("package") {
-                            if let Some(name) = package.get("name") {
-                                if let Some(name_str) = name.as_str() {
-                                    set_known(&mut known, name_str.to_lowercase(), pkg);
-                                }
-                            }
-                        }
-                    }
+            "rust" => {
+                // A Rust crate is known by its directory name ("logic-gates")
+                // AND by its declared `[package]` `name`, which Cargo
+                // dependency keys and `package` renames normally spell.
+                set_known(&mut known, dir_name.clone(), pkg);
+                if let Some(cargo_name) = read_cargo_package_name(pkg) {
+                    set_known(&mut known, cargo_name, pkg);
                 }
+            }
+            "wasm" => {
+                // WASM wrappers resolve only through their declared Cargo
+                // name ("graph-wasm"): the bare directory name ("graph")
+                // belongs to the canonical Rust crate the wrapper wraps.
                 if let Some(cargo_name) = read_cargo_package_name(pkg) {
                     set_known(&mut known, cargo_name, pkg);
                 }
@@ -536,13 +534,54 @@ fn parse_go_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<St
 
 /// Extracts internal dependencies from a Rust Cargo.toml file.
 ///
-/// Rust crates declare local dependencies in Cargo.toml with:
-///   [dependencies]
-///   my-crate = { path = "../my-crate" }
+/// # Which tables are build-graph edges
 ///
-/// We use the `toml` crate to parse the file properly and look for
-/// dependencies that have a `path` key (indicating a local dependency)
-/// or whose name matches a known internal package.
+/// A graph edge means "rebuild and re-test the dependent when this changes",
+/// so it must cover everything Cargo compiles INTO the crate:
+///
+/// ```text
+/// table                                  edge?  why
+/// -------------------------------------  -----  ------------------------------
+/// [dependencies]                         yes    linked into the library
+/// [build-dependencies]                   yes    compiled into build.rs, which
+///                                               generates or configures it
+/// [target.<cfg>.dependencies]            yes    linked on that target; CI
+/// [target.<cfg>.build-dependencies]      yes    builds on several hosts, so
+///                                               the union over every <cfg>
+/// [dev-dependencies] (every form)        no     tests only; Cargo allows dev
+///                                               cycles, a graph must not
+/// [patch], [replace], [workspace], ...   no     not a dependency of the crate
+/// ```
+///
+/// `build_dependencies` is Cargo's legacy spelling of `build-dependencies`.
+///
+/// # Which entry shapes
+///
+/// Both TOML spellings of a path dependency are read:
+///
+/// ```text
+/// [dependencies]
+/// logic-gates = { path = "../logic-gates" }          <- inline table
+/// gates = { package = "logic-gates", path = "..." }  <- renamed: "logic-gates"
+///
+/// [dependencies.logic-gates]                         <- sub-table
+/// path = "../logic-gates"
+/// ```
+///
+/// The crate name (the `package` rename if present, else the key) is then
+/// looked up in the known names, and each internal package is returned once.
+///
+/// # Why not the `toml` crate?
+///
+/// This tool does parse TOML elsewhere (the `[package]` `name`), but the
+/// dependency edges must be the SAME edges every build-tool front computes,
+/// and most fronts have no TOML library. So the cross-implementation contract
+/// in `code/specs/build-tool-conformance.md` is a line procedure, and a full
+/// parser would disagree with it at the edges: it would read the out-of-scope
+/// dotted key `a.path = "../a"` as a path dependency, and it would drop every
+/// edge of a manifest with one malformed line. [`cargo_link_dependency_names`]
+/// implements that procedure; the shared fixture
+/// `resolution-rust-field-aware.json` pins it.
 fn parse_rust_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
     let cargo_toml = pkg.path.join("Cargo.toml");
     let data = match fs::read_to_string(&cargo_toml) {
@@ -550,24 +589,382 @@ fn parse_rust_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<
         Err(_) => return Vec::new(),
     };
 
-    let parsed: toml::Table = match data.parse() {
-        Ok(t) => t,
-        Err(_) => return Vec::new(),
-    };
-
-    let mut internal_deps = Vec::new();
-
-    // Check [dependencies] section.
-    if let Some(deps) = parsed.get("dependencies").and_then(|d| d.as_table()) {
-        for (name, _value) in deps {
-            let lower_name = name.to_lowercase();
-            if let Some(pkg_name) = known_names.get(&lower_name) {
+    let mut internal_deps: Vec<String> = Vec::new();
+    for crate_name in cargo_link_dependency_names(&data) {
+        if let Some(pkg_name) = known_names.get(&crate_name) {
+            // A crate may appear in several link tables at once (say in
+            // `[dependencies]` and `[build-dependencies]`): one edge.
+            if !internal_deps.contains(pkg_name) {
                 internal_deps.push(pkg_name.clone());
             }
         }
     }
 
     internal_deps
+}
+
+/// The table names whose path entries link into, or build, the crate. They
+/// are compared exactly: TOML keys are case-sensitive, so `[Dependencies]`
+/// is some other table.
+const CARGO_LINK_TABLE_NAMES: [&str; 3] =
+    ["dependencies", "build-dependencies", "build_dependencies"];
+
+/// How the lines under the current header are read.
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum CargoLinkTable {
+    /// Not a link table: its lines are skipped.
+    Ignored,
+    /// `[D]` or `[target.C.D]`: one `name = { ... }` entry per line.
+    Inline,
+    /// `[D.N]` or `[target.C.D.N]`: the keys of the one entry `N`.
+    Sub(String),
+}
+
+/// Returns the ASCII-lowercased crate names of every path dependency in a
+/// manifest's link tables, in manifest order, duplicates included (the
+/// caller collapses them).
+///
+/// It is one pass over the lines with a three-state machine
+/// ([`CargoLinkTable`]). Every header line — even a malformed one, or an
+/// array of tables — ends the current table, and so does the end of the
+/// file; a sub-table's entry is complete only then, because its `path` and
+/// `package` keys may come in any order.
+///
+/// One inline entry may cover several lines. TOML 1.0 lets an ARRAY inside
+/// an inline table span lines, and the repository writes exactly that:
+///
+/// ```text
+/// coding_adventures_vault_pm_cli = { path = "../vault-pm-cli", features = [
+///     "crash-injection",
+/// ] }
+/// ```
+///
+/// So while the entry's value still has an unclosed `{` or `[`, the next
+/// lines are joined onto it with one space (and are not looked at as headers
+/// or entries). If the file ends first, the entry contributes nothing.
+fn cargo_link_dependency_names(text: &str) -> Vec<String> {
+    let text = text.strip_prefix('\u{feff}').unwrap_or(text);
+    // Step 1 of the contract: split at LF, then drop ONE trailing CR.
+    let lines: Vec<&str> = text.split('\n').collect();
+    let clean_line = |raw: &str| -> String {
+        let raw = raw.strip_suffix('\r').unwrap_or(raw);
+        trim_toml_blank(strip_toml_line_comment(raw)).to_string()
+    };
+
+    let mut names = Vec::new();
+    let mut table = CargoLinkTable::Ignored;
+    let mut sub_path: Option<String> = None;
+    let mut sub_package: Option<String> = None;
+
+    // A sub-table is a candidate only once it ends, when `path` was set; it
+    // is named by its `package` rename, else by its key `N`.
+    let finish_table = |table: &CargoLinkTable,
+                        sub_path: &Option<String>,
+                        sub_package: &Option<String>,
+                        names: &mut Vec<String>| {
+        if let (CargoLinkTable::Sub(key), Some(_)) = (table, sub_path) {
+            let name = sub_package.as_deref().unwrap_or(key);
+            names.push(name.to_ascii_lowercase());
+        }
+    };
+
+    let mut index = 0;
+    while index < lines.len() {
+        let line = clean_line(lines[index]);
+        index += 1;
+
+        if line.starts_with('[') && line.ends_with(']') {
+            finish_table(&table, &sub_path, &sub_package, &mut names);
+            table = classify_cargo_link_header(&line);
+            sub_path = None;
+            sub_package = None;
+            continue;
+        }
+
+        let Some(equals) = index_toml_outside_strings(&line, b'=') else {
+            continue;
+        };
+        match &table {
+            CargoLinkTable::Ignored => {}
+            CargoLinkTable::Inline => {
+                let mut value = trim_toml_blank(&line[equals + 1..]).to_string();
+                let mut complete = true;
+                while value.starts_with('{') && toml_open_bracket_depth(&value) > 0 {
+                    if index >= lines.len() {
+                        complete = false; // the file ended inside the value
+                        break;
+                    }
+                    value.push(' ');
+                    value.push_str(&clean_line(lines[index]));
+                    index += 1;
+                }
+                if complete {
+                    if let Some(name) = cargo_path_dependency_name(&line[..equals], &value) {
+                        names.push(name);
+                    }
+                }
+            }
+            CargoLinkTable::Sub(_) => {
+                // Only the two bare, lowercase keys matter; the first
+                // occurrence of each wins. `version`, `features`, `optional`
+                // ... are ignored.
+                let Some(value) = toml_single_string(&line[equals + 1..]) else {
+                    continue;
+                };
+                let slot = match trim_toml_blank(&line[..equals]) {
+                    "path" => &mut sub_path,
+                    "package" => &mut sub_package,
+                    _ => continue,
+                };
+                if slot.is_none() {
+                    *slot = Some(value.to_string());
+                }
+            }
+        }
+    }
+    finish_table(&table, &sub_path, &sub_package, &mut names);
+    names
+}
+
+/// Decides how to read the lines under a header line (already
+/// comment-stripped and trimmed, starting with `[` and ending with `]`).
+///
+/// The header is split into dotted-key segments at every `.` OUTSIDE a
+/// string, and each segment is decoded to its value. That is what makes a
+/// cfg header one segment however much punctuation it quotes:
+///
+/// ```text
+/// [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+///  └─┬──┘ └──────────────────┬───────────────────┘ └────┬─────┘
+///  target            C (one quoted segment)               D
+///
+/// [target."thumbv8m.main-none-eabihf".dependencies.pi]  -> sub-table "pi"
+/// [target.x86_64-unknown-linux-gnu.build-dependencies]  -> bare triple
+/// ["dependencies"]                                      -> same as [dependencies]
+/// ```
+///
+/// Segment lists that are not exactly one of `[D]`, `[D.N]`, `[target.C.D]`
+/// or `[target.C.D.N]` — and malformed headers — are ignored tables.
+fn classify_cargo_link_header(line: &str) -> CargoLinkTable {
+    if line.starts_with("[[") {
+        return CargoLinkTable::Ignored; // array of tables, e.g. [[bin]]
+    }
+    let mut segments = Vec::new();
+    for raw in split_toml_outside_strings(&line[1..line.len() - 1], b'.', false) {
+        match toml_key_segment(raw) {
+            Some(segment) => segments.push(segment),
+            None => return CargoLinkTable::Ignored,
+        }
+    }
+    let mut segments = segments.as_slice();
+    if segments.len() >= 3 && segments[0] == "target" {
+        segments = &segments[2..]; // drop `target` and the cfg, whatever it is
+    }
+    match segments {
+        [table] if CARGO_LINK_TABLE_NAMES.contains(table) => CargoLinkTable::Inline,
+        [table, key] if CARGO_LINK_TABLE_NAMES.contains(table) => {
+            CargoLinkTable::Sub(key.to_string())
+        }
+        _ => CargoLinkTable::Ignored,
+    }
+}
+
+/// Returns the crate a completed inline-table entry `key = value` names when
+/// it is a path dependency — the only kind that can point at a repository
+/// package. The key is the crate name unless the inline table renames it
+/// with `package = "..."`:
+///
+/// ```text
+/// logic-gates = { path = "../logic-gates" }                    -> logic-gates
+/// gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+/// serde = "1"                                                  -> not a path dep
+/// x = { version = "1", features = ["path"] }                   -> not a path dep
+/// foo.path = "../foo"                                          -> dotted key: no
+/// ```
+///
+/// Fields are split at commas outside strings AND outside nested `[...]` or
+/// `{...}`, so a `features` array cannot leak a fake field and a nested
+/// table's `path` is not the entry's. Field keys must be exactly `path` and
+/// `package` (Cargo ignores `Package`, so it must not count as a rename).
+fn cargo_path_dependency_name(key: &str, value: &str) -> Option<String> {
+    let crate_name = toml_key_segment(key)?;
+    let value = trim_toml_blank(value);
+    if value.len() < 2 || !value.starts_with('{') || !value.ends_with('}') {
+        return None;
+    }
+    let mut path: Option<&str> = None;
+    let mut package_name: Option<&str> = None;
+    for field in split_toml_outside_strings(&value[1..value.len() - 1], b',', true) {
+        let Some(equals) = index_toml_outside_strings(field, b'=') else {
+            continue;
+        };
+        let Some(field_value) = toml_single_string(&field[equals + 1..]) else {
+            continue;
+        };
+        let slot = match trim_toml_blank(&field[..equals]) {
+            "path" => &mut path,
+            "package" => &mut package_name,
+            _ => continue,
+        };
+        if slot.is_none() {
+            *slot = Some(field_value);
+        }
+    }
+    path?;
+    Some(package_name.unwrap_or(crate_name).to_ascii_lowercase())
+}
+
+/// Trims spaces and tabs only — the contract's notion of blank. (`str::trim`
+/// would also strip other Unicode whitespace, which TOML does not allow.)
+fn trim_toml_blank(s: &str) -> &str {
+    s.trim_matches(|character| character == ' ' || character == '\t')
+}
+
+/// Returns the index just past the string that opens at `s[start]` (a `"`
+/// or `'`), or `None` if it is not closed on this line. In a basic `"..."`
+/// string a backslash makes the next byte part of the string, so `\"` does
+/// not end it; a literal `'...'` string has no escapes.
+///
+/// Every byte compared here is ASCII, and in UTF-8 an ASCII byte is never
+/// part of a multi-byte character, so scanning bytes is exact and every
+/// index returned is a character boundary that is safe to slice at.
+fn toml_string_end(s: &[u8], start: usize) -> Option<usize> {
+    let quote = s[start];
+    let mut index = start + 1;
+    while index < s.len() {
+        if quote == b'"' && s[index] == b'\\' {
+            index += 1;
+        } else if s[index] == quote {
+            return Some(index + 1);
+        }
+        index += 1;
+    }
+    None
+}
+
+/// Removes a TOML comment: everything from the first `#` outside a string.
+/// An unclosed string runs to the end of the line.
+fn strip_toml_line_comment(line: &str) -> &str {
+    let bytes = line.as_bytes();
+    let mut index = 0;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'"' | b'\'' => match toml_string_end(bytes, index) {
+                Some(end) => index = end,
+                None => return line,
+            },
+            b'#' => return &line[..index],
+            _ => index += 1,
+        }
+    }
+    line
+}
+
+/// Returns the index of the first `target` byte that is outside every
+/// string, or `None` (also when a string is left unclosed before it).
+fn index_toml_outside_strings(s: &str, target: u8) -> Option<usize> {
+    let bytes = s.as_bytes();
+    let mut index = 0;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'"' | b'\'' => index = toml_string_end(bytes, index)?,
+            byte if byte == target => return Some(index),
+            _ => index += 1,
+        }
+    }
+    None
+}
+
+/// Counts the `{` and `[` outside strings in `s` that are not closed again
+/// within `s`. Zero (or less) means the value is complete; an unclosed
+/// string stops the count where it opens.
+fn toml_open_bracket_depth(s: &str) -> i64 {
+    let bytes = s.as_bytes();
+    let mut depth = 0;
+    let mut index = 0;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'"' | b'\'' => match toml_string_end(bytes, index) {
+                Some(end) => {
+                    index = end;
+                    continue;
+                }
+                None => return depth,
+            },
+            b'{' | b'[' => depth += 1,
+            b'}' | b']' => depth -= 1,
+            _ => {}
+        }
+        index += 1;
+    }
+    depth
+}
+
+/// Splits `s` at every `separator` outside strings. With `nested` set, a
+/// separator inside `[...]` or `{...}` does not split either. An unclosed
+/// string makes the rest of `s` the last part.
+fn split_toml_outside_strings(s: &str, separator: u8, nested: bool) -> Vec<&str> {
+    let bytes = s.as_bytes();
+    let mut parts = Vec::new();
+    let (mut start, mut depth, mut index) = (0, 0i64, 0);
+    while index < bytes.len() {
+        match bytes[index] {
+            b'"' | b'\'' => match toml_string_end(bytes, index) {
+                Some(end) => {
+                    index = end;
+                    continue;
+                }
+                None => {
+                    parts.push(&s[start..]);
+                    return parts;
+                }
+            },
+            b'[' | b'{' if nested => depth += 1,
+            b']' | b'}' if nested => depth -= 1,
+            byte if byte == separator && depth == 0 => {
+                parts.push(&s[start..index]);
+                start = index + 1;
+            }
+            _ => {}
+        }
+        index += 1;
+    }
+    parts.push(&s[start..]);
+    parts
+}
+
+/// Decodes one key or header segment: a bare key (ASCII letters, digits,
+/// `_`, `-`), or exactly one complete string, whose value is the text
+/// between its quotes taken verbatim (escapes are not decoded). Anything
+/// else — empty, dotted, or text around a string — is not a key.
+fn toml_key_segment(raw: &str) -> Option<&str> {
+    let segment = trim_toml_blank(raw);
+    let bytes = segment.as_bytes();
+    match bytes.first()? {
+        b'"' | b'\'' => {
+            if toml_string_end(bytes, 0)? != bytes.len() {
+                return None;
+            }
+            Some(&segment[1..segment.len() - 1])
+        }
+        _ => bytes
+            .iter()
+            .all(|&byte| byte.is_ascii_alphanumeric() || byte == b'_' || byte == b'-')
+            .then_some(segment),
+    }
+}
+
+/// Returns the content of a value that is exactly one complete, non-empty
+/// string (after trimming), as `path` and `package` require. `"1"` is one;
+/// `"a" "b"`, `1`, `""` and `["x"]` are not.
+fn toml_single_string(raw: &str) -> Option<&str> {
+    let value = trim_toml_blank(raw);
+    let bytes = value.as_bytes();
+    if !matches!(bytes.first(), Some(b'"' | b'\'')) || toml_string_end(bytes, 0)? != bytes.len() {
+        return None;
+    }
+    let content = &value[1..value.len() - 1];
+    (!content.is_empty()).then_some(content)
 }
 
 fn parse_dotnet_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
@@ -1173,6 +1570,357 @@ mod tests {
 
             let _ = fs::remove_dir_all(root);
         }
+    }
+
+    /// Runs the shared case every build-tool front implements: inline and
+    /// sub-table entries in `[dependencies]`, `[build-dependencies]` and
+    /// their target forms are edges; dev-dependencies (every form),
+    /// `[patch]`, registry entries, features and comments are not.
+    #[test]
+    fn test_rust_resolution_conformance_fixture() {
+        let name = "resolution-rust-field-aware.json";
+        let fixture = load_resolution_fixture(name);
+        assert_eq!(fixture.expected.outcome, "ok");
+        let (root, packages) = materialize_resolution_fixture(&fixture, name);
+        let graph = resolve_dependencies(&packages).expect("rust fixture must resolve");
+
+        let mut actual_edges = Vec::new();
+        for package in &packages {
+            for dependency in graph.predecessors(&package.name).unwrap() {
+                actual_edges.push(vec![dependency, package.name.clone()]);
+            }
+        }
+        actual_edges.sort();
+        let mut expected_edges = fixture.expected.result.edges.clone();
+        expected_edges.sort();
+        assert_eq!(actual_edges, expected_edges);
+
+        let _ = fs::remove_dir_all(root);
+    }
+
+    /// Pins each line rule of the Cargo contract in
+    /// `code/specs/build-tool-conformance.md`, one manifest shape per case.
+    /// The table is the Go reference's `TestCargoLinkDependencyNames`,
+    /// case for case, so the two readers are held to the same shapes.
+    #[test]
+    fn test_cargo_link_dependency_names() {
+        let cases: &[(&str, &str, &[&str])] = &[
+            (
+                "top-level inline",
+                "[dependencies]\na = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "build-dependencies",
+                "[build-dependencies]\na = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "legacy build_dependencies",
+                "[build_dependencies]\na = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "quoted cfg target",
+                "[target.'cfg(any(target_os = \"linux\", windows))'.dependencies]\na = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "bare triple target build",
+                "[target.x86_64-pc-windows-msvc.build-dependencies]\na = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "legacy target build",
+                "[target.'cfg(unix)'.build_dependencies]\na = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "spaced header segments",
+                "[ target . 'cfg(unix)' . dependencies ]\na = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "quoted table segment",
+                "[\"dependencies\"]\na = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "sub-table",
+                "[dependencies.a]\nversion = \"1\"\npath = \"../a\"\n",
+                &["a"],
+            ),
+            (
+                "sub-table rename before path",
+                "[build-dependencies.x]\npackage = \"A\"\npath = '../a'\n",
+                &["a"],
+            ),
+            (
+                "target sub-table, dotted quoted triple",
+                "[target.\"thumbv8m.main-none-eabihf\".dependencies.a]\npath = \"../a\"\n",
+                &["a"],
+            ),
+            (
+                "quoted sub-table key",
+                "[dependencies.\"a\"]\npath = \"../a\"\n",
+                &["a"],
+            ),
+            (
+                "sub-table without path",
+                "[dependencies.a]\nversion = \"1\"\n",
+                &[],
+            ),
+            (
+                "sub-table first path wins, ended by header",
+                "[dependencies.a]\npath = \"../a\"\npath = \"../b\"\n[package]\nname = \"z\"\n",
+                &["a"],
+            ),
+            (
+                "sub-table non-string path",
+                "[dependencies.a]\npath = 1\n",
+                &[],
+            ),
+            (
+                "sub-table empty path",
+                "[dependencies.a]\npath = \"\"\n",
+                &[],
+            ),
+            (
+                "sub-table capitalised Path key",
+                "[dependencies.a]\nPath = \"../a\"\n",
+                &[],
+            ),
+            (
+                "rename",
+                "[dependencies]\nx = { package = \"Logic-Gates\", path = \"../g\" }\n",
+                &["logic-gates"],
+            ),
+            (
+                "capitalised Package is not a rename",
+                "[dependencies]\nx = { Package = \"y\", path = \"../g\" }\n",
+                &["x"],
+            ),
+            (
+                "capitalised Path is not a path",
+                "[dependencies]\nx = { Path = \"../g\" }\n",
+                &[],
+            ),
+            (
+                "version plus path with trailing comment",
+                "[dependencies]\na = { version = \"1\", path = \"../a\" } # b = { path = \"../b\" }\n",
+                &["a"],
+            ),
+            (
+                "hash inside a string is not a comment",
+                "[dependencies]\na = { path = \"../a#1\" }\n",
+                &["a"],
+            ),
+            (
+                "quoted entry key",
+                "[dependencies]\n\"a\" = { path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "registry entry with path feature",
+                "[dependencies]\na = { version = \"1\", features = [\"path\", \"x\"] }\nb = \"1\"\n",
+                &[],
+            ),
+            (
+                "nested table path is not the entry's",
+                "[dependencies]\na = { x = { path = \"../a\" } }\n",
+                &[],
+            ),
+            (
+                "features array commas do not split fields",
+                "[dependencies]\na = { features = [\"p\", \"q\"], path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "empty path",
+                "[dependencies]\na = { path = \"\" }\n",
+                &[],
+            ),
+            (
+                "array continued onto later lines",
+                "[dependencies]\na = { path = \"../a\", features = [\n    \"x\", # [not-a-header]\n] }\nb = { path = \"../b\" }\n",
+                &["a", "b"],
+            ),
+            (
+                "continuation lines are not headers",
+                "[dependencies]\na = { path = \"../a\", features = [\n[\"x\"]\n] }\nb = { path = \"../b\" }\n",
+                &["a", "b"],
+            ),
+            (
+                "braces continued onto later lines",
+                "[dependencies]\na = { version = \"1\",\n  path = \"../a\" }\n",
+                &["a"],
+            ),
+            (
+                "file ends inside the value",
+                "[dependencies]\na = { path = \"../a\", features = [\n  \"x\",\n",
+                &[],
+            ),
+            (
+                "continued value must end with a brace",
+                "[dependencies]\na = { path = \"../a\", features = [\n] } x\n",
+                &[],
+            ),
+            (
+                "dotted key is out of scope",
+                "[dependencies]\na.path = \"../a\"\n",
+                &[],
+            ),
+            (
+                "commented-out entry",
+                "[dependencies]\n# a = { path = \"../a\" }\n",
+                &[],
+            ),
+            (
+                "dev-dependencies",
+                "[dev-dependencies]\na = { path = \"../a\" }\n[dev_dependencies]\nb = { path = \"../b\" }\n",
+                &[],
+            ),
+            (
+                "target dev-dependencies",
+                "[target.'cfg(unix)'.dev-dependencies]\na = { path = \"../a\" }\n",
+                &[],
+            ),
+            (
+                "dev-dependencies sub-table",
+                "[dev-dependencies.a]\npath = \"../a\"\n",
+                &[],
+            ),
+            (
+                "patch, replace, workspace",
+                "[patch.crates-io]\na = { path = \"../a\" }\n[workspace.dependencies]\nb = { path = \"../b\" }\n[replace]\n\"c:1.0.0\" = { path = \"../c\" }\n",
+                &[],
+            ),
+            (
+                "capitalised table name",
+                "[Dependencies]\na = { path = \"../a\" }\n",
+                &[],
+            ),
+            (
+                "features sub-table of a dependency",
+                "[dependencies.a.features]\npath = \"../a\"\n",
+                &[],
+            ),
+            (
+                "target table itself",
+                "[target.'cfg(unix)']\na = { path = \"../a\" }\n",
+                &[],
+            ),
+            (
+                "array of tables ends the table",
+                "[dependencies]\n[[bin]]\na = { path = \"../a\" }\n",
+                &[],
+            ),
+            (
+                "malformed header ends the table",
+                "[dependencies]\n[a b]\nc = { path = \"../c\" }\n",
+                &[],
+            ),
+            (
+                "unterminated quoted header ends the table",
+                "[dependencies]\n[target.'cfg(unix).dependencies]\nc = { path = \"../c\" }\n",
+                &[],
+            ),
+            (
+                "CRLF and BOM",
+                "\u{feff}[dependencies]\r\na = { path = \"../a\" }\r\n",
+                &["a"],
+            ),
+            (
+                "union across tables keeps duplicates for the caller",
+                "[dependencies]\na = { path = \"../a\" }\n[build-dependencies]\na = { path = \"../a\" }\n",
+                &["a", "a"],
+            ),
+        ];
+        assert_eq!(cases.len(), 46);
+        for (name, manifest, want) in cases {
+            assert_eq!(
+                cargo_link_dependency_names(manifest),
+                want.to_vec(),
+                "case {name:?}: {manifest:?}"
+            );
+        }
+    }
+
+    /// Writes `files` (relative path -> contents) under a fresh temporary
+    /// directory and returns it.
+    fn write_rust_fixture(case: &str, files: &[(&str, &str)]) -> PathBuf {
+        let root = std::env::temp_dir().join(format!(
+            "build_tool_rust_deps_{case}_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        for (path, contents) in files {
+            let path = root.join(path);
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            fs::write(path, contents).unwrap();
+        }
+        root
+    }
+
+    fn rust_package(name: &str, path: PathBuf) -> Package {
+        Package {
+            name: name.to_string(),
+            path,
+            build_commands: vec![],
+            language: "rust".to_string(),
+        }
+    }
+
+    /// A crate named by three link tables yields one dependency, and an
+    /// unknown path dependency (`serde`) is dropped.
+    #[test]
+    fn test_parse_rust_deps_collapses_duplicate_links() {
+        let root = write_rust_fixture(
+            "dedupe",
+            &[
+                (
+                    "app/Cargo.toml",
+                    "[package]\nname = \"app\"\n\n[dependencies]\nlib = { path = \"../lib\" }\n\
+                     serde = { path = \"../vendored-serde\" }\n\n[build-dependencies]\n\
+                     lib = { path = \"../lib\" }\n\n[target.'cfg(windows)'.dependencies.lib]\n\
+                     path = \"../lib\"\n",
+                ),
+                ("lib/Cargo.toml", "[package]\nname = \"lib\"\n"),
+            ],
+        );
+        let packages = vec![
+            rust_package("rust/app", root.join("app")),
+            rust_package("rust/lib", root.join("lib")),
+        ];
+        let deps = parse_rust_deps(&packages[0], &build_known_names(&packages));
+        assert_eq!(deps, vec!["rust/lib"]);
+
+        let _ = fs::remove_dir_all(root);
+    }
+
+    /// Step 5 of the contract: a Rust crate is known by its directory name
+    /// AND by its declared `[package]` `name`, ASCII-lowercased.
+    #[test]
+    fn test_build_known_names_rust_directory_and_declared_name() {
+        let root = write_rust_fixture(
+            "known",
+            &[(
+                "logic-gates/Cargo.toml",
+                "[package]\nname = \"Coding-Adventures-Logic-Gates\"\n",
+            )],
+        );
+        let packages = vec![rust_package("rust/logic-gates", root.join("logic-gates"))];
+        let known = build_known_names(&packages);
+        assert_eq!(
+            known.get("logic-gates"),
+            Some(&"rust/logic-gates".to_string())
+        );
+        assert_eq!(
+            known.get("coding-adventures-logic-gates"),
+            Some(&"rust/logic-gates".to_string())
+        );
+
+        let _ = fs::remove_dir_all(root);
     }
 
     #[test]

@@ -114,7 +114,7 @@ The tool is organized into focused modules, each responsible for one aspect of t
 
 1. **graph** — Directed graph data structure with topological sort and affected-node queries
 2. **discovery** — Recursively walks for `BUILD` files to find packages
-3. **resolver** — Parses supported package metadata, including strict UTF-8 Lua rockspecs, into dependency edges
+3. **resolver** — Parses supported package metadata, including strict UTF-8 Lua rockspecs and Cargo link tables, into dependency edges
 4. **hasher** — SHA256 hashing for change detection
 5. **cache** — JSON-based build cache (read/write with atomic saves)
 6. **executor** — Parallel execution with Rayon thread pool
@@ -202,6 +202,23 @@ METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adv
 
 The resolver and real CLI tests materialize the language-neutral
 `resolution/lua-utf8` and `resolution/lua-invalid-utf8` fixtures.
+
+Rust resolution reads path entries from every Cargo table that is compiled
+into the crate: `[dependencies]`, `[build-dependencies]` (and the legacy
+`build_dependencies`), and the same tables under `[target.<cfg>.…]` for any
+cfg, quoted or a bare triple, as a union over all targets. Entries count both
+as inline tables (`name = { path = "..." }`, whose arrays may continue onto
+later lines) and as `[dependencies.name]` sub-tables with a `path = "..."`
+key. A `package = "..."` rename is authoritative. The crate name is matched,
+ASCII-lowercased, against each Rust package's directory name and declared
+`[package]` `name` (a WASM wrapper only by its declared name). Dev-dependencies
+in every form, `[patch]`, `[replace]`, `[workspace]`, package metadata,
+features, comments, and registry-only dependencies never create edges. The
+reader is the line procedure of the Rust paragraph of
+`code/specs/build-tool-conformance.md`, not the `toml` crate, so it draws the
+same edges as every other front; the shared `resolution/rust-field-aware`
+fixture pins it, and it returns the same dependency names as the Go reference
+reader for all 1,650 tracked `Cargo.toml` files (checked 2026-11-01).
 
 Orphan-crate validation also consumes only caller-supplied inert records. It
 models source directories, Cargo manifests, recognized BUILD files, and the
