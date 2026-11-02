@@ -29,10 +29,10 @@ var resolutionExpectedReaders = map[string]string{
 	"gradle-java-field-aware": "GHY", "gradle-kotlin-field-aware": "GHY",
 	"ecosystem-scoped-aliases": "GY",
 	"elixir-field-aware":       "GH", "go-field-aware": "GH", "perl-field-aware": "GH",
-	"ruby-field-aware": "GH", "swift-field-aware": "GH", "typescript-field-aware": "GH",
+	"ruby-field-aware": "GH", "rust-field-aware": "GH", "swift-field-aware": "GH", "typescript-field-aware": "GH",
 	"elixir-program-package": "BR", "elixir-self-edge": "R",
 	"lua-cycle": "H", "lua-field-aware": "H", "lua-program-package": "H",
-	"python-diamond": "H", "python-field-aware": "H", "rust-field-aware": "H",
+	"python-diamond": "H", "python-field-aware": "H",
 	"lua-utf8": "GHLPBRST", "lua-invalid-utf8": "GHLPBRST",
 	"ocaml-field-aware": "G",
 }

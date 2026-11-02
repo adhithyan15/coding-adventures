@@ -4,9 +4,10 @@ package resolver
 // =======================================
 //
 // The dependency graph built by ResolveDependencies answers one question:
-// "what must be built before what?" For Rust that comes from the
-// `[dependencies]` table of each Cargo.toml. Cargo has a second table that
-// the graph deliberately leaves out:
+// "what must be built before what?" For Rust that comes from the tables
+// Cargo compiles into the crate: `[dependencies]`, `[build-dependencies]`
+// and their `[target.<cfg>.…]` forms (parseRustDeps in resolver.go). Cargo
+// has one more table that the graph deliberately leaves out:
 //
 //	[dev-dependencies]
 //	mosmodel-compiler  = { path = "../../rust/mosmodel-compiler" }
@@ -37,8 +38,8 @@ package resolver
 //     not the way a library is.
 //  2. Contract. The cross-implementation conformance fixture
 //     resolution/rust-field-aware pins the build graph's edges and says
-//     `[dev-dependencies]` contribute none. The graph stays what that
-//     contract describes.
+//     `[dev-dependencies]` contribute none (while build and target-specific
+//     dependencies do). The graph stays what that contract describes.
 //  3. Cycles. Cargo allows a dev-dependency cycle: B depends on A for real,
 //     and A dev-depends on B to test the two together. As graph edges that is
 //     A → B → A, IndependentGroups() reports a cycle, and the executor marks
@@ -103,12 +104,17 @@ package resolver
 // In the first two cases the chain continues: the target's own
 // [dependencies] and [build-dependencies] (target forms included) are linked
 // into the dependent's tests too, so they are followed transitively. A
-// package root is no exception, because the build graph records only a Rust
-// or WASM package's top-level [dependencies] — not its target-specific or
-// build dependencies, and not a Cargo.toml at the root of another language's
-// package (a native extension). Each crate's closure is cached
-// (crateClosure), and a cycle among these tables is refused, as Cargo
-// refuses it.
+// package root is no exception. The build graph does record a Rust or WASM
+// package's [dependencies], [build-dependencies] and target forms, so for a
+// root whose links all resolve to packages this walk merely re-derives what
+// the one-hop rule reaches through AffectedNodes. But the graph has no node
+// for a nested or orphan crate (which may be reachable only through a
+// dev-dependency), reads another language's package through that language's
+// manifest (so a native extension's root Cargo.toml adds no edge), and
+// resolves entries by Cargo name where triggers resolve by path. Following
+// every target covers all three without asking which one applies. Each
+// crate's closure is cached (crateClosure), and a cycle among these tables
+// is refused, as Cargo refuses it.
 //
 // `workspace = true` inherits the path from a workspace manifest this reader
 // does not follow, so it is refused; no repository harness uses it. So is
@@ -848,9 +854,10 @@ func (walk *triggerWalk) containing(real string) string {
 // follow resolves one path entry, written in the manifest at fromDir, into
 // out: the trigger for the target itself, then everything the target links.
 //
-//   - A discovered package root is a trigger. The chain does NOT end there:
-//     the build graph records only a Rust or WASM package's top-level
-//     [dependencies], so its target-specific and build dependencies, and any
+//   - A discovered package root is a trigger. The chain does NOT end there.
+//     The build graph records a Rust or WASM package's [dependencies],
+//     [build-dependencies] and target forms, but only by Cargo name and only
+//     between packages: what a nested or orphan crate links, and a
 //     Cargo.toml at the root of a package in another language (a Python, Lua
 //     or TypeScript native extension), would otherwise be invisible.
 //   - Any other crate — nested inside a package (the dependent included) or

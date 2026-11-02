@@ -6,6 +6,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strings"
 	"testing"
@@ -1282,6 +1283,109 @@ func TestParseRustDepsNoCargoToml(t *testing.T) {
 	deps := parseRustDeps(pkg, map[string]string{})
 	if len(deps) != 0 {
 		t.Fatalf("expected 0 deps, got %d", len(deps))
+	}
+}
+
+// TestRustResolutionConformanceFixture runs the Go reference reader against
+// the shared case every build-tool front implements: inline and sub-table
+// entries in [dependencies], [build-dependencies] and their target forms are
+// edges; dev-dependencies (every form), [patch], registry entries, features
+// and comments are not.
+func TestRustResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-rust-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
+	}
+}
+
+// TestCargoLinkDependencyNames pins each line rule of the Cargo contract in
+// code/specs/build-tool-conformance.md, one manifest shape per case.
+func TestCargoLinkDependencyNames(t *testing.T) {
+	cases := []struct {
+		name     string
+		manifest string
+		want     []string
+	}{
+		{"top-level inline", "[dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"build-dependencies", "[build-dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"legacy build_dependencies", "[build_dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"quoted cfg target", "[target.'cfg(any(target_os = \"linux\", windows))'.dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"bare triple target build", "[target.x86_64-pc-windows-msvc.build-dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"legacy target build", "[target.'cfg(unix)'.build_dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"spaced header segments", "[ target . 'cfg(unix)' . dependencies ]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"quoted table segment", "[\"dependencies\"]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"sub-table", "[dependencies.a]\nversion = \"1\"\npath = \"../a\"\n", []string{"a"}},
+		{"sub-table rename before path", "[build-dependencies.x]\npackage = \"A\"\npath = '../a'\n", []string{"a"}},
+		{"target sub-table, dotted quoted triple", "[target.\"thumbv8m.main-none-eabihf\".dependencies.a]\npath = \"../a\"\n", []string{"a"}},
+		{"quoted sub-table key", "[dependencies.\"a\"]\npath = \"../a\"\n", []string{"a"}},
+		{"sub-table without path", "[dependencies.a]\nversion = \"1\"\n", nil},
+		{"sub-table first path wins, ended by header", "[dependencies.a]\npath = \"../a\"\npath = \"../b\"\n[package]\nname = \"z\"\n", []string{"a"}},
+		{"sub-table non-string path", "[dependencies.a]\npath = 1\n", nil},
+		{"sub-table empty path", "[dependencies.a]\npath = \"\"\n", nil},
+		{"sub-table capitalised Path key", "[dependencies.a]\nPath = \"../a\"\n", nil},
+		{"rename", "[dependencies]\nx = { package = \"Logic-Gates\", path = \"../g\" }\n", []string{"logic-gates"}},
+		{"capitalised Package is not a rename", "[dependencies]\nx = { Package = \"y\", path = \"../g\" }\n", []string{"x"}},
+		{"capitalised Path is not a path", "[dependencies]\nx = { Path = \"../g\" }\n", nil},
+		{"version plus path with trailing comment", "[dependencies]\na = { version = \"1\", path = \"../a\" } # b = { path = \"../b\" }\n", []string{"a"}},
+		{"hash inside a string is not a comment", "[dependencies]\na = { path = \"../a#1\" }\n", []string{"a"}},
+		{"quoted entry key", "[dependencies]\n\"a\" = { path = \"../a\" }\n", []string{"a"}},
+		{"registry entry with path feature", "[dependencies]\na = { version = \"1\", features = [\"path\", \"x\"] }\nb = \"1\"\n", nil},
+		{"nested table path is not the entry's", "[dependencies]\na = { x = { path = \"../a\" } }\n", nil},
+		{"features array commas do not split fields", "[dependencies]\na = { features = [\"p\", \"q\"], path = \"../a\" }\n", []string{"a"}},
+		{"empty path", "[dependencies]\na = { path = \"\" }\n", nil},
+		{"array continued onto later lines", "[dependencies]\na = { path = \"../a\", features = [\n    \"x\", # [not-a-header]\n] }\nb = { path = \"../b\" }\n", []string{"a", "b"}},
+		{"continuation lines are not headers", "[dependencies]\na = { path = \"../a\", features = [\n[\"x\"]\n] }\nb = { path = \"../b\" }\n", []string{"a", "b"}},
+		{"braces continued onto later lines", "[dependencies]\na = { version = \"1\",\n  path = \"../a\" }\n", []string{"a"}},
+		{"file ends inside the value", "[dependencies]\na = { path = \"../a\", features = [\n  \"x\",\n", nil},
+		{"continued value must end with a brace", "[dependencies]\na = { path = \"../a\", features = [\n] } x\n", nil},
+		{"dotted key is out of scope", "[dependencies]\na.path = \"../a\"\n", nil},
+		{"commented-out entry", "[dependencies]\n# a = { path = \"../a\" }\n", nil},
+		{"dev-dependencies", "[dev-dependencies]\na = { path = \"../a\" }\n[dev_dependencies]\nb = { path = \"../b\" }\n", nil},
+		{"target dev-dependencies", "[target.'cfg(unix)'.dev-dependencies]\na = { path = \"../a\" }\n", nil},
+		{"dev-dependencies sub-table", "[dev-dependencies.a]\npath = \"../a\"\n", nil},
+		{"patch, replace, workspace", "[patch.crates-io]\na = { path = \"../a\" }\n[workspace.dependencies]\nb = { path = \"../b\" }\n[replace]\n\"c:1.0.0\" = { path = \"../c\" }\n", nil},
+		{"capitalised table name", "[Dependencies]\na = { path = \"../a\" }\n", nil},
+		{"features sub-table of a dependency", "[dependencies.a.features]\npath = \"../a\"\n", nil},
+		{"target table itself", "[target.'cfg(unix)']\na = { path = \"../a\" }\n", nil},
+		{"array of tables ends the table", "[dependencies]\n[[bin]]\na = { path = \"../a\" }\n", nil},
+		{"malformed header ends the table", "[dependencies]\n[a b]\nc = { path = \"../c\" }\n", nil},
+		{"unterminated quoted header ends the table", "[dependencies]\n[target.'cfg(unix).dependencies]\nc = { path = \"../c\" }\n", nil},
+		{"CRLF and BOM", "\ufeff[dependencies]\r\na = { path = \"../a\" }\r\n", []string{"a"}},
+		{"union across tables keeps duplicates for the caller", "[dependencies]\na = { path = \"../a\" }\n[build-dependencies]\na = { path = \"../a\" }\n", []string{"a", "a"}},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := cargoLinkDependencyNames(tc.manifest); !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("cargoLinkDependencyNames(%q) = %#v, want %#v", tc.manifest, got, tc.want)
+			}
+		})
+	}
+}
+
+// TestParseRustDepsCollapsesDuplicateLinks checks that a crate named by two
+// link tables yields one dependency, and that unknown names are dropped.
+func TestParseRustDepsCollapsesDuplicateLinks(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"app/Cargo.toml": "[package]\nname = \"app\"\n\n[dependencies]\nlib = { path = \"../lib\" }\n" +
+			"serde = { path = \"../vendored-serde\" }\n\n[build-dependencies]\nlib = { path = \"../lib\" }\n\n" +
+			"[target.'cfg(windows)'.dependencies.lib]\npath = \"../lib\"\n",
+		"lib/Cargo.toml": "[package]\nname = \"lib\"\n",
+	})
+	packages := []discovery.Package{
+		{Name: "rust/app", Path: filepath.Join(root, "app"), Language: "rust"},
+		{Name: "rust/lib", Path: filepath.Join(root, "lib"), Language: "rust"},
+	}
+	if got, want := parseRustDeps(packages[0], BuildKnownNames(packages)), []string{"rust/lib"}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("parseRustDeps = %v, want %v", got, want)
 	}
 }
 

@@ -515,14 +515,49 @@ func isDartPackageIdentifier(value string) bool {
 
 // parseRustDeps extracts internal dependencies from a Rust Cargo.toml file.
 //
-// Rust Cargo.toml declares workspace-local dependencies with path references:
+// # Which tables are build-graph edges
+//
+// A graph edge means "rebuild and re-test the dependent when this changes",
+// so it must cover everything Cargo compiles INTO the crate:
+//
+//	table                                  edge?  why
+//	-------------------------------------  -----  ------------------------------
+//	[dependencies]                         yes    linked into the library
+//	[build-dependencies]                   yes    compiled into build.rs, which
+//	                                              generates or configures it
+//	[target.<cfg>.dependencies]            yes    linked on that target; CI
+//	[target.<cfg>.build-dependencies]      yes    builds on several hosts, so
+//	                                              the union over every <cfg>
+//	[dev-dependencies] (every form)        no     tests only; Cargo allows dev
+//	                                              cycles (test_triggers.go)
+//	[patch], [replace], [workspace], ...   no     not a dependency of the crate
+//
+// `build_dependencies` is Cargo's legacy spelling of `build-dependencies`.
+// Until 2026-11-01 only the first row was read, and a change to, say,
+// paint-metal re-tested none of the barcode crates that link it on macOS.
+//
+// # Which entry shapes
+//
+// Both TOML spellings of a path dependency are read:
 //
 //	[dependencies]
-//	logic-gates = { path = "../logic-gates" }
+//	logic-gates = { path = "../logic-gates" }          ← inline table
+//	gates = { package = "logic-gates", path = "..." }  ← renamed: "logic-gates"
 //
-// We look for inline-table entries in the [dependencies] section with a
-// quoted `path` field and extract the crate name (the key before the first
-// `=`). We then look up that name in the known names mapping.
+//	[dependencies.logic-gates]                         ← sub-table
+//	path = "../logic-gates"
+//
+// The crate name (the `package` rename if present, else the key) is then
+// looked up in the known names mapping. The full line procedure, including
+// the shapes a line reader deliberately leaves out of scope (multi-line
+// strings and inline tables, dotted keys), is the cross-implementation
+// contract in code/specs/build-tool-conformance.md; every build-tool front
+// implements the same procedure, and the shared fixture
+// resolution/rust-field-aware pins it.
+//
+// This reader is lenient — an unreadable line contributes nothing — because
+// a dropped edge here is backstopped by the strict test-trigger reader for
+// the cases that matter most (test_triggers.go fails closed).
 func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	cargoToml := filepath.Join(pkg.Path, "Cargo.toml")
 	data, err := os.ReadFile(cargoToml)
@@ -530,109 +565,358 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 		return nil
 	}
 
-	text := string(data)
 	var internalDeps []string
-
-	// Scan for [dependencies] section and extract path-based deps.
-	inDeps := false
-	for _, line := range strings.Split(text, "\n") {
-		trimmed := strings.TrimSpace(line)
-
-		// Detect section headers like [dependencies] or [dev-dependencies]
-		if strings.HasPrefix(trimmed, "[") {
-			inDeps = trimmed == "[dependencies]"
-			continue
-		}
-
-		if !inDeps {
-			continue
-		}
-
-		// Look for lines like: logic-gates = { path = "../logic-gates" }
-		if strings.Contains(trimmed, "=") {
-			// Extract the crate name (everything before the first '=')
-			parts := strings.SplitN(trimmed, "=", 2)
-			crateName, ok := cargoPathDependencyName(parts[0], parts[1])
-			if !ok {
-				continue
-			}
-			if pkgName, ok := knownNames[crateName]; ok {
-				internalDeps = append(internalDeps, pkgName)
-			}
+	seen := make(map[string]bool)
+	for _, crateName := range cargoLinkDependencyNames(string(data)) {
+		if pkgName, ok := knownNames[crateName]; ok && !seen[pkgName] {
+			seen[pkgName] = true
+			internalDeps = append(internalDeps, pkgName)
 		}
 	}
-
 	return internalDeps
 }
 
-// cargoPathDependencyName returns the crate a Cargo dependency entry names
-// when the entry is a path dependency — the only kind that can point at a
-// repository package. The key is the crate name unless the inline table
-// renames it with `package = "..."`:
+// cargoLinkTableNames are the table names whose path entries link into, or
+// build, the crate. They are compared exactly: TOML keys are case-sensitive,
+// so `[Dependencies]` is some other table.
+var cargoLinkTableNames = map[string]bool{
+	"dependencies":       true,
+	"build-dependencies": true,
+	"build_dependencies": true,
+}
+
+// cargoLinkTableKind says how the lines under the current header are read.
+type cargoLinkTableKind int
+
+const (
+	cargoLinkTableIgnored cargoLinkTableKind = iota // not a link table: skip its lines
+	cargoLinkTableInline                            // [D] or [target.C.D]: one entry per line
+	cargoLinkTableSub                               // [D.N] or [target.C.D.N]: keys of entry N
+)
+
+// cargoLinkDependencyNames returns the lowercase crate names of every path
+// dependency in a manifest's link tables, in manifest order (duplicates
+// included; the caller collapses them).
+//
+// It is one pass over the lines with a three-state machine. Every header
+// line — even a malformed one, or an array of tables — ends the current
+// table, and so does the end of the file; a sub-table's entry is complete
+// only then, because its `path` and `package` keys may come in any order.
+//
+// One inline entry may cover several lines. TOML 1.0 lets an ARRAY inside an
+// inline table span lines, and the repository writes exactly that:
+//
+//	coding_adventures_vault_pm_cli = { path = "../vault-pm-cli", features = [
+//	    "crash-injection",
+//	] }
+//
+// So while the entry's value still has an unclosed `{` or `[`, the next
+// lines are joined onto it (and are not looked at as headers or entries).
+func cargoLinkDependencyNames(text string) []string {
+	text = strings.TrimPrefix(text, "\ufeff")
+	var names []string
+	lines := strings.Split(text, "\n")
+	cleanLine := func(raw string) string {
+		return strings.Trim(stripTomlLineComment(strings.TrimSuffix(raw, "\r")), " \t")
+	}
+
+	kind := cargoLinkTableIgnored
+	var subKey, subPath, subPackage string
+	finishTable := func() {
+		if kind == cargoLinkTableSub && subPath != "" {
+			name := subKey
+			if subPackage != "" {
+				name = subPackage
+			}
+			names = append(names, strings.ToLower(name))
+		}
+	}
+
+	for index := 0; index < len(lines); index++ {
+		line := cleanLine(lines[index])
+		if strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
+			finishTable()
+			kind, subKey = classifyCargoLinkHeader(line)
+			subPath, subPackage = "", ""
+			continue
+		}
+
+		equals := indexTomlOutsideStrings(line, '=')
+		if equals < 0 {
+			continue
+		}
+		switch kind {
+		case cargoLinkTableInline:
+			value := strings.Trim(line[equals+1:], " \t")
+			for strings.HasPrefix(value, "{") && tomlOpenBracketDepth(value) > 0 {
+				index++
+				if index >= len(lines) {
+					value = "" // the file ended inside the value: no entry
+					break
+				}
+				value += " " + cleanLine(lines[index])
+			}
+			if crateName, ok := cargoPathDependencyName(line[:equals], value); ok {
+				names = append(names, crateName)
+			}
+		case cargoLinkTableSub:
+			// Only the two bare, lowercase keys matter; the first occurrence
+			// of each wins. `version`, `features`, `optional` ... are ignored.
+			value, ok := tomlSingleString(line[equals+1:])
+			if !ok {
+				continue
+			}
+			switch strings.Trim(line[:equals], " \t") {
+			case "path":
+				if subPath == "" {
+					subPath = value
+				}
+			case "package":
+				if subPackage == "" {
+					subPackage = value
+				}
+			}
+		}
+	}
+	finishTable()
+	return names
+}
+
+// classifyCargoLinkHeader decides how to read the lines under a header line
+// (already comment-stripped and trimmed, starting with `[` and ending with
+// `]`). For a sub-table it also returns the dependency key N.
+//
+// The header is split into dotted-key segments at every `.` OUTSIDE a
+// string, and each segment is decoded to its value. That is what makes a
+// cfg header one segment however much punctuation it quotes:
+//
+//	[target.'cfg(any(target_os = "linux", windows))'.dependencies]
+//	 └─┬──┘ └──────────────────┬───────────────────┘ └────┬─────┘
+//	 target            C (one quoted segment)               D
+//
+//	[target."thumbv8m.main-none-eabihf".dependencies.pi]  → sub-table "pi"
+//	[target.x86_64-unknown-linux-gnu.build-dependencies]  → bare triple
+//	["dependencies"]                                      → same as [dependencies]
+//
+// Segment lists that are not exactly one of [D], [D.N], [target.C.D] or
+// [target.C.D.N] — and malformed headers — are ignored tables.
+func classifyCargoLinkHeader(line string) (cargoLinkTableKind, string) {
+	if strings.HasPrefix(line, "[[") {
+		return cargoLinkTableIgnored, "" // array of tables, e.g. [[bin]]
+	}
+	var segments []string
+	for _, raw := range splitTomlOutsideStrings(line[1:len(line)-1], '.', false) {
+		segment, ok := tomlKeySegment(raw)
+		if !ok {
+			return cargoLinkTableIgnored, ""
+		}
+		segments = append(segments, segment)
+	}
+	if len(segments) >= 3 && segments[0] == "target" {
+		segments = segments[2:] // drop `target` and the cfg, whatever it is
+	}
+	switch {
+	case len(segments) == 1 && cargoLinkTableNames[segments[0]]:
+		return cargoLinkTableInline, ""
+	case len(segments) == 2 && cargoLinkTableNames[segments[0]]:
+		return cargoLinkTableSub, segments[1]
+	}
+	return cargoLinkTableIgnored, ""
+}
+
+// cargoPathDependencyName returns the crate a one-line inline-table entry
+// `key = value` names when it is a path dependency — the only kind that can
+// point at a repository package. The key is the crate name unless the
+// inline table renames it with `package = "..."`:
 //
 //	logic-gates = { path = "../logic-gates" }                  → logic-gates
 //	gates = { package = "logic-gates", path = "../logic-gates" } → logic-gates
 //	serde = "1"                                                 → not a path dep
+//	x = { version = "1", features = ["path"] }                  → not a path dep
+//	foo.path = "../foo"                                         → dotted key: no
 //
-// Only parseRustDeps uses it: the build graph resolves Cargo dependencies by
-// name. Test triggers resolve path entries by directory instead (see
-// test_triggers.go), so no crate can capture another's triggers by name.
+// Fields are split at commas outside strings AND outside nested `[...]` or
+// `{...}`, so a `features` array cannot leak a fake field and a nested
+// table's `path` is not the entry's. Field keys must be exactly `path` and
+// `package` (Cargo ignores `Package`, so it must not count as a rename).
+//
+// The build graph resolves Cargo dependencies by this name. Test triggers
+// resolve path entries by directory instead (see test_triggers.go), so no
+// crate can capture another's triggers by name.
 func cargoPathDependencyName(key, value string) (string, bool) {
-	if cargoInlineStringValue(value, "path") == "" {
+	crateName, ok := tomlKeySegment(key)
+	if !ok {
 		return "", false
 	}
-	crateName := strings.TrimSpace(strings.ToLower(key))
-	if packageName := cargoInlineStringValue(value, "package"); packageName != "" {
-		crateName = strings.ToLower(packageName)
+	value = strings.Trim(value, " \t")
+	if len(value) < 2 || value[0] != '{' || value[len(value)-1] != '}' {
+		return "", false
 	}
-	return crateName, true
+	var path, packageName string
+	for _, field := range splitTomlOutsideStrings(value[1:len(value)-1], ',', true) {
+		equals := indexTomlOutsideStrings(field, '=')
+		if equals < 0 {
+			continue
+		}
+		fieldValue, ok := tomlSingleString(field[equals+1:])
+		if !ok {
+			continue
+		}
+		switch strings.Trim(field[:equals], " \t") {
+		case "path":
+			if path == "" {
+				path = fieldValue
+			}
+		case "package":
+			if packageName == "" {
+				packageName = fieldValue
+			}
+		}
+	}
+	if path == "" {
+		return "", false
+	}
+	if packageName != "" {
+		crateName = packageName
+	}
+	return strings.ToLower(crateName), true
 }
 
-// cargoInlineStringValue returns a quoted string field from a Cargo inline
-// table. Commas inside quoted strings stay within their field, so a package
-// rename cannot be confused with neighboring version or path metadata.
-func cargoInlineStringValue(value, target string) string {
-	for _, field := range splitCargoInlineFields(value) {
-		field = strings.TrimLeft(strings.TrimSpace(field), "{")
-		parts := strings.SplitN(field, "=", 2)
-		if len(parts) != 2 || strings.TrimSpace(strings.ToLower(parts[0])) != target {
-			continue
-		}
-		quoted := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(parts[1]), "}"))
-		if len(quoted) >= 2 && ((quoted[0] == '"' && quoted[len(quoted)-1] == '"') ||
-			(quoted[0] == '\'' && quoted[len(quoted)-1] == '\'')) {
-			return quoted[1 : len(quoted)-1]
+// tomlStringEnd returns the index just past the string that opens at
+// s[start] (a `"` or `'`), or -1 if it is not closed on this line. In a
+// basic "..." string a backslash makes the next byte part of the string, so
+// `\"` does not end it; a literal '...' string has no escapes. The bytes
+// compared are all ASCII, so scanning UTF-8 bytewise is exact.
+func tomlStringEnd(s string, start int) int {
+	quote := s[start]
+	for index := start + 1; index < len(s); index++ {
+		switch {
+		case quote == '"' && s[index] == '\\':
+			index++
+		case s[index] == quote:
+			return index + 1
 		}
 	}
-	return ""
+	return -1
 }
 
-func splitCargoInlineFields(value string) []string {
-	fields := make([]string, 0, 3)
-	start := 0
-	var quote byte
-	for index := 0; index < len(value); index++ {
-		character := value[index]
-		if quote != 0 {
-			if quote == '"' && character == '\\' {
-				index++
-				continue
+// stripTomlLineComment removes a TOML comment: everything from the first `#`
+// outside a string. An unclosed string runs to the end of the line.
+func stripTomlLineComment(line string) string {
+	for index := 0; index < len(line); index++ {
+		switch line[index] {
+		case '"', '\'':
+			end := tomlStringEnd(line, index)
+			if end < 0 {
+				return line
 			}
-			if character == quote {
-				quote = 0
+			index = end - 1
+		case '#':
+			return line[:index]
+		}
+	}
+	return line
+}
+
+// indexTomlOutsideStrings returns the index of the first target byte that
+// is outside every string, or -1.
+func indexTomlOutsideStrings(s string, target byte) int {
+	for index := 0; index < len(s); index++ {
+		switch s[index] {
+		case '"', '\'':
+			end := tomlStringEnd(s, index)
+			if end < 0 {
+				return -1
 			}
-			continue
+			index = end - 1
+		case target:
+			return index
 		}
-		if character == '"' || character == '\'' {
-			quote = character
-			continue
+	}
+	return -1
+}
+
+// tomlOpenBracketDepth counts the `{` and `[` outside strings in s that are
+// not closed again within s. Zero means the value is complete.
+func tomlOpenBracketDepth(s string) int {
+	depth := 0
+	for index := 0; index < len(s); index++ {
+		switch s[index] {
+		case '"', '\'':
+			end := tomlStringEnd(s, index)
+			if end < 0 {
+				return depth
+			}
+			index = end - 1
+		case '{', '[':
+			depth++
+		case '}', ']':
+			depth--
 		}
-		if character == ',' {
-			fields = append(fields, value[start:index])
+	}
+	return depth
+}
+
+// splitTomlOutsideStrings splits s at every separator outside strings. With
+// nested set, a separator inside `[...]` or `{...}` does not split either.
+func splitTomlOutsideStrings(s string, separator byte, nested bool) []string {
+	var parts []string
+	start, depth := 0, 0
+	for index := 0; index < len(s); index++ {
+		switch character := s[index]; {
+		case character == '"' || character == '\'':
+			end := tomlStringEnd(s, index)
+			if end < 0 {
+				return append(parts, s[start:])
+			}
+			index = end - 1
+		case nested && (character == '[' || character == '{'):
+			depth++
+		case nested && (character == ']' || character == '}'):
+			depth--
+		case character == separator && depth == 0:
+			parts = append(parts, s[start:index])
 			start = index + 1
 		}
 	}
-	return append(fields, value[start:])
+	return append(parts, s[start:])
+}
+
+// tomlKeySegment decodes one key or header segment: a bare key (ASCII
+// letters, digits, `_`, `-`), or exactly one complete string, whose value is
+// the text between its quotes taken verbatim (escapes are not decoded).
+// Anything else — empty, dotted, or text around a string — is not a key.
+func tomlKeySegment(raw string) (string, bool) {
+	segment := strings.Trim(raw, " \t")
+	if segment == "" {
+		return "", false
+	}
+	if segment[0] == '"' || segment[0] == '\'' {
+		if tomlStringEnd(segment, 0) != len(segment) {
+			return "", false
+		}
+		return segment[1 : len(segment)-1], true
+	}
+	for index := 0; index < len(segment); index++ {
+		character := segment[index]
+		if !(character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z' ||
+			character >= '0' && character <= '9' || character == '_' || character == '-') {
+			return "", false
+		}
+	}
+	return segment, true
+}
+
+// tomlSingleString returns the content of a value that is exactly one
+// complete, non-empty string (after trimming), as `path` and `package`
+// require. `"1"` is one; `"a" "b"`, `1`, `""` and `["x"]` are not.
+func tomlSingleString(raw string) (string, bool) {
+	value := strings.Trim(raw, " \t")
+	if value == "" || (value[0] != '"' && value[0] != '\'') || tomlStringEnd(value, 0) != len(value) {
+		return "", false
+	}
+	content := value[1 : len(value)-1]
+	return content, content != ""
 }
 
 func dependencyScope(language string) string {
