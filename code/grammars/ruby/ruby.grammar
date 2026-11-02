@@ -679,7 +679,7 @@ call_arg     = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
 # as the FIRST "argument", the exact bug this whole guard list exists to
 # prevent.)
 method_call_no_paren = ( NAME | !"super" KEYWORD )
-    !"<" !">" !"<=" !">=" !"!=" !"&&" !"||" !"<<" !"lbracket_line_start"
+    !"<" !">" !"<=" !">=" !"!=" !"&&" !"||" !"<<" !"[ line start"
     expression { COMMA expression } ;
 expression_stmt = expression ;
 # Phase 6i — comparison operators at the top of the precedence pyramid.
@@ -905,10 +905,15 @@ super_expr   = "super" [ super_args ] ;
 # statements.  This grammar ignores newlines, so it read `5[1].each …`, and
 # the C backend failed with `undefined method []`.  The Rust `ruby-lexer`
 # re-tags such a `[` (still an `LBRACKET` token) with the value
-# `lbracket_line_start`, and the lookahead stops an index suffix — or a
+# `[ line start`, and the lookahead stops an index suffix — or a
 # paren-less call's first argument — from starting there.  Lexers that do
 # not re-tag never produce that value, so for them nothing changes.
-index_suffix = !"lbracket_line_start" LBRACKET expression RBRACKET ;
+# A literal matches a token's VALUE, whatever its type, so the tag must be a
+# value no other token can carry: it has spaces, which no name, keyword,
+# number or operator does (and a `String` token is never matched by a
+# literal).  The first tag, `lbracket_line_start`, was an identifier, and
+# the lookahead refused `puts lbracket_line_start` (review of #18778).
+index_suffix = !"[ line start" LBRACKET expression RBRACKET ;
 factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution | index_suffix } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
 #

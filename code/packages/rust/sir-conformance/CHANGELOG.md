@@ -6,7 +6,12 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ### Added (#18778)
 
-- **`tests/ruby_sir_gaps.rs`.**  20 Ruby programs, each checked against
+- Review follow-up: `tests/ruby_sir_gaps.rs` gains `for`-body locals
+  visible after the loop, and ranges with non-literal and Float ends
+  (`1..2.5` runs 1 and 2).  A Hash's `each` with a one-parameter block is
+  NOT in the corpus: only the Ruby backend gives the block the
+  `[key, value]` pair; the others crash, and C prints nothing (#18798).
+- **`tests/ruby_sir_gaps.rs`.**  22 Ruby programs, each checked against
   real `ruby`, and 2 Python programs, checked against CPython, run on all
   six backends: `for` (arrays, `...`/`..` ranges, zero trips, in a method,
   nested loops sharing a variable, a body ending in an `if`), a `while`

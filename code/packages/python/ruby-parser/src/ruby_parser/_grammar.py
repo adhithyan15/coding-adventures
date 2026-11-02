@@ -1335,7 +1335,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='<<'),
                 ),
                 NegativeLookahead(element=
-                    Literal(value='lbracket_line_start'),
+                    Literal(value='[ line start'),
                 ),
                 RuleReference(name='expression', is_token=False),
                 Repetition(element=
@@ -1552,13 +1552,13 @@ PARSER_GRAMMAR = ParserGrammar(
             body=
             Sequence(elements=[
                 NegativeLookahead(element=
-                    Literal(value='lbracket_line_start'),
+                    Literal(value='[ line start'),
                 ),
                 RuleReference(name='LBRACKET', is_token=True),
                 RuleReference(name='expression', is_token=False),
                 RuleReference(name='RBRACKET', is_token=True),
             ]),
-            line_number=911,
+            line_number=916,
         ),
         GrammarRule(
             name='factor',
@@ -1624,7 +1624,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=912,
+            line_number=917,
         ),
         GrammarRule(
             name='lambda_literal',
@@ -1642,7 +1642,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='block', is_token=False),
             ]),
-            line_number=931,
+            line_number=936,
         ),
         GrammarRule(
             name='unary_minus',
@@ -1651,7 +1651,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='MINUS', is_token=True),
                 RuleReference(name='factor', is_token=False),
             ]),
-            line_number=932,
+            line_number=937,
         ),
         GrammarRule(
             name='defined_expression',
@@ -1660,7 +1660,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='defined?'),
                 RuleReference(name='factor', is_token=False),
             ]),
-            line_number=943,
+            line_number=948,
         ),
         GrammarRule(
             name='symbol_literal',
@@ -1675,7 +1675,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=950,
+            line_number=955,
         ),
         GrammarRule(
             name='array_literal',
@@ -1695,7 +1695,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='RBRACKET', is_token=True),
             ]),
-            line_number=951,
+            line_number=956,
         ),
         GrammarRule(
             name='hash_literal',
@@ -1715,7 +1715,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='RBRACE', is_token=True),
             ]),
-            line_number=952,
+            line_number=957,
         ),
         GrammarRule(
             name='hash_entry',
@@ -1736,7 +1736,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='expression', is_token=False),
                 ]),
             ]),
-            line_number=953,
+            line_number=958,
         ),
     ],
 )

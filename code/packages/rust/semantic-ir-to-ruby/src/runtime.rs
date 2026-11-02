@@ -103,7 +103,12 @@ end
 # output.)
 def sir_show_class_as(klass, shown)
   internal = Module.instance_method(:name).bind_call(klass)
-  %i[name to_s inspect].each { |m| klass.define_singleton_method(m) { shown } }
+  # A subclass inherits singleton methods, so each answers `shown` only for
+  # `klass` itself; on a subclass (`class Puppy(dog)`) it defers to the
+  # subclass's own name.
+  %i[name to_s inspect].each do |m|
+    klass.define_singleton_method(m) { equal?(klass) ? shown : super() }
+  end
   return if klass.instance_of?(Module) || internal.nil?
 
   lead = /\A#<#{Regexp.escape(internal)}(?=[:\s>])/
@@ -122,16 +127,24 @@ end
 #   an object whose class defines    (that method runs: `each` is a user
 #     `each` (`sir_um_each`)          method like any other)
 #   Array                            each element
-#   Hash                             each key and value, as two arguments
+#   Hash, one-parameter block        each `[key, value]` pair, as Ruby does
+#   Hash, any other block            each key and value, as two arguments
 #
 # Anything else raises `NoMethodError`, as Ruby would.  The block is a SIR
-# closure (a lambda), so it is called with `call`.
-def sir_each(recv, blk)
+# closure (a lambda that checks its count strictly), so it is called with
+# `call`; `arity` is the block's parameter count, from the emitter (`nil`
+# when it has no single count).
+def sir_each(recv, blk, arity = nil)
   return recv.public_send(:sir_um_each, blk) if recv.respond_to?(:sir_um_each)
 
   case recv
   when Array then recv.each { |x| blk.call(x) }
-  when Hash then recv.each { |k, v| blk.call(k, v) }
+  when Hash
+    if arity == 1
+      recv.each { |k, v| blk.call([k, v]) }
+    else
+      recv.each { |k, v| blk.call(k, v) }
+    end
   else raise NoMethodError, "undefined method 'each' for #{recv.inspect}"
   end
   recv

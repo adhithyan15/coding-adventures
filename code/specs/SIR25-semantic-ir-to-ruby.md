@@ -107,13 +107,19 @@ each `::` segment:
 |---|---|---|
 | `Dog`, `StandardError` | unchanged | already a constant |
 | `dog`, `__param_a` | `SirCldog`, `SirCl__param_a` | `l`: lower-case or `_` first |
-| `SirCldog` | `SirCvSirCldog` | `v`: an upper-case name that starts with the marker |
+| `SirPair`, `SirCldog`, `SIR_RULE` | `SirCvSirPair`, … | `v`: a reserved name, kept verbatim after the marker |
 
-The map is one-to-one (a name that passes through never starts with the `SirC`
-marker; the two renamed sets differ in the tag after it), and built-in classes
+Reserved names are the runtime's own namespace: `Sir` followed by an upper-case
+letter (`SirPair`, `SirNDArray`, `SirSymTerm`, and the `SirC` marker itself)
+and `SIR_` (`SIR_DISPLAY_RUBY`, …). A user `class SirPair` would otherwise
+replace the runtime's cons-pair struct through `const_set`.
+The map is one-to-one (a name that passes through is never reserved; every
+renamed one starts with the reserved `SirC` marker, and the two renamed sets
+differ in the tag after it), and built-in classes
 pass through unchanged, so a `rescue ZeroDivisionError` still names Ruby's own
 class. A renamed class or module is followed by `sir_show_class_as(<constant>,
-"<source name>")`, which gives it its source name back for `name`, `to_s`,
+"<source name>")`, which gives it — and only it, not its subclasses, which
+inherit singleton methods — its source name back for `name`, `to_s`,
 `inspect`, an instance's default `to_s`/`inspect` (a leading `#<SirCldog` only),
 an exception's default message, and Ruby's own messages that ask for the name
 (`undefined method 'x' for an instance of dog`). Ruby's report of an uncaught
@@ -134,10 +140,12 @@ method call** (the Collections batch) — rejected cleanly (the scan collects th
 module's registered method names, then validates each dispatch), never a runtime
 `NoMethodError`. The one exception is **`each` with a block** (#18778):
 `__method__(recv, "each", MakeClosure)` — how the Ruby frontend lowers
-`[1].each do |x| … end` — renders as the runtime's `sir_each(recv, block)`,
-which runs the receiver's own registered `each` (`sir_um_each`) when it has
-one, else Ruby's native `Array#each` (one argument per element) or `Hash#each`
-(key and value as two arguments), and returns the receiver. The method name is
+`[1].each do |x| … end` — renders as the runtime's `sir_each(recv, block,
+arity)` (`arity` is the block's parameter count, or `nil`), which runs the
+receiver's own registered `each` (`sir_um_each`) when it has one, else Ruby's
+native `Array#each` (one argument per element) or `Hash#each` (a
+one-parameter block gets the `[key, value]` pair, any other the key and value
+as two arguments), and returns the receiver. The method name is
 fixed in the runtime, never source-derived, so dispatch stays closed.
 
 The third OOP slice (0.13.0) adds instance **variables**: `@v = x` and `@v`
@@ -239,7 +247,7 @@ or temporaries:
 | `BuiltinCall("__new__", [name, args…])` | `<name>.new(<args>)` — native construction |
 | `BuiltinCall("__def_method__", [class, m, closure])` | `<class>.define_method(:sir_um_<m>, &closure)` — reserved-prefix registration |
 | `BuiltinCall("__method__", [recv, m, args…])` | `(<recv>).public_send(:sir_um_<m>, <args>)` — closed prefixed dispatch (anti-RCE) |
-| `BuiltinCall("__method__", [recv, "each", closure])` | `sir_each(<recv>, <closure>)` — the one built-in method (a user `each` still wins) |
+| `BuiltinCall("__method__", [recv, "each", closure])` | `sir_each(<recv>, <closure>, <arity>)` — the one built-in method (a user `each` still wins) |
 | `VarRef { Instance }` / `Assign { Instance }` | `@v` — native instance variable (name incl. `@`, verbatim, validated `@<identifier>`) |
 | `BuiltinCall("__self__", [])` | `self` — native |
 | `ClassDef { superclass: Some(S) }` | `Object.const_set(:<name>, Class.new(<S>))` — native inheritance (`S` a validated constant ref) |

@@ -1119,11 +1119,11 @@ impl RubyLexer {
     ///   operator or a keyword such as `in`, the statement is not over, so
     ///   a multi-line array (`[⏎  [1, 2],⏎  [3, 4]⏎]`) is unaffected.
     ///
-    /// Effect: the token's `value` becomes `lbracket_line_start`; its
+    /// Effect: the token's `value` becomes [`LINE_START_LBRACKET`]; its
     /// `type_` stays `LBracket`, so `array_literal` (which matches
     /// `LBRACKET` by type) still accepts it, while `index_suffix` and a
     /// paren-less call's first argument refuse that value (the grammar's
-    /// `!"lbracket_line_start"` lookaheads).
+    /// `!"[ line start"` lookaheads).
     fn tag_line_start_brackets(&mut self) {
         let mut prev: Option<usize> = None;
         let mut newline_since_prev = false;
@@ -1136,7 +1136,7 @@ impl RubyLexer {
                 TokenType::LBracket
                     if newline_since_prev && prev.is_some_and(|j| self.ends_expression(j)) =>
                 {
-                    self.tokens[i].value = "lbracket_line_start".to_string();
+                    self.tokens[i].value = LINE_START_LBRACKET.to_string();
                 }
                 _ => {}
             }
@@ -2212,6 +2212,15 @@ fn is_ruby_keyword(s: &str) -> bool {
 // Convenience entry points — preserve the prior public surface so
 // `ruby-parser` keeps working without changes.
 // ---------------------------------------------------------------------------
+
+/// #18778 — the value `tag_line_start_brackets` gives a `[` that opens a
+/// new statement (its type stays `LBracket`).  The grammar refuses it with
+/// the literal lookahead `!"[ line start"`.  A grammar literal matches a
+/// token's value whatever the token's type, so the tag must be a value no
+/// other token can carry: the spaces rule out every name, keyword, number
+/// and operator.  (The first tag, `lbracket_line_start`, was an identifier,
+/// so `puts lbracket_line_start` stopped parsing.)
+pub const LINE_START_LBRACKET: &str = "[ line start";
 
 /// Tokenize Ruby source (Phase-1 = Ruby 1.8 lexer).  Returns the
 /// EOF-terminated token list.  Diagnostics are dropped silently;
@@ -4623,7 +4632,7 @@ mod tests {
 
     // -----------------------------------------------------------------
     // #18778 — a `[` that opens a new statement is re-tagged
-    // `lbracket_line_start` (still an `LBracket` token), so the grammar
+    // `[ line start` (still an `LBracket` token), so the grammar
     // never reads it as an index into the line before.
     // -----------------------------------------------------------------
 
@@ -4645,7 +4654,7 @@ mod tests {
                 let toks = tokenize_ruby_for_version(src, era).unwrap();
                 assert!(
                     toks.iter().any(|t| t.type_ == TokenType::LBracket
-                        && t.value == "lbracket_line_start"),
+                        && t.value == LINE_START_LBRACKET),
                     "{src:?} in era {era}: {toks:?}"
                 );
             }

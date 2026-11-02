@@ -67,6 +67,25 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "def total(xs)\n  t = 0\n  for x in xs\n    t = t + x\n  end\n  t * 100 + x\nend\nputs total([1, 2, 3])\n",
         "603",
     ),
+    // A local first assigned in the body is a local of the scope around
+    // the loop (review of #18778): `y` keeps 20, and `w` exists, as nil,
+    // even though its loop never ran.
+    (
+        "rb_for_body_locals_stay_visible_after_the_loop",
+        "for x in [1, 2]\n  y = x * 10\nend\nputs y\nfor z in []\n  w = 1\nend\nif w == nil\n  puts \"none\"\nend\n",
+        "20\nnone",
+    ),
+    // `a..b` with an end that is not an integer literal counts while
+    // `i <= b` (review of #18778: the stop was `b + 1`, so `1..2.5` ran 3).
+    (
+        "rb_for_over_ranges_with_non_literal_ends",
+        "for i in 1..2.5\n  puts i\nend\nn = 3\nfor j in 1..n\n  puts j * 10\nend\nfor k in 0...n\n  puts k + 100\nend\n",
+        "1\n2\n10\n20\n30\n100\n101\n102",
+    ),
+    // (A Hash's `each` with a ONE-parameter block gets the `[key, value]`
+    // pair in Ruby.  The Ruby backend does that now (its own test), but the
+    // other five backends pass key and value — a crash on four and no
+    // output on C — so that program is tracked in #18798, not run here.)
     // A body that ends in an `if` (its `puts` must still run on C and
     // Ruby), and an inner loop that rebinds the outer loop's variable.
     (

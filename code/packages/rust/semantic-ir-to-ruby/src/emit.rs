@@ -741,17 +741,25 @@ fn is_valid_constant_path(name: &str) -> bool {
 //
 // [`ruby_const`] maps each `::` segment of a name to a valid Ruby constant:
 //
-// | SIR segment                       | Ruby constant      | why                         |
-// |-----------------------------------|--------------------|-----------------------------|
-// | `Dog`, `StandardError`            | unchanged          | already a constant          |
-// | `dog`, `__param_a`                | `SirCldog`, `SirCl__param_a` | `l`: lower-case or `_` start |
-// | `SirCldog` (a real Ruby class!)   | `SirCvSirCldog`    | `v`: kept verbatim after the marker |
+// | SIR segment                         | Ruby constant      | why                         |
+// |-------------------------------------|--------------------|-----------------------------|
+// | `Dog`, `StandardError`              | unchanged          | already a constant          |
+// | `dog`, `__param_a`                  | `SirCldog`, `SirCl__param_a` | `l`: lower-case or `_` start |
+// | `SirPair`, `SirCldog`, `SIR_RULE`   | `SirCvSirPair`, …  | `v`: a reserved name, kept verbatim after the marker |
+//
+// RESERVED names are the runtime's own: it defines `SirPair`, `SirNDArray`,
+// `SirSymTerm` and `SIR_*` constants (`SIR_DISPLAY_RUBY`, …) at the top
+// level, and a user `class SirPair` defined with `const_set` would replace
+// the runtime's struct (every cons pair would then be built from the user's
+// class).  So every name that starts with `Sir` and an upper-case letter, or
+// with `SIR_`, is renamed — which also covers `SirC…`, the marker itself.
 //
 // The map is one-to-one, so two different classes never share a constant:
 //
-// - a segment that passes through never starts with [`CONST_MARKER`];
-// - every renamed segment does, followed by a tag (`l` or `v`) that says
-//   which rule renamed it, so the two renamed sets cannot meet either;
+// - a segment that passes through is never reserved;
+// - every renamed segment starts with [`CONST_MARKER`] (`SirC`), which is
+//   reserved, followed by a tag (`l` or `v`) that says which rule renamed
+//   it, so the two renamed sets cannot meet either;
 // - within one rule the original spelling follows the tag unchanged.
 //
 // Every position that emits a class or constant name goes through it: the
@@ -767,15 +775,23 @@ fn is_valid_constant_path(name: &str) -> bool {
 // messages that ask for the name (`undefined method 'x' for an instance of
 // dog`).
 
-/// The reserved prefix of every renamed constant segment (see [`ruby_const`]).
+/// The prefix of every renamed constant segment (see [`ruby_const`]); it is
+/// itself reserved (`Sir` + an upper-case letter).
 const CONST_MARKER: &str = "SirC";
+
+/// Whether a constant segment is in the runtime's reserved namespace:
+/// `Sir` followed by an upper-case letter (`SirPair`, `SirC…`), or `SIR_`.
+fn is_reserved_const(seg: &str) -> bool {
+    seg.starts_with("SIR_")
+        || (seg.starts_with("Sir") && seg[3..].starts_with(|c: char| c.is_ascii_uppercase()))
+}
 
 /// One `::`-free segment of a class/constant name, as a Ruby constant.  See
 /// the table above.  The caller has already checked (in the scan) that the
 /// segment is an identifier, so no character needs escaping here.
 fn ruby_const_segment(seg: &str) -> String {
     let upper = seg.starts_with(|c: char| c.is_ascii_uppercase());
-    if upper && !seg.starts_with(CONST_MARKER) {
+    if upper && !is_reserved_const(seg) {
         seg.to_string()
     } else if upper {
         format!("{CONST_MARKER}v{seg}")
@@ -2166,7 +2182,19 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // #18778 — `recv.each { |x| … }` through the runtime's `sir_each`,
         // which runs a user class's own `each` when the receiver has one and
         // Ruby's native `Array#each` / `Hash#each` otherwise.
-        "__method__" if is_each_with_block(args) => format!("sir_each({}, {})", a[0], a[2]),
+        // The block's own parameter count goes along (or `nil` when it has
+        // no single count): Ruby gives a one-parameter block over a Hash the
+        // `[key, value]` pair, a two-parameter block the key and the value.
+        "__method__" if is_each_with_block(args) => {
+            let arity = match &args[2] {
+                Expr::MakeClosure { fn_name, .. } => {
+                    STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+                }
+                _ => None,
+            };
+            let arity = arity.map_or_else(|| "nil".to_string(), |n| n.to_string());
+            format!("sir_each({}, {}, {arity})", a[0], a[2])
+        }
         "__method__" => {
             let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
             let mut parts = vec![sym];
@@ -2242,7 +2270,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
 /// Every other built-in method is still refused (the Collections batch), but
 /// `each` with a block is how Ruby iterates, and the Ruby frontend lowers
 /// `[1].each do |x| … end` to exactly this shape.  The call renders as
-/// `sir_each(recv, block)` (see the runtime), never as a `public_send` of a
+/// `sir_each(recv, block, arity)` (see the runtime), never as a `public_send` of a
 /// source-derived name, so dispatch stays closed.
 fn is_each_with_block(args: &[Expr]) -> bool {
     matches!(args.get(1), Some(Expr::StrLit { value, .. }) if value == "each")

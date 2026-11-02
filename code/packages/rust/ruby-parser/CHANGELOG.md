@@ -4,6 +4,14 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
 
 ## Unreleased — `for`, `rescue => e`, `f() + f`, line-start `[` (#18778)
 
+### Changed (review of #18778)
+
+- Regenerated for the tag's new value, `[ line start`, which no Ruby name
+  can spell.  Test `test_parse_locals_spelled_like_the_lexer_tags`: a local
+  named `lbracket_line_start` (refused by the first tag) and one named
+  `if_modifier` (only ever matched positively, after a complete
+  expression, so it was never affected) both parse.
+
 ### Changed
 
 - `src/_grammar.rs` (the `legacy` module) regenerated from
@@ -15,7 +23,7 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
     not be followed by a binary operator, so `f() + f` parses as one
     expression at the start of a statement and inside a block body;
   - `index_suffix` and `method_call_no_paren`'s first argument refuse a
-    `[` that `ruby-lexer` re-tagged `lbracket_line_start`.
+    `[` that `ruby-lexer` re-tagged `[ line start`.
 - Tests: `test_parse_for_loop_with_and_without_do`,
   `test_parse_rescue_arrow_without_an_exception_class`,
   `test_parse_call_plus_name_as_a_statement`,

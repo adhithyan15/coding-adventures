@@ -3564,6 +3564,22 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_locals_spelled_like_the_lexer_tags() {
+        // The line-start tag is `[ line start`, a value no name can spell.
+        // The first tag, `lbracket_line_start`, was an identifier, so the
+        // lookahead refused `puts lbracket_line_start` (review of #18778).
+        // `if_modifier` is only ever matched positively, after a complete
+        // expression, so a local of that name is unaffected too.
+        let ast = parse_ruby(
+            "lbracket_line_start = 1\nputs lbracket_line_start\nif_modifier = 2\nputs if_modifier\nx = a[if_modifier]\n",
+        );
+        assert_eq!(
+            statement_rules(&ast),
+            vec!["assignment", "method_call_no_paren", "assignment", "method_call_no_paren", "assignment"]
+        );
+    }
+
+    #[test]
     fn test_parse_begin_multi_type_rescue() {
         // Phase 16b — `rescue Foo, Bar => e` parses with an
         // `exception_list` carrying BOTH class Name tokens.

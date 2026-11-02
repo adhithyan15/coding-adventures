@@ -9816,6 +9816,58 @@ b = "y"
         assert_valid(&m);
     }
 
+    /// Review of #18778: locals first assigned in a `for` body are locals of
+    /// the scope around the loop, as in Ruby, so they are declared (nil)
+    /// before it and assigned inside it; a read after the loop sees them.
+    #[test]
+    fn for_body_locals_are_declared_before_the_loop() {
+        let m = lower("for x in [1, 2]\n  y = x * 10\n  a, b = 1, 2\nend\nputs y + a\n");
+        let body = main_body(&m);
+        let decls: Vec<&str> = body.stmts.iter().take(4).filter_map(binding_name).collect();
+        assert_eq!(decls, vec!["x", "y", "a", "b"]);
+        let loop_body = body
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ForEach { body, .. } => Some(body),
+                _ => None,
+            })
+            .expect("a ForEach");
+        assert!(
+            loop_body.stmts.iter().skip(1).all(|s| matches!(s, Stmt::Assign { .. })),
+            "every body assignment stores into an outer local: {:?}",
+            loop_body.stmts
+        );
+        assert_valid(&m);
+    }
+
+    /// Review of #18778: `a..b` counts with `<=` unless `b` is an integer
+    /// literal.  The stop used to be `b + 1` for any `b`, so `for i in
+    /// 1..2.5` ran 1, 2 and 3.
+    #[test]
+    fn for_over_an_inclusive_range_with_a_non_integer_end_counts_with_le() {
+        let m = lower("n = 2.5\nfor i in 1..n\n  puts i\nend\nfor j in 1..2.5\n  puts j\nend\n");
+        let body = main_body(&m);
+        let whiles: Vec<&Stmt> = body.stmts.iter().filter(|s| matches!(s, Stmt::While { .. })).collect();
+        assert_eq!(whiles.len(), 2, "got {:?}", body.stmts);
+        for w in whiles {
+            let Stmt::While { cond, body, .. } = w else { unreachable!() };
+            assert!(matches!(cond, Expr::BuiltinCall { name, .. } if name == "<="), "got {cond:?}");
+            // `i = counter` first, the counter's increment last.
+            assert!(matches!(body.stmts.last(), Some(Stmt::Assign { value: Expr::BuiltinCall { name, .. }, .. }) if name == "+"));
+        }
+        assert!(!body.stmts.iter().any(|s| matches!(s, Stmt::ForRange { .. })));
+        assert_valid(&m);
+    }
+
+    /// Ruby cannot iterate a range that starts at a Float; that is refused.
+    #[test]
+    fn for_over_a_range_that_starts_at_a_float_is_refused() {
+        let err = compile_source("for i in 1.5..3\n  puts i\nend\n", "test")
+            .expect_err("refused");
+        assert!(err.message.contains("Float"), "got {err}");
+    }
+
     /// The fresh iteration variable never takes a spelling the program
     /// already uses.
     #[test]

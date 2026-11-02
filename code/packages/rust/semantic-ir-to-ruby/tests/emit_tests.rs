@@ -2783,7 +2783,8 @@ fn each_with_a_block_runs_over_an_array_and_a_hash() {
     let rb = ruby_to_ruby(
         "xs = [1, 2]\nxs.each do |x|\n  puts x * 10\nend\n{a: 3}.each { |k, v| puts v }\n",
     );
-    assert!(rb.contains("sir_each(xs, ->(*sir_args)"), "got:\n{rb}");
+    assert!(rb.contains("sir_each(xs, ->(*sir_args) { sir_fn___block_0(*sir_args) }, 1)"), "got:\n{rb}");
+    assert!(rb.contains("sir_each({:a => 3}, ->(*sir_args) { sir_fn___block_1(*sir_args) }, 2)"), "got:\n{rb}");
     assert!(!rb.contains("(xs).public_send"), "got:\n{rb}");
     match run_ruby(&rb) {
         Some(out) => assert_eq!(out, "10\n20\n3"),
@@ -2812,5 +2813,80 @@ fn other_built_in_methods_are_still_refused() {
         let module = ruby_to_semantic_ir::compile_source(src, "prog").expect("ruby lowering");
         let err = compile(&module).expect_err(src);
         assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature, "{src:?}");
+    }
+}
+
+/// Review of #18778: a renamed class's display name is its own, not its
+/// subclasses'.  `name`/`to_s`/`inspect` are singleton methods, which a
+/// subclass inherits, so `Puppy.name` read `"dog"`; and an exception
+/// subclass of a renamed `my_err` reported `my_err`.
+#[test]
+fn a_subclass_of_a_renamed_class_keeps_its_own_name() {
+    let mut m = class_module(vec![
+        classdef("dog", None, vec![]),
+        classdef("Puppy", Some("dog"), vec![]),
+        classdef("pup", Some("dog"), vec![]),
+        classdef("my_err", Some("StandardError"), vec![]),
+        classdef("SubErr", Some("my_err"), vec![]),
+        puts(const_ref("dog")),
+        puts(const_ref("Puppy")),
+        puts(const_ref("pup")),
+        trycatch(
+            vec![raise_(Some(new_expr("SubErr", vec![])))],
+            vec![rescue_clause(vec!["my_err"], Some("e"), vec![puts(local("e"))])],
+            None,
+        ),
+        puts(const_ref("SubErr")),
+    ]);
+    m.manifest.add(Feature::Exceptions);
+    let rb = compile(&m).expect("subclasses of renamed classes compile").source;
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "dog\nPuppy\npup\nSubErr\nSubErr"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// Review of #18778: the runtime's own top-level constants (`SirPair`,
+/// `SirNDArray`, `SirSymTerm`, `SIR_*`) are reserved, so a user class
+/// spelled like one is renamed instead of replacing the runtime's struct.
+/// Before, `class SirPair` replaced the cons-pair struct, and the next
+/// `cons` failed (`wrong number of arguments`).
+#[test]
+fn a_user_class_spelled_like_a_runtime_constant_does_not_replace_it() {
+    let cons = Expr::BuiltinCall {
+        name: "cons".into(),
+        args: vec![ilit(1), Expr::NilLit { span: s2() }],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let mut m = class_module(vec![
+        classdef("SirPair", None, vec![]),
+        classdef("SIR_DISPLAY_RUBY", None, vec![]),
+        let_bind("p", new_expr("SirPair", vec![])),
+        puts(const_ref("SirPair")),
+        puts(cons),
+    ]);
+    m.manifest.add(Feature::Pairs);
+    let rb = compile(&m).expect("compiles").source;
+    assert!(rb.contains("Object.const_set(:SirCvSirPair, Class.new)"), "got:\n{rb}");
+    assert!(rb.contains("Object.const_set(:SirCvSIR_DISPLAY_RUBY, Class.new)"), "got:\n{rb}");
+    assert!(!rb.contains("const_set(:SirPair"), "got:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "SirPair\n(1)"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// Review of #18778: Ruby gives a one-parameter block over a Hash the
+/// `[key, value]` pair.  `sir_each` called every block with two arguments,
+/// so `{a: 1}.each { |pair| … }` raised ArgumentError (the block is a
+/// strict lambda).
+#[test]
+fn each_over_a_hash_gives_a_one_parameter_block_the_pair() {
+    let rb = ruby_to_ruby("h = {a: 1, b: 2}\nh.each do |pair|\n  for x in pair\n    puts x\n  end\nend\n");
+    assert!(rb.contains("sir_each(h, ->(*sir_args) { sir_fn___block_0(*sir_args) }, 1)"), "got:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "a\n1\nb\n2"),
+        None => eprintln!("skip: no ruby on PATH"),
     }
 }

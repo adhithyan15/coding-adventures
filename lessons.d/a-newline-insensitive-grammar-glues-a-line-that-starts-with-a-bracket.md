@@ -21,7 +21,7 @@ same gluing still happens for a line that starts with `-` or `+`
 **Fix.** Ruby ends a statement at a newline that follows a complete
 expression.  `ruby-lexer`'s `tag_line_start_brackets` re-tags such a `[`
 (`Newline` token(s) between it and an expression-ending token) with the
-value `lbracket_line_start`, keeping the `LBracket` type, and the grammar's
+value `[ line start`, keeping the `LBracket` type, and the grammar's
 `index_suffix` and paren-less-call argument refuse that value with a
 negative lookahead.  `array_literal` matches by type, so it still accepts the
 token.  The grammar is shared by six languages' parsers, and only Rust's

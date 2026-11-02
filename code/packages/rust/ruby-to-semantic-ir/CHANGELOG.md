@@ -4,6 +4,23 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ## Unreleased — Ruby-on-SIR gaps (#18778)
 
+### Fixed (review of #18778)
+
+- **`for i in 1..2.5` ran 1, 2 and 3.**  An inclusive range's stop was
+  `b + 1` for any `b`.  It is now `b + 1` only for an integer-literal `b`;
+  `a..b` with any other `b` lowers to a `While` that counts while
+  `i <= b` (start and end evaluated once), and a range that starts at a
+  Float literal is refused, as Ruby cannot iterate from a Float.  Tests
+  `for_over_an_inclusive_range_with_a_non_integer_end_counts_with_le`,
+  `for_over_a_range_that_starts_at_a_float_is_refused`.
+- **Locals first assigned in a `for` body now stay visible after the
+  loop**, as in Ruby: `collect_loop_assigned_names` finds them (stopping
+  at blocks, lambdas, `def`s, classes and modules) and they are declared
+  `nil` before the loop.  The grammar comment already said so; the code
+  had restored the locals instead.  A `rescue => e` binding still stays
+  inside its clause (#18798).  Test
+  `for_body_locals_are_declared_before_the_loop`.
+
 ### Added
 
 - **`for x in xs [do] … end`** (`lower_for_statement`).  A `for` opens no

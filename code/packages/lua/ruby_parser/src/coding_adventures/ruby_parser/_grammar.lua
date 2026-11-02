@@ -912,7 +912,7 @@ local function parser_grammar()
         { type="negative_lookahead", element={ type="literal", value="&&" } },
         { type="negative_lookahead", element={ type="literal", value="||" } },
         { type="negative_lookahead", element={ type="literal", value="<<" } },
-        { type="negative_lookahead", element={ type="literal", value="lbracket_line_start" } },
+        { type="negative_lookahead", element={ type="literal", value="[ line start" } },
         { type="rule_reference", name="expression", is_token=false },
         { type="repetition", element={ type="sequence", elements={
             { type="rule_reference", name="COMMA", is_token=true },
@@ -1074,12 +1074,12 @@ local function parser_grammar()
     {
       name="index_suffix",
       body={ type="sequence", elements={
-        { type="negative_lookahead", element={ type="literal", value="lbracket_line_start" } },
+        { type="negative_lookahead", element={ type="literal", value="[ line start" } },
         { type="rule_reference", name="LBRACKET", is_token=true },
         { type="rule_reference", name="expression", is_token=false },
         { type="rule_reference", name="RBRACKET", is_token=true },
       } },
-      line_number=911,
+      line_number=916,
     },
     {
       name="factor",
@@ -1120,7 +1120,7 @@ local function parser_grammar()
             { type="rule_reference", name="index_suffix", is_token=false },
           } } },
       } },
-      line_number=912,
+      line_number=917,
     },
     {
       name="lambda_literal",
@@ -1133,7 +1133,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="block", is_token=false },
       } },
-      line_number=931,
+      line_number=936,
     },
     {
       name="unary_minus",
@@ -1141,7 +1141,7 @@ local function parser_grammar()
         { type="rule_reference", name="MINUS", is_token=true },
         { type="rule_reference", name="factor", is_token=false },
       } },
-      line_number=932,
+      line_number=937,
     },
     {
       name="defined_expression",
@@ -1149,7 +1149,7 @@ local function parser_grammar()
         { type="literal", value="defined?" },
         { type="rule_reference", name="factor", is_token=false },
       } },
-      line_number=943,
+      line_number=948,
     },
     {
       name="symbol_literal",
@@ -1161,7 +1161,7 @@ local function parser_grammar()
             { type="rule_reference", name="STRING", is_token=true },
           } } },
       } },
-      line_number=950,
+      line_number=955,
     },
     {
       name="array_literal",
@@ -1176,7 +1176,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RBRACKET", is_token=true },
       } },
-      line_number=951,
+      line_number=956,
     },
     {
       name="hash_literal",
@@ -1191,7 +1191,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RBRACE", is_token=true },
       } },
-      line_number=952,
+      line_number=957,
     },
     {
       name="hash_entry",
@@ -1211,7 +1211,7 @@ local function parser_grammar()
           { type="rule_reference", name="expression", is_token=false },
         } },
       } },
-      line_number=953,
+      line_number=958,
     },
   }
   g.version = 0

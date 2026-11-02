@@ -2151,7 +2151,7 @@ mod legacy {
                     GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"&&"#.to_string() }) },
                     GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"||"#.to_string() }) },
                     GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"<<"#.to_string() }) },
-                    GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"lbracket_line_start"#.to_string() }) },
+                    GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"[ line start"#.to_string() }) },
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                     GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
                             GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
@@ -2313,12 +2313,12 @@ mod legacy {
             GrammarRule {
                 name: r#"index_suffix"#.to_string(),
                 body: GrammarElement::Sequence { elements: vec![
-                    GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"lbracket_line_start"#.to_string() }) },
+                    GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"[ line start"#.to_string() }) },
                     GrammarElement::TokenReference { name: r#"LBRACKET"#.to_string() },
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                     GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
                 ] },
-                line_number: 911,
+                line_number: 916,
             },
             GrammarRule {
                 name: r#"factor"#.to_string(),
@@ -2359,7 +2359,7 @@ mod legacy {
                             GrammarElement::RuleReference { name: r#"index_suffix"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 912,
+                line_number: 917,
             },
             GrammarRule {
                 name: r#"lambda_literal"#.to_string(),
@@ -2372,7 +2372,7 @@ mod legacy {
                         ] }) },
                     GrammarElement::RuleReference { name: r#"block"#.to_string() },
                 ] },
-                line_number: 931,
+                line_number: 936,
             },
             GrammarRule {
                 name: r#"unary_minus"#.to_string(),
@@ -2380,7 +2380,7 @@ mod legacy {
                     GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
                     GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                 ] },
-                line_number: 932,
+                line_number: 937,
             },
             GrammarRule {
                 name: r#"defined_expression"#.to_string(),
@@ -2388,7 +2388,7 @@ mod legacy {
                     GrammarElement::Literal { value: r#"defined?"#.to_string() },
                     GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                 ] },
-                line_number: 943,
+                line_number: 948,
             },
             GrammarRule {
                 name: r#"symbol_literal"#.to_string(),
@@ -2400,7 +2400,7 @@ mod legacy {
                             GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 950,
+                line_number: 955,
             },
             GrammarRule {
                 name: r#"array_literal"#.to_string(),
@@ -2415,7 +2415,7 @@ mod legacy {
                         ] }) },
                     GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
                 ] },
-                line_number: 951,
+                line_number: 956,
             },
             GrammarRule {
                 name: r#"hash_literal"#.to_string(),
@@ -2430,7 +2430,7 @@ mod legacy {
                         ] }) },
                     GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
                 ] },
-                line_number: 952,
+                line_number: 957,
             },
             GrammarRule {
                 name: r#"hash_entry"#.to_string(),
@@ -2450,7 +2450,7 @@ mod legacy {
                         GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                     ] },
                 ] },
-                line_number: 953,
+                line_number: 958,
             },
         ],
             version: 1,

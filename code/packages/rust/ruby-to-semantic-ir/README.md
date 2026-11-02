@@ -86,10 +86,13 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
 - **`for x in xs [do] … end` (#18778).**  No new scope, as in Ruby: `x` is a
   local of the enclosing scope (declared `nil` first if new) and keeps the
   last item.  The SIR loop iterates a fresh `__for_<n>` and stores it into
-  `x` first thing in the body.  A literal `a...b` / `a..b` becomes a
-  `ForRange`, anything else a `ForEach`.  Locals first assigned in the body
-  stay inside it (as for `while`); a parameter as the loop variable is
-  refused.
+  `x` first thing in the body.  Locals first assigned in the body are
+  locals of the enclosing scope too, declared `nil` before the loop, so they
+  are still there after it.  `a...b` and `a..b` with an integer-literal `b`
+  become a `ForRange`; `a..b` with any other `b` counts with `<=` in a
+  `While` (`b + 1` is wrong for `1..2.5`); a Float-literal start is refused,
+  as Ruby cannot iterate from a Float; anything else is a `ForEach`.  A
+  parameter as the loop variable is refused.
 - **`rescue => e` (#18778)** binds `e` with no class list (a catch-all).
 - **Loop bodies** are statements only: a trailing `puts` in a `while` or
   `for` body is an `ExprStmt`, never the body's value (the C and Ruby
@@ -143,8 +146,9 @@ function).
 
 - Control flow beyond v0 and refinements.
 - `for a, b in pairs` (one loop variable only), the value of a `for` loop
-  (a method that ends in one returns `nil`, not the iterable), and locals a
-  `for`/`while` body introduces staying visible after the loop.
+  (a method that ends in one returns `nil`, not the iterable), locals a
+  `while` body introduces staying visible after the loop, and a `rescue =>
+  e` binding staying visible after its clause (#18798).
 - A block that assigns an outer local (`t = 0; xs.each { |x| t = t + x }`):
   the block's `t` is a new block local, so the read of `t` is refused.
 - A lambda body that reads an outer local (lambdas capture nothing yet), and

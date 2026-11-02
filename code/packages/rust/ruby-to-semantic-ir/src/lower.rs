@@ -220,6 +220,85 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     })
 }
 
+/// #18778 (review) — is `name` a plain local-variable spelling (not a
+/// constant, `@ivar`, `@@cvar` or `$global`)?
+fn is_plain_local_name(name: &str) -> bool {
+    !is_constant_name(name)
+        && !is_instance_var_name(name)
+        && !is_class_var_name(name)
+        && !name.starts_with('$')
+}
+
+/// #18778 (review) — append to `out`, in source order and without
+/// duplicates, every local that a `for` body's statement `node` assigns:
+/// the targets of `x = …`, `x += …`, `a, b = …`, `… => x` and a nested
+/// `for x in …`.
+///
+/// A `rescue … => x` binding is NOT collected: in SIR it is a binding of
+/// the clause alone (every other backend emits a catch parameter), so a
+/// declaration around it would not receive the exception on those
+/// backends.  That binding staying inside its clause is a known divergence
+/// from Ruby (#18798).
+///
+/// These are the names Ruby makes locals of the scope AROUND the loop (a
+/// `for`, `while`, `if` or `begin` opens no scope).  The walk stops at the
+/// constructs that DO open one — a block, a lambda, a `def`, a `class` or a
+/// `module` — whose assignments stay inside them.
+fn collect_loop_assigned_names(node: &GrammarASTNode, out: &mut Vec<String>) {
+    let push = |name: &str, out: &mut Vec<String>| {
+        if is_plain_local_name(name) && !out.iter().any(|n| n == name) {
+            out.push(name.to_string());
+        }
+    };
+    let names = |n: &GrammarASTNode| -> Vec<String> {
+        n.children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                _ => None,
+            })
+            .collect()
+    };
+    match node.rule_name.as_str() {
+        "do_block" | "brace_block" | "lambda_literal" | "def_statement"
+        | "endless_def_statement" | "class_statement" | "module_statement" => return,
+        // `x = …` / `x += …`: the target is the first token.
+        "assignment" => {
+            if let Some(ASTNodeOrToken::Token(t)) = node.children.first() {
+                if t.type_ == TokenType::Name {
+                    push(&t.value, out);
+                }
+            }
+        }
+        // `a, *b = …`: each target is an `mlhs_target`'s name.
+        "mlhs_target" => {
+            for n in names(node) {
+                push(&n, out);
+            }
+        }
+        // `… => x`: the target is the last token.
+        "rightward_assignment" => {
+            if let Some(ASTNodeOrToken::Token(t)) = node.children.last() {
+                if t.type_ == TokenType::Name {
+                    push(&t.value, out);
+                }
+            }
+        }
+        // `for x in …`: the first name token.
+        "for_statement" => {
+            if let Some(n) = names(node).first() {
+                push(n, out);
+            }
+        }
+        _ => {}
+    }
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            collect_loop_assigned_names(n, out);
+        }
+    }
+}
+
 /// #18778 — is this `modifier_statement` an `if`/`unless` modifier (as
 /// opposed to a `while`/`until` loop modifier)?  The lexer re-tags the
 /// keyword, so the tag is a direct token child.
@@ -1965,35 +2044,44 @@ impl Lowerer {
 
     /// Lower a `for_statement` (`for NAME in expression [do] … end`).
     ///
-    /// A Ruby `for` is NOT a block: it opens no scope.  The loop variable
-    /// is an ordinary local of the enclosing scope, so it keeps the last
-    /// item after the loop, and is `nil` if the loop never ran:
+    /// A Ruby `for` is NOT a block: it opens no scope.  The loop variable,
+    /// and every local first assigned in the body, are ordinary locals of
+    /// the enclosing scope: they keep their last value after the loop, and
+    /// are `nil` if the loop never ran (Ruby declares a local when it
+    /// *parses* the assignment):
     ///
     /// ```ruby
-    /// for x in [1, 2]; end
-    /// p x                     # 2
-    /// for y in []; end
-    /// p y                     # nil
+    /// for x in [1, 2]; y = x * 10; end
+    /// p x, y                  # 2, 20
+    /// for z in []; w = 1; end
+    /// p z, w                  # nil, nil
     /// ```
     ///
-    /// A SIR `ForEach`/`ForRange` declares its variable fresh, scoped to
-    /// the body.  So the loop iterates a fresh `__for_<n>` instead, and the
-    /// body starts by storing it into the real variable, which is declared
-    /// `nil` before the loop when nothing declared it yet:
+    /// A SIR `ForEach`/`ForRange`/`While` body is its own scope.  So every
+    /// such name that is new here is declared `nil` BEFORE the loop (see
+    /// [`collect_loop_assigned_names`]), which makes each assignment in the
+    /// body an `Assign` to the outer local; and the loop iterates a fresh
+    /// `__for_<n>` whose first statement stores it into the real variable:
     ///
     /// ```text
-    ///   let x = nil                         (only if `x` is new here)
-    ///   ForEach  { var: __for_0, iter,      body: [x = __for_0, …body] }
-    ///   ForRange { var: __for_0, a, b, 1,   body: [x = __for_0, …body] }   for `a...b`
+    ///   let x = nil; let y = nil              (the names new here)
+    ///   ForEach  { var: __for_0, iter,        body: [x = __for_0, …body] }
     /// ```
     ///
-    /// A literal range iterable (`a...b`, or `a..b`, whose stop is
-    /// `b + 1`) becomes a `ForRange`, which every backend counts natively;
-    /// anything else is a `ForEach` over the value.  The body is lowered
-    /// like a `while` body: statements only (see [`loop_body`]), and locals
-    /// it introduces stay inside it (unlike Ruby, where they would leak —
-    /// the same limitation `while` has; a later read of one is refused by
-    /// the validator, never mis-run).
+    /// The iterable picks the loop:
+    ///
+    /// | iterable                           | loop                                            |
+    /// |------------------------------------|-------------------------------------------------|
+    /// | `a...b`                            | `ForRange(a, b, 1)` — counts while `i < b`      |
+    /// | `a..b`, `b` an integer literal     | `ForRange(a, b + 1, 1)`                         |
+    /// | `a..b`, any other `b`              | `let s = a; let e = b; while s <= e …; s = s + 1` |
+    /// | a `Float` literal start            | refused (Ruby: `can't iterate from Float`)       |
+    /// | anything else                      | `ForEach` over the value                        |
+    ///
+    /// `b + 1` is only right for an integer `b`: `for i in 1..2.5` runs 1
+    /// and 2, but a stop of `3.5` would run 3 too (review of #18778).  The
+    /// `while` form tests `<=`, which is right for any number.  The body is
+    /// statements only (see [`loop_body`]).
     ///
     /// Not handled: `for a, b in pairs` (the grammar takes one name), and
     /// the loop's own value (Ruby's `for` returns the iterable; here it is
@@ -2014,7 +2102,7 @@ impl Lowerer {
             })
             .ok_or_else(|| err("for_statement missing its loop variable"))?;
         let var = var_tok.value.clone();
-        if is_constant_name(&var) || is_instance_var_name(&var) || is_class_var_name(&var) {
+        if !is_plain_local_name(&var) {
             return Err(err(&format!(
                 "unsupported: a `for` loop variable that is not a local (`{var}`)"
             )));
@@ -2035,32 +2123,29 @@ impl Lowerer {
         // enclosing scope (and before the loop variable exists).
         let iter = self.lower_expression(iter_node)?;
 
+        // Declare, before the loop, the loop variable and every local the
+        // body assigns that is new here, in source order.
+        let mut names = vec![var.clone()];
+        for n in node.children.iter().filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+            _ => None,
+        }) {
+            collect_loop_assigned_names(n, &mut names);
+        }
         let mut out: Vec<Stmt> = Vec::new();
-        if !self.declared_locals.contains(&var) {
-            self.declared_locals.insert(var.clone());
+        for name in names {
+            if self.current_params.contains(&name) || !self.declared_locals.insert(name.clone()) {
+                continue;
+            }
             out.push(Stmt::LetBinding {
-                name: var.clone(),
+                name,
                 sir_type: None,
                 value: Expr::NilLit { span: span.clone() },
                 span: span.clone(),
             });
         }
 
-        // The fresh iteration variable, skipping any spelling the program
-        // already uses for a local, parameter or method.
-        let tmp = loop {
-            let candidate = format!("__for_{}", self.for_counter);
-            self.for_counter += 1;
-            let taken = self.declared_locals.contains(&candidate)
-                || self.current_params.contains(&candidate)
-                || self.enclosing_visible.contains(&candidate)
-                || self.top_level_methods.contains(&candidate)
-                || self.nested_methods.contains(&candidate);
-            if !taken {
-                break candidate;
-            }
-        };
-
+        let tmp = self.fresh_for_name();
         let store = Stmt::Assign {
             name: var.clone(),
             scope: Scope::Local,
@@ -2086,6 +2171,11 @@ impl Lowerer {
             value,
             span: span.clone(),
         };
+        let var_ref = |name: &str| Expr::VarRef {
+            name: name.to_string(),
+            scope: Scope::Local,
+            span: span.clone(),
+        };
         let looped = match iter {
             Expr::BuiltinCall { name, mut args, .. }
                 if name == "range"
@@ -2094,26 +2184,72 @@ impl Lowerer {
                     && !matches!(args[1], Expr::NilLit { .. })
                     && matches!(args[2], Expr::BoolLit { .. }) =>
             {
+                if matches!(args[0], Expr::FloatLit { .. }) {
+                    return Err(err(
+                        "unsupported: a `for` over a range that starts at a Float \
+                         (Ruby raises `can't iterate from Float`)",
+                    ));
+                }
                 let exclusive = matches!(args[2], Expr::BoolLit { value: true, .. });
                 let end = args.remove(1);
                 let start = args.remove(0);
-                let stop = if exclusive {
-                    end
-                } else {
-                    Expr::BuiltinCall {
-                        name: "+".to_string(),
-                        args: vec![end, int(1)],
-                        effects: EffectSet::PURE,
-                        span: span.clone(),
+                if exclusive || matches!(end, Expr::IntLit { .. }) {
+                    let stop = if exclusive {
+                        end
+                    } else {
+                        Expr::BuiltinCall {
+                            name: "+".to_string(),
+                            args: vec![end, int(1)],
+                            effects: EffectSet::PURE,
+                            span: span.clone(),
+                        }
+                    };
+                    Stmt::ForRange {
+                        var: tmp,
+                        start,
+                        stop,
+                        step: int(1),
+                        body,
+                        span,
                     }
-                };
-                Stmt::ForRange {
-                    var: tmp,
-                    start,
-                    stop,
-                    step: int(1),
-                    body,
-                    span,
+                } else {
+                    // `a..b` with any `b`: count with `<=`.  The counter and
+                    // the end are evaluated once, start first, as Ruby builds
+                    // the range before iterating it.
+                    let stop = self.fresh_for_name();
+                    out.push(Stmt::LetBinding {
+                        name: tmp.clone(),
+                        sir_type: None,
+                        value: start,
+                        span: span.clone(),
+                    });
+                    out.push(Stmt::LetBinding {
+                        name: stop.clone(),
+                        sir_type: None,
+                        value: end,
+                        span: span.clone(),
+                    });
+                    body.stmts.push(Stmt::Assign {
+                        name: tmp.clone(),
+                        scope: Scope::Local,
+                        value: Expr::BuiltinCall {
+                            name: "+".to_string(),
+                            args: vec![var_ref(&tmp), int(1)],
+                            effects: EffectSet::PURE,
+                            span: span.clone(),
+                        },
+                        span: span.clone(),
+                    });
+                    Stmt::While {
+                        cond: Expr::BuiltinCall {
+                            name: "<=".to_string(),
+                            args: vec![var_ref(&tmp), var_ref(&stop)],
+                            effects: EffectSet::PURE,
+                            span: span.clone(),
+                        },
+                        body,
+                        span,
+                    }
                 }
             }
             iter => Stmt::ForEach {
@@ -2125,6 +2261,24 @@ impl Lowerer {
         };
         out.push(looped);
         Ok(out)
+    }
+
+    /// A fresh `__for_<n>` name for a `for` loop's own variables, skipping
+    /// any spelling the program already uses for a local, parameter or
+    /// method.
+    fn fresh_for_name(&mut self) -> String {
+        loop {
+            let candidate = format!("__for_{}", self.for_counter);
+            self.for_counter += 1;
+            let taken = self.declared_locals.contains(&candidate)
+                || self.current_params.contains(&candidate)
+                || self.enclosing_visible.contains(&candidate)
+                || self.top_level_methods.contains(&candidate)
+                || self.nested_methods.contains(&candidate);
+            if !taken {
+                return candidate;
+            }
+        }
     }
 
     // -------------------------------------------------------------------

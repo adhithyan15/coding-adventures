@@ -8,7 +8,7 @@
   which gained a `for_statement` (`for x in xs [do] … end`), `rescue => e`
   with no class, a guard so a parenthesised call followed by a binary operator
   (`f() + f`) parses as one expression statement, and a lookahead that keeps a
-  `[` re-tagged `lbracket_line_start` (only the Rust `ruby-lexer` produces it)
+  `[` re-tagged `[ line start` (only the Rust `ruby-lexer` produces it)
   from being an index or a paren-less call's first argument.  This package's
   lexer never produces that value, so the last change does not affect it here.
 

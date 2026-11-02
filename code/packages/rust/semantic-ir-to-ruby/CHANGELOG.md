@@ -2,6 +2,28 @@
 
 ## Unreleased — class names that are not Ruby constants; `each` (#18778)
 
+### Fixed (review of #18778)
+
+- **A subclass of a renamed class showed the parent's name.**
+  `sir_show_class_as` installed `name`/`to_s`/`inspect` as singleton
+  methods, which subclasses inherit: `Puppy.name` was `"dog"`, and an
+  exception subclass of a renamed `my_err` reported `my_err`.  Each now
+  answers the source name only for the class itself (`equal?(klass)`) and
+  defers to `super` otherwise.  Test
+  `a_subclass_of_a_renamed_class_keeps_its_own_name`.
+- **A user class could replace a runtime constant.**  `ruby_const` reserved
+  only the `SirC` marker, but the runtime defines `SirPair`, `SirNDArray`,
+  `SirSymTerm` and `SIR_*` constants; a user `class SirPair` replaced the
+  cons-pair struct through `const_set`.  Every name that starts with `Sir`
+  and an upper-case letter, or with `SIR_`, is now renamed (`SirCv…`); the
+  map stays one-to-one because the marker is itself reserved.  Test
+  `a_user_class_spelled_like_a_runtime_constant_does_not_replace_it`.
+- **`each` over a Hash with a one-parameter block** raised `ArgumentError`
+  (the block is a strict lambda, and it was always called with key and
+  value).  The emitter now passes the block's parameter count, and
+  `sir_each` gives a one-parameter block the `[key, value]` pair, as Ruby
+  does.  Test `each_over_a_hash_gives_a_one_parameter_block_the_pair`.
+
 ### Fixed
 
 - **A class whose name is not a Ruby constant** (Python's `class dog:`, the
