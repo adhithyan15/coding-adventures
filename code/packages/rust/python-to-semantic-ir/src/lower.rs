@@ -2120,7 +2120,7 @@ impl Lowerer {
         let suite = self
             .first_child_named(def, "suite")
             .ok_or_else(|| self.err_at(def, "malformed def: missing body".to_string()))?;
-        let hoisted_name = format!("{class_name}__{py_name}");
+        let hoisted_name = self.hoisted_method_name(class_name, &py_name);
         let mut inner = FunctionCtx::for_method(params.iter().map(|(n, ..)| n.clone()).collect());
         let span = self.span_of(def);
         let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
@@ -3355,14 +3355,41 @@ impl Lowerer {
     /// zero-capture closure for a lambda that declares captures.)  `N`
     /// also skips any name a user `def` or class already uses, so the
     /// synthesised function never collides with one.
+    /// Is `name` unavailable for a function the lowerer synthesises?
+    ///
+    /// Taken means: a user `def` or `class` name, a function already pushed,
+    /// or **any name spelled in the source**.  The last matters because
+    /// every backend keeps functions and variables in one namespace: a local
+    /// spelled `__lambda_0` used to shadow the synthesised lambda of that
+    /// name, and JavaScript then failed with `TypeError: __lambda_0 is not a
+    /// function` (#18482 review).
+    fn function_name_taken(&self, name: &str) -> bool {
+        self.function_names.contains(name)
+            || self.class_names.contains(name)
+            || self.claimed_names.contains(name)
+            || self.source_names.contains(name)
+    }
+
+    /// The name of the function hoisted from method `method` of class
+    /// `class`: `{class}__{method}`, or, if that is taken (see
+    /// [`Self::function_name_taken`]: `class C: def m` next to a variable or
+    /// `def` spelled `C__m`), the first free `{class}__{method}_{N}`.
+    fn hoisted_method_name(&self, class: &str, method: &str) -> String {
+        let base = format!("{class}__{method}");
+        if !self.function_name_taken(&base) {
+            return base;
+        }
+        (1..)
+            .map(|n| format!("{base}_{n}"))
+            .find(|n| !self.function_name_taken(n))
+            .expect("an unbounded range always yields a free name")
+    }
+
     fn fresh_lambda_name(&mut self) -> String {
         loop {
             let name = format!("__lambda_{}", self.lambda_counter);
             self.lambda_counter += 1;
-            let taken = self.function_names.contains(&name)
-                || self.class_names.contains(&name)
-                || self.claimed_names.contains(&name);
-            if !taken {
+            if !self.function_name_taken(&name) {
                 return name;
             }
         }

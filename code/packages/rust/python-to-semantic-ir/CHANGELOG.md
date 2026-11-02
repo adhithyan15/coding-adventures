@@ -104,10 +104,20 @@ one where they are written into the IR (`sir_function_name`): `main` →
   evaluated call operands in unspecified order (now hoisted in order when
   it matters).
 
-**Tests.** New `tests/statement_forms.rs` (40 tests; the first 35 fail
-against 0.12.0, the last 5 against the first commit of this release).
-`sir-conformance`'s `python_statement_forms.rs` runs the programs on all
-six backends against CPython's output.
+**Security re-review fix:** synthesised function names (`__lambda_N`, and a
+hoisted method's `{Class}__{method}`) now skip every name spelled in the
+source (`function_name_taken`, `hoisted_method_name`).  A local spelled
+`__lambda_0` used to shadow the synthesised lambda of that name in the
+backends' shared namespace: JavaScript failed with `TypeError: __lambda_0
+is not a function`.  A clash takes the next free `__lambda_N`, or appends
+`_N` to the hoisted method name.  This also separates two methods that
+used to hoist to the same name (`A.b__c` and `A__b.c`).
+
+**Tests.** New `tests/statement_forms.rs` (42 tests).  The first 35 fail
+against 0.12.0, the next 5 against the first commit of this release, and
+the last 2 against the security-review commit.  `sir-conformance`'s
+`python_statement_forms.rs` runs the programs on all six backends against
+CPython's output.
 
 ## 0.12.0 — A closure that names itself or a sibling keeps its captures (#18468)
 

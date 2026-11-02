@@ -4,7 +4,7 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [0.29.0] - Python statement forms (#18482)
 
-Adds `tests/python_statement_forms.rs`: 29 Python programs covering the
+Adds `tests/python_statement_forms.rs`: 33 Python programs covering the
 statement forms `python-to-semantic-ir` 0.13.0 fixed, each run on Python,
 JavaScript, Go, Rust, C and Ruby and compared with CPython's output:
 
@@ -22,7 +22,15 @@ JavaScript, Go, Rust, C and Ruby and compared with CPython's output:
   body that assigns its own loop variable, and an inner loop that rebinds
   the outer loop's variable;
 - `self.n += self.bump()` where `bump` changes `self.n`, which tells the
-  evaluation order apart (CPython: 6).
+  evaluation order apart (CPython: 6);
+- two code-running arguments of one method call (`c.pair(c.get(),
+  c.bump())`, CPython 1005, #18768), a constructor and a method call with
+  a compound argument, an indirect call whose callee and argument both
+  print, and a local spelled `__lambda_0`.
+
+A backend that *refuses* one of these programs ("does not yet accept")
+counts as a failure here, not a skip: after the first ordering fix the C
+backend refused the compound-argument method call, and the skip hid it.
 
 `programs_lower_and_validate` checks every program passes the validator.
 `programs_print_cpythons_output_on_every_backend` first checks each

@@ -863,3 +863,29 @@ fn a_loop_body_has_no_value() {
         );
     }
 }
+
+// ── synthesised function names avoid source names (#18482 re-review) ─
+
+/// A synthesised lambda used to be `__lambda_0` even when the program had a
+/// local of that name, which shadowed the function on every backend that
+/// shares one namespace (JavaScript: `TypeError: __lambda_0 is not a
+/// function`).  The lambda now skips every name spelled in the source.
+#[test]
+fn a_synthesised_lambda_skips_names_in_the_source() {
+    let m = lower("def g():\n    __lambda_0 = 5\n    f = lambda: 1\n    return f() + __lambda_0\n");
+    let names: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+    assert!(!names.contains(&"__lambda_0"), "{names:?}");
+    assert!(names.contains(&"__lambda_1"), "{names:?}");
+}
+
+/// Likewise a hoisted method, `{Class}__{method}`, skips a source name of
+/// the same spelling (and a second method that would hoist to it).
+#[test]
+fn a_hoisted_method_skips_names_in_the_source() {
+    let m = lower(
+        "class C:\n    def m(self):\n        return 1\n\nC__m = 5\nclass A:\n    def b__c(self):\n        return 2\n\nclass A__b:\n    def c(self):\n        return 3\n",
+    );
+    let mut names: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+    names.sort_unstable();
+    assert_eq!(names, ["A__b__c", "A__b__c_1", "C__m_1", "main"]);
+}

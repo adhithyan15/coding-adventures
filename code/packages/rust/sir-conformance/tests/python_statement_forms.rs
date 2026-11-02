@@ -182,6 +182,35 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "for i in range(3):\n    print(i)\nx = 0\nwhile x < 2:\n    x += 1\n    if x == 2:\n        print(x * 10)\n",
         "0\n1\n2\n20",
     ),
+    // Two code-running arguments of ONE method call run left to right
+    // (#18768): `c.get()` reads 1 before `c.bump()` adds 100.  CPython: 1005.
+    (
+        "py_dispatch_args_left_to_right",
+        "class C:\n    def __init__(self):\n        self.n = 1\n    def bump(self):\n        self.n = self.n + 100\n        return 5\n    def get(self):\n        return self.n\n    def pair(self, a, b):\n        return a * 1000 + b\n\nc = C()\nprint(c.pair(c.get(), c.bump()))\n",
+        "1005",
+    ),
+    // A constructor and a method call whose argument is compound.  After the
+    // first ordering fix the C backend emitted `_sir_unknown_builtin("__new__")`
+    // for the first and refused the second.
+    (
+        "py_dispatch_with_compound_arg",
+        "class P:\n    def __init__(self, v):\n        self.v = v\n    def get(self):\n        return self.v\n    def add(self, k):\n        return self.v + k\n\na = P(2)\nb = P(3)\nc = P(a.get() + b.get())\nprint(a.add(c.get() + b.get()) * 100 + c.get())\n",
+        "1005",
+    ),
+    // An indirect call evaluates its callee before its argument.  The C
+    // backend rendered both inline, and gcc ran `side()` first.
+    (
+        "py_indirect_call_callee_first",
+        "def show(s):\n    print(s)\n    return 0\n\ndef make():\n    show(\"callee\")\n    return lambda x: x\n\ndef side():\n    show(\"arg\")\n    return 1\n\nr = make()(side())\n",
+        "callee\narg",
+    ),
+    // A local spelled like a synthesised lambda (`__lambda_0`) must not
+    // shadow it.  JavaScript failed with `__lambda_0 is not a function`.
+    (
+        "py_local_spelled_like_a_lambda",
+        "def g():\n    __lambda_0 = 5\n    f = lambda: 1\n    return f() + __lambda_0\n\nprint(g())\n",
+        "6",
+    ),
     // ── `pass` ────────────────────────────────────────────────────────
     (
         "py_pass_everywhere",
@@ -315,6 +344,14 @@ fn programs_print_cpythons_output_on_every_backend() {
                         ));
                     }
                     ran += 1;
+                }
+                // A missing toolchain is a skip.  A backend that *refuses*
+                // the program ("does not yet accept") is a failure: every
+                // program here is ordinary Python that each backend ran at
+                // some point, and a refusal is how a regression in the C
+                // backend's dispatch path first showed up (#18768).
+                RunOutcome::Skipped(why) if why.contains("does not yet accept") => {
+                    wrong.push(format!("`{name}` on {}: refused: {why}", target.tag()))
                 }
                 RunOutcome::Skipped(why) => eprintln!("skip {name}/{}: {why}", target.tag()),
                 RunOutcome::Failed(msg) => {

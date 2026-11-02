@@ -132,7 +132,10 @@ because JavaScript, Go and C refuse to redeclare a parameter in the
 function's own scope, and the Rust backend refuses to assign one.
 
 **Temporaries** (`__chain_N`, `__for_N`, `__param_<name>_N`) never take a
-name spelled anywhere in the source file.
+name spelled anywhere in the source file, and neither do synthesised
+functions (`__lambda_N`, a hoisted method's `{Class}__{method}`): the
+backends keep functions and variables in one namespace, so a local
+spelled `__lambda_0` would otherwise shadow the lambda.
 
 **Tuples.**  A trailing comma makes a tuple (`x = 1,`, `return y,`,
 `for x, in rows:`, `xs[i,]`).  These used to lower as the bare element;
