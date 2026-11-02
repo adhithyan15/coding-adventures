@@ -172,8 +172,15 @@ my $_TWO_64  = Math::BigInt->new('18446744073709551616');
 sub _rejection_sample {
     my ($next_u32_fn, $min, $max) = @_;
     for my $bound ($min, $max) {
+        # Two checks, because a float's string form is rounded to 15
+        # significant digits: 0.9999999999999999 prints as "1" and would pass
+        # the pattern alone. The second compares the number with its own
+        # integer part, which differs for any non-integer float. (Comparing
+        # with Math::BigInt does not work: its constructor stringifies too.)
         Carp::croak('next_int_in_range bounds must be integers')
-            unless defined $bound && "$bound" =~ /\A-?[0-9]+\z/;
+            unless defined $bound
+            && "$bound" =~ /\A-?[0-9]+\z/
+            && (ref($bound) || $bound == int($bound));
     }
     my ($lo, $hi) = (Math::BigInt->new("$min"), Math::BigInt->new("$max"));
     Carp::croak("next_int_in_range needs signed 64-bit bounds with min <= max, got [$lo, $hi]")

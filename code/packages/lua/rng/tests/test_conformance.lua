@@ -121,6 +121,18 @@ describe("regressions for the v1 range bug", function()
         end
     end)
 
+    it("blames the caller's line for an invalid range", function()
+        local g = rng.LCG.new(1)
+        local ok, err = pcall(function()
+            local v = g:next_int_in_range(2, 1) -- the line the error must name
+            return v
+        end)
+        assert.is_false(ok)
+        assert.is_truthy(err:find("test_conformance.lua:%d+:"))
+        local line = debug.getinfo(1, "l").currentline - 5
+        assert.is_truthy(err:find(":" .. line .. ":", 1, true), err)
+    end)
+
     it("rejects non-integer or reversed bounds without drawing", function()
         local g, fresh = rng.LCG.new(9), rng.LCG.new(9)
         assert.has_error(function() g:next_int_in_range(1, 0) end)

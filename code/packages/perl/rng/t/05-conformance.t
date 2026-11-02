@@ -96,7 +96,7 @@ subtest 'the whole signed 64-bit domain' => sub {
 };
 
 subtest 'invalid bounds croak without drawing' => sub {
-    for my $bounds ([1, 0], [0.5, 2], ['-9223372036854775809', 0], [0, '9223372036854775808'], ['x', 1]) {
+    for my $bounds ([1, 0], [0.5, 2], [0, 0.9999999999999999], [123456789012345.67, 123456789012346], ['-9223372036854775809', 0], [0, '9223372036854775808'], ['x', 1]) {
         my $g     = CodingAdventures::Rng::Xorshift64->new(9);
         my $fresh = CodingAdventures::Rng::Xorshift64->new(9);
         ok(dies { $g->next_int_in_range(@$bounds) }, "croaks for [@$bounds]");

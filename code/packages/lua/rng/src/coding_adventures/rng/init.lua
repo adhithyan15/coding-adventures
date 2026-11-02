@@ -164,6 +164,9 @@ end
 
 local TWO_32 = 1 << 32
 
+-- Error level 3 names the caller of next_int_in_range: level 1 is this
+-- function, 2 the method (which deliberately does not tail-call it, so its
+-- frame survives), 3 the caller.
 local function rejection_sample(next_u32_fn, min_val, max_val)
     if math.type(min_val) ~= "integer" or math.type(max_val) ~= "integer" or min_val > max_val then
         error("next_int_in_range needs integer bounds with min <= max, got ["
@@ -239,7 +242,9 @@ end
 -- next_int_in_range(min, max): uniform integer in [min, max] inclusive.
 -- Uses rejection sampling to eliminate modulo bias.
 function LCG:next_int_in_range(min, max)
-    return rejection_sample(function() return self:next_u32() end, min, max)
+    -- Not a tail call: keeps this frame, so error level 3 names our caller.
+    local value = rejection_sample(function() return self:next_u32() end, min, max)
+    return value
 end
 
 M.LCG = LCG
@@ -297,7 +302,9 @@ end
 
 -- next_int_in_range(min, max): uniform integer in [min, max].
 function Xorshift64:next_int_in_range(min, max)
-    return rejection_sample(function() return self:next_u32() end, min, max)
+    -- Not a tail call: keeps this frame, so error level 3 names our caller.
+    local value = rejection_sample(function() return self:next_u32() end, min, max)
+    return value
 end
 
 M.Xorshift64 = Xorshift64
@@ -376,7 +383,9 @@ end
 
 -- next_int_in_range(min, max): uniform integer in [min, max].
 function PCG32:next_int_in_range(min, max)
-    return rejection_sample(function() return self:next_u32() end, min, max)
+    -- Not a tail call: keeps this frame, so error level 3 names our caller.
+    local value = rejection_sample(function() return self:next_u32() end, min, max)
+    return value
 end
 
 M.PCG32 = PCG32
