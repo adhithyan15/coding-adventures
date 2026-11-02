@@ -782,6 +782,7 @@ members = [
     "curve25519",
     "csprng",
     "ct-compare",
+    "test-bootstrap",
     "zeroize",
     "x3dh",
     "double-ratchet",
