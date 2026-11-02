@@ -1219,7 +1219,10 @@ single mechanism does both, so the box uses each for what it does well.
 - the **broker** (below), for the process spawns and wildcard filesystem
   grants that `capability-os-sandbox` routes through it;
 - seccomp filters that return an error or kill the process, for whole
-  classes of system call.
+  classes of system call. Class denials are enforced this way, with
+  `SECCOMP_FILTER_FLAG_LOG`, not through user notifications. Error and
+  kill returns take precedence over notifications, so a listener the
+  package installs cannot override them.
 
 **seccomp user notification is used to observe, never to approve.** A
 supervisor process that is told about each relevant system call is the
@@ -1244,7 +1247,8 @@ continue on the strength of its own check**. Either:
     namespace;
   - an **empty set of Linux capabilities** (no `CAP_DAC_OVERRIDE` or
     similar) and `no_new_privs`;
-  - **the same Landlock ruleset**;
+  - **the package's own Landlock domain**, not a sibling built from the
+    same ruleset (the two differ in Landlock's ptrace and signal scoping);
   - the same mount namespace;
   - the root and working directory **of the calling thread at the time of
     the call**, read under a `NOTIF_ID_VALID` check. Threads can
@@ -1313,7 +1317,7 @@ blocks the gate, never "pass, with a caveat".
 | Mode | Behaviour | Used for |
 |---|---|---|
 | **Enforce** | Anything outside the manifest is denied; every denial is recorded and fails the run | **All** gate evidence |
-| **Observe** | Observable operations are allowed and recorded. Two sets of denials stay in place in this mode, as in every mode. First, the base policy's denials of *unobservable* channels: the architecture check (so 32-bit and x32 system-call numbers cannot alias others), `io_uring`, `ptrace`, `process_vm_writev`, `userfaultfd`, `bpf` and `perf_event_open`. Second, the integrity denials of §8.5.4: `vsock`, and signals to the supervisor. | Proposing a manifest for a new package; finding over-declaration |
+| **Observe** | Observable operations are allowed and recorded. Two sets of denials stay in place in this mode, as in every mode. First, the base policy's denials of *unobservable* channels: the architecture check (so 32-bit and x32 system-call numbers cannot alias others), `io_uring`, `ptrace`, `process_vm_writev`, `userfaultfd`, `bpf`, `perf_event_open`, and `seccomp` with `SECCOMP_FILTER_FLAG_NEW_LISTENER`. A package that installs its own listener would receive the notifications meant for the supervisor, and could answer "continue" to them. Second, the integrity denials of §8.5.4: `vsock`, and signals to the supervisor. | Proposing a manifest for a new package; finding over-declaration |
 
 Observe mode never supplies gate evidence. A manifest drafted from it is a
 **proposal for human review**, because it would otherwise launder whatever
@@ -1412,15 +1416,16 @@ Three rules make the network rows honest:
   - The broker does filesystem work on the package's behalf, so it must
     not become a way around enforcement, as emulation could (§8.5.3):
     - it resolves every path from a pinned descriptor for the grant's root,
-      using `openat2` with `RESOLVE_BENEATH`, `RESOLVE_NO_MAGICLINKS` and
-      `RESOLVE_NO_SYMLINKS` (or `RESOLVE_NO_XDEV` as required);
+      using `openat2` with `RESOLVE_BENEATH` and `RESOLVE_NO_MAGICLINKS`,
+      plus `RESOLVE_NO_SYMLINKS` and/or `RESOLVE_NO_XDEV` where the grant
+      requires;
     - it matches the wildcard against the *resolved* path;
-    - it runs as the package's user, with no Linux capabilities and a
-      Landlock domain limited to the grant's base directory;
+    - it runs as a **distinct user**, whose file access is no broader than
+      the package's. It has no Linux capabilities and a Landlock domain
+      limited to the grant's base directory;
     - it passes descriptors back, not paths.
-  - It also gets the supervisor's integrity protections (§8.5.4): a
-    separate user, and no `ptrace` of it or signals to it from the
-    package.
+  - It also gets the supervisor's integrity protections (§8.5.4): the
+    package may not `ptrace` it or send it signals.
   - **Brokered process spawns and filesystem operations run inside the
     guest.** A broker on the VM's host would serve the *host's*
     filesystem and start programs *outside* the VM, escaping the boundary
@@ -1652,23 +1657,58 @@ every program effects **without any import**:
 - Rust's fully qualified paths, such as `::std::fs::read`, with no `use`;
 - Go's `print` and `println`.
 
-So the rule is not an import list. **Every name the package uses that
-resolves outside the package must be on a closed allowlist.** That covers
-imports, builtins, globals, implicitly available namespaces and fully
-qualified paths alike. What may be on the list:
+So the rule is not an import list. **Everything is denied unless it is
+explicitly allowed.** That covers imports, builtins, globals, implicitly
+available namespaces, fully qualified paths, and attributes and methods
+reached on objects. Exactly three things can be allowed:
 
-- the package's own generated module;
-- in-repo dependencies, each confined in the same way;
-- standard-library members on the language's reviewed
-  **pure-computation list**.
+1. **The package's own generated module.**
+2. **In-repo packages**, each confined in the same way and each passing
+   the same gate.
+3. **The language core allowlist.** This is a short, explicit list, per
+   language, of what genuinely cannot be replaced: built-in types,
+   literals and operators, and whatever the runtime forces on every
+   program, such as `java.lang`.
 
-**The list is per member, not per module.** Allowing a whole module is
-too coarse, because an allowed module is a doorway to everything reachable
-from it. Python's `typing.sys`, `collections._sys` and `dataclasses.sys`
+**The standard library is not on the list.** Collections, string
+formatting, JSON, regular expressions, dates and Unicode come from audited
+in-repo packages, which go through the unit, property, fuzz and proof
+rungs like everything else. Only the D21 runtime beneath the generated
+modules may touch the language's real standard library. Every line of code
+above the language runtime is then the repository's own, which is the end
+state B06 describes:
+
+```
+package code         may name: the core allowlist, in-repo packages, its generated module
+in-repo libraries    collections, formatting, JSON, regex, dates… (audited, gated)
+generated module     the declared capabilities only
+D21 runtime          the ONLY code that touches the real standard library
+language runtime     assumed (§7.5.1), tested per language (§7.5.3)
+```
+
+**Some languages make this easy.** Rust's `#![no_std]` crates cannot name
+`std::fs` at all, so the compiler does the enforcing. JavaScript's SES
+compartments start with no globals except those handed in. Java's module
+system limits what can be read, though `java.lang` is unavoidable. Other
+languages rely on the allowlist check, backed by replacing the builtins
+at start-up.
+
+**There is a transitional allowance, and it shrinks to zero.** Until a
+language's in-repo replacements exist, specific standard-library members
+may be allowed temporarily, on a reviewed **transitional list** (VER23).
+Each entry names the in-repo package that will replace it. An entry is
+removed when the replacement lands, and the list for every language trends
+to empty. The rules below apply to every entry on either list.
+
+**The lists are per member, not per module, and that includes members of
+objects.** Allowing a whole module is too coarse, because an allowed module
+is a doorway to everything reachable from it. Python's `typing.sys`, `collections._sys` and `dataclasses.sys`
 all lead to `sys.modules['os']`. So the list is kept at (module, member)
-granularity, the way Joe-E's "taming database" works. A member is
-reviewed against **everything reachable from it**, not just its documented
-behaviour. Some members that look pure have effects in D21's categories,
+granularity, the way Joe-E's "taming database" works. The same applies to
+the attributes, properties and methods reachable **on objects** of allowed
+types, which are denied unless listed, exactly as Joe-E tames each member
+of each class. A member is reviewed against **everything reachable from
+it**, not just its documented behaviour. Some members that look pure have effects in D21's categories,
 and those are capabilities like any other, usable only through a
 declaration:
 
@@ -1680,9 +1720,10 @@ declaration:
 | `codecs.open`, `io.open` | `fs.*` |
 | Go `plugin`, `runtime/debug.WriteHeapDump` | `ffi.load`, `fs.write` |
 
-The pure lists are **trust-root policy data** (§9.4), because a member
-wrongly listed as pure is a hole. A member goes on a list only after that
-review, and when in doubt it stays off.
+Both lists are **trust-root policy data** (§9.4), because a member
+wrongly allowed is a hole. A member goes on a list only after that review,
+and when in doubt it stays off. The core allowlist starts as small as the
+language allows, and only shrinks.
 
 **Reflection is rejected outright**, because it turns any allowed object
 into a path to everything else. That means:
@@ -1695,16 +1736,31 @@ into a path to everything else. That means:
 - `constructor` access in JavaScript (`({}).constructor.constructor`
   reaches `Function` without writing either word);
 - `gc`, `sys`, `inspect`, `ObjectSpace`;
+- **introspection attributes, which do not look like private names**:
+  Python's frame, code and traceback attributes (`gi_frame`, `cr_frame`,
+  `ag_frame`, `f_back`, `f_globals`, `f_builtins`, `f_code`, `tb_frame`,
+  `tb_next`); V8's `Error.prepareStackTrace` and its call-site objects
+  (`getThis`, `getFunction`); `Function.prototype.caller` and
+  `arguments.callee`;
+- **format strings that are not literals.** Python's `str.format` and
+  `format_map` walk attribute paths written *inside the data*
+  (`"{0.__init__.__globals__}"`). This is the classic template-sandbox
+  escape, so the format string must be a literal the analyzer can read;
 - `eval`, `exec`, `compile`, `Function`, and dynamic import of a
   non-literal name;
 - **deserialisers that look up names**: `pickle` and `marshal`, Ruby's
   `Marshal.load` and `YAML.unsafe_load`, and `JSON.load` with
   `create_additions`. These can call `os.system` from a byte string.
 
-**Lock the globals as well, where the runtime allows it.** JavaScript runs
-under SES-style `lockdown`: frozen built-in objects, with tamed `Function`
-and `eval`. Python's builtins can be replaced at start-up. This is defence
-in depth, not the primary control.
+**Lock the globals as well.** Python's builtins are replaced at start-up
+with the core allowlist, as defence in depth. **For JavaScript it is a
+required control, not defence in depth.** A computed property access
+(`o[k]`) cannot be banned without banning ordinary indexing, and
+`({})["constr" + "uctor"]["constr" + "uctor"]` survives any syntactic
+rule. Only SES `lockdown` (frozen built-in objects, tamed `Function` and
+`eval`), together with a compartment whose globals are exactly the
+allowlist, closes that route. Code that uses non-literal computed access
+must run that way.
 
 **The check runs on code as it is compiled, not as it is written.**
 Several things never appear in source text:
@@ -1715,7 +1771,11 @@ Several things never appear in source text:
   and module attributes, Java annotation processors;
 - embedded files (`include_bytes!`, `//go:embed`), Rust `global_asm!`,
   `#[no_mangle]` symbol interposition, and Go assembly (`.s`) files, which
-  are native code (§8.6.3).
+  are native code (§8.6.3);
+- other routes that VER23 names explicitly: Go `//go:linkname`, Rust 2024
+  `unsafe extern` blocks that declare `safe fn`, and package-manager
+  install scripts (`setup.py`, npm `postinstall`), which run as
+  build-time code.
 
 So the allowlist is checked after expansion: Rust's HIR or MIR, or the
 compiled form, depending on the language. Code that runs at compile time
@@ -1810,8 +1870,10 @@ requirements:
   and Ruby have no enforced privacy, so this depends on the reflection
   ban of §8.6.2.
 - **Handles cannot be serialised, recreated or forged.**
-- **Libraries hold no ambient grants** and cannot import any generated
-  module other than their own.
+- **Libraries hold no ambient grants.** An object-capability library's
+  generated module exports only the capability *types* it accepts, never
+  operations it could call on its own. It cannot import any other
+  package's generated module.
 - **There is no shared mutable global state** in which a library could
   hide or intercept capabilities. That needs frozen built-in objects (SES)
   and no mutable statics (Joe-E); otherwise patching a prototype would
@@ -2448,7 +2510,7 @@ ends with its rung **live and blocking**.
 | 0b | Trust-root rules (agent identity, human review of trust-root paths, signed policy data); SSHSIG `-sk` verifier; signed-tag release approval | Approvals | VER01, VER21 |
 | — | P-256, in-house USB HID and CTAP2, `release-approve` CLI | — | VER21 |
 | 1 | Capability analyzers for all languages, capability diff, weakness registry v1 (exclusions) | E0 | VER08, VER15 |
-| 1b | Generated capability modules and closed import allowlists: Go and Rust first, extending the existing generators, then every lane; native shim and binary checks | E0 language-level | VER23 |
+| 1b | Generated capability modules, deny-by-default name allowlists with a per-language core list, transitional standard-library lists trending to zero: Go and Rust first, extending the existing generators, then every lane; native shim and binary checks | E0 language-level | VER23 |
 | 2 | Test tiers, purity and speed enforcement, simulated host, taxonomy extension, chaos injection | E1 purity, E2 | VER02, VER03, VER17 |
 | 2b | Checked allocator, checked C interpreter, native attack corpora | E0 for native code | VER16 |
 | 2c | Locked-box capability check: Linux appliers and the base deny, race-free enforcement, recorded denials, closed system-call mapping, broker log, exact-target baseline, D/S/O cross-check. Live with baseline charging only; attribution is research. Gets most of its reach once phases 3–4 drive the harness. | E0 dynamic (Linux guests) | VER22 |
