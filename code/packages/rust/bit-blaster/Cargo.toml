@@ -1,0 +1,18 @@
+[package]
+name = "bit-blaster"
+version = "0.1.0"
+edition = "2021"
+description = "VER10 — and-inverter graphs, Tseitin encoding and a fixed-width bit-blaster (QF_BV) over the cdcl-sat solver."
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+cdcl-sat = { path = "../cdcl-sat" }
+constraint-core = { path = "../constraint-core" }
+constraint-instructions = { path = "../constraint-instructions" }
+
+# Test-only: the trusted kernel certifies miters, and the SMT-LIB reader
+# feeds the QF_BV corpus. Neither is needed to run the blaster.
+[dev-dependencies]
+drat-check = { path = "../drat-check" }
+smt-lib-format = { path = "../smt-lib-format" }
