@@ -20,6 +20,15 @@ The spec's central claim is that this is much smaller than it sounds, and
 the reason is measurable rather than optimistic. See "Measured surface"
 below: the repo's 7,245 test files use about twenty distinct assertions.
 
+> **Revised by TF01 and VER26 (2026-11).** The pilot builds this framework in
+> layers rather than by hand in every language. First comes a tiny bootstrap
+> harness, TF01. Then **Warrant** (VER04) compiles each package's examples and
+> claims into plain tests over that harness. The richer runtime support is
+> specified once and generated per language. The assertion vocabulary and
+> measurements below remain the reference for what those generated tests must
+> express. The per-language sequencing in "Sequencing" is superseded by
+> VER26's.
+
 ## A warning about "rich"
 
 The instinct with a test framework is to match the surface of the thing
