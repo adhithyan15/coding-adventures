@@ -12,8 +12,6 @@
   core writes ऊ ध झ ओ ढ फ, each after its anchor word).
 - `tests/filmstrip-target-counts/marwadi.json`: 43 -> 49 (one strip per new
   letter lesson).
-- `tests/levels.test.ts`: comment only; Marwadi stays on the A2 reach list, since
-  the core touches no B1 node.
 - `tests/verbs.test.ts`: `tracksWithNoCoreVerb` 2 -> 1. Marwadi's verbs are all
   namespaced MW-VERB-* tags; the core's हूं · है lesson carries the canonical
   VERB-BE, so the track now covers one core verb. The mean holds at 41.

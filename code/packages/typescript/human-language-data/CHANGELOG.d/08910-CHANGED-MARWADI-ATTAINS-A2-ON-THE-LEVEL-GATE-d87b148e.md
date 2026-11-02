@@ -1,11 +1,10 @@
 ### Changed — Marwadi attains A2 on the level gate
 
-- `tests/level-gate-attainment/marwadi.json`: A1 -> A2. The A2 core (chapters
+- `tests/level-gate-attainment/marwadi.json`: attained A1 -> A2, reach A2, in the
+  track-owned `{attained, reach, evidence}` form. The A2 core (chapters
   152-165) realized the four A2 spine nodes the track lacked, and the A2
   vocabulary (chapters 166-290, 625 headwords) clears the vocabulary and verb
   criteria with 1,265 headwords and 276 verbs at or below A2.
-- `tests/level-gate.test.ts`: a comment records Marwadi moving from the A1 row
-  to the A2 row.
 - `tests/corpus/marwadi/pins-marwadi-lesson-content-budgets-*.case.ts`: lessons
   962 -> 1612 (625 word lessons and 25 reviews); idioms, senses and culture
   claims hold.
@@ -16,8 +15,6 @@
   closure `lessonCount` is 1612.
 - `tests/exam-inventory-marwadi.test.ts`: 962 / 165 / 887 -> 1612 / 290 / 1512
   lessons, chapters and introduced atoms; the A1 coverage holds.
-- `tests/levels.test.ts`: comment only; Marwadi stays on the A2 reach list,
-  since no chapter touches a B1 node.
 - `tests/plan-cli.test.ts`: Marwadi's human-validation item moves up from the
   A2 to the B1 full mocks, the rung it now works on.
 - `tests/drivable-instructions.test.ts`: three spoken questions join the
