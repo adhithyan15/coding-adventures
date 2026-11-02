@@ -1265,10 +1265,18 @@ continue on the strength of its own check**. Either:
   - directory descriptors for relative paths taken from the package via
     `pidfd_getfd`.
 
-  The helper resolves paths with `openat2` and its `RESOLVE_*` flags,
-  injects the resulting descriptor with `SECCOMP_IOCTL_NOTIF_ADDFD`, and
-  confirms with `NOTIF_ID_VALID` that the call is still current after
-  reading memory. Its denials are recorded like any other.
+  The helper resolves paths with `openat2` and its `RESOLVE_*` flags, then
+  returns the descriptor to the supervisor. **The supervisor** confirms
+  with `NOTIF_ID_VALID` that the call is still current and injects the
+  descriptor with `SECCOMP_IOCTL_NOTIF_ADDFD`. The helper's denials are
+  recorded like any other.
+
+  The launch order matters: restrict with Landlock, then start the
+  helper, then install the seccomp filter, then start the runtime.
+  Otherwise the helper inherits the filter, and its own `openat2` calls
+  would notify the supervisor recursively. The helper's protection
+  against signals also covers `kill(-1)` and kills aimed at its process
+  group. Killing the helper only fails closed, so this is hardening.
 
 `userfaultfd` stays denied by the base policy in every mode.
 
@@ -1326,7 +1334,7 @@ blocks the gate, never "pass, with a caveat".
 | Mode | Behaviour | Used for |
 |---|---|---|
 | **Enforce** | Anything outside the manifest is denied; every denial is recorded and fails the run | **All** gate evidence |
-| **Observe** | Observable operations are allowed and recorded. Two sets of denials stay in place in this mode, as in every mode. First, the base policy's denials of *unobservable* channels: the architecture check (so 32-bit and x32 system-call numbers cannot alias others), `io_uring`, `ptrace`, `process_vm_writev`, `userfaultfd`, `bpf`, `perf_event_open`, and `seccomp` with `SECCOMP_FILTER_FLAG_NEW_LISTENER`. A package that installs its own listener would receive the notifications meant for the supervisor, and could answer "continue" to them. Second, the integrity denials of §8.5.4: `vsock`, and signals to the supervisor. | Proposing a manifest for a new package; finding over-declaration |
+| **Observe** | Observable operations are allowed and recorded. Two sets of denials stay in place in this mode, as in every mode. First, the base policy's denials of *unobservable* channels: the architecture check (so 32-bit and x32 system-call numbers cannot alias others), `io_uring`, `ptrace`, `process_vm_writev`, `userfaultfd`, `bpf`, `perf_event_open`, and `seccomp` with `SECCOMP_FILTER_FLAG_NEW_LISTENER`. A package that installs its own listener would receive the notifications meant for the supervisor, and could answer "continue" to them. Second, the integrity denials of §8.5.4: `vsock`; `ptrace`, `pidfd_getfd` and `process_vm_writev` against the supervisor, the broker and the emulation helper; and signals to any of them. | Proposing a manifest for a new package; finding over-declaration |
 
 Observe mode never supplies gate evidence. A manifest drafted from it is a
 **proposal for human review**, because it would otherwise launder whatever
@@ -1680,9 +1688,13 @@ reached on objects. Exactly three things can be allowed:
    language and per member, of what genuinely cannot be replaced:
    built-in types, literals and operators, and the members every program
    needs from namespaces the runtime forces on it. In Java, for example,
-   that means `Object`, `String` and the boxed types, but not `System`,
-   `Runtime`, `ProcessBuilder`, `Class`, `ClassLoader` or `Thread`,
-   which stay off unless tamed.
+   that means the needed members of `Object`, `String` and the boxed
+   types, each listed individually. Some members of even those types stay
+   off: `Integer.getInteger`, `Long.getLong` and `Boolean.getBoolean`
+   read system properties; `Object.getClass` leads to reflection;
+   `Throwable.printStackTrace()` writes to stderr; and `Object.wait` and
+   `notify` affect concurrency. `System`, `Runtime`, `ProcessBuilder`,
+   `Class`, `ClassLoader` and `Thread` stay off entirely unless tamed.
 
 **Third-party packages are not on the list either.** A shipped closure
 should contain none (B06). Where one remains, it can be named only under
@@ -1713,7 +1725,10 @@ for **every** language, without exception.
   prelude. But a `no_std` crate can still write `extern crate std;` and
   then call `std::fs::read`, which is a common, legal idiom. So the check
   rejects `extern crate std`, and any other extern crate not on the
-  allowlist, in package crates.
+  allowlist, in package crates. Cargo dependencies enter the extern
+  prelude without any `extern crate` item, so the check applies to the
+  whole extern prelude (the `--extern` set) and to resolved HIR paths,
+  not only to `extern crate` declarations.
 - **JavaScript.** SES compartments have no *host* globals, such as
   `process`, `require` or `fetch`, unless they are handed in. They do
   share the hardened built-in objects (`Object`, `Array`, `JSON`, `Math`,
@@ -1805,6 +1820,10 @@ rule. So:
   intercept capability handles other packages pass in (§8.6.4).
 - **Each package's code is evaluated in its own compartment**, whose
   globals are exactly the allowlist.
+- **Lockdown keeps SES's safe defaults.** Its default taming of
+  `Date.now`, `Math.random` and error stacks in compartments stays on,
+  and the options that loosen it are forbidden. Capability handles passed
+  between compartments are `harden()`ed.
 
 Once computed access is allowed, per-member taming of the shared built-in
 objects cannot be checked statically. What remains reachable is then only
@@ -1939,30 +1958,81 @@ requirements:
 Everything above rests on one assumption: that the analyzer enforcing the
 rules is itself correct. It is a large program, and it will have bugs. So
 the analyzer does not merely answer "this package uses no file access". It
-also produces the **evidence** for that answer, and a small checker
-verifies the evidence. This is *proof-carrying code*, applied to
-capabilities.
+also produces evidence for that answer, and a small checker verifies the
+evidence **against the program itself**. This is *proof-carrying code*,
+applied to capabilities.
 
-- **The certificate.** For every function reachable from the package's
-  public API, the analyzer emits that function's **effect type**: the set
-  of capabilities it may exercise. It also emits the derivation showing
-  why: the call graph after expansion, the resolution of every name
-  against the allowlists of §8.6.2, and each call into a generated
-  module.
-- **The checker.** A small effect-typing checker re-checks every step
-  locally. Each function's effect set must cover the effects of
-  everything it calls, and every name must resolve to an allowed entry.
-  The checker is written to be read in full, and it sits beside the proof
-  kernel of §7.5 in the trust root (§9.4).
-- **The claim.** The package's capability claim becomes a Warrant claim
-  like any other. For a `sum` package it is `effects(sum) = ∅`, and the
-  gate accepts it only with a certificate that the checker accepts.
+**The checker reads the program, not the analyzer's summary of it.** A
+checker that only tests a certificate for internal consistency verifies
+nothing. A dropped call edge or a misresolved name would still yield an
+accepted "no effects". So:
 
-The payoff is that a bug in the big analyzer can only cause a false
-*rejection*, which is annoying but safe, and never a false "no effects".
-The analyzer's own correctness drops out of the assumptions behind every
-capability claim. What remains are the language-runtime assumptions of
-§7.5.1, the reviewed allowlists, and the small checker.
+- **The checker's input is the program.** It reads the expanded
+  intermediate form of the package, produced by the gate's own rebuild
+  (§9.2.1) and bound to the certificate by hash.
+- **The checker does the security-relevant work itself.** It performs
+  name resolution and applies the per-member taming of §8.6.2 at every
+  call site and member access.
+- **The certificate supplies only annotations.** These are effect types,
+  plus hints about receiver types and dispatch targets. The checker
+  verifies each hint, and an unverifiable one is rejected.
+- **The whole package is checked.** That means every feature and `cfg`
+  (§8.6.2), not only the default build.
+- **Dependencies bring their own certificates.** The effects of in-repo
+  dependencies come from *their* checked certificates, bound by hash,
+  never from this one.
+
+**Every indirect call has an effect.** "The effects of everything a
+function calls" must include calls that are not written as calls:
+
+- **Indirect calls**: callbacks, closures, and methods on a receiver
+  whose type is unknown. When the target is unknown, it is
+  over-approximated soundly: every method of that name, on every type
+  that has one.
+- **Calls the language makes implicitly**: operator methods (`__add__`,
+  `__eq__`, `__hash__`), property getters, `__getattr__`, `valueOf`,
+  `toString`, `Symbol.toPrimitive`, iterator protocols, finalizers and
+  `Drop`. The checker treats each of these as a call site.
+- **Capability objects passed in** (§8.6.4). A library's effect is
+  "whatever was passed in", which can only be stated with **effect
+  polymorphism**: effect types relative to the arguments, such as
+  `map : (a →ε b, [a]) →ε [b]`. Without it the honest answer is "any
+  effect", and certificates would certify nothing useful. VER24 specifies
+  capability-relative effect types.
+
+So `effects(sum) = ∅` precisely means **no effects beyond the latent
+effects of its arguments**.
+
+**Every entry point is a root, not just the public API.** A great deal
+of code runs without any API call:
+
+- module top-level and import-time code;
+- Python class bodies and decorators;
+- Java static initializers;
+- Go `init()`;
+- `.init_array` and `#[ctor]` functions;
+- exit hooks, finalizers, `__del__` and `Drop`;
+- handlers registered with the runtime.
+
+A `sum` package that reads a wallet when it is imported must not receive
+a valid "no effects" certificate. So the claim is about the whole package,
+and every one of these is a root of the check.
+
+The checker is written to be read in full, and it sits beside the proof
+kernel of §7.5 in the trust root (§9.4). A package's capability claim
+becomes a Warrant claim, and the gate accepts it only with a certificate
+the checker accepts. **A bug in the big analyzer can then only cause a
+false *rejection*, never a false "no effects".** What remains trusted:
+
+- the language-runtime assumptions of §7.5.1;
+- the reviewed allowlists;
+- the small checker;
+- **the front end that produces the expanded form the checker reads**:
+  the parser, the macro expander, the lowering to HIR, MIR or SIR, and
+  the type inference used for taming. Like every SIR front end (§7.5.5),
+  it is checked differentially against the real runtime;
+- for JavaScript, the SES lockdown and builtin-replacement runtime
+  (§8.6.2), which the checker's treatment of computed access relies on.
 
 #### 8.6.6 Information flow: where data is allowed to go
 
@@ -1972,43 +2042,123 @@ data goes**. Suppose a package is legitimately granted `fs.read` on
 file, *and* it can send that file to the server. Each step is declared;
 the combination is the exploit. Information-flow claims close this gap.
 
-- **Flow claims in Warrant.** A package can state, and a reviewer can
-  require, claims such as:
-  - "data read through `fs.read` never reaches `net.connect`";
-  - "the `secret` key never reaches `stdout`, a log, or an error message";
-  - "nothing derived from the request body reaches `proc.exec`
-    arguments".
+**Flow claims in Warrant.** Claims are stated against the generated
+capability functions (§8.6.1), the same names the code uses. They come in
+two kinds:
 
-  Each source and sink is a generated capability function (§8.6.1), so
-  the claims are stated against the same names the code uses.
-- **Proving them.** The SIR symbolic execution of §7.6.2 tracks **taint**
-  alongside values. Every value carries the set of sources it was derived
-  from, and the proof shows that no tainted value reaches a forbidden
-  sink. The constant-time machinery of §7.4.1 is already a special case:
-  "timing does not depend on the secret".
-- **Implicit flows count.** Data can leak through control flow as well as
-  through values: `if secret_bit: connect()` leaks a bit without passing
-  the secret anywhere. Flow claims are therefore proved as
-  **noninterference**: running the program twice, with different values
-  for the protected source, must produce identical observations at the
-  sink. This is the same self-composition technique as constant time.
-- **Declassification is an exemption.** Some flows are intended: a hash
-  of the password may be stored, or an error code may reach the log.
-  Each is a named, reviewed declassification point, and adding one is an
-  exemption needing approval (§9.1).
-- **Defaults for the dangerous combinations.** When a package's effective
-  capabilities include both a source of sensitive data and an outbound
-  sink, the gate *requires* a flow claim between them before it will
-  ship. Examples are `fs.read` together with `net.connect`, or
-  `env.read` together with `stdout.write`. The weakness registry (§8.2)
-  carries these combinations as their own classes, starting with
-  exfiltration (CWE-200) and cleartext logging of sensitive data
-  (CWE-532).
+- **Confidentiality**: "data read through `fs.read` never reaches
+  `net.connect`", or "the `secret` key never reaches `stdout`, a log or
+  an error message".
+- **Integrity**: "nothing derived from the request body reaches
+  `proc.exec` arguments" (CWE-78 and CWE-88). Here the approved exception
+  is *sanitization*, not declassification, and it obeys the same rules
+  as declassification below.
 
-Flow claims are proved under the same assumptions as everything else
-(§7.5.1). The usual limits apply: a flow claim proved over SIR covers the
-package's logic, not covert channels such as cache timing on a
-third-party runtime (§7.4.1).
+**What an attacker observes.** A flow claim compares what an attacker can
+see, so "what can be seen" is defined precisely. It is the full trace of
+every sink the attacker can observe:
+
+- whether each sink is called, how many times, and in what order;
+- each call's targets (address, port, DNS name) and arguments;
+- exceptions and exit status;
+- values returned to untrusted callers;
+- whether, and when, the program stops making progress.
+
+Concurrent code must also be **observationally deterministic**, so the
+scheduler cannot act as a second, hidden input.
+
+**How flow claims are proved:**
+
+- **Noninterference.** Run the program twice, with different values for
+  the protected source, and the observable traces must be identical.
+  Leaks through control flow count as well as leaks through values: `if
+  secret_bit: connect()` leaks a bit without passing the secret anywhere.
+- **Progress-sensitive, not just output-equal.** Comparing outputs only
+  when both runs terminate ("termination-insensitive" noninterference)
+  lets a loop leak the whole secret one bit at a time, by hanging or not.
+  So proofs are **progress-sensitive**. Alternatively, a
+  noninterference proof is combined with `terminates` and step-bound
+  proofs (§7.4.1) for every loop whose control depends on the secret.
+- **Relational proofs by default.** Proving self-composition naively
+  needs full functional loop invariants, which is impractical. The
+  default is a sound **security type system** (in the style of Volpano
+  and Smith) or a **product program** that runs the two copies in
+  lockstep with relational invariants. Full self-composition is kept for
+  refining cases the type system rejects.
+- **`bounded(k)` never discharges a flow claim.** A proof that unrolls a
+  loop `k` times says nothing about iteration `k + 1`, and loops that run
+  once per byte of input are the normal case.
+- **Taint survives storage.** Generated capability functions are opaque
+  to the prover, so data written to a cache and read back would come back
+  clean. Laundering through storage would then defeat every claim. So
+  either a write to any store the package or a later reader can read back
+  is itself a sink, or a read from that store carries the combined label
+  of everything that could have been written to it.
+- **The whole shipped program.** Flows are proved over the shipped
+  program, not one package at a time, because a flow can pass through
+  several packages.
+
+**Approve the expression, not the place.** Some flows are intended. A
+"named declassification point" that simply strips the label from whatever
+passes through it does not work:
+
+- any secret can be laundered through it;
+- calling it in a loop leaks a secret one bit at a time;
+- data the attacker controls can decide what gets released.
+
+So each approved release is an **expression**, in the style known as
+*delimited release*. The proof must show three things:
+
+- the released value *equals* the approved expression applied to the
+  original, unmodified secret;
+- the number of releases is bounded;
+- the decision to release does not depend on data the attacker
+  controls (*robust* declassification).
+
+Approving one is an exemption (§9.1). Two examples:
+
+- A password may be stored only as a salted output of a slow key
+  derivation function. A fast or unsalted hash of a low-entropy secret is
+  effectively disclosure.
+- An error code whose value depends on a secret is an oracle, and is
+  treated as one.
+
+**Required claims for every source and sink, by default.** Two rules make
+the required claim impossible to dodge:
+
+- **Every read capability is a source, and every write, send, exec or log
+  capability is a sink.** Classification is deny-by-default, exactly as
+  §7.4.1 does for secrets: sinks are found, not listed. That includes
+  `fs.write` to shared or synced paths, IPC, exit status, error text and
+  DNS lookups.
+- **Every (source, sink) pair in the effective closure needs a proved,
+  complete flow claim.** It must cover all of the capability's targets,
+  and it must be noninterference, or delimited release of an approved
+  expression. Anything less fails the gate or needs an approved
+  exemption. That includes a `bounded(k)` proof, a claim about a narrower
+  target than the grant, a `not-yet-provable` claim, or a package in a
+  language with no SIR front end yet (§7.5.5).
+
+The weakness registry (§8.2) carries these as their own classes:
+
+- exfiltration (CWE-201, under the CWE-200 family);
+- sensitive data in log files (CWE-532);
+- cleartext storage or exposure of sensitive data (CWE-312, CWE-359);
+- error messages that disclose information (CWE-209);
+- command and argument injection (CWE-78, CWE-88).
+
+**What remains trusted.** A SAT certificate (§7.6.6) shows that a formula
+is unsatisfiable, not that the formula correctly encodes the flow claim.
+So the following are trusted, as they are for every SIR proof (§7.6.2):
+
+- the symbolic execution;
+- the product-program construction;
+- the taint encoding;
+- the SIR front end.
+
+The usual limits apply. A flow claim covers the package's logic, under
+§7.5.1's assumptions. It does not cover covert channels below the
+observation model, such as cache timing on a third-party runtime (§7.4.1).
 
 #### 8.6.7 How the layers fit together
 
@@ -2017,8 +2167,8 @@ third-party runtime (§7.4.1).
 | Generated module + per-member allowlist (§8.6) | Any undeclared effect in code that stays inside the confined subset. It makes S nearly exact | Native code and FFI; memory-safety bugs in the C code behind allowed standard-library modules (CPython is not a security boundary); Go data races that corrupt memory and so forge interfaces (§8.2) |
 | Capability analyzer (§8.1) | Enforces the allowlist and the subset; computes S | Whatever the subset rules miss |
 | Locked box (§8.5) | What the program actually did, including native code | Paths never exercised; a package that detects the box |
-| Effect certificates (§8.6.5) | Bugs in the analyzer that would wrongly report "no effects" | Errors in the allowlists themselves, which are reviewed policy |
-| Information-flow claims (§8.6.6) | Misuse of declared capabilities in combination, such as reading a file and then sending it | Covert channels below the cost model |
+| Effect certificates (§8.6.5) | Bugs in the analyzer that would wrongly report "no effects" | Errors in the allowlists themselves, which are reviewed policy; bugs in the front end that produces the form the checker reads, which is checked differentially instead |
+| Information-flow claims (§8.6.6) | Misuse of declared capabilities in combination, such as reading a file and then sending it, including through control flow, progress and storage | Covert channels below the observation model, such as cache timing on a third-party runtime |
 | Weakness registry and proofs (§8.2, E5) | Whole classes of misuse, *within* the declared capabilities | Anything outside their stated assumptions |
 
 **A package is only as confined as its closure.** Its confinement label is
@@ -2647,7 +2797,7 @@ ends with its rung **live and blocking**.
 | 2 | Test tiers, purity and speed enforcement, simulated host, taxonomy extension, chaos injection | E1 purity, E2 | VER02, VER03, VER17 |
 | 2b | Checked allocator, checked C interpreter, native attack corpora | E0 for native code | VER16 |
 | 2c | Locked-box capability check: Linux appliers and the base deny, race-free enforcement, recorded denials, closed system-call mapping, broker log, exact-target baseline, D/S/O cross-check. Live with baseline charging only; attribution is research. Gets most of its reach once phases 3–4 drive the harness. | E0 dynamic (Linux guests) | VER22 |
-| 2d | Effect certificates and checker (with 1b); information-flow claims and noninterference proofs (with S4) | E0 proved | VER24 |
+| 2d | Effect certificates and checker (needs 1b and Warrant claims from phase 3); information-flow claims and noninterference proofs (needs S4, and SIR front ends, which reach Rust and Go only in phase 7) | E0 capability and flow claims, labelled `proved` (§7.6.5) | VER24 |
 | 3 | Warrant v0 (examples, claims, models) with TypeScript and Rust backends; property engine | E3 | VER04, VER05 |
 | 4 | Fuzz engine; `input` blocks | E4 | VER06 |
 | 5 | Microbench harness in every lane; `budget` blocks; timing calibration | (budgets only) | VER07 |
