@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-300-DEATH300",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-300-DEATH300"
+  ],
+  "after": []
+}

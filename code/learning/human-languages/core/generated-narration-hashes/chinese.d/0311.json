@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:bc863eaa1c4dce19",
+  "lessonIds": [
+    "ZH-C311-diaocha",
+    "ZH-C311-jingche",
+    "ZH-W311-jing-alert",
+    "ZH-C311-zhui",
+    "ZH-C311-jingbao",
+    "ZH-C311-jiaojing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch311.txt",
+  "json": "chinese/narration/ch311.json",
+  "textHash": "fnv1a64:9dbd78ad425f98bf",
+  "jsonHash": "fnv1a64:cbc0257977e36a85",
+  "findings": []
+}

@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 316,
+  "title": "A New Place",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8db5745786732172",
+  "lessons": [
+    {
+      "id": "ZH-C316-dengji",
+      "sequence": 24340,
+      "title": "dēngjì — to register officially",
+      "headword": "dēngjì",
+      "romanization": "dēngjì",
+      "gloss": "to register officially",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce95c4098ddea353",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to my surprise, then the Mandarin for the same as before."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēngjì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēngjì — \"to register officially\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen qù pàichūsuǒ dēngjì — We went to the police station to register."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēngjì is built from dēng 'to go up' and 记 'to note down', both inherited from Middle Chinese, tong and kiH (Guangyun, in Baxter's transcription), which glosses the first 'to rise' and 'to go forward': to enter in the record."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēngjì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēngjì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēngjì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēngjì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen qù pàichūsuǒ dēngjì — We went to the police station to register.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen qù pàichūsuǒ dēngjì* — We went to the police station to register.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to my surprise, then the Mandarin for the same as before, then say dēngjì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to my surprise, then the Mandarin for the same as before, then say *dēngjì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēngjì mean? (\"To register officially\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C316-shuxi",
+      "sequence": 24350,
+      "title": "shúxī — to know well; to be familiar with",
+      "headword": "shúxī",
+      "romanization": "shúxī",
+      "gloss": "to know well; to be familiar with",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46eb60156d0d1967",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the same as before, then the Mandarin for to register officially."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shúxī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shúxī — \"to know well; to be familiar with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ duì zhèr hái bù shúxī — I don't know this place well yet."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shúxī is built from shú 'ripe' and xī 'in full', both inherited from Middle Chinese, dzyuwk and sit (Guangyun, in Baxter's transcription), which glosses the first 'done' and the second 'in every detail'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shúxī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shúxī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shúxī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shúxī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ duì zhèr hái bù shúxī — I don't know this place well yet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ duì zhèr hái bù shúxī* — I don't know this place well yet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the same as before, then the Mandarin for to register officially, then say shúxī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the same as before, then the Mandarin for to register officially, then say *shúxī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shúxī mean? (\"To know well; to be familiar with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C316-dangdi",
+      "sequence": 24360,
+      "title": "当地 (dāngdì) — of that place; in the place in question",
+      "headword": "当地",
+      "romanization": "dāngdì",
+      "gloss": "of that place; in the place in question",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32f9e6c756dd6ab6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to register officially, then the Mandarin for to be familiar with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 当地",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当地 — dāngdì — \"of that place; in the place in question\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我到了当地才找到房子 wǒ dào le dāngdì cái zhǎodào fángzi — I only found somewhere to live once I got there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当地 (dāngdì) is built from 当 'at' and 地 'a place', both inherited from Middle Chinese, tang and dijH (Guangyun, in Baxter's transcription), which glosses the first 'to face' and 'to meet': the very place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāngdì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāngdì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāngdì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāngdì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ dào le dāngdì cái zhǎodào fángzi — I only found somewhere to live once I got there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ dào le dāngdì cái zhǎodào fángzi* — I only found somewhere to live once I got there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to register officially, then the Mandarin for to be familiar with, then say dāngdì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to register officially, then the Mandarin for to be familiar with, then say *dāngdì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 当地 (dāngdì) mean? (\"Of that place; in the place in question\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C316-rensheng",
+      "sequence": 24370,
+      "title": "人生 (rénshēng) — a person's life; life from birth to death",
+      "headword": "人生",
+      "romanization": "rénshēng",
+      "gloss": "a person's life; life from birth to death",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28060ce26b216eeb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be familiar with, then the Mandarin for of that place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 人生",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "人生 — rénshēng — \"a person's life; life from birth to death\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rénshēng hěn cháng, nǐ kěyǐ chóngxīn kāishǐ — Life is long; you can start over."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "人生 (rénshēng) is built from 人 'a person' and 生 'to live', both inherited from Middle Chinese, nyin and srjaeng (Guangyun, in Baxter's transcription), which glosses the second 'to grow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rénshēng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rénshēng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rénshēng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rénshēng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rénshēng hěn cháng, nǐ kěyǐ chóngxīn kāishǐ — Life is long; you can start over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rénshēng hěn cháng, nǐ kěyǐ chóngxīn kāishǐ* — Life is long; you can start over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be familiar with, then the Mandarin for of that place, then say rénshēng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be familiar with, then the Mandarin for of that place, then say *rénshēng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 人生 (rénshēng) mean? (\"A person's life; life from birth to death\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C316-ziran",
+      "sequence": 24380,
+      "title": "自然 (zìrán) — naturally; nature",
+      "headword": "自然",
+      "romanization": "zìrán",
+      "gloss": "naturally; nature",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a8be0cbe2271a02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for of that place, then the Mandarin for life from birth to death."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 自然",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "自然 — zìrán — \"naturally; nature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "又下雨了我们自然不出门 yòu xiàyǔ le, wǒmen zìrán bù chūmén — It's raining again, so naturally we're staying in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "自然 (zìrán) is built from 自 and 然 'so', both inherited from Middle Chinese, dzijH and nyen (Guangyun, in Baxter's transcription), which glosses the first 'from' and 'by way of'; its sense 'by itself' is not given there. So of itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zìrán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zìrán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zìrán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zìrán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yòu xiàyǔ le, wǒmen zìrán bù chūmén — It's raining again, so naturally we're staying in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yòu xiàyǔ le, wǒmen zìrán bù chūmén* — It's raining again, so naturally we're staying in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for of that place, then the Mandarin for life from birth to death, then say zìrán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for of that place, then the Mandarin for life from birth to death, then say *zìrán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 自然 (zìrán) mean? (\"Naturally; nature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

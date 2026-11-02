@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C290-diantai",
+    "language": "chinese",
+    "chapter": 290,
+    "sequence": 23020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8c38b641a0f3680"
+  },
+  "findings": []
+}

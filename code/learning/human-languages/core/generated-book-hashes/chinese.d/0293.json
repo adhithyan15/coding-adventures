@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:cf053b484d174152",
+  "lessonIds": [
+    "ZH-C293-zazhi",
+    "ZH-C293-bao",
+    "ZH-W293-bao-report",
+    "ZH-C293-jianbao",
+    "ZH-C293-toutiao",
+    "ZH-C293-guanzhu"
+  ],
+  "tex": "chinese/book/chapters/ch293-headlines.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C298-xiaofangyuan",
+    "language": "chinese",
+    "chapter": 298,
+    "sequence": 23430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a6f57121cb736a3"
+  },
+  "findings": []
+}

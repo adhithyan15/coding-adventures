@@ -1,0 +1,864 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 304,
+  "title": "Starting School",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:4f7f21cc887530c7",
+  "lessons": [
+    {
+      "id": "ZH-C304-ruxue",
+      "sequence": 23720,
+      "title": "rùxué — to start school",
+      "headword": "rùxué",
+      "romanization": "rùxué",
+      "gloss": "to start school",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6807c0215a4f8fb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to start the school term, then the Mandarin for a new student at school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rùxué",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rùxué — \"to start school\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā liù suì rùxué — He started school at six."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rùxué is built from rù 'to enter' and 学 'to study', both inherited from Middle Chinese, nyip and haewk (Guangyun, in Baxter's transcription), which glosses the first 'inside' and 'to take in'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rùxué",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rùxué*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rùxué, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rùxué*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā liù suì rùxué — He started school at six.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā liù suì rùxué* — He started school at six.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to start the school term, then the Mandarin for a new student at school, then say rùxué again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to start the school term, then the Mandarin for a new student at school, then say *rùxué* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rùxué mean? (\"To start school\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C304-riji",
+      "sequence": 23730,
+      "title": "日记 (rìjì) — diary",
+      "headword": "日记",
+      "romanization": "rìjì",
+      "gloss": "diary",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31484565faf88fae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a new student at school, then the Mandarin for to start school as a child."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 日记",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日记 — rìjì — \"diary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我小时候写过日记 wǒ xiǎoshíhou xiě guo rìjì — I kept a diary when I was little."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 记 (jì) — five strokes in two pieces: the speech piece of 说 on the left, two strokes; on the right the right piece of 起, three strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日记 (rìjì) is built from 日 'a day' and 记 (jì) 'to note down', both inherited from Middle Chinese, nyit and kiH (Guangyun, in Baxter's transcription), which glosses the second 'to record'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rìjì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rìjì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rìjì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rìjì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎoshíhou xiě guo rìjì — I kept a diary when I was little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎoshíhou xiě guo rìjì* — I kept a diary when I was little.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a new student at school, then the Mandarin for to start school as a child, then say rìjì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a new student at school, then the Mandarin for to start school as a child, then say *rìjì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 日记 (rìjì) mean? (\"Diary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W304-ji-note",
+      "sequence": 23735,
+      "title": "记 (jì) — the speech piece, then the right piece of 起",
+      "headword": "记",
+      "romanization": "jì",
+      "gloss": "记 — the speech piece, then the right piece of 起",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d1c11adf12ed7a53",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the speech piece, then the right piece of 起",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the speech piece, then the right piece of 起 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rìjì — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rìjì* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "说 起."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — shuō, qǐ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *shuō*, *qǐ*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the speech piece, then the right piece of 起",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "记 (jì)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, two strokes. The speech piece of 说: a dot, then a short stroke that runs right, turns down, and rises to the right at the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, three strokes, as on the right of 起: a bar that turns down, a bar across the middle, then a vertical that bends right along the foot and hooks up."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 3 = five."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "记 (jì), all five, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 记, all five, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces in 记 (jì)? (Two.) What is the left piece? (The speech piece, as in 说.) Where have you made the right piece? (On the right of 起.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 记 (jì), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C304-baodao-register",
+      "sequence": 23740,
+      "title": "报到 (bàodào) — to report in on arrival; to sign in",
+      "headword": "报到",
+      "romanization": "bàodào",
+      "gloss": "to report in on arrival; to sign in",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f32367174c8469ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to start school as a child, then the Mandarin for a diary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 报到",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "报到 — bàodào — \"to report in on arrival; to sign in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "新生明天来学校报到 xīnshēng míngtiān lái xuéxiào bàodào — The new students sign in at school tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "It sounds the same as bàodào 'to report the news'; this one means arriving and signing in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "报到 (bàodào) is built from 报 'to report' and 到 'to arrive', both inherited from Middle Chinese, pawH and tawH (Guangyun, in Baxter's transcription), which glosses the second 'to reach': to report that you have arrived."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàodào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàodào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàodào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàodào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnshēng míngtiān lái xuéxiào bàodào — The new students sign in at school tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnshēng míngtiān lái xuéxiào bàodào* — The new students sign in at school tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to start school as a child, then the Mandarin for a diary, then say bàodào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to start school as a child, then the Mandarin for a diary, then say *bàodào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 报到 (bàodào) mean? (\"To report in on arrival; to sign in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C304-xuefei",
+      "sequence": 23750,
+      "title": "xuéfèi — tuition fees",
+      "headword": "xuéfèi",
+      "romanization": "xuéfèi",
+      "gloss": "tuition fees",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1990c8f7f5a435cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a diary, then the Mandarin for to report in on arrival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xuéfèi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xuéfèi — \"tuition fees\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dàxué de xuéfèi hěn guì — University fees are high."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xuéfèi is built from 学 'to study' and fèi 'to spend', both inherited from Middle Chinese, haewk and phj+jH (Guangyun, in Baxter's transcription), which glosses the second 'to use up'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xuéfèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xuéfèi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xuéfèi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xuéfèi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàxué de xuéfèi hěn guì — University fees are high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàxué de xuéfèi hěn guì* — University fees are high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a diary, then the Mandarin for to report in on arrival, then say xuéfèi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a diary, then the Mandarin for to report in on arrival, then say *xuéfèi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xuéfèi mean? (\"Tuition fees\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C304-jizhu",
+      "sequence": 23760,
+      "title": "jìzhù — to commit to memory; to keep in mind",
+      "headword": "jìzhù",
+      "romanization": "jìzhù",
+      "gloss": "to commit to memory; to keep in mind",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:baa525a0d33d3b68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to report in on arrival, then the Mandarin for school tuition fees."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jìzhù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jìzhù — \"to commit to memory; to keep in mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ jìzhù le tā de diànhuà hàomǎ — I memorized his phone number."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jìzhù is built from 记 (jì) 'to note down' and zhù 'to stay', both inherited from Middle Chinese, kiH and drjuH (Guangyun, in Baxter's transcription), which glosses the second 'to stop': noted so that it stays."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìzhù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìzhù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìzhù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìzhù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ jìzhù le tā de diànhuà hàomǎ — I memorized his phone number.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ jìzhù le tā de diànhuà hàomǎ* — I memorized his phone number.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to report in on arrival, then the Mandarin for school tuition fees, then say jìzhù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to report in on arrival, then the Mandarin for school tuition fees, then say *jìzhù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jìzhù mean? (\"To commit to memory; to keep in mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

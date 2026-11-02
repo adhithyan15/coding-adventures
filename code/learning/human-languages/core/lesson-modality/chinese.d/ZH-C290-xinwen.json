@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C290-xinwen",
+    "language": "chinese",
+    "chapter": 290,
+    "sequence": 23000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0855aadee741adc7"
+  },
+  "findings": []
+}

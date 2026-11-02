@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:789f946ca49432d9",
+  "lessonIds": [
+    "ZH-C300-dizhen",
+    "ZH-C300-si",
+    "ZH-W300-si-die",
+    "ZH-C300-shengming",
+    "ZH-C300-siyin",
+    "ZH-C300-baozha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch300.txt",
+  "json": "chinese/narration/ch300.json",
+  "textHash": "fnv1a64:6f42f8732ac10a66",
+  "jsonHash": "fnv1a64:e0a55571941963cb",
+  "findings": []
+}

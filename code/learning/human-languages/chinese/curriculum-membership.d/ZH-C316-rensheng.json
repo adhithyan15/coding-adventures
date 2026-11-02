@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C316-rensheng",
+  "pathSegment": "ZH-PATH-316-PLACE316",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-316-PLACE316",
+      "order": 3
+    }
+  ]
+}

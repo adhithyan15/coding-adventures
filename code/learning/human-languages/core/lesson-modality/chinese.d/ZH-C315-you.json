@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C315-you",
+    "language": "chinese",
+    "chapter": 315,
+    "sequence": 24300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f556dcc4fbbcf37a"
+  },
+  "findings": []
+}

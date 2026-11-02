@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W306-jing-pass",
+  "pathSegment": "ZH-PATH-306-WEDDING306",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-306-WEDDING306",
+      "order": 2
+    }
+  ]
+}

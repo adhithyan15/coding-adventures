@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Getting Engaged",
+  "label": "ch:zh-getting-engaged",
+  "canDo": "I can talk about going out with someone, a proposal, an engagement and a happy family occasion.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C305-xinlang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can talk about going out with someone, a proposal, an engagement and a happy family occasion.",
+    "assesses": [
+      "ZH-LEX-C305-ENGAGE305-03",
+      "ZH-LEX-C305-ENGAGE305-04",
+      "ZH-LEX-C305-ENGAGE305-05"
+    ]
+  }
+}

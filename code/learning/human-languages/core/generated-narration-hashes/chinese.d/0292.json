@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:938316a098fc2d3c",
+  "lessonIds": [
+    "ZH-C292-guangbo",
+    "ZH-C292-guanzhong",
+    "ZH-C292-zhibo",
+    "ZH-C292-tingzhong",
+    "ZH-C292-fabiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch292.txt",
+  "json": "chinese/narration/ch292.json",
+  "textHash": "fnv1a64:a5bc751650aba846",
+  "jsonHash": "fnv1a64:d178a55723177c62",
+  "findings": []
+}

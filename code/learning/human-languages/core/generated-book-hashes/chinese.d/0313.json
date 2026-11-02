@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:26a5eb14bdbc3854",
+  "lessonIds": [
+    "ZH-C313-zhuangxiu",
+    "ZH-C313-cai",
+    "ZH-W313-cai-only",
+    "ZH-C313-dingju",
+    "ZH-C313-shebude",
+    "ZH-C313-shiying"
+  ],
+  "tex": "chinese/book/chapters/ch313-moving-house.tex"
+}

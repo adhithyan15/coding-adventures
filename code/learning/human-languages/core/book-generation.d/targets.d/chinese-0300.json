@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 300,
+  "output": "chinese/book/chapters/ch300-life-and-death.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

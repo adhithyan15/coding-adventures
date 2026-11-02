@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C290-diantai",
+  "pathSegment": "ZH-PATH-290-NEWS290",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-290-NEWS290",
+      "order": 2
+    }
+  ]
+}

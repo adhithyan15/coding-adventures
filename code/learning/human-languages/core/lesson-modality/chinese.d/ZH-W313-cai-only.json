@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W313-cai-only",
+    "language": "chinese",
+    "chapter": 313,
+    "sequence": 24205,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8788eebe2c1d833c",
+    "detachableSegments": [
+      "Script — a bar, a hooked post and a sweep"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

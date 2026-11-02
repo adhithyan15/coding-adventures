@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C307-zaihun",
+  "pathSegment": "ZH-PATH-307-SPLIT307",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-307-SPLIT307",
+      "order": 2
+    }
+  ]
+}

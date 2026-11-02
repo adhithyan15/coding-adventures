@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:b98b8117949d790d",
+  "lessonIds": [
+    "ZH-C309-qiangjie",
+    "ZH-C309-xiaotou",
+    "ZH-W309-tou-steal",
+    "ZH-C309-pian",
+    "ZH-C309-pianzi",
+    "ZH-C309-guyi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch309.txt",
+  "json": "chinese/narration/ch309.json",
+  "textHash": "fnv1a64:7995ca22d4e0bbb5",
+  "jsonHash": "fnv1a64:ad9616188c3a700e",
+  "findings": []
+}
