@@ -93,8 +93,19 @@ public enum Resolver {
                    let match = content.firstMatch(for: #""name"\s*:\s*"([^"]+)""#) {
                     setKnown(match.lowercased(), package.name, path: package.path)
                 }
-            case "rust", "wasm":
+            case "rust":
+                // A Rust crate is known by its directory name ("logic-gates")
+                // and by its declared `[package]` `name`.
                 setKnown(packageDirName, package.name, path: package.path)
+                if let cargoName = readCargoPackageName(in: package.path) {
+                    setKnown(cargoName, package.name, path: package.path)
+                }
+            case "wasm":
+                // A WASM wrapper is known only by its declared Cargo name
+                // ("graph-wasm"). Its bare directory name ("graph") belongs to
+                // the Rust crate it wraps, and claiming it would turn the
+                // wrapper's own `graph = { path = "../../rust/graph" }` into a
+                // self-edge (as the Go reference explains).
                 if let cargoName = readCargoPackageName(in: package.path) {
                     setKnown(cargoName, package.name, path: package.path)
                 }
@@ -282,6 +293,56 @@ public enum Resolver {
         return dependencies
     }
 
+    // MARK: - Rust (Cargo.toml)
+    //
+    // # Which tables are build-graph edges
+    //
+    // A graph edge means "rebuild and re-test the dependent when this
+    // changes", so it must cover everything Cargo compiles INTO the crate:
+    //
+    //     table                                  edge?  why
+    //     -------------------------------------  -----  ---------------------------
+    //     [dependencies]                         yes    linked into the library
+    //     [build-dependencies]                   yes    compiled into build.rs,
+    //                                                   which generates or
+    //                                                   configures it
+    //     [target.<cfg>.dependencies]            yes    linked on that target; CI
+    //     [target.<cfg>.build-dependencies]      yes    builds on several hosts,
+    //                                                   so the union over every cfg
+    //     [dev-dependencies] (every form)        no     tests only; Cargo allows
+    //                                                   dev cycles, a graph must not
+    //     [patch], [replace], [workspace], ...   no     not a dependency at all
+    //
+    // `build_dependencies` is Cargo's legacy spelling of `build-dependencies`.
+    //
+    // # Which entry shapes
+    //
+    // Both TOML spellings of a path dependency are read:
+    //
+    //     [dependencies]
+    //     logic-gates = { path = "../logic-gates" }          <- inline table
+    //     gates = { package = "logic-gates", path = "..." }  <- renamed: "logic-gates"
+    //
+    //     [dependencies.logic-gates]                         <- sub-table
+    //     path = "../logic-gates"
+    //
+    // The crate name (the `package` rename if present, else the key) is then
+    // looked up in the known names, and each internal package is returned
+    // once. The line procedure is the cross-implementation contract in the
+    // Rust paragraph of code/specs/build-tool-conformance.md; every build-tool
+    // front implements the same one (ported here from the Go reference,
+    // cargoLinkDependencyNames), and the shared fixture
+    // resolution-rust-field-aware pins it.
+    //
+    // # Why bytes, not Characters
+    //
+    // A Swift `Character` is a grapheme cluster, and "\r\n" is ONE grapheme,
+    // so splitting a String at "\n" would never split a CRLF file at all. The
+    // contract is defined on LF and on ASCII delimiters, so the reader works
+    // on the UTF-8 bytes. Every byte it compares is ASCII, and in UTF-8 an
+    // ASCII byte is never part of a multi-byte character, so byte offsets are
+    // exact and every slice it decodes back to a String is whole characters.
+
     private static func parseRustDeps(package: BuildPackage, knownNames: [String: String]) -> [String] {
         let filePath = (package.path as NSString).appendingPathComponent("Cargo.toml")
         guard let content = try? String(contentsOfFile: filePath, encoding: .utf8) else {
@@ -289,27 +350,410 @@ public enum Resolver {
         }
 
         var dependencies: [String] = []
-        var inDependencies = false
+        for crateName in cargoLinkDependencyNames(content) {
+            // A crate may sit in several link tables at once (say in
+            // `[dependencies]` and `[build-dependencies]`): one edge.
+            if let packageName = knownNames[crateName], !dependencies.contains(packageName) {
+                dependencies.append(packageName)
+            }
+        }
+        return dependencies
+    }
 
-        for line in content.split(whereSeparator: \.isNewline) {
-            let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
-            if trimmed.hasPrefix("[") {
-                inDependencies = trimmed == "[dependencies]"
-                continue
+    /// The table names whose path entries link into, or build, the crate.
+    /// They are compared exactly: TOML keys are case-sensitive, so
+    /// `[Dependencies]` is some other table.
+    private static let cargoLinkTableNames: Set<String> = [
+        "dependencies", "build-dependencies", "build_dependencies",
+    ]
+
+    /// How the lines under the current header are read.
+    private enum CargoLinkTable {
+        /// Not a link table: its lines are skipped.
+        case ignored
+        /// `[D]` or `[target.C.D]`: one `name = { ... }` entry per line.
+        case inline
+        /// `[D.N]` or `[target.C.D.N]`: the keys of the one entry `N`.
+        case sub(String)
+    }
+
+    private typealias Bytes = ArraySlice<UInt8>
+
+    private static let quote = UInt8(ascii: "\"")
+    private static let apostrophe = UInt8(ascii: "'")
+    private static let backslash = UInt8(ascii: "\\")
+    private static let space = UInt8(ascii: " ")
+    private static let tab = UInt8(ascii: "\t")
+
+    /// Returns the ASCII-lowercased crate names of every path dependency in
+    /// a manifest's link tables, in manifest order, duplicates included (the
+    /// caller collapses them).
+    ///
+    /// It is one pass over the lines with a three-state machine
+    /// (`CargoLinkTable`). Every header line — even a malformed one, or an
+    /// array of tables — ends the current table, and so does the end of the
+    /// file; a sub-table's entry is complete only then, because its `path`
+    /// and `package` keys may come in any order.
+    ///
+    /// One inline entry may cover several lines. TOML 1.0 lets an ARRAY
+    /// inside an inline table span lines, and the repository writes exactly
+    /// that:
+    ///
+    ///     coding_adventures_vault_pm_cli = { path = "../vault-pm-cli", features = [
+    ///         "crash-injection",
+    ///     ] }
+    ///
+    /// So while the entry's value still has an unclosed `{` or `[`, the next
+    /// lines are joined onto it with one space (and are not looked at as
+    /// headers or entries). If the file ends first, the entry contributes
+    /// nothing.
+    public static func cargoLinkDependencyNames(_ text: String) -> [String] {
+        var bytes = Array(text.utf8)
+        if bytes.starts(with: [0xEF, 0xBB, 0xBF]) {
+            bytes.removeFirst(3) // a leading UTF-8 byte-order mark
+        }
+        // Step 1 of the contract: split at LF, drop ONE trailing CR, strip
+        // the comment outside strings, trim spaces and tabs.
+        let lines = bytes.split(separator: UInt8(ascii: "\n"), omittingEmptySubsequences: false)
+        func cleanLine(_ raw: Bytes) -> Bytes {
+            var line = raw
+            if line.last == UInt8(ascii: "\r") {
+                line = line.dropLast()
             }
-            guard inDependencies else {
-                continue
-            }
-            if trimmed.contains("path"), trimmed.contains("=") {
-                let parts = trimmed.split(separator: "=", maxSplits: 1)
-                let crateName = parts[0].trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-                if let packageName = knownNames[crateName] {
-                    dependencies.append(packageName)
-                }
+            return trimBlank(stripLineComment(line))
+        }
+
+        var names: [String] = []
+        var table = CargoLinkTable.ignored
+        var subPath: Bytes?
+        var subPackage: Bytes?
+
+        // A sub-table is a candidate only once it ends, when `path` was set;
+        // it is named by its `package` rename, else by its key `N`.
+        func finishTable() {
+            if case .sub(let key) = table, subPath != nil {
+                names.append(asciiLowercased(subPackage.map(decode) ?? key))
             }
         }
 
-        return dependencies
+        var index = 0
+        while index < lines.count {
+            let line = cleanLine(lines[index])
+            index += 1
+
+            if line.first == UInt8(ascii: "["), line.last == UInt8(ascii: "]") {
+                finishTable()
+                table = classifyCargoLinkHeader(line)
+                subPath = nil
+                subPackage = nil
+                continue
+            }
+
+            guard let equals = indexOutsideStrings(line, UInt8(ascii: "=")) else {
+                continue
+            }
+            switch table {
+            case .ignored:
+                break
+            case .inline:
+                var value = Array(trimBlank(line[(equals + 1)...]))
+                var complete = true
+                while value.first == UInt8(ascii: "{"), openBracketDepth(value[...]) > 0 {
+                    guard index < lines.count else {
+                        complete = false // the file ended inside the value
+                        break
+                    }
+                    value.append(space)
+                    value.append(contentsOf: cleanLine(lines[index]))
+                    index += 1
+                }
+                if complete, let name = cargoPathDependencyName(key: line[..<equals], value: value[...]) {
+                    names.append(name)
+                }
+            case .sub:
+                // Only the two bare, lowercase keys matter; the first
+                // occurrence of each wins. `version`, `features`,
+                // `optional` ... are ignored.
+                guard let value = singleString(line[(equals + 1)...]) else {
+                    continue
+                }
+                switch decode(trimBlank(line[..<equals])) {
+                case "path" where subPath == nil:
+                    subPath = value
+                case "package" where subPackage == nil:
+                    subPackage = value
+                default:
+                    break
+                }
+            }
+        }
+        finishTable()
+        return names
+    }
+
+    /// Decides how to read the lines under a header line (already
+    /// comment-stripped and trimmed, starting with `[` and ending with `]`).
+    ///
+    /// The header is split into dotted-key segments at every `.` OUTSIDE a
+    /// string, and each segment is decoded to its value. That is what makes
+    /// a cfg header one segment however much punctuation it quotes:
+    ///
+    ///     [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+    ///      target  C (one quoted segment)                    D
+    ///
+    ///     [target."thumbv8m.main-none-eabihf".dependencies.pi]  -> sub-table "pi"
+    ///     [target.x86_64-unknown-linux-gnu.build-dependencies]  -> bare triple
+    ///     ["dependencies"]                                      -> same as [dependencies]
+    ///
+    /// Segment lists that are not exactly one of `[D]`, `[D.N]`,
+    /// `[target.C.D]` or `[target.C.D.N]` — and malformed headers — are
+    /// ignored tables.
+    private static func classifyCargoLinkHeader(_ line: Bytes) -> CargoLinkTable {
+        if line.starts(with: [UInt8(ascii: "["), UInt8(ascii: "[")]) {
+            return .ignored // array of tables, e.g. [[bin]]
+        }
+        let inner = line[(line.startIndex + 1)..<(line.endIndex - 1)]
+        var segments: [String] = []
+        for raw in splitOutsideStrings(inner, separator: UInt8(ascii: "."), nested: false) {
+            guard let segment = keySegment(raw) else {
+                return .ignored
+            }
+            segments.append(segment)
+        }
+        if segments.count >= 3, segments[0] == "target" {
+            segments.removeFirst(2) // drop `target` and the cfg, whatever it is
+        }
+        if segments.count == 1, cargoLinkTableNames.contains(segments[0]) {
+            return .inline
+        }
+        if segments.count == 2, cargoLinkTableNames.contains(segments[0]) {
+            return .sub(segments[1])
+        }
+        return .ignored
+    }
+
+    /// Returns the crate a completed inline-table entry `key = value` names
+    /// when it is a path dependency — the only kind that can point at a
+    /// repository package. The key is the crate name unless the inline table
+    /// renames it with `package = "..."`:
+    ///
+    ///     logic-gates = { path = "../logic-gates" }                    -> logic-gates
+    ///     gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+    ///     serde = "1"                                                  -> not a path dep
+    ///     x = { version = "1", features = ["path"] }                   -> not a path dep
+    ///     foo.path = "../foo"                                          -> dotted key: no
+    ///
+    /// Fields are split at commas outside strings AND outside nested `[...]`
+    /// or `{...}`, so a `features` array cannot leak a fake field and a
+    /// nested table's `path` is not the entry's. Field keys must be exactly
+    /// `path` and `package` (Cargo ignores `Package`, so it must not count as
+    /// a rename).
+    private static func cargoPathDependencyName(key: Bytes, value: Bytes) -> String? {
+        guard let crateName = keySegment(key) else {
+            return nil
+        }
+        let value = trimBlank(value)
+        guard value.count >= 2, value.first == UInt8(ascii: "{"), value.last == UInt8(ascii: "}") else {
+            return nil
+        }
+        var path: Bytes?
+        var packageName: Bytes?
+        let fields = value[(value.startIndex + 1)..<(value.endIndex - 1)]
+        for field in splitOutsideStrings(fields, separator: UInt8(ascii: ","), nested: true) {
+            guard let equals = indexOutsideStrings(field, UInt8(ascii: "=")),
+                  let fieldValue = singleString(field[(equals + 1)...]) else {
+                continue
+            }
+            switch decode(trimBlank(field[..<equals])) {
+            case "path" where path == nil:
+                path = fieldValue
+            case "package" where packageName == nil:
+                packageName = fieldValue
+            default:
+                break
+            }
+        }
+        guard path != nil else {
+            return nil
+        }
+        return asciiLowercased(packageName.map(decode) ?? crateName)
+    }
+
+    /// Trims spaces and tabs only — the contract's notion of blank.
+    private static func trimBlank(_ bytes: Bytes) -> Bytes {
+        var slice = bytes
+        while let first = slice.first, first == space || first == tab {
+            slice = slice.dropFirst()
+        }
+        while let last = slice.last, last == space || last == tab {
+            slice = slice.dropLast()
+        }
+        return slice
+    }
+
+    /// Returns the index just past the string that opens at `bytes[start]`
+    /// (a `"` or `'`), or nil if it is not closed on this line. In a basic
+    /// `"..."` string a backslash makes the next byte part of the string, so
+    /// `\"` does not end it; a literal `'...'` string has no escapes.
+    private static func stringEnd(_ bytes: Bytes, _ start: Int) -> Int? {
+        let delimiter = bytes[start]
+        var index = start + 1
+        while index < bytes.endIndex {
+            if delimiter == quote, bytes[index] == backslash {
+                index += 1
+            } else if bytes[index] == delimiter {
+                return index + 1
+            }
+            index += 1
+        }
+        return nil
+    }
+
+    /// Removes a TOML comment: everything from the first `#` outside a
+    /// string. An unclosed string runs to the end of the line.
+    private static func stripLineComment(_ line: Bytes) -> Bytes {
+        var index = line.startIndex
+        while index < line.endIndex {
+            switch line[index] {
+            case quote, apostrophe:
+                guard let end = stringEnd(line, index) else {
+                    return line
+                }
+                index = end
+            case UInt8(ascii: "#"):
+                return line[..<index]
+            default:
+                index += 1
+            }
+        }
+        return line
+    }
+
+    /// Returns the index of the first `target` byte that is outside every
+    /// string, or nil (also when a string is left unclosed before it).
+    private static func indexOutsideStrings(_ bytes: Bytes, _ target: UInt8) -> Int? {
+        var index = bytes.startIndex
+        while index < bytes.endIndex {
+            switch bytes[index] {
+            case quote, apostrophe:
+                guard let end = stringEnd(bytes, index) else {
+                    return nil
+                }
+                index = end
+            case target:
+                return index
+            default:
+                index += 1
+            }
+        }
+        return nil
+    }
+
+    /// Counts the `{` and `[` outside strings that are not closed again
+    /// within `bytes`. Zero (or less) means the value is complete; an
+    /// unclosed string stops the count where it opens.
+    private static func openBracketDepth(_ bytes: Bytes) -> Int {
+        var depth = 0
+        var index = bytes.startIndex
+        while index < bytes.endIndex {
+            switch bytes[index] {
+            case quote, apostrophe:
+                guard let end = stringEnd(bytes, index) else {
+                    return depth
+                }
+                index = end
+                continue
+            case UInt8(ascii: "{"), UInt8(ascii: "["):
+                depth += 1
+            case UInt8(ascii: "}"), UInt8(ascii: "]"):
+                depth -= 1
+            default:
+                break
+            }
+            index += 1
+        }
+        return depth
+    }
+
+    /// Splits at every `separator` outside strings. With `nested` set, a
+    /// separator inside `[...]` or `{...}` does not split either. An
+    /// unclosed string makes the rest the last part.
+    private static func splitOutsideStrings(_ bytes: Bytes, separator: UInt8, nested: Bool) -> [Bytes] {
+        var parts: [Bytes] = []
+        var start = bytes.startIndex
+        var depth = 0
+        var index = bytes.startIndex
+        while index < bytes.endIndex {
+            let byte = bytes[index]
+            if byte == quote || byte == apostrophe {
+                guard let end = stringEnd(bytes, index) else {
+                    parts.append(bytes[start...])
+                    return parts
+                }
+                index = end
+                continue
+            }
+            if nested, byte == UInt8(ascii: "[") || byte == UInt8(ascii: "{") {
+                depth += 1
+            } else if nested, byte == UInt8(ascii: "]") || byte == UInt8(ascii: "}") {
+                depth -= 1
+            } else if byte == separator, depth == 0 {
+                parts.append(bytes[start..<index])
+                start = index + 1
+            }
+            index += 1
+        }
+        parts.append(bytes[start...])
+        return parts
+    }
+
+    /// Decodes one key or header segment: a bare key (ASCII letters,
+    /// digits, `_`, `-`), or exactly one complete string, whose value is the
+    /// text between its quotes taken verbatim (escapes are not decoded).
+    /// Anything else — empty, dotted, or text around a string — is not a key.
+    private static func keySegment(_ raw: Bytes) -> String? {
+        let segment = trimBlank(raw)
+        guard let first = segment.first else {
+            return nil
+        }
+        if first == quote || first == apostrophe {
+            guard stringEnd(segment, segment.startIndex) == segment.endIndex else {
+                return nil
+            }
+            return decode(segment[(segment.startIndex + 1)..<(segment.endIndex - 1)])
+        }
+        let isBare = segment.allSatisfy { byte in
+            (byte >= UInt8(ascii: "a") && byte <= UInt8(ascii: "z"))
+                || (byte >= UInt8(ascii: "A") && byte <= UInt8(ascii: "Z"))
+                || (byte >= UInt8(ascii: "0") && byte <= UInt8(ascii: "9"))
+                || byte == UInt8(ascii: "_") || byte == UInt8(ascii: "-")
+        }
+        return isBare ? decode(segment) : nil
+    }
+
+    /// Returns the content of a value that is exactly one complete,
+    /// non-empty string (after trimming), as `path` and `package` require.
+    /// `"1"` is one; `"a" "b"`, `1`, `""` and `["x"]` are not.
+    private static func singleString(_ raw: Bytes) -> Bytes? {
+        let value = trimBlank(raw)
+        guard let first = value.first, first == quote || first == apostrophe,
+              stringEnd(value, value.startIndex) == value.endIndex else {
+            return nil
+        }
+        let content = value[(value.startIndex + 1)..<(value.endIndex - 1)]
+        return content.isEmpty ? nil : content
+    }
+
+    private static func decode(_ bytes: Bytes) -> String {
+        String(decoding: bytes, as: UTF8.self)
+    }
+
+    /// Lowercases A-Z only, as the contract says: `String.lowercased()`
+    /// would also fold non-ASCII letters.
+    private static func asciiLowercased(_ name: String) -> String {
+        String(decoding: name.utf8.map { byte in
+            byte >= UInt8(ascii: "A") && byte <= UInt8(ascii: "Z") ? byte + 32 : byte
+        }, as: UTF8.self)
     }
 
     private static func parseElixirDeps(package: BuildPackage, knownNames: [String: String]) -> [String] {
