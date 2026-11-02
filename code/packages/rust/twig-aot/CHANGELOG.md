@@ -1,5 +1,16 @@
 # Changelog — `twig-aot`
 
+## Unreleased — a branch-joined string's length is read at run time; `linux_x86_64_smoke` back in CI
+
+- **Bug (silent miscompile).** In `lower_string_literals_for_aot`, a `mov` copied its source's compile-time literal into the destination even when the destination has more than one definition; the integer table beside it was already guarded. Twig writes `(if c "hello!!" "x")` as one literal register per arm and a `mov` into the join in each arm, so the arm emitted last won, and `(string-length s)` folded to 1 on every path (exit 1 instead of 7 when the first arm is taken).
+- **Fix.** A `mov` now passes a literal on only to a single-definition destination, exactly as the integer fact.
+- **The same hole in the rest of the string table, also fixed.**
+  - A `str_const` register overwritten by a non-string instruction (a `call`, a `const`, an `add`, …) kept its literal, because only the four string-producing ops touched the table; every other write now erases the destination's literal ("a fact dies the moment anything else writes the register").
+  - `collect_runtime_str_vars_for_aot` counted only `str`-hinted definitions when deciding that a variable is branch-selected, so a variable a `str_const` writes in one block and a `call` hinted `any` writes in another stayed on the literal fast path; it now counts every definition of a variable that has at least one `str` definition.
+  - The integer table needs nothing: it only ever holds single-definition registers. The other per-register maps in the crate are flow-insensitive unions (`root_heap_word_copies`, `sign_word_comparisons`) or a type environment (`propagate_aot_types`, tracked separately).
+- **Tests.** `linux_x86_64_smoke::branch_joined_string_copy_reads_its_length_at_run_time_on_linux` (the Twig `if` join, run natively: 7; it exited 1 before), and unit tests `mov_into_a_branch_joined_string_does_not_fold_one_arms_length`, `a_non_string_definition_in_another_block_disables_the_literal_fold` and `a_non_string_write_erases_the_literal_fact`. All four fail without the fix.
+- **CI.** `BUILD`'s comment said `linux_x86_64_smoke` fails 2 of 8. It passes 8 of 8 on origin/main (the precise-GC differentials have passed since the x86-64 precise-roots work) and 9 of 9 in three runs here, so the suite is listed again and the comment rewritten. `macos_arm64_smoke` stays excluded until someone re-checks it on Apple Silicon.
+
 ## Unreleased — #18765 / #18766 — globals and string buffers stay GC roots
 
 - **Bug (#18765): globals were no GC root.** A top-level `define` that a function reads lives in a slot of the `_twig_globals` data block. No stack map names it and no stack scan reaches it, so the precise and compacting collectors (and the allocation-triggered conservative one) never saw it. A compacting collection moved a pair that both a global and `main`'s frame slot named, rewrote the frame slot, and left the global pointing at the freed from-space cell: `(define g (cons 7 8)) (define (f) (begin (w4) (car g))) (f)` with `gc_collect_compacting` spliced in before the read exited 51 instead of 7, and valgrind memcheck reported an invalid read. Non-moving collections got away with it because a stale word in a stack-mapped, not-yet-written frame slot of `f` (rule R1 names every root slot at every safepoint) still held the pair's address.

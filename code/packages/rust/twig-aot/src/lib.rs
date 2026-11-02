@@ -3278,8 +3278,16 @@ fn push_aot_string_literal(
 /// buffer's address (a runtime handle) via `mov dest = buf`, so no backend
 /// change is needed — dropping the `strings` registration is the whole fix, and
 /// it applies to both the aarch64 and x86_64 backends at once.
+///
+/// **Every definition counts, not only the `str`-hinted ones.** A variable a
+/// `str_const` writes in one block and a `call` hinted `any` writes in another is
+/// just as branch-selected; counting only `str` definitions left it on the
+/// literal fast path, and when the `call` arm was emitted first the literal
+/// reached the join. So a variable is runtime when it has at least one `str`
+/// definition and its definitions, of any type, span two or more blocks.
 fn collect_runtime_str_vars_for_aot(func: &IIRFunction) -> HashSet<String> {
-    let mut str_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
+    let mut def_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
+    let mut has_str_def: HashSet<&str> = HashSet::new();
     let mut block: usize = 0;
     for instr in &func.instructions {
         let op = instr.op.as_str();
@@ -3287,17 +3295,18 @@ fn collect_runtime_str_vars_for_aot(func: &IIRFunction) -> HashSet<String> {
             block += 1;
         }
         if let Some(dest) = &instr.dest {
+            def_blocks.entry(dest.as_str()).or_default().insert(block);
             if instr.type_hint == "str" {
-                str_blocks.entry(dest.as_str()).or_default().insert(block);
+                has_str_def.insert(dest.as_str());
             }
         }
         if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
             block += 1;
         }
     }
-    str_blocks
+    def_blocks
         .into_iter()
-        .filter(|(_, blocks)| blocks.len() >= 2)
+        .filter(|(name, blocks)| blocks.len() >= 2 && has_str_def.contains(name))
         .map(|(name, _)| name.to_string())
         .collect()
 }
@@ -3349,6 +3358,19 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             }
             prev_loc = old_map.get(in_idx).copied().unwrap_or(SourceLoc::SYNTHETIC);
         }
+        // A compile-time fact about a register dies the moment anything else
+        // writes that register. The four ops that may *produce* a string fact
+        // decide for themselves (after reading their sources, which may be the
+        // destination); every other write — a `call`, an `add`, a `const`, a
+        // `str_len` — erases the destination's literal here. Without this a
+        // `call` that overwrote a literal register left the literal behind, and a
+        // later `str_len` folded the old length. (The integer table needs no such
+        // step: it only ever holds single-definition registers.)
+        if !matches!(instr.op.as_str(), "mov" | "str_const" | "str_concat" | "str_slice") {
+            if let Some(dest) = &instr.dest {
+                strings.remove(dest);
+            }
+        }
         if instr.op == "const" {
             if let (Some(dest), Some(Operand::Int(value))) =
                 (instr.dest.as_ref(), instr.srcs.first())
@@ -3380,11 +3402,17 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                         ints.remove(dest);
                     }
                 }
+                // The literal passes on only to a SINGLE-definition destination,
+                // exactly as the integer fact above. A destination written more
+                // than once — the join of an `if` that `mov`s a different literal
+                // in each arm — would otherwise take whichever arm is emitted
+                // last, and `str_len` / `print_str` would fold that arm's length
+                // on every path (`(if c "hello!!" "x")` folded to 1).
                 match strings.get(src).cloned() {
-                    Some(string) => {
+                    Some(string) if !mutable_vars.contains(dest.as_str()) => {
                         strings.insert(dest.clone(), string);
                     }
-                    None => {
+                    _ => {
                         strings.remove(dest);
                     }
                 }
@@ -6129,6 +6157,103 @@ mod tests {
             "print_str should still lower to call_builtin print_string: {:?}",
             f.instructions
         );
+    }
+
+    /// `str_len` of `s` reads the length header at run time: it was not folded
+    /// to a `const`.
+    fn reads_length_at_runtime(f: &IIRFunction, var: &str) -> bool {
+        f.instructions.iter().any(|i| {
+            i.op == "field_load"
+                && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == var)
+                && matches!(i.srcs.get(1), Some(Operand::Int(0)))
+        })
+    }
+
+    /// The Twig shape of an `if` choosing between two literals: each arm puts its
+    /// literal in its own register and `mov`s it into the join `s`. A `mov` used to
+    /// copy the arm's literal into `s` although `s` has two definitions, so the
+    /// arm emitted last ("x") won and `str_len s` folded to 1 on every path. Now a
+    /// `mov` passes a literal on only to a single-definition destination, exactly
+    /// as the integer table already did.
+    #[test]
+    fn mov_into_a_branch_joined_string_does_not_fold_one_arms_length() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![("c".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("c".into()), Operand::Var("Lelse".into())], "void"),
+                IIRInstr::new("str_const", Some("t1".into()), vec![Operand::Str("hello!!".into())], "str"),
+                IIRInstr::new("mov", Some("s".into()), vec![Operand::Var("t1".into())], "str"),
+                IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("Lelse".into())], "void"),
+                IIRInstr::new("str_const", Some("t2".into()), vec![Operand::Str("x".into())], "str"),
+                IIRInstr::new("mov", Some("s".into()), vec![Operand::Var("t2".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f);
+        assert!(
+            reads_length_at_runtime(&f, "s"),
+            "the join's length must be read at run time: {:?}",
+            f.instructions
+        );
+        assert!(
+            !f.instructions.iter().any(|i| i.dest.as_deref() == Some("n") && i.op == "const"),
+            "str_len s must not fold to one arm's length: {:?}",
+            f.instructions
+        );
+    }
+
+    /// The same multiple-definition hole in the literal-producing ops: a string
+    /// variable written by `str_const` in one block and by some other instruction
+    /// (here a `call` hinted `any`) in another. The runtime-string rule counted
+    /// only `str`-hinted definitions, so `s` looked single-block and kept the
+    /// literal fast path; and the `call`, which is not a string op, did not erase
+    /// the fact. With the `call` arm emitted first, the literal reached the join.
+    #[test]
+    fn a_non_string_definition_in_another_block_disables_the_literal_fold() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![("c".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("c".into()), Operand::Var("Llit".into())], "void"),
+                IIRInstr::new("call", Some("s".into()), vec![Operand::Var("g".into())], "any"),
+                IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("Llit".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello!!".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f);
+        assert!(reads_length_at_runtime(&f, "s"), "{:?}", f.instructions);
+    }
+
+    /// Straight-line: a literal followed by a non-string write of the same
+    /// register. The write must erase the literal fact ("a compile-time fact about
+    /// a register dies the moment anything else writes that register").
+    #[test]
+    fn a_non_string_write_erases_the_literal_fact() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ab".into())], "str"),
+                IIRInstr::new("call", Some("s".into()), vec![Operand::Var("g".into())], "any"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f);
+        assert!(reads_length_at_runtime(&f, "s"), "{:?}", f.instructions);
     }
 
     /// A string reassigned twice *straight-line* (one basic block) is NOT
