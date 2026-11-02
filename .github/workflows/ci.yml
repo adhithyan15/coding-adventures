@@ -747,6 +747,11 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ct_compare_conformance.py'
           python3 code/scripts/ct_compare_conformance.py
+          # TF01: the bootstrap harness's self-corpus and its independent
+          # reference. The crate's BUILD runs the validator too, but only when
+          # the build tool selects the crate; this keeps it always on.
+          python3 code/scripts/bootstrap_harness_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_bootstrap_harness_conformance.py'
           python3 code/scripts/starlark_opcode_provider_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_starlark_opcode_provider_conformance.py'
           python3 code/scripts/compiler_ir_conformance.py

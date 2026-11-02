@@ -74,6 +74,11 @@ space.
 | `L<n> v1 … vn` | list of `n` values | Ordered |
 | `M<n> k1 v1 … kn vn` | map of `n` entries | Keys are values; no two keys may be deep-equal |
 
+Lists and maps nest at most **64** deep: the outermost container is depth 1,
+and a container at depth 65 is rejected. The limit bounds a recursive
+parser's stack whatever the input, and every lane enforces the same number so
+that they accept the same files.
+
 A parser must **reject** any line that breaks these rules. The rejected inputs
 include:
 - uppercase hex;
@@ -84,7 +89,9 @@ include:
 - two spaces in a row;
 - a duplicate field;
 - a duplicate record id;
-- invalid UTF-8 inside `S`.
+- invalid UTF-8 inside `S`;
+- a carriage return anywhere in a record line;
+- nesting deeper than 64.
 
 The corpus includes such inputs as `tfv_reject` cases (§4).
 
@@ -128,9 +135,10 @@ has an `op` field (text) naming what it tests:
 | `splitmix64` | `seed`, `outputs` (list of int) | §5.1 |
 | `fnv1a64` | `input` (bytes), `hash` (int) | §5.1 |
 | `shuffle` | `seed`, `ids` (list of text), `order` (list of text) | §5.2 |
+| `sub_seed` | `seed`, `test_id` (text), `sub_seed` (int) | §5.2, rule 4 |
 | `tfv_reject` | `text` (text: one complete TFV file) | §2 |
 
-The validator (`code/scripts/test_bootstrap_conformance.py`) enforces:
+The validator (`code/scripts/bootstrap_harness_conformance.py`) enforces:
 - a closed shape for every record;
 - unique ids;
 - for `deep_equal` and `error_is`, **at least one `pass` and one `fail` case**,
@@ -174,10 +182,16 @@ The validator (`code/scripts/test_bootstrap_conformance.py`) enforces:
 4. Each test gets its own **sub-seed**: the first output of
    `SplitMix64(run_seed XOR fnv1a64(utf8(id)))`. A test's randomness therefore
    depends only on the run seed and its own id, never on its position.
-5. The run seed defaults to 0. A lane accepts `--seed <decimal u64>`.
+5. The run seed defaults to 0. A lane accepts `--seed <decimal u64>`
+   (ASCII digits only).
 
-A panic or exception escaping a test is that test's failure. It does not stop
-the run.
+A panic or exception escaping a test is that test's failure, with failure id
+`panic`. It does not stop the run. The panic's own message is **not** copied
+into TAP, because it may quote the inputs that caused it; a lane may leave it
+on stderr.
+
+An invalid or duplicate test id is reported as a single TAP
+`Bail out! <reason>` line before any test runs, and the run fails.
 
 ### 5.3 Output: a TAP v14 profile
 
@@ -196,8 +210,23 @@ ok 3 - ct-compare/eq-u64-zero
 ```
 
 - The YAML block keys are pinned: `failure_id`, `message`. `property:` and
-  `fuzz:` are reserved for VER05 and VER06.
-- The process exits **0 when every test passed, and 1 otherwise**.
+  `fuzz:` are reserved for VER05 and VER06. Both values are YAML
+  double-quoted scalars, with every control and line-breaking character
+  escaped, so a message cannot end the block or forge a TAP line.
+- Failure ids form a closed vocabulary. L0 defines:
+
+  | Id | Meaning |
+  |---|---|
+  | `not-deep-equal`, `no-error`, `wrong-error` | from the verdict core (§3) |
+  | `panic` | a panic or exception escaped the test |
+  | `corpus-mismatch` | the self-corpus expected a different answer |
+  | `corpus-malformed` | a self-corpus record lacks the fields its `op` needs |
+
+- The process exits **0 when every test passed, 1 otherwise** (including a
+  bail-out, or standard output closing before the report is written), and
+  **2 for a command line it does not understand**. Lanes whose build tool
+  forwards its own flags to every test binary may ignore those flags by
+  name; the Rust lane ignores Cargo's `--nocapture`.
 - The seed printed is the *run* seed, which is harmless.
 - Property and fuzz failures must never print their reproducing seed or input
   in public CI output (VER00 §7.3). That rule belongs to the engines that
