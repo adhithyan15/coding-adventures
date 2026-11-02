@@ -583,9 +583,10 @@ impl RubyLexer {
         }
     }
 
-    /// The pre-#18814 `finalize_heredoc`, verbatim: it removed the tag
-    /// `Name` at once with `Vec::remove`, shifting the tail once per
-    /// heredoc.  Used when `reference_heredocs` is set.
+    /// The pre-#18814 `finalize_heredoc`, verbatim but for the #18820 fix
+    /// (marked below): it removed the tag `Name` at once with
+    /// `Vec::remove`, shifting the tail once per heredoc.  Used when
+    /// `reference_heredocs` is set.
     pub(crate) fn ref_finalize_heredoc(&mut self, h: PendingHeredoc) {
         let body = match h.variant {
             HeredocVariant::Plain | HeredocVariant::DashIndent => h.body.clone(),
@@ -603,6 +604,13 @@ impl RubyLexer {
         // no tokens).
         if h.tag_idx < self.tokens.len() {
             self.tokens.remove(h.tag_idx);
+            // #18820: the same fix as production, so the differential
+            // tests keep comparing only how the tags are removed (at once
+            // here, in one sweep there), not whether the flag goes too.
+            // This line is the one change to the pre-#18814 body.
+            if h.tag_idx < self.whitespace_before_token.len() {
+                self.whitespace_before_token.remove(h.tag_idx);
+            }
         }
         if h.op_idx < self.tokens.len() {
             let line = self.tokens[h.op_idx].line;

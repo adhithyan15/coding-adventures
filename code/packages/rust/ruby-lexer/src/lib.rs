@@ -597,6 +597,8 @@ impl RubyLexer {
     /// removed before this runs), so a sorted list walked alongside
     /// `Vec::retain` finds each one.
     ///
+    /// The tags' whitespace flags are removed in the same sweep (#18820).
+    ///
     /// Runs before anything reads the stream: at the end of lexing
     /// ([`Self::finish`], before the fusion passes) and in
     /// [`Self::drain_tokens`] (for a caller that drains without finishing,
@@ -608,15 +610,15 @@ impl RubyLexer {
         let mut retired = std::mem::take(&mut self.retired_heredoc_tags);
         retired.sort_unstable();
         retired.dedup();
-        let mut next = retired.into_iter().peekable();
-        let mut idx = 0;
-        self.tokens.retain(|_| {
-            let retire = next.next_if_eq(&idx).is_some();
-            idx += 1;
-            !retire
-        });
-        // The whitespace flags are left as they are, exactly as the
-        // pre-#18814 code left them (it removed the token, not its flag).
+        // #18820: each tag's whitespace flag goes with it.  The flags are
+        // a parallel array — `whitespace_before_token[i]` says whether
+        // whitespace preceded `tokens[i]` — and the old code removed the
+        // tag but not its flag, so after a heredoc every token read the
+        // flag of the token before it: `x &.y` lexed `&` `.` (the `.`
+        // inherited the space before `&`) and `x = 1.5` lexed `1` `.` `5`.
+        // The heredoc's `String` keeps the flag of its `<<` opener.
+        remove_sorted_indices(&mut self.tokens, &retired);
+        remove_sorted_indices(&mut self.whitespace_before_token, &retired);
     }
 
     /// Feed end-of-input to the engine until it reaches its final state,
@@ -814,9 +816,10 @@ impl RubyLexer {
     ///
     /// `fuse` sees the follower's whitespace flag at its own index, as the
     /// old loop did (it kept the flags parallel by removing the same
-    /// slots).  Flags past the end of the token vector are left exactly
-    /// where they were; see `finalize_heredoc`, which removes a token
-    /// without its flag.  The differential tests in
+    /// slots).  Should the flags ever outnumber the tokens, the extra
+    /// ones are left exactly where they were.  (Before #18820,
+    /// `finalize_heredoc` removed a token without its flag, so they did.)
+    /// The differential tests in
     /// `differential_tests.rs` hold every pass to the pre-#18814 stream,
     /// step by step.
     fn fuse_adjacent(
@@ -2398,6 +2401,20 @@ fn fused_token(left: &Token, type_: TokenType, value: String) -> Token {
         flags: None,
         cv: None,
     }
+}
+
+/// #18814 review — remove `v[i]` for every `i` in `sorted` (ascending, no
+/// repeats) in one `Vec::retain` pass: each element is visited once, and
+/// the list is walked alongside, so the cost is O(len) however many go.
+/// Indices past the end are ignored.
+fn remove_sorted_indices<T>(v: &mut Vec<T>, sorted: &[usize]) {
+    let mut next = sorted.iter().copied().peekable();
+    let mut idx = 0;
+    v.retain(|_| {
+        let remove = next.next_if_eq(&idx).is_some();
+        idx += 1;
+        !remove
+    });
 }
 
 /// Phase 4k helper — true iff `s` is a pure integer-shaped lexeme
