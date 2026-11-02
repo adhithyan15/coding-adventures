@@ -13,6 +13,7 @@
 - Tests:
   - `incremental_newborn_fields_are_traced` replays the sequence above. With newborns black, `W` was freed.
   - `incremental_finish_traces_newborns_born_after_the_last_step` covers newborns created after the last step.
+- **The first stepped-sweep call ends the mark too.** `incremental_sweep_step` only `debug_assert!`ed that the worklist was empty. So `start → step* (done) → alloc N, N.car = W → sweep_step*` swept without scanning the grey newborn `N` in a release build, freeing `W` (white because the mutator had taken it out of the heap into a local), and `incremental_finish` drains nothing once a stepped sweep has begun. The first `incremental_sweep_step` now drains the worklist before it creates the sweep state, exactly as `finish` does (both through the new private `drain_grey_worklist`), and asserts emptiness after. Test: `incremental_sweep_step_scans_objects_born_after_the_last_step`. With the drain disabled it fails in release (`W` freed) and panics in debug.
 - Not in twig-vm's dependency graph.
 
 ## Unreleased — incremental cycles can re-scan the roots before the sweep

@@ -1770,6 +1770,22 @@ impl FlatHeap {
         self.sweep_state = None;
     }
 
+    /// Scan the grey worklist to empty: every grey object (a step's leftovers, or an object
+    /// born grey since the last step) is scanned, greying its white children, until none
+    /// remain. The unbounded tail of a mark, run where the mark must end before a sweep:
+    /// the first [`Self::incremental_sweep_step`] and [`Self::incremental_finish`].
+    ///
+    /// # Safety
+    /// Every worklist entry is a live block owned by this heap (only `alloc`, the barrier and
+    /// the mark push to it, and nothing frees a block before the sweep).
+    unsafe fn drain_grey_worklist(&mut self) {
+        let mut work = core::mem::take(&mut self.mark_worklist);
+        while let Some(h) = work.pop() {
+            self.scan_payload(h, &mut work, false);
+        }
+        self.mark_worklist = work;
+    }
+
     /// **Advance the sweep** by up to `budget` blocks (AOT00-T4 §4) — the sweep-phase analogue
     /// of [`Self::incremental_step`], so the *sweep* pause is bounded just like the mark. Frees
     /// each unreachable (white) block and ages each survivor, resuming from a persistent cursor
@@ -1790,9 +1806,16 @@ impl FlatHeap {
     /// other collection runs mid-cycle.
     pub unsafe fn incremental_sweep_step(&mut self, budget: usize) -> bool {
         debug_assert!(self.mark_in_progress, "incremental_sweep_step outside a mark phase");
-        debug_assert!(self.mark_worklist.is_empty(), "sweep before marking is complete");
         // Lazily begin the sweep on the first call: resume at the list head, tallies zeroed.
         if self.sweep_state.is_none() {
+            // Marking ends here, not at the last `step`: objects allocated since then were
+            // born grey and still sit on the worklist with fields never scanned
+            // (`start → step* (done) → alloc N, N.car = W → sweep_step*`). Sweeping without
+            // scanning them would free `W` under the live `N`, and once a stepped sweep has
+            // begun `incremental_finish` drains nothing. So drain here first, as `finish`
+            // does. (This used to be only a `debug_assert!`, so a release build swept on.)
+            self.drain_grey_worklist();
+            debug_assert!(self.mark_worklist.is_empty(), "sweep before marking is complete");
             let before = self.object_count();
             let prev_live = self.live_bytes;
             self.sweep_state = Some(SweepState {
@@ -1865,10 +1888,7 @@ impl FlatHeap {
         // anything they reach, before sweeping. Once a stepped sweep has started nothing
         // is queued, so the worklist is already empty there.
         if self.sweep_state.is_none() {
-            let mut work = core::mem::take(&mut self.mark_worklist);
-            while let Some(h) = work.pop() {
-                self.scan_payload(h, &mut work, false);
-            }
+            self.drain_grey_worklist();
         }
         debug_assert!(self.mark_worklist.is_empty(), "marking not complete — step to done first");
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
@@ -7577,6 +7597,36 @@ mod tests {
         let stats = unsafe { heap.incremental_finish() };
         assert_eq!(stats.freed, 0, "both newborns survive the cycle they were born in");
         assert_eq!(heap.object_count(), 4);
+    }
+
+    /// **The stepped sweep ends the mark too** (review of #18789's follow-up). Order:
+    /// `start → step* (done) → alloc N, N.car = W → sweep_step*`, with `W` white when
+    /// marking finished (the mutator had taken it out of `R.f` into a local before `R` was
+    /// scanned). `N` is born grey, but the first sweep step used to only `debug_assert!` an
+    /// empty worklist, so a release build swept without scanning `N` and freed `W` while
+    /// `N.car` named it; `finish` drains nothing once a stepped sweep has begun. The first
+    /// sweep step now drains the worklist first, as `finish` does.
+    #[test]
+    fn incremental_sweep_step_scans_objects_born_after_the_last_step() {
+        let mut heap = FlatHeap::new();
+        let pair = heap.register_kind(&[0, 8]);
+        let r = heap.alloc(16, pair) as usize;
+        let w = heap.alloc(16, pair) as usize;
+        unsafe { *(r as *mut usize) = w }; // R.f = W
+        let root_r = r;
+        unsafe { heap.incremental_start(&[&root_r as *const usize as usize], &[]) };
+        // The mutator takes W out of R into a local (a root store: no barrier).
+        let held = w;
+        unsafe { *(r as *mut usize) = 0 };
+        while !unsafe { heap.incremental_step(1) } {} // mark "done": R black, W white
+        // alloc N, N.car = W — a constructor's barrier-free initial store.
+        let n = heap.alloc(16, pair) as usize;
+        unsafe { *(n as *mut usize) = held };
+        while !unsafe { heap.incremental_sweep_step(1) } {}
+        let stats = unsafe { heap.incremental_finish() };
+        assert_eq!(heap.kind_of(held), pair, "W survives: the newborn N.car names it");
+        assert_eq!(stats.freed, 0, "R, W and N are all kept");
+        assert_eq!(heap.kind_of(n), pair);
     }
 
     #[test]
