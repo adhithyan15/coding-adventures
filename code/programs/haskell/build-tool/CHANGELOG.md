@@ -6,6 +6,17 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. Headers are split into dotted-key
+  segments outside strings, so quoted cfgs with dots, commas and `=` stay one
+  segment; table names compare case-sensitively; inline values whose arrays
+  continue onto later lines are joined; `path` and `package` field keys must
+  be exact. This follows the corrected conformance contract and matches the
+  Go reader on every tracked `Cargo.toml`. `rustDependencyTokens` is exported
+  and covered by 46 one-shape Hspec examples.
+
 - Classify discovery language and package/program identity from the configured
   code-root bucket, preserving basename case and rejecting borrowed ancestor or
   later language names. Exclude the leading specification subtree before BUILD

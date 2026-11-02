@@ -428,11 +428,23 @@ an absent `BUILD_windows` is an empty Windows closure rather than a reason to
 skip comparison. The validator reports every missing canonical sibling in
 stable sorted order; an explicit Windows recipe may add transitive local rocks.
 
-Cargo dependency resolution reads inline path dependencies from the top-level
-`[dependencies]` table. When a dependency uses a local source alias together
-with `package = "published-name"`, the published package name drives internal
-lookup. Package metadata, features, dev/build/target tables, and registry-only
-dependencies remain outside this graph contract.
+Cargo dependency resolution reads path dependencies from every table Cargo
+compiles into the crate: `[dependencies]`, `[build-dependencies]` (and the
+legacy `build_dependencies`), and the same tables under `[target.<cfg>.…]` for
+any cfg, quoted (`[target.'cfg(any(unix, windows))'.dependencies]`) or a bare
+triple — the union over all targets, because CI builds on several hosts. Both
+entry forms count: an inline table (`name = { path = "..." }`, whose
+`features` array may continue onto later lines) and a `[dependencies.name]`
+sub-table with a `path = "..."` key. When a dependency uses a local source
+alias together with `package = "published-name"`, the published package name
+drives internal lookup. `[dev-dependencies]` in every form (they are test
+triggers instead; see `internal/resolver/test_triggers.go` and "Cargo
+dev-dependency test triggers" in `code/specs/12-build-system.md`), `[patch]`,
+`[replace]`, `[workspace]`, package metadata, features, and registry-only
+dependencies remain outside this graph contract. The exact line procedure is
+the Rust paragraph of `code/specs/build-tool-conformance.md`, pinned by the
+shared `resolution/rust-field-aware` case that this tool and the Haskell
+front both read.
 
 Ruby dependency resolution reads only `add_dependency` and
 `add_runtime_dependency` calls on the gem specification receiver. Development
