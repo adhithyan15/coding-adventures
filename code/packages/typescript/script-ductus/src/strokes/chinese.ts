@@ -13344,4 +13344,311 @@ export const entries: DuctusEntry[] = [
       source: chineseCharacterSource("变"),
     },
   ],
+  // 约: Hanzi Writer Data's six ordered medians, fitted to the vendored Noto
+  // Sans SC 约. Medians 1–3 draw the silk piece as 给 opens. Medians 4–6 draw the
+  // right side: a short left-falling stroke, a horizontal that turns down into
+  // a long hook to the left without lifting, then a dot inside. The order, the
+  // directions, the turns, the hook and all five lifts are the source's.
+  [
+    "chinese:约",
+    {
+      script: "chinese",
+      glyph: "约",
+      strokes: [
+        simpleStroke(
+          "draw 纟's first stroke down to the left and turn right",
+          compactPath("260 815 258 751 114 510 108 482 244 474 330 498"),
+        ),
+        simpleStroke(
+          "lift, then draw 纟's second stroke down to the left and turn right",
+          compactPath(
+            "357 607 367 581 349 552 145 283 152 244 186 244 397 287",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw 纟's rising stroke",
+          compactPath("54 35 146 20 217 54 409 97"),
+        ),
+        simpleStroke(
+          "lift, then draw the short left-falling stroke",
+          compactPath("587 822 599 780 550 635 449 475"),
+        ),
+        simpleStroke(
+          "lift, then draw the horizontal, turn down and hook left",
+          compactPath(
+            "494 598 652 618 832 614 858 607 885 527 865 175 830 18 809 -16 766 -50 636 -23",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw the inner dot",
+          compactPath("523 418 638 324 701 223"),
+        ),
+      ],
+      source: chineseCharacterSource("约"),
+    },
+  ],
+  // 定: Hanzi Writer Data's eight ordered medians, fitted to the vendored Noto
+  // Sans SC 定. Medians 1–3 draw the roof as 安 opens. Medians 4–8 draw the lower
+  // part of 是 as 题 writes it: a horizontal, a short vertical down from it, a
+  // short horizontal to its right, a left-falling stroke, then a long right-
+  // falling stroke along the foot. Noto's roof turns straight down at its right
+  // end, where the source's hooks to the left. The order, the directions, the
+  // turn and all seven lifts are the source's.
+  [
+    "chinese:定",
+    {
+      script: "chinese",
+      glyph: "定",
+      strokes: [
+        simpleStroke(
+          "draw the roof's dot",
+          compactPath("452 818 566 670"),
+        ),
+        simpleStroke(
+          "lift, then draw the roof's left stroke",
+          compactPath("118 702 118 531"),
+        ),
+        simpleStroke(
+          "lift, then draw the roof's top and turn down",
+          compactPath("118 693 879 693 879 531"),
+        ),
+        simpleStroke(
+          "lift, then draw the horizontal",
+          compactPath("222 498 319 486 733 504"),
+        ),
+        simpleStroke(
+          "lift, then draw the lower vertical",
+          compactPath("470 447 495 375 491 139 525 66"),
+        ),
+        simpleStroke(
+          "lift, then draw the short horizontal to its right",
+          compactPath("472 235 599 271 790 271"),
+        ),
+        simpleStroke(
+          "lift, then draw the left-falling stroke",
+          compactPath("231 343 238 308 267 268 247 204 170 65 69 -39"),
+        ),
+        simpleStroke(
+          "lift, then draw the long sweep along the foot",
+          compactPath("218 258 299 114 414 32 535 -7 676 -32 930 -14"),
+        ),
+      ],
+      source: chineseCharacterSource("定"),
+    },
+  ],
+  // 改: Hanzi Writer Data's seven ordered medians, fitted to the vendored Noto
+  // Sans SC 改. Medians 1–3 draw 己 as 起 ends: a horizontal that turns down
+  // without lifting, a horizontal across the middle, then a vertical that bends
+  // right along the foot and flicks up without lifting. Medians 4–7 draw the
+  // striking piece as 做 ends. The order, the directions, the turns, the hook
+  // and all six lifts are the source's.
+  [
+    "chinese:改",
+    {
+      script: "chinese",
+      glyph: "改",
+      strokes: [
+        simpleStroke(
+          "draw 己's top and turn down",
+          compactPath("96 732 394 732 394 455"),
+        ),
+        simpleStroke(
+          "lift, then draw 己's middle horizontal",
+          compactPath("110 446 402 446"),
+        ),
+        simpleStroke(
+          "lift, then draw 己's last stroke down, along the foot and hook up",
+          compactPath("127 446 122 60 230 81 408 151"),
+        ),
+        simpleStroke(
+          "lift, then draw 攵's short left-falling stroke",
+          compactPath("611 745 550 500 500 450 471 396"),
+        ),
+        simpleStroke(
+          "lift, then draw 攵's horizontal",
+          compactPath("564 612 922 620"),
+        ),
+        simpleStroke(
+          "lift, then draw 攵's long left-falling stroke",
+          compactPath(
+            "841 550 806 400 770 300 709 200 693 130 680 110 645 100 522 0 477 -52",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw 攵's right-falling stroke",
+          compactPath("594 450 645 300 764 100 874 0 906 -52"),
+        ),
+      ],
+      source: chineseCharacterSource("改"),
+    },
+  ],
+  // 万: Hanzi Writer Data's three ordered medians, fitted to the vendored Noto
+  // Sans SC 万. Median 1 draws a long horizontal; median 2 a horizontal from
+  // under its middle that turns down and hooks to the left without lifting;
+  // median 3 a long left-falling stroke from the top horizontal down to the
+  // lower left. The order, the directions, the turn, the hook and all two lifts
+  // are the source's.
+  [
+    "chinese:万",
+    {
+      script: "chinese",
+      glyph: "万",
+      strokes: [
+        simpleStroke(
+          "draw the long horizontal",
+          compactPath("84 728 914 728"),
+        ),
+        simpleStroke(
+          "lift, then draw the turning stroke and hook left",
+          compactPath("340 442 815 450 778 100 742 0 647 -43 533 -36 513 -16"),
+        ),
+        simpleStroke(
+          "lift, then draw the long left-falling stroke",
+          compactPath("372 725 348 400 304 233 235 100 104 -30"),
+        ),
+      ],
+      source: chineseCharacterSource("万"),
+    },
+  ],
+  // 取: Hanzi Writer Data's eight ordered medians, fitted to the vendored Noto
+  // Sans SC 取. Medians 1–6 draw the left side: a horizontal, a short vertical
+  // on the left, a long vertical on the right, two short horizontals between
+  // them, then a stroke rising to the right at the foot. Medians 7–8 draw 又 as
+  // 变 ends: a horizontal that turns and falls to the left without lifting, then
+  // a right-falling stroke. The order, the directions, the turn and all seven
+  // lifts are the source's.
+  [
+    "chinese:取",
+    {
+      script: "chinese",
+      glyph: "取",
+      strokes: [
+        simpleStroke(
+          "draw the top horizontal",
+          compactPath("68 759 480 759"),
+        ),
+        simpleStroke(
+          "lift, then draw the left vertical",
+          compactPath("151 766 151 120"),
+        ),
+        simpleStroke(
+          "lift, then draw the right vertical",
+          compactPath("392 766 392 -54"),
+        ),
+        simpleStroke(
+          "lift, then draw the upper short horizontal",
+          compactPath("151 552 392 552"),
+        ),
+        simpleStroke(
+          "lift, then draw the lower short horizontal",
+          compactPath("151 342 392 342"),
+        ),
+        simpleStroke(
+          "lift, then draw the rising stroke",
+          compactPath("66 100 171 105 316 142 489 168"),
+        ),
+        simpleStroke(
+          "lift, then draw 又's horizontal and turn down to the left",
+          compactPath("526 690 907 690 783 300 700 140 539 -30 530 -55"),
+        ),
+        simpleStroke(
+          "lift, then draw 又's right-falling stroke",
+          compactPath("595 625 619 500 680 300 773 120 909 -34"),
+        ),
+      ],
+      source: chineseCharacterSource("取"),
+    },
+  ],
+  // 难: Hanzi Writer Data's ten ordered medians, fitted to the vendored Noto
+  // Sans SC 难. Medians 1–2 draw 又 narrowed on the left: a horizontal that turns
+  // and falls to the left without lifting, then a dot instead of the long
+  // right-falling stroke. Medians 3–10 draw the right side as 准 ends: a left-
+  // falling stroke, a long vertical down the left, a dot at the top right,
+  // three short horizontals, a vertical through them, then a long horizontal at
+  // the foot. The order, the directions, the turn and all nine lifts are the
+  // source's.
+  [
+    "chinese:难",
+    {
+      script: "chinese",
+      glyph: "难",
+      strokes: [
+        simpleStroke(
+          "draw 又's horizontal and turn down to the left",
+          compactPath("78 691 378 691 350 630 262 300 201 200 80 45"),
+        ),
+        simpleStroke(
+          "lift, then draw the dot",
+          compactPath("105 525 202 400 330 200 361 124"),
+        ),
+        simpleStroke(
+          "lift, then draw the left-falling stroke",
+          compactPath("571 813 563 729 494 572 393 428"),
+        ),
+        simpleStroke(
+          "lift, then draw the long left vertical",
+          compactPath("471 587 509 433 510 -67"),
+        ),
+        simpleStroke(
+          "lift, then draw the top-right dot",
+          compactPath("708 799 750 700"),
+        ),
+        simpleStroke(
+          "lift, then draw the upper horizontal",
+          compactPath("489 626 741 611 792 628 927 636"),
+        ),
+        simpleStroke(
+          "lift, then draw the middle horizontal",
+          compactPath("488 425 727 420 906 439"),
+        ),
+        simpleStroke(
+          "lift, then draw the lower horizontal",
+          compactPath("488 241 660 230 737 250 907 221"),
+        ),
+        simpleStroke(
+          "lift, then draw the right vertical",
+          compactPath("710 560 736 480 736 401 735 164 709 7"),
+        ),
+        simpleStroke(
+          "lift, then draw the bottom horizontal",
+          compactPath("487 35 556 21 851 33 940 8"),
+        ),
+      ],
+      source: chineseCharacterSource("难"),
+    },
+  ],
+  // 只: Hanzi Writer Data's five ordered medians, fitted to the vendored Noto
+  // Sans SC 只. Medians 1–3 draw 口 on top in the order the standalone character
+  // uses. Medians 4–5 draw 八 under it: a left-falling stroke, then a dot. The
+  // order, the directions, the turn and all four lifts are the source's.
+  [
+    "chinese:只",
+    {
+      script: "chinese",
+      glyph: "只",
+      strokes: [
+        simpleStroke(
+          "draw 口's left side",
+          compactPath("196 740 196 336"),
+        ),
+        simpleStroke(
+          "lift, then draw 口's top and turn down its right side",
+          compactPath("196 729 804 729 804 336"),
+        ),
+        simpleStroke(
+          "lift, then close 口 with a horizontal",
+          compactPath("196 347 804 347"),
+        ),
+        simpleStroke(
+          "lift, then draw 八's left-falling stroke",
+          compactPath("380 183 353 179 283 90 158 -6 84 -40"),
+        ),
+        simpleStroke(
+          "lift, then draw 八's dot",
+          compactPath("635 191 656 185 837 35 885 -55"),
+        ),
+      ],
+      source: chineseCharacterSource("只"),
+    },
+  ],
 ];
