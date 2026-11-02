@@ -191,10 +191,32 @@ Key points:
 - **Conservative safety.** Shading a child that later turns out dead just retains it one extra
   cycle (floating garbage) — never a UAF. Erring toward grey is the safe direction, exactly
   like T3's "when unsure, pin."
-- **New allocations during a mark** are born **black** (or grey) — a white new object with no
-  in-edge yet could otherwise be swept. Simplest sound choice: allocate **marked** (black)
-  while `mark_in_progress`, so this cycle never reclaims an object allocated mid-mark
-  (reclaimed next cycle if it dies). `FlatHeap::alloc` sets `marked = mark_in_progress`.
+- **New allocations during a mark are born grey.** A white new object with no in-edge yet
+  could be swept, so `FlatHeap::alloc` sets `marked = mark_in_progress`: this cycle never
+  reclaims an object allocated mid-mark, and it is reclaimed next cycle if it dies.
+  While marking (not yet sweeping), `alloc` also **pushes the newborn onto the worklist**.
+  The first version stopped at "marked" (born black). That is unsound, because a
+  constructor writes its initial fields straight into the fresh block, with no barrier
+  (`__dyn_pair_new`'s car/cdr, any record, closure or array built in C). A black object
+  is never scanned again, so:
+
+  ```text
+    W reachable only via R.f ; N = pair_new(W, nil)   (born black, W not shaded)
+    R.f = other              ; the barrier shades `other`, not W
+    N published to a root    ; the finish re-scan stops at the already-black N
+    → W swept while N.car still names it
+  ```
+
+  Born grey, `N` is scanned when the worklist reaches it. That is always after the
+  constructor wrote its fields, because steps and the re-scan run between mutator slices,
+  never inside an allocation. One rule at the allocator covers every constructor in every
+  runtime, instead of a barrier call in each. `incremental_finish` drains newborns queued
+  after the last step. During a stepped sweep the mark is over, so a newborn stays black
+  (it is threaded ahead of the sweep cursor). Cost: one scan per object born mid-mark.
+  Tests: gc-core `incremental_newborn_fields_are_traced` (the sequence above; `W` was swept
+  when newborns were black) and gc-core-capi
+  `incremental_cycle_traces_fields_of_cells_built_mid_phase` (64 cells built mid-phase
+  around children reachable only through them; all 64 children were swept before).
 
 ---
 
@@ -241,8 +263,18 @@ through a barriered `field_store`"). That missed globals, which are roots writte
 trampoline like `start`. It walks the stack again, adds the spilled registers and the
 registered global slots, and calls `FlatHeap::incremental_rescan_roots(slots, regions)`. That
 greys every white object the current roots reach and drains the worklist before the sweep.
-This is the standard root half of a Dijkstra (incremental-update) collector. The re-scan is
-the one unbounded step of the cycle, proportional to what the mutator moved into roots. If
+This is the standard root half of a Dijkstra (incremental-update) collector.
+
+**The finish pause is unbounded.** The re-scan is a full, non-incremental mark from the
+current roots: it greys everything they reach that is still white, and drains the worklist
+to empty in one go, including every object born grey since the last step. Its cost is not
+bounded by any `step` budget. It is proportional to the objects still white at `finish`
+that the current roots (or the newborns) reach. In the worst case that is most of the live
+heap, for example when the mutator moved the root of a large white structure into a local
+just before `finish`. In the common case it is small, because the steps already blackened
+nearly everything. A driver that needs a hard pause bound cannot get it from `finish` as
+designed. The bounded alternative is a re-scan that greys the roots and returns to
+stepping until a re-scan finds nothing new. That is not implemented. If
 `finish` cannot trust the stack, it calls `FlatHeap::incremental_abandon()`: the phase ends,
 nothing is freed, and no stale-snapshot sweep happens. The re-scan must precede any stepped
 sweep (`incremental_rescan_roots` panics otherwise); the C ABI never steps the sweep. Tests:
@@ -285,7 +317,8 @@ remembered set" tests:
    the same objects as a single atomic `collect_mixed` with the same roots. Incremental is a
    strict decomposition, not a different reachability.
 3. **New-during-mark object is retained.** An object allocated *between* two steps (born
-   black) is never freed by the cycle that was already running.
+   grey: marked and queued) is never freed by the cycle that was already running, and its
+   fields are traced.
 4. **Bounded step.** `step(budget)` scans at most `budget` objects (assert via a scan
    counter) — the pause-bound contract.
 5. **End-to-end (native).** A compiled program drives `start / step / finish` around a live
@@ -297,7 +330,7 @@ remembered set" tests:
 ## 9. PR breakdown (small, each CI-validated)
 
 1. **PR-1 (gc-core core):** `mark_worklist` / `mark_in_progress` / root snapshot fields +
-   `incremental_start` / `incremental_step` / `incremental_finish` on `FlatHeap`; alloc-black
+   `incremental_start` / `incremental_step` / `incremental_finish` on `FlatHeap`; alloc-black (now alloc-grey, §5)
    during mark. Tests 2–4 above (pure in-heap, no barrier yet — start with roots-only graphs
    that need no barrier). gc-core-only, Miri the step/sweep boundary.
 2. **PR-2 (gc-core barrier):** extend `FlatHeap::write_barrier` with incremental shading;
@@ -320,7 +353,7 @@ defer the barrier PRs, exactly as T3 offered a pin-only fallback.
   (the barrier already exists for generational; we extend it, not add a new obligation).
 - **Root snapshot staleness (§6).** Closed by the `finish`-time root re-scan (stack, registers
   and registered globals).
-- **Floating garbage.** Insertion barrier + alloc-black retain some dead objects one extra
+- **Floating garbage.** Insertion barrier + alloc-grey retain some dead objects one extra
   cycle — a throughput/footprint cost, never a safety one; acceptable and self-correcting.
 - **Sweep pause.** Now bounded too (gc-core 0.21.0): `incremental_sweep_step(budget)` carries a
   persistent sweep cursor, so a full `start → step* → sweep_step* → finish` cycle bounds *both*
