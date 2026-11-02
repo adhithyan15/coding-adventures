@@ -747,6 +747,9 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ct_compare_conformance.py'
           python3 code/scripts/ct_compare_conformance.py
+          # rng spec v2: the shared corpus and its independent reference.
+          python3 code/scripts/rng_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_rng_conformance.py'
           python3 code/scripts/starlark_opcode_provider_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_starlark_opcode_provider_conformance.py'
           python3 code/scripts/compiler_ir_conformance.py
