@@ -299,12 +299,12 @@ describe("handwriting ductus", () => {
     // 311 -> 325: the fourteen characters B1 vocabulary tranche o writes
     // (chapters 458-485), each right after the word that anchors
     // it: 情 爱 怕 兴 静 性 温 眼 脸 牙 力 伤 血 紧.
-    // 325 -> 332: the first characters B1 vocabulary tranche p writes
+    // 325 -> 339: the fourteen characters B1 vocabulary tranche p writes
     // (chapters 486-513), each right after the word that anchors
-    // it: 业 职 司 教 考 级 球.
-    expect(chinese.letters).toHaveLength(332);
+    // it: 业 职 司 教 考 级 球 赛 画 歌 舞 父 母 亲.
+    expect(chinese.letters).toHaveLength(339);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      332,
+      339,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),

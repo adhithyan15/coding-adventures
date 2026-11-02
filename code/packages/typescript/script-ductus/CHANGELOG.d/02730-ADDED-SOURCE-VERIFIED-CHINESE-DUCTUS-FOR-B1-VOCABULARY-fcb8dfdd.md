@@ -21,13 +21,13 @@
 - Add font-checked ductus for the fourteen characters B1 vocabulary
   tranche o writes (chapters 458-485):
   情 爱 怕 兴 静 性 温 眼 脸 牙 力 伤 血 紧.
-- Add font-checked ductus for the first characters B1 vocabulary
+- Add font-checked ductus for the fourteen characters B1 vocabulary
   tranche p writes (chapters 486-513):
-  业 职 司 教 考 级 球.
+  业 职 司 教 考 级 球 赛 画 歌 舞 父 母 亲.
   Each is fitted to the vendored Noto Sans SC outline from Hanzi Writer Data's
   ordered medians (snapshot 68d10a4) with the source's order, directions,
   turns, hooks and lifts; every stroke lies wholly on the ink and none of the
   glyph is left untraced.
-- Pin the Chinese inventory at 332 letters and the stroke-ownership owner at
-  332 keys with its new key and data hashes; add a ductusview case and a
+- Pin the Chinese inventory at 339 letters and the stroke-ownership owner at
+  339 keys with its new key and data hashes; add a ductusview case and a
   per-character strokes case for each character.
