@@ -444,7 +444,16 @@ dev-dependency test triggers" in `code/specs/12-build-system.md`), `[patch]`,
 dependencies remain outside this graph contract. The exact line procedure is
 the Rust paragraph of `code/specs/build-tool-conformance.md`, pinned by the
 shared `resolution/rust-field-aware` case that this tool and the Haskell
-front both read.
+front both read. Field and sub-table keys may be bare or quoted
+(`"path" = "..."`). That procedure is lenient, so for every Rust and WASM
+package the strict test-trigger reader also screens these tables and stops the
+plan on any shape the procedure does not model (a dotted key such as
+`a.path = "..."` or `build-dependencies.a.path = "..."`, an inline table
+spelling a link table, `[dependencies.a.features]`, a multi-line string, a
+backslash, ...). The edge reader carries its own limits (a regular file of at
+most 1 MiB, one entry of at most 256 lines or 64 KiB) and joins continuation
+lines in linear time. A dependency that resolves to the package itself is a
+`DEPENDENCY_SELF_EDGE` diagnostic with exit status 2.
 
 Ruby dependency resolution reads only `add_dependency` and
 `add_runtime_dependency` calls on the gem specification receiver. Development

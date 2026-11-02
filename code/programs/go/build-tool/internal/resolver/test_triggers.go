@@ -153,6 +153,35 @@ package resolver
 //
 // A leading UTF-8 byte-order mark is stripped, as TOML allows. Every Cargo
 // manifest of a Rust, WASM or Mosaic package in the repository passes.
+//
+// # Screening the graph's link tables
+//
+// The build graph's own reader (parseRustDeps in resolver.go) is a LENIENT
+// line reader that every build-tool front implements identically, so it
+// does not model every TOML spelling: a shape outside its contract simply
+// contributes no edge. For a Rust or WASM package that would be a silently
+// dropped edge, so this reader — which runs over the same manifest — also
+// screens the link tables `[dependencies]`, `[build-dependencies]`,
+// `[build_dependencies]` and their `[target.<cfg>.…]` forms, and refuses
+// every write into them in a shape the lenient contract does not model
+// (screenLinks; a Mosaic harness reads those tables as trigger tables
+// instead, strictly). Nothing is read from them here; they are only checked:
+//
+//	accepted (the lenient reader sees exactly what Cargo sees)
+//	  [dependencies]                      a = "1"
+//	  [target.'cfg(unix)'.dependencies]   a = { path = "../a", features = [
+//	                                          "x",
+//	                                      ] }
+//	  [build-dependencies.a]              path = "../a"   "package" = "b"
+//	refused (the lenient reader would drop or misread the entry)
+//	  [build-dependencies]                a.path = "../a"         dotted key
+//	  (root)                              build-dependencies.a.path = "../a"
+//	  [target.'cfg(unix)']                build-dependencies = { a = { ... } }
+//	  (root)                              target = { ... }         (as before)
+//	  [dependencies.a.features]  [[dependencies]]                  deeper / array
+//	  [dependencies]                      a = ["x"]                not an entry
+//	  [dependencies.a]                    features = [ ...newline  spans lines
+//	  any link table                      a backslash in a value   not decoded
 
 import (
 	"bytes"
@@ -411,10 +440,74 @@ type cargoEntry struct {
 	path string // "" for a registry dependency
 }
 
+// cargoLinkKind says how the link-table screen treats the current table.
+type cargoLinkKind int
+
+const (
+	cargoNotLinkTable    cargoLinkKind = iota // not [D…] or [target.C.D…]
+	cargoLinkInlineTable                      // [D] or [target.C.D]: one entry per key
+	cargoLinkSubTable                         // [D.N] or [target.C.D.N]: the keys of entry N
+)
+
+// cargoLinkPrefix returns how many leading segments of a decoded key path
+// name a graph link table — 1 for `dependencies…`, 3 for
+// `target.<cfg>.dependencies…` (any of the three spellings in
+// cargoLinkTableNames) — or 0 when the path does not reach one. A header,
+// or a table path plus a dotted key, with a non-zero prefix writes into a
+// link table.
+func cargoLinkPrefix(path []string) int {
+	if len(path) >= 1 && cargoLinkTableNames[path[0]] {
+		return 1
+	}
+	if len(path) >= 3 && path[0] == "target" && cargoLinkTableNames[path[2]] {
+		return 3
+	}
+	return 0
+}
+
+// screenCargoLinkEntry checks one complete entry `key = value` of an inline
+// link table (the key is already one segment) and returns why it is refused,
+// or "". The value must be a one-line string (a registry version) or an
+// inline table whose fields are each `key = value` with a one-segment key —
+// bare or quoted, as the lenient reader decodes them. No backslash is
+// accepted, because the lenient reader does not decode escapes: `"pa\u0074h"`
+// is the key `path` to Cargo and not to it.
+func screenCargoLinkEntry(entry string) string {
+	eq := tomlKeyValueSplit(entry)
+	key := strings.TrimSpace(entry[:eq])
+	value := strings.TrimSpace(entry[eq+1:])
+	if strings.ContainsRune(value, '\\') {
+		return fmt.Sprintf("%s uses a backslash escape, which the build graph's reader does not decode", key)
+	}
+	if _, ok := oneLineTomlString(value); ok {
+		return ""
+	}
+	if !strings.HasPrefix(value, "{") || !strings.HasSuffix(value, "}") {
+		return fmt.Sprintf("%s is neither a version string nor an inline table", key)
+	}
+	body := strings.TrimSpace(value[1 : len(value)-1])
+	if body == "" {
+		return ""
+	}
+	for _, field := range splitTopLevel(body, ',') {
+		fieldEq := tomlKeyValueSplit(field)
+		if fieldEq < 0 {
+			return fmt.Sprintf("%s has an inline-table field %q that is not key = value (a trailing comma?)", key, strings.TrimSpace(field))
+		}
+		if fieldKey, ok := decodeTomlKey(field[:fieldEq]); !ok || len(fieldKey) != 1 {
+			return fmt.Sprintf("%s has the inline-table key %q, which is not one bare or quoted key", key, strings.TrimSpace(field[:fieldEq]))
+		}
+	}
+	return ""
+}
+
 // readCargoTriggerEntries reads the Cargo.toml at manifest and returns every
 // entry of the tables named by names (their target forms included), or
-// found=false when there is no such file.
-func readCargoTriggerEntries(manifest string, names map[string]bool) (entries []cargoEntry, found bool, err error) {
+// found=false when there is no such file. With screenLinks set (a Rust or
+// WASM package root) it also refuses a write into a graph link table in any
+// shape the lenient edge reader does not model (see "Screening the graph's
+// link tables"); those tables must not be among names.
+func readCargoTriggerEntries(manifest string, names map[string]bool, screenLinks bool) (entries []cargoEntry, found bool, err error) {
 	data, found, err := readCargoManifestBytes(manifest)
 	if err != nil || !found {
 		return nil, found, err
@@ -429,10 +522,12 @@ func readCargoTriggerEntries(manifest string, names map[string]bool) (entries []
 
 	var table []string // current header path; nil is the root table
 	kind := cargoOtherTable
-	var stack []byte     // brackets open across lines
-	var pending []string // a read-table entry continuing onto later lines
-	var pendingBytes int // its length so far, capped at maxCargoEntryBytes
-	var pendingLine int  // where it started, for messages
+	linkKind := cargoNotLinkTable // only ever set with screenLinks
+	var stack []byte              // brackets open across lines
+	var pending []string          // a read- or link-table entry continuing onto later lines
+	var pendingLink bool          // pending is a link-table entry (screened, not read)
+	var pendingBytes int          // its length so far, capped at maxCargoEntryBytes
+	var pendingLine int           // where it started, for messages
 
 	for number, rawLine := range strings.Split(string(data), "\n") {
 		lineNumber := number + 1
@@ -456,15 +551,23 @@ func readCargoTriggerEntries(manifest string, names map[string]bool) (entries []
 					return refuse("line %d: one dependency entry spans more than %d lines or %d bytes",
 						pendingLine, maxCargoEntryLines, maxCargoEntryBytes)
 				}
-				if len(stack) > 0 && stack[len(stack)-1] == '{' {
+				if !pendingLink && len(stack) > 0 && stack[len(stack)-1] == '{' {
 					return refuse("line %d: an inline table in a dependency table spans lines", pendingLine)
 				}
 				if len(stack) == 0 {
-					entry, reason := parseCargoTriggerEntry(strings.Join(pending, " "))
-					if reason != "" {
-						return refuse("line %d: %s", pendingLine, reason)
+					joined := strings.Join(pending, " ")
+					if pendingLink {
+						// The lenient reader joins these lines exactly so.
+						if reason := screenCargoLinkEntry(joined); reason != "" {
+							return refuse("line %d: %s", pendingLine, reason)
+						}
+					} else {
+						entry, reason := parseCargoTriggerEntry(joined)
+						if reason != "" {
+							return refuse("line %d: %s", pendingLine, reason)
+						}
+						entries = append(entries, entry)
 					}
-					entries = append(entries, entry)
 					pending, pendingBytes = nil, 0
 				}
 			}
@@ -489,6 +592,17 @@ func readCargoTriggerEntries(manifest string, names map[string]bool) (entries []
 			if reason != "" {
 				return refuse("line %d: the header %q %s", lineNumber, line, reason)
 			}
+			linkKind = cargoNotLinkTable
+			if prefix := cargoLinkPrefix(path); screenLinks && prefix > 0 {
+				switch {
+				case arrayOfTables || len(path) > prefix+1:
+					return refuse("line %d: the header %q writes a dependency table in a shape the build graph does not read", lineNumber, line)
+				case len(path) == prefix:
+					linkKind = cargoLinkInlineTable
+				default:
+					linkKind = cargoLinkSubTable
+				}
+			}
 			table = path
 			continue
 		}
@@ -512,6 +626,33 @@ func readCargoTriggerEntries(manifest string, names map[string]bool) (entries []
 			if keyReachesTriggerTable(full, value, names) {
 				return refuse("line %d: the key %q writes a dependency table in a shape this reader does not model", lineNumber, strings.TrimSpace(line[:eq]))
 			}
+			if !screenLinks {
+				continue
+			}
+			rawKey := strings.TrimSpace(line[:eq])
+			switch {
+			case linkKind != cargoNotLinkTable && len(key) != 1:
+				return refuse("line %d: the dotted key %q in a dependency table is not read by the build graph; "+
+					"write the entry as name = { ... }", lineNumber, rawKey)
+			case linkKind == cargoLinkSubTable:
+				if len(stack) > 0 {
+					return refuse("line %d: the value of %q in a dependency sub-table spans lines", lineNumber, rawKey)
+				}
+				if strings.ContainsRune(value, '\\') {
+					return refuse("line %d: the value of %q uses a backslash escape, which the build graph's reader does not decode", lineNumber, rawKey)
+				}
+			case linkKind == cargoLinkInlineTable:
+				if len(stack) > 0 {
+					pending, pendingLink, pendingBytes, pendingLine = []string{line}, true, len(line), lineNumber
+					continue
+				}
+				if reason := screenCargoLinkEntry(line); reason != "" {
+					return refuse("line %d: %s", lineNumber, reason)
+				}
+			case cargoLinkPrefix(full) > 0:
+				return refuse("line %d: the key %q writes a dependency table in a shape the build graph does not read; "+
+					"use a [dependencies] (or [target.<cfg>.dependencies]) table", lineNumber, rawKey)
+			}
 			continue
 		}
 
@@ -523,7 +664,7 @@ func readCargoTriggerEntries(manifest string, names map[string]bool) (entries []
 			if stack[len(stack)-1] == '{' {
 				return refuse("line %d: an inline table in a dependency table spans lines", lineNumber)
 			}
-			pending, pendingBytes, pendingLine = []string{line}, len(line), lineNumber
+			pending, pendingLink, pendingBytes, pendingLine = []string{line}, false, len(line), lineNumber
 			continue
 		}
 		entry, reason := parseCargoTriggerEntry(line)
@@ -926,7 +1067,7 @@ func (walk *triggerWalk) crateClosure(target, real, manifest, path, root string,
 	defer delete(walk.expanding, key)
 
 	crateManifest := filepath.Join(target, "Cargo.toml")
-	entries, found, err := readCargoTriggerEntries(crateManifest, dependencyTableNames())
+	entries, found, err := readCargoTriggerEntries(crateManifest, dependencyTableNames(), false)
 	if err != nil {
 		return nil, err
 	}
@@ -1060,7 +1201,11 @@ func scanCargoConfig(path string, data []byte) error {
 // for a package without a Cargo.toml.
 func (walk *triggerWalk) parseRustDevDeps(pkg discovery.Package) ([]string, error) {
 	manifest := filepath.Join(pkg.Path, "Cargo.toml")
-	entries, found, err := readCargoTriggerEntries(manifest, triggerTableNames(pkg.Language))
+	// A Rust or WASM package's link tables are the build graph's edges, read
+	// leniently by parseRustDeps; screen them here so a shape that reader
+	// would drop fails closed. (A Mosaic harness reads them as triggers.)
+	screenLinks := pkg.Language == "rust" || pkg.Language == "wasm"
+	entries, found, err := readCargoTriggerEntries(manifest, triggerTableNames(pkg.Language), screenLinks)
 	if err != nil || !found {
 		return nil, err
 	}

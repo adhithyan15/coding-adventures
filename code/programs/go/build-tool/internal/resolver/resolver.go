@@ -78,6 +78,62 @@ func (err *MetadataEncodingError) Error() string {
 	)
 }
 
+const dependencySelfEdge = "DEPENDENCY_SELF_EDGE"
+
+// DependencySelfEdgeError reports a package whose own manifest resolves the
+// package itself as a dependency. The conformance contract requires the
+// resolver to reject that rather than drop it (or draw a self-loop, which the
+// directed graph refuses with a panic). Manifest is repository-relative, so
+// the diagnostic never discloses the checkout root.
+type DependencySelfEdgeError struct {
+	Code       string
+	Package    string
+	Manifest   string
+	Dependency string
+}
+
+func (err *DependencySelfEdgeError) Error() string {
+	return fmt.Sprintf(
+		"%s: package=%s manifest=%s dependency=%s",
+		err.Code,
+		err.Package,
+		err.Manifest,
+		err.Dependency,
+	)
+}
+
+// dependencyManifestPath names the file a package's dependencies are read
+// from, for diagnostics. Ecosystems whose manifest file name varies (a
+// .gemspec, .rockspec, .cabal or project file) report the first such file in
+// sorted order, and the BUILD file when there is none — the file the
+// `# build-tool: deps=` comment lives in.
+func dependencyManifestPath(pkg discovery.Package) string {
+	fixed := map[string]string{
+		"python": "pyproject.toml", "go": "go.mod", "typescript": "package.json",
+		"dart": "pubspec.yaml", "rust": "Cargo.toml", "wasm": "Cargo.toml",
+		"elixir": "mix.exs", "perl": "cpanfile", "swift": "Package.swift",
+		"mosaic": "mosaic-package.toml",
+	}
+	if name, ok := fixed[pkg.Language]; ok {
+		return filepath.Join(pkg.Path, name)
+	}
+	suffixes := map[string][]string{
+		"ruby": {".gemspec"}, "lua": {".rockspec"}, "haskell": {".cabal"},
+		"csharp": {".csproj", ".fsproj"}, "fsharp": {".csproj", ".fsproj"},
+		"dotnet": {".csproj", ".fsproj"},
+	}[pkg.Language]
+	if entries, err := os.ReadDir(pkg.Path); err == nil && len(suffixes) > 0 {
+		for _, entry := range entries { // ReadDir returns sorted names
+			for _, suffix := range suffixes {
+				if !entry.IsDir() && strings.HasSuffix(entry.Name(), suffix) {
+					return filepath.Join(pkg.Path, entry.Name())
+				}
+			}
+		}
+	}
+	return filepath.Join(pkg.Path, "BUILD")
+}
+
 func repositoryManifestPath(path string) string {
 	parts := strings.Split(filepath.ToSlash(filepath.Clean(path)), "/")
 	canonicalStart := -1
@@ -555,25 +611,54 @@ func isDartPackageIdentifier(value string) bool {
 // implements the same procedure, and the shared fixture
 // resolution/rust-field-aware pins it.
 //
-// This reader is lenient — an unreadable line contributes nothing — because
-// a dropped edge here is backstopped by the strict test-trigger reader for
-// the cases that matter most (test_triggers.go fails closed).
-func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string {
+// # Lenient lines, strict limits
+//
+// The line procedure is lenient: a line it cannot read contributes nothing.
+// That leniency is safe in this tool only because a second reader covers
+// it. readCargoTriggerEntries (test_triggers.go), which runs over the same
+// manifest of every Rust and WASM package, fails closed — the whole plan
+// stops — on exactly the shapes this procedure would misread:
+//
+//	shape                                          lenient reader  strict reader
+//	---------------------------------------------  --------------  -------------
+//	a multi-line string (""" or ''') anywhere       may misread     refuses
+//	a.path = "..." in [dependencies] (dotted key)  drops the edge  refuses
+//	dependencies.a.path = "..." at the root        drops the edge  refuses
+//	build-dependencies = { ... } in [target.C]     drops the edge  refuses
+//	target = { ... } at the root                   drops the edge  refuses
+//	[dependencies.a.features], [[dependencies]]    drops the edge  refuses
+//	a value spanning lines in [dependencies.a]     may misread     refuses
+//	a backslash in a link-table value              may misread     refuses
+//
+// (The strict reader runs after this one, in resolveTestTriggers; its
+// refusal still fails the whole resolution, so the order does not matter.)
+//
+// What is NOT backstopped is the reader's own cost and size, because it runs
+// first: it reads the manifest with the strict reader's guard (a regular
+// file of at most 1 MiB) and refuses one entry continuing past
+// maxCargoEntryLines lines or maxCargoEntryBytes bytes, so a crafted
+// manifest can neither exhaust memory nor (with the linear join below) time.
+// Both refusals are *CargoManifestError, like the strict reader's.
+func parseRustDeps(pkg discovery.Package, knownNames map[string]string) ([]string, error) {
 	cargoToml := filepath.Join(pkg.Path, "Cargo.toml")
-	data, err := os.ReadFile(cargoToml)
+	data, found, err := readCargoManifestBytes(cargoToml)
+	if err != nil || !found {
+		return nil, err
+	}
+	crateNames, err := cargoLinkDependencyNames(string(data))
 	if err != nil {
-		return nil
+		return nil, &CargoManifestError{Path: cargoToml, Reason: err.Error()}
 	}
 
 	var internalDeps []string
 	seen := make(map[string]bool)
-	for _, crateName := range cargoLinkDependencyNames(string(data)) {
+	for _, crateName := range crateNames {
 		if pkgName, ok := knownNames[crateName]; ok && !seen[pkgName] {
 			seen[pkgName] = true
 			internalDeps = append(internalDeps, pkgName)
 		}
 	}
-	return internalDeps
+	return internalDeps, nil
 }
 
 // cargoLinkTableNames are the table names whose path entries link into, or
@@ -612,7 +697,18 @@ const (
 //
 // So while the entry's value still has an unclosed `{` or `[`, the next
 // lines are joined onto it (and are not looked at as headers or entries).
-func cargoLinkDependencyNames(text string) []string {
+//
+// # Linear time
+//
+// The brackets are counted over the joined value, but the joined value is
+// never rescanned: a tomlBracketScanner keeps its count (and whether it is
+// inside a string) from one piece to the next, the pieces are collected in a
+// slice, and they are joined once when the value closes. Rescanning the
+// growing value for every appended line, as this function first did, is
+// quadratic — a crafted 400 KB entry took a minute. One entry is also capped
+// at maxCargoEntryLines non-blank lines and maxCargoEntryBytes bytes, the
+// strict reader's limits; past them the manifest is refused (the error).
+func cargoLinkDependencyNames(text string) ([]string, error) {
 	text = strings.TrimPrefix(text, "\ufeff")
 	var names []string
 	lines := strings.Split(text, "\n")
@@ -648,25 +744,53 @@ func cargoLinkDependencyNames(text string) []string {
 		switch kind {
 		case cargoLinkTableInline:
 			value := strings.Trim(line[equals+1:], " \t")
-			for strings.HasPrefix(value, "{") && tomlOpenBracketDepth(value) > 0 {
-				index++
-				if index >= len(lines) {
+			if strings.HasPrefix(value, "{") {
+				var scanner tomlBracketScanner
+				scanner.feed(value)
+				if scanner.depth > 0 {
+					startLine := index + 1
+					pieces := []string{value}
+					entryLines, entryBytes := 1, len(line)
+					closed := false
+					for !closed && index+1 < len(lines) {
+						index++
+						next := cleanLine(lines[index])
+						scanner.feed(" ")
+						scanner.feed(next)
+						pieces = append(pieces, next)
+						if next != "" {
+							entryLines++
+							entryBytes += len(next) + 1
+						}
+						if entryLines > maxCargoEntryLines || entryBytes > maxCargoEntryBytes {
+							return nil, fmt.Errorf("line %d: one dependency entry spans more than %d lines or %d bytes",
+								startLine, maxCargoEntryLines, maxCargoEntryBytes)
+						}
+						closed = scanner.depth <= 0
+					}
 					value = "" // the file ended inside the value: no entry
-					break
+					if closed {
+						value = strings.Join(pieces, " ")
+					}
 				}
-				value += " " + cleanLine(lines[index])
 			}
 			if crateName, ok := cargoPathDependencyName(line[:equals], value); ok {
 				names = append(names, crateName)
 			}
 		case cargoLinkTableSub:
-			// Only the two bare, lowercase keys matter; the first occurrence
-			// of each wins. `version`, `features`, `optional` ... are ignored.
+			// Only the keys `path` and `package` matter, bare or quoted
+			// (`"path" = ...` is the same key); the first occurrence of each
+			// wins. `version`, `features`, `optional` ... are ignored, and so
+			// is `Path`: TOML keys are case-sensitive.
 			value, ok := tomlSingleString(line[equals+1:])
 			if !ok {
 				continue
 			}
-			switch strings.Trim(line[:equals], " \t") {
+			key, ok := tomlKeySegment(line[:equals])
+			if !ok {
+				continue
+			}
+			switch key {
 			case "path":
 				if subPath == "" {
 					subPath = value
@@ -679,7 +803,7 @@ func cargoLinkDependencyNames(text string) []string {
 		}
 	}
 	finishTable()
-	return names
+	return names, nil
 }
 
 // classifyCargoLinkHeader decides how to read the lines under a header line
@@ -737,8 +861,14 @@ func classifyCargoLinkHeader(line string) (cargoLinkTableKind, string) {
 //
 // Fields are split at commas outside strings AND outside nested `[...]` or
 // `{...}`, so a `features` array cannot leak a fake field and a nested
-// table's `path` is not the entry's. Field keys must be exactly `path` and
-// `package` (Cargo ignores `Package`, so it must not count as a rename).
+// table's `path` is not the entry's. A field key is decoded like an entry
+// key, so `"path"` and `'path'` are the key `path` (TOML, and so Cargo, read
+// them that way); the decoded key must then be exactly `path` or `package`
+// (Cargo ignores `Package`, so it must not count as a rename):
+//
+//	a = { "path" = "../a" }                                     → a
+//	x = { 'package' = "a", path = "../a" }                      → a
+//	a = { "Path" = "../a" }                                     → not a path dep
 //
 // The build graph resolves Cargo dependencies by this name. Test triggers
 // resolve path entries by directory instead (see test_triggers.go), so no
@@ -762,7 +892,11 @@ func cargoPathDependencyName(key, value string) (string, bool) {
 		if !ok {
 			continue
 		}
-		switch strings.Trim(field[:equals], " \t") {
+		fieldKey, ok := tomlKeySegment(field[:equals])
+		if !ok {
+			continue // a dotted or malformed field key is no key at all
+		}
+		switch fieldKey {
 		case "path":
 			if path == "" {
 				path = fieldValue
@@ -836,25 +970,45 @@ func indexTomlOutsideStrings(s string, target byte) int {
 	return -1
 }
 
-// tomlOpenBracketDepth counts the `{` and `[` outside strings in s that are
-// not closed again within s. Zero means the value is complete.
-func tomlOpenBracketDepth(s string) int {
-	depth := 0
-	for index := 0; index < len(s); index++ {
-		switch s[index] {
-		case '"', '\'':
-			end := tomlStringEnd(s, index)
-			if end < 0 {
-				return depth
+// tomlBracketScanner counts the `{` and `[` outside strings that are not
+// closed again, over text fed to it in pieces. Feeding "ab" and then "cd"
+// leaves exactly the state feeding "abcd" would, because the scanner keeps
+// what a rescan would have to rediscover: whether it is inside a string (and
+// which delimiter closes it), and whether the last byte was a backslash
+// escaping the next one in a basic string. So a string still open at the end
+// of one piece continues into the next, as it does in the joined value:
+//
+//	feed(`{ x = "q\`)   depth 1, inside "…", escape pending
+//	feed(" ")            the space is escaped: still inside the string
+//	feed(`", p = 1 }`)   the string closes, `}` closes the table: depth 0
+//
+// depth zero (or less) means the value is complete.
+type tomlBracketScanner struct {
+	depth  int
+	quote  byte // the delimiter of the string being scanned, or 0
+	escape bool // the previous byte was a backslash inside a basic string
+}
+
+func (scanner *tomlBracketScanner) feed(text string) {
+	for index := 0; index < len(text); index++ {
+		character := text[index]
+		switch {
+		case scanner.escape:
+			scanner.escape = false
+		case scanner.quote != 0:
+			if scanner.quote == '"' && character == '\\' {
+				scanner.escape = true
+			} else if character == scanner.quote {
+				scanner.quote = 0
 			}
-			index = end - 1
-		case '{', '[':
-			depth++
-		case '}', ']':
-			depth--
+		case character == '"' || character == '\'':
+			scanner.quote = character
+		case character == '{' || character == '[':
+			scanner.depth++
+		case character == '}' || character == ']':
+			scanner.depth--
 		}
 	}
-	return depth
 }
 
 // splitTomlOutsideStrings splits s at every separator outside strings. With
@@ -2654,10 +2808,12 @@ func ResolveWithTestTriggersAgainst(packages, known []discovery.Package) (*direc
 			deps = parseTypescriptDeps(pkg, knownNames)
 		case "dart":
 			deps = parseDartDeps(pkg, knownNames)
-		case "rust":
-			deps = parseRustDeps(pkg, knownNames)
-		case "wasm":
-			deps = parseRustDeps(pkg, knownNames)
+		case "rust", "wasm":
+			var err error
+			deps, err = parseRustDeps(pkg, knownNames)
+			if err != nil {
+				return nil, nil, err
+			}
 		case "elixir":
 			deps = parseElixirDeps(pkg, knownNames)
 		case "lua":
@@ -2688,6 +2844,19 @@ func ResolveWithTestTriggersAgainst(packages, known []discovery.Package) (*direc
 		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
 
 		for _, depName := range deps {
+			// A package that resolves itself is malformed input, not a
+			// programming error: report it (the conformance contract's
+			// DEPENDENCY_SELF_EDGE) instead of letting AddEdge panic on the
+			// self-loop. A Cargo manifest can do it with nothing more than a
+			// path entry named after its own directory or [package] name.
+			if depName == pkg.Name {
+				return nil, nil, &DependencySelfEdgeError{
+					Code:       dependencySelfEdge,
+					Package:    pkg.Name,
+					Manifest:   repositoryManifestPath(dependencyManifestPath(pkg)),
+					Dependency: depName,
+				}
+			}
 			// Edge direction: dep → pkg means "dep must be built before pkg".
 			// This convention makes IndependentGroups() produce the correct
 			// build order: nodes with zero in-degree (no deps) come first.

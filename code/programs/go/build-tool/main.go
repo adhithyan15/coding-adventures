@@ -99,6 +99,13 @@ func formatResolverError(err error) (string, int) {
 	if errors.As(err, &encodingError) {
 		return encodingError.Error(), 2
 	}
+	// A manifest that names its own package is malformed input too (the
+	// contract's DEPENDENCY_SELF_EDGE), so it gets the same stable,
+	// root-free diagnostic and exit status.
+	var selfEdgeError *resolver.DependencySelfEdgeError
+	if errors.As(err, &selfEdgeError) {
+		return selfEdgeError.Error(), 2
+	}
 	return fmt.Sprintf("Error: %v", err), 1
 }
 
