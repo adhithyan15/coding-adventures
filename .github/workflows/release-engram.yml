@@ -509,7 +509,12 @@ jobs:
             status=$?
             set -e
             echo "::group::$name launch log (exit $status)"
+            # The app's output must not be read as workflow commands; see
+            # code/scripts/mosaic-release-launch.sh show_log.
+            local token="mosaic-log-$$-$RANDOM$RANDOM"
+            echo "::stop-commands::$token"
             cat "$log"
+            echo "::$token::"
             echo "::endgroup::"
             if [[ "$status" -ne 124 ]]; then
               echo "::error::the $name launch exited with $status before the timeout"
@@ -945,7 +950,12 @@ jobs:
             status=$?
             set -e
             echo "::group::$name launch log (exit $status)"
+            # The app's output must not be read as workflow commands; see
+            # code/scripts/mosaic-release-launch.sh show_log.
+            local token="mosaic-log-$$-$RANDOM$RANDOM"
+            echo "::stop-commands::$token"
             cat "$log"
+            echo "::$token::"
             echo "::endgroup::"
             if [[ "$status" -ne 124 ]]; then
               echo "::error::the $name launch exited with $status before the timeout"

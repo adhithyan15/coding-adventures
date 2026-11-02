@@ -107,9 +107,18 @@ pid=$!
 # runner to hold files open for the next step.
 trap 'kill -KILL "$pid" 2>/dev/null || true' EXIT
 
+# The log is the app's own output. GitHub reads any line of the form
+# `::command::` on stdout as a workflow command, so a stray `::endgroup::`
+# or `::add-mask::` printed by the app would be obeyed. `::stop-commands::`
+# with a one-off token turns command parsing off until the same token is
+# echoed back, so the log is shown as plain text.
 show_log() {
+  local token
+  token="mosaic-log-$$-$RANDOM$RANDOM"
   echo "::group::$label"
+  echo "::stop-commands::$token"
   cat "$log"
+  echo "::$token::"
   echo "::endgroup::"
 }
 
