@@ -420,3 +420,35 @@ fn review_regressions_are_refused() {
     let program = smt_lib_format::read("(assert (= (bvadd #b01 #b01) #b10))(check-sat)").unwrap();
     assert_eq!(run_and_verify("ground BV", &program), vec!["sat"]);
 }
+
+/// Security review (VER10, round 2): Bool variables next to Int variables
+/// were grounded as integers and compared with Booleans as "unknown", read
+/// as false, and every one of these satisfiable problems came back UNSAT.
+#[test]
+fn bool_and_int_together_are_decided_correctly() {
+    let d = "(declare-const n Int)(declare-const p Bool)";
+    for (body, want_p) in [
+        ("(assert (= p true))", true),
+        ("(assert (= n 3))(assert (distinct p false))", true),
+        ("(assert (= n 3))(assert (= p (> n 0)))", true),
+        ("(assert (= n 3))(assert (= (ite p p p) true))", true),
+        ("(assert (= n 3))(assert (= p (> n 5)))", false),
+    ] {
+        let program = smt_lib_format::read(&format!("{d}{body}(check-sat)")).unwrap();
+        let out = Vm::new().execute(&program).unwrap();
+        let model = out.sat_results[0].model().unwrap_or_else(|| panic!("{body}: {:?}", out.sat_results[0]));
+        assert_eq!(model.get("p"), Some(&Value::Bool(want_p)), "{body}");
+    }
+    // Arithmetic near the i128 edge once saturated and turned a true
+    // comparison false; such literals are now refused outright.
+    refuse(
+        "(declare-const n Int)(assert (= n 5))\
+         (assert (> (+ n 170141183460469231731687303715884105727) (+ n 170141183460469231731687303715884105726)))",
+        "beyond ±2^62",
+    );
+    refuse("(declare-const n Int)(assert (> (* 4611686018427387905 n) 0))", "beyond ±2^62");
+    // Arithmetic over Booleans is ill-sorted even though `infer_sort`
+    // accepts it.
+    refuse("(declare-const n Int)(declare-const p Bool)(declare-const q Bool)(assert (= (+ p q) p))", "arithmetic on a Bool");
+    refuse("(declare-const n Int)(declare-const p Bool)(assert (> p n))", "arithmetic on a Bool");
+}

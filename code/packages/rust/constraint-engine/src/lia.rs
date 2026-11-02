@@ -62,7 +62,7 @@ use std::collections::{HashMap, HashSet};
 
 use constraint_core::Predicate;
 
-use crate::{eval_bool, Model, SolverResult, Value};
+use crate::{truth, Model, SolverResult, Value};
 
 // ---------------------------------------------------------------------------
 // Public entry point
@@ -114,7 +114,8 @@ impl LiaTactic {
         // against adversarial formulae with 3+ unconstrained variables.
         const LIA_BUDGET: usize = 2_000_000;
         let mut budget = LIA_BUDGET;
-        match eliminate_all(&constraints, &all_vars, &mut assignment, &mut budget) {
+        let bools: HashSet<String> = bool_vars.iter().cloned().collect();
+        match eliminate_all(&constraints, &all_vars, &bools, &mut assignment, &mut budget) {
             EliminationResult::Sat => {
                 // Build the model from the assignment.
                 let mut model = Model::new();
@@ -154,6 +155,7 @@ enum EliminationResult {
 fn eliminate_all(
     constraints: &[Predicate],
     vars: &[String],
+    bools: &HashSet<String>,
     assignment: &mut HashMap<String, i128>,
     budget: &mut usize,
 ) -> EliminationResult {
@@ -163,14 +165,25 @@ fn eliminate_all(
     }
     *budget -= 1;
 
-    // Base case: no more variables — ground evaluation.
+    // Base case: no more variables — ground evaluation, three-valued. A
+    // constraint that cannot be evaluated (overflow, an unsupported term)
+    // makes the whole answer Unknown: concluding UNSAT from "could not
+    // evaluate" would be a false proof.
     if vars.is_empty() {
         let model = build_model(assignment);
-        if constraints.iter().all(|p| eval_bool(p, &model)) {
-            return EliminationResult::Sat;
-        } else {
-            return EliminationResult::Unsat;
+        let mut unknown = false;
+        for p in constraints {
+            match truth(p, &model) {
+                Some(true) => {}
+                Some(false) => return EliminationResult::Unsat,
+                None => unknown = true,
+            }
         }
+        return if unknown {
+            EliminationResult::Unknown("a constraint could not be evaluated (overflow or unsupported term)".into())
+        } else {
+            EliminationResult::Sat
+        };
     }
 
     let var = &vars[0];
@@ -201,6 +214,11 @@ fn eliminate_all(
             }
             BoundInfo::Irrelevant => {}
             BoundInfo::Unsatisfiable => return EliminationResult::Unsat,
+            BoundInfo::Unknown => {
+                return EliminationResult::Unknown(
+                    "a ground constraint could not be evaluated (overflow or unsupported term)".into(),
+                )
+            }
             BoundInfo::Complex => {
                 // Can't extract a simple bound — fall back to interval search
                 // heuristic after we do finish bounds gathering.
@@ -232,7 +250,7 @@ fn eliminate_all(
             return EliminationResult::Unsat;
         }
         assignment.insert(var.clone(), first);
-        return eliminate_all(constraints, rest, assignment, budget);
+        return eliminate_all(constraints, rest, bools, assignment, budget);
     }
 
     // Step 3: determine search range.
@@ -259,10 +277,12 @@ fn eliminate_all(
 
     // Step 4: enumerate candidate values.
     //
-    // For Bool vars: restrict to {0, 1}.
+    // For Bool vars: restrict to {0, 1}, the only integers a Boolean
+    //   grounds to (the evaluator compares them with Booleans by truth).
     // For Int vars: start at `lo`, skip values in `neqs`.
     let candidates: Vec<i128> = {
-        let mut cands: Vec<i128> = (lo..=search_hi)
+        let range = if bools.contains(var) { lo.max(0)..=search_hi.min(1) } else { lo..=search_hi };
+        let mut cands: Vec<i128> = range
             .filter(|v| !neqs.contains(v))
             .collect();
         // If we couldn't find a candidate because neqs block the whole range,
@@ -283,7 +303,7 @@ fn eliminate_all(
     // Try each candidate.
     for &val in &candidates {
         assignment.insert(var.clone(), val);
-        match eliminate_all(constraints, rest, assignment, budget) {
+        match eliminate_all(constraints, rest, bools, assignment, budget) {
             EliminationResult::Sat => return EliminationResult::Sat,
             EliminationResult::Unsat => {
                 // This candidate doesn't work — try next.
@@ -331,6 +351,10 @@ enum BoundInfo {
     Irrelevant,
     /// Constraint doesn't mention `var` and is *not* satisfied.
     Unsatisfiable,
+    /// Constraint doesn't mention `var` and is ground, but cannot be
+    /// evaluated (an overflow, an unsupported term). The search must answer
+    /// Unknown rather than guess.
+    Unknown,
     /// Constraint is too complex to extract a simple bound.
     Complex,
 }
@@ -381,10 +405,10 @@ fn extract_bound(
                 // which would produce a spurious Unsatisfiable — so we guard.
                 if is_ground_under(other, assignment) {
                     let model = build_model(assignment);
-                    if eval_bool(other, &model) {
-                        BoundInfo::Irrelevant
-                    } else {
-                        BoundInfo::Unsatisfiable
+                    match truth(other, &model) {
+                        Some(true) => BoundInfo::Irrelevant,
+                        Some(false) => BoundInfo::Unsatisfiable,
+                        None => BoundInfo::Unknown,
                     }
                 } else {
                     BoundInfo::Irrelevant // not yet ground — defer
@@ -528,6 +552,7 @@ fn merge_bounds(a: BoundInfo, b: BoundInfo) -> BoundInfo {
         (BoundInfo::Unsatisfiable, _) | (_, BoundInfo::Unsatisfiable) => {
             BoundInfo::Unsatisfiable
         }
+        (BoundInfo::Unknown, _) | (_, BoundInfo::Unknown) => BoundInfo::Unknown,
         // If either is Complex, the whole thing is Complex.
         (BoundInfo::Complex, _) | (_, BoundInfo::Complex) => BoundInfo::Complex,
         // Both irrelevant → irrelevant.
@@ -657,7 +682,9 @@ fn eval_as_const(p: &Predicate, assignment: &HashMap<String, i128>) -> Option<i1
         }
         Predicate::Ite(cond, t, e) => {
             let model = build_model(assignment);
-            if eval_bool(cond, &model) {
+            // A condition that cannot be evaluated yet (unassigned
+            // variables, overflow) means "not a constant yet": defer.
+            if truth(cond, &model)? {
                 eval_as_const(t, assignment)
             } else {
                 eval_as_const(e, assignment)

@@ -38,6 +38,25 @@ regression tests in `constraint-vm/tests/qfbv.rs`:
   `Unsat`. Every assertion must now sort-check as `Bool` under the declared
   sorts (`infer_sort`) and stay inside the evaluator's fragment before LIA
   runs; otherwise the answer is `Unknown`.
+- **The evaluator was two-valued, and the LIA search trusted it.** Also
+  predates VER10. Two concrete false-`Unsat` paths:
+  - Bool variables next to `Int` variables were grounded as integers. The
+    evaluator treated `Int` vs `Bool` as "unknown", then as false, so
+    `(declare-const n Int) (declare-const p Bool) (assert (= p true))`
+    answered `Unsat`.
+  - Arithmetic saturated at the edge of `i128`, so
+    `n + MAX > n + MAX − 1` came out false.
+
+  The fixes:
+  - **`eval_int_or_bool` is now three-valued** (Kleene `and`/`or`/`not`/
+    `implies`/`iff`/`ite`), with exact checked arithmetic, so overflow is
+    unknown. A grounded Bool meets a Boolean by truth value.
+  - **The LIA search answers `Unknown`** whenever a ground constraint cannot
+    be evaluated, both at the base case and during bound extraction.
+  - **Bool variables are searched over {0, 1} only.**
+  - **The guard now refuses** integer literals beyond ±2^62, which keeps
+    bound arithmetic away from overflow, and arithmetic or comparisons over
+    non-`Int` operands.
 - **DoS through the BV tactic.** Every kind of work is now bounded:
   - circuit size: `MAX_AIG_NODES` cut from 4M to 250k, about 150 MB;
   - construction work: `MAX_GATE_CALLS`, 2M, since repeated subterms are

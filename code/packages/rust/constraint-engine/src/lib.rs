@@ -549,8 +549,36 @@ fn lia_fragment_violation(p: &Predicate, env: &SortEnv) -> Option<String> {
     if depth_of(p) > MAX_PREDICATE_DEPTH {
         return Some(format!("deeper than MAX_PREDICATE_DEPTH ({MAX_PREDICATE_DEPTH})"));
     }
+    // Integer literals and coefficients stay far from the i128 edge, so the
+    // LIA search's bound arithmetic (`lo + width`, `hi − lo`, `k ± 1`) cannot
+    // overflow.
+    const MAX_LIA_LITERAL: i128 = 1 << 62;
     let mut stack = vec![p];
     while let Some(q) = stack.pop() {
+        match q {
+            Predicate::Int(n) | Predicate::Mul { coef: n, .. } if n.unsigned_abs() > MAX_LIA_LITERAL as u128 => {
+                return Some(format!("integer {n} beyond ±2^62"));
+            }
+            // Arithmetic and comparisons take integers: `infer_sort` lets
+            // `(+ p q)` over Booleans through, and the search would read it
+            // as 0/1 arithmetic.
+            Predicate::Add(_)
+            | Predicate::Sub(..)
+            | Predicate::Mul { .. }
+            | Predicate::Le(..)
+            | Predicate::Lt(..)
+            | Predicate::Ge(..)
+            | Predicate::Gt(..) => {
+                for c in children(q) {
+                    match infer_sort(c, env) {
+                        Ok(Sort::Int) => {}
+                        Ok(other) => return Some(format!("arithmetic on a {other} operand")),
+                        Err(e) => return Some(e.to_string()),
+                    }
+                }
+            }
+            _ => {}
+        }
         let ok = matches!(
             q,
             Predicate::Bool(_)
@@ -661,50 +689,75 @@ pub(crate) fn eval_int_or_bool(p: &Predicate, model: &Model) -> EvalResult {
             Some(Value::Int(n)) => EvalResult::Int(*n),
             _ => EvalResult::Unknown,
         },
+        // The connectives are three-valued (Kleene logic): an operand that
+        // cannot be evaluated makes the result unknown unless another operand
+        // already decides it. Unknown must never quietly become `false`:
+        // under a `not` it would become `true`, and either way the LIA search
+        // could report a wrong UNSAT or SAT.
         Predicate::And(parts) => {
+            let mut unknown = false;
             for part in parts {
-                if !eval_bool(part, model) {
-                    return EvalResult::Bool(false);
+                match truth(part, model) {
+                    Some(false) => return EvalResult::Bool(false),
+                    Some(true) => {}
+                    None => unknown = true,
                 }
             }
-            EvalResult::Bool(true)
+            if unknown { EvalResult::Unknown } else { EvalResult::Bool(true) }
         }
         Predicate::Or(parts) => {
+            let mut unknown = false;
             for part in parts {
-                if eval_bool(part, model) {
-                    return EvalResult::Bool(true);
+                match truth(part, model) {
+                    Some(true) => return EvalResult::Bool(true),
+                    Some(false) => {}
+                    None => unknown = true,
                 }
             }
-            EvalResult::Bool(false)
+            if unknown { EvalResult::Unknown } else { EvalResult::Bool(false) }
         }
-        Predicate::Not(inner) => {
-            EvalResult::Bool(!eval_bool(inner, model))
-        }
-        Predicate::Implies(a, b) => {
-            EvalResult::Bool(!eval_bool(a, model) || eval_bool(b, model))
-        }
-        Predicate::Iff(a, b) => {
-            EvalResult::Bool(eval_bool(a, model) == eval_bool(b, model))
-        }
-        Predicate::Eq(a, b) => {
-            match (eval_int_or_bool(a, model), eval_int_or_bool(b, model)) {
-                (EvalResult::Int(x), EvalResult::Int(y)) => EvalResult::Bool(x == y),
-                (EvalResult::Bool(x), EvalResult::Bool(y)) => EvalResult::Bool(x == y),
-                _ => EvalResult::Unknown,
+        Predicate::Not(inner) => match truth(inner, model) {
+            Some(b) => EvalResult::Bool(!b),
+            None => EvalResult::Unknown,
+        },
+        Predicate::Implies(a, b) => match (truth(a, model), truth(b, model)) {
+            (Some(false), _) | (_, Some(true)) => EvalResult::Bool(true),
+            (Some(true), Some(false)) => EvalResult::Bool(false),
+            _ => EvalResult::Unknown,
+        },
+        Predicate::Iff(a, b) => match (truth(a, model), truth(b, model)) {
+            (Some(x), Some(y)) => EvalResult::Bool(x == y),
+            _ => EvalResult::Unknown,
+        },
+        Predicate::Eq(a, b) | Predicate::NEq(a, b) => {
+            let same = match (eval_int_or_bool(a, model), eval_int_or_bool(b, model)) {
+                (EvalResult::Int(x), EvalResult::Int(y)) => Some(x == y),
+                (EvalResult::Bool(x), EvalResult::Bool(y)) => Some(x == y),
+                // The LIA search grounds Bool variables as the integers 0
+                // and 1, so a Bool variable meets a Boolean as an integer.
+                // Callers only evaluate well-sorted predicates (the engine
+                // sort-checks before LIA), so this pairing always means a
+                // grounded Bool, compared by truth value.
+                (EvalResult::Int(x), EvalResult::Bool(y)) | (EvalResult::Bool(y), EvalResult::Int(x)) => {
+                    Some((x != 0) == y)
+                }
+                _ => None,
+            };
+            match same {
+                Some(s) => EvalResult::Bool(if matches!(p, Predicate::Eq(..)) { s } else { !s }),
+                None => EvalResult::Unknown,
             }
         }
-        Predicate::NEq(a, b) => {
-            match (eval_int_or_bool(a, model), eval_int_or_bool(b, model)) {
-                (EvalResult::Int(x), EvalResult::Int(y)) => EvalResult::Bool(x != y),
-                (EvalResult::Bool(x), EvalResult::Bool(y)) => EvalResult::Bool(x != y),
-                _ => EvalResult::Unknown,
-            }
-        }
+        // Arithmetic is exact: an overflow is unknown, never a clamped value
+        // (saturation once made `n + MAX > n + MAX − 1` false).
         Predicate::Add(parts) => {
             let mut sum = 0i128;
             for part in parts {
                 match eval_int_or_bool(part, model) {
-                    EvalResult::Int(n) => sum = sum.saturating_add(n),
+                    EvalResult::Int(n) => match sum.checked_add(n) {
+                        Some(s) => sum = s,
+                        None => return EvalResult::Unknown,
+                    },
                     _ => return EvalResult::Unknown,
                 }
             }
@@ -713,14 +766,14 @@ pub(crate) fn eval_int_or_bool(p: &Predicate, model: &Model) -> EvalResult {
         Predicate::Sub(a, b) => {
             match (eval_int_or_bool(a, model), eval_int_or_bool(b, model)) {
                 (EvalResult::Int(x), EvalResult::Int(y)) => {
-                    EvalResult::Int(x.saturating_sub(y))
+                    x.checked_sub(y).map_or(EvalResult::Unknown, EvalResult::Int)
                 }
                 _ => EvalResult::Unknown,
             }
         }
         Predicate::Mul { coef, term } => {
             match eval_int_or_bool(term, model) {
-                EvalResult::Int(n) => EvalResult::Int(coef.saturating_mul(n)),
+                EvalResult::Int(n) => coef.checked_mul(n).map_or(EvalResult::Unknown, EvalResult::Int),
                 _ => EvalResult::Unknown,
             }
         }
@@ -728,15 +781,23 @@ pub(crate) fn eval_int_or_bool(p: &Predicate, model: &Model) -> EvalResult {
         Predicate::Lt(a, b) => cmp_eval(a, b, model, |x, y| x < y),
         Predicate::Ge(a, b) => cmp_eval(a, b, model, |x, y| x >= y),
         Predicate::Gt(a, b) => cmp_eval(a, b, model, |x, y| x > y),
-        Predicate::Ite(c, t, e) => {
-            if eval_bool(c, model) {
-                eval_int_or_bool(t, model)
-            } else {
-                eval_int_or_bool(e, model)
-            }
-        }
+        Predicate::Ite(c, t, e) => match truth(c, model) {
+            Some(true) => eval_int_or_bool(t, model),
+            Some(false) => eval_int_or_bool(e, model),
+            None => EvalResult::Unknown,
+        },
         // Unsupported in evaluation: Apply, quantifiers, arrays.
         _ => EvalResult::Unknown,
+    }
+}
+
+/// The truth value of `p`, or `None` if it cannot be evaluated. An integer
+/// in Boolean position is a grounded Bool variable: true iff non-zero.
+pub(crate) fn truth(p: &Predicate, model: &Model) -> Option<bool> {
+    match eval_int_or_bool(p, model) {
+        EvalResult::Bool(b) => Some(b),
+        EvalResult::Int(n) => Some(n != 0),
+        EvalResult::Unknown => None,
     }
 }
 
@@ -1003,6 +1064,44 @@ mod tests {
     fn eval_bool_literals() {
         let m = Model::new();
         assert!(eval_bool(&Predicate::Bool(true), &m));
+        // Three-valued connectives: unknown is never quietly false.
+        let unk = Predicate::Var("undeclared".into());
+        let not_unk = Predicate::Not(Box::new(unk.clone()));
+        assert_eq!(eval_int_or_bool(&not_unk, &m), EvalResult::Unknown);
+        let t = Predicate::Bool(true);
+        let f = Predicate::Bool(false);
+        assert_eq!(eval_int_or_bool(&Predicate::And(vec![unk.clone(), t.clone()]), &m), EvalResult::Unknown);
+        assert_eq!(eval_int_or_bool(&Predicate::And(vec![unk.clone(), f.clone()]), &m), EvalResult::Bool(false));
+        assert_eq!(eval_int_or_bool(&Predicate::Or(vec![unk.clone(), f.clone()]), &m), EvalResult::Unknown);
+        assert_eq!(eval_int_or_bool(&Predicate::Or(vec![unk.clone(), t.clone()]), &m), EvalResult::Bool(true));
+        let imp = |a: &Predicate, b: &Predicate| Predicate::Implies(Box::new(a.clone()), Box::new(b.clone()));
+        assert_eq!(eval_int_or_bool(&imp(&f, &unk), &m), EvalResult::Bool(true));
+        assert_eq!(eval_int_or_bool(&imp(&unk, &t), &m), EvalResult::Bool(true));
+        assert_eq!(eval_int_or_bool(&imp(&t, &f), &m), EvalResult::Bool(false));
+        assert_eq!(eval_int_or_bool(&imp(&t, &unk), &m), EvalResult::Unknown);
+        assert_eq!(
+            eval_int_or_bool(&Predicate::Iff(Box::new(unk.clone()), Box::new(t.clone())), &m),
+            EvalResult::Unknown
+        );
+        assert_eq!(
+            eval_int_or_bool(&Predicate::Ite(Box::new(unk.clone()), Box::new(t.clone()), Box::new(f.clone())), &m),
+            EvalResult::Unknown
+        );
+        // Exact arithmetic: overflow is unknown, not a clamped value.
+        let max = Predicate::Int(i128::MAX);
+        let one = Predicate::Int(1);
+        assert_eq!(eval_int_or_bool(&Predicate::Add(vec![max.clone(), one.clone()]), &m), EvalResult::Unknown);
+        assert_eq!(
+            eval_int_or_bool(&Predicate::Sub(Box::new(Predicate::Int(i128::MIN)), Box::new(one.clone())), &m),
+            EvalResult::Unknown
+        );
+        assert_eq!(eval_int_or_bool(&Predicate::Mul { coef: 2, term: Box::new(max) }, &m), EvalResult::Unknown);
+        // A grounded Bool (an integer) meets a Boolean by truth value.
+        let eq = Predicate::Eq(Box::new(Predicate::Int(1)), Box::new(t.clone()));
+        assert_eq!(eval_int_or_bool(&eq, &m), EvalResult::Bool(true));
+        let neq = Predicate::NEq(Box::new(f), Box::new(Predicate::Int(0)));
+        assert_eq!(eval_int_or_bool(&neq, &m), EvalResult::Bool(false));
+        assert_eq!(truth(&Predicate::Int(2), &m), Some(true));
         assert!(!eval_bool(&Predicate::Bool(false), &m));
     }
 

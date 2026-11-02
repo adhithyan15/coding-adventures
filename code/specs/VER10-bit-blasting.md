@@ -238,3 +238,11 @@ lists no capabilities.
    Separately, every LIA assertion must sort-check and stay inside the
    evaluator's fragment, which also closes the older case of an
    undeclared name.
+4. **The engine's evaluator is three-valued** (security review, round 2).
+   With Bool and `Int` variables together, Bool variables were grounded as
+   integers, compared with Booleans as "unknown", and read as false, which
+   gave false `Unsat` answers. Saturating arithmetic gave more. Evaluation
+   now distinguishes true, false and unknown, and uses exact arithmetic. The
+   LIA search answers `Unknown` rather than `Unsat` whenever it cannot
+   evaluate. Bool variables are searched over {0, 1}. The guard caps
+   literals at ±2^62 and requires arithmetic operands to be `Int`.
