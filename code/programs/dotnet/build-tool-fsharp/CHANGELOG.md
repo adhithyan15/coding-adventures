@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Rust resolution, which this front door takes from the shared C# engine,
+  now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]`, every `[target.<cfg>.…]` link table and the
+  `[dependencies.<name>]` sub-table form, honouring `package` renames, as the
+  Rust paragraph of `code/specs/build-tool-conformance.md` requires. See the
+  C# build tool's changelog; F# has no Cargo reader of its own.
+
 - Exposed a no-inline pure CI-gate-selection facade over the shared .NET
   engine. The native F# suite independently replays all eleven neutral
   registry, path, budget, and run-all cases without workflow authority.

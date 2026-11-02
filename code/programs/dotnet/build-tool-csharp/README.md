@@ -91,6 +91,23 @@ dotnet run -- --emit-plan --plan-file build-plan.json
 - Mirrors the current practical feature set of the TypeScript and Rust ports:
   shell `BUILD` files, manifest-based dependency resolution, git diff, cache,
   reporting, and plan emission.
+- Rust resolution reads path entries from every Cargo table that is compiled
+  into the crate: `[dependencies]`, `[build-dependencies]` (and the legacy
+  `build_dependencies`), and the same tables under `[target.<cfg>.…]` for any
+  cfg, quoted or a bare triple, as a union over all targets. Entries count
+  both as inline tables (`name = { path = "..." }`, whose arrays may continue
+  onto later lines) and as `[dependencies.name]` sub-tables with a
+  `path = "..."` key. A `package = "..."` rename is authoritative. The crate
+  name is matched, ASCII-lowercased, against each Rust package's directory
+  name and declared `[package]` `name` (a WASM wrapper only by its declared
+  name). Dev-dependencies in every form, `[patch]`, `[replace]`,
+  `[workspace]`, package metadata, features, comments, and registry-only
+  dependencies never create edges. `Resolver.CargoLinkDependencyNames` is the
+  line procedure of the Rust paragraph of
+  `code/specs/build-tool-conformance.md`; the test suite pins it with the Go
+  reference's 46 shape cases, and it returns the same dependency names as the
+  Go reference reader for all 1,650 tracked `Cargo.toml` files (checked
+  2026-11-01). The F# front door shares this engine.
 - Discovery consumes the complete language-neutral registry. The exact bucket
   immediately below `packages` or `programs` is the sole language
   discriminator, BUILD roots outside those containers do not become packages,
