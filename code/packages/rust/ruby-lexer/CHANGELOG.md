@@ -4,6 +4,8 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
 
 ## Unreleased — a newline or `;` ends a statement before `-`, `+`, `(` and after a lone name or a `rescue` list (#18798)
 
+- A keyword in method-name position (`5.then`, `obj&.do`, `A::begin`) no longer opens a statement, so `x = 5.then foo` ⏎ `bar` keeps `foo` as the call's argument instead of splitting after `then` (#18798 third review).
+
 ### Fixed (re-review of #18798)
 
 - **A statement starts after an opener on the same line too.**  Step 4

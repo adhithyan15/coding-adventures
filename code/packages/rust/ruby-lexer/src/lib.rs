@@ -1517,12 +1517,27 @@ impl RubyLexer {
         let t = &self.tokens[j];
         match t.type_ {
             TokenType::Semicolon | TokenType::LBrace => true,
-            TokenType::Keyword => matches!(
-                t.value.as_str(),
-                "do" | "then" | "else" | "begin" | "ensure" | "rescue"
-            ),
+            // A keyword spelled in method-name position is a method call,
+            // not an opener: `5.then foo`, `obj&.do`, `A::begin` (re-review
+            // LOW: `x = 5.then foo` ⏎ `bar` must not split after `then`).
+            TokenType::Keyword => {
+                matches!(
+                    t.value.as_str(),
+                    "do" | "then" | "else" | "begin" | "ensure" | "rescue"
+                ) && !self.follows_method_call_dot(j)
+            }
             TokenType::Name => closing_bars.contains(&j),
             _ => false,
+        }
+    }
+
+    /// Whether `tokens[j]` is spelled where a method name goes, right after
+    /// `.`, `&.` or `::`, so a keyword there names a method.
+    fn follows_method_call_dot(&self, j: usize) -> bool {
+        j > 0 && {
+            let pt = &self.tokens[j - 1];
+            matches!(pt.type_, TokenType::Dot | TokenType::Colon)
+                || (pt.type_ == TokenType::Name && pt.value == "&.")
         }
     }
 
@@ -5306,7 +5321,16 @@ mod tests {
             );
         }
         // Mid-expression on its line: left alone.
-        for (src, tok) in [("x = foo; bar", "foo"), ("a or return; puts 1", "return"), ("f(a, b; c)", "b")] {
+        // A keyword in method-name position (`5.then`, `obj&.do`, `A::begin`)
+        // is a method call, not an opener: `foo` after it is its argument.
+        for (src, tok) in [
+            ("x = foo; bar", "foo"),
+            ("a or return; puts 1", "return"),
+            ("f(a, b; c)", "b"),
+            ("x = 5.then foo\nbar", "foo"),
+            ("x = obj&.do foo\nbar", "foo"),
+            ("x = A::begin foo\nbar", "foo"),
+        ] {
             let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
             let at = toks.iter().position(|t| t.value == tok).unwrap();
             assert_ne!(toks[at + 1].type_, TokenType::Semicolon, "{src:?}: {toks:?}");
