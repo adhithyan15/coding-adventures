@@ -28,13 +28,13 @@
 //! Go toolchain each case still lowers and emits; only running is
 //! skipped.
 
-use std::process::{Command, Output};
+use std::process::Output;
 use std::sync::atomic::{AtomicU32, Ordering};
 
 use semantic_ir::{Expr, Feature, Module, RescueClause, Span, Stmt};
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -57,12 +57,13 @@ fn run_module(module: &Module, label: &str, tag: &str) -> Option<Output> {
         return None;
     }
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
-    let path = std::env::temp_dir().join(format!(
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let path = scratch.path().join(format!(
         "sir_go_twig_gn_{tag}_{}_{n}.go",
         std::process::id()
     ));
-    std::fs::write(&path, &artifact.source).expect("write temp go");
-    let out = Command::new("go")
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp go");
+    let out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&path)
         .output()

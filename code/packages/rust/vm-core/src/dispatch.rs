@@ -1246,13 +1246,19 @@ fn reserve_nil_handle(ctx: &mut DispatchCtx) {
 /// fails outright rather than returning one) — kept so `is_null` stays
 /// correct even if a future caller (a hand-built IIR module, a different
 /// frontend) ever produces one directly.
+///
+/// `Value::Null` — the dynamic nil `dyn_nil` produces (#18470) — is null too.
+/// The `Int(0)` arm stays for the frontends that still spell nil
+/// `const 0 : ref<LispyPair>`, which is why a Lisp-family module run on this
+/// VM asks `dyn_is_nil` instead: there `(null? 0)` must be `#f`, and only the
+/// kind-aware test can say so (`iir-builtin-lowering::vm_lisp`).
 fn handle_is_null(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let x = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
         resolve_src(frame, &instr.srcs, 0)?
     };
     let is_null = match &x {
-        Value::Int(0) => true,
+        Value::Int(0) | Value::Null => true,
         Value::HeapRef(r) => r.is_null(),
         _ => false,
     };
@@ -1441,6 +1447,62 @@ const FIELD_TAG_BITS: u32 = gc_core::NAN_BOX_TAG_BITS;
 const FIELD_TAG_MASK: i64 = gc_core::NAN_BOX_TAG_MASK as i64;
 const FIELD_TAG_HEAP_REF: i64 = gc_core::NAN_BOX_REF_TAG as i64;
 
+// ── The scalar field words besides integers (#18470) ─────────────────────────
+//
+// A field used to hold only an `Int` (tag `000`) or a `HeapRef` (tag `111`), so
+// `(cons #t '())`, a list of symbols and a closure capturing `#f` all stopped
+// with "unsupported value kind", and nil — which was `Int(0)` — came back from a
+// field as the integer 0. The dynamic kinds now get the words the tagged-word
+// backends already give them (LANG83 PR7f `dyn_tag`; LANG85 §1.1), so one value
+// has one spelling whether it sits in a register or in a cell:
+//
+// | `Value`       | field word            | tag   | `dyn_tag` |
+// |---------------|-----------------------|-------|-----------|
+// | `Int(n)`      | `n << 3`              | `000` | 0         |
+// | `Null` (nil)  | `1`                   | `001` | 1         |
+// | `Symbol(id)`  | `(id << 32) \| 0b010` | `010` | 2         |
+// | `Bool(false)` | `3`                   | `011` | 3         |
+// | `Bool(true)`  | `5`                   | `101` | 5         |
+// | `HeapRef(p)`  | `p \| 0b111`          | `111` | 7         |
+//
+// None of the new words has tag `111`, so `gc-core`'s tagged kind still sees
+// exactly the `HeapRef`s as references: the collector's view is unchanged.
+// `Float` and `Str` still have no word (they would need a boxed cell of their
+// own) and are still refused.
+const FIELD_WORD_NIL: i64 = 0b001;
+const FIELD_WORD_FALSE: i64 = 0b011;
+const FIELD_WORD_TRUE: i64 = 0b101;
+const FIELD_TAG_SYMBOL: i64 = 0b010;
+
+/// Encode a symbol id as its field word: the id in the high 32 bits, tag `010`.
+fn symbol_field_word(id: u32) -> i64 {
+    (((id as u64) << 32) as i64) | FIELD_TAG_SYMBOL
+}
+
+/// Decode one stored field word back into the [`Value`] it was written from —
+/// the inverse of [`handle_gc_field_store`]'s encoding table above.
+///
+/// A word no store produces (tag `100` or `110`, or a nil / boolean / symbol
+/// tag on bits that are not exactly that value's word) is refused rather than
+/// guessed at: the only way to build one is to write the payload behind the
+/// VM's back.
+fn decode_field_word(word: i64) -> Result<Value, VMError> {
+    let value = match word & FIELD_TAG_MASK {
+        0b000 => Value::Int(word >> FIELD_TAG_BITS),
+        FIELD_TAG_HEAP_REF => Value::HeapRef(gc_core::HeapRef::new((word & !FIELD_TAG_MASK) as usize)),
+        _ if word == FIELD_WORD_NIL => Value::Null,
+        _ if word == FIELD_WORD_FALSE => Value::Bool(false),
+        _ if word == FIELD_WORD_TRUE => Value::Bool(true),
+        _ if word & 0xFFFF_FFFF == FIELD_TAG_SYMBOL => Value::Symbol(((word as u64) >> 32) as u32),
+        tag => {
+            return Err(VMError::Custom(format!(
+                "gc_field_load: malformed field word (tag {tag:#05b}) — no store writes this shape"
+            )))
+        }
+    };
+    Ok(value)
+}
+
 /// Validate a `gc_field_load`/`gc_field_store` access and return the byte
 /// offset of word `idx` within `obj`'s payload.
 ///
@@ -1540,12 +1602,13 @@ fn checked_field_offset(
 /// Decoded purely from the word's own tag bits (see [`FIELD_TAG_MASK`]),
 /// never from `instr.type_hint` — a field's *declared* type ("ref<any>")
 /// doesn't reveal what a specific stored word actually is. Tag `111` →
-/// `HeapRef` (address = word with the tag bits cleared); anything else →
-/// `Int` (value = word arithmetic-shifted right, restoring the sign). A
-/// freshly `gc_alloc`'d object is zero-initialized, which decodes as
-/// `Int(0)` — the same default `alloc`'s old `ctx.arrays`-backed
-/// implementation used. Must mirror [`handle_gc_field_store`]'s encoding
-/// exactly.
+/// `HeapRef` (address = word with the tag bits cleared); tag `000` → `Int`
+/// (value = word arithmetic-shifted right, restoring the sign); the words
+/// `1`, `3`, `5` and tag `010` → nil, `#f`, `#t` and a symbol
+/// ([`decode_field_word`], #18470). A freshly `gc_alloc`'d object is
+/// zero-initialized, which decodes as `Int(0)` — the same default `alloc`'s
+/// old `ctx.arrays`-backed implementation used. Must mirror
+/// [`handle_gc_field_store`]'s encoding exactly.
 fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let (obj, idx) = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1560,11 +1623,7 @@ fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
     // whose payload is at least `byte_off + 8` bytes long, so this read stays
     // within the allocation `ctx.heap.alloc` returned for `obj`.
     let word = unsafe { std::ptr::read_unaligned((obj.addr() + byte_off) as *const i64) };
-    let value = if word & FIELD_TAG_MASK == FIELD_TAG_HEAP_REF {
-        Value::HeapRef(gc_core::HeapRef::new((word & !FIELD_TAG_MASK) as usize))
-    } else {
-        Value::Int(word >> FIELD_TAG_BITS)
-    };
+    let value = decode_field_word(word)?;
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
@@ -1583,11 +1642,11 @@ fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
 /// `[i64::MIN >> 3, i64::MAX >> 3]` are rejected rather than silently
 /// truncated) — the same tradeoff `dyn_repr`'s NaN-boxing already accepts
 /// for the native backends' lisp integers, so this is parity, not a new
-/// limitation. `Value::Float`/`Value::Bool`/`Value::Str` are rejected: none
-/// fits this tag scheme without its own boxed heap allocation, and no Twig
-/// lowering pass stores one directly into a record/union/closure field on
-/// any backend today (confirmed by investigation) — pre-existing
-/// unsupported territory, not a regression.
+/// limitation. `Value::Null`, `Value::Bool` and `Value::Symbol` are stored as
+/// their tagged words (`1`, `3` / `5`, `(id << 32) | 010`; #18470), so a
+/// list of booleans or symbols, and a closure that captures `#f`, work.
+/// `Value::Float`/`Value::Str` are rejected: neither fits this tag scheme
+/// without its own boxed heap allocation.
 fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let (obj, idx, val) = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1629,9 +1688,16 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
             }
             shifted
         }
+        // #18470: the dynamic scalars get their tagged-word spellings (the
+        // table above `decode_field_word`), so nil, the booleans and symbols
+        // round-trip through a cell as themselves.
+        Value::Null => FIELD_WORD_NIL,
+        Value::Bool(false) => FIELD_WORD_FALSE,
+        Value::Bool(true) => FIELD_WORD_TRUE,
+        Value::Symbol(id) => symbol_field_word(*id),
         other => return Err(VMError::Custom(format!(
-            "gc_field_store: unsupported value kind {other:?} — only heap refs \
-             and integers can be stored in a raw GC field"
+            "gc_field_store: unsupported value kind {other:?} — only heap refs, \
+             integers, nil, booleans and symbols can be stored in a raw GC field"
         ))),
     };
     let field_addr = obj.addr() + byte_off;

@@ -101,13 +101,14 @@ fn run_array_program(m: &Module) -> Option<String> {
     static SEQ: AtomicUsize = AtomicUsize::new(0);
 
     let source = semantic_ir_to_ruby::compile(m).expect("ruby emit").source;
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_ruby_test_");
+    let dir = scratch.path();
     let path = dir.join(format!(
         "sir_ruby_array_{}_{}.rb",
         std::process::id(),
         SEQ.fetch_add(1, Ordering::Relaxed)
     ));
-    std::fs::File::create(&path).ok()?.write_all(source.as_bytes()).ok()?;
+    sir_test_scratch::create_new(&path).ok()?.write_all(source.as_bytes()).ok()?;
     let out = std::process::Command::new("ruby").arg(&path).output().ok()?;
     let _ = std::fs::remove_file(&path);
     assert!(

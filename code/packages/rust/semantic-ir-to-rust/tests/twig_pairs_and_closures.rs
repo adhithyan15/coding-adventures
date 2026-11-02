@@ -42,11 +42,12 @@ fn run(src: &str, tag: &str) -> Option<Output> {
         return None;
     }
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let stem = format!("sir_rs_twig_pc_{tag}_{}_{n}", std::process::id());
     let src_path = dir.join(format!("{stem}.rs"));
     let bin_path = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-    std::fs::write(&src_path, &artifact.source).expect("write temp rust");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp rust");
     let mut cmd = Command::new("rustc");
     cmd.args(["--edition", "2021", "-C", "debuginfo=0"]);
     if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {

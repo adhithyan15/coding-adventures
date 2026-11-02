@@ -167,6 +167,13 @@ Rather than silently change those programs, LANG83 adds new ops whose edges are
 *defined* and identical everywhere. `i64_div_trunc` (Later) is the defined twin
 of `div`.
 
+A language that needs defined edges before `i64_div_trunc` exists writes them
+itself. Twig on the VM and JIT columns does (#18470): `iir-builtin-lowering::
+vm_lisp` puts a `Trap.DivZero` check and a `Trap.Overflow` check for
+`MIN / -1` in front of every `div` and `mod` in a Twig module, typed or from a
+dynamic `/` / `quotient` / `remainder` / `modulo`, matching twig-vm. vm-core's
+own `div` / `mod` keep the legacy edges in the table.
+
 ### Trap semantics
 
 A trap terminates the program. It is a **terminator**: control never falls
@@ -2176,6 +2183,15 @@ the frontends.
   harnesses register none for these; `jit_lisp`'s McCarthy embedding does,
   and it is not the JIT column. vm-core's `every_standard_op_is_executed`
   pins that `Dynamic` is the one family the VM refuses.
+  *Update (#18470):* the VM now lowers the five primitives that read or make
+  a value's kind — `dyn_tag`, `dyn_is_nil`, `dyn_is_pair`, `dyn_nil`,
+  `dyn_symbol` — as default builtins over its own `Value` kinds (nil is
+  `Null`, a symbol the new `Value::Symbol`, `dyn_symbol` takes the name and
+  interns it), and still refuses `dyn_box_int`, `dyn_unbox_int` and
+  `dyn_pair_new` / `_first` / `_rest`, because its cells are built with
+  `alloc` / `field_*`. `the_vm_lowers_exactly_five_dynamic_primitives` pins
+  the split; `op_conformance`'s `dyn_symbol` case now runs on the VM. The JIT
+  column still refuses all ten.
 - *Nothing a frontend emits changed.* Twig, McCarthy Lisp and the CAS
   frontends still emit `cons` / `car` / `null?` …, which pass
   `check_module_for` ungated and are renamed to the registered names by
@@ -2338,7 +2354,7 @@ PRs rather than landed as one.
 | --- | --- | --- |
 | `lang-aot` LLVM, `twig-aot` native (x86-64 / AArch64), `jit_lisp` | `cons` `car` `cdr` `pair?` `null?` `equal?` `not` `+` … via `lower_heap_builtins_runtime`, `lower_dynamic_arith`, `lower_dyn_repr` | tagged word, `dynval_runtime.c` |
 | `lang-aot` WASM / JVM / CLR / BEAM | the same names via `lower_heap_builtins` (`alloc` / `field_*` / `is_null`), `lower_dyn_repr_structural` (`box` → `i31ref` / object); `pair?`, `not`, `equal?` reach the backend, which lowers them itself (`iir-to-wasm` `lower.rs`, `iir-to-jvm-class-file` `lower.rs`, `iir-to-cil-bytecode` `il_text.rs`, `iir-to-beam`) | structural: GC struct / object / Erlang term; booleans are machine `i32`, nil is a null reference, a symbol is an interned `i31` indistinguishable from an integer |
-| `lang_matrix` VM and JIT columns | `lower_heap_builtins` + `intern_symbols_structural` in the harness | structural (`vm-core` heap cells) |
+| `lang_matrix` VM and JIT columns | `lower_heap_builtins` in the harness, then (#18470, Twig modules) `vm_lisp::lower_lisp_for_vm`, which turns `null?` / `pair?` / `not` / `number?` / `symbol?` / `boolean?` / `list?`, a branch's truthiness and the dynamic division names into IIR over `dyn_tag` / `dyn_is_nil` / `dyn_is_pair` / `dyn_nil` / `dyn_symbol`; `intern_symbols_structural` for other languages | structural (`vm-core` heap cells); nil, booleans and symbols are kinds of their own |
 | `twig-vm` | `call_builtin "+" / "cons" / …` resolved by `dynval-runtime`'s `LispyBinding` (about 50 names, the TW00 / LANG47 / LANG52 surface) | `LispyValue` |
 | `mccarthy-lisp-vm`, `macsyma-vm`, `maple-vm`, `axiom-vm`, `derive-vm`, `reduce-vm`, `wolfram-vm` (maxima has no VM of its own) | their own `resolve_builtin` tables over the source names (`+` → `dynval_runtime::builtins::add`, `cons`, …) | `LispyValue` |
 
@@ -2387,6 +2403,15 @@ PRs rather than landed as one.
 - **PR7f-3b** — `vm-core` lowers the primitives (the VM and JIT columns
   stop needing the harness's structural pass), and `twig-vm` and the seven
   `*-vm` interpreters accept the registry names beside the source names.
+  *Partly landed (#18470):* `vm-core` lowers the five kind primitives, and
+  the VM column's Twig rules are written over them by
+  `iir-builtin-lowering::vm_lisp` (truthiness as `(dyn_tag c | 2) ≠ 3`; `not`,
+  the type predicates and `list?` inline), so no Lisp rule is a VM builtin.
+  The pair primitives, the structural pass's removal and the other
+  interpreters remain. `vm-core` still registers the source names `+` `-`
+  `*` `<` `<=` `>` `>=` `=` `equal?` `pair?` from before; the Twig VM path no
+  longer calls `pair?` (it calls `dyn_is_pair`), and removing the rest is
+  this step's job.
 - **PR7f-3c** — Twig, McCarthy Lisp and the seven CAS compilers call the
   translation library (`lower_heap_builtins_runtime`'s renames,
   `lower_dynamic_arith`, the boxing decision and `lisp_semantics`) before

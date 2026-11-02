@@ -14,7 +14,6 @@
 //! Both go the whole way: hand-built SIR → emitted Go → `go run` → observed
 //! stdout/stderr.  Gated on `go` being available (skip, never fail, if absent).
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Span,
@@ -87,7 +86,7 @@ fn module_of(stmts: Vec<Stmt>) -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -95,10 +94,11 @@ fn go_available() -> bool {
 }
 
 fn run_go(source: &str, tag: &str) -> std::process::Output {
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let path = dir.join(format!("sir_go_{}_{}.go", tag, unique_suffix()));
-    std::fs::write(&path, source).expect("write temp source");
-    let out = Command::new("go").arg("run").arg(&path).output().expect("invoke go run");
+    sir_test_scratch::write_new(&path, source).expect("write temp source");
+    let out = sir_test_scratch::go_command().arg("run").arg(&path).output().expect("invoke go run");
     let _ = std::fs::remove_file(&path);
     out
 }

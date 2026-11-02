@@ -130,9 +130,10 @@ fn run_module(module: &Module, tag: &str) -> Option<String> {
         eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
         return None;
     }
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(
@@ -159,9 +160,10 @@ fn emit_and_run(src: &str, module_name: &str, tag: &str) -> Option<String> {
     }
 
     // Unique path per process so parallel test runs never collide.
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_{}_{}_{}.js", tag, unique_suffix(), module_name));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
 
     let output = Command::new("node")
         .arg(&path)
@@ -251,9 +253,10 @@ fn run_runtime_snippet_lang(snippet: &str, tag: &str, lang: &str) -> Option<Stri
         return None;
     }
     let program = format!("{}\n{}\n", artifact.source, snippet);
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_rt_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &program).expect("write temp js");
+    sir_test_scratch::write_new(&path, &program).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(
@@ -1575,9 +1578,10 @@ fn run_module_expecting_failure(module: &Module, tag: &str) -> Option<String> {
         eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
         return None;
     }
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(
@@ -2344,9 +2348,10 @@ fn run_module_raw(module: &Module, tag: &str) -> Option<String> {
         eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
         return None;
     }
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(

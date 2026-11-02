@@ -84,9 +84,10 @@ fn run(module: &Module, tag: &str) -> Option<(String, String)> {
         return None;
     }
     let artifact = compile(module).expect("compile to javascript");
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_syswrite_{}_{}.js", tag, unique_suffix()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(
