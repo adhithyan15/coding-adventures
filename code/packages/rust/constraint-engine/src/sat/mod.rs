@@ -1,60 +1,69 @@
-//! # SAT tactic — boolean satisfiability solver.
+//! # SAT tactic — Boolean satisfiability through `cdcl-sat`.
 //!
-//! Implements a **DPLL-based SAT solver** (Davis-Putnam-Logemann-Loveland,
-//! 1962) with unit propagation and pure-literal elimination.  For v1 this
-//! is sufficient — the boolean predicates that arise from LANG23 refinement
-//! checking are small (O(10) variables in practice).
+//! **VER09 §7.** This tactic answers "is this conjunction of Boolean
+//! predicates satisfiable?" for the engine. Since VER09 it is an **adapter**:
+//! the search itself is the `cdcl-sat` crate's conflict-driven
+//! clause-learning solver (two watched literals, first-UIP learning,
+//! backjumping, VSIDS, Luby restarts). This module only translates.
 //!
-//! ## DPLL — a literate overview
+//! ## The translation
 //!
-//! DPLL is the classic backtracking procedure for boolean satisfiability.
-//! It operates on a formula in **Conjunctive Normal Form** (CNF) — a
-//! conjunction of clauses where each clause is a disjunction of literals.
+//! ```text
+//!   [Predicate]                 assertions over named Bool variables
+//!       │  depth guard           (refuse trees deep enough to overflow)
+//!       │  Predicate::to_cnf     (constraint-core's normaliser)
+//!       ▼
+//!   Vec<Clause>                 clauses of named literals   (collect_clauses)
+//!       │  name → cdcl_sat::Var, in first-appearance order
+//!       ▼
+//!   cdcl_sat::Solver            solve, with a conflict budget
+//!       │
+//!       ▼
+//!   SolverResult                Sat(model) / Unsat / Unknown(reason)
+//! ```
 //!
-//! The algorithm:
+//! ## Behaviour preserved from the DPLL era
 //!
-//! 1. **Unit propagation.**  If a clause has only one literal left (`x` or
-//!    `¬x`), that literal *must* be true.  Assign it and simplify the
-//!    formula.  Repeat until no unit clauses remain.
+//! - Same signature, same three outcomes.
+//! - Every requested `bool_var` appears in the model; a variable that occurs
+//!   in no clause is reported `false`.
+//! - A bounded amount of work: the old DPLL stopped after 1 000 000 search
+//!   nodes; the adapter stops after 1 000 000 conflicts and answers
+//!   `Unknown`.
 //!
-//! 2. **Pure-literal elimination.**  If a variable appears in *only* one
-//!    polarity (always positive, or always negative) across all remaining
-//!    clauses, assign the value that satisfies all its occurrences.  Those
-//!    clauses all become satisfied and can be dropped.
-//!
-//! 3. **Branching.**  Pick an unassigned variable (heuristic: first
-//!    unassigned), try it as `true`, recurse.  If that leads to a
-//!    contradiction, try `false`, recurse.  If both fail, backtrack.
-//!
-//! DPLL is complete for propositional formulae — it always finds a model
-//! if one exists or proves UNSAT.  CDCL (Conflict-Driven Clause Learning)
-//! extends DPLL with non-chronological backtracking and clause learning;
-//! that is a planned future enhancement for formulae with >100 variables.
-//!
-//! ## Input format
-//!
-//! The tactic accepts raw [`Predicate`] values (not pre-CNF'd).  It first
-//! converts to CNF using `constraint-core`'s `to_cnf()` method, then
-//! extracts clauses as sets of literals.
+//! The old DPLL lives on in [`dpll_oracle`] (tests only), as an independent
+//! second opinion the tests compare against.
 //!
 //! ## Scope and limitations
 //!
 //! - Correct for all propositional formulae (and/or/not/implies/iff).
-//! - Pure boolean variables only.  If a predicate mixes Booleans with
+//! - Pure Boolean variables only. If a predicate mixes Booleans with
 //!   integers, the LIA tactic handles it.
-//! - No timeout — rely on caller (`constraint-vm`) for time limits.
+//! - CNF conversion is `constraint-core`'s distributive `to_cnf`, which can
+//!   grow exponentially on some formulas; a Tseitin encoding (VER10) is the
+//!   planned replacement.
 
 use std::collections::HashMap;
 
+use cdcl_sat::{SolveResult, Solver, Var};
 use constraint_core::{depth_of, Predicate, MAX_PREDICATE_DEPTH};
 
 use crate::{Model, SolverResult, Value};
+
+#[cfg(test)]
+pub(crate) mod dpll_oracle;
+
+/// Conflicts the CDCL search may spend before answering `Unknown`. The same
+/// order of magnitude as the DPLL node budget it replaces: generous for the
+/// O(10)-variable formulas LANG23 produces, and a bound on hostile input.
+pub const CONFLICT_BUDGET: u64 = 1_000_000;
 
 // ---------------------------------------------------------------------------
 // Literal type
 // ---------------------------------------------------------------------------
 
-/// A literal is a variable (positive or negative).
+/// A named literal: a variable, positive or negative. This is the shape
+/// `to_cnf` output is read into before variables get solver indices.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct Literal {
     var: String,
@@ -68,10 +77,6 @@ impl Literal {
     fn neg(var: impl Into<String>) -> Self {
         Literal { var: var.into(), positive: false }
     }
-    #[allow(dead_code)] // Reserved for future CDCL conflict-driven learning
-    fn negated(&self) -> Self {
-        Literal { var: self.var.clone(), positive: !self.positive }
-    }
 }
 
 /// A clause is a disjunction of literals.
@@ -81,9 +86,9 @@ type Clause = Vec<Literal>;
 // Public entry point
 // ---------------------------------------------------------------------------
 
-/// The boolean SAT tactic.
+/// The Boolean SAT tactic.
 ///
-/// Solves conjunctions of boolean predicates using DPLL.
+/// Solves conjunctions of Boolean predicates with the `cdcl-sat` solver.
 pub struct SatTactic;
 
 impl SatTactic {
@@ -123,26 +128,67 @@ impl SatTactic {
             }
         }
 
-        // DPLL with an initial empty assignment.
-        //
-        // The budget limits total recursive calls — 1 000 000 is generous
-        // for LANG23 use (typical formulae use O(10) variables) but prevents
-        // exponential blowup if a caller somehow feeds in a large formula.
-        const DPLL_BUDGET: usize = 1_000_000;
-        let mut assignment: HashMap<String, bool> = HashMap::new();
-        let mut budget = DPLL_BUDGET;
-        match dpll(&clauses, &mut assignment, &mut budget) {
-            DpllResult::Sat => {
+        match solve_clauses(&clauses, CONFLICT_BUDGET) {
+            ClauseAnswer::Sat(values) => {
                 let mut model = Model::new();
                 for v in bool_vars {
-                    let val = *assignment.get(v).unwrap_or(&false);
+                    let val = values.get(v).copied().unwrap_or(false);
                     model.insert(v.clone(), Value::Bool(val));
                 }
                 SolverResult::Sat(model)
             }
-            DpllResult::Unsat => SolverResult::Unsat,
-            DpllResult::Unknown(r) => SolverResult::Unknown(r),
+            ClauseAnswer::Unsat => SolverResult::Unsat,
+            ClauseAnswer::Unknown(reason) => SolverResult::Unknown(reason),
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Named clauses → cdcl-sat
+// ---------------------------------------------------------------------------
+
+/// The answer for a set of named clauses.
+#[derive(Debug, PartialEq)]
+enum ClauseAnswer {
+    /// SAT, with a value for every variable that occurs in a clause.
+    Sat(HashMap<String, bool>),
+    Unsat,
+    Unknown(String),
+}
+
+/// Give each variable name a solver variable (in first-appearance order,
+/// so the numbering is deterministic), load the clauses, and solve with at
+/// most `budget` conflicts.
+fn solve_clauses(clauses: &[Clause], budget: u64) -> ClauseAnswer {
+    let mut solver = Solver::new();
+    let mut index: HashMap<&str, Var> = HashMap::new();
+    let mut names: Vec<&str> = Vec::new();
+    for clause in clauses {
+        let lits: Vec<_> = clause
+            .iter()
+            .map(|l| {
+                let var = *index.entry(l.var.as_str()).or_insert_with(|| {
+                    names.push(l.var.as_str());
+                    solver.new_var()
+                });
+                var.lit(!l.positive)
+            })
+            .collect();
+        solver.add_clause(&lits);
+    }
+    solver.set_conflict_budget(Some(budget));
+    match solver.solve() {
+        SolveResult::Sat => ClauseAnswer::Sat(
+            names
+                .iter()
+                .enumerate()
+                .map(|(i, n)| (n.to_string(), solver.model()[i]))
+                .collect(),
+        ),
+        SolveResult::Unsat => ClauseAnswer::Unsat,
+        SolveResult::Unknown => ClauseAnswer::Unknown(format!(
+            "CDCL conflict budget ({budget}) exhausted before an answer"
+        )),
     }
 }
 
@@ -204,210 +250,6 @@ fn collect_clauses(p: &Predicate) -> Result<Vec<Clause>, String> {
         other => Err(format!("predicate {other:?} is not boolean-CNF")),
     }
 }
-
-// ---------------------------------------------------------------------------
-// DPLL
-// ---------------------------------------------------------------------------
-
-#[derive(Debug)]
-enum DpllResult {
-    Sat,
-    Unsat,
-    /// The DPLL search budget was exhausted.  The formula may be satisfiable
-    /// but the solver couldn't confirm it within the allowed node count.
-    /// The caller should surface this as `SolverResult::Unknown`.
-    Unknown(String),
-}
-
-/// Core DPLL procedure.
-///
-/// `clauses` is the current (possibly simplified) formula; `assignment`
-/// accumulates committed assignments.  `budget` is a shared mutable counter
-/// decremented on each recursive call; when it reaches zero the search is
-/// abandoned and `DpllResult::Unknown` is returned to prevent exponential
-/// blowup on adversarial formulae.
-fn dpll(
-    clauses: &[Clause],
-    assignment: &mut HashMap<String, bool>,
-    budget: &mut usize,
-) -> DpllResult {
-    // ── Budget guard ─────────────────────────────────────────────────────────
-    //
-    // DPLL is O(2^n) in the worst case.  For the small Boolean formulae that
-    // arise from LANG23 refinement checking the budget is never reached in
-    // practice.  For adversarially large or malformed programs, the budget
-    // prevents a denial-of-service via an exhaustive search.
-    if *budget == 0 {
-        return DpllResult::Unknown("DPLL node budget exceeded".into());
-    }
-    *budget -= 1;
-
-    // Step 1: unit propagation.
-    let (mut clauses_owned, forced) = unit_propagate(clauses);
-    for (var, val) in &forced {
-        assignment.insert(var.clone(), *val);
-    }
-
-    // Check for contradictions (empty clause) or satisfaction (no clauses).
-    if clauses_owned.iter().any(|c| c.is_empty()) {
-        return DpllResult::Unsat;
-    }
-    if clauses_owned.is_empty() {
-        return DpllResult::Sat;
-    }
-
-    // Step 2: pure literal elimination.
-    let pure = find_pure_literals(&clauses_owned);
-    for (var, val) in &pure {
-        assignment.insert(var.clone(), *val);
-        clauses_owned = simplify_clauses(&clauses_owned, var, *val);
-    }
-
-    if clauses_owned.is_empty() {
-        return DpllResult::Sat;
-    }
-    if clauses_owned.iter().any(|c| c.is_empty()) {
-        return DpllResult::Unsat;
-    }
-
-    // Step 3: choose an unassigned variable and branch.
-    let branch_var = choose_variable(&clauses_owned, assignment);
-    let branch_var = match branch_var {
-        Some(v) => v,
-        None => {
-            // All variables assigned — check if satisfied.
-            return DpllResult::Sat;
-        }
-    };
-
-    // Try branch_var = true.
-    {
-        let mut a = assignment.clone();
-        let simplified = simplify_clauses(&clauses_owned, &branch_var, true);
-        a.insert(branch_var.clone(), true);
-        match dpll(&simplified, &mut a, budget) {
-            DpllResult::Sat => {
-                *assignment = a;
-                return DpllResult::Sat;
-            }
-            DpllResult::Unknown(r) => return DpllResult::Unknown(r),
-            DpllResult::Unsat => {} // try false branch
-        }
-    }
-
-    // Try branch_var = false.
-    {
-        let mut a = assignment.clone();
-        let simplified = simplify_clauses(&clauses_owned, &branch_var, false);
-        a.insert(branch_var.clone(), false);
-        match dpll(&simplified, &mut a, budget) {
-            DpllResult::Sat => {
-                *assignment = a;
-                return DpllResult::Sat;
-            }
-            DpllResult::Unknown(r) => return DpllResult::Unknown(r),
-            DpllResult::Unsat => {} // backtrack — both branches failed
-        }
-    }
-
-    DpllResult::Unsat
-}
-
-/// Unit propagation: repeatedly find unit clauses and propagate.
-///
-/// Returns (simplified_clauses, forced_assignments).
-fn unit_propagate(clauses: &[Clause]) -> (Vec<Clause>, HashMap<String, bool>) {
-    let mut clauses = clauses.to_vec();
-    let mut forced: HashMap<String, bool> = HashMap::new();
-
-    loop {
-        // Find the first unit clause.
-        let unit = clauses.iter().find(|c| c.len() == 1).map(|c| c[0].clone());
-        let lit = match unit {
-            Some(l) => l,
-            None => break,
-        };
-
-        // Force this literal.
-        forced.insert(lit.var.clone(), lit.positive);
-        clauses = simplify_clauses(&clauses, &lit.var, lit.positive);
-
-        if clauses.iter().any(|c| c.is_empty()) {
-            break; // Contradiction found — let dpll handle it.
-        }
-    }
-
-    (clauses, forced)
-}
-
-/// Pure-literal elimination: find variables that appear in only one polarity.
-fn find_pure_literals(clauses: &[Clause]) -> HashMap<String, bool> {
-    let mut pos: std::collections::HashSet<String> = std::collections::HashSet::new();
-    let mut neg: std::collections::HashSet<String> = std::collections::HashSet::new();
-
-    for clause in clauses {
-        for lit in clause {
-            if lit.positive {
-                pos.insert(lit.var.clone());
-            } else {
-                neg.insert(lit.var.clone());
-            }
-        }
-    }
-
-    let mut pure = HashMap::new();
-    for var in &pos {
-        if !neg.contains(var) {
-            pure.insert(var.clone(), true);
-        }
-    }
-    for var in &neg {
-        if !pos.contains(var) {
-            pure.insert(var.clone(), false);
-        }
-    }
-    pure
-}
-
-/// Simplify `clauses` by setting `var = val`:
-/// - Remove any clause that is satisfied by this literal.
-/// - Remove the negated literal from all remaining clauses.
-fn simplify_clauses(clauses: &[Clause], var: &str, val: bool) -> Vec<Clause> {
-    let mut out = Vec::new();
-    for clause in clauses {
-        // Does this clause contain the satisfied literal?
-        if clause.iter().any(|l| l.var == var && l.positive == val) {
-            continue; // Clause satisfied — drop it.
-        }
-        // Remove the falsified literal from the clause.
-        let reduced: Clause = clause
-            .iter()
-            .filter(|l| !(l.var == var && l.positive != val))
-            .cloned()
-            .collect();
-        out.push(reduced);
-    }
-    out
-}
-
-/// Pick the first unassigned variable from the clauses.
-fn choose_variable(
-    clauses: &[Clause],
-    assignment: &HashMap<String, bool>,
-) -> Option<String> {
-    for clause in clauses {
-        for lit in clause {
-            if !assignment.contains_key(&lit.var) {
-                return Some(lit.var.clone());
-            }
-        }
-    }
-    None
-}
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 #[cfg(test)]
 mod tests {
@@ -583,6 +425,148 @@ mod tests {
         // All assertions must hold under the returned model.
         for a in assertions {
             assert!(eval_bool(a, m), "model violated {a:?}");
+        }
+    }
+
+    // ---------- VER09: the adapter against independent oracles ----------
+
+    /// xorshift64, so the cross-check is deterministic and dependency-free.
+    struct Rng(u64);
+
+    impl Rng {
+        fn next(&mut self) -> u64 {
+            self.0 ^= self.0 << 13;
+            self.0 ^= self.0 >> 7;
+            self.0 ^= self.0 << 17;
+            self.0
+        }
+        fn below(&mut self, n: u64) -> u64 {
+            self.next() % n
+        }
+    }
+
+    const NAMES: [&str; 6] = ["a", "b", "c", "d", "e", "f"];
+
+    /// A random propositional formula over `NAMES`, of bounded depth, using
+    /// every connective `to_cnf` understands.
+    fn random_predicate(rng: &mut Rng, depth: u32) -> Predicate {
+        if depth == 0 || rng.below(4) == 0 {
+            return match rng.below(12) {
+                0 => Predicate::Bool(rng.below(2) == 0),
+                k => {
+                    let v = vb(NAMES[(k % 6) as usize]);
+                    if rng.below(2) == 0 { v } else { Predicate::Not(Box::new(v)) }
+                }
+            };
+        }
+        let sub = |rng: &mut Rng| Box::new(random_predicate(rng, depth - 1));
+        match rng.below(5) {
+            0 => Predicate::And(vec![*sub(rng), *sub(rng)]),
+            1 => Predicate::Or(vec![*sub(rng), *sub(rng), *sub(rng)]),
+            2 => Predicate::Not(sub(rng)),
+            3 => Predicate::Implies(sub(rng), sub(rng)),
+            _ => Predicate::Iff(sub(rng), sub(rng)),
+        }
+    }
+
+    /// Exhaustive truth table over `NAMES` through `eval_bool`, which shares
+    /// no code with either solver or with `to_cnf`.
+    fn brute_force(assertions: &[Predicate]) -> bool {
+        (0u32..64).any(|bits| {
+            let mut m = Model::new();
+            for (i, n) in NAMES.iter().enumerate() {
+                m.insert(*n, Value::Bool(bits >> i & 1 == 1));
+            }
+            assertions.iter().all(|a| eval_bool(a, &m))
+        })
+    }
+
+    #[test]
+    fn cdcl_adapter_agrees_with_old_dpll_and_truth_tables() {
+        let mut rng = Rng(0x0005_EED0_F5A7);
+        let names = vars(&NAMES);
+        let (mut sat, mut unsat, mut over_cap) = (0, 0, 0);
+        for round in 0..1000 {
+            let count = 1 + rng.below(4) as usize;
+            let assertions: Vec<Predicate> = (0..count).map(|_| random_predicate(&mut rng, 3)).collect();
+            let expected = brute_force(&assertions);
+
+            let r = SatTactic::solve(&assertions, &names);
+
+            // The old DPLL, on the very same clauses. The distributive CNF
+            // conversion has a clause cap (it is exponential in the worst
+            // case); past it the tactic must say Unknown, never guess.
+            let cnfs: Result<Vec<Predicate>, String> =
+                assertions.iter().map(|a| a.clone().to_cnf()).collect();
+            let Ok(cnfs) = cnfs else {
+                assert!(matches!(r, SolverResult::Unknown(_)), "round {round}: {r:?}");
+                over_cap += 1;
+                continue;
+            };
+            let mut clauses = Vec::new();
+            for c in &cnfs {
+                clauses.extend(collect_clauses(c).expect("to_cnf output is CNF"));
+            }
+            let dpll = dpll_oracle::solve(&clauses);
+            assert_eq!(dpll.is_some(), expected, "round {round}: DPLL vs truth table on {assertions:?}");
+
+            match &r {
+                SolverResult::Sat(m) => {
+                    assert!(expected, "round {round}: CDCL SAT, truth table UNSAT: {assertions:?}");
+                    for a in &assertions {
+                        assert!(eval_bool(a, m), "round {round}: model violates {a:?}");
+                    }
+                    assert_eq!(m.len(), NAMES.len());
+                    sat += 1;
+                }
+                SolverResult::Unsat => {
+                    assert!(!expected, "round {round}: CDCL UNSAT, truth table SAT: {assertions:?}");
+                    unsat += 1;
+                }
+                SolverResult::Unknown(why) => panic!("round {round}: unexpected Unknown: {why}"),
+            }
+        }
+        assert!(sat > 100 && unsat > 100, "sat={sat} unsat={unsat}");
+        assert!(over_cap < 50, "too few formulas were actually solved: {over_cap} over the CNF cap");
+    }
+
+    #[test]
+    fn variables_outside_every_clause_default_to_false() {
+        let r = SatTactic::solve(&[vb("a")], &vars(&["a", "unused"]));
+        let m = r.model().unwrap();
+        assert_eq!(m.get("a").unwrap().as_bool(), Some(true));
+        assert_eq!(m.get("unused").unwrap().as_bool(), Some(false));
+    }
+
+    #[test]
+    fn exhausted_budget_is_unknown() {
+        // PHP(4, 3) over named variables needs more than one conflict.
+        let holes = 3;
+        let x = |p: usize, h: usize| Literal::pos(format!("p{p}h{h}"));
+        let mut clauses: Vec<Clause> = (0..=holes).map(|p| (0..holes).map(|h| x(p, h)).collect()).collect();
+        for h in 0..holes {
+            for p in 0..=holes {
+                for q in p + 1..=holes {
+                    clauses.push(vec![Literal::neg(x(p, h).var), Literal::neg(x(q, h).var)]);
+                }
+            }
+        }
+        match solve_clauses(&clauses, 1) {
+            ClauseAnswer::Unknown(why) => assert!(why.contains("budget (1)"), "{why}"),
+            other => panic!("expected Unknown, got {other:?}"),
+        }
+        assert_eq!(solve_clauses(&clauses, CONFLICT_BUDGET), ClauseAnswer::Unsat);
+        assert_eq!(dpll_oracle::solve(&clauses), None);
+    }
+
+    #[test]
+    fn non_boolean_cnf_is_unknown() {
+        let p = Predicate::Le(Box::new(Predicate::Int(1)), Box::new(vb("x")));
+        assert!(matches!(SatTactic::solve(&[p], &vars(&["x"])), SolverResult::Unknown(_)));
+        let deep = (0..MAX_PREDICATE_DEPTH + 2).fold(vb("a"), |acc, _| Predicate::Not(Box::new(acc)));
+        match SatTactic::solve(&[deep], &vars(&["a"])) {
+            SolverResult::Unknown(why) => assert!(why.contains("MAX_PREDICATE_DEPTH"), "{why}"),
+            other => panic!("expected Unknown, got {other:?}"),
         }
     }
 }

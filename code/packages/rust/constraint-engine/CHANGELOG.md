@@ -1,5 +1,29 @@
 # Changelog — `constraint-engine`
 
+## 0.2.0 — 2026-11-02
+
+VER09: the SAT tactic now runs on the `cdcl-sat` CDCL solver.
+
+### Changed
+
+- **`SatTactic` is an adapter over `cdcl-sat`.** The recursive DPLL over
+  string-named literals is replaced by a conflict-driven clause-learning
+  solver. The signature, the three outcomes, and the "variables that occur
+  in no clause are `false`" model rule are unchanged. The DPLL's
+  1 000 000-node budget becomes a 1 000 000-conflict budget, and running
+  out still answers `Unknown`.
+- **The Cargo description is now true.** It said "SAT CDCL" while the code
+  was DPLL; the tactic is now CDCL, via `cdcl-sat`.
+- `src/sat.rs` became `src/sat/mod.rs`.
+
+### Added
+
+- `sat::CONFLICT_BUDGET`.
+- `src/sat/dpll_oracle.rs`: the pre-VER09 DPLL, unchanged, compiled only
+  under `cfg(test)`. A new test runs 1000 random propositional formulas
+  through the adapter, the old DPLL and a truth table, and requires all
+  three to agree; every model is checked with `eval_bool`.
+
 ## Unreleased — 2026-08-18
 
 Brought under CI: the crate had no `BUILD` file, so nothing ever ran its tests
