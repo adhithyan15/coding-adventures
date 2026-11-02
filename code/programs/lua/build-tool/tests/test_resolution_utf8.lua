@@ -359,3 +359,27 @@ describe("Lua rockspec UTF-8 resolution contract", function()
         assert.is_nil(stderr:find(root, 1, true))
     end)
 end)
+
+-- Cargo link tables: inline and sub-table entries in [dependencies],
+-- [build-dependencies] and their target forms are edges; dev-dependencies,
+-- [patch], registry entries, features and comments are not.
+describe("Rust link-table resolution contract", function()
+    after_each(function()
+        for _, root in ipairs(temporary_roots) do
+            remove_tree(root)
+        end
+        temporary_roots = {}
+    end)
+
+    it("matches the shared resolution-rust-field-aware.json fixture exactly", function()
+        local fixture, root = materialize_fixture("resolution-rust-field-aware.json")
+        local packages = Discovery.discover_packages(root .. "/code")
+        local graph = Resolver.resolve_dependencies(packages)
+
+        local expected = fixture.expected.result.edges
+        table.sort(expected, function(left, right)
+            return table.concat(left, "\0") < table.concat(right, "\0")
+        end)
+        assert.are.same(expected, graph_edges(graph))
+    end)
+end)

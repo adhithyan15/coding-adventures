@@ -40,6 +40,9 @@
   routing in `main.go` and its selection test sends that case to Go as well
   as Haskell. New table-driven `TestCargoLinkDependencyNames` pins each line
   rule of the contract.
+- The Lua, Perl, Python, Ruby and TypeScript fronts now implement the same
+  contract and read the same case, so the routing (and `ci-gate-registry.md`)
+  sends `rust-field-aware` to G, H, L, P, Y, B and T.
 
 ## 2026-10-26 — Mosaic manifest dependencies and repository-wide Mosaic guards
 

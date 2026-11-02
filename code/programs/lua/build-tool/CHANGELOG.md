@@ -42,6 +42,30 @@
 
 ### Fixed
 
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form, so a change to a crate used only by
+  a build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md`, ported
+  from the Go reference: headers are split into dotted-key segments outside
+  strings (quoted cfgs stay one segment, table names compare case-sensitively,
+  `[[...]]` and malformed headers end the table); comments are stripped
+  outside strings; inline values whose arrays continue onto later lines are
+  joined; `path` and `package` field keys must be exact and hold one non-empty
+  string; names are ASCII-lowercased and deduplicated. Dev-dependencies (every
+  form), `[patch]`, `[replace]`, `[workspace]` and registry entries add no
+  edge.
+- The old reader counted any `[dependencies]` line mentioning `path`, so a
+  registry entry with `features = ["path"]` drew an edge, and it looked up
+  the entry key instead of a `package` rename. Both are fixed.
+  `Resolver.cargo_link_dependency_names` is exported for the tests.
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, raw-byte BOM/CRLF, duplicate collapse, and
+  the shared `resolution-rust-field-aware.json` fixture. The reader returns
+  the same dependency names as the Go reader for all 1,650 tracked
+  `Cargo.toml` files.
+
 - Package discovery without LuaFileSystem now uses `nul` for Windows directory
   probes as well as listings, so `dir /ad` results are not silently discarded
   by a Unix-only `/dev/null` redirection. Deterministic fallback tests cover

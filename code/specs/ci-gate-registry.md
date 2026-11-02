@@ -245,7 +245,7 @@ L=Lua, P=Perl, Y=Python, B=Ruby, R=Rust, S=Swift, T=TypeScript.
 | `dotnet-csharp-field-aware`, `dotnet-fsharp-field-aware`, `gradle-java-field-aware`, `gradle-kotlin-field-aware` | G, H, Y |
 | `ecosystem-scoped-aliases` | G, Y |
 | `elixir-field-aware`, `go-field-aware`, `perl-field-aware`, `ruby-field-aware`, `swift-field-aware`, `typescript-field-aware` | G, H |
-| `rust-field-aware` | G, H, P, Y, B, T |
+| `rust-field-aware` | G, H, L, P, Y, B, T |
 | `elixir-program-package` | B, R |
 | `elixir-self-edge` | R |
 | `lua-cycle`, `lua-field-aware`, `lua-program-package`, `python-diamond`, `python-field-aware` | H |
