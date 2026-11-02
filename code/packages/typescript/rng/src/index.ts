@@ -26,7 +26,7 @@
  * implementation of the computing stack from transistors to operating systems.
  */
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 //
@@ -92,23 +92,21 @@ export class LCG {
   }
 
   /**
-   * Return a uniform random integer in `[min, max]` inclusive.
-   *
-   * Uses rejection sampling to eliminate modulo bias. The threshold is:
-   * `(-rangeSize) mod rangeSize` — any draw below it is discarded.
+   * A uniform integer in `[min, max]` inclusive, for bounds that are safe
+   * JavaScript integers (|n| <= 2^53 − 1). Throws `RangeError` for unsafe or
+   * reversed bounds, before drawing anything. See {@link bigIntInRange}.
    */
   nextIntInRange(min: number, max: number): number {
-    if (min > max) {
-      throw new RangeError(`nextIntInRange requires min <= max, got ${min} > ${max}`);
-    }
-    const rangeSize = BigInt(max - min + 1);
-    const threshold = (-rangeSize & MASK32) % rangeSize;
-    for (;;) {
-      const r = BigInt(this.nextU32());
-      if (r >= threshold) {
-        return min + Number(r % rangeSize);
-      }
-    }
+    return intInRange(() => this.nextU32(), min, max);
+  }
+
+  /**
+   * A uniform integer in `[min, max]` inclusive over the whole signed 64-bit
+   * domain, as `bigint`. Throws `RangeError` for out-of-domain or reversed
+   * bounds, before drawing anything. See {@link bigIntInRange}.
+   */
+  nextBigIntInRange(min: bigint, max: bigint): bigint {
+    return bigIntInRange(() => this.nextU32(), min, max);
   }
 }
 
@@ -165,21 +163,21 @@ export class Xorshift64 {
   }
 
   /**
-   * Return a uniform random integer in `[min, max]` inclusive.
-   * Identical rejection-sampling algorithm to {@link LCG.nextIntInRange}.
+   * A uniform integer in `[min, max]` inclusive, for bounds that are safe
+   * JavaScript integers (|n| <= 2^53 − 1). Throws `RangeError` for unsafe or
+   * reversed bounds, before drawing anything. See {@link bigIntInRange}.
    */
   nextIntInRange(min: number, max: number): number {
-    if (min > max) {
-      throw new RangeError(`nextIntInRange requires min <= max, got ${min} > ${max}`);
-    }
-    const rangeSize = BigInt(max - min + 1);
-    const threshold = (-rangeSize & MASK32) % rangeSize;
-    for (;;) {
-      const r = BigInt(this.nextU32());
-      if (r >= threshold) {
-        return min + Number(r % rangeSize);
-      }
-    }
+    return intInRange(() => this.nextU32(), min, max);
+  }
+
+  /**
+   * A uniform integer in `[min, max]` inclusive over the whole signed 64-bit
+   * domain, as `bigint`. Throws `RangeError` for out-of-domain or reversed
+   * bounds, before drawing anything. See {@link bigIntInRange}.
+   */
+  nextBigIntInRange(min: bigint, max: bigint): bigint {
+    return bigIntInRange(() => this.nextU32(), min, max);
   }
 }
 
@@ -257,20 +255,84 @@ export class PCG32 {
   }
 
   /**
-   * Return a uniform random integer in `[min, max]` inclusive.
-   * Identical rejection-sampling algorithm to {@link LCG.nextIntInRange}.
+   * A uniform integer in `[min, max]` inclusive, for bounds that are safe
+   * JavaScript integers (|n| <= 2^53 − 1). Throws `RangeError` for unsafe or
+   * reversed bounds, before drawing anything. See {@link bigIntInRange}.
    */
   nextIntInRange(min: number, max: number): number {
-    if (min > max) {
-      throw new RangeError(`nextIntInRange requires min <= max, got ${min} > ${max}`);
-    }
-    const rangeSize = BigInt(max - min + 1);
-    const threshold = (-rangeSize & MASK32) % rangeSize;
+    return intInRange(() => this.nextU32(), min, max);
+  }
+
+  /**
+   * A uniform integer in `[min, max]` inclusive over the whole signed 64-bit
+   * domain, as `bigint`. Throws `RangeError` for out-of-domain or reversed
+   * bounds, before drawing anything. See {@link bigIntInRange}.
+   */
+  nextBigIntInRange(min: bigint, max: bigint): bigint {
+    return bigIntInRange(() => this.nextU32(), min, max);
+  }
+}
+
+// ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ────────────────────
+
+const I64_MIN = -(1n << 63n);
+const I64_MAX = (1n << 63n) - 1n;
+const TWO_32 = 1n << 32n;
+const TWO_64 = 1n << 64n;
+
+/**
+ * A uniform integer in `[min, max]`, drawn from a stream of 32-bit outputs,
+ * identically in every language of the repository.
+ *
+ * `span = max − min + 1` lies between 1 and 2^64. Taking `r % span` of a raw
+ * draw over-samples small offsets whenever the number of possible draws is
+ * not a multiple of `span`; rejecting the `threshold` lowest draws removes
+ * exactly the excess. Three regimes, chosen by `span` alone:
+ *
+ * ```text
+ *   span <= 2^32    draw 32 bits,  threshold = (2^32 − span) mod span
+ *   span <  2^64    draw 64 bits,  threshold = (2^64 − span) mod span
+ *   span == 2^64    the whole int64 domain: every u64 is a valid offset
+ * ```
+ *
+ * Example, span = 3: 2^32 = 3 × 1431655765 + 1, so threshold = 1. Rejecting
+ * r = 0 leaves 2^32 − 1 draws, an exact multiple of 3.
+ *
+ * v1 drew 32 bits for every span, so a wide range could never return more
+ * than 2^32 − 1 above `min`; its `number` bounds also lost precision above
+ * 2^53, silently drawing from a different range than the caller asked for.
+ */
+export function bigIntInRange(next32: () => number, min: bigint, max: bigint): bigint {
+  if (min < I64_MIN || max > I64_MAX || min > max) {
+    throw new RangeError(
+      `nextIntInRange needs signed 64-bit bounds with min <= max, got [${min}, ${max}]`,
+    );
+  }
+  const span = max - min + 1n;
+  const next64 = (): bigint => (BigInt(next32()) << 32n) | BigInt(next32());
+  if (span <= TWO_32) {
+    const threshold = (TWO_32 - span) % span;
     for (;;) {
-      const r = BigInt(this.nextU32());
-      if (r >= threshold) {
-        return min + Number(r % rangeSize);
-      }
+      const r = BigInt(next32());
+      if (r >= threshold) return min + (r % span);
     }
   }
+  if (span < TWO_64) {
+    const threshold = (TWO_64 - span) % span;
+    for (;;) {
+      const r = next64();
+      if (r >= threshold) return min + (r % span);
+    }
+  }
+  return min + next64();
+}
+
+/** {@link bigIntInRange} for bounds that are safe JavaScript integers. */
+function intInRange(next32: () => number, min: number, max: number): number {
+  if (!Number.isSafeInteger(min) || !Number.isSafeInteger(max)) {
+    throw new RangeError(
+      `nextIntInRange needs safe integer bounds (use nextBigIntInRange), got [${min}, ${max}]`,
+    );
+  }
+  return Number(bigIntInRange(next32, BigInt(min), BigInt(max)));
 }

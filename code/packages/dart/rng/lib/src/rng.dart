@@ -92,25 +92,10 @@ class Lcg {
     return nextU32() / _floatDiv;
   }
 
-  /// Return an integer uniformly drawn from `[min, max]` inclusive.
-  ///
-  /// Rejection sampling eliminates modulo bias. The threshold discards any
-  /// draw that falls in a partial bucket at the bottom, ensuring every value
-  /// in the range is reachable by the same number of raw outputs.
-  int nextIntInRange(int min, int max) {
-    if (min > max) {
-      throw ArgumentError('nextIntInRange requires min <= max, got $min > $max');
-    }
-    final rangeSize = max - min + 1;
-    // (-rangeSize) mod rangeSize — the partial-bucket threshold.
-    final threshold = ((-rangeSize) & _mask64) % rangeSize;
-    while (true) {
-      final r = nextU32();
-      if (r >= threshold) {
-        return min + (r % rangeSize);
-      }
-    }
-  }
+  /// Return an integer uniformly drawn from `[min, max]` inclusive, by the
+  /// rejection sampling of [_intInRange]. Throws [ArgumentError] if
+  /// `min > max`, before any draw.
+  int nextIntInRange(int min, int max) => _intInRange(nextU32, min, max);
 }
 
 // ─── Xorshift64 ──────────────────────────────────────────────────────────────
@@ -167,20 +152,10 @@ class Xorshift64 {
     return nextU32() / _floatDiv;
   }
 
-  /// Return an integer in `[min, max]` inclusive via rejection sampling.
-  int nextIntInRange(int min, int max) {
-    if (min > max) {
-      throw ArgumentError('nextIntInRange requires min <= max, got $min > $max');
-    }
-    final rangeSize = max - min + 1;
-    final threshold = ((-rangeSize) & _mask64) % rangeSize;
-    while (true) {
-      final r = nextU32();
-      if (r >= threshold) {
-        return min + (r % rangeSize);
-      }
-    }
-  }
+  /// Return an integer uniformly drawn from `[min, max]` inclusive, by the
+  /// rejection sampling of [_intInRange]. Throws [ArgumentError] if
+  /// `min > max`, before any draw.
+  int nextIntInRange(int min, int max) => _intInRange(nextU32, min, max);
 }
 
 // ─── Pcg32 ───────────────────────────────────────────────────────────────────
@@ -252,18 +227,62 @@ class Pcg32 {
     return nextU32() / _floatDiv;
   }
 
-  /// Return an integer in `[min, max]` inclusive via rejection sampling.
-  int nextIntInRange(int min, int max) {
-    if (min > max) {
-      throw ArgumentError('nextIntInRange requires min <= max, got $min > $max');
-    }
-    final rangeSize = max - min + 1;
-    final threshold = ((-rangeSize) & _mask64) % rangeSize;
+  /// Return an integer uniformly drawn from `[min, max]` inclusive, by the
+  /// rejection sampling of [_intInRange]. Throws [ArgumentError] if
+  /// `min > max`, before any draw.
+  int nextIntInRange(int min, int max) => _intInRange(nextU32, min, max);
+}
+
+// ─── Bounded draws (spec rng.md, "Rejection Sampling", v2) ───────────────────
+
+final BigInt _twoTo64 = BigInt.one << 64;
+
+/// A uniform integer in `[min, max]`, drawn from a stream of 32-bit outputs,
+/// identically in every language of the repository.
+///
+/// `span = max − min + 1` lies between 1 and 2^64. Taking `r % span` of a raw
+/// draw over-samples small offsets whenever the number of possible draws is
+/// not a multiple of span; rejecting the `threshold` lowest draws removes
+/// exactly the excess. Three regimes, chosen by span alone:
+///
+/// ```text
+///   span <= 2^32    draw 32 bits,  threshold = (2^32 − span) mod span
+///   span <  2^64    draw 64 bits,  threshold = (2^64 − span) mod span
+///   span == 2^64    the whole int domain: every u64 is a valid offset
+/// ```
+///
+/// Dart's `int` is signed 64-bit with no unsigned compare or divide, so the
+/// 32-bit regime (where every value is non-negative) uses `int`, and the wide
+/// regimes use [BigInt], where `span` and the 64-bit draw are exact.
+///
+/// v1 took the threshold modulo 2^64 while drawing 32 bits, and computed
+/// `max - min + 1` in wrapping `int`: biased, never more than 2^32 − 1 above
+/// `min`, wrong for spans past 2^63, and for spans such as 2^63 + 1 every draw
+/// was rejected, so it never returned.
+int _intInRange(int Function() next32, int min, int max) {
+  if (min > max) {
+    throw ArgumentError('nextIntInRange requires min <= max, got $min > $max');
+  }
+  final span = BigInt.from(max) - BigInt.from(min) + BigInt.one;
+  if (span <= BigInt.from(1 << 32)) {
+    final s = span.toInt();
+    final threshold = ((1 << 32) - s) % s;
     while (true) {
-      final r = nextU32();
-      if (r >= threshold) {
-        return min + (r % rangeSize);
-      }
+      final r = next32();
+      if (r >= threshold) return min + r % s;
     }
   }
+  BigInt next64() {
+    final hi = BigInt.from(next32());
+    return (hi << 32) | BigInt.from(next32());
+  }
+
+  if (span < _twoTo64) {
+    final threshold = (_twoTo64 - span) % span;
+    while (true) {
+      final r = next64();
+      if (r >= threshold) return (BigInt.from(min) + r % span).toInt();
+    }
+  }
+  return (BigInt.from(min) + next64()).toInt();
 }

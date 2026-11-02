@@ -21,10 +21,11 @@ draw. The whole signed 64-bit domain divides by zero in fixed-width lanes.
 in three regimes, keeping the 32-bit regime exactly as v1 so small ranges keep
 their sequences. The shared corpus `code/specs/fixtures/rng-v1/cases.json` is
 checked by the independent reference `code/scripts/rng_conformance.py`.
-Fixed and running the corpus: Python, Rust, Go, C, C++ and Swift. Go, C and
-C++ had the hang; Swift also trapped on any range wider than half the domain.
-Still open: C#, Dart, Elixir, F#, Haskell, Java, Kotlin, Lua, Perl, Ruby and
-TypeScript. Lanes without a JSON reader can use the generated flat form
+Fixed and running the corpus: Python, Rust, Go, C, C++, Swift, TypeScript,
+Java, Kotlin, C#, F# and Dart. Every fixed-width lane had the hang; Swift
+also trapped on any range wider than half the domain, and TypeScript's
+`number` bounds lost precision above 2^53. Still open: Elixir, Haskell, Lua,
+Perl and Ruby. Lanes without a JSON reader can use the generated flat form
 `code/specs/fixtures/rng-v1/cases.txt`.
 
 The pilot's property engine does not reuse these generators; it pins its own

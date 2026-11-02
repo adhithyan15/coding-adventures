@@ -12,7 +12,7 @@ import { VERSION, LCG, Xorshift64, PCG32 } from "../src/index.js";
 
 describe("package", () => {
   it("exports VERSION 0.1.0", () => {
-    expect(VERSION).toBe("0.1.0");
+    expect(VERSION).toBe("0.2.0");
   });
 });
 
