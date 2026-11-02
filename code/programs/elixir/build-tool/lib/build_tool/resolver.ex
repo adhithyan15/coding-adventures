@@ -27,8 +27,10 @@ defmodule BuildTool.Resolver do
     - **TypeScript**: package.json uses "@coding-adventures/" scoped npm names.
       `"@coding-adventures/logic-gates"` maps to `"typescript/logic-gates"`.
 
-    - **Rust**: Cargo.toml uses the crate name (the directory basename).
-      `"logic-gates"` maps to `"rust/logic-gates"`.
+    - **Rust**: Cargo.toml path dependencies name the crate by its directory
+      basename or its declared `[package]` name. `"logic-gates"` maps to
+      `"rust/logic-gates"`. WASM wrappers are known only by their declared
+      name.
 
     - **Elixir**: mix.exs uses atom names with "coding_adventures_" prefix.
       `":coding_adventures_logic_gates"` maps to `"elixir/logic-gates"`.
@@ -160,11 +162,11 @@ defmodule BuildTool.Resolver do
           |> maybe_put(read_cargo_package_name(pkg.path), pkg.name)
 
         "wasm" ->
-          crate_name = String.downcase(Path.basename(pkg.path))
-
-          acc
-          |> Map.put(crate_name, pkg.name)
-          |> maybe_put(read_cargo_package_name(pkg.path), pkg.name)
+          # A WASM wrapper is known only by its declared Cargo name
+          # ("graph-wasm"). Its bare directory name ("graph") belongs to the
+          # Rust crate it wraps, and claiming it would turn the wrapper's own
+          # `graph = { path = "../../rust/graph" }` into a self-edge.
+          maybe_put(acc, read_cargo_package_name(pkg.path), pkg.name)
 
         "elixir" ->
           # Elixir mix names: "logic-gates" -> "coding_adventures_logic_gates"
@@ -510,10 +512,51 @@ defmodule BuildTool.Resolver do
   # Rust: Cargo.toml
   # ---------------------------------------------------------------------------
   #
-  # Rust Cargo.toml declares workspace-local dependencies with path references:
+  # ## Which tables are build-graph edges
+  #
+  # A graph edge means "rebuild and re-test the dependent when this changes",
+  # so it must cover everything Cargo compiles INTO the crate:
+  #
+  #   table                                  edge?  why
+  #   -------------------------------------  -----  -----------------------------
+  #   [dependencies]                         yes    linked into the library
+  #   [build-dependencies]                   yes    compiled into build.rs, which
+  #                                                 generates or configures it
+  #   [target.<cfg>.dependencies]            yes    linked on that target; CI
+  #   [target.<cfg>.build-dependencies]      yes    builds on several hosts, so
+  #                                                 the union over every <cfg>
+  #   [dev-dependencies] (every form)        no     tests only; Cargo allows dev
+  #                                                 cycles, a graph must not
+  #   [patch], [replace], [workspace], ...   no     not a dependency at all
+  #
+  # `build_dependencies` is Cargo's legacy spelling of `build-dependencies`.
+  #
+  # ## Which entry shapes
+  #
+  # Both TOML spellings of a path dependency are read:
   #
   #   [dependencies]
-  #   logic-gates = { path = "../logic-gates" }
+  #   logic-gates = { path = "../logic-gates" }          <- inline table
+  #   gates = { package = "logic-gates", path = "..." }  <- renamed: "logic-gates"
+  #
+  #   [dependencies.logic-gates]                         <- sub-table
+  #   path = "../logic-gates"
+  #
+  # The crate name (the `package` rename if present, else the key) is then
+  # looked up in the known names, and each internal package is returned once.
+  # The line procedure is the cross-implementation contract in the Rust
+  # paragraph of code/specs/build-tool-conformance.md; every build-tool front
+  # implements the same one (ported here from the Go reference,
+  # cargoLinkDependencyNames), and the shared fixture
+  # resolution-rust-field-aware pins it.
+  #
+  # ## Bytes, not graphemes
+  #
+  # An Elixir string is a binary. Every helper below walks it BYTE by byte
+  # (`:binary.at/2`, `binary_part/3`), never with the grapheme-aware `String`
+  # functions: "\r\n" is one grapheme, and the contract is defined on LF and
+  # on ASCII delimiters. In UTF-8 an ASCII byte is never part of a multi-byte
+  # character, so byte offsets are exact and every slice is whole characters.
 
   defp parse_rust_deps(pkg, known_names) do
     cargo_toml = Path.join(pkg.path, "Cargo.toml")
@@ -521,11 +564,451 @@ defmodule BuildTool.Resolver do
     case File.read(cargo_toml) do
       {:ok, data} ->
         data
-        |> String.split("\n")
-        |> parse_rust_lines(known_names, false, [])
+        |> cargo_link_dependency_names()
+        |> Enum.flat_map(fn crate_name ->
+          case Map.get(known_names, crate_name) do
+            nil -> []
+            pkg_name -> [pkg_name]
+          end
+        end)
+        # A crate may sit in several link tables at once (say in
+        # `[dependencies]` and `[build-dependencies]`): one edge.
+        |> Enum.uniq()
 
       {:error, _} ->
         []
+    end
+  end
+
+  # The table names whose path entries link into, or build, the crate. They
+  # are compared exactly: TOML keys are case-sensitive, so `[Dependencies]`
+  # is some other table.
+  @cargo_link_tables ["dependencies", "build-dependencies", "build_dependencies"]
+
+  @doc """
+  Returns the ASCII-lowercased crate names of every path dependency in a
+  Cargo manifest's link tables, in manifest order, duplicates included (the
+  caller collapses them).
+
+  It is one pass over the lines with a three-state machine. The current
+  table is one of:
+
+    * `:ignored` — not a link table: its lines are skipped;
+    * `:inline` — `[D]` or `[target.C.D]`: one `name = { ... }` entry per line;
+    * `{:sub, n}` — `[D.N]` or `[target.C.D.N]`: the keys of the one entry `N`.
+
+  Every header line — even a malformed one, or an array of tables — ends the
+  current table, and so does the end of the file; a sub-table's entry is
+  complete only then, because its `path` and `package` keys may come in any
+  order.
+
+  One inline entry may cover several lines. TOML 1.0 lets an ARRAY inside an
+  inline table span lines, and the repository writes exactly that:
+
+      coding_adventures_vault_pm_cli = { path = "../vault-pm-cli", features = [
+          "crash-injection",
+      ] }
+
+  So while the entry's value still has an unclosed `{` or `[`, the next lines
+  are joined onto it with one space (and are not looked at as headers or
+  entries). If the file ends first, the entry contributes nothing.
+
+  Exported for testing.
+
+  ## Example
+
+      iex> BuildTool.Resolver.cargo_link_dependency_names(
+      ...>   "[dependencies]\\ngates = { package = \\"Logic-Gates\\", path = \\"../g\\" }\\n"
+      ...> )
+      ["logic-gates"]
+  """
+  def cargo_link_dependency_names(text) do
+    # Step 1 of the contract: ignore a leading byte-order mark, split at LF.
+    text =
+      case text do
+        <<0xEF, 0xBB, 0xBF, rest::binary>> -> rest
+        _ -> text
+      end
+
+    text
+    |> :binary.split("\n", [:global])
+    |> walk_cargo_lines(:ignored, nil, nil, [])
+  end
+
+  defp walk_cargo_lines([], table, sub_path, sub_package, acc) do
+    table |> finish_cargo_table(sub_path, sub_package, acc) |> Enum.reverse()
+  end
+
+  defp walk_cargo_lines([raw | rest], table, sub_path, sub_package, acc) do
+    line = clean_cargo_line(raw)
+
+    cond do
+      cargo_header?(line) ->
+        acc = finish_cargo_table(table, sub_path, sub_package, acc)
+        walk_cargo_lines(rest, classify_cargo_link_header(line), nil, nil, acc)
+
+      true ->
+        case toml_index_outside_strings(line, ?=) do
+          nil -> walk_cargo_lines(rest, table, sub_path, sub_package, acc)
+          equals -> cargo_entry(table, line, equals, rest, sub_path, sub_package, acc)
+        end
+    end
+  end
+
+  # A line `key = value` under the current table.
+  defp cargo_entry(:ignored, _line, _equals, rest, sub_path, sub_package, acc) do
+    walk_cargo_lines(rest, :ignored, sub_path, sub_package, acc)
+  end
+
+  defp cargo_entry(:inline, line, equals, rest, sub_path, sub_package, acc) do
+    key = binary_part(line, 0, equals)
+    value = toml_trim_blank(toml_tail(line, equals + 1))
+
+    case join_cargo_continuation(value, rest) do
+      {:ok, value, rest} ->
+        acc =
+          case cargo_path_dependency_name(key, value) do
+            nil -> acc
+            name -> [name | acc]
+          end
+
+        walk_cargo_lines(rest, :inline, sub_path, sub_package, acc)
+
+      :eof ->
+        # The file ended inside the value: no entry.
+        walk_cargo_lines([], :inline, sub_path, sub_package, acc)
+    end
+  end
+
+  defp cargo_entry({:sub, _} = table, line, equals, rest, sub_path, sub_package, acc) do
+    # Only the two bare, lowercase keys matter; the first occurrence of each
+    # wins. `version`, `features`, `optional` ... are ignored.
+    key = toml_trim_blank(binary_part(line, 0, equals))
+
+    case {key, toml_single_string(toml_tail(line, equals + 1))} do
+      {"path", {:ok, value}} when sub_path == nil ->
+        walk_cargo_lines(rest, table, value, sub_package, acc)
+
+      {"package", {:ok, value}} when sub_package == nil ->
+        walk_cargo_lines(rest, table, sub_path, value, acc)
+
+      _ ->
+        walk_cargo_lines(rest, table, sub_path, sub_package, acc)
+    end
+  end
+
+  # While the value opens with `{` and still has an unclosed `{` or `[`, the
+  # next line is cleaned and joined onto it with one space.
+  defp join_cargo_continuation(value, rest) do
+    if String.starts_with?(value, "{") and toml_open_bracket_depth(value) > 0 do
+      case rest do
+        [] -> :eof
+        [next | rest] -> join_cargo_continuation(value <> " " <> clean_cargo_line(next), rest)
+      end
+    else
+      {:ok, value, rest}
+    end
+  end
+
+  # A sub-table is a candidate only once it ends, when `path` was set; it is
+  # named by its `package` rename, else by its key `N`.
+  defp finish_cargo_table({:sub, key}, sub_path, sub_package, acc) when sub_path != nil do
+    [String.downcase(sub_package || key, :ascii) | acc]
+  end
+
+  defp finish_cargo_table(_table, _sub_path, _sub_package, acc), do: acc
+
+  # Step 1: drop ONE trailing CR, strip the comment, trim spaces and tabs.
+  defp clean_cargo_line(raw) do
+    raw =
+      if String.ends_with?(raw, "\r"),
+        do: binary_part(raw, 0, byte_size(raw) - 1),
+        else: raw
+
+    raw |> toml_strip_line_comment() |> toml_trim_blank()
+  end
+
+  defp cargo_header?(line), do: String.starts_with?(line, "[") and String.ends_with?(line, "]")
+
+  # Decides how to read the lines under a header line (already cleaned,
+  # starting with `[` and ending with `]`).
+  #
+  # The header is split into dotted-key segments at every `.` OUTSIDE a
+  # string, and each segment is decoded to its value. That is what makes a
+  # cfg header one segment however much punctuation it quotes:
+  #
+  #   [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+  #    target  C (one quoted segment)                    D
+  #
+  #   [target."thumbv8m.main-none-eabihf".dependencies.pi]  -> sub-table "pi"
+  #   [target.x86_64-unknown-linux-gnu.build-dependencies]  -> bare triple
+  #   ["dependencies"]                                      -> same as [dependencies]
+  #
+  # Segment lists that are not exactly one of [D], [D.N], [target.C.D] or
+  # [target.C.D.N] — and malformed headers — are ignored tables.
+  defp classify_cargo_link_header("[[" <> _), do: :ignored
+
+  defp classify_cargo_link_header(line) do
+    segments =
+      line
+      |> binary_part(1, byte_size(line) - 2)
+      |> toml_split_outside_strings(?., false)
+      |> Enum.map(&toml_key_segment/1)
+
+    if Enum.member?(segments, :error) do
+      :ignored
+    else
+      segments
+      |> Enum.map(fn {:ok, segment} -> segment end)
+      |> drop_cargo_target()
+      |> case do
+        [table] when table in @cargo_link_tables -> :inline
+        [table, key] when table in @cargo_link_tables -> {:sub, key}
+        _ -> :ignored
+      end
+    end
+  end
+
+  # Drops `target` and the cfg, whatever it is, from [target.C.…].
+  defp drop_cargo_target(["target", _cfg, _ | _] = segments), do: Enum.drop(segments, 2)
+  defp drop_cargo_target(segments), do: segments
+
+  # Returns the crate a completed inline-table entry `key = value` names when
+  # it is a path dependency — the only kind that can point at a repository
+  # package. The key is the crate name unless the inline table renames it
+  # with `package = "..."`:
+  #
+  #   logic-gates = { path = "../logic-gates" }                    -> logic-gates
+  #   gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+  #   serde = "1"                                                  -> not a path dep
+  #   x = { version = "1", features = ["path"] }                   -> not a path dep
+  #   foo.path = "../foo"                                          -> dotted key: no
+  #
+  # Fields are split at commas outside strings AND outside nested `[...]` or
+  # `{...}`, so a `features` array cannot leak a fake field and a nested
+  # table's `path` is not the entry's. Field keys must be exactly `path` and
+  # `package` (Cargo ignores `Package`, so it must not count as a rename).
+  defp cargo_path_dependency_name(key, value) do
+    value = toml_trim_blank(value)
+
+    with {:ok, crate_name} <- toml_key_segment(key),
+         true <-
+           byte_size(value) >= 2 and String.starts_with?(value, "{") and
+             String.ends_with?(value, "}") do
+      {path, package_name} =
+        value
+        |> binary_part(1, byte_size(value) - 2)
+        |> toml_split_outside_strings(?,, true)
+        |> Enum.reduce({nil, nil}, &collect_cargo_field/2)
+
+      if path, do: String.downcase(package_name || crate_name, :ascii), else: nil
+    else
+      _ -> nil
+    end
+  end
+
+  defp collect_cargo_field(field, {path, package_name} = found) do
+    case toml_index_outside_strings(field, ?=) do
+      nil ->
+        found
+
+      equals ->
+        key = toml_trim_blank(binary_part(field, 0, equals))
+
+        case {key, toml_single_string(toml_tail(field, equals + 1))} do
+          {"path", {:ok, value}} when path == nil -> {value, package_name}
+          {"package", {:ok, value}} when package_name == nil -> {path, value}
+          _ -> found
+        end
+    end
+  end
+
+  # -- TOML lexical helpers (bytes) -------------------------------------------
+
+  # The bytes of `s` from `index` to its end.
+  defp toml_tail(s, index), do: binary_part(s, index, byte_size(s) - index)
+
+  # Trims spaces and tabs only — the contract's notion of blank.
+  defp toml_trim_blank(s), do: s |> trim_leading_blank() |> trim_trailing_blank()
+
+  defp trim_leading_blank(<<c, rest::binary>>) when c in [?\s, ?\t], do: trim_leading_blank(rest)
+  defp trim_leading_blank(s), do: s
+
+  defp trim_trailing_blank(s) do
+    size = byte_size(s)
+
+    if size > 0 and :binary.last(s) in [?\s, ?\t],
+      do: trim_trailing_blank(binary_part(s, 0, size - 1)),
+      else: s
+  end
+
+  # Returns the index just past the string that opens at byte `start` (a `"`
+  # or `'`), or nil if it is not closed on this line. In a basic "..." string
+  # a backslash makes the next byte part of the string, so `\"` does not end
+  # it; a literal '...' string has no escapes.
+  defp toml_string_end(s, start), do: toml_string_end(s, :binary.at(s, start), start + 1)
+
+  defp toml_string_end(s, _quote, index) when index >= byte_size(s), do: nil
+
+  defp toml_string_end(s, quote, index) do
+    case :binary.at(s, index) do
+      ?\\ when quote == ?" -> toml_string_end(s, quote, index + 2)
+      ^quote -> index + 1
+      _ -> toml_string_end(s, quote, index + 1)
+    end
+  end
+
+  # Removes a TOML comment: everything from the first `#` outside a string.
+  # An unclosed string runs to the end of the line.
+  defp toml_strip_line_comment(s), do: strip_comment(s, 0)
+
+  defp strip_comment(s, index) when index >= byte_size(s), do: s
+
+  defp strip_comment(s, index) do
+    case :binary.at(s, index) do
+      c when c in [?", ?'] ->
+        case toml_string_end(s, index) do
+          nil -> s
+          stop -> strip_comment(s, stop)
+        end
+
+      ?# ->
+        binary_part(s, 0, index)
+
+      _ ->
+        strip_comment(s, index + 1)
+    end
+  end
+
+  # Returns the index of the first `target` byte outside every string, or nil
+  # (also when a string is left unclosed before it).
+  defp toml_index_outside_strings(s, target), do: index_outside(s, target, 0)
+
+  defp index_outside(s, _target, index) when index >= byte_size(s), do: nil
+
+  defp index_outside(s, target, index) do
+    case :binary.at(s, index) do
+      c when c in [?", ?'] ->
+        case toml_string_end(s, index) do
+          nil -> nil
+          stop -> index_outside(s, target, stop)
+        end
+
+      ^target ->
+        index
+
+      _ ->
+        index_outside(s, target, index + 1)
+    end
+  end
+
+  # Counts the `{` and `[` outside strings that are not closed again within
+  # `s`. Zero (or less) means the value is complete; an unclosed string stops
+  # the count where it opens.
+  defp toml_open_bracket_depth(s), do: bracket_depth(s, 0, 0)
+
+  defp bracket_depth(s, index, depth) when index >= byte_size(s), do: depth
+
+  defp bracket_depth(s, index, depth) do
+    case :binary.at(s, index) do
+      c when c in [?", ?'] ->
+        case toml_string_end(s, index) do
+          nil -> depth
+          stop -> bracket_depth(s, stop, depth)
+        end
+
+      c when c in [?{, ?[] ->
+        bracket_depth(s, index + 1, depth + 1)
+
+      c when c in [?}, ?]] ->
+        bracket_depth(s, index + 1, depth - 1)
+
+      _ ->
+        bracket_depth(s, index + 1, depth)
+    end
+  end
+
+  # Splits `s` at every `separator` byte outside strings. With `nested` set,
+  # a separator inside `[...]` or `{...}` does not split either. An unclosed
+  # string makes the rest of `s` the last part.
+  defp toml_split_outside_strings(s, separator, nested) do
+    split_outside(s, separator, nested, 0, 0, 0, [])
+  end
+
+  defp split_outside(s, _separator, _nested, start, _depth, index, parts)
+       when index >= byte_size(s) do
+    Enum.reverse([toml_tail(s, start) | parts])
+  end
+
+  defp split_outside(s, separator, nested, start, depth, index, parts) do
+    c = :binary.at(s, index)
+
+    cond do
+      c in [?", ?'] ->
+        case toml_string_end(s, index) do
+          nil -> Enum.reverse([toml_tail(s, start) | parts])
+          stop -> split_outside(s, separator, nested, start, depth, stop, parts)
+        end
+
+      nested and c in [?[, ?{] ->
+        split_outside(s, separator, nested, start, depth + 1, index + 1, parts)
+
+      nested and c in [?], ?}] ->
+        split_outside(s, separator, nested, start, depth - 1, index + 1, parts)
+
+      c == separator and depth == 0 ->
+        part = binary_part(s, start, index - start)
+        split_outside(s, separator, nested, index + 1, depth, index + 1, [part | parts])
+
+      true ->
+        split_outside(s, separator, nested, start, depth, index + 1, parts)
+    end
+  end
+
+  # Decodes one key or header segment: a bare key (ASCII letters, digits,
+  # `_`, `-`), or exactly one complete string, whose value is the text
+  # between its quotes taken verbatim (escapes are not decoded). Anything
+  # else — empty, dotted, or text around a string — is not a key.
+  defp toml_key_segment(raw) do
+    segment = toml_trim_blank(raw)
+
+    cond do
+      segment == "" ->
+        :error
+
+      :binary.first(segment) in [?", ?'] ->
+        if toml_string_end(segment, 0) == byte_size(segment),
+          do: {:ok, binary_part(segment, 1, byte_size(segment) - 2)},
+          else: :error
+
+      toml_bare_key?(segment) ->
+        {:ok, segment}
+
+      true ->
+        :error
+    end
+  end
+
+  defp toml_bare_key?(<<>>), do: true
+
+  defp toml_bare_key?(<<c, rest::binary>>)
+       when c in ?a..?z or c in ?A..?Z or c in ?0..?9 or c in [?_, ?-],
+       do: toml_bare_key?(rest)
+
+  defp toml_bare_key?(_), do: false
+
+  # Returns `{:ok, content}` for a value that is exactly one complete,
+  # non-empty string (after trimming), as `path` and `package` require.
+  # `"1"` is one; `"a" "b"`, `1`, `""` and `["x"]` are not.
+  defp toml_single_string(raw) do
+    value = toml_trim_blank(raw)
+
+    with true <- value != "" and :binary.first(value) in [?", ?'],
+         true <- toml_string_end(value, 0) == byte_size(value),
+         content when content != "" <- binary_part(value, 1, byte_size(value) - 2) do
+      {:ok, content}
+    else
+      _ -> :error
     end
   end
 
@@ -560,32 +1043,6 @@ defmodule BuildTool.Resolver do
           []
       end
     end)
-  end
-
-  defp parse_rust_lines([], _known, _in_deps, acc), do: Enum.reverse(acc)
-
-  defp parse_rust_lines([line | rest], known, in_deps, acc) do
-    trimmed = String.trim(line)
-
-    cond do
-      String.starts_with?(trimmed, "[") ->
-        parse_rust_lines(rest, known, trimmed == "[dependencies]", acc)
-
-      not in_deps ->
-        parse_rust_lines(rest, known, false, acc)
-
-      String.contains?(trimmed, "path") and String.contains?(trimmed, "=") ->
-        [crate_name | _] = String.split(trimmed, "=", parts: 2)
-        crate_name = crate_name |> String.trim() |> String.downcase()
-
-        case Map.get(known, crate_name) do
-          nil -> parse_rust_lines(rest, known, true, acc)
-          pkg_name -> parse_rust_lines(rest, known, true, [pkg_name | acc])
-        end
-
-      true ->
-        parse_rust_lines(rest, known, true, acc)
-    end
   end
 
   # ---------------------------------------------------------------------------

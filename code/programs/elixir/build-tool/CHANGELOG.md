@@ -57,8 +57,38 @@ All notable changes to this project will be documented in this file.
   the old concatenated per-file-hex-digest or sentinel paths. Native reads are
   streamed with candidate, depth, byte, and opened-file identity bounds.
 
+### Fixed
+
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. A change to a crate used only by a
+  build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md` (public
+  `BuildTool.Resolver.cargo_link_dependency_names/1`, over bytes): headers are
+  split into dotted-key segments outside strings (quoted cfgs stay one
+  segment, table names compare case-sensitively, `[[...]]` and malformed
+  headers end the table); comments are stripped outside strings; inline
+  values whose arrays continue onto later lines are joined; `path` and
+  `package` field keys must be exact and hold one non-empty string; names are
+  ASCII-lowercased and deduplicated. Dev-dependencies (every form),
+  `[patch]`, `[replace]`, `[workspace]` and registry entries add no edge.
+- The old reader counted any `[dependencies]` line mentioning `path` and
+  looked up the entry key, so `x = { version = "1", features = ["path"] }`
+  drew an edge and a `package` rename was ignored. Both are fixed.
+- WASM wrappers are now known only by their declared Cargo name, as in the Go
+  reference. Claiming the bare directory name made 25 wrappers (`wasm/graph`,
+  `wasm/heap`, ...) self-edges, which `DirectedGraph.add_edge/3` rejects by
+  raising.
+
 ### Tests
 
+- Add `test/resolver_test.exs`: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, duplicate collapse, build/target/renamed
+  sub-table edges against dev and patch tables, the Rust directory and
+  declared-name aliases, the WASM-wrapper alias rule, and the module's
+  doctests. Over all 1,650 tracked `Cargo.toml` files the reader returns the
+  same dependency names as the Go reader.
 - Exercise every neutral graph and diff-selection case through production code,
   pin the exact case-ID roster, assert both shared-input consumers independently,
   and cover structural rejection, no-partial cycle and unknown-path failures,

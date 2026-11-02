@@ -118,6 +118,27 @@ mix escript.build
 | `--diff-base` | `origin/main` | Git ref to diff against |
 | `--cache-file` | `.build-cache.json` | Path to cache file |
 
+## Rust dependency resolution
+
+Rust resolution reads path entries from every Cargo table that is compiled
+into the crate: `[dependencies]`, `[build-dependencies]` (and the legacy
+`build_dependencies`), and the same tables under `[target.<cfg>.…]` for any
+cfg, quoted or a bare triple, as a union over all targets. Entries count both
+as inline tables (`name = { path = "..." }`, whose arrays may continue onto
+later lines) and as `[dependencies.name]` sub-tables with a `path = "..."`
+key. A `package = "..."` rename is authoritative. The crate name is matched,
+ASCII-lowercased, against each Rust package's directory name and declared
+`[package]` `name`; a WASM wrapper is known only by its declared name, so its
+own dependency on the Rust crate it wraps is not a self-edge. Dev-dependencies
+in every form, `[patch]`, `[replace]`, `[workspace]`, package metadata,
+features, comments, and registry-only dependencies never create edges.
+`BuildTool.Resolver.cargo_link_dependency_names/1` walks the manifest's bytes
+(not graphemes, so CRLF splits correctly) with the line procedure of the Rust
+paragraph of `code/specs/build-tool-conformance.md`; `test/resolver_test.exs`
+pins it with the Go reference's 46 shape cases, and it returns the same
+dependency names as the Go reference reader for all 1,650 tracked
+`Cargo.toml` files (checked 2026-11-01).
+
 ## Toolchain detection
 
 `BuildTool.ToolchainDetection.evaluate_snapshot/5` evaluates caller-supplied,
