@@ -2,6 +2,10 @@
 
 ## Unreleased — `nil` inside an array; Ruby's `[]=` (#18798)
 
+- 28 execution tests that lower real Ruby expected the Lisp display (`#t`,
+  `#f`, `nil` for `puts nil`), because the Ruby frontend never said its
+  module was Ruby; they now expect what ruby 3.3.6 prints.
+
 - **`print [nil, false]` printed `[, false]`.**  Ruby shows a collection's
   elements with `inspect`, where `nil` is `nil`; only a value printed on its
   own is empty.  `_sir_fmt_elem` / `_sir_display_elem` render an Array or

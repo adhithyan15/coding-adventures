@@ -112,7 +112,7 @@ fn any_all_none_predicates() {
          puts [1, 2, 3].all? { |x| r = x > 2\nr }\n\
          puts [1, 2, 3].none? { |x| r = x > 5\nr }\n",
     ) {
-        Some(out) => assert_eq!(out, "#t\n#f\n#t\n"),
+        Some(out) => assert_eq!(out, "true\nfalse\ntrue\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -189,7 +189,7 @@ fn block_methods_chain_and_close_over_an_outer_local() {
 #[test]
 fn reduce_on_empty_with_no_initial_is_nil() {
     match run_ruby("puts [].reduce { |acc, x| acc + x }\n") {
-        Some(out) => assert_eq!(out, "nil\n"),
+        Some(out) => assert_eq!(out, "\n"),
         None => eprintln!("skip: no cc"),
     }
 }
