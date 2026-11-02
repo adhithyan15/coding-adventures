@@ -3070,11 +3070,18 @@ fn push_aot_string_literal(
         vec![Operand::Int(n.saturating_add(8))],
         "i64",
     ));
+    // The block is a gc-core allocation, so the register holding its handle
+    // must be a GC root. LANG83 PR5a found it typed `i64`: the backends' stack
+    // maps (`is_gc_root_ty`) skip a machine-scalar slot, so a precise or
+    // compacting collection could not see a live literal string, and the
+    // `mov dest = buf` alias inherited the same blind spot. Typed `str`, the
+    // buffer is a root, and `root_heap_word_copies` makes every `mov` copy of
+    // it one too. Only the type changes: `alloc_bytes` lowers to the same call.
     lowered.push(IIRInstr::new(
         "alloc_bytes",
         Some(buf_var.clone()),
         vec![Operand::Var(tlen_var)],
-        "i64",
+        "str",
     ));
     // write the 8-byte length header at field index 0 (byte offset 0)
     lowered.push(IIRInstr::new(
@@ -3162,7 +3169,25 @@ fn collect_runtime_str_vars_for_aot(func: &IIRFunction) -> HashSet<String> {
         .collect()
 }
 
-fn lower_string_literals_for_aot(func: &mut IIRFunction) {
+/// The IIR `trap` instruction for a registered kind (LANG83). The native
+/// backends lower it to `mov edi/w0, id; call/bl __twig_trap; ud2/udf`, and
+/// `__twig_trap` flushes stdout before naming the kind on stderr.
+fn aot_trap(kind: &str) -> IIRInstr {
+    IIRInstr::new("trap", None, vec![Operand::Str(kind.into())], "void")
+}
+
+/// Lower the E4 string ops of `func` for the native backends.
+///
+/// `ceiling` is the module's string ceiling (`IIRModule::str_ceiling`,
+/// LANG83 PR5a). It reaches the runtime as the third argument of
+/// `__twig_str_concat`, and it stops a compile-time concat fold that would
+/// build a longer literal.
+///
+/// LANG83 PR5a: a fold never turns a failing op into a value. A folded
+/// `str_index` or `str_slice` that is out of range compiles to
+/// `trap "Trap.Bounds"`; a concat fold past the ceiling is not taken, so the
+/// runtime helper raises `Trap.Overflow`.
+fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
     // E4-dyn (E4d-4): variables whose string value is chosen by control flow.
     // These are kept OUT of the compile-time `strings` map so their length is
     // read at run time from the buffer header, not folded to a (possibly wrong)
@@ -3337,7 +3362,10 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             // literal (so downstream `str_len`/`str_index` keep folding).
             if let (Some(ll), Some(rl)) = (&left_lit, &right_lit) {
                 let literal = format!("{ll}{rl}");
-                if is_printable_ascii_str(&literal) {
+                // LANG83 PR5a: a fold past the ceiling would build a string the
+                // module may not hold. Leave it to the runtime helper, which
+                // raises `Trap.Overflow` before it allocates anything.
+                if is_printable_ascii_str(&literal) && literal.len() <= ceiling as usize {
                     let (buf_var, len_var, lit) =
                         push_aot_string_literal(&mut lowered, &mut next, literal);
                     lowered.push(IIRInstr::new(
@@ -3381,6 +3409,17 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             strings.remove(&dest);
             // so downstream `print_str`/`str_len` take their runtime
             // header-reading paths rather than folding a length that isn't known.
+            //
+            // LANG83 PR5a: the ceiling is the helper's third argument,
+            // materialised as an `i64` immediate in a fresh register.
+            let max_var = format!("__aot_strmax{next}");
+            next += 1;
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(max_var.clone()),
+                vec![Operand::Int(i64::from(ceiling))],
+                "i64",
+            ));
             lowered.push(IIRInstr::new(
                 "call_builtin",
                 Some(dest),
@@ -3388,6 +3427,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     Operand::Var("str_concat".into()),
                     Operand::Var(left.clone()),
                     Operand::Var(right.clone()),
+                    Operand::Var(max_var),
                 ],
                 &instr.type_hint,
             ));
@@ -3413,7 +3453,11 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             strings.remove(&dest);
             if let Some(((_, _, literal), (start, end))) = known {
                 let folded = if start < 0 || end < start || end as usize > literal.len() {
-                    lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                    // LANG83 PR5a: the registered trap, which flushes output
+                    // first (an argument-less `type_assert` was a bare `ud2`).
+                    // `dest` is still bound to an empty literal, so code after
+                    // the trap — unreachable — keeps a well-formed register.
+                    lowered.push(aot_trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
                     Some(String::new())
                 } else {
                     String::from_utf8(literal.as_bytes()[start as usize..end as usize].to_vec())
@@ -3510,7 +3554,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 .and_then(|idx| literal.as_bytes().get(idx))
                 .copied()
             else {
-                lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                // LANG83 PR5a: a folded out-of-range read is `Trap.Bounds`
+                // through `__twig_trap`, never a value and never a bare `ud2`.
+                lowered.push(aot_trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
                 lowered.push(IIRInstr::new(
                     "const",
                     Some(dest),
@@ -3813,8 +3859,11 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
     // `V1_BUILTINS` dispatches to `bl/call __dyn_box_int` / `__dyn_unbox_int`.
     lower_box_unbox_to_runtime_calls(module);
 
+    // LANG83 PR5a: the module's string ceiling, read before the functions
+    // are borrowed mutably below.
+    let str_ceiling = module.str_ceiling();
     for func in &mut module.functions {
-        lower_string_literals_for_aot(func);
+        lower_string_literals_for_aot(func, str_ceiling);
         // Phase 0b: remove dead name-register `const` instructions.
         // `lower_global_io` leaves `const %n = Var("x")` in place even after
         // the `global_set`/`global_get` that consumed it is rewritten.
@@ -4985,7 +5034,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_const" && i.op != "print_str"),
@@ -5023,7 +5072,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let len_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
         assert!(
@@ -5055,7 +5104,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
         assert!(
@@ -5068,6 +5117,73 @@ mod tests {
             "native lowering should remove folded str_index: {:?}",
             f.instructions
         );
+    }
+
+    /// LANG83 PR5a: a folded `str_slice` whose bounds are out of range compiles
+    /// to `trap "Trap.Bounds"`.
+    #[test]
+    fn string_literal_slice_out_of_bounds_lowers_to_trap_bounds() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(2)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("str_slice", Some("t".into()), vec![
+                    Operand::Var("s".into()), Operand::Var("a".into()), Operand::Var("b".into()),
+                ], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("t".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(
+            f.instructions.iter().any(|i| i.op == "trap" && i.srcs == vec![Operand::Str("Trap.Bounds".into())]),
+            "{:?}",
+            f.instructions
+        );
+        assert!(f.instructions.iter().all(|i| i.op != "type_assert"), "{:?}", f.instructions);
+    }
+
+    /// `s = "01234567" ++ "01234567"` (16 bytes), then `s ++ "x"` (17).
+    fn concat_two_literals_then_one_more() -> IIRFunction {
+        IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("01234567".into())], "str"),
+                IIRInstr::new("str_concat", Some("b".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+                IIRInstr::new("str_const", Some("x".into()), vec![Operand::Str("x".into())], "str"),
+                IIRInstr::new("str_concat", Some("c".into()), vec![Operand::Var("b".into()), Operand::Var("x".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        )
+    }
+
+    /// LANG83 PR5a: a literal concat fold stops at the module's ceiling. Under
+    /// the registry ceiling both concats fold; under a ceiling of 16 the second
+    /// is left to `__twig_str_concat`, whose third argument is the ceiling.
+    #[test]
+    fn a_concat_fold_past_the_ceiling_becomes_a_runtime_call_with_the_ceiling() {
+        let mut f = concat_two_literals_then_one_more();
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(f.instructions.iter().all(|i| i.op != "call_builtin"), "{:?}", f.instructions);
+
+        let mut f = concat_two_literals_then_one_more();
+        lower_string_literals_for_aot(&mut f, 16);
+        let calls: Vec<&IIRInstr> = f.instructions.iter().filter(|i| i.op == "call_builtin").collect();
+        assert_eq!(calls.len(), 1, "only the 17-byte concat reaches the runtime: {:?}", f.instructions);
+        let call = calls[0];
+        assert_eq!(call.dest.as_deref(), Some("c"));
+        assert_eq!(call.srcs.len(), 4, "name, a, b, ceiling: {call:?}");
+        assert_eq!(call.srcs[0], Operand::Var("str_concat".into()));
+        let Operand::Var(max_var) = &call.srcs[3] else { panic!("{call:?}") };
+        let max = f.instructions.iter().find(|i| i.dest.as_deref() == Some(max_var.as_str())).expect("ceiling const");
+        assert_eq!((max.op.as_str(), &max.srcs), ("const", &vec![Operand::Int(16)]));
     }
 
     #[test]
@@ -5087,13 +5203,16 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
+        // LANG83 PR5a: the registered `Trap.Bounds`, through `__twig_trap`
+        // (which flushes stdout), not an argument-less `type_assert` (`ud2`).
         assert!(
-            f.instructions.iter().any(|i| i.op == "type_assert"),
-            "out-of-bounds str_index should lower to an unconditional native trap: {:?}",
+            f.instructions.iter().any(|i| i.op == "trap" && i.srcs == vec![Operand::Str("Trap.Bounds".into())]),
+            "out-of-bounds str_index should lower to trap Trap.Bounds: {:?}",
             f.instructions
         );
+        assert!(f.instructions.iter().all(|i| i.op != "type_assert"), "{:?}", f.instructions);
         let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
         assert!(
             matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(0)]),
@@ -5120,7 +5239,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
         assert!(
@@ -5161,7 +5280,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
         assert!(
@@ -5189,7 +5308,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let len_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
         assert!(
@@ -5240,7 +5359,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let byte_const = f
             .instructions
@@ -5277,7 +5396,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let eq_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ok"));
         assert!(
@@ -5309,7 +5428,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let cmp_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ord"));
         assert!(
@@ -5650,7 +5769,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_len"),
@@ -5687,7 +5806,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_eq"),
@@ -5727,7 +5846,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|instr| instr.op != "str_cmp"),
@@ -5764,7 +5883,7 @@ mod tests {
                 Operand::Var("one".into())], "i64"),
             IIRInstr::new("jmp", None, vec![Operand::Var("top".into())], "void"),
         ]);
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         assert!(f.instructions.iter().any(|i| i.op == "call_builtin"
             && i.dest.as_deref() == Some("c")
             && i.srcs.first() == Some(&Operand::Var("str_index".into()))));
@@ -5785,7 +5904,7 @@ mod tests {
                 IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
             ],
         );
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         assert!(f.instructions.iter().any(|i| i.op == "call_builtin"
             && i.dest.as_deref() == Some("s")
             && i.srcs.first() == Some(&Operand::Var("str_slice".into()))));
@@ -5811,7 +5930,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_concat"),
@@ -5852,7 +5971,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_concat"),
@@ -5882,7 +6001,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         // Must allocate 2 + 8 = 10 bytes.
         let alloc = f.instructions.iter().find(|i| i.op == "alloc_bytes").expect("alloc_bytes");
@@ -5956,7 +6075,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         // Both branches still build their `[i64 len][bytes]` heap buffers.
         assert_eq!(
@@ -6006,7 +6125,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             !f.instructions.iter().any(|i| i.op == "field_load"),
@@ -6045,7 +6164,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         strip_dead_aot_string_allocs(&mut f);
 
         // Both branch buffers must survive — neither is dead when `s` is live.
@@ -6152,7 +6271,7 @@ mod tests {
             SourceLoc { line: 4, column: 1 },
         ];
 
-        lower_string_literals_for_aot(&mut func);
+        lower_string_literals_for_aot(&mut func, interpreter_ir::STR_MAX_BYTES);
         assert_eq!(
             func.source_map.len(),
             func.instructions.len(),
@@ -6195,7 +6314,7 @@ mod tests {
             ],
         );
         assert!(func.source_map.is_empty());
-        lower_string_literals_for_aot(&mut func);
+        lower_string_literals_for_aot(&mut func, interpreter_ir::STR_MAX_BYTES);
         strip_dead_string_consts(&mut func);
         strip_dead_aot_string_allocs(&mut func);
         assert!(func.source_map.is_empty(), "no map in, no map out");
@@ -6452,6 +6571,60 @@ mod gc_param_root_tests {
         for (pc, slots) in &records {
             assert!(slots.contains(&added[0]), "p's slot is a root at pc {pc}");
         }
+    }
+
+    // ── LANG83 PR5a: a literal string's handle is a GC root ─────────────────
+
+    /// LANG83 PR5a, the native half of "is a `str` slot still a reference after
+    /// the specialiser?". A runtime string (`str_concat`, a call's result)
+    /// always was. A *literal* was not: its block's handle lived in
+    /// `alloc_bytes buf : i64` and `mov keep = buf : i64`, both machine
+    /// scalars, so no stack-map record named either slot and a precise or
+    /// compacting collection could not see the live block. Now the buffer is
+    /// typed `str` and its alias becomes `any` through `root_heap_word_copies`,
+    /// on both native compile paths.
+    #[test]
+    fn a_literal_strings_handle_registers_are_gc_roots_after_specialisation() {
+        let mut module = IIRModule::new("str_roots", "iir");
+        module.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("keep".into()), vec![Operand::Str("KEEP".into())], "str"),
+                IIRInstr::new("call_builtin", Some("freed".into()), vec![Operand::Var("gc_collect_precise".into())], "i64"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("keep".into())], "void"),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+            ],
+        ));
+        prepare_module_for_aot(&mut module).unwrap();
+        let f = func(&module, "main");
+        let typed = specialisation_view(f);
+        let inferred = infer_types(&typed);
+        let mut cir = aot_specialise(&typed, Some(&inferred));
+        root_heap_word_copies(&f.params, &mut cir);
+        let buf = cir
+            .iter()
+            .find(|i| i.op == "alloc_bytes")
+            .and_then(|i| i.dest.clone())
+            .expect("the literal is materialised by alloc_bytes");
+        for name in [buf.as_str(), "keep"] {
+            let tys = ty_of(&cir, name);
+            assert!(!tys.is_empty(), "{name} is defined");
+            for ty in tys {
+                assert!(
+                    !matches!(ty, "i64" | "u64" | "i32" | "u32" | "i16" | "u16" | "i8" | "u8" | "bool" | "f64" | "f32" | "void"),
+                    "{name} holds a gc-core block handle, so its slot must be a root, but its CIR type is {ty:?}: {cir:?}"
+                );
+            }
+        }
+        // And the x86-64 stack map really names a slot at the collection's
+        // safepoint (before the fix main had no root-typed slot at all).
+        let ctx = FunctionContext { name: &f.name, params: &f.params, return_type: &f.return_type };
+        let (_, _, records) =
+            x86_64_compile_with_stackmap(&ctx, &cir, X86_64Abi::SysV, &collect_global_slots(&module)).unwrap();
+        assert!(records.iter().any(|r| !r.slots.is_empty()), "no stack-map record names a root: {records:?}");
     }
 
     // ── Follow-up: copies of heap words (`root_heap_word_copies`) ────────────

@@ -12043,9 +12043,11 @@ const PRINT_RUNTIME_C: &str =
 void __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n\
 void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n";
 
-/// The standalone `__twig_input_i64`/`__twig_input_str`/`__twig_str_concat`/
+/// The standalone `__twig_input_i64`/`__twig_input_str`/
 /// `__twig_str_eq`/`__twig_str_cmp` substitute for `twig_runtime.c`'s own
-/// definitions of the identical five symbols — used only when `twig_runtime.c`
+/// definitions of the identical four symbols (LANG83 PR5a dropped its
+/// `__twig_str_concat`: a program that concatenates at run time links the
+/// production helper, which enforces the string ceiling) — used only when `twig_runtime.c`
 /// itself isn't already being linked (see `uses_gc_runtime` in `run_llvm`),
 /// since linking both is a duplicate-symbol error.
 const MISC_IO_RUNTIME_C: &str =
@@ -12057,14 +12059,6 @@ int64_t __twig_input_str(void){char buf[4096];int i=0;int c;\
 while((c=getchar())!=EOF&&c!='\\n'&&i<4095){buf[i++]=(char)c;}\
 int64_t* h=(int64_t*)malloc(8+(size_t)i);if(!h)return 0;\
 h[0]=(int64_t)i;if(i>0)memcpy((char*)h+8,buf,(size_t)i);\
-return (int64_t)(intptr_t)h;}\n\
-int64_t __twig_str_concat(int64_t a,int64_t b){\
-int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
-if(la<0)la=0;if(lb<0)lb=0;\
-int64_t* h=(int64_t*)malloc(8+(size_t)(la+lb));if(!h)return 0;\
-h[0]=la+lb;\
-if(la>0)memcpy((char*)h+8,(const char*)(intptr_t)a+8,(size_t)la);\
-if(lb>0)memcpy((char*)h+8+la,(const char*)(intptr_t)b+8,(size_t)lb);\
 return (int64_t)(intptr_t)h;}\n\
 int64_t __twig_str_eq(int64_t a,int64_t b){\
 int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
@@ -12140,6 +12134,10 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
         || ll.contains("@__twig_gc_live_bytes")
         // Runtime slices must execute the production bounds-checked helper.
         || ll.contains("@__twig_str_slice")
+        // LANG83 PR5a: so must runtime concatenation, whose production helper
+        // takes the module's string ceiling and traps `Trap.Overflow` past it
+        // (the standalone substitute below no longer defines it).
+        || ll.contains("@__twig_str_concat")
         || ll.contains("@__twig_str_index")
         || ll.contains("@__twig_input_more");
     if uses_gc_runtime {
@@ -12167,7 +12165,7 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     // started referencing `@__twig_alloc_bytes`).
     if !uses_gc_runtime
         && (ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
-            || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq")
+            || ll.contains("@__twig_str_eq")
             || ll.contains("@__twig_str_cmp"))
     {
         let rt_path = dir.path().join("misc_io_rt.c");

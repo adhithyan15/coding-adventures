@@ -516,11 +516,18 @@ fn end_to_end_gc_manages_runtime_strings() {
         let mut body = vec![
             IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
             IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+            // The string ceiling `__twig_str_concat` takes since LANG83 PR5a.
+            IIRInstr::new("const", Some("max".into()), vec![Operand::Int(i64::from(interpreter_ir::STR_MAX_BYTES))], "i64"),
             // A fresh runtime string → __twig_str_concat → __twig_alloc_bytes → __gc_alloc_kind.
             IIRInstr::new(
                 "call_builtin",
                 Some("c".into()),
-                vec![Operand::Var("str_concat".into()), Operand::Var("a".into()), Operand::Var("b".into())],
+                vec![
+                    Operand::Var("str_concat".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                    Operand::Var("max".into()),
+                ],
                 "str",
             ),
         ];

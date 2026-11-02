@@ -1,4 +1,10 @@
 # Changelog — iir-to-llvm
+## Unreleased — LANG83 PR5a — strings fail closed
+
+- A folded out-of-range `str_index` or `str_slice` raises `Trap.Bounds` through the module's own `@__iir_trap` (flush, then `trap: Trap.Bounds` on stderr), not `@llvm.trap` (SIGILL, buffered output lost). The runtime path already calls `twig_runtime.c`'s helpers, which now raise `Trap.Bounds` themselves.
+- `@__twig_str_concat` is declared and called with a third argument, the module's string ceiling (`IIRModule::str_ceiling`); the helper raises `Trap.Overflow` past it. A literal concat whose result would exceed the ceiling is not folded, so the trap happens at run time.
+- Tests: `e4_string_literal_index_out_of_bounds_traps` now requires `@__iir_trap(@__iir_trap_msg.1, …)`; new `e4_string_literal_slice_out_of_bounds_traps_bounds` and `a_literal_concat_past_the_ceiling_is_a_runtime_call_with_the_ceiling`.
+
 ## Unreleased — only the entry point is exported (#18416)
 
 - In a module with an entry point, every function except the entry is emitted `define internal`. Before, every program function was a global symbol, and the linker binds every reference to a global in the executable to that one definition. So a program that defined a function named like libc's replaced it for the linked C runtime and the collector too. With `(define (abort) 0)`, the pair guard's `abort()` returned. With `(define (malloc n) 0)`, gc-core-capi's allocations failed. With `(define (calloc a b) 0)`, `__dyn_pair_new` got a null cell. Nothing in the runtime calls a program function by name: closures dispatch through the module's own `__dyn_call_closure`. So the entry (`main`, called by the C start-up code) is the only function that must stay external. A module without an entry point is a library and keeps external linkage everywhere.
