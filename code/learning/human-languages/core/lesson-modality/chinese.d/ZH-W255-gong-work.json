@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W255-gong-work",
+    "language": "chinese",
+    "chapter": 255,
+    "sequence": 19365,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bba3aecdae550322",
+    "detachableSegments": [
+      "Script — two bars and a post"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

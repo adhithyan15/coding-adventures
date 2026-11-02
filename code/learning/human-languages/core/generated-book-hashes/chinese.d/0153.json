@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:56c0b35b03ed26aa",
+  "lessonIds": [
+    "ZH-C153-bi",
+    "ZH-W153-bi-compare",
+    "ZH-C153-bi-grammar",
+    "ZH-C153-geng",
+    "ZH-C153-gen",
+    "ZH-C153-name",
+    "ZH-C153-practice"
+  ],
+  "tex": "chinese/book/chapters/ch153-older-than-me.tex"
+}

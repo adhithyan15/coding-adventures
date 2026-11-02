@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:a4589914c25f2683",
+  "lessonIds": [
+    "ZH-C273-chengshi",
+    "ZH-C273-haoke",
+    "ZH-C273-yongxin",
+    "ZH-C273-cuxin",
+    "ZH-C273-xixin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch273.txt",
+  "json": "chinese/narration/ch273.json",
+  "textHash": "fnv1a64:078dd9fc502f8c02",
+  "jsonHash": "fnv1a64:4e06af5d0222e0b6",
+  "findings": []
+}

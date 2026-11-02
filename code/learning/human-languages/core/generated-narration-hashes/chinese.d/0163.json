@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:7301eb9d6b7278f9",
+  "lessonIds": [
+    "ZH-C163-youkong",
+    "ZH-C163-pei",
+    "ZH-C163-yecan",
+    "ZH-C163-xiaci",
+    "ZH-C163-yikuair",
+    "ZH-R163-review-158-163"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch163.txt",
+  "json": "chinese/narration/ch163.json",
+  "textHash": "fnv1a64:a13a28884e8047cf",
+  "jsonHash": "fnv1a64:af86944adb4e70e2",
+  "findings": []
+}

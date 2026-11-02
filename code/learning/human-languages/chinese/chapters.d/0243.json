@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Changing Seasons",
+  "label": "ch:zh-changing-seasons",
+  "canDo": "I can describe the climate, snowflakes, the weather changing, ice on the lake and the temperature.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C243-wendu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can describe the climate, snowflakes, the weather changing, ice on the lake and the temperature.",
+    "assesses": [
+      "ZH-LEX-C243-SEASON243-03",
+      "ZH-LEX-C243-SEASON243-04",
+      "ZH-LEX-C243-SEASON243-05"
+    ]
+  }
+}

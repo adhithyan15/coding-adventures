@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C271-jidong",
+  "pathSegment": "ZH-PATH-271-MOOD271",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-271-MOOD271",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W255-gong-work",
+  "pathSegment": "ZH-PATH-255-PARTTIME255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-255-PARTTIME255",
+      "order": 1
+    }
+  ]
+}

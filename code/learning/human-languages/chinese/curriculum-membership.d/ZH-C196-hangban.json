@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C196-hangban",
+  "pathSegment": "ZH-PATH-196-TICKET196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-196-TICKET196",
+      "order": 3
+    }
+  ]
+}

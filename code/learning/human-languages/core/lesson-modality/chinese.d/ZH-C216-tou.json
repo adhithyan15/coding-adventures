@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C216-tou",
+    "language": "chinese",
+    "chapter": 216,
+    "sequence": 16460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff1ae93584191a68"
+  },
+  "findings": []
+}

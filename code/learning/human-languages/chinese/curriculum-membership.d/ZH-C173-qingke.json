@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C173-qingke",
+  "pathSegment": "ZH-PATH-173-INVITE173",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-173-INVITE173",
+      "order": 5
+    }
+  ]
+}

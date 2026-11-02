@@ -62,6 +62,12 @@ machine word (`bits()` / `from_raw_bits`). The native runtime implements
 | `0b111` `TAG_HEAP` | Heap pointer | `ptr \| 0b111`, ptr 8-byte aligned | `x & ~0b111` |
 | `0b100`,`0b110` | reserved | — | — |
 
+> **See also LANG85** (`LANG85-uniform-dynamic-value-representation.md`):
+> where a value must be in this tagged form (every call, join, cell, global,
+> capture and dynamic builtin on the native and LLVM columns), where a raw
+> machine value is allowed, and the overflow rule for the ±2⁶⁰ range
+> (`Trap.Overflow`, not a silent wrap).
+
 Truthiness (Scheme/lispy): a value is **false** iff it is `#f` *or* `nil`;
 everything else (including `0`) is true. `not(x)` returns `#t` iff `x` is
 false, else `#f`.

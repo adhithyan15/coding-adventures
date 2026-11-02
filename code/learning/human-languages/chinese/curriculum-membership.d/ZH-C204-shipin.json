@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C204-shipin",
+  "pathSegment": "ZH-PATH-204-ONLINE204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-204-ONLINE204",
+      "order": 3
+    }
+  ]
+}

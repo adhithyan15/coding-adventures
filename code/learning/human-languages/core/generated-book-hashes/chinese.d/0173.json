@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:9e7f59f6669daf9c",
+  "lessonIds": [
+    "ZH-C173-yaoqing",
+    "ZH-C173-wenhou",
+    "ZH-W173-hou-wait",
+    "ZH-C173-wanhui",
+    "ZH-C173-juhui",
+    "ZH-C173-qingke"
+  ],
+  "tex": "chinese/book/chapters/ch173-an-invitation.tex"
+}

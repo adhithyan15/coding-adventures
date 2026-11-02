@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Pots and Pans",
+  "label": "ch:zh-pots-and-pans",
+  "canDo": "I can name a wok, a teacup, a spoon, a fork and a microwave.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C170-weibolu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can name a wok, a teacup, a spoon, a fork and a microwave.",
+    "assesses": [
+      "ZH-LEX-C170-POT170-03",
+      "ZH-LEX-C170-POT170-04",
+      "ZH-LEX-C170-POT170-05"
+    ]
+  }
+}

@@ -233,6 +233,7 @@ validated at generation time. Every frontend MUST enforce a
 | Compiler traversal depth | ≤ parser depth cap; iterative where unbounded by the grammar | IIR compiler |
 | Flat operator spine | 512 | before any allocation that folds a repetition (lesson: *check flat operator spines…*) |
 | IIR instructions | 1,000,000 | IIR compiler |
+| Registers per lowered function | the target VM's frame limit: vm-core's `VMFrame::MAX_FRAME_REGISTERS` (65,536), referenced, not restated; counted as the VM counts them (parameters + distinct non-parameter `dest`s) | IIR compiler, as it emits (Python and Ruby release paths since #18419) |
 | Lexer group/pair stack (E2) | 256 frames | lexer |
 | Captured slot length (E4) | 256 bytes | lexer |
 | Pending deferred bodies (E5) | 64 per line, 4,096 total | lexer |
@@ -240,7 +241,22 @@ validated at generation time. Every frontend MUST enforce a
 | Binding log (E7) | ≤ token count; scope depth ≤ parser depth cap | parser |
 
 A budget breach is a typed `Budget { which, limit }` error. It MUST NOT be a
-panic, an abort or a stack overflow. Every frontend MUST carry hostile-input
+panic, an abort or a stack overflow.
+
+The register budget exists because the source and token budgets do not bound
+it: Python's and Ruby's trusted budgets (1 MiB, 256 Ki tokens) admit a `main`
+of well over 65,536 registers, which used to compile and then fail at VM load
+(#18419). A frontend whose other budgets can reach the target VM's frame limit
+MUST refuse such a function itself (the JavaScript pilot's fixed 16,384-node
+budget keeps it at about 36,900 registers, measured with
+`console.log(x,x,x);` repeated, and Perl's 16,384-item budget at most one
+register per item), and its
+`Budget` names the function and the 1-based start of the statement
+that went over. Registers the compiler emits after the last statement (the
+`ret 0` epilogue) are reserved while statements are lowered, so the refusal
+always points at source, and the check is exact: a function of exactly the
+limit compiles and runs. The finished module is then put through the VM's own
+load-time check (`VMFrame::check_register_limit`) as a backstop. Every frontend MUST carry hostile-input
 probes run in a child process, so that an abort is distinguishable from an
 error. The probes cover deep nesting, long flat operator chains, unterminated
 constructs, and every new lexer extension's stack or queue.
@@ -264,7 +280,17 @@ Error categories (one `FrontendError` enum per frontend, mapped into
 
 1. Every emitted instruction MUST be either a LANG83 registry entry (Op or
    Builtin) whose status is not `Later`, or a pre-registry instruction that
-   the registry does not gate.
+   the registry does not gate. The pre-registry set is shrinking. Since
+   LANG83 PR7f-1 a dynamic value (an integer, nil, a symbol, a boolean or a
+   pair in one tagged word) is built and taken apart with the registered
+   `Dynamic` builtins (`dyn_pair_new`, `dyn_tag`, …), not with unregistered
+   `dyn_*` names. Since PR7f-2 a language's truthiness, `not`, equality and
+   exit code over those values are module code its compiler emits, never a
+   runtime call. What remains is the source-level builtin vocabulary the
+   Lisp-family and CAS frontends still emit (`+`, `cons`, `null?`,
+   `equal?`, …), which the backend pipelines translate after
+   `check_module_for`; LANG83 PR7f-3 moves that translation into the
+   frontends, and a new frontend MUST NOT add to it.
 2. A new operation a frontend needs is added to the LANG83 registry first, in
    its own PR, with every backend's `op_support` declaration. The frontend PR
    that emits it comes after.
@@ -275,7 +301,11 @@ Error categories (one `FrontendError` enum per frontend, mapped into
 4. Trap kinds come only from `interpreter_ir::exception_kind`, and they are
    neutral: a language's error class is mapped onto the kind that names
    its condition (`NameError` and `ReferenceError` both become
-   `Trap.Unbound`). LANG83 PR7d retires the `LANGUAGE_TRAP_KINDS` table.
+   `Trap.Unbound`). There is no language-namespaced kind: LANG83 PR7d
+   retired the `LANGUAGE_TRAP_KINDS` table, and `exception_kind::is_trap_kind`
+   (the seven built-in `Trap.*` leaves) is the whole closed set. A
+   catchable language exception will be a value the frontend builds once
+   AOT00 T2 exceptions land, never a trap kind.
 5. Rule 2's "new operation" must be language-neutral (C2 "Language-specific
    IIR"). A frontend that needs a language's formatting, coercion or
    equality asks LANG83 for the neutral primitives underneath it, such as
@@ -905,9 +935,9 @@ command_arg      = @space_before !@space_after_next MINUS primary ;
 completes it so that every fact has both polarities: `@space_before`,
 `@no_space_before`, `@newline_before`, `@no_newline_before`,
 `@space_after_next` and `@no_space_after_next` (`!@p` is equivalent to the
-`no_` form). `@asi(...)` is still to come; until it lands it is rejected with
-a "not implemented yet" error. No shipped `.grammar` uses the predicates yet:
-JavaScript (phase 6b) and Ruby (R6) adopt them in their own PRs. The non-Rust
+`no_` form). `@asi(T, C…)` followed on 2026-10-25, specified in F11
+"Automatic insertion". The details are below. No shipped `.grammar` uses
+either yet: JavaScript (phase 6b) and Ruby (R6) adopt them in their own PRs. The non-Rust
 ports already reject `@` with an "unexpected character" error; F11 lists the
 parity follow-ups.
 
@@ -925,8 +955,12 @@ inside a multi-line comment, as ECMAScript requires.
   - the parser is at end of input
 
   On success it adds a **synthetic leaf token** of type `T` with a new
-  `TOKEN_SYNTHETIC` flag, zero width, positioned at the next token. The CST
-  shape is then the same whether or not the semicolon was written.
+  `TOKEN_SYNTHETIC` flag (`8`). The token has zero width (`value` is `""`)
+  and takes the position of the next token. The CST shape is then the same
+  whether or not the semicolon was written. CST spans skip synthetic tokens,
+  so a statement ends at its last written token. F11 gives the exact rules:
+  `T` and `C` are token names, `T` is not `NEWLINE`/`EOF`, closers do not
+  repeat, and a failure records no expectation.
 
 PEG greediness supplies ECMAScript's "offending token" condition: `@asi` is
 tried only after the statement's expression has stopped consuming, so
@@ -948,7 +982,9 @@ packrat-memo-safe.
 grammar construct.
 
 **Security and budget.** Constant-time predicates. Synthetic tokens are capped
-at one per real token.
+at one per input token, `EOF` included. The cap is checked on the finished
+tree, and a parse that exceeds it fails with an "automatic insertion budget
+exceeded" error.
 
 ### E7. Goal-directed lexing (parser→lexer feedback) and binding predicates
 
@@ -1837,7 +1873,8 @@ Divergences from this spec in 5b/7b slice 2:
      each argument through `f64_signbit` and `write_f64_js`, `putchar 32`
      between arguments, and `putchar 10` at the end. Arithmetic uses the
      `f64_*` ops. The ReferenceError builtins become
-     `trap "Trap.ReferenceError"`, a new closed kind, so rows use
+     `trap "Trap.ReferenceError"` (renamed `Trap.Unbound` by LANG83 PR7d),
+     a new closed kind, so rows use
      `StdoutThenTrap` for the TDZ and not-defined cases.
    - **`run_module`** keeps its captured sink by registering `write_f64_js`
      and `putchar` into the same buffer.
@@ -1883,14 +1920,16 @@ Divergences from this spec in 5b/7b slice 2:
      such as `-0`, `inf` and `NaN`. Those could only arrive in a tree forged
      through `compile_ast`.
    - **`Trap.ReferenceError` is a built-in `Trap.*` leaf, id 7**, not a
-     `LANGUAGE_TRAP_KINDS` entry: an unbound name is not JavaScript's alone
+     `LANGUAGE_TRAP_KINDS` entry (LANG83 PR7d later renamed it
+     `Trap.Unbound` and retired that table): an unbound name is not JavaScript's alone
      (Python's `NameError`, a Lisp's unbound variable). `twig_runtime.c`'s
      kind table gains it. A trap ends straight-line code, so the compiler
      drops every instruction after it (the function still ends with its
      exit status, `const 0` and an `i64` `ret`; a `ret_void` `main` read
      back as `[]` on BEAM, which CI caught), and records V8's message (`ReferenceError: z is not
      defined`) for `run_source`, since the IIR does not name the binding;
-     `run_module` alone reports `trap: Trap.ReferenceError`.
+     `run_module` alone reports `trap: Trap.ReferenceError` (since PR7d,
+     `trap: Trap.Unbound`).
    - **No `StdoutThenTrap` rows in `PROGRAMS`.** The `es-number-log` corpus
      has no failing case, and the rows are exactly the sweep's boundary
      set, so the two ReferenceError programs (undeclared, TDZ) are checked
@@ -1916,6 +1955,18 @@ Divergences from this spec in 5b/7b slice 2:
    is refused by BEAM at compile time; CI executes both columns. Following
    the Ruby and Python precedent, `backend_status` claims `es-number-log`
    for es2016–es2025 (`check --matrix`: 38 cells direct, 92 by IIR class).
+
+   **Since LANG83 PR7c-js (2026-10-26)** the IIR names no language, so
+   `write_f64_js` and the `x + 0` sign test above are history. The compiler
+   writes `String(x)` into the module as `__js_write_number`, built from
+   `f64_class`/`f64_signbit`/`f64_digits`/`f64_exp10`, and every
+   `console.log` argument calls it. The `-0` test is
+   `f64_signbit x > f64_class x`. `main` now calls a function, so it runs on
+   the JIT's interpreter tier; the JIT test above became
+   `javascript_rows_run_with_their_call_free_number_helpers_compiled_by_the_jit`.
+   The rows' output and columns are unchanged (LANG83 "What PR7c-js
+   landed"). LANG83 PR7e then removed `write_f64_js` from the registry and
+   all nine backends; the rows did not change (LANG83 "What PR7e landed").
 6. **Later.** E7 goals replace the F10 approximation for full JavaScript.
 
 ### Twig and McCarthy Lisp: rewrite to walk `GrammarASTNode`
@@ -2783,7 +2834,7 @@ print(7.5 // 2)         # refused: float `//` and `%` (no LANG83 op yet)
   | `a / b`, `b` is `±0` | `trap "Trap.DivZero"`, then the `f64_div` (dead) |
   | `-x` (float) | `f64_neg` (so `-0.0` is `-0.0`) |
   | `+x` (float) | nothing: `float.__pos__` is the identity |
-  | `print(x)` (float) | `call_builtin write_f64_py, x`, `putchar 10` |
+  | `print(x)` (float) | `call_builtin write_f64_py, x`, `putchar 10` (since LANG83 PR7c-py: `call __py_write_float, x`) |
   | `a // b`, `a % b` with a float | `Unsupported` |
 
   - *Why the zero test is at compile time.* CPython's `float_div` (and
@@ -2865,6 +2916,23 @@ print(7.5 // 2)         # refused: float `//` and `%` (no LANG83 op yet)
   - The plan's example of an int overflow inside a float expression used
     `**`, which the subset does not have; the corpus case
     `overflow_inside_float` writes `(9223372036854775807 + 1) * 1.0`.
+
+**Since LANG83 PR7c-py (2026-10-26)** the IIR names no language, so the
+`write_f64_py` lowering above is history. The compiler writes `repr(float)`
+into the module as `__py_write_float`, built from
+`f64_class`/`f64_signbit`/`f64_digits`/`f64_exp10`, and every float `print`
+is one `call` of it, then `putchar 10`. A module that prints no float is
+unchanged, so the `py-int-print` and `py2-int-print` classes keep their
+digests; the 77 `py-float-print` digests changed, with the same two
+classes. The 38 float rows print what they printed before on every column
+they ran on (828 Python cells locally, 372 trapping, as above) and keep
+their columns. A float row's `main` now calls a function, so it runs on
+the JIT's interpreter tier; the two call-free helpers compile
+(`python_float_rows_run_with_their_call_free_float_helpers_compiled_by_the_jit`).
+The release runner's step budget is now derived from the IIR limit and a
+measured 700-step dearest print (LANG83 "What PR7c-py landed"). LANG83 PR7e
+then removed `write_f64_py` from the registry and all nine backends; no row
+and no digest changed (LANG83 "What PR7e landed").
 
 ### Wire every IIR frontend into lang-aot
 

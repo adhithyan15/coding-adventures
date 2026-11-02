@@ -1,0 +1,21 @@
+{
+  "chapter": 187,
+  "title": "What a Day",
+  "label": "ch:zh-what-a-day",
+  "canDo": "I can tell what went wrong: something smashed, a fall, a regret, how things were then and how it ended.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-R187-review-final-187",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can tell what went wrong: something smashed, a fall, a regret, how things were then and how it ended.",
+    "assesses": [
+      "ZH-LEX-C187-BADDAY187-01",
+      "ZH-LEX-C187-BADDAY187-02",
+      "ZH-LEX-C187-BADDAY187-03",
+      "ZH-LEX-C187-BADDAY187-04",
+      "ZH-LEX-C187-BADDAY187-05"
+    ]
+  }
+}

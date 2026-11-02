@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C194-zoulu",
+    "language": "chinese",
+    "chapter": 194,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0135e54cb835547"
+  },
+  "findings": []
+}

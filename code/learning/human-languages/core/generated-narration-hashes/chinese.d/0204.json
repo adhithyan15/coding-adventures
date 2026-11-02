@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:fc6dd488e0f58db6",
+  "lessonIds": [
+    "ZH-C204-wangzhan",
+    "ZH-C204-denglu",
+    "ZH-C204-dianji",
+    "ZH-C204-shipin",
+    "ZH-C204-dazi"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch204.txt",
+  "json": "chinese/narration/ch204.json",
+  "textHash": "fnv1a64:b8ddab53aa5cc4e2",
+  "jsonHash": "fnv1a64:a91a49629ab26006",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Keeping Fit",
+  "label": "ch:zh-keeping-fit",
+  "canDo": "I can talk about working out, losing weight, sweating, skipping and doing exercises.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C220-zuocao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can talk about working out, losing weight, sweating, skipping and doing exercises.",
+    "assesses": [
+      "ZH-LEX-C220-FIT220-03",
+      "ZH-LEX-C220-FIT220-04",
+      "ZH-LEX-C220-FIT220-05"
+    ]
+  }
+}

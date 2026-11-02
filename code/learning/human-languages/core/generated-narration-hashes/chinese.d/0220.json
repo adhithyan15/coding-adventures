@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:2f3b692e2c98e323",
+  "lessonIds": [
+    "ZH-C220-jianshen",
+    "ZH-C220-jianfei",
+    "ZH-C220-chuhan",
+    "ZH-C220-tiaosheng",
+    "ZH-C220-zuocao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch220.txt",
+  "json": "chinese/narration/ch220.json",
+  "textHash": "fnv1a64:7e21e31ca27f8cd4",
+  "jsonHash": "fnv1a64:3278de72287704aa",
+  "findings": []
+}

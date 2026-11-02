@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C170-weibolu",
+  "pathSegment": "ZH-PATH-170-POT170",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-170-POT170",
+      "order": 5
+    }
+  ]
+}

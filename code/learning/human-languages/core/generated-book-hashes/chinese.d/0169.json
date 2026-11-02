@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:ec7ac5098777e54c",
+  "lessonIds": [
+    "ZH-C169-yidazao",
+    "ZH-C169-wujiao",
+    "ZH-W169-jiao-sleep",
+    "ZH-C169-bangwan",
+    "ZH-C169-aoye",
+    "ZH-C169-shenye",
+    "ZH-R169-review-164-169"
+  ],
+  "tex": "chinese/book/chapters/ch169-early-and-late.tex"
+}

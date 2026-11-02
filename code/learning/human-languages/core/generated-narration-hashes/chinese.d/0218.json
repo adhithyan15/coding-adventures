@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:b959a472f8a7cbd6",
+  "lessonIds": [
+    "ZH-C218-fengyi",
+    "ZH-W218-feng-wind",
+    "ZH-C218-nuanhuo",
+    "ZH-C218-menre",
+    "ZH-C218-ganzao",
+    "ZH-C218-chaoshi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch218.txt",
+  "json": "chinese/narration/ch218.json",
+  "textHash": "fnv1a64:54b7d1712591aa27",
+  "jsonHash": "fnv1a64:3895028627025eb2",
+  "findings": []
+}

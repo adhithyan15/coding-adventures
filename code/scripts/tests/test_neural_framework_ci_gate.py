@@ -134,8 +134,11 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
             "working-directory: code/packages/go/neural-framework", self.reusable
         )
         self.assertIn("actions/setup-go@", self.reusable)
-        self.assertIn(
-            "ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec", self.reusable
+        # Ruby must come from ruby/setup-ruby pinned to a full 40-hex commit
+        # SHA (never a movable tag). The exact SHA is Dependabot's to bump, so
+        # the test pins the *shape* of the reference rather than one release.
+        self.assertRegex(
+            self.reusable, r"uses: ruby/setup-ruby@[0-9a-f]{40}(?![0-9a-zA-Z])"
         )
         self.assertIn(
             "working-directory: code/packages/ruby/neural-framework", self.reusable

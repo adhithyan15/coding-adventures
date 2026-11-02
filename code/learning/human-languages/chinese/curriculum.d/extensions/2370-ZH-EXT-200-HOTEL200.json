@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-200-HOTEL200",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can book a hotel room, ask for a single room, and say when I will check in and check out.",
+  "prerequisites": []
+}

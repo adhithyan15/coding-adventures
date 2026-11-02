@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:d57a03f872583c48",
+  "lessonIds": [
+    "ZH-C176-qiaomen",
+    "ZH-C176-linju",
+    "ZH-C176-chaojia",
+    "ZH-C176-dao-topple",
+    "ZH-C176-zhaohuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch176.txt",
+  "json": "chinese/narration/ch176.json",
+  "textHash": "fnv1a64:5a9d507f43f9dd37",
+  "jsonHash": "fnv1a64:6b884687b8b420d2",
+  "findings": []
+}

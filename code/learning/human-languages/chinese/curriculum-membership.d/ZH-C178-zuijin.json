@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C178-zuijin",
+  "pathSegment": "ZH-PATH-178-DAY178",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-178-DAY178",
+      "order": 4
+    }
+  ]
+}

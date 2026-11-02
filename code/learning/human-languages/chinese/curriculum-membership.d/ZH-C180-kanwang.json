@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C180-kanwang",
+  "pathSegment": "ZH-PATH-180-VISIT180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-180-VISIT180",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C270-fandui",
+  "pathSegment": "ZH-PATH-270-AGREE270",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-270-AGREE270",
+      "order": 1
+    }
+  ]
+}

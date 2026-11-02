@@ -4,6 +4,9 @@
 
 - Add a certificate-wide, fail-closed gate for caller-recognized critical
   extensions.
+- Add a bounded, validated critical-extension OID policy with exact matching,
+  duplicate rejection, and certificate-bound role evidence that retains the
+  accepted policy data.
 - Add bounded algorithm-independent issuing-CA and end-entity role checks that
   compose Basic Constraints, Key Usage, and Extended Key Usage under one
   explicit semantic decoder budget.

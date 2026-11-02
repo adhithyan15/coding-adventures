@@ -171,12 +171,17 @@ function quarantineSnapshot() {
     const corruptPath =
       index === 0 ? `${snapshotPath}.corrupt` : `${snapshotPath}.corrupt.${index}`;
     try {
-      // COPYFILE_EXCL fails with EEXIST instead of replacing what is there.
+      // COPYFILE_EXCL fails instead of replacing what is there (EEXIST on
+      // POSIX; EPERM or EISDIR for a directory on Windows).
       copyFileSync(snapshotPath, corruptPath, constants.COPYFILE_EXCL);
       console.warn(`Engram copied the unreadable snapshot to ${corruptPath}`);
       return;
     } catch (error) {
-      if (error?.code === "EEXIST") {
+      // A taken slot is skipped, whatever occupies it. POSIX reports a
+      // file *or* a directory there as EEXIST, but Windows reports a
+      // directory as EPERM (or EISDIR), so the error code alone would
+      // switch persistence off on Windows where POSIX moves on.
+      if (error?.code === "EEXIST" || existsSync(corruptPath)) {
         continue;
       }
       persistenceDisabled = true;

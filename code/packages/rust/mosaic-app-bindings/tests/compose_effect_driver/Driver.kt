@@ -323,14 +323,17 @@ private fun suffix(ok: Boolean, why: String) = if (ok) "" else " [$why]"
 
 /**
  * A state file the runtime rejects moves to the first FREE quarantine name,
- * never over an earlier quarantine, which may be someone's real data. With all
- * ten names taken it stays where it is, and nothing is saved over it.
+ * never over an earlier quarantine, which may be someone's real data. A
+ * directory takes a name as surely as a file does (Windows refuses an
+ * exclusive create onto one as `AccessDeniedException`, not
+ * `FileAlreadyExistsException`). With all ten names taken the file stays where
+ * it is, and nothing is saved over it.
  *
  * ```
- * launch | before                        | afterwards
- * -------+-------------------------------+------------------------------
- * first  | `{}`, `.corrupt` held         | `{}` in `.corrupt.1`, saving
- * second | `{}`, `.corrupt` to `.9` held | `{}` still live, not saving
+ * launch | before                                  | afterwards
+ * -------+-----------------------------------------+------------------------------
+ * first  | `{}`, `.corrupt` file, `.corrupt.1` dir | `{}` in `.corrupt.2`, saving
+ * second | `{}`, `.corrupt` to `.9` held           | `{}` still live, not saving
  * ```
  */
 private fun caseQuarantine() {
@@ -345,13 +348,18 @@ private fun caseQuarantine() {
     fun file(suffix: String) = java.io.File(path + suffix)
     fun warning(update: Map<String, Any?>?) = update?.get("persistenceWarning") as? String
     file(".corrupt").writeText("earlier")
+    file(".corrupt.1").mkdir()
     file("").writeText(rejected)
 
     host().use { first ->
         val moved = warning(first.props())
         check(file(".corrupt").readText() == "earlier", "an earlier quarantine is never replaced")
         check(
-            file(".corrupt.1").isFile && file(".corrupt.1").readText() == rejected,
+            file(".corrupt.1").isDirectory && file(".corrupt.1").list()?.isEmpty() == true,
+            "a directory at a quarantine name is skipped",
+        )
+        check(
+            file(".corrupt.2").isFile && file(".corrupt.2").readText() == rejected,
             "a rejected file moves to the first free name",
         )
         check(moved != null && "will not be saved" !in moved, "a file moved aside leaves saving on")
@@ -362,7 +370,7 @@ private fun caseQuarantine() {
         )
     }
 
-    for (index in 2 until 10) file(".corrupt.$index").writeText("taken $index")
+    for (index in 3 until 10) file(".corrupt.$index").writeText("taken $index")
     file("").writeText(rejected)
     host().use { second ->
         val blocked = warning(second.props())
@@ -375,7 +383,8 @@ private fun caseQuarantine() {
         check(blocked != null && warning(answer) == blocked, "the warning stays showing after an event")
         check(
             file(".corrupt").readText() == "earlier" &&
-                file(".corrupt.1").readText() == rejected &&
+                file(".corrupt.1").isDirectory &&
+                file(".corrupt.2").readText() == rejected &&
                 file(".corrupt.9").readText() == "taken 9",
             "no quarantine was replaced",
         )

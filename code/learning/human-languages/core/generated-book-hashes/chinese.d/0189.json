@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:1e7984e81aea3983",
+  "lessonIds": [
+    "ZH-C189-hao",
+    "ZH-W189-hao-number",
+    "ZH-C189-biaoge",
+    "ZH-C189-tianxie",
+    "ZH-C189-qianming",
+    "ZH-C189-shenfenzheng"
+  ],
+  "tex": "chinese/book/chapters/ch189-forms-and-dates.tex"
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 153,
+  "title": "Older Than Me",
+  "label": "ch:zh-older-than-me",
+  "canDo": "I can compare two people or things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C153-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Comparing two people or things with 比, saying by how much, even more, the same as, and not as much as, built on one new written character: 比.",
+    "assesses": [
+      "ZH-LEX-C153-BI-01",
+      "ZH-SCRIPT-BI-COMPARE-01",
+      "ZH-GRAMMAR-BI-COMPARE-01",
+      "ZH-LEX-C153-GENG-01",
+      "ZH-LEX-C153-GEN-01",
+      "ZH-LEX-C153-NAME-01",
+      "ZH-PERFORMANCE-COMPARE-01"
+    ]
+  }
+}

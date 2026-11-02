@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:015bfa225b5d5384",
+  "lessonIds": [
+    "ZH-C152-de-complement",
+    "ZH-W152-de-complement",
+    "ZH-C152-de-grammar",
+    "ZH-C152-liuli",
+    "ZH-C152-bucuo",
+    "ZH-C152-qingchu",
+    "ZH-C152-practice"
+  ],
+  "tex": "chinese/book/chapters/ch152-well-said.tex"
+}

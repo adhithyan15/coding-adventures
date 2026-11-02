@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:3a1a2024b7631300",
+  "lessonIds": [
+    "ZH-C245-tiwen",
+    "ZH-C245-chuanran",
+    "ZH-C245-kouzhao",
+    "ZH-C245-xinqing",
+    "ZH-C245-baozhong"
+  ],
+  "tex": "chinese/book/chapters/ch245-take-care.tex"
+}

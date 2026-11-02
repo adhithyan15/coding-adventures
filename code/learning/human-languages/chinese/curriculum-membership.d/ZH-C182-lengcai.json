@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C182-lengcai",
+  "pathSegment": "ZH-PATH-182-EATOUT182",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-182-EATOUT182",
+      "order": 1
+    }
+  ]
+}

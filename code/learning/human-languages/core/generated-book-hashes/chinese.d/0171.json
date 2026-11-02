@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:8f7b3fc017e87d44",
+  "lessonIds": [
+    "ZH-C171-dakai",
+    "ZH-C171-kongtiao",
+    "ZH-C171-yaokongqi",
+    "ZH-C171-an",
+    "ZH-C171-peng"
+  ],
+  "tex": "chinese/book/chapters/ch171-switching-things-on.tex"
+}

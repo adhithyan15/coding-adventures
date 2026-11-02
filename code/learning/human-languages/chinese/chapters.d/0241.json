@@ -1,0 +1,21 @@
+{
+  "chapter": 241,
+  "title": "In Hospital",
+  "label": "ch:zh-in-hospital",
+  "canDo": "I can tell how someone went into hospital, the ward, the operation, coming home and getting better.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-R241-review-236-241",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can tell how someone went into hospital, the ward, the operation, coming home and getting better.",
+    "assesses": [
+      "ZH-LEX-C241-WARD241-01",
+      "ZH-LEX-C241-WARD241-02",
+      "ZH-LEX-C241-WARD241-03",
+      "ZH-LEX-C241-WARD241-04",
+      "ZH-LEX-C241-WARD241-05"
+    ]
+  }
+}

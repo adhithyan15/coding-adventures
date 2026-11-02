@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C166-xiawucha",
+  "pathSegment": "ZH-PATH-166-TEA166",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-166-TEA166",
+      "order": 1
+    }
+  ]
+}

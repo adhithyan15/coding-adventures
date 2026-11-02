@@ -4,8 +4,11 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1 task inventory is checked in, while
-A1-C2 inventories, mocks, calibration, and human validation remain backlog
+**Status:** target specified; the pre-A1, A1, and B2 task shapes and the A1 and
+B2 content inventories are checked in, while A2, B1, C1, and C2 inventories,
+mocks, calibration, and human validation remain backlog. The B2 content
+inventory is deliberately partial at 0/36 demands and does not establish exam
+readiness.
 
 This specification names the assessment that the complete Tamil book must
 eventually prepare a book-only learner to pass. It is not an external
@@ -83,6 +86,80 @@ Sources checked 2026-09-13:
 - [Council of Europe introduction and certification caveat](https://www.coe.int/en/web/common-european-framework-reference-languages/introduction-and-context)
 - [Tamil Virtual Academy certificate rules and regulations](https://www.tamilvu.org/en/coresite-html-cwsylcrl-342515)
 - [Tamil Virtual Academy higher certificate course](https://www.tamilvu.org/en/highercertificate)
+
+### B2 task-shape source boundary
+
+The B2 task shape is an executable form of this project's own envelope, not a
+transcription of a published Tamil B2 examination. The Council of Europe CEFR
+Companion Volume supplies the generic B2 proficiency backbone and
+examination-design context. Tamil Virtual Academy documents a real Government
+of Tamil Nadu school-class ladder with oral, online, and written assessment.
+Neither checked source publishes a CEFR-mapped Tamil B2 paper with part counts,
+timings, input speed, text or response lengths, replay rules, regional-voice
+requirements, aid rules, independent-skill thresholds, or validation evidence.
+
+HL16, HL18, and this specification therefore own the numeric B2 envelope as a
+transparent project choice. The machine-readable inventory must repeat that
+source boundary wherever a precise project value could otherwise look
+externally measured. It must also preserve this specification's Tamil variety
+boundary: contemporary standard written Tamil for reading and writing, standard
+spoken Tamil accepted for listening and speaking, consistent documented
+regional forms credited, and the expected register stated by the task.
+Publishing the shape does not establish an external qualification, complete
+mocks, calibration, human validation, learner readiness, or learner attainment.
+
+### B2 content-inventory specification
+
+The B2 content inventory is a source-bounded project inventory, not a Tamil
+qualification or a claim that the current book is ready for the B2 task shape.
+It lives at `core/exam-inventory-tamil-b2.json` because the completion planner
+measures every track inventory from that shared machine-readable directory. Its
+stable point ids use `TA-B2-FUNC-*`, `TA-B2-GRAM-*`, `TA-B2-ORTH-*`, and
+`TA-B2-LEX-*`.
+
+The first version enumerates **36 demands**, nine in each of four dimensions:
+
+1. communicative functions and discourse;
+2. Tamil grammar and register;
+3. Tamil script, sound, and orthography;
+4. lexicon and genre domains.
+
+Every dimension remains `partial`. Every complete demand begins with
+`probe: null`, because a foundation atom such as a causal linker, a script
+lesson, or one domain word is not evidence that the learner can perform the
+whole B2 demand. The first measured coverage is therefore 0/36, and the
+completion planner must keep `exam-inventory/tamil/B2` visible as unfinished
+work while exposing the 36 demands in five-point tranches.
+
+Each source is confined to the boundary it can support:
+
+- the Council of Europe CEFR Companion Volume supplies generic B2 descriptors,
+  not Tamil exponents or certification;
+- Tamil Virtual Academy certificate rules document a real Government of Tamil
+  Nadu school-class ladder and oral, online, and written assessment, but not a
+  CEFR-mapped Tamil B2 content syllabus;
+- Unicode 18.0 section 12.6 supplies normative Tamil script behaviour, not
+  spelling, handwriting, pronunciation, processing speed, or B2 attainment;
+- official LDC-IL Tamil text and speech documentation supplies contemporary
+  domains, text/speech corpus boundaries, and documented regional sampling,
+  not a B2 word list, frequency threshold, accent quota, or level mapping;
+- the committed Tamil B2 task shape supplies this project's genres and
+  performance envelope, not evidence that their content has been taught.
+
+The inventory must preserve the variety contract above: contemporary standard
+written Tamil for reading and writing, standard spoken Tamil accepted for
+listening and speaking, consistent documented regional forms credited, and no
+unmotivated register mixing from A2 onward. It must name the B2 task genres
+without confusing their presence with content coverage: reasoned argument,
+reported feature, detailed procedure, literary or cultural prose, multiparty
+discussion, collaborative problem-solving, and formal interaction text.
+
+No checked source closes a finite Tamil B2 grammar or lexicon. A later source
+may close a dimension only when it is primary, explicitly level-bounded, and
+enumerates that dimension rather than merely providing examples or corpus
+domains. Until then, this inventory cannot support external certification,
+mock readiness, validation, learner readiness, learner attainment, or complete
+B2 coverage.
 
 ## Pass rule
 

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:c7a13e0b5c573496",
+  "lessonIds": [
+    "ZH-C221-xueren",
+    "ZH-W221-xue-snow",
+    "ZH-C221-huaxue",
+    "ZH-C221-bing",
+    "ZH-C221-lingxia",
+    "ZH-C221-shoutao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch221.txt",
+  "json": "chinese/narration/ch221.json",
+  "textHash": "fnv1a64:c4924c80dc913154",
+  "jsonHash": "fnv1a64:446b392efdc493e6",
+  "findings": []
+}

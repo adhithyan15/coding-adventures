@@ -4,11 +4,47 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.13` accumulate here until the next version is
+Entries added after `task-app-v0.5.16` accumulate here until the next version is
 cut.
+
+## [0.5.16] - 2026-10-30
 
 ### Fixed
 
+- Preserve the Board card drop target's authored 9-pixel spacing on Qt
+  (#18563). Lower its static column-flex declarations, removing three verified
+  drops (80 to 77); keep unsupported values and state overrides explicit.
+
+## [0.5.15] - 2026-10-29
+
+### Fixed
+
+- Preserve the Board empty-column drop zone's authored 60-pixel minimum height
+  on Qt's outer drop target (#18559), without changing shared styles, drag
+  routing or artifact coverage. Reading its styles exposes three existing Qt
+  drops (display, flex-direction, gap), each pinned to one occurrence: total
+  76 to 79. Their lowering is tracked in #18563; further increases still fail.
+
+## [0.5.14] - 2026-10-28
+
+### Changed
+
+- **Notes is built from the shared list and editor (E3).** The Notes view
+  mounts `mosaic-pkg-notes` 0.3.0, which draws its list with the toolkit's
+  `RecordList` and its title, body and Save/Delete/Cancel with
+  `DraftEditor`. The fields gain visible labels ("Title", "Note", "Attach to
+  task") that are also their accessible names; the attach-to-task field had
+  no name before. Every label is now written at TaskApp's Notes mount, not
+  inside the package. **Delete is shown only for a saved note:** the new
+  `note-delete-label` slot is "Delete" for a note the project has saved and
+  empty for a new one, so no Delete button appears on a note that does not
+  exist yet. `note-rows` rows are RecordList's six fields. Ctrl/Cmd+Enter
+  still saves from the body. Spec: `task-app-notes-ui-v1.md`, addendum v1.3.
+
+### Fixed
+
+- Preserve the Qt due-date editor's authored 150-pixel non-shrinking width on
+  the control itself (#18394), without changing shared styles or flex diagnostics.
 - **A refused note Save says why (E5).** Saving a note whose *Attach to task*
   field names no task in the project did nothing visible: the web host logged
   to the console and the native hosts did nothing at all. TaskApp gains a

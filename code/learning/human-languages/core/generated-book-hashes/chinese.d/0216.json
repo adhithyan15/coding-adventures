@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:b4c000c1f24e4ad3",
+  "lessonIds": [
+    "ZH-C216-zaogao",
+    "ZH-C216-qiguai",
+    "ZH-C216-tou",
+    "ZH-C216-jingcha",
+    "ZH-C216-baojing"
+  ],
+  "tex": "chinese/book/chapters/ch216-something-has-gone-wrong.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C267-xiaohua",
+    "language": "chinese",
+    "chapter": 267,
+    "sequence": 20010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4648536c3410580a"
+  },
+  "findings": []
+}

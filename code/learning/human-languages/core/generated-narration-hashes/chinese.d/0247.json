@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:d5fbea848b0a4257",
+  "lessonIds": [
+    "ZH-C247-jingli",
+    "ZH-C247-yukuai",
+    "ZH-C247-techan",
+    "ZH-C247-jinianpin",
+    "ZH-C247-huiyi",
+    "ZH-R247-review-242-247",
+    "ZH-R247-review-final-247"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch247.txt",
+  "json": "chinese/narration/ch247.json",
+  "textHash": "fnv1a64:d1a4e1ca1cc441e5",
+  "jsonHash": "fnv1a64:c535fcb896d451f2",
+  "findings": []
+}

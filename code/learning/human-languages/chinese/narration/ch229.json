@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 229,
+  "title": "Keeping a Pet",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:66aabd0402f8c9cd",
+  "lessons": [
+    {
+      "id": "ZH-C229-chongwu",
+      "sequence": 17560,
+      "title": "chǒngwù — pet",
+      "headword": "chǒngwù",
+      "romanization": "chǒngwù",
+      "gloss": "pet",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a008b9fdb9cb6a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for serious (of illness), then the Mandarin for to nod."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chǒngwù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chǒngwù — \"pet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ jiā yǒu chǒngwù ma — Have you got a pet at home?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chǒngwù is built from chǒng 'to dote on' and wù 'thing', both inherited from Middle Chinese, trhjowngX and mjut (Guangyun, in Baxter's transcription), which glosses the first 'to love and favour'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chǒngwù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chǒngwù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chǒngwù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chǒngwù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ jiā yǒu chǒngwù ma — Have you got a pet at home?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ jiā yǒu chǒngwù ma* — Have you got a pet at home?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for serious (of illness), then the Mandarin for to nod, then say chǒngwù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for serious (of illness), then the Mandarin for to nod, then say *chǒngwù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chǒngwù mean? (\"Pet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C229-yang",
+      "sequence": 17570,
+      "title": "yǎng — to keep an animal; to raise",
+      "headword": "yǎng",
+      "romanization": "yǎng",
+      "gloss": "to keep an animal; to raise",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6f1d6735f1e81ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to nod, then the Mandarin for a pet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǎng — \"to keep an animal; to raise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ xiǎng yǎng yì zhī māo — I'd like to have a cat."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǎng is inherited from Middle Chinese yangX (Guangyun, in Baxter's transcription), glossed 'to rear' and 'to delight'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎng yǎng yì zhī māo — I'd like to have a cat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎng yǎng yì zhī māo* — I'd like to have a cat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to nod, then the Mandarin for a pet, then say yǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to nod, then the Mandarin for a pet, then say *yǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yǎng mean? (\"To keep an animal; to raise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C229-liugou",
+      "sequence": 17580,
+      "title": "liùgǒu — to walk the dog",
+      "headword": "liùgǒu",
+      "romanization": "liùgǒu",
+      "gloss": "to walk the dog",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:236a5da49d4da176",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a pet, then the Mandarin for to keep an animal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: liùgǒu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "liùgǒu — \"to walk the dog\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ měitiān wǎnshang liùgǒu — I walk the dog every evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "liùgǒu is built from liù 'to stroll' and gǒu 'dog'. The second is inherited from Middle Chinese kuwX (Guangyun, in Baxter's transcription), glossed 'dog'; the dictionary glosses the first, ljuw there, 'to linger', and the falling tone of liù is not the regular outcome of that form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liùgǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liùgǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liùgǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liùgǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ měitiān wǎnshang liùgǒu — I walk the dog every evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ měitiān wǎnshang liùgǒu* — I walk the dog every evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a pet, then the Mandarin for to keep an animal, then say liùgǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a pet, then the Mandarin for to keep an animal, then say *liùgǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does liùgǒu mean? (\"To walk the dog\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C229-zhua",
+      "sequence": 17590,
+      "title": "zhuā — to scratch; to grab",
+      "headword": "zhuā",
+      "romanization": "zhuā",
+      "gloss": "to scratch; to grab",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5db8505f455e5046",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to keep an animal, then the Mandarin for to walk the dog."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhuā",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhuā — \"to scratch; to grab\"."
+            },
+            {
+              "kind": "speech",
+              "text": "bié pà wǒ de māo bù zhuā rén — Don't worry, my cat doesn't scratch."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhuā is inherited from Middle Chinese tsraew (Guangyun, in Baxter's transcription), glossed 'to scratch and pinch'; the vowel of zhuā is not the regular outcome of that form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhuā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhuā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhuā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhuā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bié pà wǒ de māo bù zhuā rén — Don't worry, my cat doesn't scratch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bié pà wǒ de māo bù zhuā rén* — Don't worry, my cat doesn't scratch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to keep an animal, then the Mandarin for to walk the dog, then say zhuā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to keep an animal, then the Mandarin for to walk the dog, then say *zhuā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhuā mean? (\"To scratch; to grab\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C229-mo",
+      "sequence": 17600,
+      "title": "mō — to stroke; to touch",
+      "headword": "mō",
+      "romanization": "mō",
+      "gloss": "to stroke; to touch",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d5ca28ecc6252c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to walk the dog, then the Mandarin for to scratch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mō — \"to stroke; to touch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ kěyǐ mō nǐ de gǒu ma — Can I stroke your dog?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mō is inherited from Middle Chinese mu (Guangyun, in Baxter's transcription), glossed 'to feel with the hand'. The vowel and the level tone of mō are not the regular outcome of that form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ kěyǐ mō nǐ de gǒu ma — Can I stroke your dog?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ kěyǐ mō nǐ de gǒu ma* — Can I stroke your dog?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to walk the dog, then the Mandarin for to scratch, then say mō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to walk the dog, then the Mandarin for to scratch, then say *mō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mō mean? (\"To stroke; to touch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R229-review-224-229",
+      "sequence": 17610,
+      "title": "Looking back: from Spring Flowers to Keeping a Pet",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Spring Flowers to Keeping a Pet",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7568ce10c1b251b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to bloom and a florist's."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bloom, a florist's, a garden, a butterfly, a bee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bloom, a florist's, a garden, a butterfly, a bee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the countryside, a farmer, to work the land, to pick fruit, to camp out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the countryside, a farmer, to work the land, to pick fruit, to camp out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lawn, a lake, a forest, grassland, scenery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lawn, a lake, a forest, grassland, scenery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the seaside, a boat, to get seasick, a sandy beach, to run into someone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the seaside, a boat, to get seasick, a sandy beach, to run into someone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a headache, to take medicine, to have an injection, serious (of illness), to nod",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a headache, to take medicine, to have an injection, serious (of illness), to nod]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pet, to keep an animal, to walk the dog, to scratch, to stroke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pet, to keep an animal, to walk the dog, to scratch, to stroke]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "花 草 头 疼 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 花 草 头 疼 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To bloom? (开花, kāihuā.) A florist's? (花店, huādiàn.) A garden? (huāyuán.) A butterfly? (húdié.) A bee? (mìfēng.) The countryside? (nóngcūn.) A farmer? (nóngmín.) To work the land? (zhòngdì.) To pick fruit? (zhāi.) To camp out? (lùyíng.) A lawn? (草地, cǎodì.) A lake? (hú.) A forest? (sēnlín.) Grassland? (cǎoyuán.) Scenery? (fēngjǐng.) The seaside? (hǎibiān.) A boat? (chuán.) To get seasick? (yùnchuán.) A sandy beach? (shātān.) To run into someone? (yùdào.) A headache? (头疼, tóuténg.) To take medicine? (chīyào.) To have an injection? (dǎzhēn.) Serious (of illness)? (yánzhòng.) To nod? (点头, diǎntóu.) A pet? (chǒngwù.) To keep an animal? (yǎng.) To walk the dog? (liùgǒu.) To scratch? (zhuā.) To stroke? (mō.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

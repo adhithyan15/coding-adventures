@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W152-de-complement",
+  "pathSegment": "ZH-PATH-152-WELL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-152-WELL",
+      "order": 1
+    }
+  ]
+}

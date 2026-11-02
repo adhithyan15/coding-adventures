@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C179-xiyifen",
+  "pathSegment": "ZH-PATH-179-WASH179",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-179-WASH179",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+[package]
+name = "http1-chunk-size-line"
+version = "0.1.0"
+edition = "2021"
+description = "Strict bounded HTTP/1 chunk-size line decoding"
+
+[dependencies]

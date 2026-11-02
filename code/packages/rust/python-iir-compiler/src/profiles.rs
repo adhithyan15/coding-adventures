@@ -84,8 +84,11 @@
 //! | 3.0a1 | `float_str`: `format_float(…, PREC_STR)`, `PREC_STR` 12 (`Objects/floatobject.c` lines 285–299), i.e. `%.12g` | `0.333333333333` | `py30`, [`Floats::None`] |
 //! | 3.5.10 … 3.16.0a1 | `float_repr` (`Objects/floatobject.c` at v3.5.10, `tp_repr` and `tp_str` both, lines 1849/1855): the shortest string that reads back exactly | `0.3333333333333333` | `py3`, [`Floats::Repr`] |
 //!
-//! LANG83 has one Python float writer, `write_f64_py`, and it writes
-//! `repr`. So floats are in the subset only under [`Floats::Repr`]. The
+//! The compiler writes one float layout, `repr`, into the module
+//! (`__py_write_float`, LANG83 PR7c-py; up to 0.3.0 the `write_f64_py`
+//! builtin). `%.12g` needs correctly rounded 12-digit significands, which
+//! LANG83 plans as `f64_digits_prec` and does not have yet. So floats are in
+//! the subset only under [`Floats::Repr`]. The
 //! difference is semantic, not lexical (LANG84 C2): `7 / 2` lexes in every
 //! Python 3 release, so 3.0a1's lexer could never be its only guard.
 //!
@@ -178,8 +181,9 @@ pub enum Floats {
     /// No floats: a `FLOAT` token and a true `/` are refused. 3.0a1
     /// (`%.12g` for `str(float)`) and Python 2 (the same).
     None,
-    /// Floats are in the subset and `print` writes `repr` (LANG83
-    /// `write_f64_py`): the `py3` profile, 3.5.10 and later.
+    /// Floats are in the subset and `print` writes `repr` (the module's own
+    /// `__py_write_float`, LANG83 PR7c-py): the `py3` profile, 3.5.10 and
+    /// later.
     Repr,
 }
 
@@ -230,8 +234,8 @@ pub const PY3: ReleaseProfile = ReleaseProfile {
     subsets: &["py-int-print", "py-float-print"],
 };
 
-/// Python 3.0: as [`PY3`], but `str(float)` is `%.12g`, which no LANG83
-/// writer produces, so the integer subset only.
+/// Python 3.0: as [`PY3`], but `str(float)` is `%.12g`, which this
+/// compiler does not write yet, so the integer subset only.
 pub const PY30: ReleaseProfile = ReleaseProfile {
     name: "py30",
     slash: Slash::True,

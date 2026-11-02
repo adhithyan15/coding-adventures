@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:920689d8176f396b",
+  "lessonIds": [
+    "ZH-C255-dagong",
+    "ZH-W255-gong-work",
+    "ZH-C255-gongzi",
+    "ZH-C255-tongshi",
+    "ZH-C255-jiaban",
+    "ZH-C255-laoban"
+  ],
+  "tex": "chinese/book/chapters/ch255-a-part-time-job.tex"
+}

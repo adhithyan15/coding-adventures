@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/rsa-pss-sha256",
+  "capabilities": [],
+  "justification": "Pure allocation-free validation of caller-supplied public RSA-PSS verification bytes using caller-owned scratch memory. It performs no filesystem, network, process, environment, clock, credential, private-key, signing, RSA arithmetic, certificate, trust-root, path, revocation, TLS, or transport access."
+}

@@ -14,6 +14,12 @@ path/query characters with complete percent escapes. The caller supplies the
 allowed lowercase schemes, their default ports, the exact explicit ports, and
 all input length ceilings. There is no built-in provider or transport policy.
 
+The stronger certificate-binding entry point consumes certificate-wide
+critical-extension and role-policy evidence, derives and decodes AIA only from
+that exact certificate, and retains both the role evidence and selected URI
+components. A locator decoded from another certificate, including a byte-equal
+re-decode, cannot enter that API.
+
 ## Example
 
 ```rust

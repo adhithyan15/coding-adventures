@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C179-yigui",
+    "language": "chinese",
+    "chapter": 179,
+    "sequence": 14120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e01e3a76882f14d"
+  },
+  "findings": []
+}

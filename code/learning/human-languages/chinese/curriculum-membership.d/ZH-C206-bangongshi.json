@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C206-bangongshi",
+  "pathSegment": "ZH-PATH-206-FLOOR206",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-206-FLOOR206",
+      "order": 3
+    }
+  ]
+}

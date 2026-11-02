@@ -1,0 +1,22 @@
+{
+  "chapter": 154,
+  "title": "This One or That One",
+  "label": "ch:zh-this-one-or-that-one",
+  "canDo": "I can ask 'this or that?', say 'not yet' and 'don't'.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C154-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Still and not yet with 还, asking which of two with 还是, offering either with huòzhě, and don't with bié, built on one new written character: 还.",
+    "assesses": [
+      "ZH-LEX-C154-HAI-01",
+      "ZH-SCRIPT-HAI-STILL-01",
+      "ZH-LEX-C154-HAISHI-01",
+      "ZH-LEX-C154-HUOZHE-01",
+      "ZH-LEX-C154-BIE-01",
+      "ZH-PERFORMANCE-OR-01"
+    ]
+  }
+}

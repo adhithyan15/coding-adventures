@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C220-chuhan",
+  "pathSegment": "ZH-PATH-220-FIT220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-220-FIT220",
+      "order": 2
+    }
+  ]
+}

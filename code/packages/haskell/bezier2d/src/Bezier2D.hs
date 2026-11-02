@@ -2,6 +2,7 @@
 module Bezier2D
     ( QuadraticBezier (..)
     , CubicBezier (..)
+    , FlatteningError (..)
     , evaluateQuadratic
     , derivativeQuadratic
     , splitQuadratic
@@ -17,6 +18,20 @@ module Bezier2D
 
 import Point2D (Point (..), Rect (..))
 import qualified Point2D
+
+-- | Deterministic failures from the bounded G2D02 flattening contract.
+data FlatteningError
+    = InvalidTolerance
+    | NonFiniteControlPoint
+    | NonFiniteGeometry
+    | FlatteningBudgetExceeded
+    deriving (Eq, Show)
+
+maxFlatteningDepth :: Int
+maxFlatteningDepth = 32
+
+maxFlatteningSubdivisions :: Int
+maxFlatteningSubdivisions = 65535
 
 -- | A quadratic Bezier with two on-curve endpoints and one control point.
 data QuadraticBezier = QuadraticBezier
@@ -61,18 +76,33 @@ splitQuadratic curve amount =
     secondLevel = Point2D.lerp (quadraticP1 curve) (quadraticP2 curve) amount
     midpoint = Point2D.lerp firstLevel secondLevel amount
 
--- | Adaptively flatten a quadratic curve using the G2D02 midpoint criterion.
-toPolylineQuadratic :: QuadraticBezier -> Double -> [Point]
-toPolylineQuadratic curve tolerance
-    | midpointError <= tolerance = [quadraticP0 curve, quadraticP2 curve]
-    | otherwise = leftPoints ++ drop 1 rightPoints
+-- | Flatten a quadratic with conservative finite-segment error measurement.
+--
+-- The work list makes both safety budgets explicit. A 'Left' never exposes the
+-- internally accumulated prefix, so callers cannot mistake a partial curve for
+-- a complete approximation.
+toPolylineQuadratic :: QuadraticBezier -> Double -> Either FlatteningError [Point]
+toPolylineQuadratic curve tolerance = do
+    validateFlatteningInputs tolerance
+        [quadraticP0 curve, quadraticP1 curve, quadraticP2 curve]
+    go [(curve, 0)] 0 [quadraticP0 curve]
   where
-    chordMidpoint = Point2D.lerp (quadraticP0 curve) (quadraticP2 curve) 0.5
-    curveMidpoint = evaluateQuadratic curve 0.5
-    midpointError = Point2D.distance chordMidpoint curveMidpoint
-    (left, right) = splitQuadratic curve 0.5
-    leftPoints = toPolylineQuadratic left tolerance
-    rightPoints = toPolylineQuadratic right tolerance
+    go [] _ pointsReversed = Right (reverse pointsReversed)
+    go ((current, depth) : pending) subdivisions pointsReversed = do
+        errorBound <- distanceToSegment
+            (quadraticP1 current)
+            (quadraticP0 current)
+            (quadraticP2 current)
+        if errorBound <= tolerance
+            then go pending subdivisions (quadraticP2 current : pointsReversed)
+            else if depth >= maxFlatteningDepth || subdivisions >= maxFlatteningSubdivisions
+                then Left FlatteningBudgetExceeded
+                else
+                    let (left, right) = splitQuadratic current 0.5
+                    in go
+                        ((left, depth + 1) : (right, depth + 1) : pending)
+                        (subdivisions + 1)
+                        pointsReversed
 
 -- | Compute the tight axis-aligned bounds of a quadratic curve.
 boundingBoxQuadratic :: QuadraticBezier -> Rect
@@ -138,18 +168,33 @@ splitCubic curve amount =
     secondRight = Point2D.lerp firstMiddle firstRight amount
     midpoint = Point2D.lerp secondLeft secondRight amount
 
--- | Adaptively flatten a cubic curve using the G2D02 midpoint criterion.
-toPolylineCubic :: CubicBezier -> Double -> [Point]
-toPolylineCubic curve tolerance
-    | midpointError <= tolerance = [cubicP0 curve, cubicP3 curve]
-    | otherwise = leftPoints ++ drop 1 rightPoints
+-- | Flatten a cubic under the same conservative and bounded contract.
+toPolylineCubic :: CubicBezier -> Double -> Either FlatteningError [Point]
+toPolylineCubic curve tolerance = do
+    validateFlatteningInputs tolerance
+        [cubicP0 curve, cubicP1 curve, cubicP2 curve, cubicP3 curve]
+    go [(curve, 0)] 0 [cubicP0 curve]
   where
-    chordMidpoint = Point2D.lerp (cubicP0 curve) (cubicP3 curve) 0.5
-    curveMidpoint = evaluateCubic curve 0.5
-    midpointError = Point2D.distance chordMidpoint curveMidpoint
-    (left, right) = splitCubic curve 0.5
-    leftPoints = toPolylineCubic left tolerance
-    rightPoints = toPolylineCubic right tolerance
+    go [] _ pointsReversed = Right (reverse pointsReversed)
+    go ((current, depth) : pending) subdivisions pointsReversed = do
+        firstError <- distanceToSegment
+            (cubicP1 current)
+            (cubicP0 current)
+            (cubicP3 current)
+        secondError <- distanceToSegment
+            (cubicP2 current)
+            (cubicP0 current)
+            (cubicP3 current)
+        if max firstError secondError <= tolerance
+            then go pending subdivisions (cubicP3 current : pointsReversed)
+            else if depth >= maxFlatteningDepth || subdivisions >= maxFlatteningSubdivisions
+                then Left FlatteningBudgetExceeded
+                else
+                    let (left, right) = splitCubic current 0.5
+                    in go
+                        ((left, depth + 1) : (right, depth + 1) : pending)
+                        (subdivisions + 1)
+                        pointsReversed
 
 -- | Compute the tight axis-aligned bounds of a cubic curve.
 boundingBoxCubic :: CubicBezier -> Rect
@@ -212,6 +257,60 @@ boundsOfPoints points = Rect minimumX minimumY (maximumX - minimumX) (maximumY -
 maybeToList :: Maybe value -> [value]
 maybeToList Nothing = []
 maybeToList (Just value) = [value]
+
+validateFlatteningInputs :: Double -> [Point] -> Either FlatteningError ()
+validateFlatteningInputs tolerance points
+    | not (isFinite tolerance) || tolerance <= 0.0 = Left InvalidTolerance
+    | all pointIsFinite points = Right ()
+    | otherwise = Left NonFiniteControlPoint
+
+pointIsFinite :: Point -> Bool
+pointIsFinite point = isFinite (pointX point) && isFinite (pointY point)
+
+isFinite :: Double -> Bool
+isFinite value = not (isNaN value || isInfinite value)
+
+-- | Measure a point against the finite segment, not its infinite support line.
+-- Scaling first keeps the square root stable for very large or tiny values;
+-- every derived value is checked so finite inputs cannot silently create NaN.
+distanceToSegment :: Point -> Point -> Point -> Either FlatteningError Double
+distanceToSegment point start end = do
+    deltaX <- finiteValue (pointX end - pointX start)
+    deltaY <- finiteValue (pointY end - pointY start)
+    let scale = max (abs deltaX) (abs deltaY)
+    if scale == 0.0
+        then stableDistance point start
+        else do
+            let normalizedX = deltaX / scale
+                normalizedY = deltaY / scale
+            lengthSquared <- finiteValue
+                (normalizedX * normalizedX + normalizedY * normalizedY)
+            offsetX <- finiteValue (pointX point - pointX start)
+            offsetY <- finiteValue (pointY point - pointY start)
+            normalizedOffsetX <- finiteValue (offsetX / scale)
+            normalizedOffsetY <- finiteValue (offsetY / scale)
+            projection <- finiteValue
+                ((normalizedOffsetX * normalizedX + normalizedOffsetY * normalizedY)
+                    / lengthSquared)
+            let boundedProjection = max 0.0 (min 1.0 projection)
+            nearestX <- finiteValue (pointX start + boundedProjection * deltaX)
+            nearestY <- finiteValue (pointY start + boundedProjection * deltaY)
+            stableDistance point (Point nearestX nearestY)
+
+stableDistance :: Point -> Point -> Either FlatteningError Double
+stableDistance left right = do
+    deltaX <- finiteValue (pointX left - pointX right)
+    deltaY <- finiteValue (pointY left - pointY right)
+    let scale = max (abs deltaX) (abs deltaY)
+    if scale == 0.0
+        then Right 0.0
+        else finiteValue
+            (scale * sqrt ((deltaX / scale) ^ (2 :: Int) + (deltaY / scale) ^ (2 :: Int)))
+
+finiteValue :: Double -> Either FlatteningError Double
+finiteValue value
+    | isFinite value = Right value
+    | otherwise = Left NonFiniteGeometry
 
 epsilon :: Double
 epsilon = 1e-12

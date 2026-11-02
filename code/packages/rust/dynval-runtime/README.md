@@ -11,7 +11,7 @@
 | [`intern`](src/intern.rs) | Process-global symbol intern table with `intern(name)` / `name_of(id)` |
 | [`builtins`](src/builtins.rs) | TW00 builtin handlers: `+ - * / = < >`, `cons car cdr`, `null? pair? number? symbol?`, `print`; **LANG47** string builtins: `string?`, `string-length`, `string-ref`, `substring`, `string-append`, `make-string`, `string=?`, `string<?`, `string>?`, `number->string`, `string->number`, `string->symbol`, `symbol->string`, and all `char-*` predicates/converters |
 | [`binding`](src/binding.rs) | `LispyBinding` — full `LangBinding` impl + `LispyClass` + `LispyICEntry` |
-| [`abi`](src/abi.rs) | `extern "C"` surface: `lispy_cons`, `lispy_car`, `lispy_cdr`, `lispy_make_symbol`, `lispy_make_closure`, `lispy_apply_closure`, `lispy_closure_capture_count` |
+| [`abi`](src/abi.rs) | `extern "C"` surface: `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_symbol` (the LANG83 PR7f registry names; `lispy_cons` … before DVAL01, `dyn_cons` … before PR7f), plus the closure entry points |
 
 ## Tag scheme (`LispyValue`)
 
@@ -89,7 +89,7 @@ cargo test -p dynval-runtime
 - Symbol interning idempotency
 - Every builtin's success and error paths
 - The full `LangBinding` trait surface (type_tag, class_of, equal/identical, hash, trace, materialize/box round-trips)
-- C ABI symbols (`lispy_cons` round-trip, `lispy_make_symbol` interning, `lispy_make_closure` capture recording)
+- C ABI symbols (`dyn_pair_new` round-trip, `dyn_symbol` interning, closure capture recording)
 
 Coverage is comprehensive but does NOT include panic-across-FFI tests — `extern "C"` panics are undefined behavior, so the panic paths are tested via the underlying Rust API instead.
 

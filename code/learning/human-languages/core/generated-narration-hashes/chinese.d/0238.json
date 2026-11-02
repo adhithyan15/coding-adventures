@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:674394784b795a0e",
+  "lessonIds": [
+    "ZH-C238-tiankong",
+    "ZH-C238-yueliang",
+    "ZH-C238-wuyun",
+    "ZH-C238-dahai",
+    "ZH-C238-caihong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch238.txt",
+  "json": "chinese/narration/ch238.json",
+  "textHash": "fnv1a64:a8a298787be3fb33",
+  "jsonHash": "fnv1a64:e93ba2e910a2ce97",
+  "findings": []
+}

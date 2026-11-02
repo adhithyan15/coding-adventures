@@ -26,6 +26,44 @@
 //! Name resolution at any point walks these in order:
 //! locals (innermost-first) → params → captures → module globals →
 //! module function names → builtins → unresolved (lowering error).
+//!
+//! That is TW00's "lexical scope wins" rule — lexical bindings, then the
+//! program's top-level definitions, then builtins — and it holds in
+//! **call position too**.  `(car p)` asks the same question as `car`:
+//! which binding does this name mean here?  Only the *node* differs
+//! (`IndirectCall` for a local or a value define, `DirectCall` for a
+//! function define, `BuiltinCall` for a builtin); see `lower_apply`.
+//! Before issue #18456 call position asked the builtin table first, so a
+//! user's `(define (car p) …)` never ran.
+//!
+//! ## Closures are strict
+//!
+//! Every closure this frontend builds — an inline `(lambda …)` and a
+//! top-level function used as a value — is emitted as
+//!
+//! ```text
+//! BuiltinCall("lambda", [MakeClosure { fn_name, captures }])
+//! ```
+//!
+//! not as a bare `MakeClosure`.  SIR10 ("Strict closures") reads the bare
+//! form as a proc-lenient Ruby block (extra arguments dropped, missing ones
+//! `nil`) and the wrapped form as a lambda that checks its argument count
+//! when called.  Twig has no blocks, so `((lambda (x y) …) 4)` is an arity
+//! error on every backend (issue #18461) instead of `4` on one, `NaN` on
+//! another and an index panic on a third.
+//!
+//! ## Names the compiler owns
+//!
+//! The synthesised entry points `main` and `_init`, and the gensym'd
+//! `__lambda_<n>` closure bodies, live in the same function namespace as
+//! the user's definitions.  So a user may not bind any of them — by
+//! `define`, as a parameter, or with `let` / `let*` (a positioned error) —
+//! and every *reference* to one, called or not, is an unresolved name
+//! rather than a reach into generated code.  Before #18461,
+//! `(define main 5) (main)` made the generated `main` call itself forever;
+//! and naming a closure body (`(define g __lambda_0)`) built a closure
+//! missing the body's captures, which the C backend read through a NULL
+//! pointer (security review of the first fix, F1).
 
 use std::collections::HashSet;
 
@@ -82,8 +120,10 @@ const FILE: &str = "<twig>";
 
 struct Lowerer {
     module_name: String,
-    /// Top-level function names declared in this module (including
-    /// synthesised lambdas, `_init`, and `main`).
+    /// Top-level function names a Twig name can resolve to: the user's
+    /// function defines, and nothing else.  The generated `main`, `_init`
+    /// and `__lambda_<n>` bodies are deliberately absent — user code can
+    /// neither call nor name them (see "Names the compiler owns" above).
     function_names: HashSet<String>,
     /// Top-level value defines.
     global_names: HashSet<String>,
@@ -141,11 +181,13 @@ impl Lowerer {
             }
         }
 
-        // 2. First pass: collect names.  Function names include
-        //    user-declared functions plus the synthesised `_init` and
-        //    `main`.
+        // 2. First pass: collect names, refusing the ones the compiler
+        //    generates itself.  `main` and `_init` are NOT added to
+        //    `function_names`: they are emitted below, but no Twig name
+        //    resolves to them.
         for form in &p.forms {
             if let Form::Define(def) = form {
+                check_binding_name(&def.name, def.line, def.column)?;
                 if let TExpr::Lambda(_) = &def.expr {
                     self.function_names.insert(def.name.clone());
                 } else {
@@ -153,8 +195,6 @@ impl Lowerer {
                 }
             }
         }
-        self.function_names.insert("_init".to_string());
-        self.function_names.insert("main".to_string());
 
         // 3. Second pass: lower each form.
         let mut user_fns: Vec<Function> = Vec::new();
@@ -346,6 +386,9 @@ impl Lowerer {
         //    typos at lowering time, not just at runtime).
         // 2. Surface a clear error message at lowering time when a
         //    name escapes.
+        for p in &lam.params {
+            check_binding_name(p, lam.line, lam.column)?;
+        }
         let mut ctx = FunctionCtx::new(
             lam.params.clone(),
             HashSet::new(), // no captures at top level
@@ -396,10 +439,25 @@ impl Lowerer {
         Ok(Block { stmts, value, span })
     }
 
+    /// A fresh `__lambda_<n>` name for a closure body.
+    ///
+    /// The name is **not** added to `function_names`.  It used to be, and
+    /// that made the gensym a name user code could write: security review
+    /// of the #18461 fix (F1) found that
+    ///
+    /// ```scheme
+    /// (define (adder n) (lambda (x) (+ x n)))
+    /// (define g __lambda_0)      ; a closure over adder's lambda, 0 captures
+    /// (print (g 5))              ; C: the body reads caps[0] through NULL
+    /// ```
+    ///
+    /// built a closure with no capture values for a body that expects one,
+    /// and `(__lambda_0 5)` was a `DirectCall` passing `5` into the capture
+    /// slot.  The synthesised function lives only in `self.synthesised`;
+    /// its one legitimate reference is the `MakeClosure` built beside it.
     fn fresh_lambda_name(&mut self) -> String {
         let name = format!("__lambda_{}", self.lambda_counter);
         self.lambda_counter += 1;
-        self.function_names.insert(name.clone());
         name
     }
 
@@ -500,6 +558,9 @@ impl Lowerer {
                 column,
             });
         }
+        for (name, _) in bindings {
+            check_binding_name(name, line, column)?;
+        }
         let span = self.span_at(line, column);
 
         // Lower the RHS expressions.  For `let`, all RHS use the
@@ -583,6 +644,9 @@ impl Lowerer {
         lam: &TLambda,
         ctx: &mut FunctionCtx,
     ) -> Result<Expr, TwigLowerError> {
+        for p in &lam.params {
+            check_binding_name(p, lam.line, lam.column)?;
+        }
         self.observed.add(Feature::Closures);
         let span = self.span_at(lam.line, lam.column);
         // 1. Free-variable analysis.
@@ -603,10 +667,7 @@ impl Lowerer {
         let mut captures: Vec<String> = Vec::new();
         let mut capture_values: Vec<Expr> = Vec::new();
         for name in free {
-            if ctx.locals.iter().any(|n| n == &name)
-                || ctx.params.contains(&name)
-                || ctx.captures.contains(&name)
-            {
+            if ctx.is_lexical(&name) {
                 let v = self.resolve_varref(&name, ctx, &span)?;
                 captures.push(name.clone());
                 capture_values.push(v);
@@ -645,16 +706,14 @@ impl Lowerer {
         };
         self.synthesised.push(f);
 
-        // 4. Emit MakeClosure at the source position.
-        Ok(Expr::MakeClosure {
-            fn_name,
-            captures: captures
-                .into_iter()
-                .zip(capture_values)
-                .map(|(name, value)| CaptureValue { name, value })
-                .collect(),
-            span,
-        })
+        // 4. Emit the closure at the source position — strict, like every
+        //    Twig closure (see "Closures are strict" above).
+        let captures = captures
+            .into_iter()
+            .zip(capture_values)
+            .map(|(name, value)| CaptureValue { name, value })
+            .collect();
+        Ok(strict_closure(fn_name, captures, span))
     }
 
     fn lower_apply(
@@ -673,8 +732,83 @@ impl Lowerer {
             lowered_args.push(self.lower_expr(a, ctx)?);
         }
 
-        // Three cases for the function position:
+        // A named function position resolves in TW00's order — the same
+        // order `resolve_varref` uses for a name in value position:
+        //
+        // ```text
+        // row  the name is bound by…                    (name args…) lowers to
+        // 1    param / let / let* / lambda param /       IndirectCall on the local
+        //      capture (innermost first)
+        // 2    a top-level function define               DirectCall name
+        // 3    a top-level value define                  IndirectCall on the Global
+        // 4    the builtin table                         BuiltinCall name
+        // -    nothing                                   "unresolved name" error
+        // ```
+        //
+        // The first row that knows the name wins, so a definition always
+        // hides a builtin of the same name, and a local hides both:
+        //
+        // ```scheme
+        // (define (car p) 42)
+        // (car (cons 1 2))            ; row 2: DirectCall car    → 42
+        // (define (f car) (car 1))    ; row 1: IndirectCall param → f's argument
+        // (cdr (cons 1 2))            ; row 4: BuiltinCall cdr   → 2
+        // ```
+        //
+        // Issue #18456: this used to check row 4 first, then row 2, and only
+        // then rows 1 and 3 — so `(car (cons 1 2))` above called the builtin
+        // and returned 1, and a parameter named like a top-level function
+        // called the function instead of the argument.
+        //
+        // Special forms (`if`, `let`, `let*`, `lambda`, `begin`, `quote`,
+        // `match`) never reach this point: the parser has already turned
+        // them into their own AST nodes, so they stay syntax whatever the
+        // program defines.
         if let TExpr::VarRef(VarRef { name, .. }) = fn_expr {
+            // A compiler-owned name (`main`, `_init`, `__lambda_<n>`) is
+            // bound by no row: it cannot be defined or bound locally, and
+            // the generated functions are not callable from Twig.
+            if is_reserved_name(name) {
+                return Err(unresolved(name, &span));
+            }
+            // Row 1 — lexical.  The callee is whatever value the local
+            // holds, known only at run time.
+            if ctx.is_lexical(name) {
+                self.observed.add(Feature::Closures);
+                let target = self.resolve_varref(name, ctx, &span)?;
+                return Ok(Expr::IndirectCall {
+                    target: Box::new(target),
+                    args: lowered_args,
+                    effects: EffectSet::PURE,
+                    span,
+                });
+            }
+            // Row 2 — a top-level function: its name is a static target.
+            if self.function_names.contains(name) {
+                return Ok(Expr::DirectCall {
+                    fn_name: name.clone(),
+                    args: lowered_args,
+                    effects: EffectSet::PURE,
+                    span,
+                });
+            }
+            // Row 3 — a top-level value: call the closure the global holds.
+            // `(define car 5) (car p)` therefore calls 5 — a run-time
+            // "not a closure" error, as in Scheme — instead of quietly
+            // calling the builtin `car`.
+            if ctx.global_names.contains(name) {
+                self.observed.add(Feature::Closures);
+                let target = self.resolve_varref(name, ctx, &span)?;
+                return Ok(Expr::IndirectCall {
+                    target: Box::new(target),
+                    args: lowered_args,
+                    effects: EffectSet::PURE,
+                    span,
+                });
+            }
+
+            // Row 4 — builtins.  Only a name nothing above binds gets here.
+            //
             // SIR28 §2: `print(x)` lowers to `__sys_write__`, not a bare
             // `BuiltinCall("print", ...)`. `terminator: "none"` (write the
             // value with no added newline, no added separator) matches
@@ -698,6 +832,7 @@ impl Lowerer {
                 });
             }
             if builtins::is_builtin(name) {
+                self.note_builtin_use(name);
                 return Ok(Expr::BuiltinCall {
                     name: name.clone(),
                     args: lowered_args,
@@ -705,25 +840,8 @@ impl Lowerer {
                     span,
                 });
             }
-            if self.function_names.contains(name) {
-                return Ok(Expr::DirectCall {
-                    fn_name: name.clone(),
-                    args: lowered_args,
-                    effects: EffectSet::PURE,
-                    span,
-                });
-            }
-            // Otherwise the name must resolve to a *value* (local /
-            // param / capture / global) — emit IndirectCall on that
-            // value.
-            self.observed.add(Feature::Closures);
-            let target = self.resolve_varref(name, ctx, &span)?;
-            return Ok(Expr::IndirectCall {
-                target: Box::new(target),
-                args: lowered_args,
-                effects: EffectSet::PURE,
-                span,
-            });
+            // Bound nowhere.
+            return Err(unresolved(name, &span));
         }
 
         // The function position is an arbitrary expression.  Lower
@@ -748,6 +866,10 @@ impl Lowerer {
         ctx: &FunctionCtx,
         span: &Span,
     ) -> Result<Expr, TwigLowerError> {
+        // A compiler-owned name resolves to nothing (see `lower_apply`).
+        if is_reserved_name(name) {
+            return Err(unresolved(name, span));
+        }
         // Local (innermost-first).  We iterate in reverse so inner
         // shadowing wins.
         if ctx.locals.iter().rev().any(|n| n == name) {
@@ -773,27 +895,41 @@ impl Lowerer {
                 span: span.clone(),
             });
         }
-        // Global (value-define or top-level function name).
-        if ctx.global_names.contains(name) || ctx.function_names.contains(name) {
+        // Global — a top-level value define, held in the globals store.
+        if ctx.global_names.contains(name) {
             return Ok(Expr::VarRef {
                 name: name.to_string(),
                 scope: Scope::Global,
                 span: span.clone(),
             });
         }
+        // A top-level function used as a value: `g` in `(define g h)`, or
+        // `h` in `(app h 5)`.  Functions are not stored in the globals
+        // table — they are code, not data — so a `VarRef Global` here read
+        // an empty slot (issue #18461: "non-closure" on C and JS).  A
+        // reference to a function is instead a closure over it, with
+        // nothing to capture because a top-level function sees only
+        // globals, functions and builtins:
+        //
+        // ```text
+        // (define (h x) (* x 3))
+        // (define g h)      ;  g = BuiltinCall("lambda", [MakeClosure h []])
+        // (g 4)             ;  IndirectCall g [4]  →  h(4)  →  12
+        // ```
+        if ctx.function_names.contains(name) {
+            self.observed.add(Feature::Closures);
+            return Ok(strict_closure(name.to_string(), Vec::new(), span.clone()));
+        }
         // Builtin.
         if builtins::is_builtin(name) {
+            self.note_builtin_use(name);
             return Ok(Expr::VarRef {
                 name: name.to_string(),
                 scope: Scope::Builtin,
                 span: span.clone(),
             });
         }
-        Err(TwigLowerError {
-            message: format!("unresolved name `{}`", name),
-            line: span.start_line,
-            column: span.start_col,
-        })
+        Err(unresolved(name, span))
     }
 
     // -------------------------------------------------------------------
@@ -802,6 +938,81 @@ impl Lowerer {
 
     fn span_at(&self, line: usize, column: usize) -> Span {
         Span::point(FILE, line, column)
+    }
+
+    /// Record the manifest feature a builtin's use implies.
+    ///
+    /// SIR11's manifest rules tie `Feature::Pairs` to the four pair
+    /// builtins.  Issue #18460: this frontend emitted them without ever
+    /// declaring the feature, so the validator — and with it every
+    /// validating backend — refused any Twig program that built a list.
+    /// A builtin used as a *value* (`(define first car)`) counts too: the
+    /// backend materialises it as a closure over the same runtime helper.
+    fn note_builtin_use(&mut self, name: &str) {
+        if matches!(name, "cons" | "car" | "cdr" | "pair?") {
+            self.observed.add(Feature::Pairs);
+        }
+    }
+}
+
+/// `BuiltinCall("lambda", [MakeClosure { fn_name, captures }])` — a closure
+/// that checks its argument count when called.  See "Closures are strict" in
+/// the module docs and SIR10's "Strict closures".
+fn strict_closure(fn_name: String, captures: Vec<CaptureValue>, span: Span) -> Expr {
+    Expr::BuiltinCall {
+        name: "lambda".into(),
+        args: vec![Expr::MakeClosure { fn_name, captures, span: span.clone() }],
+        effects: EffectSet::PURE.with(Effect::MayAllocate),
+        span,
+    }
+}
+
+/// Refuse a binding of a reserved name — by a top-level `define`, a
+/// function or lambda parameter, or a `let` / `let*` — at `line:column`.
+///
+/// A reserved name never resolves (see `resolve_varref`), so such a binding
+/// could not be read anyway; and the backends name their entry points and
+/// closure bodies after exactly these names, so a parameter called
+/// `__lambda_0` collided with the function of that name in the emitted JS,
+/// Python and Go (security review of the #18461 fix, F1).
+fn check_binding_name(name: &str, line: usize, column: usize) -> Result<(), TwigLowerError> {
+    if !is_reserved_name(name) {
+        return Ok(());
+    }
+    Err(TwigLowerError {
+        message: format!(
+            "`{name}` is reserved: the compiler generates a function with that \
+             name (the program entry `main`, the value initialiser `_init`, or a \
+             `__lambda_<n>` closure body)"
+        ),
+        line,
+        column,
+    })
+}
+
+/// `true` for a name only the compiler may define: the generated entry
+/// points and the `__lambda_<digits>` closure-body gensyms.
+///
+/// ```text
+/// main  _init  __lambda_0  __lambda_17      reserved
+/// main2  _init_count  __lambda_x  my-main    ordinary names
+/// ```
+fn is_reserved_name(name: &str) -> bool {
+    if name == "main" || name == "_init" {
+        return true;
+    }
+    name.strip_prefix("__lambda_")
+        .is_some_and(|n| !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()))
+}
+
+/// The error for a name that no scope, definition or builtin binds —
+/// shared by value position ([`Lowerer::resolve_varref`]) and call
+/// position ([`Lowerer::lower_apply`]) so both report it identically.
+fn unresolved(name: &str, span: &Span) -> TwigLowerError {
+    TwigLowerError {
+        message: format!("unresolved name `{}`", name),
+        line: span.start_line,
+        column: span.start_col,
     }
 }
 
@@ -846,6 +1057,16 @@ impl FunctionCtx {
         function_names: HashSet<String>,
     ) -> Self {
         Self::new(vec![], HashSet::new(), global_names, function_names)
+    }
+
+    /// `true` iff `name` is bound *lexically* here — by a `let`/`let*`,
+    /// a parameter, or a capture.  This is TW00's resolution row 1, which
+    /// beats every top-level definition and every builtin, in call
+    /// position as in value position.
+    fn is_lexical(&self, name: &str) -> bool {
+        self.locals.iter().any(|n| n == name)
+            || self.params.contains(name)
+            || self.captures.contains(name)
     }
 
     fn push_local(&mut self, name: String) {

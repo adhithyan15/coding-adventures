@@ -1,0 +1,17 @@
+[package]
+name = "x509-rsa-constructed-path-signature-routing"
+version = "0.1.0"
+edition = "2021"
+description = "Bind data-driven RSA verification to exact constructed X.509 path adjacencies"
+
+[dependencies]
+rsa-public-operation = { path = "../rsa-public-operation" }
+x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-rsa-algorithm-policy = { path = "../x509-rsa-algorithm-policy" }
+x509-rsa-signature-routing = { path = "../x509-rsa-signature-routing" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }

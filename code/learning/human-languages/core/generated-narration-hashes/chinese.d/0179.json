@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:1f498b5405d70512",
+  "lessonIds": [
+    "ZH-C179-xiyiji",
+    "ZH-C179-xiyifen",
+    "ZH-C179-liang",
+    "ZH-C179-yun",
+    "ZH-C179-yigui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch179.txt",
+  "json": "chinese/narration/ch179.json",
+  "textHash": "fnv1a64:e04fd1fe0986842f",
+  "jsonHash": "fnv1a64:543fadedf8e47744",
+  "findings": []
+}

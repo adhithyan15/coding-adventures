@@ -48,7 +48,7 @@
 //! `VarRef("x")` hits the scope stack first → `Any`.
 //! `VarRef("f")` misses the scope stack, falls to globals → `Function{1}`.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use lang_refined_types::RefinedType;
 use twig_parser::TypeExpr;
@@ -109,7 +109,54 @@ pub struct TypeEnv {
     ///
     /// Populated by `register_fn_refinements` during Pass 1.
     pub fn_param_refinements: HashMap<String, Vec<Option<RefinedType>>>,
+
+    /// Every name the program itself defines at the top level (#18438):
+    /// `(define …)`, record / union constructors, predicates and accessors,
+    /// and definitions imported from other modules.
+    ///
+    /// `globals` cannot answer "is `<` still the builtin?" on its own — a
+    /// builtin and a user value both have kind `Any`.  This set can, and
+    /// [`TypeEnv::resolves_to_builtin`] reads it.
+    user_defined: HashSet<String>,
 }
+
+/// Every Twig runtime builtin, as registered by [`TypeEnv::new`].
+///
+/// - All names from the `BUILTINS` const in `twig-ir-compiler`
+///   (arithmetic, comparisons, cons-cells, predicates, list ops, symbol
+///   utilities, string/char ops, I/O, higher-order ops).
+/// - `and` and `or` — special forms in the IR compiler (`compile_apply`)
+///   but parsed as regular `Apply` nodes by `twig-parser`.  Without them the
+///   type-checker would emit "unresolved variable `and`".
+const BUILTIN_NAMES: &[&str] = &[
+    // ── Arithmetic / comparison (TW00 core + LANG52) ────────────────
+    "+", "-", "*", "/", "=", "<", ">", "<=", ">=",
+    "modulo", "remainder", "quotient",
+    // ── Cons cells ──────────────────────────────────────────────────
+    "cons", "car", "cdr",
+    // ── Predicates ──────────────────────────────────────────────────
+    "null?", "pair?", "number?", "symbol?", "not", "boolean?",
+    "equal?", "list?",
+    // ── List stdlib (LANG52) ─────────────────────────────────────────
+    "list", "length", "append", "reverse", "list-ref", "assoc",
+    // ── Symbol utilities ────────────────────────────────────────────
+    "symbol-append",
+    // ── Conversions ─────────────────────────────────────────────────
+    "number->string", "string->symbol", "symbol->string",
+    // ── String and char operations (LANG58) ─────────────────────────
+    "string-length", "string-ref", "substring", "string-append",
+    "string->number", "string=?", "string<?", "string>?",
+    "char->integer", "integer->char",
+    "char-alphabetic?", "char-numeric?", "char-whitespace?",
+    // ── I/O ─────────────────────────────────────────────────────────
+    "print",
+    // ── Host I/O (LANG52) ───────────────────────────────────────────
+    "host/write_string", "host/read_line", "host/read_file",
+    // ── Higher-order list operations (LANG55) ───────────────────────
+    "map", "filter", "fold-left", "fold-right",
+    // ── Special forms that parse as regular calls (LANG52) ───────────
+    "and", "or",
+];
 
 impl TypeEnv {
     /// Construct a `TypeEnv` pre-populated with all Twig runtime builtins.
@@ -134,12 +181,8 @@ impl TypeEnv {
     ///
     /// ## Included names
     ///
-    /// - All 43 names from the `BUILTINS` const in `twig-ir-compiler`
-    ///   (arithmetic, comparisons, cons-cells, predicates, list ops, symbol
-    ///   utilities, string/char ops, I/O, higher-order ops).
-    /// - `and` and `or` — special-cased in the IR compiler (`compile_apply`)
-    ///   but parsed as regular `Apply` nodes by `twig-parser`.  Without this
-    ///   registration the type-checker emits "unresolved variable `and`".
+    /// Every name in [`BUILTIN_NAMES`].  A user definition of the same name
+    /// overwrites the entry and shadows the builtin (#18438).
     ///
     /// ## Not included
     ///
@@ -149,39 +192,7 @@ impl TypeEnv {
     /// - Import-supplied names — the module driver is responsible for passing
     ///   exported names from imported modules (multi-module strict mode TW05-P).
     fn register_builtins(&mut self) {
-        let names: &[&str] = &[
-            // ── Arithmetic / comparison (TW00 core + LANG52) ────────────────
-            "+", "-", "*", "/", "=", "<", ">", "<=", ">=",
-            "modulo", "remainder", "quotient",
-            // ── Cons cells ──────────────────────────────────────────────────
-            "cons", "car", "cdr",
-            // ── Predicates ──────────────────────────────────────────────────
-            "null?", "pair?", "number?", "symbol?", "not", "boolean?",
-            "equal?", "list?",
-            // ── List stdlib (LANG52) ─────────────────────────────────────────
-            "list", "length", "append", "reverse", "list-ref", "assoc",
-            // ── Symbol utilities ────────────────────────────────────────────
-            "symbol-append",
-            // ── Conversions ─────────────────────────────────────────────────
-            "number->string", "string->symbol", "symbol->string",
-            // ── String and char operations (LANG58) ─────────────────────────
-            "string-length", "string-ref", "substring", "string-append",
-            "string->number", "string=?", "string<?", "string>?",
-            "char->integer", "integer->char",
-            "char-alphabetic?", "char-numeric?", "char-whitespace?",
-            // ── I/O ─────────────────────────────────────────────────────────
-            "print",
-            // ── Host I/O (LANG52) ───────────────────────────────────────────
-            "host/write_string", "host/read_line", "host/read_file",
-            // ── Higher-order list operations (LANG55) ───────────────────────
-            "map", "filter", "fold-left", "fold-right",
-            // ── Special forms that parse as regular calls (LANG52) ───────────
-            // `and` and `or` are handled in the IR compiler via compile_apply,
-            // not listed in BUILTINS, but look like function calls to the type
-            // checker.
-            "and", "or",
-        ];
-        for &name in names {
+        for &name in BUILTIN_NAMES {
             self.globals.insert(name.to_owned(), TwigKind::Any);
         }
     }
@@ -218,8 +229,7 @@ impl TypeEnv {
         let field_names: Vec<String> = r.fields.iter().map(|f| f.name.clone()).collect();
         self.records.insert(r.name.clone(), field_names);
         // Constructor: stored as Record kind so type_expr_to_kind can map back.
-        self.globals
-            .insert(r.name.clone(), TwigKind::Record(r.name.clone()));
+        self.define_global(r.name.clone(), TwigKind::Record(r.name.clone()));
 
         // ── Generated symbols (TW05-P Part 1 / LANG70) ──────────────────────
         //
@@ -229,12 +239,10 @@ impl TypeEnv {
         // record accessors / predicates to pass in `(typed strict)` mode.
         let prefix = r.name.to_lowercase();
         // Predicate: <lower(RecordName)>?
-        self.globals
-            .insert(format!("{prefix}?"), TwigKind::Any);
+        self.define_global(format!("{prefix}?"), TwigKind::Any);
         // Field accessors: <lower(RecordName)>-<field_name>
         for f in &r.fields {
-            self.globals
-                .insert(format!("{prefix}-{}", f.name), TwigKind::Any);
+            self.define_global(format!("{prefix}-{}", f.name), TwigKind::Any);
         }
     }
 
@@ -264,13 +272,16 @@ impl TypeEnv {
     pub fn register_union(&mut self, u: &twig_parser::UnionDef) {
         let variant_names: Vec<String> = u.variants.iter().map(|v| v.name.clone()).collect();
         self.unions.insert(u.name.clone(), variant_names);
-        // Union type name itself.
+        // Union type name itself.  It is a TYPE name, not a function the IR
+        // compiler generates, so it does not shadow a builtin: after
+        // `(union not (A) (B))`, `(not …)` still runs the builtin `not` and
+        // must still narrow.  Hence `globals` only, not `define_global`.
         self.globals
             .insert(u.name.clone(), TwigKind::Union(u.name.clone()));
         // Expose each variant constructor + generated symbols.
         for v in &u.variants {
             // Constructor: callable with arity = number of fields.
-            self.globals.insert(
+            self.define_global(
                 v.name.clone(),
                 TwigKind::Function {
                     arity: v.fields.len(),
@@ -280,23 +291,48 @@ impl TypeEnv {
             //
             // Variant predicate: <VariantName>?  (original case, not lowercased).
             // Mirrors compiler.rs line 355: format!("{}?", variant.name)
-            self.globals
-                .insert(format!("{}?", v.name), TwigKind::Any);
+            self.define_global(format!("{}?", v.name), TwigKind::Any);
             // Variant field accessors: <lower(VariantName)>-<field_name>
             // Mirrors compiler.rs lines 357-359:
             //   let vprefix = variant.name.to_lowercase();
             //   format!("{vprefix}-{}", f.name)
             let vprefix = v.name.to_lowercase();
             for f in &v.fields {
-                self.globals
-                    .insert(format!("{vprefix}-{}", f.name), TwigKind::Any);
+                self.define_global(format!("{vprefix}-{}", f.name), TwigKind::Any);
             }
         }
     }
 
     /// Bind a top-level name to a `TwigKind` in `globals`.
+    ///
+    /// The name is a user definition: if a builtin has the same name, the
+    /// definition shadows it from here on ([`Self::resolves_to_builtin`]).
     pub fn bind_global(&mut self, name: String, kind: TwigKind) {
+        self.define_global(name, kind);
+    }
+
+    fn define_global(&mut self, name: String, kind: TwigKind) {
+        self.user_defined.insert(name.clone());
         self.globals.insert(name, kind);
+    }
+
+    /// Does the top-level name `name` still mean the builtin `name`?
+    ///
+    /// True for a builtin the program has not redefined.  A top-level
+    /// `define`, a record / union name, or an imported definition of the same
+    /// name shadows the builtin everywhere, as in Scheme and as in the IR
+    /// compiler (#18438) — so code that treats a call as the builtin (guard
+    /// narrowing reads `(< x 128)` as a fact about `x`) must ask this first.
+    /// A *local* binding shadows a builtin too; that is the caller's
+    /// [`ScopeStack::is_lexically_bound`] check.
+    ///
+    /// | Program                      | `resolves_to_builtin("<")` |
+    /// |------------------------------|----------------------------|
+    /// | `(< x 128)`                  | true                       |
+    /// | `(define (< a b) #t) …`      | false                      |
+    /// | `(define < 5) …`             | false                      |
+    pub fn resolves_to_builtin(&self, name: &str) -> bool {
+        BUILTIN_NAMES.contains(&name) && !self.user_defined.contains(name)
     }
 
     /// Look up a name in `globals`.  Returns `None` if not found.
@@ -353,6 +389,11 @@ impl TypeEnv {
 pub struct ScopeStack {
     /// Stack of frames; the last element is the innermost (most recent) scope.
     frames: Vec<HashMap<String, TwigKind>>,
+    /// `narrowing[i]` is true when `frames[i]` was pushed by
+    /// [`ScopeStack::push_narrowing_frame`] — an `if` branch re-stating what a
+    /// guard proved about names that are *already* bound (locally or
+    /// globally), not a new binding.  Kept parallel to `frames`.
+    narrowing: Vec<bool>,
 }
 
 impl ScopeStack {
@@ -367,6 +408,19 @@ impl ScopeStack {
     /// `match` arm body.
     pub fn push_frame(&mut self) {
         self.frames.push(HashMap::new());
+        self.narrowing.push(false);
+    }
+
+    /// Push a frame that only *narrows* existing names (TW05-C `if` guards).
+    ///
+    /// Lookups see its entries exactly like a lexical frame's — that is the
+    /// point of narrowing — but [`ScopeStack::is_lexically_bound`] skips it.
+    /// A guard such as `(< ascii-info 1)` may narrow a top-level name, and
+    /// the narrowed entry must not make the global look like a local that
+    /// shadows it (#18435).
+    pub fn push_narrowing_frame(&mut self) {
+        self.frames.push(HashMap::new());
+        self.narrowing.push(true);
     }
 
     /// Pop the innermost frame off the stack.
@@ -378,6 +432,7 @@ impl ScopeStack {
         self.frames
             .pop()
             .expect("ScopeStack::pop_frame called on empty stack");
+        self.narrowing.pop();
     }
 
     /// Bind `name` to `kind` in the innermost frame.
@@ -405,5 +460,21 @@ impl ScopeStack {
             }
         }
         None
+    }
+
+    /// Is `name` bound by a parameter, `let`, lambda or `match` arm — a real
+    /// lexical binding, as opposed to an `if`-guard narrowing entry?
+    ///
+    /// ```scheme
+    /// (define (g h)                 ;; lexical frame {h}
+    ///   (if (< ascii-info 1)        ;; narrowing frame {ascii-info}
+    ///     (h 1)                     ;; is_lexically_bound("h")          → true
+    ///     (ascii-info 200)))        ;; is_lexically_bound("ascii-info") → false
+    /// ```
+    pub fn is_lexically_bound(&self, name: &str) -> bool {
+        self.frames
+            .iter()
+            .zip(&self.narrowing)
+            .any(|(frame, &narrowing)| !narrowing && frame.contains_key(name))
     }
 }

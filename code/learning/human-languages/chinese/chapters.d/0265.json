@@ -1,0 +1,21 @@
+{
+  "chapter": 265,
+  "title": "Shy or Brave",
+  "label": "ch:zh-shy-or-brave",
+  "canDo": "I can say that someone is shy, brave, generous, stingy or nervous.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-R265-review-260-265",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say that someone is shy, brave, generous, stingy or nervous.",
+    "assesses": [
+      "ZH-LEX-C265-SHY265-01",
+      "ZH-LEX-C265-SHY265-02",
+      "ZH-LEX-C265-SHY265-03",
+      "ZH-LEX-C265-SHY265-04",
+      "ZH-LEX-C265-SHY265-05"
+    ]
+  }
+}

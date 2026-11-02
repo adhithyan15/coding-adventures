@@ -166,9 +166,8 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // the lisp `not` to `i32.eqz` (boolean negation), and `equal?` (McCarthy
     // `EQ` on atoms) to unbox-both-and-`i32.eq`. `ATOM x` = `not(pair? x)`.
     // `write_i64` (LANG83 PR1b) lowers to `env.__write_i64(i64)`: decimal, no newline.
-    // `write_f64_py` / `write_f64_js` (LANG83 PR6a) call the in-module
-    // `$__iir_write_f64`, which prints through `env.putchar`.
-    &["putchar", "getchar", "print_i64", "write_i64", "write_f64_py", "write_f64_js", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
+    // (LANG83 PR6a's `write_f64_py` / `write_f64_js` were removed in PR7e.)
+    &["putchar", "getchar", "print_i64", "write_i64", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
 
 // ---------------------------------------------------------------------------
 // validate_for_wasm
@@ -277,7 +276,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // `env.__trap(<stable id>)`, so an unregistered kind has no id.
             if instr.op == "trap" {
                 let ok = matches!(instr.srcs.as_slice(),
-                    [interpreter_ir::Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k));
+                    [interpreter_ir::Operand::Str(k)] if interpreter_ir::exception_kind::is_trap_kind(k));
                 if !ok {
                     errors.push(format!(
                         "InvalidTrap: function {:?}, trap requires srcs = [Operand::Str(registered trap kind)], got {:?}",

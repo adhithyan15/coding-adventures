@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W170-bei-cup",
+  "pathSegment": "ZH-PATH-170-POT170",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-170-POT170",
+      "order": 2
+    }
+  ]
+}

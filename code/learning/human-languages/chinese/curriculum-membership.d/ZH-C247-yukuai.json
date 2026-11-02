@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C247-yukuai",
+  "pathSegment": "ZH-PATH-247-TRIP247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-247-TRIP247",
+      "order": 1
+    }
+  ]
+}

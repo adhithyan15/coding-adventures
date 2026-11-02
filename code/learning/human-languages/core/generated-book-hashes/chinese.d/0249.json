@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:92b58ebc9432d40b",
+  "lessonIds": [
+    "ZH-C249-yuxi",
+    "ZH-C249-fangxue",
+    "ZH-C249-duyin",
+    "ZH-W249-du-read",
+    "ZH-C249-chengji",
+    "ZH-C249-nuli"
+  ],
+  "tex": "chinese/book/chapters/ch249-hitting-the-books.tex"
+}

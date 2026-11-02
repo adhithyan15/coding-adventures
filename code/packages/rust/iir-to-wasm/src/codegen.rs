@@ -433,6 +433,10 @@ pub const F64_SQRT: u8 = 0x9F;
 /// conversion (LANG83 PR6c `f64_signbit`).
 pub const I64_REINTERPRET_F64: u8 = 0xBD;
 
+/// `i64.extend_i32_u` (0xAD) — zero-extend an i32 to an i64 (LANG83 PR7b
+/// `f64_class`, whose three 0/1 compares are summed as an i32).
+pub const I64_EXTEND_I32_U: u8 = 0xAD;
+
 /// `i64.trunc_f64_s` (0xB0) — truncate a double toward zero to a signed i64,
 /// **trapping** on NaN/±∞/out-of-range.
 pub const I64_TRUNC_F64_S: u8 = 0xB0;

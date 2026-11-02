@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C171-kongtiao",
+    "language": "chinese",
+    "chapter": 171,
+    "sequence": 13680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c4f411f1ce4402b"
+  },
+  "findings": []
+}

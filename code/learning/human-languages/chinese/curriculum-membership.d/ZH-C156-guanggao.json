@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C156-guanggao",
+  "pathSegment": "ZH-PATH-156-PRICES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-156-PRICES",
+      "order": 4
+    }
+  ]
+}

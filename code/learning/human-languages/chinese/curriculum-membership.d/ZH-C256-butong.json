@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C256-butong",
+  "pathSegment": "ZH-PATH-256-THINK256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-256-THINK256",
+      "order": 4
+    }
+  ]
+}

@@ -34,6 +34,7 @@ from .arithmetic import (
 from .pairs import Pair, car, cdr, cons, is_pair
 from .pairs import set_display as _set_pairs_display
 from .runtime import (
+    ArityError,
     Closure,
     LocalJumpError,
     apply,
@@ -97,6 +98,7 @@ __all__ = [
     "ge",
     # closures / globals / dispatch
     "Closure",
+    "ArityError",
     "LocalJumpError",
     "apply",
     "make_closure",

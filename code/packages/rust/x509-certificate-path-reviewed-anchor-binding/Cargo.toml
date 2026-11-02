@@ -7,6 +7,7 @@ license = "MIT"
 
 [dependencies]
 x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-webpki-root-anchor-selection = { path = "../x509-webpki-root-anchor-selection" }
 
 [dev-dependencies]

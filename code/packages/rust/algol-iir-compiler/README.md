@@ -254,6 +254,13 @@ An integer-only multiplication chain may temporarily exceed `2^53` up to
 into binary64's contiguous exact-integer range before widening. Checked
 overflow still fails closed, and real `/` may not consume an over-wide
 intermediate because its integer operand would widen before division.
+The same checked intermediate budget applies to integer-only additive
+subexpressions nested inside such a reduction, while a top-level additive
+result still has to fit the contiguous exact-integer range.
+Variable-free and tracked integer terms in that reduction are read directly as
+checked `i64` values, so odd integers above `2^53` do not round through
+binary64 before a later `div` or `mod`. Real-valued terms retain the narrower
+exact-binary64 boundary, and unreduced wide terms remain conservative.
 Independently bounded dynamic sign-rooted transforms may multiply under the
 same checked magnitude limit because every factor remains an exact integer.
 They may also add or subtract under a checked complete-sum magnitude limit,
@@ -304,6 +311,46 @@ Built-in `abs`, `sign`, and `entier` may normalize those checked variable-free
 integer reductions before they become a static offset, factor, or exponent.
 User-declared procedures with the same names retain runtime call semantics;
 dynamic inputs, zero divisors, and results beyond `2^53` remain conservative.
+Call-free integer arguments above `2^53` also stay in checked `i64` through
+those three normalizers when a following `div` or `mod` reduces the result
+before widening. Procedure-calling arguments, overflow, and unreduced wide
+results remain conservative.
+Purely nested chains of those normalizers preserve the same exact integer
+root. A user override or any other procedure call at any level keeps the
+chain outside the proof.
+Checked unary `+` and `-` may appear between those nested normalizers without
+forcing the wide root through binary64; negation overflow still fails closed.
+Checked `+`, `-`, and `*` arithmetic may also connect nested normalizers while
+every intermediate remains in `i64`. Overflow, unsupported operators, user
+overrides, other calls, and unreduced wide results remain conservative.
+Bounded nonnegative right-associative powers may connect them too. Exponents
+use the existing 4,096 cap and every powered intermediate is checked in `i64`;
+negative or oversized exponents and overflow remain conservative.
+Checked integer `div` and `mod` may connect nested normalizers too. Zero
+divisors, `i64::MIN div -1`, procedure-calling divisors, and unreduced wide
+results remain conservative.
+Conditional expressions may connect nested normalizers when their selector is
+side-effect-free and static or every branch proves the same checked integer
+result. Effectful selectors, unequal branches, procedure-calling branches, and
+unreduced wide results remain conservative.
+Canonical standard-function identities may connect those normalizers too:
+`sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and `ln(1)`. Non-identity inputs,
+user overrides, other calls, and overflowing checked arithmetic remain
+conservative.
+Exact nonnegative perfect squares may pass through `sqrt` in the same chain,
+including radicands beyond binary64's exact integer range. Negative and
+non-square radicands, user overrides, and dynamic operands remain conservative.
+An enclosing built-in `entier` may also reduce a non-square nonnegative exact
+integer `sqrt` to its mathematical floor root before widening. Negative
+radicands, shadowed built-ins, and dynamic operands remain conservative.
+A unary minus around that `sqrt` preserves the exact mathematical floor too,
+using the negated ceiling root for non-squares. Repeated unary signs are
+checked without widening; negative radicands and dynamic roots still fail
+closed.
+Checked integer additions and subtractions may translate one such square root
+before `entier`. Subtraction reverses the root sign and therefore uses the
+same ceiling-root adjustment; overflow, multiple roots, multiplication, real
+division, overrides, and dynamic roots remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.

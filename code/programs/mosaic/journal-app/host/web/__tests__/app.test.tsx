@@ -54,6 +54,17 @@ function button(label: string): HTMLButtonElement {
   return found;
 }
 
+/**
+ * A timeline entry's Open button. Each row is a mosaic-pkg-card Card with an
+ * "Open" button beside it, named "Open {title}" (the app's open-label row
+ * field), so a row is found by its accessible name rather than its text.
+ */
+function entry(title: string): HTMLButtonElement {
+  const found = container.querySelector(`button[aria-label="Open ${title}"]`) as HTMLButtonElement | null;
+  if (!found) throw new Error(`no timeline entry "${title}"`);
+  return found;
+}
+
 async function type(field: HTMLInputElement | HTMLTextAreaElement, value: string) {
   const proto = field instanceof HTMLInputElement ? HTMLInputElement.prototype : HTMLTextAreaElement.prototype;
   await act(async () => {
@@ -80,10 +91,39 @@ it("writes and saves an entry onto the timeline, and stores it", async () => {
   await mount(storage);
   await writeEntry("First light", "Written in the browser.");
   expect(container.textContent).not.toContain("No entries yet");
-  expect(button("First light")).toBeTruthy();
+  expect(entry("First light")).toBeTruthy();
   const stored = JSON.parse(storage.getItem(STATE_KEY)!);
   expect(stored.schema).toBe("journal-mosaic-app/state");
   expect(stored.text).toContain("First light");
+});
+
+it("draws each timeline entry as a Card with an Open button beside it", async () => {
+  await mount(memoryStorage());
+  await writeEntry("First light", "Walked to the lighthouse.");
+  await type(container.querySelector('input[aria-label="Tags"]') as HTMLInputElement, "travel");
+  await act(async () => button("Save").click());
+  await act(async () => button("Star").click());
+
+  const open = entry("First light");
+  // One button per row, labelled "Open" and named after the entry; it is the
+  // open entry, so it reports itself selected.
+  expect(open.textContent).toBe("Open");
+  expect(open.getAttribute("aria-pressed")).toBe("true");
+  // The Card holds the title, the excerpt and the meta (tags); the badge sits
+  // beside the button; the day is a heading above the card.
+  const row = open.parentElement!.parentElement!;
+  expect(row.textContent).toContain("First light");
+  expect(row.textContent).toContain("Walked to the lighthouse.");
+  expect(row.textContent).toContain("#travel");
+  expect(open.parentElement!.textContent).toBe("Open★");
+  expect([...container.querySelectorAll("h2")].some(h => /\d{4}$/.test(h.textContent ?? ""))).toBe(true);
+  // The card is beside the button, never inside it (EM-8).
+  expect(open.querySelector("div")).toBeNull();
+
+  await act(async () => button("New entry").click());
+  expect(entry("First light").getAttribute("aria-pressed")).toBe("false");
+  await act(async () => entry("First light").click());
+  expect((container.querySelector('input[aria-label="Title"]') as HTMLInputElement).value).toBe("First light");
 });
 
 it("restores the journal on the next visit", async () => {
@@ -93,7 +133,7 @@ it("restores the journal on the next visit", async () => {
   await act(async () => root.unmount());
   root = createRoot(container);
   await mount(storage);
-  expect(button("Kept")).toBeTruthy();
+  expect(entry("Kept")).toBeTruthy();
 });
 
 it("searches the journal, says when nothing matches, and clears back to the timeline", async () => {
@@ -105,9 +145,9 @@ it("searches the journal, says when nothing matches, and clears back to the time
   expect(search).not.toBeNull();
 
   await type(search, "harbour");
-  expect(button("Harbour walk")).toBeTruthy();
-  expect(button("Groceries")).toBeTruthy();
-  expect(() => button("Unrelated")).toThrow();
+  expect(entry("Harbour walk")).toBeTruthy();
+  expect(entry("Groceries")).toBeTruthy();
+  expect(() => entry("Unrelated")).toThrow();
   // Ranked results carry no day headings; each hit shows its day instead.
   expect(container.textContent).toContain("Fog over the water.");
 
@@ -116,7 +156,7 @@ it("searches the journal, says when nothing matches, and clears back to the time
   expect(container.textContent).not.toContain("No entries yet");
 
   await act(async () => button("Clear").click());
-  expect(button("Unrelated")).toBeTruthy();
+  expect(entry("Unrelated")).toBeTruthy();
   expect(() => button("Clear")).toThrow();
 });
 
@@ -126,7 +166,7 @@ it("stars an entry and filters the timeline to starred entries", async () => {
   expect(container.textContent).not.toContain("No starred entries");
   await act(async () => button("Starred only").click());
   expect(container.textContent).toContain("No starred entries");
-  expect(() => button("Plain day")).toThrow();
+  expect(() => entry("Plain day")).toThrow();
 
   await act(async () => button("Starred only").click());
   await writeEntry("Good day", "Worth keeping.");
@@ -135,8 +175,8 @@ it("stars an entry and filters the timeline to starred entries", async () => {
   expect(container.textContent).toContain("★");
 
   await act(async () => button("Starred only").click());
-  expect(button("Good day")).toBeTruthy();
-  expect(() => button("Plain day")).toThrow();
+  expect(entry("Good day")).toBeTruthy();
+  expect(() => entry("Plain day")).toThrow();
 });
 
 it("tags entries and filters the timeline by a tag", async () => {
@@ -154,11 +194,11 @@ it("tags entries and filters the timeline by a tag", async () => {
   expect(container.textContent).toContain("#travel");
 
   await act(async () => button("#travel (1)").click());
-  expect(button("Beach")).toBeTruthy();
-  expect(() => button("Office")).toThrow();
+  expect(entry("Beach")).toBeTruthy();
+  expect(() => entry("Office")).toThrow();
 
   await act(async () => button("#travel (1)").click());
-  expect(button("Office")).toBeTruthy();
+  expect(entry("Office")).toBeTruthy();
 });
 
 it("adds a journal, files new entries there and switches between journals", async () => {
@@ -178,18 +218,18 @@ it("adds a journal, files new entries there and switches between journals", asyn
   expect(container.textContent).not.toContain("already exists");
   await act(async () => button("Add").click());
   expect(field("New journal name").value).toBe("");
-  expect(() => button("At home")).toThrow();
+  expect(() => entry("At home")).toThrow();
   expect(container.textContent).toContain("No entries in this journal"); // J4h
   await write("Standup");
-  expect(button("Standup")).toBeTruthy();
+  expect(entry("Standup")).toBeTruthy();
   expect(container.textContent).not.toContain("No entries in this journal");
 
   await act(async () => button("Personal").click());
-  expect(button("At home")).toBeTruthy();
-  expect(() => button("Standup")).toThrow();
+  expect(entry("At home")).toBeTruthy();
+  expect(() => entry("Standup")).toThrow();
   await act(async () => button("All journals").click());
-  expect(button("At home")).toBeTruthy();
-  expect(button("Standup")).toBeTruthy();
+  expect(entry("At home")).toBeTruthy();
+  expect(entry("Standup")).toBeTruthy();
 });
 
 it("moves an entry to another journal from the editor's picker", async () => {
@@ -211,16 +251,16 @@ it("moves an entry to another journal from the editor's picker", async () => {
   await act(async () => button("Add").click());
   await act(async () => button("All journals").click());
   expect(personal()).toHaveLength(2);
-  await act(async () => button("At home").click());
+  await act(async () => entry("At home").click());
   await act(async () => pickerOption("Work").click());
   await act(async () => button("Save").click());
 
   await act(async () => pickerOption("Personal").click());
   await act(async () => button("Cancel").click());
   await act(async () => button("Personal").click());
-  expect(() => button("At home")).toThrow();
+  expect(() => entry("At home")).toThrow();
   await act(async () => button("Work").click());
-  expect(button("At home")).toBeTruthy();
+  expect(entry("At home")).toBeTruthy();
 });
 
 it("renames a journal, then deletes it and keeps its entries in Personal", async () => {
@@ -240,9 +280,9 @@ it("renames a journal, then deletes it and keeps its entries in Personal", async
 
   await act(async () => button("Delete journal").click());
   expect(() => button("Office")).toThrow();
-  expect(button("Standup")).toBeTruthy(); // moved to Personal, shown under All journals
+  expect(entry("Standup")).toBeTruthy(); // moved to Personal, shown under All journals
   await act(async () => button("Personal").click());
-  expect(button("Standup")).toBeTruthy();
+  expect(entry("Standup")).toBeTruthy();
   expect(() => button("Delete journal")).toThrow(); // Personal cannot be deleted
 });
 

@@ -1,0 +1,7 @@
+[package]
+name = "x509-ip-name-constraint-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 5280 IPv4 and IPv6 NameConstraints policy"
+
+[dependencies]

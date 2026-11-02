@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:14f5c5afb99b89da",
+  "lessonIds": [
+    "ZH-C171-dakai",
+    "ZH-C171-kongtiao",
+    "ZH-C171-yaokongqi",
+    "ZH-C171-an",
+    "ZH-C171-peng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch171.txt",
+  "json": "chinese/narration/ch171.json",
+  "textHash": "fnv1a64:2c776933811482a2",
+  "jsonHash": "fnv1a64:1ca9fd7445b6744e",
+  "findings": []
+}

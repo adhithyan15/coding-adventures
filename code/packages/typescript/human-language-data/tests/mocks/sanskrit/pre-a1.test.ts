@@ -2,8 +2,10 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot } from "../../../src/loader.js";
+import { listMockAssessmentStatuses } from "../../../src/mock-assessment.js";
 
-const root = join(defaultCurriculumRoot(), "sanskrit", "mocks", "pre-a1");
+const curriculumRoot = defaultCurriculumRoot();
+const root = join(curriculumRoot, "sanskrit", "mocks", "pre-a1");
 const read = (name: string) => readFileSync(join(root, name), "utf8");
 const section = (paper: string, heading: string, nextHeading?: string) => {
   const start = paper.indexOf(heading);
@@ -14,6 +16,17 @@ const itemCount = (text: string) => text.match(/^\d+\./gmu)?.length ?? 0;
 const keyedCount = (text: string) => text.match(/\b\d+ [ABC]\b/gu)?.length ?? 0;
 
 describe("Sanskrit pre-A1 timed mock source pair", () => {
+  it("binds both timed mocks to every published task-shape part", () => {
+    expect(listMockAssessmentStatuses(curriculumRoot).find(
+      (status) => status.language === "sanskrit" && status.level === "pre-A1",
+    )).toMatchObject({
+      requiredMocks: 2,
+      completeMocks: 2,
+      missingMocks: [],
+      blockedBy: [],
+    });
+  });
+
   it("owns two separated learner, examiner, key, and rubric bundles", () => {
     const names = [
       "mock-1.md",

@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased — LANG84 E6 automatic insertion
+
+### Added
+- `TOKEN_SYNTHETIC = 8`: the flag on the zero-width token that the parser's
+  `@asi(T, C…)` element inserts (F11 "Automatic insertion"). `GrammarLexer`
+  never sets it, so it always means "not in the source".
+
 ## Unreleased — LANG84 E1 line-start guards and E8 refusal transitions
 
 ### Added

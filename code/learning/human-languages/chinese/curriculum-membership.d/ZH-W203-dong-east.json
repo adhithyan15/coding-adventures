@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W203-dong-east",
+  "pathSegment": "ZH-PATH-203-RENT203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-203-RENT203",
+      "order": 2
+    }
+  ]
+}

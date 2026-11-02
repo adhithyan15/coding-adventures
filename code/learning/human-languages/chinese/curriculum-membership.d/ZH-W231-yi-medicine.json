@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W231-yi-medicine",
+  "pathSegment": "ZH-PATH-231-DOCTOR231",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-231-DOCTOR231",
+      "order": 1
+    }
+  ]
+}

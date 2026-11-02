@@ -1,0 +1,1268 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 157,
+  "title": "A Note About Tomorrow",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:e05bb575d485d0f2",
+  "lessons": [
+    {
+      "id": "ZH-C157-kaihui",
+      "sequence": 12710,
+      "title": "开会 (kāihuì) — to have a meeting",
+      "headword": "开会",
+      "romanization": "kāihuì",
+      "gloss": "to have a meeting",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee88ebc8cbc38ef3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on a word you will hear at work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 一本书十元 — yì běn shū shí yuán — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 一本书十元 — *yì běn shū shí yuán* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say guǎnggào, an advert — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *guǎnggào*, an advert — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 开门 — kāimén, to open — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 开门 — *kāimén*, to open — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 开会",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "开会 — kāihuì — \"to have a meeting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "明天下午开会 míngtiān xiàwǔ kāihuì — There's a meeting tomorrow afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "我们在开会 wǒmen zài kāihuì — We're in a meeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "开会 (kāihuì) is built from 开 'to open' and 会 'a gathering'. 会 is the character of 会 'can' and 会 'will', inherited from Middle Chinese hwajH (Guangyun, in Baxter's transcription), glossed 'to come together': here it keeps that sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "开 starts many things you know: 开门, 开车, and now 开会 (kāihuì)."
+            },
+            {
+              "kind": "speech",
+              "text": "在 before it says the meeting is going on: 我们在开会."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāihuì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāihuì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāihuì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāihuì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "明天下午开会 — míngtiān xiàwǔ kāihuì — There's a meeting tomorrow afternoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 明天下午开会 — *míngtiān xiàwǔ kāihuì* — There's a meeting tomorrow afternoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我们在开会 — wǒmen zài kāihuì — We're in a meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我们在开会 — *wǒmen zài kāihuì* — We're in a meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 开门 and 开车, then 开会 (kāihuì)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 开门 and 开车, then 开会]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 开会 (kāihuì) mean? (\"To have a meeting\".) Say there's a meeting tomorrow afternoon. (明天下午开会.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C157-tongzhi",
+      "sequence": 12720,
+      "title": "tōngzhī — to notify; a notice",
+      "headword": "tōngzhī",
+      "romanization": "tōngzhī",
+      "gloss": "to notify; a notice",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3a6701147b68923",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then a word that ends the same way."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 开会 — kāihuì — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 开会 — *kāihuì* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhīdào, to know — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhīdào*, to know — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tōngzhī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tōngzhī — \"to notify; a notice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "lǎoshī tōngzhī wǒmen míngtiān kāihuì — The teacher let us know there's a meeting tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè shì yí ge tōngzhī — This is a notice."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tōngzhī is built from tōng 'to get through' and zhī 'to know', the zhī of zhīdào. Both are inherited from Middle Chinese, thuwng and trje (Guangyun, in Baxter's transcription), glossed 'to reach' and 'to perceive': making something known."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "As a verb, tōngzhī takes the people told, then the news: tōngzhī wǒmen míngtiān kāihuì."
+            },
+            {
+              "kind": "speech",
+              "text": "As a noun it is the notice itself, pinned up or sent round."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōngzhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōngzhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōngzhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōngzhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǎoshī tōngzhī wǒmen míngtiān kāihuì — The teacher let us know there's a meeting tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǎoshī tōngzhī wǒmen míngtiān kāihuì* — The teacher let us know there's a meeting tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhīdào, then tōngzhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhīdào*, then *tōngzhī*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tōngzhī mean? (\"To notify; a notice\".) What comes after it as a verb? (Who is told, then the news.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C157-xiaoxi",
+      "sequence": 12730,
+      "title": "xiāoxi — news; a message",
+      "headword": "xiāoxi",
+      "romanization": "xiāoxi",
+      "gloss": "news; a message",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab5917e6f092c080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then a word that ends on the same light xi."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tōngzhī, a notice — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tōngzhī*, a notice — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiūxi, to rest — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiūxi*, to rest — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xiāoxi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiāoxi — \"news; a message\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ yǒu yí ge hǎo xiāoxi — I've got some good news."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiāoxi is built from xiāo and xi, the xi of xiūxi. Both are inherited from Middle Chinese, sjew and sik (Guangyun, in Baxter's transcription), glossed 'to melt away; to wane' and 'to stop; to breed'. Neither gloss gives 'news', so how the pair came to mean it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiāoxi is any news, and the message that brings it: a text from a friend is a xiāoxi."
+            },
+            {
+              "kind": "speech",
+              "text": "The xi at the end is light, as in xiūxi."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiāoxi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiāoxi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiāoxi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiāoxi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yǒu yí ge hǎo xiāoxi — I've got some good news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yǒu yí ge hǎo xiāoxi* — I've got some good news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiūxi, then xiāoxi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiūxi*, then *xiāoxi*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xiāoxi mean? (\"News; a message\".) Say you have some good news. (wǒ yǒu yí ge hǎo xiāoxi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C157-huifu",
+      "sequence": 12740,
+      "title": "huífù — to reply",
+      "headword": "huífù",
+      "romanization": "huífù",
+      "gloss": "to reply (to a message)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85efab7946af1f22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then two words this one leans on."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiāoxi, a message — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiāoxi*, a message — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huídá, to answer — R2, a few chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huídá*, to answer — **R2**, a few chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say fùxí, to revise — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *fùxí*, to revise — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: huífù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huífù — \"to reply (to a message)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "qǐng huífù — Please reply."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huífù is built from huí 'to go back' and fù 'to return', the fù of fùxí. Both are inherited from Middle Chinese, hwoj and bjuwk (Guangyun, in Baxter's transcription), glossed 'to turn round' and 'to return'. The regular change from bjuwk gives fú; fù continues the Guangyun's other reading, bjuwH, glossed 'again'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huídá answers a question; huífù answers a message."
+            },
+            {
+              "kind": "speech",
+              "text": "请 in front makes it the polite request at the foot of a notice: qǐng huífù."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huífù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huífù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huífù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huífù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐng huífù — Please reply.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐng huífù* — Please reply.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huídá, then huífù: a question, then a message",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huídá*, then *huífù*: a question, then a message]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does huífù mean? (\"To reply to a message\".) And huídá? (To answer a question.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C157-reading",
+      "sequence": 12750,
+      "title": "(reading) (míngtiān xiàwǔ sān diǎn kāihuì) — a notice and a message",
+      "headword": "(reading)",
+      "romanization": "míngtiān xiàwǔ sān diǎn kāihuì",
+      "gloss": "a notice at work and a friend's message about an appointment, every character written by the reader",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:56c24496354262d1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A notice pinned up at work, then a message from a friend."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huífù, to reply — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huífù*, to reply — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tōngzhī, a notice — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tōngzhī*, a notice — **R2**]"
+            },
+            {
+              "kind": "speech",
+              "text": "大家."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it aloud, with nothing said first — dàjiā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it aloud, with nothing said first — *dàjiā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "明天下午三点开会 大家都要来 请不要来晚了."
+            },
+            {
+              "kind": "speech",
+              "text": "我明天不能去了 因为我妈妈病了 后天下午你在家吗 我想两点来看你 给我打电话."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice and the message through once without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice and the message through once without stopping; do not translate as you go]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the message again, and find the question your friend asks you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the message again, and find the question your friend asks you]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the pinyin, after you have tried",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "míngtiān xiàwǔ sān diǎn kāihuì dàjiā dōu yào lái qǐng bú yào lái wǎn le."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ míngtiān bù néng qù le yīnwèi wǒ māma bìng le hòutiān xiàwǔ nǐ zài jiā ma wǒ xiǎng liǎng diǎn lái kàn nǐ gěi wǒ dǎ diànhuà."
+            },
+            {
+              "kind": "speech",
+              "text": "The notice speaks to everyone, 大家, and asks with 请. The message runs in order: what has changed, why, a question, an offer, a request. 因为 ties the reason to the line before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When is the meeting? (明天下午三点: three tomorrow afternoon.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why isn't your friend coming tomorrow? (因为我妈妈病了: the mother is ill.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What does your friend ask you? (后天下午你在家吗: whether you are home the afternoon after tomorrow.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What does your friend want you to do? (给我打电话: phone back.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the message aloud, once, as your friend would say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the message aloud, once, as your friend would say it]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C157-reading-why",
+              "prompt": "Why can't your friend come tomorrow?",
+              "assesses": [
+                "ZH-SKILL-READ-NOTICE-01",
+                "ZH-LEX-C96-YINWEI-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the mother is ill",
+                "mother is ill",
+                "her mum is ill",
+                "his mum is ill",
+                "妈妈病了",
+                "因为我妈妈病了",
+                "mum is ill",
+                "their mother is ill"
+              ],
+              "feedback": {
+                "correct": "因为我妈妈病了: the mother is ill.",
+                "incorrect": "The line with 因为 says it: 妈妈病了."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who is the notice for? (大家: everyone.) What must nobody be? (来晚了: late.) What time does your friend want to come? (两点.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W157-reply",
+      "sequence": 12760,
+      "title": "A reply, and the lines that lean on each other",
+      "headword": "(a reply)",
+      "romanization": "",
+      "gloss": "four to six connected lines answering a friend's message, held together by time words, one subject and 因为",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:91efd3826ef7497b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson ended on a message from a friend: they cannot come tomorrow, and they ask whether you are at home the afternoon after."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson answers it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huífù, to reply",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huífù*, to reply]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Connected writing is not longer writing. Four short lines can hang together; six long ones can fall apart. What makes lines connected is that each one leans on the one before it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three things do the leaning, and you own all three. A time word at the front of a line tells your reader where in the day they are: 后天下午, 两点以后. The subject said once: say 我 in the first line, and the lines after it can start on the time or the verb. 因为 ties a reason to the line before it, so your reader knows why."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your reader is the friend who sent the message. Your purpose is to settle the appointment: answer the question, then agree a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write four to six lines back to your friend. No name at the top: write to them as you would in a message."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 1 answers the question: 后天下午我在家, or 后天下午我不在家."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 2 says what you will be doing then, with 会, 要 or 正在."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 3 gives one reason, with 因为."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 4 offers a time, with 从 … 到 …, or 两点以后."
+            },
+            {
+              "kind": "speech",
+              "text": "The last line asks after their mother. 你妈妈 … needs only characters you write."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word whose characters you have not written goes in pinyin, inside the line, with its tone marks: kěyǐ, shūfu, huífù. Every character comes from the 163 you have learned, each in the order you learned it, each in the same size of square."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No Chinese commas or full stops: leave a space between clauses, as this book prints them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the reply. Then read it once as your friend would, top to bottom."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read your third line on its own. Does it stand up without the line above it? (It should not quite: 因为 leans on the line before.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count the lines that start with 我. If every one does, you wrote a list, not a reply."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-W157-reply-from",
+              "prompt": "Write the words for 'from two to four o'clock', in characters.",
+              "assesses": [
+                "ZH-GRAMMAR-CONG-DAO-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "从两点到四点",
+                "cóng liǎng diǎn dào sì diǎn",
+                "cong liang dian dao si dian"
+              ],
+              "feedback": {
+                "correct": "从两点到四点: 从 before the start, 到 before the end.",
+                "incorrect": "从两点到四点. 从 is one 人 following another."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R157-review-final-157",
+      "sequence": 12770,
+      "title": "The A2 core — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one conversation across the A2 core: will, going to, now, ever, seen, how well, than, or, from and to, prices and a meeting",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1b4d3da6ca3d9a32",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of the A2 core: one conversation that uses every chapter of it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiāoxi, a message — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiāoxi*, a message — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 开门 and guānmén, to open and to close — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 开门 and *guānmén*, to open and to close — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiàqián and miǎnfèi, the price and free — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiàqián* and *miǎnfèi*, the price and free — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 明天会下雨吗 míngtiān huì xiàyǔ ma — Will it rain tomorrow? B: tiānqì yùbào shuō kěnéng huì — The forecast says it might. B: 后天不会 hòutiān bú huì — Not the day after. A: 后天下午开会 你来吗 hòutiān xiàwǔ kāihuì, nǐ lái ma — There's a meeting the afternoon after tomorrow. Are you coming? B: wǒ yídìng lái — I'll be there, for sure. A: 从两点到四点 cóng liǎng diǎn dào sì diǎn — From two till four. B: nǐ kàndào tōngzhī le ma — Did you see the notice? A: kàndào le, wǒ yě huífù le — I saw it, and I've replied. B: 下个月你要去中国吗 xià ge yuè nǐ yào qù Zhōngguó ma — Are you going to China next month? A: 要 yào — I am. A: 你去过中国吗 nǐ qù guo Zhōngguó ma — Have you ever been? B: 没去过 méi qù guo — No, never. B: 你汉语说得很好 nǐ Hànyǔ shuō de hěn hǎo — Your Chinese is good. A: 我没有他那么好 wǒ méiyǒu tā nàme hǎo — Not as good as his. B: 你要水还是要饭 nǐ yào shuǐ háishi yào fàn — Water or food? A: 饭 我还没吃 fàn, wǒ hái méi chī — Food. I haven't eaten yet. B: 我正在做饭 wǒ zhèngzài zuò fàn — I'm cooking right now. B: bié zǒu — Don't go. A: wǒ de huǒchē bā diǎn chūfā — My train leaves at eight. A: wǒ kàndào yí ge guǎnggào — I saw an advert: A: 书十元一本 shū shí yuán yì běn — books at ten yuan each. B: 星期天不开门 xīngqītiān bù kāimén — That shop is closed on Sundays."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines printed in characters aloud, then the rest",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines printed in characters aloud, then the rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole dialogue, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole dialogue, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "B's lines again, with your own answers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: B's lines again, with your own answers]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Will? (会.) Going to? (要.) Right now? (正在.) Ever? (过.) Saw it? (看到.) How well? (得.) Than? (比.) Or? (还是.) Not yet? (还没.) From … to? (从 … 到.) Yuan, as written? (元.) A meeting? (开会 (kāihuì).) Reply? (huífù.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

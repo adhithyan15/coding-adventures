@@ -57,7 +57,7 @@ use std::sync::{Arc, Mutex};
 use coding_adventures_ruby_parser::{parse_ruby_at, resolve_release};
 use interpreter_ir::{IIRFunction, IIRModule};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
-use vm_core::{errors::VMError, value::Value, VMCore};
+use vm_core::{errors::VMError, frame::VMFrame, value::Value, VMCore};
 
 mod error;
 mod lower;
@@ -67,7 +67,7 @@ pub use coding_adventures_ruby_parser::{
     supported_releases, FrontendBudgets, DEFAULT_MAX_SOURCE_BYTES, DEFAULT_RELEASE,
 };
 pub use error::FrontendError;
-pub use lower::{DISPATCHED_RULES, DISPATCHED_TOKENS, MAX_IIR_INSTRUCTIONS};
+pub use lower::{DISPATCHED_RULES, DISPATCHED_TOKENS, MAX_IIR_INSTRUCTIONS, MAX_REGISTERS_PER_FUNCTION};
 
 /// Source bytes the untrusted default budget accepts (64 KiB).
 pub const MAX_SOURCE_BYTES: usize = DEFAULT_MAX_SOURCE_BYTES;
@@ -147,6 +147,8 @@ fn check_module_name(release: &str, module_name: &str) -> Result<(), FrontendErr
             release: release.to_string(),
             which: "module name bytes",
             limit: MAX_AST_FIELD_BYTES,
+            function: None,
+            start: None,
         });
     }
     Ok(())
@@ -178,7 +180,32 @@ fn finish(
             message: format!("the lowered module is not valid IIR: {}", errors.join("; ")),
         });
     }
+    check_frames(release, &module)?;
     Ok(module)
+}
+
+/// Put every function of the finished module through vm-core's own
+/// load-time check, `VMFrame::check_register_limit` (#18419).
+///
+/// The walker already refused a `main` that does not fit, at the statement
+/// that went over (`lower.rs`, "Registers"); this backstop makes "compiles"
+/// imply "vm-core will load it" by construction rather than by two counts
+/// agreeing. Unreachable for any tree the walker accepted; a refusal still
+/// names the function, as a `Budget` with no position.
+fn check_frames(release: &str, module: &IIRModule) -> Result<(), FrontendError> {
+    for function in &module.functions {
+        if let Err(error) = VMFrame::check_register_limit(function) {
+            debug_assert!(matches!(error, VMError::RegisterLimitExceeded { .. }), "{error:?}");
+            return Err(FrontendError::Budget {
+                release: release.to_string(),
+                which: "registers per function",
+                limit: MAX_REGISTERS_PER_FUNCTION,
+                function: Some(function.name.clone()),
+                start: None,
+            });
+        }
+    }
+    Ok(())
 }
 
 /// Walk a caller-supplied tree once, iteratively, and refuse it if it is too
@@ -190,6 +217,8 @@ fn check_ast_budget(release: &str, root: &GrammarASTNode) -> Result<(), Frontend
         release: release.to_string(),
         which,
         limit,
+        function: None,
+        start: None,
     };
     let mut pending = vec![(root, 1_usize)];
     let mut visited = 1_usize;

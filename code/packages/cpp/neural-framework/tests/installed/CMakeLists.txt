@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(native_dense_consumer LANGUAGES CXX)
+find_package(ca_neural_framework 0.1 REQUIRED CONFIG)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ca::neural_framework)

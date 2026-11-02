@@ -115,6 +115,18 @@
     ],
     "CONNECTIVE-SO": [
       "ZH-CONNECTIVE-SUOYI"
+    ],
+    "COMPARISON-BASIC": [
+      "ZH-GRAMMAR-BI-COMPARE"
+    ],
+    "CONNECTIVE-THEN": [
+      "ZH-PAST150-RANHOU"
+    ],
+    "VERB-TAKE": [
+      "ZH-VERB-NA"
+    ],
+    "VERB-ANSWER": [
+      "ZH-VERB-HUIDA"
     ]
   }
 }

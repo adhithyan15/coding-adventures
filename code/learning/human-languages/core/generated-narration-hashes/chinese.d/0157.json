@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:e05bb575d485d0f2",
+  "lessonIds": [
+    "ZH-C157-kaihui",
+    "ZH-C157-tongzhi",
+    "ZH-C157-xiaoxi",
+    "ZH-C157-huifu",
+    "ZH-C157-reading",
+    "ZH-W157-reply",
+    "ZH-R157-review-final-157"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "chinese/narration/ch157.txt",
+  "json": "chinese/narration/ch157.json",
+  "textHash": "fnv1a64:8452fea14113c8a1",
+  "jsonHash": "fnv1a64:bb802f89810df72b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C247-huiyi",
+  "pathSegment": "ZH-PATH-247-TRIP247",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-247-TRIP247",
+      "order": 4
+    }
+  ]
+}

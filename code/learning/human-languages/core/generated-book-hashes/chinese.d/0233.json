@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:8d8ce99d723cd6a4",
+  "lessonIds": [
+    "ZH-C233-yangzi",
+    "ZH-C233-yanjing",
+    "ZH-C233-huzi",
+    "ZH-C233-miaotiao",
+    "ZH-C233-pifu"
+  ],
+  "tex": "chinese/book/chapters/ch233-how-people-look.tex"
+}

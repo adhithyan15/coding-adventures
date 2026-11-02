@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C156-yuan",
+    "language": "chinese",
+    "chapter": 156,
+    "sequence": 12640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:777431bf71e54480"
+  },
+  "findings": []
+}

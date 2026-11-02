@@ -646,6 +646,103 @@ Each target should consume generated components and the same `engram-core`
 facade contract. If a target needs special behavior, add the capability to the
 shared contract first, then let each shell bind to it.
 
+### 5.3 The screens scroll (EN-6)
+
+A native window scrolls nothing unless the layout says so. The web never
+showed the gap, because a browser page scrolls by default. Before this, no
+Engram layout had a scroll container on any native backend, so whatever a
+screen laid out past the window's bottom edge could not be reached: no
+scrollbar, no wheel, no gesture.
+
+Engram declares no window size, so Compose Desktop opens it at its default
+800×600. Measured there with an empty collection:
+
+- **Options:** the deck options alone fill the window. The note type editor
+  under them, and its New / Save / Delete / Cancel row, are off screen.
+- **Decks:** the collection's action buttons (Import, Export, Prune unused
+  media, Add note, Delete note, …) are off screen.
+- **Add** fits, but only just. A real collection's note types, decks and
+  fields push its Save button down.
+
+On Flutter, in the same window, Decks overflows the bottom by 344px. At
+1280×900, Options overflows by 1140px. Journal's pane (JO-5) and TaskApp's
+view area (#14734) had the same gap, and were fixed the same way.
+
+**Layout.** In both layouts, the shell's last child is a vertical
+`HostScroll [ content-scroll ]` that wraps one `Column [ content ]`, and all
+six screens are inside that column. The scroll has `flex-grow : 1`, so it
+takes the shell's remaining height, which is what bounds its viewport.
+`content` has `gap : 18`, the same gap as `app-shell`.
+
+- **Desktop (`EngramApp.mll`).** The header and the host status stay
+  **outside** the scroll, as TaskApp's do. The screen switcher never scrolls
+  away.
+- **Touch (`EngramApp.touch.mll`).** The header and the host status are
+  **inside** the scroll. The stacked header is a title over six full-width
+  buttons, which is taller than a phone in landscape. Pinned outside the
+  scroll, it would leave the screen below it no height. On an 844×390 Flutter
+  surface, every screen overflowed before this change, even Stats by 234px.
+  Getting back to the switcher costs a swipe up.
+
+The shell is a plain `Column`, and no screen mounts a `HostNavigationSplit`.
+That matters: a split nested in a vertical `HostScroll` crashes Compose and
+collapses SwiftUI to zero height (the lesson in #18458). If Engram's shell
+ever becomes a split, the scroll moves into the split's detail.
+
+| Backend | The screens' scroll container |
+| --- | --- |
+| React, HTML, WebComponent | `<div style="overflow-y: auto; overflow-x: hidden">` (the page still scrolls, as before) |
+| SwiftUI | `ScrollView` in the shell's `VStack`, which proposes the remaining height |
+| Compose | `Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()))`, the shell `Column`'s last child, so it gets the remaining height |
+| Flutter | `Expanded(child: SingleChildScrollView(...))` |
+| Qt | `ScrollView`, horizontal bar off. **It does not scroll yet.** See below. |
+| XAML | `ScrollViewer` in the shell `Grid`'s `*` row, vertical bar `Auto`, horizontal `Disabled` |
+
+**Qt does not bound the scroll.** The Qt emitter lowers the shell `Column` to
+a `Rectangle` whose `ColumnLayout` is placed with `x`/`y` and sized to its
+children. It never fills the window. `flex-grow` is not lowered on Qt, so the
+`ScrollView` gets no `Layout.fillHeight` either. A `ScrollView` sized to its
+content has nothing to scroll. The layout is correct for Qt; the gap is in the
+emitter, and it is recorded as follow-up work. Journal and TaskApp do not
+have the gap on Qt, because their shell is a `HostNavigationSplit`, which the
+Qt emitter anchors to fill the window.
+
+**Tests.**
+
+- `package_compiles::the_screens_scroll` checks the layout in both files:
+  - the shell's last child is `HostScroll [ content-scroll ]`, with no axis;
+  - the scroll wraps exactly `Column [ content ]`, and all six screens are
+    inside it;
+  - the header is outside the scroll on desktop and inside it on touch;
+  - there is no `HostNavigationSplit`;
+  - both themes give `content-scroll` `flex-grow : 1`.
+- `native_complete_gate::every_native_backend_scrolls_the_screens` builds each
+  native backend. It requires the backend's scroll container in both
+  generated layouts, and fails if a native backend has no marker.
+- **Reachability on Compose desktop**
+  (`conformance/compose/EngramScrollUiTest.kt`). CI's Compose lane runs it,
+  with its own state file. At 800×600 it:
+  - opens Options;
+  - requires that the note type editor's New button is **not** displayed, so
+    the test really crosses the fold;
+  - scrolls with the `ScrollBy` semantics action until the button is
+    displayed (`performScrollTo()` hangs, EM-11);
+  - clicks it, and requires the engine's new `note-type-…` id to appear;
+  - requires that the switcher is still displayed.
+- **Reachability on Flutter** (`conformance/flutter/engram_scroll_test.dart`).
+  CI's Flutter lane runs it, with its own state file. At 800×600 it:
+  - requires that Decks lays out with no exception;
+  - requires that the screen's last control, Delete note type, starts below
+    the window;
+  - drags the screen's `Scrollable` until the button is inside the window;
+  - requires that the button is hit-testable, and that the switcher still is.
+
+  It uses Decks rather than Options because Flutter's Options throws for
+  reasons unrelated to scrolling: the sibling-bury checkbox row overflows to
+  the right, since Flutter does not lower `flex-wrap`.
+- `EngramScreenshots` also renders every screen at 800×600, as
+  `800x600-*.png`, next to the 1280×900 shots.
+
 ## Initial Autonomous Loop
 
 ### Commit A: Foundation

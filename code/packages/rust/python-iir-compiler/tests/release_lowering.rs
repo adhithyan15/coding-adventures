@@ -282,18 +282,62 @@ fn release_not_available_reasons_are_self_describing() {
 // LANG84 phase 7c slice 3: `py-float-print`
 // ---------------------------------------------------------------------------
 
-/// A float literal is an `f64` `const`; `print` writes it with LANG83
-/// `write_f64_py` (no newline) and then `putchar 10`.
+/// A float literal is an `f64` `const`; `print` writes it with one `call`
+/// of the module's own `__py_write_float` (LANG83 PR7c-py; no newline) and
+/// then `putchar 10`. The helper and the three it calls follow `main`.
 #[test]
-fn a_float_prints_through_write_f64_py_and_a_newline() {
+fn a_float_prints_through_the_module_helper_and_a_newline() {
     let module = compile("print(1.5)\n").unwrap();
     let main = &module.functions[0].instructions;
     let ops: Vec<_> = main.iter().map(|i| i.op.as_str()).collect();
-    assert_eq!(ops, ["const", "call_builtin", "const", "call_builtin", "const", "ret"]);
+    assert_eq!(ops, ["const", "call", "const", "call_builtin", "const", "ret"]);
     assert_eq!(main[0].type_hint, "f64");
     assert!(matches!(main[0].srcs[..], [interpreter_ir::Operand::Float(x)] if x == 1.5));
-    assert!(matches!(&main[1].srcs[0], interpreter_ir::Operand::Var(name) if name == "write_f64_py"));
+    assert!(matches!(&main[1].srcs[0], interpreter_ir::Operand::Var(name) if name == "__py_write_float"));
+    assert_eq!(main[1].srcs[1], main[0].dest.clone().map(interpreter_ir::Operand::Var).unwrap());
     assert!(matches!(&main[3].srcs[0], interpreter_ir::Operand::Var(name) if name == "putchar"));
+    let names: Vec<_> = module.functions.iter().map(|f| f.name.as_str()).collect();
+    assert_eq!(names, ["main", "__py_write_float", "__py_digit_count", "__py_write_digits", "__py_write_uint"]);
+}
+
+/// LANG83 PR7c-py: the `repr(float)` helpers go only into a module that
+/// prints a float, every float print site is one `call` (the layout is
+/// never inlined into `main`), and no module names a Python builtin.
+#[test]
+fn the_float_helpers_are_emitted_only_into_modules_that_print_a_float() {
+    let names = |source: &str, release: Option<&str>| -> Vec<String> {
+        compile_source_at(source, release, "t", &FrontendBudgets::default())
+            .unwrap()
+            .functions
+            .iter()
+            .map(|f| f.name.clone())
+            .collect()
+    };
+    // Integers only, on every profile: `main` alone, as before.
+    assert_eq!(names("print(1)\nprint()\n", None), ["main"]);
+    assert_eq!(names("print(7 // 2)\n", Some("3.0a1")), ["main"]);
+    assert_eq!(names("print 7 / 2\nprint\n", Some("2.7.18")), ["main"]);
+    // A float computed but printed only as an int result is no float print.
+    assert_eq!(names("print(1 + 2)\n", Some("3.5.10")), ["main"]);
+    let helpers = ["main", "__py_write_float", "__py_digit_count", "__py_write_digits", "__py_write_uint"];
+    assert_eq!(names("print(1.5)\n", None), helpers);
+    assert_eq!(names("print(1 / 2)\nprint(3)\nprint(-0.0)\n", Some("3.5.10")), helpers);
+    // A print after a certain trap is still lowered (dead), so it still
+    // brings the helpers.
+    assert_eq!(names("print(1 / 0)\nprint(2.5)\n", None), helpers);
+    let module = compile("print(1.5)\nprint(2)\nprint(-2.5)\nprint(1e300 * 1e300)\n").unwrap();
+    let main = module.get_function("main").unwrap();
+    let calls: Vec<_> = main.instructions.iter().filter(|i| i.op == "call").collect();
+    assert_eq!(calls.len(), 3);
+    assert!(calls.iter().all(|c| c.dest.as_deref() == Some("py_repr")));
+    assert!(main.instructions.iter().all(|i| !i.op.starts_with("f64_digits") && i.op != "putchar"));
+    for instr in module.functions.iter().flat_map(|f| &f.instructions) {
+        assert!(instr.srcs.iter().all(|s| s.as_var() != Some("write_f64_py")), "{instr:?}");
+    }
+    assert_eq!(
+        run_source_at("print(1.5)\nprint(2)\nprint(-2.5)\nprint(1e300 * 1e300)\n", None).unwrap().stdout,
+        "1.5\n2\n-2.5\ninf\n"
+    );
 }
 
 /// An int meeting a float is widened with `int_to_real`; float arithmetic
@@ -303,7 +347,7 @@ fn a_float_prints_through_write_f64_py_and_a_newline() {
 fn mixed_arithmetic_widens_the_int_and_uses_the_ieee_ops() {
     assert_eq!(
         ops("print(1 + 0.5)\n"),
-        ["const", "const", "int_to_real", "f64_add", "call_builtin", "const", "call_builtin", "const", "ret"]
+        ["const", "const", "int_to_real", "f64_add", "call", "const", "call_builtin", "const", "ret"]
     );
     let all = ops("print(2 * 0.5 - 1.5 / 3)\n");
     for op in ["f64_mul", "f64_sub", "f64_div", "int_to_real"] {
@@ -315,7 +359,7 @@ fn mixed_arithmetic_widens_the_int_and_uses_the_ieee_ops() {
     // True division of two ints converts both.
     assert_eq!(
         ops("print(7 / 2)\n"),
-        ["const", "const", "int_to_real", "int_to_real", "f64_div", "call_builtin", "const", "call_builtin", "const", "ret"]
+        ["const", "const", "int_to_real", "int_to_real", "f64_div", "call", "const", "call_builtin", "const", "ret"]
     );
     // An int sub-expression keeps its checked int ops.
     let nested = ops("print(7 // 2 * 1.5)\n");
@@ -325,8 +369,10 @@ fn mixed_arithmetic_widens_the_int_and_uses_the_ieee_ops() {
 /// `-x` on a float flips the sign bit (`f64_neg`); `+x` is the identity.
 #[test]
 fn float_signs_are_a_sign_flip_and_the_identity() {
-    assert_eq!(ops("print(-0.0)\n"), ["const", "f64_neg", "call_builtin", "const", "call_builtin", "const", "ret"]);
-    assert_eq!(ops("print(+1.5)\n"), ["const", "call_builtin", "const", "call_builtin", "const", "ret"]);
+    // Python's `repr` shows the sign of zero itself, so the print site is
+    // one `call` with no sign test (unlike JavaScript's `console.log`).
+    assert_eq!(ops("print(-0.0)\n"), ["const", "f64_neg", "call", "const", "call_builtin", "const", "ret"]);
+    assert_eq!(ops("print(+1.5)\n"), ["const", "call", "const", "call_builtin", "const", "ret"]);
     for (source, stdout) in [("print(-0.0)\n", "-0.0\n"), ("print(+-0.0)\n", "-0.0\n"), ("print(0.0 - 0.0)\n", "0.0\n")] {
         assert_eq!(run_source_at(source, None).unwrap().stdout, stdout, "{source:?}");
     }

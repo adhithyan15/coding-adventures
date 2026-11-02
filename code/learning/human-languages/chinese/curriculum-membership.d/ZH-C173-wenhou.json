@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C173-wenhou",
+  "pathSegment": "ZH-PATH-173-INVITE173",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-173-INVITE173",
+      "order": 1
+    }
+  ]
+}

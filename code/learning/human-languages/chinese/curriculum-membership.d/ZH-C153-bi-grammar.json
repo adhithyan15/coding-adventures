@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C153-bi-grammar",
+  "pathSegment": "ZH-PATH-153-THAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-153-THAN",
+      "order": 2
+    }
+  ]
+}

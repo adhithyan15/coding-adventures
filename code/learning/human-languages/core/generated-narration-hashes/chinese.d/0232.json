@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:07221360c83c57ca",
+  "lessonIds": [
+    "ZH-C232-chushi",
+    "ZH-C232-shoushang",
+    "ZH-C232-liuxue",
+    "ZH-C232-zhuang",
+    "ZH-C232-jiuhuche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch232.txt",
+  "json": "chinese/narration/ch232.json",
+  "textHash": "fnv1a64:6113bd34946078ce",
+  "jsonHash": "fnv1a64:d1719527de6e28e2",
+  "findings": []
+}

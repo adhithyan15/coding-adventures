@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:96a2ebf8a428c459",
+  "lessonIds": [
+    "ZH-C226-caodi",
+    "ZH-W226-cao-grass",
+    "ZH-C226-hu",
+    "ZH-C226-senlin",
+    "ZH-C226-caoyuan",
+    "ZH-C226-fengjing"
+  ],
+  "tex": "chinese/book/chapters/ch226-grass-and-lakes.tex"
+}

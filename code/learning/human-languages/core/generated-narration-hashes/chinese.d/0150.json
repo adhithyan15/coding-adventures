@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:16f5e12d31956d0f",
+  "lessonIds": [
+    "ZH-C150-guoqu",
+    "ZH-W150-guo-pass",
+    "ZH-C150-guo-ever",
+    "ZH-C150-houlai",
+    "ZH-C150-ranhou",
+    "ZH-C150-conglai",
+    "ZH-C150-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch150.txt",
+  "json": "chinese/narration/ch150.json",
+  "textHash": "fnv1a64:5e78362ddd2ce8a4",
+  "jsonHash": "fnv1a64:3a43ee34ce570557",
+  "findings": []
+}

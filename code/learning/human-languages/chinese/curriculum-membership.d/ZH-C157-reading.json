@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C157-reading",
+  "pathSegment": "ZH-PATH-157-NOTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-157-NOTE",
+      "order": 4
+    }
+  ]
+}

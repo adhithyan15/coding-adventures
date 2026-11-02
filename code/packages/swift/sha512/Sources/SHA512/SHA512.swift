@@ -166,6 +166,18 @@ private func writeBE64(_ value: UInt64) -> [UInt8] {
     ]
 }
 
+enum SHA512LengthError: Error {
+    case messageTooLong
+}
+
+func encodeBitLength(byteCountHigh: UInt64, byteCountLow: UInt64) throws -> [UInt8] {
+    guard byteCountHigh & 0xe000000000000000 == 0 else {
+        throw SHA512LengthError.messageTooLong
+    }
+    return writeBE64((byteCountHigh << 3) | (byteCountLow >> 61))
+        + writeBE64(byteCountLow << 3)
+}
+
 // ============================================================================
 // Padding (FIPS 180-4, Section 5.1.2)
 // ============================================================================
@@ -178,8 +190,6 @@ private func writeBE64(_ value: UInt64) -> [UInt8] {
 //   3. Append the original bit length as a 128-bit BIG-ENDIAN integer.
 
 private func pad(_ data: [UInt8]) -> [UInt8] {
-    let bitLen = UInt64(data.count) * 8
-
     let afterBit = (data.count + 1) % 128
     let zeroCount = afterBit <= 112 ? 112 - afterBit : 128 + 112 - afterBit
 
@@ -190,19 +200,8 @@ private func pad(_ data: [UInt8]) -> [UInt8] {
     }
     result[data.count] = 0x80
 
-    // Append 128-bit BIG-endian bit length.
-    // For messages < 2^64 bits, the high 64 bits are zero.
     let lengthOffset = result.count - 16
-    // High 64 bits are already zero (initialized to 0)
-    // Low 64 bits:
-    result[lengthOffset + 8]  = UInt8((bitLen >> 56) & 0xFF)
-    result[lengthOffset + 9]  = UInt8((bitLen >> 48) & 0xFF)
-    result[lengthOffset + 10] = UInt8((bitLen >> 40) & 0xFF)
-    result[lengthOffset + 11] = UInt8((bitLen >> 32) & 0xFF)
-    result[lengthOffset + 12] = UInt8((bitLen >> 24) & 0xFF)
-    result[lengthOffset + 13] = UInt8((bitLen >> 16) & 0xFF)
-    result[lengthOffset + 14] = UInt8((bitLen >> 8) & 0xFF)
-    result[lengthOffset + 15] = UInt8(bitLen & 0xFF)
+    result.replaceSubrange(lengthOffset..<result.count, with: try! encodeBitLength(byteCountHigh: 0, byteCountLow: UInt64(data.count)))
 
     return result
 }
@@ -344,31 +343,45 @@ public func sha512Hex(_ data: Data) -> String {
 public struct SHA512Hasher: Sendable {
     private var _state: [UInt64]
     private var _buffer: [UInt8]
-    private var _byteCount: Int
+    private var _byteCountHigh: UInt64
+    private var _byteCountLow: UInt64
 
     /// Initialize a new SHA-512 hasher with the standard initial state.
     public init() {
         _state = INIT_H
         _buffer = []
-        _byteCount = 0
+        _byteCountHigh = 0
+        _byteCountLow = 0
     }
 
     /// Feed more bytes into the hasher.
     public mutating func update(_ data: Data) {
-        let bytes = [UInt8](data)
-        _byteCount += bytes.count
-        _buffer.append(contentsOf: bytes)
-
-        // Process complete 128-byte blocks from the buffer.
-        var offset = 0
-        while offset + 128 <= _buffer.count {
-            _state = compress(_state, block: _buffer, blockOffset: offset)
-            offset += 128
-        }
-
-        // Keep only the unprocessed remainder.
-        if offset > 0 {
-            _buffer = Array(_buffer[offset...])
+        let (nextLow, carry) = _byteCountLow.addingReportingOverflow(UInt64(data.count))
+        let nextHigh = _byteCountHigh &+ (carry ? 1 : 0)
+        precondition((try? encodeBitLength(byteCountHigh: nextHigh, byteCountLow: nextLow)) != nil,
+                     "sha512: message length must be less than 2^128 bits")
+        _byteCountHigh = nextHigh
+        _byteCountLow = nextLow
+        data.withUnsafeBytes { raw in
+            let bytes = raw.bindMemory(to: UInt8.self)
+            var offset = 0
+            if !_buffer.isEmpty {
+                let copied = min(128 - _buffer.count, bytes.count)
+                _buffer.append(contentsOf: bytes[offset..<offset + copied])
+                offset += copied
+                if _buffer.count == 128 {
+                    _state = compress(_state, block: _buffer, blockOffset: 0)
+                    _buffer.removeAll(keepingCapacity: true)
+                }
+            }
+            while offset + 128 <= bytes.count {
+                let block = Array(bytes[offset..<offset + 128])
+                _state = compress(_state, block: block, blockOffset: 0)
+                offset += 128
+            }
+            if offset < bytes.count {
+                _buffer.append(contentsOf: bytes[offset..<bytes.count])
+            }
         }
     }
 
@@ -376,7 +389,6 @@ public struct SHA512Hasher: Sendable {
     ///
     /// Non-destructive: the internal state is not modified.
     public func digest() -> Data {
-        let bitLen = UInt64(_byteCount) * 8
         let buf = _buffer
 
         let afterBit = (buf.count + 1) % 128
@@ -388,17 +400,8 @@ public struct SHA512Hasher: Sendable {
         }
         tail[buf.count] = 0x80
 
-        // Append 128-bit big-endian total bit count.
         let lengthOffset = tail.count - 16
-        // High 64 bits are zero
-        tail[lengthOffset + 8]  = UInt8((bitLen >> 56) & 0xFF)
-        tail[lengthOffset + 9]  = UInt8((bitLen >> 48) & 0xFF)
-        tail[lengthOffset + 10] = UInt8((bitLen >> 40) & 0xFF)
-        tail[lengthOffset + 11] = UInt8((bitLen >> 32) & 0xFF)
-        tail[lengthOffset + 12] = UInt8((bitLen >> 24) & 0xFF)
-        tail[lengthOffset + 13] = UInt8((bitLen >> 16) & 0xFF)
-        tail[lengthOffset + 14] = UInt8((bitLen >> 8) & 0xFF)
-        tail[lengthOffset + 15] = UInt8(bitLen & 0xFF)
+        tail.replaceSubrange(lengthOffset..<tail.count, with: try! encodeBitLength(byteCountHigh: _byteCountHigh, byteCountLow: _byteCountLow))
 
         var state = _state
         var offset = 0
@@ -420,7 +423,8 @@ public struct SHA512Hasher: Sendable {
         var other = SHA512Hasher()
         other._state = _state
         other._buffer = _buffer
-        other._byteCount = _byteCount
+        other._byteCountHigh = _byteCountHigh
+        other._byteCountLow = _byteCountLow
         return other
     }
 }

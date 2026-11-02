@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R181-review-176-181",
+    "language": "chinese",
+    "chapter": 181,
+    "sequence": 14230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:392d3c3679f85b4b"
+  },
+  "findings": []
+}

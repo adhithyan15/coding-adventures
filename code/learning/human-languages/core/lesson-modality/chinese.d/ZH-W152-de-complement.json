@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W152-de-complement",
+    "language": "chinese",
+    "chapter": 152,
+    "sequence": 12370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a89ebe8e53a0af73",
+    "detachableSegments": [
+      "Script — the left of 很, then 日, a bar and 寸"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

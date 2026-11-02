@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C237-faya",
+  "pathSegment": "ZH-PATH-237-PLANT237",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-237-PLANT237",
+      "order": 3
+    }
+  ]
+}

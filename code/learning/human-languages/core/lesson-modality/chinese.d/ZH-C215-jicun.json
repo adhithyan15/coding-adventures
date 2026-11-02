@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C215-jicun",
+    "language": "chinese",
+    "chapter": 215,
+    "sequence": 16410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:688df2d8f1e6ebaf"
+  },
+  "findings": []
+}

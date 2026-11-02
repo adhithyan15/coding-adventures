@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-155-TIMETABLE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-155-TIMETABLE"
+  ],
+  "after": []
+}

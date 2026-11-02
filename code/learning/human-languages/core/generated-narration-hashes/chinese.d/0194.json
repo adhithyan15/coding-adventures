@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:1c19ff684b97508c",
+  "lessonIds": [
+    "ZH-C194-malu",
+    "ZH-W194-lu-road",
+    "ZH-C194-zoulu",
+    "ZH-C194-banmaxian",
+    "ZH-C194-guangchang",
+    "ZH-C194-hongludeng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch194.txt",
+  "json": "chinese/narration/ch194.json",
+  "textHash": "fnv1a64:8bf401fbc2f6e288",
+  "jsonHash": "fnv1a64:e4d75458480a5820",
+  "findings": []
+}

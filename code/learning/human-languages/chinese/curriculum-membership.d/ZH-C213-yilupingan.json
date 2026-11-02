@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C213-yilupingan",
+  "pathSegment": "ZH-PATH-213-TRIP213",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-213-TRIP213",
+      "order": 4
+    }
+  ]
+}

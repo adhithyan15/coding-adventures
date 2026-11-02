@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C238-dahai",
+  "pathSegment": "ZH-PATH-238-SKY238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-238-SKY238",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:d54d03f269450e1b",
+  "lessonIds": [
+    "ZH-C217-meiguanxi",
+    "ZH-C217-dangran",
+    "ZH-C217-jide",
+    "ZH-C217-dating",
+    "ZH-C217-jiejue",
+    "ZH-R217-review-212-217",
+    "ZH-R217-review-final-217"
+  ],
+  "tex": "chinese/book/chapters/ch217-never-mind.tex"
+}

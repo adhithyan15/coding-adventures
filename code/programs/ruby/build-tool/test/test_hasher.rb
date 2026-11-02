@@ -27,6 +27,52 @@ class TestHasher < Minitest::Test
   SOURCE_COLLECTION_CASES = Pathname(__dir__).expand_path
     .join("../../../../specs/fixtures/build-tool-v1/cases")
   HASHING_FIXTURE = "hashing-cache-missing.json"
+  DEPENDENCY_HASHING_FIXTURE_IDS = %w[
+    hashing-cache/dependency-change-after
+    hashing-cache/dependency-order-before
+    hashing-cache/failed-prior-record
+  ].freeze
+
+  class CountingPredecessorChain
+    attr_reader :calls
+
+    def initialize(length)
+      @length = length
+      @calls = 0
+    end
+
+    def has_node?(_name)
+      true
+    end
+
+    def each_predecessor(name)
+      @calls += 1
+      index = (name == "ruby/app") ? 0 : Integer(name.delete_prefix("ruby/Node"), 10) + 1
+      yield "ruby/Node#{index}" if index < @length
+    end
+  end
+
+  class CountingPredecessorStar
+    attr_reader :yields
+
+    def initialize(width)
+      @width = width
+      @yields = 0
+    end
+
+    def has_node?(_name)
+      true
+    end
+
+    def each_predecessor(name)
+      return unless name == "ruby/app"
+
+      @width.times do |index|
+        @yields += 1
+        yield "ruby/Node#{index}"
+      end
+    end
+  end
 
   def test_production_registry_equals_checked_neutral_registry
     checked = SOURCE_COLLECTION_CASES.parent / "language-source-input-registry.json"
@@ -528,19 +574,19 @@ class TestHasher < Minitest::Test
   def test_hash_deps_with_deps
     # Edge: dep -> dependent (dep must build first)
     graph = BuildTool::DirectedGraph.new
-    graph.add_edge("pkg-b", "pkg-a")
+    graph.add_edge("ruby/pkg-b", "ruby/pkg-a")
 
-    hashes = {"pkg-a" => "aaaa", "pkg-b" => "bbbb"}
-    hash = BuildTool::Hasher.hash_deps("pkg-a", graph, hashes)
-    assert_equal 64, hash.length
+    hashes = {"ruby/pkg-b" => "bb" * 32}
+    hash = BuildTool::Hasher.hash_deps("ruby/pkg-a", graph, hashes)
+    assert_equal expected_dependency_hash(hashes), hash
   end
 
   def test_hash_deps_changes_when_dep_changes
     graph = BuildTool::DirectedGraph.new
-    graph.add_edge("pkg-b", "pkg-a")
+    graph.add_edge("ruby/pkg-b", "ruby/pkg-a")
 
-    hash1 = BuildTool::Hasher.hash_deps("pkg-a", graph, {"pkg-b" => "v1"})
-    hash2 = BuildTool::Hasher.hash_deps("pkg-a", graph, {"pkg-b" => "v2"})
+    hash1 = BuildTool::Hasher.hash_deps("ruby/pkg-a", graph, {"ruby/pkg-b" => "11" * 32})
+    hash2 = BuildTool::Hasher.hash_deps("ruby/pkg-a", graph, {"ruby/pkg-b" => "22" * 32})
     refute_equal hash1, hash2
   end
 
@@ -548,6 +594,163 @@ class TestHasher < Minitest::Test
     graph = BuildTool::DirectedGraph.new
     hash = BuildTool::Hasher.hash_deps("nonexistent", graph, {})
     assert_equal 64, hash.length
+  end
+
+  def test_dependency_hashing_consumes_exact_neutral_adversarial_roster
+    fixtures = dependency_hashing_fixtures
+    assert_equal DEPENDENCY_HASHING_FIXTURE_IDS,
+      fixtures.map { |fixture| fixture.fetch("id") }.sort
+    snapshots_by_combined_digest = fixtures.to_h do |fixture|
+      result = fixture.dig("expected", "result")
+      [result.fetch("combined_digest"),
+        [result.fetch("package_digest"), result.fetch("dependencies_digest")]]
+    end
+
+    fixtures.each do |fixture|
+      options = fixture.dig("input", "options")
+      expected = fixture.dig("expected", "result")
+      dependency_hashes = options.fetch("dependency_digests").to_h do |entry|
+        [entry.fetch("package"), entry.fetch("digest")]
+      end
+      graph = BuildTool::DirectedGraph.new
+      graph.add_node(options.fetch("package"))
+      options.fetch("dependency_digests").reverse_each do |entry|
+        graph.add_edge(entry.fetch("package"), options.fetch("package"))
+      end
+      options.fetch("dependents").each do |dependent|
+        graph.add_edge(options.fetch("package"), dependent)
+      end
+
+      dependencies_digest = BuildTool::Hasher.hash_deps(
+        options.fetch("package"), graph, dependency_hashes
+      )
+      assert_equal expected.fetch("dependencies_digest"), dependencies_digest, fixture.fetch("id")
+      assert_equal expected_dependency_hash(dependency_hashes), dependencies_digest,
+        fixture.fetch("id")
+      assert_equal expected.fetch("combined_digest"),
+        BuildTool::Hasher.combine_hashes(expected.fetch("package_digest"), dependencies_digest),
+        fixture.fetch("id")
+
+      prior = options.fetch("prior_cache")
+      assert_equal "record", prior.fetch("state"), fixture.fetch("id")
+      prior_package_digest, prior_dependencies_digest =
+        snapshots_by_combined_digest.fetch(prior.fetch("combined_digest"))
+      cache = BuildTool::BuildCache.new
+      cache.record(
+        options.fetch("package"), prior_package_digest, prior_dependencies_digest,
+        prior.fetch("status")
+      )
+      cache_miss = cache.needs_build?(
+        options.fetch("package"), expected.fetch("package_digest"), dependencies_digest
+      )
+      assert_equal expected.fetch("cache_status"), cache_miss ? "miss" : "hit", fixture.fetch("id")
+      invalidated = if cache_miss
+        [options.fetch("package"), *graph.transitive_closure(options.fetch("package"))].sort
+      else
+        []
+      end
+      assert_equal expected.fetch("invalidated_packages"), invalidated, fixture.fetch("id")
+      assert_equal [], fixture.dig("expected", "diagnostics"), fixture.fetch("id")
+    end
+  end
+
+  def test_dependency_hash_accepts_case_preserving_package_identity
+    graph = BuildTool::DirectedGraph.new
+    graph.add_edge("swift/Code128", "ruby/app")
+    hashes = {"swift/Code128" => "11" * 32}
+
+    assert_equal expected_dependency_hash(hashes), BuildTool::Hasher.hash_deps("ruby/app", graph, hashes)
+  end
+
+  def test_dependency_hash_frames_identity_and_raw_digest_boundaries
+    first = BuildTool::DirectedGraph.new
+    first.add_edge("ruby/a", "ruby/app")
+    first.add_edge("ruby/bc", "ruby/app")
+    second = BuildTool::DirectedGraph.new
+    second.add_edge("ruby/ab", "ruby/app")
+    second.add_edge("ruby/c", "ruby/app")
+    first_hashes = {"ruby/a" => "11" * 32, "ruby/bc" => "22" * 32}
+    second_hashes = {"ruby/ab" => "11" * 32, "ruby/c" => "22" * 32}
+
+    refute_equal BuildTool::Hasher.hash_deps("ruby/app", first, first_hashes),
+      BuildTool::Hasher.hash_deps("ruby/app", second, second_hashes)
+    assert_equal first_hashes, {"ruby/a" => "11" * 32, "ruby/bc" => "22" * 32}
+  end
+
+  def test_dependency_hash_rejects_missing_or_noncanonical_digest_without_echoing_it
+    graph = BuildTool::DirectedGraph.new
+    graph.add_edge("ruby/base", "ruby/app")
+
+    error = assert_raises(ArgumentError) do
+      BuildTool::Hasher.hash_deps("ruby/app", graph, {})
+    end
+    assert_equal "missing SHA-256 dependency digest", error.message
+
+    ["AB" * 32, "ab" * 31, "gg" * 32, "ab" * 32 + "00"].each do |invalid|
+      error = assert_raises(ArgumentError) do
+        BuildTool::Hasher.hash_deps("ruby/app", graph, {"ruby/base" => invalid})
+      end
+      assert_equal "invalid SHA-256 dependency digest", error.message
+      refute_includes error.message, invalid
+    end
+  end
+
+  def test_dependency_hash_rejects_noncanonical_or_excessive_identities
+    invalid = BuildTool::DirectedGraph.new
+    invalid.add_edge("ruby/../escape", "ruby/app")
+    error = assert_raises(ArgumentError) do
+      BuildTool::Hasher.hash_deps("ruby/app", invalid, {"ruby/../escape" => "11" * 32})
+    end
+    assert_equal "invalid package identity", error.message
+
+    oversized = BuildTool::DirectedGraph.new
+    hashes = {}
+    4_097.times do |index|
+      name = "ruby/item#{index}"
+      oversized.add_edge(name, "ruby/app")
+      hashes[name] = "11" * 32
+    end
+    error = assert_raises(ArgumentError) do
+      BuildTool::Hasher.hash_deps("ruby/app", oversized, hashes)
+    end
+    assert_equal "dependency identity limit exceeded", error.message
+  end
+
+  def test_dependency_hash_stops_reverse_traversal_at_identity_limit
+    graph = CountingPredecessorChain.new(1_000_000)
+
+    error = assert_raises(ArgumentError) do
+      BuildTool::Hasher.hash_deps("ruby/app", graph, {})
+    end
+    assert_equal "dependency identity limit exceeded", error.message
+    assert_operator graph.calls, :<=, BuildTool::Hasher::MAX_HASHING_IDENTITIES + 1
+  end
+
+  def test_dependency_hash_stops_wide_predecessor_enumeration_at_first_excess_identity
+    graph = CountingPredecessorStar.new(1_000_000)
+
+    error = assert_raises(ArgumentError) do
+      BuildTool::Hasher.hash_deps("ruby/app", graph, {})
+    end
+    assert_equal "dependency identity limit exceeded", error.message
+    assert_equal BuildTool::Hasher::MAX_HASHING_IDENTITIES + 1, graph.yields
+  end
+
+  def test_combined_hash_uses_decoded_digests_and_rejects_invalid_inputs
+    package_digest = "11" * 32
+    dependencies_digest = "bb" * 32
+    expected = Digest::SHA256.hexdigest([package_digest, dependencies_digest].pack("H64H64"))
+    assert_equal expected, BuildTool::Hasher.combine_hashes(package_digest, dependencies_digest)
+
+    {"package" => "bad", "dependency" => "AA" * 32}.each do |role, invalid|
+      error = assert_raises(ArgumentError) do
+        BuildTool::Hasher.combine_hashes(
+          (role == "package") ? invalid : package_digest,
+          (role == "dependency") ? invalid : dependencies_digest
+        )
+      end
+      assert_equal "invalid SHA-256 #{role} digest", error.message
+    end
   end
 
   # -- collect_source_files_glob tests -----------------------------------------
@@ -721,6 +924,26 @@ class TestHasher < Minitest::Test
       digest.update(body)
     end
     digest.hexdigest
+  end
+
+  def expected_dependency_hash(dependency_hashes)
+    digest = Digest::SHA256.new
+    dependency_hashes.sort_by { |name, _digest| name.b }.each do |name, raw_digest|
+      name_bytes = name.b
+      digest.update([name_bytes.bytesize].pack("Q>"))
+      digest.update(name_bytes)
+      digest_bytes = [raw_digest].pack("H64")
+      digest.update([digest_bytes.bytesize].pack("Q>"))
+      digest.update(digest_bytes)
+    end
+    digest.hexdigest
+  end
+
+  def dependency_hashing_fixtures
+    SOURCE_COLLECTION_CASES.glob("hashing-cache-*.json").filter_map do |path|
+      fixture = JSON.parse(path.read)
+      fixture if DEPENDENCY_HASHING_FIXTURE_IDS.include?(fixture.fetch("id"))
+    end
   end
 
   def projected_expected_paths(fixture)

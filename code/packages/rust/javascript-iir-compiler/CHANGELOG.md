@@ -1,5 +1,95 @@
 # Changelog
 
+## Unreleased - the crate owns its `Number::toString` oracle (LANG83 PR7e)
+
+### Changed
+
+- `write_number_matches_the_pr6a_layout_byte_for_byte` (was
+  `…_formatter_…`) compares the 1,200 values with a test-local
+  `number_to_string_oracle` over `vm_core::float_format::shortest_digits`,
+  because LANG83 PR7e removed vm-core's `format_f64` with the `write_f64_js`
+  builtin. `the_oracle_matches_host_node` pins the oracle to strings host
+  `node` printed. No code change: the compiler has emitted no `write_f64_js`
+  since 0.7.0.
+- The same test now runs the values in batches of 100 `console.log`s, and
+  where a host `node` is on `PATH` it runs each batch with `node -e` and
+  compares the bytes too (like python-iir-compiler's sweep does with
+  `python3 -I`), so all 1,200 values are checked against a real engine.
+
+## Unreleased - ReferenceError traps `Trap.Unbound` (LANG83 PR7d)
+
+### Changed
+
+- **An undeclared or temporal-dead-zone read now lowers to
+  `trap "Trap.Unbound"`** (was `trap "Trap.ReferenceError"`). LANG83 PR7d
+  renamed the kind, keeping its stable id 7: a trap kind names the
+  condition (the name is unbound), not JavaScript's exception class. The
+  constant `REFERENCE_ERROR_TRAP` is now `UNBOUND_TRAP`
+  (`interpreter_ir::exception_kind::TRAP_UNBOUND`).
+- `run_module` alone reports `trap: Trap.Unbound`. `run_source` still
+  reports V8's wording (`ReferenceError: z is not defined`,
+  `ReferenceError: Cannot access 'a' before initialization`): that message,
+  and the word `ReferenceError` in it, are this compiler's knowledge, and
+  `run_compiled` maps the neutral trap back onto them.
+- The `es-number-log` corpus has no failing case, so no release-sweep
+  module changes and `release_classes.csv` is unchanged.
+
+## 0.7.0 - Unreleased - the compiler writes `String(x)` (LANG83 PR7c-js)
+
+LANG83 PR7 says the IIR names no source language. This release takes
+JavaScript's number layout out of every backend and puts it in the module.
+
+### Changed
+
+- **The native runner's step budget is sized from the node limit**
+  (`MAX_VM_STEPS = MAX_AST_NODES × 256`, about 4.2M; it was a flat 100,000).
+  A printed number now runs `__js_write_number`, about 110–165 VM steps
+  instead of one builtin call, so the old budget refused valid programs
+  such as `console.log(1e20, 1e20, 1e20)` written 200 times, with a message
+  that blamed an infinite loop (security review of this release). The new
+  test `the_step_budget_covers_every_program_the_limits_accept` runs the
+  largest program the source and node limits accept for the most
+  expensive print lines.
+- **`write_f64_js` is no longer emitted.** A module that prints a number
+  carries four functions this compiler writes (new `number_to_string`
+  module): `__js_write_number(x)` is `Number::toString(x)`, built from the
+  LANG83 PR7b primitives `f64_class`, `f64_signbit`, `f64_digits` and
+  `f64_exp10`, and it calls `__js_digit_count`, `__js_write_digits` and
+  `__js_write_uint`, which are integer code (`add`/`sub`/`mul`/`div` on
+  non-negative values with power-of-ten divisors, `cmp_*`, branches,
+  `putchar`). Every `console.log` argument is one `call __js_write_number`;
+  the layout is never inlined. A module that prints no number (only
+  `console.log()`, or a ReferenceError before the first print) gets none of
+  them. The helpers are marked fully typed, like Dartmouth BASIC's.
+- **The `-0` test is the class test.** A print site writes `-` when
+  `f64_signbit x > f64_class x`, which holds exactly for a zero with its sign
+  bit set (the spec's `f64_class x == 0 and f64_signbit x == 1`, as one
+  compare). The 0.6.0 test, `f64_signbit x > f64_signbit (x + 0)`, needed
+  `f64_add`, which BEAM refuses, and relied on `f64_add` keeping a NaN
+  operand's sign. Now only the arithmetic a program does keeps it off BEAM.
+  Literals still skip the test.
+- `run_module` registers only `putchar`: the module writes every number
+  itself.
+- Every module's IIR changed, so
+  `code/grammars/ecmascript/release_classes.csv` is regenerated. The classes
+  partition the editions exactly as before (es2016–es2020, es2021–es2025).
+
+### Output
+
+Byte-identical. A new test runs 1,200 values (every layout boundary, the
+extremes, and a deterministic sweep of bit patterns, each positive and
+negative) through `run_source` and compares each line with vm-core's PR6a
+formatter, the text `write_f64_js` wrote. All 38 `lang_matrix` rows print
+what they printed before on every column.
+
+### Divergences from the LANG83 pseudo-code
+
+- A digit is `q − (q div 10) × 10`, not `q mod 10` (the same value for
+  `q ≥ 0`), so the generic JIT, which has no `mod` bytecode, compiles
+  `__js_write_digits`.
+- The `(-e-1) × '0'` run after `0.` is `write_digits(D, n, n, n − e − 1)`:
+  positions past `D`'s end are zeros, so no separate loop is needed.
+
 ## 0.6.0 - Unreleased - JavaScript on every backend (LANG84 6e)
 
 ### Fixed (6e security review)

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-228-ACHE228",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say my head aches, take medicine, have an injection, say whether it is serious, and nod.",
+  "prerequisites": []
+}

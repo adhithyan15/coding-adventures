@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Long Ago and Soon",
+  "label": "ch:zh-long-ago-and-soon",
+  "canDo": "I can say it has been ages, talk about before and after, mornings and evenings, and what tends to happen.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C185-wangwang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say it has been ages, talk about before and after, mornings and evenings, and what tends to happen.",
+    "assesses": [
+      "ZH-LEX-C185-WHEN185-03",
+      "ZH-LEX-C185-WHEN185-04",
+      "ZH-LEX-C185-WHEN185-05"
+    ]
+  }
+}

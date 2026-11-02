@@ -7,10 +7,14 @@
 #![deny(unsafe_code)]
 
 use core::fmt;
+use der_asn1::{Asn1Decoder, Asn1Limits};
 use std::net::IpAddr;
 use x509_authority_information_access::{
-    AuthorityInformationAccess, ID_AD_OCSP_OID, MAX_ACCESS_DESCRIPTIONS,
+    decode_authority_information_access, AuthorityInformationAccess,
+    AuthorityInformationAccessErrorKind, AUTHORITY_INFORMATION_ACCESS_OID, ID_AD_OCSP_OID,
+    MAX_ACCESS_DESCRIPTIONS,
 };
+use x509_certificate_policy::ValidatedCertificateRolePolicy;
 
 /// Maximum caller-supplied scheme rules.
 pub const MAX_ALLOWED_SCHEMES: usize = 8;
@@ -84,6 +88,44 @@ impl fmt::Display for X509OcspAiaLocatorError {
 }
 
 impl std::error::Error for X509OcspAiaLocatorError {}
+
+/// Stable certificate-bound locator failure categories.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509OcspCertificateAiaLocatorErrorKind {
+    MissingExtensions,
+    MissingAuthorityInformationAccess,
+    AuthorityInformationAccess(AuthorityInformationAccessErrorKind),
+    Locator(X509OcspAiaLocatorErrorKind),
+}
+
+/// One redacted failure while deriving an OCSP locator from a certificate.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509OcspCertificateAiaLocatorError {
+    kind: X509OcspCertificateAiaLocatorErrorKind,
+}
+
+impl X509OcspCertificateAiaLocatorError {
+    const fn new(kind: X509OcspCertificateAiaLocatorErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    pub const fn kind(self) -> X509OcspCertificateAiaLocatorErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509OcspCertificateAiaLocatorError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 OCSP certificate AIA locator error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509OcspCertificateAiaLocatorError {}
 
 /// One caller-supplied scheme and exact port rule.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -236,6 +278,79 @@ impl fmt::Debug for SelectedX509OcspAiaLocator<'_, '_, '_> {
     }
 }
 
+/// Non-copyable OCSP locator evidence bound to one exact certificate.
+///
+/// Every retained string slice originates in the encoded bytes of the exact
+/// certificate retained by `role_policy`. This is discovery evidence only; it
+/// grants no DNS, destination, HTTP, TLS, trust, or revocation authority.
+pub struct SelectedX509CertificateOcspAiaLocator<'certificate, 'encoded, 'policy> {
+    role_policy: ValidatedCertificateRolePolicy<'certificate, 'encoded>,
+    description_index: usize,
+    scheme_policy: &'policy X509OcspAiaSchemePolicy<'policy>,
+    uri: &'encoded str,
+    host: &'encoded str,
+    explicit_port: Option<u16>,
+    path: &'encoded str,
+    query: Option<&'encoded str>,
+    path_and_query: &'encoded str,
+}
+
+impl<'certificate, 'encoded, 'policy>
+    SelectedX509CertificateOcspAiaLocator<'certificate, 'encoded, 'policy>
+{
+    /// Return the consumed critical-extension and role-policy evidence.
+    pub const fn role_policy(&self) -> &ValidatedCertificateRolePolicy<'certificate, 'encoded> {
+        &self.role_policy
+    }
+
+    /// Return the exact AIA description index selected from the certificate.
+    pub const fn description_index(&self) -> usize {
+        self.description_index
+    }
+
+    /// Return the exact caller-owned scheme rule that accepted the locator.
+    pub const fn scheme_policy(&self) -> &'policy X509OcspAiaSchemePolicy<'policy> {
+        self.scheme_policy
+    }
+
+    pub const fn uri(&self) -> &'encoded str {
+        self.uri
+    }
+
+    pub const fn host(&self) -> &'encoded str {
+        self.host
+    }
+
+    pub const fn explicit_port(&self) -> Option<u16> {
+        self.explicit_port
+    }
+
+    pub const fn effective_port(&self) -> u16 {
+        match self.explicit_port {
+            Some(port) => port,
+            None => self.scheme_policy.default_port,
+        }
+    }
+
+    pub const fn path(&self) -> &'encoded str {
+        self.path
+    }
+
+    pub const fn query(&self) -> Option<&'encoded str> {
+        self.query
+    }
+
+    pub const fn path_and_query(&self) -> &'encoded str {
+        self.path_and_query
+    }
+}
+
+impl fmt::Debug for SelectedX509CertificateOcspAiaLocator<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("SelectedX509CertificateOcspAiaLocator")
+    }
+}
+
 struct ParsedLocator {
     scheme_index: usize,
     host_start: usize,
@@ -299,6 +414,75 @@ pub fn select_unique_x509_ocsp_aia_locator<'aia, 'encoded, 'policy>(
         explicit_port: parsed.explicit_port,
         path_start: parsed.path_start,
         query_start: parsed.query_start,
+    })
+}
+
+/// Derive and select one OCSP AIA locator from one exact certificate.
+///
+/// Caller policy is validated before certificate data is inspected. The AIA
+/// extension is then derived only through the consumed certificate-wide role
+/// policy, structurally decoded under `asn1_limits`, and passed through the
+/// same fail-closed unique-locator policy as the lower-level entry point.
+pub fn select_unique_x509_certificate_ocsp_aia_locator<'certificate, 'encoded, 'policy>(
+    role_policy: ValidatedCertificateRolePolicy<'certificate, 'encoded>,
+    asn1_limits: Asn1Limits,
+    policy: &'policy X509OcspAiaLocatorPolicy<'policy>,
+) -> Result<
+    SelectedX509CertificateOcspAiaLocator<'certificate, 'encoded, 'policy>,
+    X509OcspCertificateAiaLocatorError,
+> {
+    validate_policy(policy).map_err(|kind| {
+        X509OcspCertificateAiaLocatorError::new(X509OcspCertificateAiaLocatorErrorKind::Locator(
+            X509OcspAiaLocatorErrorKind::InvalidPolicy(kind),
+        ))
+    })?;
+
+    let extensions = role_policy
+        .certificate()
+        .tbs_certificate()
+        .extensions()
+        .ok_or_else(|| {
+            X509OcspCertificateAiaLocatorError::new(
+                X509OcspCertificateAiaLocatorErrorKind::MissingExtensions,
+            )
+        })?;
+    let extension = extensions
+        .iter()
+        .find(|extension| {
+            extension
+                .extension_id()
+                .equals(AUTHORITY_INFORMATION_ACCESS_OID)
+        })
+        .ok_or_else(|| {
+            X509OcspCertificateAiaLocatorError::new(
+                X509OcspCertificateAiaLocatorErrorKind::MissingAuthorityInformationAccess,
+            )
+        })?;
+
+    let mut decoder = Asn1Decoder::new(asn1_limits);
+    let authority_information_access = decode_authority_information_access(&mut decoder, extension)
+        .map_err(|error| {
+            X509OcspCertificateAiaLocatorError::new(
+                X509OcspCertificateAiaLocatorErrorKind::AuthorityInformationAccess(error.kind()),
+            )
+        })?;
+    let selected = select_unique_x509_ocsp_aia_locator(&authority_information_access, policy)
+        .map_err(|error| {
+            X509OcspCertificateAiaLocatorError::new(
+                X509OcspCertificateAiaLocatorErrorKind::Locator(error.kind()),
+            )
+        })?;
+
+    Ok(SelectedX509CertificateOcspAiaLocator {
+        role_policy,
+        description_index: selected.description_index(),
+        scheme_policy: selected.scheme_policy(),
+        uri: selected.uri(),
+        host: selected.host(),
+        explicit_port: selected.explicit_port(),
+        path: selected.path(),
+        query: selected.query(),
+        path_and_query: selected.path_and_query(),
     })
 }
 

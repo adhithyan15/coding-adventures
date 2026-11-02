@@ -132,6 +132,24 @@ Everything below this line is about how the track is built and checked. It is
 here for people working on the curriculum; nothing in it is needed to learn the
 language.
 
+## Kannada B2 content inventory status
+
+[`core/exam-inventory-kannada-b2.json`](../core/exam-inventory-kannada-b2.json)
+is the first source-bounded content inventory for the committed B2 task shape.
+It enumerates 36 project-defined demands across communicative functions,
+Kannada grammar and register, script/sound/orthography, and lexicon/genres.
+The first strict measurement is **0/36 (0%)**: all 36 points remain deliberately
+unmapped rather than letting foundation atoms or one example word stand in for
+a complete B2 demand.
+
+All four dimensions remain **partial**. CEFR supplies a generic B2 proficiency
+boundary, CIIL supplies an intermediate Kannada four-skill instructional
+boundary, Unicode supplies the script model, and LDC-IL supplies contemporary
+domains. None supplies a finite Kannada B2 grammar or word list. This inventory
+is therefore a work queue, not a readiness claim: the completion planner must
+keep `exam-inventory/kannada/B2` visible, and only the assessment contract's
+mock and human-validation evidence can support learner-facing readiness.
+
 ## Chapter capabilities
 
 [`chapters.json`](./chapters.json) is the track's

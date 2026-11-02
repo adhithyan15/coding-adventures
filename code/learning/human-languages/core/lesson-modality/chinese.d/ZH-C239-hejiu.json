@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C239-hejiu",
+    "language": "chinese",
+    "chapter": 239,
+    "sequence": 18100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ead12e8a7a074e8d"
+  },
+  "findings": []
+}

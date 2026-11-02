@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C259-diangong",
+  "pathSegment": "ZH-PATH-259-JOB259",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-259-JOB259",
+      "order": 4
+    }
+  ]
+}

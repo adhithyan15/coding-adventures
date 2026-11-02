@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C212-dayin",
+  "pathSegment": "ZH-PATH-212-SERVICE212",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-212-SERVICE212",
+      "order": 0
+    }
+  ]
+}

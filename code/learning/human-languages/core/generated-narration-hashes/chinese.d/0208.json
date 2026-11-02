@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:f3eeff42095d1fbd",
+  "lessonIds": [
+    "ZH-C208-shifu",
+    "ZH-C208-jiancha",
+    "ZH-C208-anzhuang",
+    "ZH-C208-gongju",
+    "ZH-C208-dianchi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch208.txt",
+  "json": "chinese/narration/ch208.json",
+  "textHash": "fnv1a64:f60fd2868d701526",
+  "jsonHash": "fnv1a64:ef5fc55541fed7d3",
+  "findings": []
+}

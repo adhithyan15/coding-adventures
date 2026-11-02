@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C222-dapenti",
+    "language": "chinese",
+    "chapter": 222,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26ddc51675a41c91"
+  },
+  "findings": []
+}

@@ -154,6 +154,42 @@ Revised approach:
 This is the simplest correct approach: the linker merges all functions and
 the VM runs the root's `main`.
 
+> **Superseded by #18432 — modules see only their imports' exports.**
+> "The linker resolves names globally" turned out to mean "any module can
+> call any function", private or not.  The driver handed *every* function
+> name in the module tree to the IR compiler as an extern, and with no
+> `IIRImport`s the linker left each cross-module name bare, so it bound to
+> whichever function owned it after merging.  Two libraries each holding a
+> private `helper` and a root calling `(helper)` linked, and ran the first
+> library's private helper.
+>
+> The driver now works out, for each module `m`:
+>
+> | Name list | Contents |
+> |-----------|----------|
+> | defined | every function `m` defines (`define`d lambdas, record and union constructors / predicates / accessors) |
+> | exported | `m`'s `(export …)` list ∩ defined, minus `main` (a library's `main` export is withdrawn with its entry point, #18429) |
+> | visible | the *exported* names of `m`'s **direct** imports, each paired with the module that exports it |
+>
+> `m` is compiled with *visible* as its externs, so a call to — or a
+> function value of — a name outside it is a compile error (`unbound
+> name`, with a source position).  Every visible name `m` does not define
+> itself is then appended to `m.imports` as
+> `IIRImport::new(<exporting module>, <name>, "any")`, and the linker checks
+> every function reference against those imports
+> (`LinkError::UndeclaredCall`, LANG33).
+>
+> Two consequences worth stating:
+>
+> - **A local definition shadows an import.**  No import is emitted for a
+>   name `m` defines, because the linker lets an import override a
+>   same-named own function; `m`'s calls keep reaching its own definition,
+>   matching the type checker.
+> - **Transitive exports are not visible.**  If `main` imports `lib_a` and
+>   `lib_a` imports `lib_b`, `main` must import `lib_b` to call it.  The
+>   type checker (Phase 3.5) already gave each module only its direct
+>   imports' exports, so the IR compiler now agrees with it.
+
 ### `ModuleDriverError` variants
 
 ```rust
@@ -231,7 +267,10 @@ in-memory string fixtures written to a `tempdir`.
 ## Intentional deferrals
 
 - **Per-function import checking** — LANG56 v1 uses global-merge linking;
-  strict per-function import declarations deferred to LANG57.
+  strict per-function import declarations deferred to LANG57.  *(Done in
+  #18432 at module granularity: a module may name exactly the exported
+  functions of its direct imports, and the driver declares each as an
+  `IIRImport` the linker checks.)*
 - **Circular import with graceful message** — detected via visited-set, error
   emitted, but the cycle members are not fully reconstructed (just the repeated
   module name). Full cycle reconstruction deferred.

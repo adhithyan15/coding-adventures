@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C210-aman-did-work",
+    "language": "punjabi",
+    "chapter": 210,
+    "sequence": 11410,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8072024c8e2c4d8e"
+  },
+  "findings": []
+}

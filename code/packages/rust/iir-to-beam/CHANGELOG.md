@@ -1,5 +1,64 @@
 # Changelog — iir-to-beam
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: BEAM holds dynamic values as Erlang terms (through `lang-aot`'s structural lowering) and links no tagged-word runtime.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's
+  builtin list, and the module no longer carries `'__iir_write_f64'/2`: a
+  module that calls either is refused. `'__iir_f64_shortest'/1` and the two
+  PR7b queries are unchanged, except that a module using them no longer
+  interns the writer-only imports (`lists:duplicate/2`, `lists:nthtail/2`,
+  `erlang:integer_to_list/1`) and literals, and the parse's frame shrinks
+  from 10 to 8 Y slots (the two that only the writer read).
+- Tests: `retired_float_writers_are_refused` replaces the writer tests; the
+  PR7b test also pins that the writer-only imports are absent and that a
+  module function may not take a helper's name.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- `trap` validates its kind with `exception_kind::is_trap_kind` (LANG83 PR7d
+  removed `is_registered_trap_kind` with the empty `LANGUAGE_TRAP_KINDS`
+  table); the accepted set is unchanged. Kind 7 is now `Trap.Unbound`, so the
+  `erlang:error/1` reason atom is `'Trap.Unbound'` (was
+  `'Trap.ReferenceError'`).
+
+## Unreleased — LANG83 PR7c-py — call arguments are a parallel move
+
+- **Fixed: a local `call` could hand its callee the wrong arguments.** The
+  arguments were moved into x0, x1, … one at a time in argument order. So an
+  argument already sitting in an earlier argument's slot was overwritten
+  before it was read. `__py_write_float` (python-iir-compiler, PR7c-py) keeps
+  `zero` in x1 and calls `__py_write_digits(d, n, zero, e1)`, so the callee got
+  `from = n`. On real OTP, `print(1.5)` printed `.5` and `print(1e16)` printed
+  `e+16` (the BEAM × Python cell on PR #18400). Moves are now ordered by
+  `sequence_parallel_moves`: it emits a move only once nothing still has to
+  read its destination, and it breaks a pure cycle (a swap, say) through one
+  scratch register at or above `max(next_reg, arity)`. A call whose old order
+  was already safe emits exactly the same instructions, so modules that
+  worked before lower byte-for-byte the same.
+- Tests: the opcode model runs `main → f(…)` for every way of passing four
+  arguments from five registers (625 calls, including the PR7c-py shape), and
+  checks that safe orders are unchanged. Both new tests fail before the fix.
+  The model gained `erlang:*/2`.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The PR6a `float_to_list(F, [short])` parse is its own function,
+  `'__iir_f64_shortest'(F) -> [Neg, E | D]`, called by `'__iir_write_f64'/2`
+  (output unchanged) and by the new `'__iir_f64_digits'/1`
+  (`list_to_integer(D)`) and `'__iir_f64_exp10'/1` (`E`), each emitted and
+  exported only when used; 0 for ±0.0 (BEAM has no infinities or NaN).
+- `f64_class` is inline: two `is_eq_exact` tests against the literal-table
+  ±0.0 (classes 2 and 3 cannot occur). `f64_digits` / `f64_exp10` are a
+  local `call` and join the live-across-call list.
+- Tests: the opcode-and-BIF model now runs local calls, `test_heap` and
+  `put_list`; it runs the writer (unchanged output) and the three ops,
+  alone and with a value live across both calls, over every finite PR6a
+  value in four `float_to_list` layouts. Structural here: there is no `erl`.
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 - `real_to_int_trunc` / `real_to_int_floor` range-check the exact integer

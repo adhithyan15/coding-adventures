@@ -46,7 +46,8 @@ use interpreter_ir::Operand;
 ///
 /// # Special case: `nil`
 ///
-/// The TW00 IR compiler emits `call_builtin "make_nil"` → produces
+/// The TW00 IR compiler emits `const 0 : ref<LispyPair>` for `nil`
+/// (once `call_builtin "make_nil"`, now the registered `dyn_nil`) →
 /// a fresh `nil` register; bare `nil` references go through the
 /// register file like any other local.  But during builtin name
 /// resolution the compiler embeds names like `"_move"`, `"+"`,
@@ -92,8 +93,8 @@ pub fn operand_to_value(
         )),
         Operand::Var(name) => {
             // Special case: TW00's IR compiler doesn't emit
-            // `Operand::Var("nil")` directly (it routes through
-            // `make_nil`), so we don't need a fallthrough — but
+            // `Operand::Var("nil")` directly (it emits a typed
+            // `const 0`), so we don't need a fallthrough — but
             // we accept it for forward-compat with simpler test
             // helpers.
             if name == "nil" {

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C234-quxiao",
+  "pathSegment": "ZH-PATH-234-RAIN234",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-234-RAIN234",
+      "order": 1
+    }
+  ]
+}

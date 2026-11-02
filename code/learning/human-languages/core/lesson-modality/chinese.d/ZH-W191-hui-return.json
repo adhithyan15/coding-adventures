@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W191-hui-return",
+    "language": "chinese",
+    "chapter": 191,
+    "sequence": 15155,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a780b153a8daa869",
+    "detachableSegments": [
+      "Script — 口 inside a larger frame"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

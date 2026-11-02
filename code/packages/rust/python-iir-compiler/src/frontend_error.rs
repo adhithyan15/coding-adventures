@@ -7,7 +7,7 @@
 //! |-----------------------|------------------------------|---------------------------------|
 //! | `UnknownRelease`      | release resolution           | the (escaped) request, ≤5 IDs   |
 //! | `ReleaseNotAvailable` | resolution / profile lookup  | release, why                    |
-//! | `Budget`              | parser or compiler budgets   | release, which budget, limit    |
+//! | `Budget`              | parser or compiler budgets   | release, which, limit (+ fn, start) |
 //! | `Lex`                 | `GrammarLexer`               | release, 1-based line/column    |
 //! | `Parse`               | `GrammarParser`              | release, furthest failure       |
 //! | `Unsupported`         | this crate                   | release, CST rule, start/end    |
@@ -16,6 +16,12 @@
 //! are carried over field for field ([`From`] below). `Unsupported` is the
 //! compiler's own: the tree parsed, but it is outside what `py-int-print`
 //! lowers (a callee other than `print`, `/`, a literal outside `i64`, ...).
+//!
+//! A `Budget` for the per-function register limit (#18419) also names the
+//! function and the 1-based start of the statement that went over, because
+//! unlike a source or token budget it is a property of one place in the
+//! program, which its author can split. The parser's budgets leave both
+//! `None`.
 //!
 //! LANG79's float pilot keeps its own `String` errors; this type belongs to
 //! the release path only.
@@ -51,6 +57,12 @@ pub enum FrontendError {
         which: &'static str,
         /// Its limit.
         limit: usize,
+        /// The lowered function that exceeded it, for a per-function budget
+        /// (`registers per function`); `None` for the others.
+        function: Option<String>,
+        /// The 1-based start `(line, column)` of the statement being lowered
+        /// when the budget ran out, when there is one.
+        start: Option<(usize, usize)>,
     },
     /// No token pattern of the release's `.tokens` matches at this position.
     Lex {
@@ -149,6 +161,8 @@ impl From<PythonFrontendError> for FrontendError {
                 release,
                 which,
                 limit,
+                function: None,
+                start: None,
             },
             PythonFrontendError::Lex {
                 release,
@@ -197,7 +211,20 @@ impl fmt::Display for FrontendError {
                 release,
                 which,
                 limit,
-            } => write!(f, "Python {release}: {which} exceeds the limit of {limit}"),
+                function,
+                start,
+            } => {
+                // `Python 3.13.16: registers per function exceeds the limit
+                // of 65536 in function `main` at 258:1`
+                write!(f, "Python {release}: {which} exceeds the limit of {limit}")?;
+                if let Some(function) = function {
+                    write!(f, " in function `{function}`")?;
+                }
+                if let Some((line, column)) = start {
+                    write!(f, " at {line}:{column}")?;
+                }
+                Ok(())
+            }
             Self::Lex {
                 release,
                 line,

@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 normalized element type semantics",
+  "fixtures": [
+    {
+      "name": "element-types",
+      "source": "C4Component\nPerson(person, \"Person\")\nPerson_Ext(person_ext, \"External Person\")\nSystem(system, \"System\")\nSystemDb(system_db, \"System DB\")\nSystemQueue(system_queue, \"System Queue\")\nSystem_Ext(system_ext, \"External System\")\nSystemDb_Ext(system_db_ext, \"External System DB\")\nSystemQueue_Ext(system_queue_ext, \"External System Queue\")\nContainer(container, \"Container\", \"Runtime\")\nContainerDb(container_db, \"Container DB\", \"SQL\")\nContainerQueue(container_queue, \"Container Queue\", \"Kafka\")\nContainer_Ext(container_ext, \"External Container\", \"Runtime\")\nContainerDb_Ext(container_db_ext, \"External Container DB\", \"SQL\")\nContainerQueue_Ext(container_queue_ext, \"External Container Queue\", \"Kafka\")\nComponent(component, \"Component\", \"Library\")\nComponentDb(component_db, \"Component DB\", \"SQLite\")\nComponentQueue(component_queue, \"Component Queue\", \"Channel\")\nComponent_Ext(component_ext, \"External Component\", \"Library\")\nComponentDb_Ext(component_db_ext, \"External Component DB\", \"SQLite\")\nComponentQueue_Ext(component_queue_ext, \"External Component Queue\", \"Channel\")"
+    }
+  ]
+}

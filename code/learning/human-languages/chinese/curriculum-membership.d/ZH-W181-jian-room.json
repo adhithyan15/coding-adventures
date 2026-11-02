@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W181-jian-room",
+  "pathSegment": "ZH-PATH-181-BED181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-181-BED181",
+      "order": 3
+    }
+  ]
+}

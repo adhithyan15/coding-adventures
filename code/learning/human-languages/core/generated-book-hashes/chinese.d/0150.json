@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:1cc87b0ac173830a",
+  "lessonIds": [
+    "ZH-C150-guoqu",
+    "ZH-W150-guo-pass",
+    "ZH-C150-guo-ever",
+    "ZH-C150-houlai",
+    "ZH-C150-ranhou",
+    "ZH-C150-conglai",
+    "ZH-C150-practice"
+  ],
+  "tex": "chinese/book/chapters/ch150-have-you-ever-been.tex"
+}

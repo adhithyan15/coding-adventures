@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C262-pingpangqiu",
+  "pathSegment": "ZH-PATH-262-SPORT262",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-262-SPORT262",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-155-TIMETABLE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "reading",
+  "canDo": "I can find times in a timetable and opening hours.",
+  "prerequisites": []
+}

@@ -144,7 +144,11 @@ struct SirMap { struct SirMapEntry *entries; int64_t len; int64_t cap; };
 
 /* A closure's function takes its captured environment and the call args. */
 typedef SirValue (*SirFn)(SirValue *caps, SirValue *args, int argc);
-struct SirClosure { SirFn fn; int ncap; SirValue *caps; };
+/* `arity` is -1 for a lenient closure (a Ruby block: the thunk pads a missing
+ * argument with nil and ignores an extra one) or the exact argument count a
+ * STRICT closure demands (SIR10 "Strict closures": a Ruby lambda, every Twig
+ * closure).  `_sir_strict_arity` sets it; `_sir_apply` enforces it. */
+struct SirClosure { SirFn fn; int ncap; SirValue *caps; int arity; };
 
 /* ---- small allocation + string helpers ---------------------- */
 
@@ -855,13 +859,47 @@ SirValue _sir_make_closure(SirFn fn, int ncap, ...) {
     SirValue v;
     va_list ap;
     int i;
-    c->fn = fn; c->ncap = ncap;
+    c->fn = fn; c->ncap = ncap; c->arity = -1;
     c->caps = (ncap > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)ncap) : NULL;
     va_start(ap, ncap);
     for (i = 0; i < ncap; i++) c->caps[i] = va_arg(ap, SirValue);
     va_end(ap);
     v.tag = SIR_CLOSURE; v.as.clo = c;
     return v;
+}
+
+/* Mark a fresh closure STRICT: it must be called with exactly `arity`
+ * arguments.  The emitter wraps the `MakeClosure` inside SIR's `lambda` marker
+ * as `_sir_strict_arity(_sir_make_closure(...), N)`. */
+SirValue _sir_strict_arity(SirValue c, int arity) {
+    if (c.tag == SIR_CLOSURE) c.as.clo->arity = arity;
+    return c;
+}
+
+/* Defined with the exception machinery further down. */
+SirValue _sir_error(const char *sir_class, SirValue msg);
+SirValue _sir_raise(SirValue exc);
+
+/* Run closure `c` on `args` — the ONE place a closure body is entered, so a
+ * strict closure's arity is checked on every path: `_sir_apply` (an
+ * IndirectCall, a runtime block call) and the OOP dispatchers (a method,
+ * `initialize`, `super`, a class method), which used to call `c->fn`
+ * directly and skipped the check.
+ *
+ * A strict closure called with the wrong number of arguments raises
+ * `ArgumentError` (uncaught: printed to stderr, exit 1) instead of reaching
+ * the thunk, which would quietly read a missing argument as nil — Twig's
+ * `((lambda (x y) (+ x y)) 4)` used to print 4.  `args` is freed before the
+ * raise because the raise does not return to the caller's own `free`. */
+SirValue _sir_call_closure(SirClosure *c, SirValue *args, int argc) {
+    if (c->arity >= 0 && argc != c->arity) {
+        char *msg = (char *)_sir_alloc(96);
+        snprintf(msg, 96, "arity mismatch: closure expects %d argument(s), got %d",
+                 c->arity, argc);
+        if (args) free(args);
+        return _sir_raise(_sir_error("ArgumentError", _sir_str(msg)));
+    }
+    return c->fn(c->caps, args, argc);
 }
 
 SirValue _sir_apply(SirValue target, int argc, ...) {
@@ -873,7 +911,7 @@ SirValue _sir_apply(SirValue target, int argc, ...) {
         fprintf(stderr, "sir: attempt to call a non-closure value\n");
         exit(1);
     }
-    r = target.as.clo->fn(target.as.clo->caps, args, argc);
+    r = _sir_call_closure(target.as.clo, args, argc);
     if (args) free(args);
     return r;
 }
@@ -1501,7 +1539,7 @@ SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
         const char *saved_class = _sir_current_class;
         _sir_current_self = recv;
         _sir_current_class = recv.as.inst->sir_class;  /* slice 6: `@@x` owner */
-        r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
+        r = _sir_call_closure(fn.as.clo, args, argc);
         _sir_current_self = saved_self;
         _sir_current_class = saved_class;
     }
@@ -1534,7 +1572,7 @@ SirValue _sir_call_new(const char *cls, int argc, ...) {
             const char *saved_class = _sir_current_class;
             _sir_current_self = obj;
             _sir_current_class = obj.as.inst->sir_class;
-            fn.as.clo->fn(fn.as.clo->caps, args, argc);
+            _sir_call_closure(fn.as.clo, args, argc);
             _sir_current_self = saved_self;
             _sir_current_class = saved_class;
         }
@@ -1561,7 +1599,7 @@ SirValue _sir_call_super(const char *method, const char *defining_class, int arg
     va_start(ap, argc);
     args = _sir_va_collect(argc, ap);
     va_end(ap);
-    r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
+    r = _sir_call_closure(fn.as.clo, args, argc);
     if (args) free(args);
     return r;
 }
@@ -1651,7 +1689,7 @@ SirValue _sir_call_class_method(const char *cls, const char *method, int argc, .
         const char *saved_class = _sir_current_class;
         _sir_current_self = _sir_nil();
         _sir_current_class = _sir_intern(cls);  /* slice 6: `@@x` owner is the class */
-        r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
+        r = _sir_call_closure(fn.as.clo, args, argc);
         _sir_current_self = saved_self;
         _sir_current_class = saved_class;
     }

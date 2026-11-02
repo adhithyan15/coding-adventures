@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C239-huxi",
+  "pathSegment": "ZH-PATH-239-HABIT239",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-239-HABIT239",
+      "order": 3
+    }
+  ]
+}

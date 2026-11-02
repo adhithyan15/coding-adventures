@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C258-youmo",
+  "pathSegment": "ZH-PATH-258-KIND258",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-258-KIND258",
+      "order": 4
+    }
+  ]
+}

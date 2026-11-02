@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C149-yibian",
+    "language": "chinese",
+    "chapter": 149,
+    "sequence": 12190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6738b761464c8615"
+  },
+  "findings": []
+}

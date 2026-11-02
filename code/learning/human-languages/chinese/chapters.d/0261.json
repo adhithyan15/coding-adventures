@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Have You Ever?",
+  "label": "ch:zh-have-you-ever",
+  "canDo": "I can talk about experience, say I once did something, study abroad, go overseas and say whom I saw.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C261-tiyan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can talk about experience, say I once did something, study abroad, go overseas and say whom I saw.",
+    "assesses": [
+      "ZH-LEX-C261-EVER261-03",
+      "ZH-LEX-C261-EVER261-04",
+      "ZH-LEX-C261-EVER261-05"
+    ]
+  }
+}

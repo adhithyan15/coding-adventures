@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W197-zhao-seek",
+    "language": "chinese",
+    "chapter": 197,
+    "sequence": 15475,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2049eceedc266aef",
+    "detachableSegments": [
+      "Script — the hand piece, then a hook and a fall"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

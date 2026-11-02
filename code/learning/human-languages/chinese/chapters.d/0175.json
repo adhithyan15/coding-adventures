@@ -1,0 +1,22 @@
+{
+  "chapter": 175,
+  "title": "Sofa and Shelves",
+  "label": "ch:zh-sofa-and-shelves",
+  "canDo": "I can name furniture, a sofa, a cupboard and a bookshelf, and say what is in front of me.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R175-review-170-175",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can name furniture, a sofa, a cupboard and a bookshelf, and say what is in front of me.",
+    "assesses": [
+      "ZH-LEX-C175-FURN175-01",
+      "ZH-LEX-C175-FURN175-02",
+      "ZH-LEX-C175-FURN175-03",
+      "ZH-LEX-C175-FURN175-04",
+      "ZH-LEX-C175-FURN175-05",
+      "ZH-SCRIPT-MIAN-FACE-01"
+    ]
+  }
+}

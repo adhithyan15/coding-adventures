@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C152-liuli",
+  "pathSegment": "ZH-PATH-152-WELL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-152-WELL",
+      "order": 3
+    }
+  ]
+}

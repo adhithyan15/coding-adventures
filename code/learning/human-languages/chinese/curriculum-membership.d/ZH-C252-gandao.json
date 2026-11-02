@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C252-gandao",
+  "pathSegment": "ZH-PATH-252-FEEL252",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-252-FEEL252",
+      "order": 1
+    }
+  ]
+}

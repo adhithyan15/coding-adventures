@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:a03020a1adfb30b5",
+  "lessonIds": [
+    "ZH-C228-touteng",
+    "ZH-W228-tou-head",
+    "ZH-W228-teng-ache",
+    "ZH-C228-chiyao",
+    "ZH-C228-dazhen",
+    "ZH-C228-yanzhong",
+    "ZH-C228-diantou"
+  ],
+  "tex": "chinese/book/chapters/ch228-a-headache.tex"
+}

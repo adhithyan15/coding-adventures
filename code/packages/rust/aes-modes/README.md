@@ -44,6 +44,29 @@ cargo test -p coding_adventures_aes_modes
 
 Uses NIST SP 800-38A and GCM specification test vectors.
 
+## Fixed-memory GHASH prerequisite
+
+`ghash_multiply_fixed` and `ghash_fixed` provide the repository-owned GHASH
+piece needed by a future reviewed AES-GCM boundary. They use caller-owned
+fixed output storage, allocate no memory, run the field multiplication with a
+fixed 128-round schedule and mask secret-derived decisions, and wipe the
+working multiplier, product, accumulator, and padded block on return. GHASH
+input lengths are validated before output changes.
+
+The input-bit mask also has wipe-on-drop ownership. A best-effort compiler
+barrier hides its zero/all-ones range so the tested optimizer does not skip
+the XOR work based on a secret bit. Rust's `black_box` offers no cryptographic
+guarantee: the strict optimized-IR gate remains required for each compiler and
+target, and passing it is evidence only for the generated code inspected.
+
+This is deliberately not a production AES-GCM or TLS implementation. The
+legacy GCM API remains an educational compatibility surface, and the current
+AES implementation has not been hardened or composed with this primitive into
+a reviewed fixed-memory AEAD. Key ownership, nonce construction and reuse
+prevention, per-key record limits, record protection, handshake processing,
+certificate validation, revocation, networking, HTTP, and OAuth transport all
+remain outside this crate.
+
 ## Part of coding-adventures
 
 An educational computing stack built from logic gates through compilers.

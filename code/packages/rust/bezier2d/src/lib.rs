@@ -32,6 +32,37 @@ use point2d::{Point, Rect};
 
 // We use trig::sqrt for bounding box computation (discriminant square root).
 
+/// Version of the neutral G2D02 flattening fixture consumed by this crate.
+pub const FLATTENING_FIXTURE_VERSION: u32 = 1;
+/// Maximum permitted subdivision depth for one curve fragment.
+pub const FLATTENING_MAX_DEPTH: usize = 32;
+/// Maximum number of splits permitted for one atomic flattening call.
+pub const FLATTENING_MAX_SUBDIVISIONS: usize = 65_535;
+
+/// Deterministic failures produced by conservative polyline flattening.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FlatteningError {
+    /// Tolerance was zero, negative, NaN, or infinite.
+    InvalidTolerance,
+    /// Input or derived control geometry was non-finite.
+    NonFiniteGeometry,
+    /// The pinned depth or subdivision ceiling was exhausted.
+    BudgetExceeded,
+}
+
+impl std::fmt::Display for FlatteningError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let message = match self {
+            Self::InvalidTolerance => "tolerance must be finite and positive",
+            Self::NonFiniteGeometry => "non-finite geometry",
+            Self::BudgetExceeded => "flattening budget exceeded",
+        };
+        formatter.write_str(message)
+    }
+}
+
+impl std::error::Error for FlatteningError {}
+
 // ============================================================================
 // Quadratic Bezier
 // ============================================================================
@@ -89,7 +120,7 @@ impl QuadraticBezier {
         // The linear Bezier of the differences, scaled by 2.
         let d0 = self.p1.subtract(self.p0); // p1 - p0
         let d1 = self.p2.subtract(self.p1); // p2 - p1
-        // Lerp between d0 and d1, then scale by 2.
+                                            // Lerp between d0 and d1, then scale by 2.
         d0.lerp(d1, t).scale(2.0)
     }
 
@@ -115,39 +146,36 @@ impl QuadraticBezier {
         (left, right)
     }
 
-    /// Adaptively subdivide into a polyline approximation.
+    /// Conservatively flatten this curve or return an atomic error.
     ///
-    /// The algorithm: if the midpoint of the curve is close enough to the
-    /// midpoint of the chord (straight line from p0 to p2), the curve is
-    /// flat enough to approximate with a line segment. Otherwise, split
-    /// at t=0.5 and recurse on both halves.
-    ///
-    /// `tolerance` is the maximum allowed distance (in the same units as the
-    /// control points) between the curve's midpoint and the chord's midpoint.
-    ///
-    /// The output includes both endpoints; adjacent segments share no duplicates
-    /// (each call contributes its p0 but expects the caller to include p2 once).
-    pub fn to_polyline(&self, tolerance: f64) -> Vec<Point> {
-        // The midpoint of the straight chord from p0 to p2.
-        let chord_mid = self.p0.lerp(self.p2, 0.5);
-        // The actual midpoint of the curve at t=0.5.
-        let curve_mid = self.evaluate(0.5);
-        // Flatness error: how far the curve deviates from the chord.
-        let error = chord_mid.distance(curve_mid);
+    /// Midpoint-only tests miss symmetric curves whose midpoint lies on the
+    /// chord. The quadratic convex-hull property supplies a stronger bound:
+    /// the curve stays within the control point's distance to the finite chord
+    /// segment. An explicit stack avoids host recursion limits; right is pushed
+    /// before left so output remains ordered by increasing parameter.
+    pub fn to_polyline(&self, tolerance: f64) -> Result<Vec<Point>, FlatteningError> {
+        validate_tolerance(tolerance)?;
+        validate_points(&[self.p0, self.p1, self.p2])?;
 
-        if error <= tolerance {
-            // Flat enough: just a line segment. Return [p0, p2].
-            vec![self.p0, self.p2]
-        } else {
-            // Not flat: split at midpoint and recurse on both halves.
-            let (left, right) = self.split(0.5);
-            let mut pts = left.to_polyline(tolerance);
-            // The right half starts at the split point (already in pts).
-            // Skip the first point of the right polyline to avoid duplication.
-            let right_pts = right.to_polyline(tolerance);
-            pts.extend_from_slice(&right_pts[1..]);
-            pts
+        let mut stack = vec![(*self, 0usize)];
+        let mut points = vec![self.p0];
+        let mut subdivisions = 0usize;
+        while let Some((curve, depth)) = stack.pop() {
+            let error_bound = point_to_segment_distance(curve.p1, curve.p0, curve.p2)?;
+            if error_bound <= tolerance {
+                points.push(curve.p2);
+                continue;
+            }
+            if depth >= FLATTENING_MAX_DEPTH || subdivisions >= FLATTENING_MAX_SUBDIVISIONS {
+                return Err(FlatteningError::BudgetExceeded);
+            }
+            let (left, right) = curve.split(0.5);
+            validate_points(&[left.p0, left.p1, left.p2, right.p0, right.p1, right.p2])?;
+            subdivisions += 1;
+            stack.push((right, depth + 1));
+            stack.push((left, depth + 1));
         }
+        Ok(points)
     }
 
     /// Compute the tight axis-aligned bounding box of this curve.
@@ -270,9 +298,10 @@ impl CubicBezier {
         let d0 = self.p1.subtract(self.p0); // p1 - p0
         let d1 = self.p2.subtract(self.p1); // p2 - p1
         let d2 = self.p3.subtract(self.p2); // p3 - p2
-        // Evaluate the quadratic Bezier through d0, d1, d2 at t.
+                                            // Evaluate the quadratic Bezier through d0, d1, d2 at t.
         let one_t = 1.0 - t;
-        let r = d0.scale(one_t * one_t)
+        let r = d0
+            .scale(one_t * one_t)
             .add(d1.scale(2.0 * one_t * t))
             .add(d2.scale(t * t));
         // Scale by 3 (degree of the cubic).
@@ -303,25 +332,34 @@ impl CubicBezier {
         (left, right)
     }
 
-    /// Adaptively subdivide into a polyline approximation.
-    ///
-    /// Same flatness criterion as the quadratic version: if the midpoint of
-    /// the curve at t=0.5 is within `tolerance` of the chord midpoint, emit
-    /// a line segment. Otherwise split and recurse.
-    pub fn to_polyline(&self, tolerance: f64) -> Vec<Point> {
-        let chord_mid = self.p0.lerp(self.p3, 0.5);
-        let curve_mid = self.evaluate(0.5);
-        let error = chord_mid.distance(curve_mid);
+    /// Conservatively flatten this curve or return an atomic error.
+    /// Both off-curve controls participate in the finite-segment error bound.
+    pub fn to_polyline(&self, tolerance: f64) -> Result<Vec<Point>, FlatteningError> {
+        validate_tolerance(tolerance)?;
+        validate_points(&[self.p0, self.p1, self.p2, self.p3])?;
 
-        if error <= tolerance {
-            vec![self.p0, self.p3]
-        } else {
-            let (left, right) = self.split(0.5);
-            let mut pts = left.to_polyline(tolerance);
-            let right_pts = right.to_polyline(tolerance);
-            pts.extend_from_slice(&right_pts[1..]);
-            pts
+        let mut stack = vec![(*self, 0usize)];
+        let mut points = vec![self.p0];
+        let mut subdivisions = 0usize;
+        while let Some((curve, depth)) = stack.pop() {
+            let first_bound = point_to_segment_distance(curve.p1, curve.p0, curve.p3)?;
+            let second_bound = point_to_segment_distance(curve.p2, curve.p0, curve.p3)?;
+            if first_bound.max(second_bound) <= tolerance {
+                points.push(curve.p3);
+                continue;
+            }
+            if depth >= FLATTENING_MAX_DEPTH || subdivisions >= FLATTENING_MAX_SUBDIVISIONS {
+                return Err(FlatteningError::BudgetExceeded);
+            }
+            let (left, right) = curve.split(0.5);
+            validate_points(&[
+                left.p0, left.p1, left.p2, left.p3, right.p0, right.p1, right.p2, right.p3,
+            ])?;
+            subdivisions += 1;
+            stack.push((right, depth + 1));
+            stack.push((left, depth + 1));
         }
+        Ok(points)
     }
 
     /// Tight axis-aligned bounding box.
@@ -343,24 +381,168 @@ impl CubicBezier {
         let mut max_y = self.p0.y.max(self.p3.y);
 
         // Solve for X extrema.
-        for t in extrema_of_cubic_derivative(
-            self.p0.x, self.p1.x, self.p2.x, self.p3.x,
-        ) {
+        for t in extrema_of_cubic_derivative(self.p0.x, self.p1.x, self.p2.x, self.p3.x) {
             let px = self.evaluate(t);
             min_x = min_x.min(px.x);
             max_x = max_x.max(px.x);
         }
 
         // Solve for Y extrema.
-        for t in extrema_of_cubic_derivative(
-            self.p0.y, self.p1.y, self.p2.y, self.p3.y,
-        ) {
+        for t in extrema_of_cubic_derivative(self.p0.y, self.p1.y, self.p2.y, self.p3.y) {
             let py = self.evaluate(t);
             min_y = min_y.min(py.y);
             max_y = max_y.max(py.y);
         }
 
         Rect::new(min_x, min_y, max_x - min_x, max_y - min_y)
+    }
+}
+
+fn validate_tolerance(tolerance: f64) -> Result<(), FlatteningError> {
+    if tolerance.is_finite() && tolerance > 0.0 {
+        Ok(())
+    } else {
+        Err(FlatteningError::InvalidTolerance)
+    }
+}
+
+fn validate_points(points: &[Point]) -> Result<(), FlatteningError> {
+    if points
+        .iter()
+        .all(|point| point.x.is_finite() && point.y.is_finite())
+    {
+        Ok(())
+    } else {
+        Err(FlatteningError::NonFiniteGeometry)
+    }
+}
+
+/// Project onto a unit-length chord before measuring the perpendicular
+/// residual. Scaling the point vector by the chord's largest component would
+/// erase valid mixed-scale offsets (for example, 1e-16 above a 1e308-wide
+/// chord). Compensated products retain cancellation-sensitive dot and cross
+/// products, and every nonzero returned magnitude is rounded outward by one
+/// ULP. Non-finite derived arithmetic fails closed.
+fn point_to_segment_distance(
+    point: Point,
+    start: Point,
+    end: Point,
+) -> Result<f64, FlatteningError> {
+    let dx = end.x - start.x;
+    let dy = end.y - start.y;
+    let px = point.x - start.x;
+    let py = point.y - start.y;
+    if ![dx, dy, px, py].iter().all(|value| value.is_finite()) {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+
+    let length = dx.hypot(dy);
+    let point_length = px.hypot(py);
+    if !length.is_finite() || !point_length.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+    if length == 0.0 {
+        return Ok(outward_magnitude(point_length));
+    }
+
+    let chord_scale = dx.abs().max(dy.abs());
+    let sx = dx / chord_scale;
+    let sy = dy / chord_scale;
+    let normalized_length = sx.hypot(sy);
+    let ux = sx / normalized_length;
+    let uy = sy / normalized_length;
+    let projection = compensated_product_difference(px, ux, -py, uy)?;
+
+    // Near an endpoint, rounding ambiguity is resolved toward that endpoint.
+    // Endpoint distance is an upper bound on finite-segment distance, so this
+    // can subdivide more but can never accept an unsafe chord.
+    let margin = 8.0 * f64::EPSILON * point_length.max(length) + f64::from_bits(1);
+    if !margin.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+    if projection <= margin {
+        return Ok(outward_magnitude(point_length));
+    }
+    if projection >= length - margin {
+        let ex = point.x - end.x;
+        let ey = point.y - end.y;
+        if !ex.is_finite() || !ey.is_finite() {
+            return Err(FlatteningError::NonFiniteGeometry);
+        }
+        let end_distance = ex.hypot(ey);
+        if !end_distance.is_finite() {
+            return Err(FlatteningError::NonFiniteGeometry);
+        }
+        return Ok(outward_magnitude(end_distance));
+    }
+
+    // Compute the determinant with only the chord scaled. Scaling the point
+    // vector as well would discard a small perpendicular component next to a
+    // very large chord. Dividing by the scaled chord length leaves the result
+    // in the point vector's original units.
+    let cross = compensated_product_difference(px, sy, py, sx)?;
+
+    // Widen for division-rounding in the scaled chord components, the final
+    // compensated-product rounding, and the norm. This is intentionally an
+    // upper bound: accepting a chord requires proving the true distance is no
+    // larger than tolerance. The dominant scaled component is exactly +/-1.
+    let sx_error = division_error_bound(sx, dx, chord_scale);
+    let sy_error = division_error_bound(sy, dy, chord_scale);
+    let product_magnitude = (px * sy).abs() + (py * sx).abs();
+    let numerator_error = px.abs() * sy_error
+        + py.abs() * sx_error
+        + 8.0 * f64::EPSILON * (cross.abs() + product_magnitude);
+    let norm_error = sx_error.hypot(sy_error) + 8.0 * f64::EPSILON * normalized_length;
+    let lower_norm = normalized_length - norm_error;
+    if !numerator_error.is_finite() || lower_norm <= 0.0 {
+        return Ok(outward_magnitude(point_length));
+    }
+    let distance = (cross.abs() + numerator_error) / lower_norm;
+    if !distance.is_finite() {
+        return Ok(outward_magnitude(point_length));
+    }
+    Ok(outward_magnitude(distance).min(outward_magnitude(point_length)))
+}
+
+/// Return a*b-c*d with product and subtraction roundoff folded into the result.
+fn compensated_product_difference(a: f64, b: f64, c: f64, d: f64) -> Result<f64, FlatteningError> {
+    let ab = a * b;
+    let cd = c * d;
+    if !ab.is_finite() || !cd.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+    let ab_tail = a.mul_add(b, -ab);
+    let cd_tail = c.mul_add(d, -cd);
+    let difference = ab - cd;
+    if !difference.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+    let b_virtual = ab - difference;
+    let a_virtual = difference + b_virtual;
+    let b_roundoff = b_virtual - cd;
+    let a_roundoff = ab - a_virtual;
+    let correction = (a_roundoff + b_roundoff) + ab_tail - cd_tail;
+    let result = difference + correction;
+    if result.is_finite() {
+        Ok(result)
+    } else {
+        Err(FlatteningError::NonFiniteGeometry)
+    }
+}
+
+fn division_error_bound(ratio: f64, numerator: f64, denominator: f64) -> f64 {
+    if numerator == 0.0 || numerator.abs() == denominator {
+        0.0
+    } else {
+        f64::EPSILON * ratio.abs() + f64::from_bits(1)
+    }
+}
+
+fn outward_magnitude(value: f64) -> f64 {
+    if value == 0.0 {
+        0.0
+    } else {
+        f64::from_bits(value.to_bits() + 1)
     }
 }
 
@@ -403,8 +585,12 @@ fn extrema_of_cubic_derivative(v0: f64, v1: f64, v2: f64, v3: f64) -> Vec<f64> {
             let sq = trig::sqrt(disc);
             let t1 = (-b + sq) / (2.0 * a);
             let t2 = (-b - sq) / (2.0 * a);
-            if t1 > 0.0 && t1 < 1.0 { roots.push(t1); }
-            if t2 > 0.0 && t2 < 1.0 { roots.push(t2); }
+            if t1 > 0.0 && t1 < 1.0 {
+                roots.push(t1);
+            }
+            if t2 > 0.0 && t2 < 1.0 {
+                roots.push(t2);
+            }
         }
     }
 
@@ -519,11 +705,13 @@ mod tests {
             Point::new(1.0, 0.0), // control point ON the line
             Point::new(2.0, 0.0),
         );
-        let pts = q.to_polyline(0.1);
+        let pts = q
+            .to_polyline(0.1)
+            .expect("straight quadratic should flatten");
         // Should be two points since the error is zero.
         assert_eq!(pts.len(), 2);
         assert!(point_approx_eq(pts[0], q.p0));
-        assert!(point_approx_eq(pts[pts.len()-1], q.p2));
+        assert!(point_approx_eq(pts[pts.len() - 1], q.p2));
     }
 
     #[test]
@@ -533,10 +721,10 @@ mod tests {
             Point::new(0.0, 10.0),
             Point::new(10.0, 0.0),
         );
-        let pts = q.to_polyline(0.1);
+        let pts = q.to_polyline(0.1).expect("curved quadratic should flatten");
         assert!(!pts.is_empty());
         assert!(point_approx_eq(pts[0], q.p0));
-        assert!(point_approx_eq(pts[pts.len()-1], q.p2));
+        assert!(point_approx_eq(pts[pts.len() - 1], q.p2));
     }
 
     #[test]
@@ -651,7 +839,7 @@ mod tests {
             Point::new(2.0, 0.0),
             Point::new(3.0, 0.0),
         );
-        let pts = c.to_polyline(0.1);
+        let pts = c.to_polyline(0.1).expect("straight cubic should flatten");
         assert_eq!(pts.len(), 2); // straight line → just two points
     }
 
@@ -663,12 +851,12 @@ mod tests {
             Point::new(10.0, 10.0),
             Point::new(10.0, 0.0),
         );
-        let pts = c.to_polyline(0.1);
+        let pts = c.to_polyline(0.1).expect("curved cubic should flatten");
         // Should have more than 2 points for a curved cubic.
         assert!(pts.len() > 2);
         // Endpoints must be preserved.
         assert!(point_approx_eq(pts[0], c.p0));
-        assert!(point_approx_eq(pts[pts.len()-1], c.p3));
+        assert!(point_approx_eq(pts[pts.len() - 1], c.p3));
     }
 
     #[test]
@@ -684,10 +872,16 @@ mod tests {
         for i in 0..=20 {
             let t = i as f64 / 20.0;
             let p = c.evaluate(t);
-            assert!(p.x >= bb.x - 1e-6 && p.x <= bb.x + bb.width + 1e-6,
-                "x out of bounds at t={}", t);
-            assert!(p.y >= bb.y - 1e-6 && p.y <= bb.y + bb.height + 1e-6,
-                "y out of bounds at t={}", t);
+            assert!(
+                p.x >= bb.x - 1e-6 && p.x <= bb.x + bb.width + 1e-6,
+                "x out of bounds at t={}",
+                t
+            );
+            assert!(
+                p.y >= bb.y - 1e-6 && p.y <= bb.y + bb.height + 1e-6,
+                "y out of bounds at t={}",
+                t
+            );
         }
     }
 
@@ -704,5 +898,192 @@ mod tests {
         assert!((bb.y - 2.0).abs() < 1e-9);
         assert!((bb.width - 3.0).abs() < 1e-9);
         assert!(bb.height.abs() < 1e-9);
+    }
+
+    #[derive(serde::Deserialize)]
+    struct FlatteningFixture {
+        version: u32,
+        max_depth: usize,
+        max_subdivisions: usize,
+        cases: Vec<FlatteningCase>,
+    }
+
+    #[derive(serde::Deserialize)]
+    struct FlatteningCase {
+        id: String,
+        degree: u32,
+        control_points: Vec<[f64; 2]>,
+        tolerance: f64,
+        expected_disposition: String,
+        #[serde(default)]
+        expected_termination: String,
+    }
+
+    fn flattening_fixture() -> FlatteningFixture {
+        serde_json::from_str(include_str!(
+            "../../../../specs/fixtures/bezier2d-flattening-v1/cases.json"
+        ))
+        .expect("the committed flattening fixture should decode")
+    }
+
+    fn fixture_point(coordinates: [f64; 2]) -> Point {
+        Point::new(coordinates[0], coordinates[1])
+    }
+
+    #[test]
+    fn flattening_fixture_conformance() {
+        let fixture = flattening_fixture();
+        assert_eq!(fixture.version, FLATTENING_FIXTURE_VERSION);
+        assert_eq!(fixture.max_depth, FLATTENING_MAX_DEPTH);
+        assert_eq!(fixture.max_subdivisions, FLATTENING_MAX_SUBDIVISIONS);
+        assert_eq!(fixture.cases.len(), 9);
+
+        for case in fixture.cases {
+            let result = match case.degree {
+                2 => QuadraticBezier::new(
+                    fixture_point(case.control_points[0]),
+                    fixture_point(case.control_points[1]),
+                    fixture_point(case.control_points[2]),
+                )
+                .to_polyline(case.tolerance),
+                3 => CubicBezier::new(
+                    fixture_point(case.control_points[0]),
+                    fixture_point(case.control_points[1]),
+                    fixture_point(case.control_points[2]),
+                    fixture_point(case.control_points[3]),
+                )
+                .to_polyline(case.tolerance),
+                degree => panic!("unsupported fixture degree {degree}"),
+            };
+
+            if case.expected_disposition == "invalid-tolerance" {
+                assert_eq!(
+                    result,
+                    Err(FlatteningError::InvalidTolerance),
+                    "{}",
+                    case.id
+                );
+                continue;
+            }
+            if case.expected_termination == "budget-error" {
+                assert_eq!(result, Err(FlatteningError::BudgetExceeded), "{}", case.id);
+                continue;
+            }
+
+            let points = result.unwrap_or_else(|error| panic!("{}: {error:?}", case.id));
+            assert_eq!(points.first(), Some(&fixture_point(case.control_points[0])));
+            assert_eq!(
+                points.last(),
+                Some(&fixture_point(
+                    *case.control_points.last().expect("endpoint")
+                ))
+            );
+            assert!(points
+                .iter()
+                .all(|point| point.x.is_finite() && point.y.is_finite()));
+            if case.expected_disposition == "chord" {
+                assert_eq!(points.len(), 2, "{}", case.id);
+            } else if case.expected_disposition == "subdivide" {
+                assert!(points.len() > 2, "{}", case.id);
+            }
+        }
+    }
+
+    #[test]
+    fn flattening_rejects_nonfinite_inputs_atomically() {
+        let straight = QuadraticBezier::new(
+            Point::new(0.0, 0.0),
+            Point::new(0.5, 0.0),
+            Point::new(1.0, 0.0),
+        );
+        for tolerance in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            assert_eq!(
+                straight.to_polyline(tolerance),
+                Err(FlatteningError::InvalidTolerance)
+            );
+        }
+
+        let bad_control = QuadraticBezier::new(
+            Point::new(0.0, 0.0),
+            Point::new(f64::INFINITY, 0.0),
+            Point::new(1.0, 0.0),
+        );
+        assert_eq!(
+            bad_control.to_polyline(0.1),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+    }
+
+    #[test]
+    fn flattening_fails_closed_on_derived_overflow_and_subnormal_geometry() {
+        let max = f64::MAX;
+        let overflow = CubicBezier::new(
+            Point::new(-max, 0.0),
+            Point::new(0.0, 1.0),
+            Point::new(0.0, -1.0),
+            Point::new(max, 0.0),
+        );
+        assert_eq!(
+            overflow.to_polyline(0.1),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+
+        let tiny = 1e-200;
+        let subnormal = QuadraticBezier::new(
+            Point::new(0.0, 0.0),
+            Point::new(0.0, tiny),
+            Point::new(tiny, 0.0),
+        );
+        assert_eq!(
+            subnormal.to_polyline(f64::from_bits(1)),
+            Err(FlatteningError::BudgetExceeded)
+        );
+    }
+
+    #[test]
+    fn flattening_preserves_mixed_scale_perpendicular_distance() {
+        let curve = QuadraticBezier::new(
+            Point::new(0.0, 0.0),
+            Point::new(5e307, 1e-16),
+            Point::new(1e308, 0.0),
+        );
+        let distance = point_to_segment_distance(curve.p1, curve.p0, curve.p2)
+            .expect("finite mixed-scale geometry should have a finite bound");
+        assert!(distance >= 1e-16, "mixed-scale offset was lost: {distance}");
+        assert_eq!(
+            curve.to_polyline(f64::from_bits(1)),
+            Err(FlatteningError::BudgetExceeded)
+        );
+    }
+
+    #[test]
+    fn flattening_error_messages_and_scaled_distance_boundaries() {
+        assert_eq!(
+            FlatteningError::InvalidTolerance.to_string(),
+            "tolerance must be finite and positive"
+        );
+        assert_eq!(
+            FlatteningError::NonFiniteGeometry.to_string(),
+            "non-finite geometry"
+        );
+        assert_eq!(
+            FlatteningError::BudgetExceeded.to_string(),
+            "flattening budget exceeded"
+        );
+
+        let origin = Point::new(0.0, 0.0);
+        assert_eq!(point_to_segment_distance(origin, origin, origin), Ok(0.0));
+        assert_eq!(
+            point_to_segment_distance(Point::new(f64::MAX, f64::MAX), origin, origin),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+        assert_eq!(
+            compensated_product_difference(f64::MAX, 2.0, 0.0, 0.0),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+        assert_eq!(
+            compensated_product_difference(f64::MAX, 1.0, -f64::MAX, 1.0),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
     }
 }

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C270-zhichi",
+  "pathSegment": "ZH-PATH-270-AGREE270",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-270-AGREE270",
+      "order": 3
+    }
+  ]
+}

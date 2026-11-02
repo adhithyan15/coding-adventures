@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:66aabd0402f8c9cd",
+  "lessonIds": [
+    "ZH-C229-chongwu",
+    "ZH-C229-yang",
+    "ZH-C229-liugou",
+    "ZH-C229-zhua",
+    "ZH-C229-mo",
+    "ZH-R229-review-224-229"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch229.txt",
+  "json": "chinese/narration/ch229.json",
+  "textHash": "fnv1a64:fcdddc8118b62be9",
+  "jsonHash": "fnv1a64:e84e5b078d1c4501",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C192-dianti",
+  "pathSegment": "ZH-PATH-192-SIGN192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-192-SIGN192",
+      "order": 1
+    }
+  ]
+}

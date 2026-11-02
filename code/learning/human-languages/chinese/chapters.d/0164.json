@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Getting Ready",
+  "label": "ch:zh-getting-ready",
+  "canDo": "I can talk about dressing up, washing and drying my hair, make-up and shaving.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C164-gualian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can talk about dressing up, washing and drying my hair, make-up and shaving.",
+    "assesses": [
+      "ZH-LEX-C164-READY164-03",
+      "ZH-LEX-C164-READY164-04",
+      "ZH-LEX-C164-READY164-05"
+    ]
+  }
+}

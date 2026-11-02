@@ -1,10 +1,146 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using Sha512Algorithm = CodingAdventures.Sha512.Sha512;
 
 namespace CodingAdventures.Sha512.Tests;
 
 public sealed class Sha512Tests
 {
+    private static readonly Regex IdPattern = new("^[a-z0-9]+(?:-[a-z0-9]+)*$", RegexOptions.CultureInvariant);
+    private static readonly Regex EvenHexPattern = new("^(?:[0-9a-f]{2})*$", RegexOptions.CultureInvariant);
+    private static readonly Regex DigestPattern = new("^[0-9a-f]{128}$", RegexOptions.CultureInvariant);
+    private static readonly Regex WordPattern = new("^[0-9a-f]{16}$", RegexOptions.CultureInvariant);
+    private static readonly Regex ChunksPattern = new("^[1-9][0-9]*(?:,[1-9][0-9]*)*$", RegexOptions.CultureInvariant);
+
+    private static string[] ParseFixture(byte[] raw)
+    {
+        if (raw.Length is < 1 or > 4096) throw new InvalidDataException("fixture byte size outside bounds");
+        var text = new UTF8Encoding(false, true).GetString(raw);
+        var lines = text.Split('\n').Select(line => line.TrimEnd('\r'))
+            .Where(line => line.Length > 0 && line[0] != '#').ToArray();
+        if (lines.Length is < 1 or > 64) throw new InvalidDataException("fixture row count outside bounds");
+        foreach (var line in lines) ValidateFixtureRow(line);
+        return lines;
+    }
+
+    private static string FindFixture()
+    {
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
+        {
+            var candidate = Path.Combine(directory.FullName, "code", "specs", "fixtures", "sha512-v1", "cases.txt");
+            if (File.Exists(candidate)) return candidate;
+        }
+        throw new FileNotFoundException("sha512-v1 fixture not found");
+    }
+
+    private static string[] FixtureLines(string? path = null)
+    {
+        using var stream = File.OpenRead(path ?? FindFixture());
+        var raw = new byte[4097];
+        var length = 0;
+        while (length < raw.Length)
+        {
+            var count = stream.Read(raw, length, raw.Length - length);
+            if (count == 0) break;
+            length += count;
+        }
+        var lines = ParseFixture(raw[..length]);
+        Assert.Equal(9, lines.Count(line => line.StartsWith("V|", StringComparison.Ordinal)));
+        Assert.Equal(6, lines.Count(line => line.StartsWith("L|", StringComparison.Ordinal)));
+        return lines;
+    }
+
+    [Fact]
+    public void FixtureReaderRejectsOversizedFile()
+    {
+        var path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(path, new byte[4097]);
+            Assert.Throws<InvalidDataException>(() => FixtureLines(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static void ValidateFixtureRow(string line)
+    {
+        var fields = line.Split('|');
+        if (fields.Length != 5 || !IdPattern.IsMatch(fields[1])) throw new InvalidDataException("malformed fixture row");
+        if (fields[0] == "V")
+        {
+            if (fields[2].Length > 8192 || !EvenHexPattern.IsMatch(fields[2]) || !DigestPattern.IsMatch(fields[4]))
+                throw new InvalidDataException("malformed vector row");
+            var byteCount = fields[2].Length / 2;
+            if (byteCount > 4096 || (byteCount == 0) != (fields[3].Length == 0)) throw new InvalidDataException("malformed vector size");
+            var chunks = fields[3].Length == 0 ? Array.Empty<int>() : fields[3].Split(',').Select(value =>
+                int.TryParse(value, out var size) && size <= 4096 ? size : throw new InvalidDataException("malformed chunk")).ToArray();
+            if (chunks.Length > 64 || (fields[3].Length > 0 && !ChunksPattern.IsMatch(fields[3])) || chunks.Sum() != byteCount)
+                throw new InvalidDataException("malformed chunks");
+        }
+        else if (fields[0] == "L")
+        {
+            if (!WordPattern.IsMatch(fields[2]) || !WordPattern.IsMatch(fields[3]) ||
+                (fields[4] != "ERROR" && !Regex.IsMatch(fields[4], "^[0-9a-f]{32}$", RegexOptions.CultureInvariant)))
+                throw new InvalidDataException("malformed length row");
+        }
+        else throw new InvalidDataException("unknown fixture row tag");
+    }
+
+    [Fact]
+    public void FixtureReaderRejectsMalformedRows()
+    {
+        foreach (var row in new[] { "X|id|||", "V|UPPER|00|1|" + new string('0', 128),
+                     "V|bad|0|1|" + new string('0', 128), "V|bad|00|2|" + new string('0', 128),
+                     "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC" })
+            Assert.Throws<InvalidDataException>(() => ParseFixture(Encoding.ASCII.GetBytes(row)));
+    }
+
+    [Fact]
+    public void PortableCorpusMatchesOneShotAndStreaming()
+    {
+        foreach (var line in FixtureLines().Where(line => line.StartsWith("V|", StringComparison.Ordinal)))
+        {
+            var fields = line.Split('|');
+            var data = Convert.FromHexString(fields[2]);
+            Assert.Equal(fields[4], Sha512Algorithm.HashHex(data));
+
+            var hasher = new Sha512Hasher();
+            var offset = 0;
+            var chunks = fields[3].Length == 0 ? Array.Empty<int>() : fields[3].Split(',').Select(int.Parse).ToArray();
+            Assert.InRange(chunks.Length, 0, 64);
+            foreach (var size in chunks)
+            {
+                Assert.True(size > 0 && offset + size <= data.Length);
+                hasher.Update(data.AsSpan(offset, size).ToArray());
+                offset += size;
+            }
+            Assert.Equal(data.Length, offset);
+            Assert.Equal(fields[4], hasher.HexDigest());
+        }
+    }
+
+    [Fact]
+    public void PortableLengthCorpusExercisesFull128BitField()
+    {
+        foreach (var line in FixtureLines().Where(line => line.StartsWith("L|", StringComparison.Ordinal)))
+        {
+            var fields = line.Split('|');
+            var high = Convert.ToUInt64(fields[2], 16);
+            var low = Convert.ToUInt64(fields[3], 16);
+            if (fields[4] == "ERROR")
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => Sha512Algorithm.EncodeBitLength(high, low));
+            }
+            else
+            {
+                Assert.Equal(fields[4], Convert.ToHexString(Sha512Algorithm.EncodeBitLength(high, low)).ToLowerInvariant());
+            }
+        }
+    }
+
     [Theory]
     [InlineData("", "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
     [InlineData("abc", "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f")]
@@ -102,5 +238,14 @@ public sealed class Sha512Tests
     public void UpdateRejectsNull()
     {
         Assert.Throws<ArgumentNullException>(() => new Sha512Hasher().Update(null!));
+    }
+
+    [Fact]
+    public void UpdateConsumesInputWithoutAliasing()
+    {
+        var input = "abc"u8.ToArray();
+        var hasher = new Sha512Hasher().Update(input);
+        input[0] = (byte)'z';
+        Assert.Equal(Sha512Algorithm.Hash("abc"u8.ToArray()), hasher.Digest());
     }
 }

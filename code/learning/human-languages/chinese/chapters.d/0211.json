@@ -1,0 +1,21 @@
+{
+  "chapter": 211,
+  "title": "Local or From Out of Town",
+  "label": "ch:zh-local-or-from-out-of-town",
+  "canDo": "I can say who is local and who comes from elsewhere, and talk about the city centre and a map.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R211-review-206-211",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say who is local and who comes from elsewhere, and talk about the city centre and a map.",
+    "assesses": [
+      "ZH-LEX-C211-LOCAL211-01",
+      "ZH-LEX-C211-LOCAL211-02",
+      "ZH-LEX-C211-LOCAL211-03",
+      "ZH-LEX-C211-LOCAL211-04",
+      "ZH-LEX-C211-LOCAL211-05"
+    ]
+  }
+}

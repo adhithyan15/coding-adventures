@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W221-xue-snow",
+    "language": "chinese",
+    "chapter": 221,
+    "sequence": 17155,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c78099cfbdf55ce1",
+    "detachableSegments": [
+      "Script — 雨 on top, three bars below"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

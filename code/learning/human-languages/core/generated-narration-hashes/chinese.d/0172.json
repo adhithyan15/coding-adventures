@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:7f2ff40bc7e6bda0",
+  "lessonIds": [
+    "ZH-C172-weidao",
+    "ZH-C172-suan",
+    "ZH-C172-ku",
+    "ZH-C172-xiang",
+    "ZH-C172-dan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch172.txt",
+  "json": "chinese/narration/ch172.json",
+  "textHash": "fnv1a64:d18bdcc9fc1cc414",
+  "jsonHash": "fnv1a64:95ecbb6ce653e657",
+  "findings": []
+}

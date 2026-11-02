@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:35bfacb0c7985431",
+  "lessonIds": [
+    "ZH-C149-zhengzai",
+    "ZH-W149-zheng",
+    "ZH-C149-zai-progressive",
+    "ZH-C149-zhenghao",
+    "ZH-C149-yibian",
+    "ZH-C149-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch149.txt",
+  "json": "chinese/narration/ch149.json",
+  "textHash": "fnv1a64:f66c52d9b4f5b9fa",
+  "jsonHash": "fnv1a64:3e25c8370525ece0",
+  "findings": []
+}

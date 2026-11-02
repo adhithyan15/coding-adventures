@@ -37,6 +37,17 @@
 //! Exports always win: if module A exports `"sqrt"`, any private `"sqrt"` in
 //! module B becomes `"B::sqrt"`.
 //!
+//! If even `"B::sqrt"` is taken (another module crafted an export alias
+//! spelled that way), a `$0`, `$1`, … suffix is added until the name is
+//! free — see `first_free_suffix`.
+//!
+//! Exports are never renamed, so this strategy only works if no two modules
+//! export the same public name.  `link` guarantees that before calling
+//! `merge_modules` (`LinkError::ConflictingExport`, issue #18429), together
+//! with unique module names (`DuplicateModuleName`) and an entry point that
+//! resolves inside its own module (`UnresolvedEntryPoint`).  See the
+//! *Preconditions* on [`merge_modules`].
+//!
 //! # Why renaming must reach *every* function-name operand (issue #18421)
 //!
 //! Renaming a function is only half the job: every place in the program that
@@ -77,8 +88,19 @@ use crate::resolve::ResolvedExport;
 ///
 /// # Preconditions
 ///
-/// All imports must already be resolved (no `Unresolved` errors).  The caller
-/// (`linker.rs`) is responsible for ensuring this.
+/// The caller (`linker.rs`) must have run every check in `resolve.rs` and
+/// found no errors.  In particular:
+///
+/// | Precondition | Checked by | What goes wrong without it |
+/// |--------------|------------|----------------------------|
+/// | every import resolves | `resolve_imports` | the import's calls keep a dangling name |
+/// | module names are unique | `check_module_names` | two modules share one set of import rewrites |
+/// | each public name has one owner | `build_export_map` | two functions keep the same bare name; references bind to the first |
+/// | the entry point resolves in its module | `check_entry_point` | the entry binds to another module's function |
+/// | every function reference is defined or imported | `check_function_references` | the bare name binds to another module's (possibly private) function (#18432) |
+///
+/// The one-owner rule is re-asserted in debug builds below, because breaking
+/// it does not crash — it silently runs the wrong function.
 pub fn merge_modules<'a>(
     modules: &'a [IIRModule],
     export_map: &HashMap<(String, String), ResolvedExport<'a>>,
@@ -95,9 +117,24 @@ pub fn merge_modules<'a>(
     let mut global_names: std::collections::HashSet<String> = std::collections::HashSet::new();
 
     // Pass 1a: Claim all exported public names.
+    //
+    // Debug-only guard for the one-owner precondition: remember which
+    // module claimed each public name and complain if another one does.
+    #[cfg(debug_assertions)]
+    let mut public_owner: HashMap<String, &str> = HashMap::new();
     for module in modules {
         for export in &module.exports {
             let public_name = export.public_name().to_string();
+            #[cfg(debug_assertions)]
+            {
+                let owner = *public_owner.entry(public_name.clone()).or_insert(&module.name);
+                debug_assert!(
+                    owner == module.name,
+                    "merge_modules precondition violated: {owner:?} and {:?} both export \
+                     {public_name:?} (link() reports this as LinkError::ConflictingExport)",
+                    module.name,
+                );
+            }
             global_names.insert(public_name.clone());
             // Associate this export's underlying function with the public name.
             if let Some(fn_) = module.get_function(&export.function_name) {
@@ -108,6 +145,10 @@ pub fn merge_modules<'a>(
     }
 
     // Pass 1b: Assign names to private functions.
+    //
+    // `next_suffix` remembers, per prefixed base name, where the `$N`
+    // search should resume (see `first_free_suffix`).
+    let mut next_suffix: HashMap<String, usize> = HashMap::new();
     for module in modules {
         for fn_ in &module.functions {
             let ptr_key = (fn_ as *const IIRFunction, fn_ as *const IIRFunction as usize);
@@ -121,8 +162,9 @@ pub fn merge_modules<'a>(
                 // whose name happens to equal `"<module>::<fn_name>"` (e.g.
                 // module "a" exports "b::c" and module "b" has private "c"), the
                 // prefixed name would collide a second time.  To guarantee
-                // uniqueness we detect this case and append a monotonically
-                // increasing counter until we find a free slot.  This prevents
+                // uniqueness we detect this case and append a `$N` counter
+                // until we find a free slot (`first_free_suffix` — it always
+                // finds one and never panics, #18432).  This prevents
                 // the second `merged_name_map.insert` from silently overwriting
                 // the first entry and thereby redirecting call-rewrites to the
                 // wrong function.
@@ -131,29 +173,7 @@ pub fn merge_modules<'a>(
                     base
                 } else {
                     // Double-collision: append a counter to guarantee uniqueness.
-                    // We start at 0 and increment until we find a free slot.
-                    // In practice this loop runs at most once — it fires only
-                    // when an adversarial (or pathological) module name was chosen
-                    // specifically to trigger the base collision.
-                    // Safety cap: the number of distinct names we could ever
-                    // need is bounded by the total number of functions in all
-                    // modules.  If we exceed that count, every possible name
-                    // slot is occupied by adversarially-crafted input — panic
-                    // rather than spin indefinitely (DoS guard).
-                    let max_iterations = modules.iter().map(|m| m.functions.len()).sum::<usize>() + 1;
-                    let mut counter: usize = 0;
-                    loop {
-                        assert!(
-                            counter <= max_iterations,
-                            "name-collision counter exceeded safe bound ({max_iterations}): \
-                             adversarial module names suspected"
-                        );
-                        let candidate = format!("{base}${counter}");
-                        if !global_names.contains(&candidate) {
-                            break candidate;
-                        }
-                        counter += 1;
-                    }
+                    first_free_suffix(&base, &global_names, &mut next_suffix)
                 }
             } else {
                 fn_.name.clone()
@@ -194,6 +214,12 @@ pub fn merge_modules<'a>(
     // like any other: if the entry module's `main` was renamed (because an
     // earlier module already claimed `main`), the merged module must start
     // at the renamed function, not at the other module's `main`.
+    //
+    // The `unwrap_or_else` keeps a name the rename map does not mention.
+    // That is only correct because `check_entry_point` has already proven
+    // the name is one of the module's own functions (kept its bare name) or
+    // one of its imports (kept its bare public name) — never a name that
+    // could fall through to some other module's private function (#18429).
     let entry_point = modules.iter().zip(&module_rename_maps).find_map(|(m, renames)| {
         m.entry_point
             .as_ref()
@@ -218,6 +244,55 @@ pub fn merge_modules<'a>(
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
+
+/// The first name `"{base}${n}"` (n = 0, 1, 2, …) that is not in `taken`.
+///
+/// Used when a private function's prefixed name `"<module>::<fn>"` is itself
+/// already claimed — which only happens when some *other* name was spelled
+/// to look like it, e.g. module `a` exports `f` as `b::c` while module `b`
+/// has a private `c`:
+///
+/// ```text
+///   claimed:  c, b::c, b::c$0, b::c$1      (export aliases of a's f)
+///   b's c  →  c? taken  →  b::c? taken  →  b::c$0? $1? taken  →  b::c$2
+/// ```
+///
+/// # Why this cannot panic or loop forever (issue #18432)
+///
+/// `taken` is a finite set.  Of the `taken.len() + 1` candidates
+/// `$0 … ${taken.len()}`, at most `taken.len()` can be taken, so one is
+/// free — the pigeonhole principle.  The search therefore always ends, and
+/// needs no safety bound.
+///
+/// The previous version did have one: an `assert!` that gave up after
+/// *total functions + 1* tries.  But export aliases claim names without
+/// adding functions, so one exported function with a handful of crafted
+/// aliases (`b::c$0` … `b::c$3`) exhausted the bound and `link()` panicked —
+/// in release builds too, since `assert!` is not compiled out.  A linker
+/// must report bad input, never crash on it.
+///
+/// # Why `next`
+///
+/// Without memory, `k` private functions that all collide on the same base
+/// (one module holding several functions of the same name) would rescan
+/// `$0 … $(k-1)` each time — quadratic work an input could choose.  `taken`
+/// only grows, so a suffix found taken stays taken; `next[base]` records
+/// where the previous search for `base` stopped and the next one resumes
+/// there.  Every candidate is then tried at most once per base.
+fn first_free_suffix(
+    base: &str,
+    taken: &std::collections::HashSet<String>,
+    next: &mut HashMap<String, usize>,
+) -> String {
+    let counter = next.entry(base.to_string()).or_insert(0);
+    loop {
+        let candidate = format!("{base}${counter}");
+        *counter += 1;
+        if !taken.contains(&candidate) {
+            return candidate;
+        }
+    }
+}
 
 /// Build a map `(module_name, local_call_name) → merged_function_name`
 /// for every import in every module.
@@ -261,6 +336,12 @@ fn build_import_rewrite<'a>(
 /// and imports the same bare name the import wins.  That is exactly what
 /// the linker did before #18421 (it only knew about imports), so the fix
 /// does not change behaviour for that already-ambiguous case.
+///
+/// Import rewrites are looked up by `module.name`.  That is sound only
+/// because `link` rejects two input modules with the same name
+/// (`DuplicateModuleName`, #18429); otherwise each would pick up the
+/// other's imports, and an import could override the other module's own
+/// function of the same name.
 ///
 /// Identity entries (`helper → helper`) are kept out of the map: they are
 /// harmless, but omitting them keeps `rewrite_instr`'s fast path ("nothing
@@ -355,8 +436,19 @@ fn rewrite_function(
 /// |----|------|----------------------------------------|
 /// | `call` | `srcs[0]` | `call(Var(fn_name), args…)` |
 /// | `alloc_closure` | `srcs[0]` | `alloc_closure(Str(fn_name), captures…)` (LANG34) |
-/// | `task_spawn` | `srcs[0]` | `task_spawn(callee, args…)` (LANG28) |
-/// | `group_spawn` | `srcs[1]` | `group_spawn(group, fn, args…)` (LANG28) |
+/// | `task_spawn` | `srcs[0]` | `task_spawn(fn_name, args…)` (LANG28) |
+/// | `group_spawn` | `srcs[1]` | `group_spawn(group, fn_name, args…)` (LANG28) |
+///
+/// **Contract (LANG28, pinned by issue #18429).**  The `fn` operand of
+/// `task_spawn` and `group_spawn` is the *name* of a function in the module
+/// — the same kind of operand as `call`'s callee — and never a register
+/// holding a closure.  The rewrite below matches on the operand's text
+/// alone, so it relies on this: a closure *register* that happened to be
+/// spelled like a renamed function would be "renamed" too, and would then
+/// name a register that does not exist.  A producer that wants to spawn a
+/// closure must spawn a named trampoline function and pass the closure as
+/// an ordinary argument.  No IIR producer emits either op today; the
+/// contract is fixed now so the first one is written against it.
 ///
 /// Ops that take a closure *handle* (`call_closure`) need no entry: the
 /// handle was produced by an `alloc_closure` that is rewritten here.
@@ -366,10 +458,29 @@ fn rewrite_function(
 /// linker input producer emits it any more (twig-ir-compiler switched to
 /// `alloc_closure`), and renaming it would need dataflow to tell the name
 /// apart from an ordinary string constant.
-fn function_name_slot(op: &str) -> Option<usize> {
+///
+/// The same table drives `resolve::check_function_references`, which
+/// rejects a name in one of these slots that the module neither defines nor
+/// imports (`LinkError::UndeclaredCall`, #18432) — so the check and the
+/// rewrite can never disagree about what counts as a function reference.
+pub(crate) fn function_name_slot(op: &str) -> Option<usize> {
     match op {
         "call" | "alloc_closure" | "task_spawn" => Some(0),
         "group_spawn" => Some(1),
+        _ => None,
+    }
+}
+
+/// The function name `instr` refers to, if it has a function-name slot
+/// (see [`function_name_slot`]) holding a name.
+///
+/// Both spellings count — `Operand::Var` (`call`, the spawns) and
+/// `Operand::Str` (`alloc_closure`).  A slot holding anything else (an
+/// integer, a missing operand) is malformed IIR that the VM rejects on its
+/// own; it names no function, so the linker neither renames nor checks it.
+pub(crate) fn function_name_operand(instr: &IIRInstr) -> Option<&str> {
+    match instr.srcs.get(function_name_slot(&instr.op)?)? {
+        Operand::Var(name) | Operand::Str(name) => Some(name),
         _ => None,
     }
 }
@@ -706,6 +817,71 @@ mod tests {
         assert_eq!(merged.get_function("main").unwrap().return_type, "user");
         let caller = merged.get_function("caller").unwrap();
         assert_eq!(caller.instructions[0].srcs[0], Operand::Var("main".into()));
+    }
+
+    /// Calling `merge_modules` directly on input that `link` would reject
+    /// with `ConflictingExport` trips the debug-build precondition guard
+    /// instead of silently producing two functions with one name (#18429).
+    #[test]
+    #[cfg(debug_assertions)]
+    #[should_panic(expected = "precondition violated")]
+    fn merge_guards_the_one_owner_precondition_in_debug_builds() {
+        let mk = |name: &str| {
+            let mut m = IIRModule::new(name, "twig");
+            m.entry_point = None;
+            m.add_or_replace(make_fn("foo"));
+            m.exports.push(IIRExport::new("foo"));
+            m
+        };
+        let modules = vec![mk("left"), mk("right")];
+        let (map, _) = crate::resolve::build_export_map(&modules);
+        let _ = merge_modules(&modules, &map);
+    }
+
+    #[test]
+    fn first_free_suffix_skips_taken_names_and_resumes() {
+        let taken: std::collections::HashSet<String> =
+            ["b::c$0", "b::c$1", "b::c$3"].iter().map(|s| s.to_string()).collect();
+        let mut next = HashMap::new();
+        assert_eq!(first_free_suffix("b::c", &taken, &mut next), "b::c$2");
+        // The caller inserts what it got; the next search resumes after it
+        // instead of rescanning from $0, and still skips taken names.
+        assert_eq!(first_free_suffix("b::c", &taken, &mut next), "b::c$4");
+        // Each base keeps its own position.
+        assert_eq!(first_free_suffix("x::y", &taken, &mut next), "x::y$0");
+    }
+
+    #[test]
+    fn many_same_named_functions_in_one_module_get_distinct_names() {
+        // `a` claims `f` and `b::f`; `b` holds five functions called `f`.
+        // Every copy needs the `$N` fallback, and every name must differ.
+        let mut a = IIRModule::new("a", "twig");
+        a.entry_point = None;
+        a.add_or_replace(make_fn("f"));
+        a.exports.push(IIRExport::new("f"));
+        a.exports.push(IIRExport::new("f").with_alias("b::f"));
+        let mut b = IIRModule::new("b", "twig");
+        b.entry_point = None;
+        for _ in 0..5 {
+            b.functions.push(make_fn("f"));
+        }
+        let merged = link_two(vec![a, b]);
+        let mut names: Vec<&str> = merged.functions.iter().map(|f| f.name.as_str()).collect();
+        names.sort_unstable();
+        names.dedup();
+        assert_eq!(names.len(), 6, "got {names:?}");
+    }
+
+    #[test]
+    fn function_name_operand_reads_both_spellings() {
+        let call = IIRInstr::new("call", None, vec![Operand::Var("f".into())], "any");
+        let alloc = IIRInstr::new("alloc_closure", None, vec![Operand::Str("g".into())], "any");
+        let bad = IIRInstr::new("call", None, vec![Operand::Int(1)], "any");
+        let data = IIRInstr::new("const", None, vec![Operand::Str("h".into())], "str");
+        assert_eq!(function_name_operand(&call), Some("f"));
+        assert_eq!(function_name_operand(&alloc), Some("g"));
+        assert_eq!(function_name_operand(&bad), None);
+        assert_eq!(function_name_operand(&data), None);
     }
 
     #[test]

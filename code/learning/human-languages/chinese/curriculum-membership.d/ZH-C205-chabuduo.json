@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C205-chabuduo",
+  "pathSegment": "ZH-PATH-205-FAR205",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-205-FAR205",
+      "order": 5
+    }
+  ]
+}

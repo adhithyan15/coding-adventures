@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C170-guo",
+    "language": "chinese",
+    "chapter": 170,
+    "sequence": 13620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76ec32f8fde049a7"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:13342dfa3b269e6a",
+  "lessonIds": [
+    "ZH-C156-yuan",
+    "ZH-W156-yuan-money",
+    "ZH-C156-jiaqian",
+    "ZH-C156-mianfei",
+    "ZH-C156-guanggao",
+    "ZH-C156-reading",
+    "ZH-C156-practice"
+  ],
+  "tex": "chinese/book/chapters/ch156-price-list.tex"
+}

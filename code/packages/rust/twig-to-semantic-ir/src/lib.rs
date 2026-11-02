@@ -121,10 +121,14 @@ mod tests {
     fn lambda_creates_synthesised_function_and_make_closure() {
         // `n` is captured.
         let m = lower("(define (adder n) (lambda (x) (+ x n)))");
-        // adder body should be a MakeClosure referencing a
-        // synthesised __lambda_0.
+        // adder body should be a strict closure — the `lambda` marker
+        // around a MakeClosure — referencing a synthesised __lambda_0.
         let adder = m.functions.iter().find(|f| f.name == "adder").unwrap();
-        let synth_name = match &adder.body.value {
+        let closure = match &adder.body.value {
+            semantic_ir::Expr::BuiltinCall { name, args, .. } if name == "lambda" => &args[0],
+            other => panic!("expected BuiltinCall lambda, got {:?}", other),
+        };
+        let synth_name = match closure {
             semantic_ir::Expr::MakeClosure { fn_name, captures, .. } => {
                 assert_eq!(captures.len(), 1);
                 assert_eq!(captures[0].name, "n");

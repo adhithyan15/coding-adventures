@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:4849b11f0560081a",
+  "lessonIds": [
+    "ZH-C191-huilai",
+    "ZH-W191-hui-return",
+    "ZH-C191-huiqu",
+    "ZH-C191-huiguo",
+    "ZH-C191-chuguo",
+    "ZH-C191-chuchai"
+  ],
+  "tex": "chinese/book/chapters/ch191-back-next-month.tex"
+}

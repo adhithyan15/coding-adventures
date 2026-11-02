@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:3ef640a7b61c2888",
+  "lessonIds": [
+    "ZH-C207-didian",
+    "ZH-W207-di-ground",
+    "ZH-C207-jihua",
+    "ZH-C207-anpai",
+    "ZH-C207-zhaoxiang",
+    "ZH-C207-jingdian"
+  ],
+  "tex": "chinese/book/chapters/ch207-where-and-when.tex"
+}

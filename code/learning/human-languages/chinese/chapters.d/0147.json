@@ -1,0 +1,23 @@
+{
+  "chapter": 147,
+  "title": "It Might Rain",
+  "label": "ch:zh-it-might-rain",
+  "canDo": "I can say what will probably happen, and what the weather will do.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C147-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what will happen with 会, maybe and certainly, the day after tomorrow and the weather forecast, built on one new written character: 后.",
+    "assesses": [
+      "ZH-LEX-C147-HOUTIAN-01",
+      "ZH-SCRIPT-HOU-AFTER-01",
+      "ZH-GRAMMAR-HUI-FUTURE-01",
+      "ZH-LEX-C147-KENENG-01",
+      "ZH-LEX-C147-YIDING-01",
+      "ZH-LEX-C147-TIANQIYUBAO-01",
+      "ZH-PERFORMANCE-FUTURE-01"
+    ]
+  }
+}

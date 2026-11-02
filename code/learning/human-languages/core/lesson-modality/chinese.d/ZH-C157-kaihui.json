@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C157-kaihui",
+    "language": "chinese",
+    "chapter": 157,
+    "sequence": 12710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee88ebc8cbc38ef3"
+  },
+  "findings": []
+}

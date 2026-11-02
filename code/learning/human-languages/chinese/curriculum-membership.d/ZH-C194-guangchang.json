@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C194-guangchang",
+  "pathSegment": "ZH-PATH-194-ROAD194",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-194-ROAD194",
+      "order": 4
+    }
+  ]
+}

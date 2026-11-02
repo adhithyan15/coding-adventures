@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W150-guo-pass",
+    "language": "chinese",
+    "chapter": 150,
+    "sequence": 12220,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:11268dc8f70aeb0d",
+    "detachableSegments": [
+      "Script — 寸, then the walking piece last"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

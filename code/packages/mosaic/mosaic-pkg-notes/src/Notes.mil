@@ -5,6 +5,13 @@
 // code/specs/task-app-notes-ui-v1.md for the full scope and what's
 // deliberately deferred (attachment picker, tags, rich text, search).
 //
+// Since 0.3.0 (addendum v1.3, E3 of mosaic-editor-convergence-audit-v1.md)
+// Notes is a COMPOSITION: the list is the toolkit's RecordList and the
+// title, body and actions are DraftEditor. Notes itself keeps only what is
+// Trestle's — the "+ New note" button, the attach-to-task field and the
+// empty-state hint — and draws no English: every label below is a slot,
+// bound by the host's layout, as Journal binds DraftEditor's.
+//
 // Fat engine, dumb UI: the host builds `note-rows` from task-core's
 // `Note` entities (via `workspace()` — no dedicated query needed, see the
 // spec), owns the in-progress edit buffer (`title-value`/`body-value`),
@@ -17,15 +24,23 @@
 //
 //   notes-title       the panel's heading (e.g. "Notes").
 //
-//   note-rows         one row per note, in host display order:
-//                        [ 0 ] id     the note's id — a KEY, not an index
-//                                     (see TaskApp.mil's board-columns note
-//                                     on why: an inner render's index can
-//                                     drift from a stale click).
-//                        [ 1 ] title  display title (host substitutes a
-//                                     placeholder like "Untitled" for an
-//                                     empty title — Notes doesn't decide
-//                                     that).
+//   note-rows         one row per note, in host display order, in the
+//                     toolkit RecordList's row shape (0.3.0), which Notes
+//                     passes to its RecordList unchanged:
+//                        [ 0 ] key       the note's id — a KEY, not an index
+//                                        (see TaskApp.mil's board-columns
+//                                        note on why: an inner render's
+//                                        index can drift from a stale click).
+//                        [ 1 ] heading   group heading; "" (notes are not
+//                                        grouped today).
+//                        [ 2 ] title     display title (the host substitutes
+//                                        a placeholder like "Untitled" for
+//                                        an empty title — an empty one would
+//                                        be an unnamed button).
+//                        [ 3 ] subtitle  ""  ┐ RecordList omits an empty
+//                        [ 4 ] meta      ""  │ field, so a note row is one
+//                        [ 5 ] badge     ""  ┘ line, as it was in 0.2.0.
+//                     0.2.0 rows were [id, title]; see the CHANGELOG.
 //
 //   selected-note-id   the currently open note's id, or empty for none
 //                       selected (the editor panel is hidden).
@@ -40,10 +55,30 @@
 //                       code/specs/task-app-notes-ui-v1.md's addendum).
 //                       Empty means "no attachment."
 //
+// Label vocabulary (0.3.0). None has a default — a default would put the
+// English back in the package — so a host must bind every one.
+//
+//   new-note-label     the "+ New note" button's label.
+//   empty-hint         shown when no note is open ("Select a note, …").
+//   title-label        the title field's visible label and accessible name.
+//   title-placeholder  hint in an empty title field.
+//   body-label         the body's visible label and accessible name.
+//   body-placeholder   hint in an empty body; "" = none.
+//   task-label         the attach-to-task field's visible label AND its
+//                       accessible name (it used to have neither, and
+//                       leaned on its placeholder).
+//   task-placeholder   hint in an empty attach-to-task field.
+//   save-label         the Save button; "" = no Save button.
+//   delete-label       the Delete button; "" = no Delete button. A host
+//                       passes "" for a new note that was never saved:
+//                       there is nothing to delete yet.
+//   cancel-label       the Cancel button; "" = no Cancel button.
+//
 // Emit vocabulary
 // ---------------
 //
-//   onSelectNote ( index )   a list row was clicked. Payload is the
+//   onSelectNote ( index )   a list row was clicked (RecordList's
+//                            onSelect). Payload is the
 //                            CLICKED ROW'S INDEX (HostButton's own
 //                            dedicated-primitive payload synthesis — the
 //                            same mechanism onSelectProject/onExpandTask
@@ -51,10 +86,11 @@
 //                            from the drag kernel's key-based payloads).
 //                            The host resolves index → id through the
 //                            SAME ordered list note-rows was built from.
-//   onNewNote                start a blank, unsaved note (host clears its
-//                            edit buffer and sets no id — the note is
-//                            minted on first Save, the same pattern
-//                            addTask/addProject already use).
+//   onNewNote                start a blank, unsaved note (the host clears
+//                            its edit buffer and mints the new note's id
+//                            up front, so `selected-note-id` is non-empty
+//                            and the editor opens; the engine first hears
+//                            of the note on Save).
 //   onTitleChange ( value )   the title field's content changed.
 //   onBodyChange ( value )    the body field's content changed.
 //   onTaskNameChange ( value )  the attach-to-task field's content changed.
@@ -69,6 +105,18 @@ component Notes {
   slot title-value      : text ;
   slot body-value       : text ;
   slot task-name-value  : text ;
+
+  slot new-note-label    : text ;
+  slot empty-hint        : text ;
+  slot title-label       : text ;
+  slot title-placeholder : text ;
+  slot body-label        : text ;
+  slot body-placeholder  : text ;
+  slot task-label        : text ;
+  slot task-placeholder  : text ;
+  slot save-label        : text ;
+  slot delete-label      : text ;
+  slot cancel-label      : text ;
 
   emit onSelectNote ( index : number ) ;
   emit onNewNote ;

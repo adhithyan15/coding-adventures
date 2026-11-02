@@ -1,6 +1,6 @@
 [package]
 name = "python-iir-compiler"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Python grammar-tree to InterpreterIR lowering: the LANG84 py-int-print release path (LANG83 ops, every backend) and the LANG79 float pilot"
 

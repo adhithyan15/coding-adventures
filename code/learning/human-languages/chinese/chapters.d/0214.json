@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Asking for Help",
+  "label": "ch:zh-asking-for-help",
+  "canDo": "I can say I have a question, ask someone to tell me, say I understand, and ask what to do.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C214-zenmeban",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say I have a question, ask someone to tell me, say I understand, and ask what to do.",
+    "assesses": [
+      "ZH-LEX-C214-HELP214-03",
+      "ZH-LEX-C214-HELP214-04",
+      "ZH-LEX-C214-HELP214-05"
+    ]
+  }
+}

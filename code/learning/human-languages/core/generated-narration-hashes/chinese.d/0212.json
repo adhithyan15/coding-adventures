@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:4b4a1be16aed8894",
+  "lessonIds": [
+    "ZH-C212-dayin",
+    "ZH-C212-fuyin",
+    "ZH-C212-chongzhi",
+    "ZH-C212-yuyue",
+    "ZH-C212-lifa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch212.txt",
+  "json": "chinese/narration/ch212.json",
+  "textHash": "fnv1a64:29902d8a2fc6068a",
+  "jsonHash": "fnv1a64:5888d13c50826068",
+  "findings": []
+}

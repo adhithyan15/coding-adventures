@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C187-dangshi",
+  "pathSegment": "ZH-PATH-187-BADDAY187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-187-BADDAY187",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C148-xia-xingqi",
+    "language": "chinese",
+    "chapter": 148,
+    "sequence": 12100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9006bd5d9c5c3f1d"
+  },
+  "findings": []
+}

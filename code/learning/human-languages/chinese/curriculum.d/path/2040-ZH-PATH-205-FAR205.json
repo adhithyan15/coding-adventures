@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-205-FAR205",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-205-FAR205"
+  ],
+  "after": []
+}

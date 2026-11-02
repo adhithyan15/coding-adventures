@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.81.0";
+pub const VERSION: &str = "0.83.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -762,7 +762,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.81.0");
+        assert_eq!(VERSION, "0.83.0");
     }
 
     #[test]
@@ -2130,7 +2130,7 @@ mod tests {
     #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
-            "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
+            "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\nUpdateElementStyle(user, $shape=RoundedBoxShape())\n",
         );
         let values: Vec<&str> = tokens
             .iter()
@@ -2142,6 +2142,20 @@ mod tests {
         assert!(values.contains(&"Person"));
         assert!(values.contains(&"$sprite"));
         assert!(values.contains(&"Rel"));
+        assert!(values.contains(&"RoundedBoxShape()"));
+    }
+
+    #[test]
+    fn tokenizes_c4_legacy_accessibility_description() {
+        let tokens = tokenize_mermaid_c4(
+            "C4Context\naccDescription Customer banking landscape\nPerson(user, \"Customer\")\n",
+        );
+        let description = tokens
+            .iter()
+            .find(|token| token.type_name.as_deref() == Some("ACC_DESCRIPTION"))
+            .expect("legacy C4 accessibility description token");
+
+        assert_eq!(description.value, "accDescription Customer banking landscape");
     }
 
     #[test]

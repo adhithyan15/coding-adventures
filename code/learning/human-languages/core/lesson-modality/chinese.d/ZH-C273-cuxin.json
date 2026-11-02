@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C273-cuxin",
+    "language": "chinese",
+    "chapter": 273,
+    "sequence": 20320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff83b73e07a88829"
+  },
+  "findings": []
+}

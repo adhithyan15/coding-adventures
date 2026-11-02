@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C159-keting",
+  "pathSegment": "ZH-PATH-159-ROOM159",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-159-ROOM159",
+      "order": 1
+    }
+  ]
+}

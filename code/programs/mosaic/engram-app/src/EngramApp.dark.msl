@@ -59,6 +59,21 @@ style EngramApp {
     color : "#f8fafc" ;
   }
 
+  // The screens' scroll (EN-6, EngramApp.mll). It takes the shell's remaining
+  // height, which is what gives it a bounded viewport to scroll within, as
+  // TaskApp's `content-scroll` does.
+  part content-scroll {
+    flex-grow : 1 ;
+  }
+
+  // The column inside the scroll. Its gap matches app-shell's: on the desktop
+  // layout only one screen shows at a time, so it separates nothing, but on
+  // touch the header and host status are in here too, and keep the spacing
+  // app-shell gave them before.
+  part content {
+    gap : 18 ;
+  }
+
 
 
 

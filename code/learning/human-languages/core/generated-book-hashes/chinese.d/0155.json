@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:fb9c8a86e47c03dc",
+  "lessonIds": [
+    "ZH-C155-cong",
+    "ZH-W155-cong-from",
+    "ZH-C155-cong-dao",
+    "ZH-C155-chufa",
+    "ZH-C155-kaimen",
+    "ZH-C155-guanmen",
+    "ZH-C155-reading",
+    "ZH-C155-practice"
+  ],
+  "tex": "chinese/book/chapters/ch155-trains-and-opening-hours.tex"
+}

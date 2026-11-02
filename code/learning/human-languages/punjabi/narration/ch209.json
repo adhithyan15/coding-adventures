@@ -1,0 +1,539 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 209,
+  "title": "This Is a Blue Shoe",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:faf3e24eb6c1caf8",
+  "lessons": [
+    {
+      "id": "PA-C209-nila-return",
+      "sequence": 11330,
+      "title": "Return to blue and a shoe",
+      "headword": "ਨੀਲਾ · ਜੁੱਤੀ",
+      "romanization": "nila; jutti",
+      "gloss": "retrieve blue and a shoe",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1376b377f1d2f28b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "nila; jutti; YOU SAY: ਨੀਲਾ, ਜੁੱਤੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *nila; jutti*; YOU SAY: **ਨੀਲਾ · ਜੁੱਤੀ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the familiar colour word and the familiar noun ready. The next lesson will change one ending to own one exact agreeing form; this opener does not reveal that form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "blue; YOU SAY: ਨੀਲਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *blue*; YOU SAY: **ਨੀਲਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "a shoe; YOU SAY: ਜੁੱਤੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *a shoe*; YOU SAY: **ਜੁੱਤੀ**]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the two familiar items once, then stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “blue” and “a shoe” from meaning. This opener owns no new form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C209-nili",
+      "sequence": 11340,
+      "title": "One bounded feminine adjective form",
+      "headword": "ਨੀਲੀ",
+      "romanization": "nili",
+      "gloss": "blue, feminine singular direct",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d39a7c656c74cc63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve familiar ਨੀਲਾ, “blue,” and the familiar rule that a variable adjective agrees with a feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨੀਲਾ — nīlā — blue, masculine singular direct ਨੀਲੀ (nili) — nīlī — blue, feminine singular direct."
+            },
+            {
+              "kind": "speech",
+              "text": "For this one form, change the final -ਾ ending of familiar ਨੀਲਾ to feminine singular -ੀ. The result is ਨੀਲੀ (nili). Keep the stem and meaning steady; only the ending changes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: source boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Punjabi University Patiala's reference grammar says that inflectable adjectives agree with their head noun in gender, number, and case. Its noun-phrase examples contrast masculine ਚੰਗਾ ਮੁੰਡਾ with feminine ਚੰਗੀ ਕੁੜੀ. Source: Punjabi University reference grammar."
+            },
+            {
+              "kind": "speech",
+              "text": "That source supports this one feminine singular direct ending change. This chapter does not teach a full agreement paradigm, plural or oblique forms, a new colour, or a general contrast between attributive and predicative uses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "nili, blue for one feminine noun; YOU SAY: ਨੀਲੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *nili, blue for one feminine noun*; YOU SAY: **ਨੀਲੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨੀਲਾ, ਨੀਲੀ (nili)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨੀਲਾ · ਨੀਲੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਨੀਲੀ (nili) once, checking the final -ੀ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਨੀਲੀ** once, checking the final **-ੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "familiar ਨੀਲਾ ends in -ਾ; exact feminine singular ਨੀਲੀ (nili) ends in -ੀ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: familiar **ਨੀਲਾ** ends in **-ਾ**; exact feminine singular **ਨੀਲੀ** ends in **-ੀ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce familiar “blue,” then its one feminine singular direct form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C209-nili-review",
+      "sequence": 11350,
+      "title": "Retrieve the new feminine form on its own",
+      "headword": "ਨੀਲੀ",
+      "romanization": "nili",
+      "gloss": "retrieve blue feminine singular by sound, meaning, and script",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:59a2797327c380e3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "nili; YOU SAY: ਨੀਲੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *nili*; YOU SAY: **ਨੀਲੀ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "blue, feminine singular direct; YOU SAY: ਨੀਲੀ (nili)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *blue, feminine singular direct*; YOU SAY: **ਨੀਲੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨੀਲੀ (nili)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨੀਲੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਨੀਲੀ (nili)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਨੀਲੀ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep one exact form and one bounded agreement job here. The familiar noun and sentence frame return only after this separate retrieval."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and then write the exact form once from memory."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C209-blue-shoe",
+      "sequence": 11360,
+      "title": "Put the new form before one familiar feminine noun",
+      "headword": "ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ",
+      "romanization": "eh nili jutti hai",
+      "gloss": "this is a blue shoe",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80670cee30dbe335",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the new feminine colour form, familiar “shoe,” familiar “this,” and familiar “is.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ (eh nili jutti hai) — eh nīlī juttī hai — This is a blue shoe."
+            },
+            {
+              "kind": "speech",
+              "text": "For this one frame, begin with familiar ਇਹ, place new ਨੀਲੀ (nili) before the familiar feminine noun ਜੁੱਤੀ, and keep familiar ਹੈ at the end. The adjective is feminine singular direct because it agrees with this one noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh nili jutti hai; YOU SAY: ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh nili jutti hai*; YOU SAY: **ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ (eh nili jutti hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ (eh nili jutti hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "ਨੀਲੀ (nili) comes before ਜੁੱਤੀ; ਹੈ waits at the end",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: **ਨੀਲੀ** comes before **ਜੁੱਤੀ**; **ਹੈ** waits at the end]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete “This is a blue shoe” frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C209-payoff",
+      "sequence": 11370,
+      "title": "A bounded blue-shoe payoff",
+      "headword": "ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ",
+      "romanization": "eh nili jutti hai",
+      "gloss": "recognise and produce one blue-shoe frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6b3658fe58e3fc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the new feminine colour form alone before rebuilding its familiar frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh nili jutti hai; YOU SAY: ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh nili jutti hai*; YOU SAY: **ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ (eh nili jutti hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ (eh nili jutti hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new form, then produce the complete “This is a blue shoe” frame."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the thirty-second prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 223,
+  "title": "Animals",
+  "label": "ch:zh-animals",
+  "canDo": "I can name animals: a panda, a tiger, a monkey and a rabbit, and say which ones I like.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R223-review-218-223",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can name animals: a panda, a tiger, a monkey and a rabbit, and say which ones I like.",
+    "assesses": [
+      "ZH-LEX-C223-ZOO223-01",
+      "ZH-LEX-C223-ZOO223-02",
+      "ZH-LEX-C223-ZOO223-03",
+      "ZH-LEX-C223-ZOO223-04",
+      "ZH-LEX-C223-ZOO223-05"
+    ]
+  }
+}
