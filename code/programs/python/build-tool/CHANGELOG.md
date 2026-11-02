@@ -30,6 +30,32 @@ All notable changes to this project will be documented in this file.
   registry, pruning exact lowercase `blib` while retaining `Blib` and
   `blib-example` in both extension and declared-source modes.
 
+### Fixed
+
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. A change to a crate used only by a
+  build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md`: headers
+  are split into dotted-key segments outside strings (quoted cfgs stay one
+  segment, table names compare case-sensitively, `[[...]]` and malformed
+  headers end the table); comments are stripped outside strings; inline
+  values whose arrays continue onto later lines are joined; `path` and
+  `package` field keys must be exact and hold one non-empty string; names are
+  ASCII-lowercased and deduplicated. Dev-dependencies (every form),
+  `[patch]`, `[replace]`, `[workspace]` and registry entries add no edge.
+- The old reader counted any `[dependencies]` line mentioning `path`, so
+  `gamma = { version = "1", features = ["path"] }` drew an edge, and it looked
+  up the entry key instead of a `package` rename. Both are fixed.
+- The declared Cargo `[package]` `name` is now a known Rust name alongside the
+  directory name, as the contract and the other fronts require.
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, duplicate collapse, the declared-name alias,
+  and the shared `resolution-rust-field-aware.json` fixture (edges and
+  affected closure). The reader returns the same dependency names as the Go
+  reader for all 1,650 tracked `Cargo.toml` files.
+
 ## [0.3.18] - 2026-09-27
 
 ### Added

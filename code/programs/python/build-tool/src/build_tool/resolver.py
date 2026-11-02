@@ -28,8 +28,10 @@ monorepo:
 - **TypeScript**: package.json uses ``@coding-adventures/`` scoped npm names.
   ``@coding-adventures/logic-gates`` maps to ``typescript/logic-gates``.
 
-- **Rust**: Cargo.toml uses path-based local dependencies.
-  The crate name (key before ``=``) maps to ``rust/crate-name``.
+- **Rust**: Cargo.toml uses path-based local dependencies in the tables that
+  link into or build the crate (``[dependencies]``, ``[build-dependencies]``
+  and their ``[target.<cfg>.…]`` forms). The crate name (the entry key, or its
+  ``package`` rename) maps to ``rust/crate-name``.
 
 - **Swift**: Package.swift uses ``.package(path: "../dep-name")`` relative
   path references. The directory name maps to ``swift/dep-name``.
@@ -537,26 +539,443 @@ def _parse_typescript_deps(package: Package, known_names: dict[str, str]) -> lis
 # ---------------------------------------------------------------------------
 # Rust dependency parsing
 # ---------------------------------------------------------------------------
+#
+# Which Cargo tables are build-graph edges
+# ----------------------------------------
+#
+# A graph edge means "rebuild and re-test the dependent when this changes", so
+# it must cover everything Cargo compiles INTO the crate:
+#
+#     table                                  edge?  why
+#     -------------------------------------  -----  -----------------------------
+#     [dependencies]                         yes    linked into the library
+#     [build-dependencies]                   yes    compiled into build.rs, which
+#                                                   generates or configures it
+#     [build_dependencies]                   yes    legacy spelling of the above
+#     [target.<cfg>.<one of the above>]      yes    linked on that target; CI
+#                                                   builds on several hosts, so
+#                                                   the union over every <cfg>
+#     [dev-dependencies] (every form)        no     tests only; Cargo allows a
+#                                                   dev-dependency cycle
+#     [patch], [replace], [workspace], ...   no     not a dependency of the crate
+#
+# Both TOML spellings of a path dependency are read:
+#
+#     [dependencies]
+#     logic-gates = { path = "../logic-gates" }          <- inline table
+#     gates = { package = "logic-gates", path = "..." }  <- renamed: logic-gates
+#
+#     [dependencies.logic-gates]                         <- sub-table
+#     path = "../logic-gates"
+#
+# The procedure below is the Rust paragraph of
+# code/specs/build-tool-conformance.md, step by step. Every build-tool front
+# implements the same procedure and the shared fixture
+# ``resolution-rust-field-aware`` pins it, so Python, Go, Haskell, Ruby,
+# TypeScript, Perl and Lua all draw the same Cargo edges.
+#
+# It is a *line* reader, not a TOML parser. That is deliberate: the contract
+# says exactly which shapes count, and "anything it does not describe
+# contributes nothing", so a reader that understood more TOML than the
+# contract would draw edges the other fronts do not.
+
+# The table names whose path entries link into, or build, the crate. They are
+# compared exactly: TOML keys are case-sensitive, so ``[Dependencies]`` is some
+# other table.
+_CARGO_LINK_TABLE_NAMES = frozenset(
+    {"dependencies", "build-dependencies", "build_dependencies"}
+)
+
+# The bare-key alphabet of TOML: ASCII letters, digits, ``_`` and ``-``.
+# ``str.isalnum`` would also accept ``é`` or ``٣``, which TOML does not.
+_TOML_BARE_KEY_CHARACTERS = frozenset(
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-"
+)
+
+# The three ways to read the lines under the current header.
+_CARGO_IGNORED_TABLE = "ignored"  # not a link table: skip its lines
+_CARGO_INLINE_TABLE = "inline"  # [D] or [target.C.D]: one entry per line
+_CARGO_SUB_TABLE = "sub"  # [D.N] or [target.C.D.N]: keys of entry N
+
+
+def _ascii_lower(text: str) -> str:
+    """Lower-case only ``A``-``Z``, as the contract's matching step says.
+
+    ``str.lower`` follows Unicode and would fold, say, ``K`` (KELVIN SIGN)
+    to ``k``; the other build-tool fronts would not.
+    """
+    return "".join(
+        chr(ord(character) + 32) if "A" <= character <= "Z" else character
+        for character in text
+    )
+
+
+def _trim_spaces_and_tabs(text: str) -> str:
+    """Trim only spaces and tabs (``str.strip`` would also eat ``\\f``, NBSP, ...)."""
+    return text.strip(" \t")
+
+
+def _toml_string_end(text: str, start: int) -> int:
+    """Return the index just past the string opening at ``text[start]``.
+
+    ``text[start]`` is ``"`` or ``'``. Returns -1 when the string is not closed
+    on this line (strings never span lines in this reader). In a basic
+    ``"..."`` string a backslash makes the next character part of the string,
+    so ``\\"`` does not end it; a literal ``'...'`` string has no escapes::
+
+        "a\\"b" = 1    ->  the string is  "a\\"b"   (one string, not two)
+        'a\\'          ->  the string is  'a\\'     (the backslash is literal)
+    """
+    quote = text[start]
+    index = start + 1
+    while index < len(text):
+        character = text[index]
+        if quote == '"' and character == "\\":
+            index += 2
+            continue
+        if character == quote:
+            return index + 1
+        index += 1
+    return -1
+
+
+def _strip_toml_line_comment(line: str) -> str:
+    """Remove a TOML comment: everything from the first ``#`` outside a string.
+
+    An unclosed string runs to the end of the line, so nothing after its
+    opening quote is a comment.
+    """
+    index = 0
+    while index < len(line):
+        character = line[index]
+        if character in "\"'":
+            end = _toml_string_end(line, index)
+            if end < 0:
+                return line
+            index = end
+            continue
+        if character == "#":
+            return line[:index]
+        index += 1
+    return line
+
+
+def _index_toml_outside_strings(text: str, target: str) -> int:
+    """Return the index of the first ``target`` outside every string, or -1."""
+    index = 0
+    while index < len(text):
+        character = text[index]
+        if character in "\"'":
+            end = _toml_string_end(text, index)
+            if end < 0:
+                return -1
+            index = end
+            continue
+        if character == target:
+            return index
+        index += 1
+    return -1
+
+
+def _toml_open_bracket_depth(text: str) -> int:
+    """Count the ``{`` and ``[`` outside strings that ``text`` leaves unclosed.
+
+    Zero (or less) means an inline value is complete::
+
+        { path = "../a", features = [     ->  2
+        { path = "../a" }                 ->  0
+    """
+    depth = 0
+    index = 0
+    while index < len(text):
+        character = text[index]
+        if character in "\"'":
+            end = _toml_string_end(text, index)
+            if end < 0:
+                return depth
+            index = end
+            continue
+        if character in "{[":
+            depth += 1
+        elif character in "}]":
+            depth -= 1
+        index += 1
+    return depth
+
+
+def _split_toml_outside_strings(text: str, separator: str, nested: bool) -> list[str]:
+    """Split at every ``separator`` outside strings.
+
+    With ``nested`` set, a separator inside ``[...]`` or ``{...}`` does not
+    split either, which keeps a ``features = ["a", "b"]`` array in one field.
+    An unclosed string runs to the end of the last part.
+    """
+    parts: list[str] = []
+    start = 0
+    depth = 0
+    index = 0
+    while index < len(text):
+        character = text[index]
+        if character in "\"'":
+            end = _toml_string_end(text, index)
+            if end < 0:
+                break
+            index = end
+            continue
+        if nested and character in "[{":
+            depth += 1
+        elif nested and character in "]}":
+            depth -= 1
+        elif character == separator and depth == 0:
+            parts.append(text[start:index])
+            start = index + 1
+        index += 1
+    parts.append(text[start:])
+    return parts
+
+
+def _toml_key_segment(raw: str) -> str | None:
+    """Decode one key or header segment, or return None if it is not one.
+
+    A segment is a bare key (ASCII letters, digits, ``_``, ``-``) or exactly
+    one complete string, whose value is the text between its quotes taken
+    verbatim -- escapes are not decoded::
+
+        dependencies        ->  dependencies
+        'cfg(unix)'         ->  cfg(unix)
+        "a" "b"  /  a.b     ->  None (two strings / a dotted key)
+    """
+    segment = _trim_spaces_and_tabs(raw)
+    if not segment:
+        return None
+    if segment[0] in "\"'":
+        if _toml_string_end(segment, 0) != len(segment):
+            return None
+        return segment[1:-1]
+    if all(character in _TOML_BARE_KEY_CHARACTERS for character in segment):
+        return segment
+    return None
+
+
+def _toml_single_string(raw: str) -> str | None:
+    """Return the content of a value that is exactly one non-empty string.
+
+    ``"1"`` is one; ``"a" "b"``, ``1``, ``""`` and ``["x"]`` are not.
+    """
+    value = _trim_spaces_and_tabs(raw)
+    if not value or value[0] not in "\"'":
+        return None
+    if _toml_string_end(value, 0) != len(value):
+        return None
+    content = value[1:-1]
+    return content or None
+
+
+def _classify_cargo_link_header(line: str) -> tuple[str, str]:
+    """Decide how to read the lines under a header (step 2 of the contract).
+
+    ``line`` is already comment-stripped and trimmed and starts with ``[``
+    and ends with ``]``. For a sub-table the dependency key ``N`` is returned
+    too. The header is split into dotted-key segments at every ``.`` OUTSIDE
+    a string, and each segment is decoded, so a cfg header is one segment
+    however much punctuation it quotes::
+
+        [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+         target  C (one quoted segment)                   D
+
+        [target."thumbv8m.main-none-eabihf".dependencies.pi]  -> sub-table pi
+        [target.x86_64-unknown-linux-gnu.build-dependencies]  -> bare triple
+        ["dependencies"]                                      -> [dependencies]
+
+    Exactly ``[D]``, ``[D.N]``, ``[target.C.D]`` and ``[target.C.D.N]`` are
+    read; arrays of tables, malformed headers and every other segment list
+    open an ignored table.
+    """
+    if line.startswith("[["):
+        return _CARGO_IGNORED_TABLE, ""  # array of tables, e.g. [[bin]]
+    segments: list[str] = []
+    for raw in _split_toml_outside_strings(line[1:-1], ".", nested=False):
+        segment = _toml_key_segment(raw)
+        if segment is None:
+            return _CARGO_IGNORED_TABLE, ""
+        segments.append(segment)
+    if len(segments) >= 3 and segments[0] == "target":
+        segments = segments[2:]  # drop `target` and the cfg, whatever it is
+    if len(segments) == 1 and segments[0] in _CARGO_LINK_TABLE_NAMES:
+        return _CARGO_INLINE_TABLE, ""
+    if len(segments) == 2 and segments[0] in _CARGO_LINK_TABLE_NAMES:
+        return _CARGO_SUB_TABLE, segments[1]
+    return _CARGO_IGNORED_TABLE, ""
+
+
+def _cargo_path_dependency_name(key: str, value: str) -> str | None:
+    """Return the crate a complete inline entry ``key = value`` names (step 3).
+
+    Only path dependencies can point at a repository package. The name is
+    the ``package`` rename if there is one, and the entry key otherwise::
+
+        logic-gates = { path = "../logic-gates" }                    -> logic-gates
+        gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+        serde = "1"                                    -> None (not a table)
+        x = { version = "1", features = ["path"] }     -> None (no path field)
+        foo.path = "../foo"                            -> None (dotted key)
+
+    Fields are split at commas outside strings AND outside nested ``[...]``
+    or ``{...}``, so a ``features`` array cannot leak a fake field and a
+    nested table's ``path`` is not the entry's. Field keys must be exactly
+    ``path`` and ``package``: Cargo ignores ``Package``, so it must not count
+    as a rename. The first usable field of each key wins.
+    """
+    crate_name = _toml_key_segment(key)
+    if crate_name is None:
+        return None
+    value = _trim_spaces_and_tabs(value)
+    if len(value) < 2 or value[0] != "{" or value[-1] != "}":
+        return None
+    path: str | None = None
+    package_name: str | None = None
+    for field in _split_toml_outside_strings(value[1:-1], ",", nested=True):
+        equals = _index_toml_outside_strings(field, "=")
+        if equals < 0:
+            continue
+        field_value = _toml_single_string(field[equals + 1 :])
+        if field_value is None:
+            continue
+        field_key = _trim_spaces_and_tabs(field[:equals])
+        if field_key == "path" and path is None:
+            path = field_value
+        elif field_key == "package" and package_name is None:
+            package_name = field_value
+    if path is None:
+        return None
+    return _ascii_lower(package_name if package_name is not None else crate_name)
+
+
+def _cargo_link_dependency_names(text: str) -> list[str]:
+    """Return the lower-case crate name of every path dependency in a manifest.
+
+    Names come in manifest order with duplicates kept; the caller collapses
+    them. It is one pass over the lines with a three-state machine
+    (ignored / inline / sub-table). Every header line -- even a malformed one
+    or an array of tables -- ends the current table, and so does the end of
+    the file; a sub-table's entry is complete only then, because its
+    ``path`` and ``package`` keys may come in either order.
+
+    One inline entry may cover several lines. TOML 1.0 lets an ARRAY inside
+    an inline table span lines, and the repository writes exactly that::
+
+        coding_adventures_vault_pm_cli = { path = "../vault-pm-cli", features = [
+            "crash-injection",
+        ] }
+
+    So while the entry's value still has an unclosed ``{`` or ``[``, the next
+    lines are joined onto it with one space (and are not looked at as headers
+    or entries). If the file ends first, the entry contributes nothing.
+    """
+    # Step 1: lines. Split at LF only (``str.splitlines`` would also split at
+    # \\r, \\v, \\f, U+2028, ...), drop one trailing CR, ignore a leading BOM.
+    if text.startswith("﻿"):
+        text = text[1:]
+    lines = text.split("\n")
+
+    def clean(raw: str) -> str:
+        if raw.endswith("\r"):
+            raw = raw[:-1]
+        return _trim_spaces_and_tabs(_strip_toml_line_comment(raw))
+
+    names: list[str] = []
+    kind = _CARGO_IGNORED_TABLE
+    sub_key = ""
+    sub_path: str | None = None
+    sub_package: str | None = None
+
+    def finish_table() -> None:
+        # Step 4's tail: a sub-table is a candidate once it ends with a path.
+        if kind == _CARGO_SUB_TABLE and sub_path is not None:
+            name = sub_package if sub_package is not None else sub_key
+            names.append(_ascii_lower(name))
+
+    index = 0
+    while index < len(lines):
+        line = clean(lines[index])
+        index += 1
+
+        # Step 2: headers. Every header ends the current table.
+        if line.startswith("[") and line.endswith("]"):
+            finish_table()
+            kind, sub_key = _classify_cargo_link_header(line)
+            sub_path = sub_package = None
+            continue
+
+        equals = _index_toml_outside_strings(line, "=")
+        if equals < 0:
+            continue
+
+        if kind == _CARGO_INLINE_TABLE:
+            # Step 3: inline entries, continued while a bracket is open.
+            value: str | None = _trim_spaces_and_tabs(line[equals + 1 :])
+            while (
+                value is not None
+                and value.startswith("{")
+                and _toml_open_bracket_depth(value) > 0
+            ):
+                if index >= len(lines):
+                    value = None  # the file ended inside the value: no entry
+                    break
+                value += " " + clean(lines[index])
+                index += 1
+            if value is not None:
+                crate_name = _cargo_path_dependency_name(line[:equals], value)
+                if crate_name is not None:
+                    names.append(crate_name)
+        elif kind == _CARGO_SUB_TABLE:
+            # Step 4: only the two bare, lower-case keys matter, first wins.
+            # `version`, `features`, `optional` ... are ignored.
+            field_value = _toml_single_string(line[equals + 1 :])
+            if field_value is None:
+                continue
+            field_key = _trim_spaces_and_tabs(line[:equals])
+            if field_key == "path" and sub_path is None:
+                sub_path = field_value
+            elif field_key == "package" and sub_package is None:
+                sub_package = field_value
+    finish_table()
+    return names
+
+
+def _read_cargo_package_name(package_path: Path) -> str | None:
+    """Return the lower-cased ``name = "..."`` declared by a ``Cargo.toml``.
+
+    Step 5 of the contract matches against "the package directory alias and
+    the ``[package]`` ``name``". Like the Go, Ruby, TypeScript, Perl and Lua
+    fronts, this takes the first line of the form ``name = "..."``, which is
+    the ``[package]`` name in every manifest this repository writes.
+    """
+    cargo_toml = package_path / "Cargo.toml"
+    if not cargo_toml.is_file():
+        return None
+    text = cargo_toml.read_text(encoding="utf-8")
+    match = re.search(r'^\s*name\s*=\s*"([^"]+)"', text, re.MULTILINE)
+    if match is None:
+        return None
+    return match.group(1).strip().lower()
 
 
 def _parse_rust_deps(package: Package, known_names: dict[str, str]) -> list[str]:
     """Extract internal dependencies from a Rust package's Cargo.toml.
 
-    Rust Cargo.toml declares workspace-local dependencies with path references::
-
-        [dependencies]
-        logic-gates = { path = "../logic-gates" }
-
-    We look for lines in the ``[dependencies]`` section that contain
-    ``path =`` and extract the crate name (the key before ``=``). We then
-    look up that name in the known names mapping.
+    Step 5 of the contract: each candidate name from every link table is
+    looked up among the known Cargo names, and duplicates -- the same crate
+    in ``[dependencies]`` and ``[build-dependencies]``, say -- collapse to
+    one dependency. A ``package`` rename is authoritative: the entry key of
+    a renamed entry is not looked up.
 
     Args:
         package: The Rust package to inspect.
         known_names: Mapping from crate name to package name.
 
     Returns:
-        List of internal dependency package names.
+        List of internal dependency package names, in manifest order.
     """
     cargo_toml = package.path / "Cargo.toml"
     if not cargo_toml.exists():
@@ -564,27 +983,10 @@ def _parse_rust_deps(package: Package, known_names: dict[str, str]) -> list[str]
 
     text = cargo_toml.read_text(encoding="utf-8")
     internal_deps: list[str] = []
-
-    in_deps = False
-    for line in text.splitlines():
-        stripped = line.strip()
-
-        # Detect section headers like [dependencies] or [dev-dependencies].
-        if stripped.startswith("["):
-            in_deps = stripped == "[dependencies]"
-            continue
-
-        if not in_deps:
-            continue
-
-        # Look for lines like: logic-gates = { path = "../logic-gates" }
-        if "path" in stripped and "=" in stripped:
-            parts = stripped.split("=", 1)
-            if len(parts) >= 2:
-                crate_name = parts[0].strip().lower()
-                if crate_name in known_names:
-                    internal_deps.append(known_names[crate_name])
-
+    for crate_name in _cargo_link_dependency_names(text):
+        package_name = known_names.get(crate_name)
+        if package_name is not None and package_name not in internal_deps:
+            internal_deps.append(package_name)
     return internal_deps
 
 
@@ -1269,6 +1671,11 @@ def _build_known_names_for_language(
             # Rust crate names use the directory name directly (kebab-case).
             crate_name = pkg.path.name.lower()
             _set_known(crate_name, pkg.name, pkg.path)
+            # The declared [package] name is the other known Cargo name, so
+            # a crate whose name differs from its directory still resolves.
+            cargo_name = _read_cargo_package_name(pkg.path)
+            if cargo_name:
+                _set_known(cargo_name, pkg.name, pkg.path)
 
         elif pkg.language == "elixir":
             # Elixir mix names replace hyphens with underscores.

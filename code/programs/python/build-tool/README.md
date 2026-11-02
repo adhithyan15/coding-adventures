@@ -220,6 +220,22 @@ same-priority Dart package makes that alias ambiguous and therefore inert.
 Other root fields, comments, lockfiles, unknown names, and self references are
 ignored, and referenced paths are never opened or followed.
 
+Rust resolution reads path entries from every Cargo table that is compiled
+into the crate: `[dependencies]`, `[build-dependencies]` (and the legacy
+`build_dependencies`), and the same tables under `[target.<cfg>.…]` for any
+cfg, quoted or a bare triple, as a union over all targets. Entries count both
+as inline tables (`name = { path = "..." }`, whose arrays may continue onto
+later lines) and as `[dependencies.name]` sub-tables with a `path = "..."`
+key. A `package = "..."` rename is authoritative. The crate name is matched,
+ASCII-lowercased, against each Rust package's directory name and declared
+`[package]` `name`. Dev-dependencies in every form, `[patch]`, `[replace]`,
+`[workspace]`, package metadata, features, comments, and registry-only
+dependencies never create edges. The line procedure is the Rust paragraph of
+`code/specs/build-tool-conformance.md`; the shared
+`resolution/rust-field-aware` fixture pins it, and the reader returns the same
+dependency names as the Go reference reader for all 1,650 tracked
+`Cargo.toml` files (checked 2026-11-01).
+
 Plan emission writes a complete JSON document to an exclusively created,
 writer-owned sibling temporary file and publishes it with the platform's
 replace-if-present primitive. Reusing an existing `--emit-plan` destination is
