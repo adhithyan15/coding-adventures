@@ -94,10 +94,17 @@ eq_u64_bit = ((d | -d) >> 63) xor 1
                               (d | -d has its top bit set exactly when d != 0)
 ```
 
-Languages with unbounded integers (Ruby, Elixir) use the same identities
-with an arithmetic shift of the negative value and a final `and 1`. Their
-big-integer arithmetic is not promised to be constant time (see the scope
-note above). `select_bytes(a, b, eq_bit(x, y))` then needs no conditional
+Languages with unbounded integers (Ruby, Elixir) have no word width, so they
+use forms that rely on an arithmetic shift keeping -1 as -1 while every other
+value in range shifts to 0:
+
+```
+eq_bit     = ((acc - 1) >> 8) and 1     (acc in 0..255)
+eq_u64_bit = ((d - 1) >> 64) and 1      (d in 0..2^64 - 1)
+```
+
+Their big-integer arithmetic is not promised to be constant time (see the
+scope note above). `select_bytes(a, b, eq_bit(x, y))` then needs no conditional
 anywhere. Callers must never convert a boolean equality result into a
 selection bit with a conditional.
 
