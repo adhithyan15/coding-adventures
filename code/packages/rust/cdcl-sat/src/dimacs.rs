@@ -41,8 +41,19 @@ use std::fmt;
 
 use crate::lit::Lit;
 
-/// The default cap on a header's variable count: 2^24 (about 16 million).
-pub const DEFAULT_MAX_VARS: usize = 1 << 24;
+/// The default cap on a header's variable count: 2^20 (about a million).
+///
+/// The cap is about memory downstream, not in the parser: a [`crate::Solver`]
+/// loaded with [`crate::Solver::from_cnf`] spends roughly 100 bytes per
+/// declared variable (value, level, reason, activity, phase, two watch
+/// lists, heap slot). At 2^20 a hostile header costs about 100 MB; at 2^24
+/// it would cost about 2 GB from a 30-byte file. Callers that need bigger
+/// formulas raise the limit explicitly with [`parse_dimacs_with_limit`].
+pub const DEFAULT_MAX_VARS: usize = 1 << 20;
+
+/// The largest limit [`parse_dimacs_with_limit`] honours: the literal
+/// encoding packs `2·var + 1` into a `u32`, so variables stop at 2^31.
+pub const MAX_VARS_LIMIT: usize = 1 << 31;
 
 /// A formula in conjunctive normal form: an AND of clauses, each an OR of
 /// literals over variables `0..num_vars`.
@@ -159,8 +170,9 @@ pub fn parse_dimacs(text: &str) -> Result<Cnf, DimacsError> {
 }
 
 /// Read DIMACS CNF text, rejecting headers that declare more than
-/// `max_vars` variables.
+/// `max_vars` variables. Limits above [`MAX_VARS_LIMIT`] are lowered to it.
 pub fn parse_dimacs_with_limit(text: &str, max_vars: usize) -> Result<Cnf, DimacsError> {
+    let max_vars = max_vars.min(MAX_VARS_LIMIT);
     let err = |line: usize, kind: DimacsErrorKind| DimacsError { line, kind };
 
     // (variables, clauses) from the header, once seen.
@@ -314,6 +326,12 @@ mod tests {
         assert_eq!(e.kind, DimacsErrorKind::TooManyVars { declared: 11, limit: 10 });
         assert_eq!(e.line, 1);
         assert!(parse_dimacs("p cnf 4000000000 0\n").is_err());
+        assert!(parse_dimacs("p cnf 1048577 0\n").is_err());
+        // A caller limit beyond the literal encoding is lowered, never a panic.
+        let e = parse_dimacs_with_limit("p cnf 3000000000 1\n3000000000 0\n", usize::MAX).unwrap_err();
+        assert!(matches!(e.kind, DimacsErrorKind::TooManyVars { limit: MAX_VARS_LIMIT, .. }));
+        let cnf = parse_dimacs_with_limit("p cnf 2147483648 1\n-2147483648 0\n", usize::MAX).unwrap();
+        assert_eq!(cnf.clauses[0][0].to_dimacs(), -2147483648);
         assert!(parse_dimacs_with_limit("p cnf 10 0\n", 10).is_ok());
     }
 

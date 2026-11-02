@@ -76,7 +76,10 @@ pub mod lit;
 pub mod luby;
 pub mod solver;
 
-pub use dimacs::{parse_dimacs, parse_dimacs_with_limit, write_dimacs, Cnf, DimacsError, DimacsErrorKind};
+pub use dimacs::{
+    parse_dimacs, parse_dimacs_with_limit, write_dimacs, Cnf, DimacsError, DimacsErrorKind, DEFAULT_MAX_VARS,
+    MAX_VARS_LIMIT,
+};
 pub use lit::{LBool, Lit, Var};
 pub use solver::{SolveResult, Solver, Stats};
 

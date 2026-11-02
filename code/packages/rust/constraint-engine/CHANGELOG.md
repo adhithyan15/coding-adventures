@@ -16,9 +16,19 @@ VER09: the SAT tactic now runs on the `cdcl-sat` CDCL solver.
   was DPLL; the tactic is now CDCL, via `cdcl-sat`.
 - `src/sat.rs` became `src/sat/mod.rs`.
 
+### Security
+
+- **NNF size guard.** `SatTactic::solve` now refuses (`Unknown`) any
+  predicate whose negation normal form would exceed `sat::MAX_NNF_NODES`
+  (100 000) nodes, computed in linear time without building it. `Iff`
+  copies both operands, so a chain of nested `Iff`s made `to_nnf` take
+  time and memory exponential in the depth (seconds at depth 20, hours at
+  depth 30, far below the depth guard) before any budget applied. That
+  case existed before VER09; the security review of this change found it.
+
 ### Added
 
-- `sat::CONFLICT_BUDGET`.
+- `sat::CONFLICT_BUDGET`, `sat::MAX_NNF_NODES`.
 - `src/sat/dpll_oracle.rs`: the pre-VER09 DPLL, unchanged, compiled only
   under `cfg(test)`. A new test runs 1000 random propositional formulas
   through the adapter, the old DPLL and a truth table, and requires all

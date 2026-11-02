@@ -337,7 +337,12 @@ impl Solver {
     // -----------------------------------------------------------------------
 
     /// Add a clause (an OR of literals). Variables that do not exist yet are
-    /// created.
+    /// created: **every** variable up to the largest index mentioned, at
+    /// about 100 bytes each. Variable indices are the caller's to bound;
+    /// a caller handling untrusted input should number variables densely
+    /// (as `constraint-engine` does with [`Solver::new_var`]) or check
+    /// indices first, because one literal of index 2^31 asks for hundreds
+    /// of gigabytes.
     ///
     /// Returns `false` if the solver now knows the clauses are UNSAT (the
     /// clause was empty after simplification, or contradicted a level-0
@@ -961,7 +966,8 @@ impl Solver {
 
     /// Solve the clauses added so far, with the given literals assumed true
     /// for this call only (VER09 §4.6). Learned clauses are kept for later
-    /// calls.
+    /// calls. As with [`Solver::add_clause`], assumptions on new variables
+    /// create every variable up to the largest index.
     pub fn solve_with_assumptions(&mut self, assumptions: &[Lit]) -> SolveResult {
         self.model.clear();
         self.failed.clear();

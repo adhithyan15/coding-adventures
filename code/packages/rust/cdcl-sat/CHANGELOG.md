@@ -18,7 +18,9 @@ Initial release: the VER09 CDCL SAT solver.
 - A conflict budget: `SolveResult::Unknown` when it runs out, and the solver
   stays usable.
 - Strict DIMACS CNF reader (`parse_dimacs`, `parse_dimacs_with_limit`) with
-  line-numbered errors and a variable-count cap, plus a writer
+  line-numbered errors and a variable-count cap (default 2^20, about
+  100 MB of solver state; caller limits clamp to the 2^31 encoding
+  ceiling), plus a writer
   (`write_dimacs`) and `Cnf::is_satisfied_by` for checking models.
 - Differential tests against brute force (plain, under assumptions,
   incremental), pigeonhole instances, and DIMACS round trips.

@@ -267,7 +267,10 @@ thing:
 - A line containing only `%` ends the input (the SATLIB convention); what
   follows it is ignored.
 - The header's variable count is capped by the caller's limit (default
-  `1 << 24`), so a hostile header cannot force a huge allocation.
+  `1 << 20`, never more than `1 << 31`, the encoding's ceiling), so a
+  hostile header cannot force a huge allocation. The cap is set by what a
+  solver loaded from the formula spends: about 100 bytes per declared
+  variable, so 2^20 variables cost about 100 MB.
 - Errors carry the 1-based line number.
 
 The writer emits a header and one clause per line, terminated by `0`. A
@@ -293,7 +296,11 @@ exactly one function.
 `constraint-engine::sat::SatTactic::solve(&[Predicate], &[String])` keeps
 its signature and its behaviour:
 
-1. The depth guard and CNF conversion (`to_cnf`) are unchanged.
+1. The depth guard and CNF conversion (`to_cnf`) are unchanged. A new
+   size guard runs before them: a predicate whose negation normal form
+   would exceed `MAX_NNF_NODES` (100 000) nodes is answered `Unknown`
+   without being expanded. `Iff` copies both operands, so nested `Iff`s
+   grow as 2^k, and that work happened before any existing budget applied.
 2. Each distinct variable name gets a `cdcl_sat::Var`, in first-appearance
    order.
 3. The clauses are added; the solver runs with a conflict budget of
@@ -352,6 +359,10 @@ Recorded while implementing:
    found that `Predicate::to_nnf` left `¬(a ⇔ b)` wrapped around a compound,
    so `to_cnf` returned a formula that was not CNF, and the tactic answered
    `Unknown`. `to_nnf` now rewrites it to `(a ∨ b) ∧ (¬a ∨ ¬b)`.
+5. **Security review hardening.** The DIMACS default cap went from 2^24
+   to 2^20 and limits are clamped to 2^31. The adapter gained the NNF size
+   guard of §7, which bounds an exponential case that predates this spec.
+   `add_clause` documents that variable indices are the caller's to bound.
 4. **The distributive CNF conversion keeps its clause cap** (10 000 clauses).
    Formulas past the cap still answer `Unknown`, as before. The Tseitin
    encoding of VER10 removes the cap; re-pointing `SatTactic` at it is a

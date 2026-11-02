@@ -29,7 +29,9 @@
 //!   in no clause is reported `false`.
 //! - A bounded amount of work: the old DPLL stopped after 1 000 000 search
 //!   nodes; the adapter stops after 1 000 000 conflicts and answers
-//!   `Unknown`.
+//!   `Unknown`. Before any of that, predicates whose negation normal form
+//!   would exceed [`MAX_NNF_NODES`] are refused (nested `Iff` doubles at
+//!   each level), as are trees deeper than `MAX_PREDICATE_DEPTH`.
 //!
 //! The old DPLL lives on in [`dpll_oracle`] (tests only), as an independent
 //! second opinion the tests compare against.
@@ -115,6 +117,21 @@ impl SatTactic {
             }
         }
 
+        // Refuse predicates whose negation normal form would be huge. `Iff`
+        // copies both operands, so a chain of k nested `Iff`s grows as 2^k
+        // inside `to_nnf`, before the CNF clause cap or the conflict budget
+        // ever runs: depth 20 already costs seconds, depth 30 hours.
+        let mut total = 0usize;
+        for p in assertions {
+            total = total.saturating_add(nnf_size_bound(p));
+        }
+        if total > MAX_NNF_NODES {
+            return SolverResult::Unknown(format!(
+                "predicate would expand past MAX_NNF_NODES ({MAX_NNF_NODES}) nodes in negation \
+                 normal form; refusing to expand (nested Iff doubles at each level)"
+            ));
+        }
+
         // Convert every assertion to CNF and collect clauses.
         let mut clauses: Vec<Clause> = Vec::new();
         for p in assertions {
@@ -140,6 +157,53 @@ impl SatTactic {
             ClauseAnswer::Unsat => SolverResult::Unsat,
             ClauseAnswer::Unknown(reason) => SolverResult::Unknown(reason),
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// The NNF size guard
+// ---------------------------------------------------------------------------
+
+/// The largest negation normal form, in nodes, the tactic will build.
+/// Real refinement predicates are a few hundred nodes; this leaves room for
+/// generated ones while bounding the work `to_nnf` can be made to do.
+pub const MAX_NNF_NODES: usize = 100_000;
+
+/// An upper bound on the node count of `p.to_nnf()`, computed without
+/// building it, in time linear in the size of `p`.
+///
+/// Every rewrite `to_nnf` performs adds at most a constant number of nodes
+/// per input node, except `Iff` and `¬Iff`, whose expansion
+/// `(¬a ∨ b) ∧ (¬b ∨ a)` contains each operand twice. The bound charges
+/// those twice. Saturating arithmetic keeps it meaningful (= "too big")
+/// when it overflows. Callers must have checked `depth_of` first: this
+/// recurses.
+fn nnf_size_bound(p: &Predicate) -> usize {
+    // `+ 4` covers the And, the two Ors and a Not that an expansion adds.
+    let sum = |ps: &[&Predicate]| ps.iter().fold(4usize, |acc, q| acc.saturating_add(nnf_size_bound(q)));
+    match p {
+        Predicate::Bool(_) | Predicate::Var(_) | Predicate::Int(_) | Predicate::Real(_) => 1,
+        Predicate::Iff(a, b) => sum(&[a, b]).saturating_mul(2),
+        Predicate::And(parts) | Predicate::Or(parts) | Predicate::Add(parts) => {
+            sum(&parts.iter().collect::<Vec<_>>())
+        }
+        Predicate::Apply { args, .. } => sum(&args.iter().collect::<Vec<_>>()),
+        Predicate::Not(inner) | Predicate::Mul { term: inner, .. } => sum(&[inner]),
+        Predicate::Forall { body, .. } | Predicate::Exists { body, .. } => sum(&[body]),
+        Predicate::Implies(a, b)
+        | Predicate::Eq(a, b)
+        | Predicate::NEq(a, b)
+        | Predicate::Sub(a, b)
+        | Predicate::Le(a, b)
+        | Predicate::Lt(a, b)
+        | Predicate::Ge(a, b)
+        | Predicate::Gt(a, b)
+        | Predicate::Select { arr: a, idx: b } => sum(&[a, b]),
+        Predicate::Ite(a, b, c) | Predicate::Store { arr: a, idx: b, val: c } => sum(&[a, b, c]),
+        // `Predicate` is non-exhaustive. A variant added later has an
+        // unknown expansion, so it gets no bound at all: refuse rather than
+        // under-count.
+        _ => usize::MAX,
     }
 }
 
@@ -567,6 +631,85 @@ mod tests {
         match SatTactic::solve(&[deep], &vars(&["a"])) {
             SolverResult::Unknown(why) => assert!(why.contains("MAX_PREDICATE_DEPTH"), "{why}"),
             other => panic!("expected Unknown, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn nested_iff_is_refused_before_it_explodes() {
+        // 30 nested Iffs: a 2^30-node NNF. Must come back fast, as Unknown.
+        let chain = (0..30).fold(vb("a"), |acc, i| {
+            Predicate::Iff(Box::new(acc), Box::new(vb(NAMES[i % 6])))
+        });
+        match SatTactic::solve(&[Predicate::Not(Box::new(chain))], &vars(&NAMES)) {
+            SolverResult::Unknown(why) => assert!(why.contains("MAX_NNF_NODES"), "{why}"),
+            other => panic!("expected Unknown, got {other:?}"),
+        }
+        // A short chain is still solved: a ⇔ (a ⇔ b) forces b.
+        let short = Predicate::Iff(
+            Box::new(vb("a")),
+            Box::new(Predicate::Iff(Box::new(vb("a")), Box::new(vb("b")))),
+        );
+        let r = SatTactic::solve(&[short], &vars(&["a", "b"]));
+        assert_eq!(r.model().unwrap().get("b").unwrap().as_bool(), Some(true));
+    }
+
+    #[test]
+    fn size_bound_covers_every_variant() {
+        use constraint_core::{Rational, Sort};
+        let x = || Box::new(vb("x"));
+        let all = vec![
+            Predicate::Int(1),
+            Predicate::Real(Rational::new(1, 2)),
+            Predicate::Apply { f: "f".into(), args: vec![vb("x")] },
+            Predicate::Add(vec![vb("x")]),
+            Predicate::Mul { coef: 2, term: x() },
+            Predicate::Forall { var: "y".into(), sort: Sort::Int, body: x() },
+            Predicate::Exists { var: "y".into(), sort: Sort::Int, body: x() },
+            Predicate::Implies(x(), x()),
+            Predicate::Eq(x(), x()),
+            Predicate::NEq(x(), x()),
+            Predicate::Sub(x(), x()),
+            Predicate::Le(x(), x()),
+            Predicate::Lt(x(), x()),
+            Predicate::Ge(x(), x()),
+            Predicate::Gt(x(), x()),
+            Predicate::Select { arr: x(), idx: x() },
+            Predicate::Ite(x(), x(), x()),
+            Predicate::Store { arr: x(), idx: x(), val: x() },
+        ];
+        for p in &all {
+            // The bound really is an upper bound on what to_nnf builds.
+            let built = count_nodes(&p.clone().to_nnf());
+            assert!(nnf_size_bound(p) >= built, "{p:?}: bound {} < {built}", nnf_size_bound(p));
+        }
+        let mut rng = Rng(77);
+        for _ in 0..500 {
+            let p = random_predicate(&mut rng, 5);
+            assert!(nnf_size_bound(&p) >= count_nodes(&p.clone().to_nnf()), "{p:?}");
+        }
+    }
+
+    /// Exact node count of a predicate tree, for checking the bound.
+    fn count_nodes(p: &Predicate) -> usize {
+        1 + match p {
+            Predicate::And(ps) | Predicate::Or(ps) | Predicate::Add(ps) => ps.iter().map(count_nodes).sum(),
+            Predicate::Apply { args, .. } => args.iter().map(count_nodes).sum(),
+            Predicate::Not(a) | Predicate::Mul { term: a, .. } => count_nodes(a),
+            Predicate::Forall { body, .. } | Predicate::Exists { body, .. } => count_nodes(body),
+            Predicate::Implies(a, b)
+            | Predicate::Iff(a, b)
+            | Predicate::Eq(a, b)
+            | Predicate::NEq(a, b)
+            | Predicate::Sub(a, b)
+            | Predicate::Le(a, b)
+            | Predicate::Lt(a, b)
+            | Predicate::Ge(a, b)
+            | Predicate::Gt(a, b)
+            | Predicate::Select { arr: a, idx: b } => count_nodes(a) + count_nodes(b),
+            Predicate::Ite(a, b, c) | Predicate::Store { arr: a, idx: b, val: c } => {
+                count_nodes(a) + count_nodes(b) + count_nodes(c)
+            }
+            _ => 0,
         }
     }
 }
