@@ -613,7 +613,9 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   // ── Checklists (C3b) ────────────────────────────────────────────────────
   // A port of task-mosaic-app's checklist_props and handlers (C3a): the same
   // slots, the same bounds, the same ids, so the web and native hosts agree.
-  const CHECKLIST_TEXT_MAX = 512; // characters, per composer
+  // Characters, per composer. Each composer names a task (a checklist's root
+  // or an item), so this is the task-name limit itself.
+  const CHECKLIST_TEXT_MAX = TASK_NAME_MAX_CHARS;
   const CHECKLIST_ITEMS_MAX = 10_000; // task-core's MAX_CHECKLIST_ITEMS
   const CHECKLIST_INDENT_MAX = 16; // depth in a restored snapshot is unbounded
 
@@ -923,6 +925,12 @@ export function makeController(engine: any, init: ControllerInit = {}) {
     complexity === "full"
       ? SHEET_FIELDS
       : SHEET_FIELDS.filter((f) => f.field.builtin !== "start" && f.field.builtin !== "finish");
+  // Whether the open Sheet edit is a task's name, which takes the task-name cap.
+  const editingSheetName = () =>
+    visibleSheetFields(activeProjectComplexity())[sheetEditCol]?.field.builtin === "name";
+  // Whether `value` would grow the open Name edit past the task-name cap.
+  const sheetNameRefused = (value: string) =>
+    editingSheetName() && !draftFits(value, sheetEditContent, scalarCount, TASK_NAME_MAX_CHARS);
 
   return {
     getProps() {
@@ -1254,6 +1262,8 @@ export function makeController(engine: any, init: ControllerInit = {}) {
       if (event.type !== "saveNote") noteError = "";
       switch (event.type) {
         case "newTaskNameChange":
+          // Refused past the task-name cap as typed, as a note title is (6e4).
+          if (!draftFits(event.value, newName, scalarCount, TASK_NAME_MAX_CHARS)) break;
           newName = event.value;
           if (newName.trim()) newNameError = "";
           break;
@@ -1265,6 +1275,8 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           }
           break;
         case "editTaskNameChange":
+          // A task named before the cap loads whole and may only shrink.
+          if (!draftFits(event.value, editTaskName, scalarCount, TASK_NAME_MAX_CHARS)) break;
           editTaskName = event.value;
           if (editTaskName.trim()) {
             editTaskNameError = "";
@@ -1296,6 +1308,12 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             editTaskNameError = "Enter a task name.";
             break;
           }
+          // task-core's rename rule, checked here so the refusal is visible:
+          // past the cap only for a name no longer than the stored one.
+          if (!taskNameFits(name) && scalarCount(name) > scalarCount(taskNameById(editingTask))) {
+            editTaskNameError = TASK_NAME_TOO_LONG;
+            break;
+          }
           editTaskNameError = "";
           const dueText = editTaskDue.trim();
           const due = dueText ? isoToDays(dueText) : null;
@@ -1303,7 +1321,11 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             editTaskDueError = "Use a real date in YYYY-MM-DD format.";
             break;
           }
-          engine.renameTask({ id: editingTask, name });
+          const renamed = engine.renameTask({ id: editingTask, name });
+          if (renamed?.ok === false) {
+            console.error("Could not rename the task:", renamed.error ?? renamed);
+            break;
+          }
           engine.setDeadline({ id: editingTask, deadline: due });
           editingTask = null;
           editTaskName = "";
@@ -1639,7 +1661,11 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           break;
         }
         case "noteTaskNameChange":
-          noteTaskDraft = event.value;
+          // The task-name cap (notes-ui addendum v1.5). A note attached to a
+          // task named before the cap opens with that whole name and may shrink.
+          if (draftFits(event.value, noteTaskDraft, scalarCount, TASK_NAME_MAX_CHARS)) {
+            noteTaskDraft = event.value;
+          }
           break;
         case "saveNote": {
           if (!selectedNoteId) break;
@@ -1724,6 +1750,8 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           break;
         }
         case "sheetFormulaChange":
+          // Capped only while the edit is in the Name column (6e4).
+          if (sheetNameRefused(event.value)) break;
           sheetEditContent = event.value;
           break;
         case "sheetEditCancel":
@@ -1732,6 +1760,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           sheetEditContent = "";
           break;
         case "sheetEditCommit": {
+          // A name past the cap is refused before anything is cleared, so the
+          // edit stays open on its last value, as task-mosaic-app's rollback
+          // leaves it.
+          if (sheetNameRefused(event.value)) break;
           const { ids } = sheetRows();
           const id = ids[sheetEditRow];
           const col = visibleSheetFields(activeProjectComplexity())[sheetEditCol];
@@ -1859,6 +1891,13 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             newNameError = "Enter a task name.";
             break;
           }
+          // Only a draft that skipped newTaskNameChange's cap gets here; this
+          // host does not persist drafts, so it is parity with the native
+          // adapter's restored draft rather than a reachable path.
+          if (!taskNameFits(name)) {
+            newNameError = TASK_NAME_TOO_LONG;
+            break;
+          }
           newNameError = "";
           const dueText = newDue.trim();
           const due = dueText ? isoToDays(dueText) : null;
@@ -1873,7 +1912,11 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             break;
           }
           const id = `t${n}`;
-          engine.createTask({ id, name });
+          const created = engine.createTask({ id, name });
+          if (created?.ok === false) {
+            console.error("Could not add the task:", created.error ?? created);
+            break;
+          }
           // A default one working-day duration makes the task schedulable.
           engine.setDuration({ id, duration: { workingMinutes: 8 * 60, elapsed: false } });
           // Chain after the last task so the engine builds a work queue (each task
@@ -1987,4 +2030,69 @@ export function trimWhiteSpace(text: string): string {
   while (start < end && WHITE_SPACE_UNIT.test(text[start])) start++;
   while (end > start && WHITE_SPACE_UNIT.test(text[end - 1])) end--;
   return text.slice(start, end);
+}
+
+// ── The task-name limit (6e4) ─────────────────────────────────────────────
+//
+// task-core refuses a task name past MAX_TASK_NAME_CHARS, 512 Unicode scalar
+// values, and task-mosaic-app refuses a typed one as it is typed
+// (code/specs/task-app-data-model.md, "Task names are bounded"). This host
+// applies the same number at the same places, with the same rule as a note
+// title's draftFits: an edit past the cap is ignored, so the field shows its
+// last value again, unless it is no longer than the value it replaces.
+//
+// The unit is the trap. `String.length` counts UTF-16 code units, so one
+// astral character (😀, U+1F600) is 2 there and 1 in Rust's `str::chars`:
+//
+//   name               Rust chars   String.length   scalarCount
+//   "x" × 512          512          512             512
+//   "😀" × 512         512          1024            512
+//   "é" × 256    512          512             512   (scalars, not graphemes)
+//
+// So this host counts code points, which is what string iteration yields. A
+// lone surrogate (which only JavaScript can hold) counts as one, and reaches
+// the engine as one U+FFFD after UTF-8 encoding, so the counts still agree.
+// The cases both hosts run are
+// `code/programs/mosaic/task-app/fixtures/task-name-limit-v1.json`.
+
+/** The longest a task name may be created or grown to, in Unicode scalars. */
+export const TASK_NAME_MAX_CHARS = 512;
+
+/** The composer error for Add or Save with a name past the cap. */
+export const TASK_NAME_TOO_LONG = "Task names can be at most 512 characters.";
+
+/**
+ * `text`'s length in Unicode scalar values (code points), never UTF-16 units.
+ * The count stops once it passes `limit`, returning `limit + 1`, so asking
+ * "is this within 512?" of a multi-megabyte paste costs 513 steps.
+ *
+ *   code units                 counted as
+ *   high surrogate + low one   1   (one astral code point, one Rust char)
+ *   anything else              1   (a lone surrogate too)
+ *
+ * A loop over code units rather than `[...text].length`, which builds an
+ * array of every code point first and cannot stop early.
+ */
+export function scalarCount(text: string, limit = Infinity): number {
+  let n = 0;
+  for (let i = 0; i < text.length && n <= limit; i++) {
+    const unit = text.charCodeAt(i);
+    if (unit >= 0xd800 && unit <= 0xdbff && i + 1 < text.length) {
+      const next = text.charCodeAt(i + 1);
+      if (next >= 0xdc00 && next <= 0xdfff) i++;
+    }
+    n++;
+  }
+  return n;
+}
+
+/**
+ * True when `name` is within the cap. A string has at least as many code
+ * units as code points, so a short one fits without being walked at all.
+ */
+export function taskNameFits(name: string): boolean {
+  return (
+    name.length <= TASK_NAME_MAX_CHARS ||
+    scalarCount(name, TASK_NAME_MAX_CHARS) <= TASK_NAME_MAX_CHARS
+  );
 }
