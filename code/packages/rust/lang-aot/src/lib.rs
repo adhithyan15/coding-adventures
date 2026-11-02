@@ -1099,6 +1099,19 @@ pub fn compile_iir_to_llvm(
     target_triple: &str,
 ) -> Result<String, LangAotError> {
     check_module_for(Backend::Llvm, &module)?;
+    // The program's own functions may not take a runtime symbol's name
+    // (`__twig_*`, `__gc_*`, any `__dyn_*` but the pass helpers) or share a
+    // name. The executable links the same C runtime and gc-core-capi as the
+    // native column, and a program `define i64 @__gc_alloc_kind(…)` would
+    // stand in for the collector's allocator for every caller in the runtime.
+    // It is twig-aot's link-step check, shared so the two columns refuse the
+    // same names (security review).
+    twig_aot::check_program_function_names(&module).map_err(|e| {
+        LangAotError::LlvmBackendError(match e {
+            twig_aot::AotError::Linker { stderr, .. } => stderr,
+            other => other.to_string(),
+        })
+    })?;
     // E6d-8: lower dynamic `global_get`/`global_set` → `global_load`/`global_store`
     // before the value-model passes (as the native twig-aot path does).
     iir_builtin_lowering::lower_global_io(&mut module);
@@ -1114,8 +1127,8 @@ pub fn compile_iir_to_llvm(
     // `cmp_eq` no longer emits `icmp i1` on an i64); with that landed, LLVM joins
     // NativeAot + WASM. Runs before the runtime heap lowering (which lowers the
     // `cons`/`car`/`cdr` this pass emits).
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::LlvmBackendError(e.to_string()))?;
+    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module).map_err(|e| LangAotError::LlvmBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
     // Refuses a module that defines or calls a compiler-reserved `__lisp_*`
@@ -1253,10 +1266,10 @@ pub fn compile_iir_to_wasm(mut module: IIRModule) -> Result<Vec<u8>, LangAotErro
     // BEFORE `lower_heap_builtins`, so the `cons`/`car`/`cdr` this pass emits are
     // then lowered by it. WASM has no native closure model (JVM/CLR/native/LLVM
     // do), so this is the WASM-only path; a no-op for a closure-free module.
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::WasmBackendError(e.to_string()))?;
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::WasmBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     // Intern symbol literals to distinct integers in a reserved range, so each
     // distinct symbol is a unique value (boxed as `i31ref`) and `EQ` compares
@@ -1543,8 +1556,8 @@ pub fn compile_iir_to_jvm_class(
     // `lower_heap_builtins` then makes structural. Running it here gives the
     // managed backends the same closure model wasm already had, instead of the
     // `UnsupportedOp alloc_closure` refusal.
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::JvmBackendError(e.to_string()))?;
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::JvmBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
@@ -1695,8 +1708,8 @@ pub fn compile_iir_to_cil_artifact(
     // `lower_heap_builtins` then makes structural. Running it here gives the
     // managed backends the same closure model wasm already had, instead of the
     // `UnsupportedOp alloc_closure` refusal.
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::ClrBackendError(e.to_string()))?;
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::ClrBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
@@ -1762,8 +1775,8 @@ pub fn compile_iir_to_cil_text(mut module: IIRModule, name: &str) -> Result<Stri
     // `lower_heap_builtins` then makes structural. Running it here gives the
     // managed backends the same closure model wasm already had, instead of the
     // `UnsupportedOp alloc_closure` refusal.
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::ClrBackendError(e.to_string()))?;
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::ClrBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
@@ -1858,7 +1871,7 @@ pub fn compile_iir_to_beam(mut module: IIRModule, module_name: &str) -> Result<V
     // maps directly to BEAM list ops — `put_list` (a cons cell `[H|T]`) and
     // `get_hd`/`get_tl` (`hd`/`tl`). Integers stay native Erlang integers; there
     // is NO boxing (unlike wasm/JVM/CLR). A no-op for a scalar-only module.
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::BeamBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     // McCarthy symbols (F6): intern each distinct symbol to a stable `i32` id
     // (`SYMBOL_ID_BASE = 1<<29`). The BEAM carries it as a native Erlang integer,

@@ -1,0 +1,2 @@
+cargo test -p tls13-alpn --test tls13_alpn -- --nocapture
+cargo test -p tls13-alpn --doc

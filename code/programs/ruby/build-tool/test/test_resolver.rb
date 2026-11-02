@@ -50,6 +50,17 @@ class TestDirectedGraph < Minitest::Test
     assert_equal [], graph.predecessors("a")
   end
 
+  def test_each_predecessor_is_lazy_and_preserves_predecessors
+    graph = BuildTool::DirectedGraph.new
+    graph.add_edge("a", "target")
+    graph.add_edge("b", "target")
+
+    enumeration = graph.each_predecessor("target")
+    assert_instance_of Enumerator, enumeration
+    assert_equal Set["a", "b"], enumeration.to_set
+    assert_equal [], graph.each_predecessor("missing").to_a
+  end
+
   # -- Transitive closure / dependents -----------------------------------------
 
   def test_transitive_closure_linear

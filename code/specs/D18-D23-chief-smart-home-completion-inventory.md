@@ -1044,6 +1044,35 @@ camera control while preserving the device's native arbitration boundary:
   test proves probing, denial and argument rejection before I/O, queue-cookie
   isolation, preset recall, bounded start/stop movement, and queue release.
 
+## Current Axis VAPIX SystemReady Event Slice
+
+This slice closes the concrete authenticated-host prerequisite for one bounded
+Axis event surface without widening the camera integration into a general event
+client:
+
+- The existing challenge-authenticated Axis transport mints the documented
+  15-second `wssession` token only after D23 read authorization. The token stays
+  in zeroizing memory and never appears in runtime state, checkpoints, metadata,
+  errors, or debug output.
+- Production event I/O requires certificate-verifying WSS. Plain WS is accepted
+  only for loopback tests, and the exact endpoint is fixed to
+  `/vapix/ws-data-stream?wssession=<token>&sources=events`.
+- The host sends one fixed `events:configure` request for the documented
+  stateful `tns1:Device/tnsaxis:Status/tnsaxis:SystemReady` topic. It accepts
+  only an exact version, context, method, empty success object, topic, bounded
+  string maps, and boolean readiness value.
+- The shared WebSocket core owns handshake validation, extension rejection,
+  masking, framing, fragmentation bounds, ping/close replies, and message
+  limits. The shared D18 EventStream state records connecting, connected,
+  event, checkpoint, disconnect, and retry-visible lifecycle.
+- One event is normalized as expiring confirmed D23 camera readiness state and
+  the session closes explicitly. No arbitrary topic/filter, content filter,
+  event response, configuration mutation, media stream, recording, raw event
+  retention, or long-lived socket is exposed.
+- Tests prove authorization before token or WebSocket I/O, strict parser and
+  token rejection, redaction, exact lifecycle ordering, normalized state and
+  checkpointing, plus the real loopback upgrade/configure/notify/close wire.
+
 ## Current Blue Iris Inspection and Control Slice
 
 This slice adds an authenticated local NVR host and the bounded camera controls
@@ -3119,9 +3148,10 @@ MQTT after firmware no longer logs plaintext credentials.
 26. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
    controls only when each operation has a specific native capability probe,
    bounded semantics, and readable verification where the device exposes it.
-27. Add Axis event streaming only after the existing WebSocket protocol core has
-   a concrete authenticated host using the completed Digest primitive or a
-   short-lived session token, plus subscription supervision.
+27. Add broader Axis event topics only one topic family at a time with an exact
+   documented schema, explicit privacy classification, fixed filter, bounded
+   normalization, and topic-specific tests. Do not expose arbitrary topic or
+   content filters, raw event retention, or a general JSON-RPC surface.
 28. Enumerate Axis video sources/channels before extending PTZ beyond the current
     capability-probed VAPIX camera 1 boundary.
 29. Add Axis absolute/relative zoom, guard-tour, or advanced preset management

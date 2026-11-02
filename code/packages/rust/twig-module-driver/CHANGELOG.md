@@ -1,5 +1,73 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18438: an imported function shadows a builtin
+
+### Tests
+
+- `imported_function_named_like_a_builtin_shadows_it`: `lib.tw` exports a
+  `string-append` that returns 5, and `main.tw` calls
+  `(string-length (string-append "a" "b"))`. The linked `main` must not
+  contain `str_len` or `str_concat`, and running it must fail in the
+  dynamic `string-length`. Before the `twig-ir-compiler` fix, `main` ran
+  `str_len` on 5.
+
+## Unreleased — #18435: a local shadows an imported function
+
+### Tests
+
+- `local_shadowing_imported_function_is_called` imports `double` from
+  `lib.tw`. It then calls a parameter named `double`, a `let` binding named
+  `double`, and the real imported `double`, and checks for 6 + 105 + 10 = 121.
+  Before the `twig-ir-compiler` fix all three calls went to the import, which
+  gave 30.
+- `private_library_function_gets_no_string_param_inference`: in `lib.tw`,
+  a private `strlen` is only ever called with `"abc"`, and `main.tw` calls it
+  with 5. The linked `strlen` must keep `x : any` and must not contain
+  `str_len`. Before the `twig-ir-compiler` fix it was `x : str`.
+## Unreleased — #18432 — a module sees only what its imports export
+
+### Fixed
+
+- **A bare call could reach another module's private function.**  Phase 3
+  registered *every* function name of *every* module as an extern of every
+  module, and no `IIRImport`s were emitted, so `(helper)` compiled in a
+  module that never imported anything called `helper`, and the linker bound
+  it to whichever module's private `helper` came first.  Each module's
+  externs are now the exported functions of its **direct** imports
+  (`visible_imports`), so any other name is a compile error (`unbound
+  name …`, with a source position).  Each visible name the module does not
+  define itself is also appended to its `IIRModule::imports`, so
+  `iir-linker` resolves it to the exporting module and rejects any other
+  cross-module reference (`LinkError::UndeclaredCall`).
+- **A local value could be hijacked by another module's function.**  With
+  every name in the tree registered as a function, a root's
+  `(define helper 5)` compiled `helper` as a closure over a library's
+  private `helper` function.  It now evaluates to 5.
+
+### Changed
+
+- **Exports of indirect imports are no longer visible.**  If `main`
+  imports `lib_a` and `lib_a` imports `lib_b`, `main` must import `lib_b`
+  to call its functions.  The type checker (Phase 3.5) already worked this
+  way; the IR compiler now agrees with it.
+- **A module's own definition shadows an imported name.**  This was already
+  the behaviour; it is now deliberate: no `IIRImport` is emitted for a name
+  the module defines, because the linker would let the import win.
+- Phase 3's name collection moved into `defined_function_names`, joined by
+  `library_exports` (export list ∩ defined functions, minus a library's
+  `main`).
+- Module docs, the Phase 3 / 4 / 5 comments, the `ModuleDriverError::Link`
+  doc and the README describe the new visibility rules.
+
+### Added
+
+- `a_bare_call_cannot_reach_another_modules_private_function` (the issue's
+  example), `a_function_value_cannot_name_another_modules_private_function`,
+  `exports_of_indirect_imports_are_not_visible`,
+  `a_local_value_is_not_hijacked_by_another_modules_function` — all four
+  fail on the previous driver — and the regression guard
+  `a_modules_own_definition_shadows_an_imported_name`.
+
 ## Unreleased — #18429 — duplicate exports are a link error
 
 ### Changed

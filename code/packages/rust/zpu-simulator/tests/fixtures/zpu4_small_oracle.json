@@ -1,0 +1,7702 @@
+{
+  "derived_config_sha256": "166a3f446015b0efe4aad59728be76a297e6a70686ef1510fd33920147f1cdef",
+  "initial_external_read_value": 2309737967,
+  "isolated": [
+    {
+      "break_after": true,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "ccf1f783cac92da36768f98bf44f3d297772f3c913376c31d91d1f3b6a9bb56a",
+      "mnemonic": "BREAK",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [],
+      "raw": "00",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6525ae2ca1c7c4483b8ffbe952e44472bdca8b153222f6f4a35884771e2e71f0",
+      "mnemonic": "NOP",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 256
+        }
+      ],
+      "raw": "01",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "62719df89227e3f31176778521132faf1f564098b6c5008b61dd286546fc9f33",
+      "mnemonic": "PUSHSP",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 32760
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 32760
+        }
+      ],
+      "raw": "02",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 32760,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a28081131d4add15cef36fbf6102ab38c14a039a133dbdc039d7c0b8db083119",
+      "mnemonic": "NOP",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 256
+        }
+      ],
+      "raw": "03",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b2c22ffd0a0a131ff86cce6e822740d37354c38be1b208643a1fbe9ef424bf85",
+      "mnemonic": "POPPC",
+      "next_after": 67832587,
+      "next_before": 287454020,
+      "pc_after": 256,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "04",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0a287f09176b5504f2520887fba930c5d98635723b143fd75caab642fb978dc6",
+      "mnemonic": "ADD",
+      "next_after": 84609803,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454276
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454276
+        }
+      ],
+      "raw": "05",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454276,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "abba621b9672bc81e882a3a169a80af6c3e73fe5e666daa5522288a32d74ae4e",
+      "mnemonic": "AND",
+      "next_after": 101387019,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 256
+        }
+      ],
+      "raw": "06",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "1fe3df74a7f3fdc3ab213c8fa46cb348f9cbeec39fe88dbf5d8f2e57b795041f",
+      "mnemonic": "OR",
+      "next_after": 118164235,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "07",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "42d00a316857b9da3b6e00f02b0e8ff4cd4f160cd6a7488a38d815d302f90960",
+      "mnemonic": "LOAD",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 2779077210
+        }
+      ],
+      "raw": "08",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 2779077210,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4e442b0f0a7610507b714a3135a8a5d6fd5a1ede1c17b66b66b341cd4e1ee740",
+      "mnemonic": "NOT",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 4294967039
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 4294967039
+        }
+      ],
+      "raw": "09",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 4294967039,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "664a214410802feb098c4889515ae740d35dd083f1d9d358bfc07d1aa8a82f0a",
+      "mnemonic": "FLIP",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 8388608
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 8388608
+        }
+      ],
+      "raw": "0a",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 8388608,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f546dcb081bc846a35cf232f17e0bb46f04867b97359c09e5de5188de1aa1e46",
+      "mnemonic": "NOP",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 256
+        }
+      ],
+      "raw": "0b",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "eac31e39c29f94030dbea52067bfe1f1b32eb0ce7cdd3d5d03f56f00457b7241",
+      "mnemonic": "STORE",
+      "next_after": 1073741827,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 256,
+          "port": "A",
+          "value": 287454020
+        },
+        {
+          "address": 0,
+          "port": "A",
+          "value": 202050315
+        }
+      ],
+      "raw": "0c",
+      "sp_after": 0,
+      "sp_before": 32760,
+      "top_after": 202050315,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "26435f230a6844cab6bfec60f481f3c1dfa3de1c4edba79fbb3295e4ec84b2df",
+      "mnemonic": "POPSP",
+      "next_after": 185273099,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 256,
+          "port": "A",
+          "value": 2779077210
+        }
+      ],
+      "raw": "0d",
+      "sp_after": 256,
+      "sp_before": 32760,
+      "top_after": 2779077210,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c4e340e5ffb4d847e7eaf3b4555f434c00e664c4610f7e36e0ab86ef32efdf61",
+      "mnemonic": "NOP",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 256
+        }
+      ],
+      "raw": "0e",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "fb40ff2c0d335288e56e2cee8023283b93e5c39f46dde95db6d6bb90a55ab490",
+      "mnemonic": "NOP",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 256
+        }
+      ],
+      "raw": "0f",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3f65c93c4371f8535a87d4fe724077ae2d0e1f0b90df66072440e63fd4350aa8",
+      "mnemonic": "ADDSP 0",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 512
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 512
+        }
+      ],
+      "raw": "10",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 512,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f57f2550dffff9a857a4bbfd8579f399f874cd6113a1c6e750540892222dd8d4",
+      "mnemonic": "ADDSP 1",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 287454276
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 287454276
+        }
+      ],
+      "raw": "11",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 287454276,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4c4a62ac84352e22abc36caa3b7603ebfa4e89bd76109ed8537bf10978018fcc",
+      "mnemonic": "ADDSP 2",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 302713867
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 302713867
+        }
+      ],
+      "raw": "12",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 302713867,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "57d538b07e1e01bdd29d6004830686476f273ff7f7ec23dc01518c790f114b19",
+      "mnemonic": "ADDSP 3",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742083
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742083
+        }
+      ],
+      "raw": "13",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742083,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "eb6bff68f80c27a02c83d5057a23a6a22b41e8797bd1194d91f9f97491e936d7",
+      "mnemonic": "ADDSP 4",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742084
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742084
+        }
+      ],
+      "raw": "14",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742084,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "7f46e7223b0a4c5bc54d34d3c8e2edbc162084fc0acea3341e763dc9a00c3d00",
+      "mnemonic": "ADDSP 5",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742085
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742085
+        }
+      ],
+      "raw": "15",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742085,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4190aa13c8fe02f0b61f4d48f240744de4e2eba67a1992cbd7f916b22034d358",
+      "mnemonic": "ADDSP 6",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742086
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742086
+        }
+      ],
+      "raw": "16",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742086,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "638dd145a6c795e89bc9533a7ff7d123ff50eba97cbef6a6fc4db81bcc745133",
+      "mnemonic": "ADDSP 7",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742087
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742087
+        }
+      ],
+      "raw": "17",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742087,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "02af21912bebb9487e2c761d43acc40adde2b2c6e44c98924428eb1d9d68770a",
+      "mnemonic": "ADDSP 8",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742088
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742088
+        }
+      ],
+      "raw": "18",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742088,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "349ff67f4cb26add40f611e65c1cdde8345c9731fa21b93473c63bb855cd9ff1",
+      "mnemonic": "ADDSP 9",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742089
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742089
+        }
+      ],
+      "raw": "19",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742089,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d7b716b3f6891df4fc837240bff5270a88708f2d84e3d4397808186e47d7572d",
+      "mnemonic": "ADDSP 10",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742090
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742090
+        }
+      ],
+      "raw": "1a",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742090,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "982939159a91115afe5791764e1043c5830edd2a1179d9cc17f2bcfbbc0b49c8",
+      "mnemonic": "ADDSP 11",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742091
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742091
+        }
+      ],
+      "raw": "1b",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742091,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "38a20e6e6a7026fb4ae58ce9ace495b31be2bc7045628556ec6f6b622571c497",
+      "mnemonic": "ADDSP 12",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742092
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742092
+        }
+      ],
+      "raw": "1c",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742092,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b1dcd6cf2305aaeb4fe96beebfee6f4730124801ab14914fc7445a3ea96aaf58",
+      "mnemonic": "ADDSP 13",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742093
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742093
+        }
+      ],
+      "raw": "1d",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742093,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "2143276646541b3a9029c53dffc73b9f4dbedb3f127bd876e99c3f45dbd59075",
+      "mnemonic": "ADDSP 14",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742094
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742094
+        }
+      ],
+      "raw": "1e",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742094,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "37d92e41e23b0fe0831e57d629850275ece6a1bb6028c3bc59a65c53e797f2f0",
+      "mnemonic": "ADDSP 15",
+      "next_after": 287454020,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742095
+        },
+        {
+          "address": 32760,
+          "port": "A",
+          "value": 1073742095
+        }
+      ],
+      "raw": "1f",
+      "sp_after": 32760,
+      "sp_before": 32760,
+      "top_after": 1073742095,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "78cd04143ada77357ebe9aa3f2bb48322bad3f15f46b2682258af8b47f32e278",
+      "mnemonic": "EMULATE 0",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 0,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "20",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "42b7c9cb6d43f8739478f8de6ef6e20f2ae687b52eaa41cf476bed237ada33a0",
+      "mnemonic": "EMULATE 1",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 32,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "21",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "2f135f13e0b5c47d1e01894e7b32c47e2c886b59e69d492e0a86d37dbae880fb",
+      "mnemonic": "EMULATE 2",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 64,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "22",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "48c6ba612a058c243705830f759d9b9b8f1173cd25b63aa6fd90fdedd1458347",
+      "mnemonic": "EMULATE 3",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 96,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "23",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f10bb622d41e76d7e3e73edad50a8e88085119390009003b00ea4faae11a234f",
+      "mnemonic": "EMULATE 4",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 128,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "24",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "50fb2dacf2cd0dd273c837807e262193f914f3ce625f71d6047b3d62050b3f5f",
+      "mnemonic": "EMULATE 5",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 160,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "25",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "ab0a7a582a1c0571e72cc42db88133f266302e697d1cbc0d79249fb82911bbb2",
+      "mnemonic": "EMULATE 6",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 192,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "26",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c0adba835502b47fddbc1a1bd6a24cf63423feaa53f0ee415e432b919ca759a2",
+      "mnemonic": "EMULATE 7",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 224,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "27",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "2f4bc8f1c26ab18a75a8f179afb57a245dfab2b10daaeb02b779ab7e07528cd6",
+      "mnemonic": "EMULATE 8",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 256,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "28",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6ecd2ebcbee26a9136eef25c1ba57dad2dfb25d3548083c30bd175eb997629e6",
+      "mnemonic": "EMULATE 9",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 288,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "29",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "660ba9275e70ad848d307ff737bb9af85a3d61e113dd2edede5eba1ab7c86753",
+      "mnemonic": "EMULATE 10",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 320,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "2a",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "8079805de5437887b209dce972fe30cce12ca17609d486071c49d6cdf6e55d12",
+      "mnemonic": "EMULATE 11",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 352,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "2b",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "85f8b363018b03b9bcee04cd865a4306ae79c8e13955efb3227cbe72c8bb6a88",
+      "mnemonic": "EMULATE 12",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 384,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "2c",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0bd8e77b94f3ee38b7f7d097a06cb91aaaa206d086fd9724a2a295cceda9f5ed",
+      "mnemonic": "EMULATE 13",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 416,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "2d",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "05318f2c60b72c588bb1826046e23096a194a3ddf7e2331fbee51a69ca8d993a",
+      "mnemonic": "EMULATE 14",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 448,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "2e",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d17947182d3e11a5e6192cb17f8e8f56f6b194f406dc4141a9a8f5e21e58edf9",
+      "mnemonic": "EMULATE 15",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 480,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "2f",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "7fa19d9e07c0321c8a6deecdd8bdb8f99185f0f98e5e99acc9699d2f8a685d93",
+      "mnemonic": "EMULATE 16",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 512,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "30",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5e843251c83dd8cee3028291e17062d227c29618972ed9bed16b5eaf417307f4",
+      "mnemonic": "EMULATE 17",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 544,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "31",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b19d796eab6a9a7b8c4a6ad323e013439a28367e5edb9e13c0b214afd455b8ab",
+      "mnemonic": "EMULATE 18",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 576,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "32",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0883dc7ce4eab47dc5d82b126fcf8814610f2d4636877045008d71108fbc5a71",
+      "mnemonic": "EMULATE 19",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 608,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "33",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a546ee260ed898075b1f1727169c2f54e6811d1f36739e917ebab219a32b3e3b",
+      "mnemonic": "EMULATE 20",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 640,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "34",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4843dfa0843e7e6af8d782c4df959ab24b6a32bb3015dba8545047b52c633d06",
+      "mnemonic": "EMULATE 21",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 672,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "35",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a0219a8c30fe10edb072ba58573167ad82c725b0e7972d8d5fcf620d0231c88b",
+      "mnemonic": "EMULATE 22",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 704,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "36",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6f4709ed3ed0e8f8675c82052b5a5c1a9ab6823f81643587d5ebc80ba51b0458",
+      "mnemonic": "EMULATE 23",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 736,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "37",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "33714de4eadc1569f0d5d3076019ee9a7b0aff017fdad7b24f722a6f810421b9",
+      "mnemonic": "EMULATE 24",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 768,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "38",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "61180bb19ac01b1d28643c5d7069f46aeb7834d4c068807153312eda81a536a6",
+      "mnemonic": "EMULATE 25",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 800,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "39",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4e03e9fcda47c6c036e05883b2b1f21209bceebb268002ddb175e2427fc726c2",
+      "mnemonic": "EMULATE 26",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 832,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "3a",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "32bbd3af87de226bceff7f87aa50de2f50ff361f23ce2dfe8ca11ca5884c1e8f",
+      "mnemonic": "EMULATE 27",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 864,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "3b",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f098e5337595428ca04bf26015086ec64b9c210dd403d2e959889d2083585a74",
+      "mnemonic": "EMULATE 28",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 896,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "3c",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "e437e1ca116324ae07e8075daaf755311bf44e537ec0d3845813c92981a370fc",
+      "mnemonic": "EMULATE 29",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 928,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "3d",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "dd6c570881c18f594df33ebfe042fad7a1ce59b8316e734f7f5e7bd0e7c03fc5",
+      "mnemonic": "EMULATE 30",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 960,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "3e",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "dca3f361c09452abfd3fdd25deed10c5586d7360ec137504c9af8591436862c7",
+      "mnemonic": "EMULATE 31",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 992,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "3f",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "622fd384014a4a118a870348e39805403b6f4cb3bf1b5bb0b8469cc7deaba638",
+      "mnemonic": "STORESP 16",
+      "next_after": 1074465547,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 56,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "40",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c6347d28595d28e33b387b29542dbbd175fa63c61077c99bdb67ad144434c2bb",
+      "mnemonic": "STORESP 17",
+      "next_after": 1091242763,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 60,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "41",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a6e97b71279e9f4ea7520c1e1d047cf24aef51e3b2aa5d1583346ae5b58ad6f2",
+      "mnemonic": "STORESP 18",
+      "next_after": 1108019979,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 64,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "42",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0742d08738ad65d7c571f34b297ae13fd184aef6584e95821f8fbf86c6943036",
+      "mnemonic": "STORESP 19",
+      "next_after": 1124797195,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 68,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "43",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "be06fca27c0eeb74e40bc15ac65bd3fc3cd712c2e511fc2efecd16c7ca9a1f30",
+      "mnemonic": "STORESP 20",
+      "next_after": 1141574411,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 72,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "44",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f9f23867ef4b23fe7d25b0fd93a7539fbde4f55cce3403767514c4af326e4479",
+      "mnemonic": "STORESP 21",
+      "next_after": 1158351627,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 76,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "45",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "57ff160875f87a311f3ceec2a2742d354fc850ee562f227e4ca93f6bc426c52c",
+      "mnemonic": "STORESP 22",
+      "next_after": 1175128843,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 80,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "46",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "46fd1130a42cd7b8e330ce704c87358361e0f8f44a505fa3013f19224326301b",
+      "mnemonic": "STORESP 23",
+      "next_after": 1191906059,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 84,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "47",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c88600cf96385d8061aa78df292d2bab66cdddf92441d2c1f0b9052e87bfb1d0",
+      "mnemonic": "STORESP 24",
+      "next_after": 1208683275,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 88,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "48",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "7ce8d54e0b7f1aa7059ee9cb442b80a317238f46f56f35ad184551a564f92956",
+      "mnemonic": "STORESP 25",
+      "next_after": 1225460491,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 92,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "49",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3d581588c75a8d21e00695981cdabfbd05f62f70a7c65233267faffbff45a15d",
+      "mnemonic": "STORESP 26",
+      "next_after": 1242237707,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 96,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "4a",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "325501f339c8253c51a919a56f9167c2d79653fa86055408eb2bec1f86b2ae42",
+      "mnemonic": "STORESP 27",
+      "next_after": 1259014923,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 100,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "4b",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d9d486b0df1138b00b03bab68d5b118cf2513b736d5b04d5a1ae1af538fc00c1",
+      "mnemonic": "STORESP 28",
+      "next_after": 1275792139,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 104,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "4c",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "bc8df4c58bbf71ec7d46ba13112a0a38c0675302d52ae5ca22cb25bb3ce8bdea",
+      "mnemonic": "STORESP 29",
+      "next_after": 1292569355,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 108,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "4d",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4a17addc89df67d67e3e9428cd43a932b97cb9ead2cf69bd150f308db50e411c",
+      "mnemonic": "STORESP 30",
+      "next_after": 1309346571,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 112,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "4e",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d16d6cd3a970348ba0cde987fd9b42cf22a97ab639a440dfdb0e60aed8bd4b8b",
+      "mnemonic": "STORESP 31",
+      "next_after": 1326123787,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 116,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "4f",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a55e7709b1d8c8e861ae8dca74681f16930b70fc320a78eb7d9685a3e550194c",
+      "mnemonic": "STORESP 0",
+      "next_after": 1342901003,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32760,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "50",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a4d1d4ffbac68a9c42c94a20063ebb61cc5f4869c2f49bff165d2faf6d64336c",
+      "mnemonic": "STORESP 1",
+      "next_after": 1359678219,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32764,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 256
+        }
+      ],
+      "raw": "51",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "af4a61f03ab7c386650665b0c267985659a4c9e5d709e9f139565a0ab56ab0a5",
+      "mnemonic": "STORESP 2",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 0,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "52",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "26fcd9c9a7c4d820c5a1acc381ab259921c988fee778e7e6867ad423466de8b3",
+      "mnemonic": "STORESP 3",
+      "next_after": 1393232651,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 4,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "53",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5a896a015297beca9a15d2ff137e693733586a72180fc3bcdf7794bcb2660180",
+      "mnemonic": "STORESP 4",
+      "next_after": 1410009867,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 8,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "54",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "8adbb5b8bdf0ecfaa4d077d1bfc615285d9792e5b804e406af4947dedc8f34b6",
+      "mnemonic": "STORESP 5",
+      "next_after": 1426787083,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 12,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "55",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "764e6ba43f0d93b842f4b97da2671b5bfc9c7f696d9a80ffc698b6378bc918b2",
+      "mnemonic": "STORESP 6",
+      "next_after": 1443564299,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 16,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "56",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c202f9afd2b685a6f398f2db25276b0ba733790f78e8a5dabb4a03c17bcba131",
+      "mnemonic": "STORESP 7",
+      "next_after": 1460341515,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 20,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "57",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d75d4bcf7a32e682f55245c465bb6eb7aebf47efa6fa39e0bed8b86071aaeab3",
+      "mnemonic": "STORESP 8",
+      "next_after": 1477118731,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 24,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "58",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "20749fcf35eac140ad2ea0c92eb8ac28de0783f915b4058634f61d14e5cff726",
+      "mnemonic": "STORESP 9",
+      "next_after": 1493895947,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 28,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "59",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "da28e99b38ce7d8d2b1c2c4dca98d3073d995f6e3c35300939d19d93f5bd8d8a",
+      "mnemonic": "STORESP 10",
+      "next_after": 1510673163,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "5a",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b05a4099954002427c988fb4591c58761e5c48634db51825c1fa5f146c5c7893",
+      "mnemonic": "STORESP 11",
+      "next_after": 1527450379,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 36,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "5b",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c8b304cc1ecc4442e5dd2ba0ee39706d1b4a8b3a33687b3991fe65939d70ed0b",
+      "mnemonic": "STORESP 12",
+      "next_after": 1544227595,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 40,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "5c",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "ea73f19df1059ac19111482f9d1e928f5fbbc85ba09ca6f6e435370b6722bd3b",
+      "mnemonic": "STORESP 13",
+      "next_after": 1561004811,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 44,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "5d",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3069dbf4f66b4654a9c704b4cc82e0b16ef889b6c0b72976757282d055c13017",
+      "mnemonic": "STORESP 14",
+      "next_after": 1577782027,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 48,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "5e",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "79477b424c88a22d84bc7ce0dbc9fcf1418936137adea5d5691e6f2848ae6367",
+      "mnemonic": "STORESP 15",
+      "next_after": 1594559243,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 52,
+          "port": "B",
+          "value": 256
+        },
+        {
+          "address": 32764,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "5f",
+      "sp_after": 32764,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4936f6c1276776d3d2bce1f7a99ca818f328adfd192cace003138e7e0b1b0cf2",
+      "mnemonic": "LOADSP 16",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741840
+        }
+      ],
+      "raw": "60",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741840,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d949b931b0dfe520f38ac4f1e1d800439e1008620be03be8e6944227c4dae17e",
+      "mnemonic": "LOADSP 17",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741841
+        }
+      ],
+      "raw": "61",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741841,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3a21dedb462001b1f07cdbb1f2549476e1be1b2ad0566ee33067456e49bf3933",
+      "mnemonic": "LOADSP 18",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741842
+        }
+      ],
+      "raw": "62",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741842,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "35c04c2d41de7ade67672fe73dc643d3b80f88ce4e68a7736ab2b1f12d94d78e",
+      "mnemonic": "LOADSP 19",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741843
+        }
+      ],
+      "raw": "63",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741843,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "ebe6f197397c2b51f5bd50dde7d6854f72c56b444d5109446e62e694e387d50b",
+      "mnemonic": "LOADSP 20",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741844
+        }
+      ],
+      "raw": "64",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741844,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f06cd394e379c310f7d8daf6858208828c724e885d3ac3b037ce6c205962261a",
+      "mnemonic": "LOADSP 21",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741845
+        }
+      ],
+      "raw": "65",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741845,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "15b2c26d3292c8cf87c7c99d39b1f85392b1a8370da1c3f4ab7cd107b04732a2",
+      "mnemonic": "LOADSP 22",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741846
+        }
+      ],
+      "raw": "66",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741846,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "304dc58bac1503c9e738140e39dd3e109f6d69a391be6f8f81b3f61410d966d6",
+      "mnemonic": "LOADSP 23",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741847
+        }
+      ],
+      "raw": "67",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741847,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c822d04d6d140f8c23f7d093b5b2816293606ce38a8f8d2dec8192575246203c",
+      "mnemonic": "LOADSP 24",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741848
+        }
+      ],
+      "raw": "68",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741848,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "69412afc58c562e67069078b43bc40cabf4c78f70e9230db3c4614fc3a6bb692",
+      "mnemonic": "LOADSP 25",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741849
+        }
+      ],
+      "raw": "69",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741849,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "605610e3017b6310cc2c7b106d4971c59b15b7620afae71933d3e753118ff2f7",
+      "mnemonic": "LOADSP 26",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741850
+        }
+      ],
+      "raw": "6a",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741850,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "9a1daf4cc4757f948246d98ecd86d6499fdc6b509a2589ba64cce5f2ab14a47c",
+      "mnemonic": "LOADSP 27",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741851
+        }
+      ],
+      "raw": "6b",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741851,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "52b646981749e5d0f9458a0a5b71e348a4404d1125810324b17c18d9b6c184dc",
+      "mnemonic": "LOADSP 28",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741852
+        }
+      ],
+      "raw": "6c",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741852,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "01c8872aff65a84c583997534050f973c56664dd1b510fd7529816d9cec62e17",
+      "mnemonic": "LOADSP 29",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741853
+        }
+      ],
+      "raw": "6d",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741853,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "034ea3e10aa6a6b16c69e869c11f9249d4f616cf822426b039d453657197bd8b",
+      "mnemonic": "LOADSP 30",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741854
+        }
+      ],
+      "raw": "6e",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741854,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3b4ac90b5453ad52915e24100b82ae20c19d041adbe31a882b2b28e04d21e757",
+      "mnemonic": "LOADSP 31",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741855
+        }
+      ],
+      "raw": "6f",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741855,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0fa70f1345bc8d4cf7578de6a85dc58b8882219b2c7e8f9bff8a469fd4345a9b",
+      "mnemonic": "LOADSP 0",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 256
+        }
+      ],
+      "raw": "70",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0c822dcfa2c0c723eebf3438ab61c6d8a4092ca98b0452349edfce1eb1985ddd",
+      "mnemonic": "LOADSP 1",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 287454020
+        }
+      ],
+      "raw": "71",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 287454020,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "bab1778a03795126516153aa34f3e29262d0d10e4cdff978af730098ab9cb8f8",
+      "mnemonic": "LOADSP 2",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1913326347
+        }
+      ],
+      "raw": "72",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1913326347,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "9d12f8691e22012a1265fcd1857fc5ed0338c9ed8cf3b187356b782964475de3",
+      "mnemonic": "LOADSP 3",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741827
+        }
+      ],
+      "raw": "73",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741827,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "90ab9370e6d32c18d061fc6363a090bbe36b8f405079f9a15a5fd4cbb6674123",
+      "mnemonic": "LOADSP 4",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741828
+        }
+      ],
+      "raw": "74",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741828,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a81edca385877aef7fa41645f417f2adacdc186f8073274f7203f32d2dbfa925",
+      "mnemonic": "LOADSP 5",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741829
+        }
+      ],
+      "raw": "75",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741829,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "2c814db23258938f4b90564c3741385c60bf5aaf58ee77f3670539280fde6d27",
+      "mnemonic": "LOADSP 6",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741830
+        }
+      ],
+      "raw": "76",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741830,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "095cece7f8da22385d19686138383a6f311df17fe6d582a7583478752de59e74",
+      "mnemonic": "LOADSP 7",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741831
+        }
+      ],
+      "raw": "77",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741831,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "e058546613fba969e16676f75c0323448518d1bfa7a450da5cb986b3dee18764",
+      "mnemonic": "LOADSP 8",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741832
+        }
+      ],
+      "raw": "78",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741832,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3f41ce710e09e582aad8a082eb87ae98b0276d1387f632377a0ac6c60f717aa5",
+      "mnemonic": "LOADSP 9",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741833
+        }
+      ],
+      "raw": "79",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741833,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "560d69ffcfc4044382944b09c5aa5e2eec3d11a065d397accd17dc80e4b14b87",
+      "mnemonic": "LOADSP 10",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741834
+        }
+      ],
+      "raw": "7a",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741834,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f0fee538ec60bfe3d47a5a7dde0f5ac0a78af2a58b9968cb01d967c7500122be",
+      "mnemonic": "LOADSP 11",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741835
+        }
+      ],
+      "raw": "7b",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741835,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "cbd2d3b2721a50f45f00b2980ce5aafb8dc6c02c4169eed99dabf1c7b0f685fb",
+      "mnemonic": "LOADSP 12",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741836
+        }
+      ],
+      "raw": "7c",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741836,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a32ab51f7224ee5b4a7ad31d3446da0e7073a82e74a2e41d53252038fa12dfd7",
+      "mnemonic": "LOADSP 13",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741837
+        }
+      ],
+      "raw": "7d",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741837,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5a92d0b342fb48b4eba6bad876c6d8c3cbacc509af693a963d279d12dd9d531a",
+      "mnemonic": "LOADSP 14",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741838
+        }
+      ],
+      "raw": "7e",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741838,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": false,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0ea23b3f266a34e3a12988426d06596bb9d842ae0213bfaa9853631a3a68078e",
+      "mnemonic": "LOADSP 15",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1073741839
+        }
+      ],
+      "raw": "7f",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1073741839,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6e28e13bb92be1e005bfdd98c933934b0e605c0853453ab6a484fdf3ed54228d",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 0
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 0
+        }
+      ],
+      "raw": "80",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 0,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d4ec0d06326f31ca4cd7c69f273fca90563a0329c20bcfb4ad1b6bc23a0a9762",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 1
+        }
+      ],
+      "raw": "81",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 1,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f5441ac01101136eef2b7df97b3a778940edf65ffd0486ccac0f73bfb81f5dd2",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 2
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 2
+        }
+      ],
+      "raw": "82",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 2,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5ebc2ab367c0f2e484cc0f81668ff24d7c0d0b5097e4fa76d95c8110e3d6c6c9",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 3
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 3
+        }
+      ],
+      "raw": "83",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 3,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a8603d4d5c6f62762f7dd30b6beeb3ac79395bf0b11f3dc5f3337d90940b8915",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4
+        }
+      ],
+      "raw": "84",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "9403d5ebac88e46a87dcb478fd3c51fa5135e0eb2a100ded46e8340715cdfe7d",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 5
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 5
+        }
+      ],
+      "raw": "85",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 5,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5274300d923868e37eed94ffe502c38df7ed26b2033adc077577d0127f41a2e4",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 6
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 6
+        }
+      ],
+      "raw": "86",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 6,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "896939f43f508190571fe8b2fbac4266a2d0b759dfcd7ef0936ed9c9cfcdd87d",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 7
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 7
+        }
+      ],
+      "raw": "87",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 7,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "47dcad2d0040fc9f4bdd782e42614dec0be0599d620a60fabc56b86059b249aa",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 8
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 8
+        }
+      ],
+      "raw": "88",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 8,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "1f3f439ac0b1baf680a3b1b520efd72a591b88b17e2728d1a5188b3c1953d712",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 9
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 9
+        }
+      ],
+      "raw": "89",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 9,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "593ffae594a8b15c4f42781a54d6f59207fd4b7100055a3aeea6aeeee1b1e7d6",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 10
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 10
+        }
+      ],
+      "raw": "8a",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 10,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "dc2e144c32ebd616fcc08f0e8e27cf497dbdf45941d36107e6e70ae4c58bfaeb",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 11
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 11
+        }
+      ],
+      "raw": "8b",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 11,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c4f297e7a431168b2907e8a169121efc7c990060df517643543bc78a722b4bc4",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 12
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 12
+        }
+      ],
+      "raw": "8c",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 12,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "66ff567ea1072776fd98fe0d28dc3f4c4273668cc2cfca0af3a1d9d5906b6d59",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 13
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 13
+        }
+      ],
+      "raw": "8d",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 13,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "55a6e19933b1762b953a168759f955c6d720fa95727ea2be236a1194a795248d",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 14
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 14
+        }
+      ],
+      "raw": "8e",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 14,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "fb9f992d43cfa41e61c42d8e71e3e4b6002d3af14ea6918e50c4dd4160aaa3a1",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 15
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 15
+        }
+      ],
+      "raw": "8f",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 15,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "1c409652d5752fc0555897c6b2699fbf87da9282e1975c376f80861e73970758",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 16
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 16
+        }
+      ],
+      "raw": "90",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 16,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6099403c660d9db06fa1fb16f4ef8574125e77a788e32fdee432c5f7bd7760cc",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 17
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 17
+        }
+      ],
+      "raw": "91",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 17,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6ddb54914a31ed971707a2339a3adc2b773064f807185a336e42df6dec877070",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 18
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 18
+        }
+      ],
+      "raw": "92",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 18,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3f6ef6c045915c5f929da1ca65bbc08e17cbe794a41a97354bf8a72e1e29fa35",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 19
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 19
+        }
+      ],
+      "raw": "93",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 19,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "85b651fb069760b08f532c8d1cacc19091e024a9b15589113a4c8a6a77aa8a36",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 20
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 20
+        }
+      ],
+      "raw": "94",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 20,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f828a77182de40361785bd0df3810c43de46adf14456d55cd7e5661e055bae42",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 21
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 21
+        }
+      ],
+      "raw": "95",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 21,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "76928bdec3b5cc37499999552fc52428ec655906e0eed534c54274e404d9fc11",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 22
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 22
+        }
+      ],
+      "raw": "96",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 22,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4084de66789064ca4bee6ca7d996b7feb5cf4230ff3d728ec0fbb4a3714a2fb7",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 23
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 23
+        }
+      ],
+      "raw": "97",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 23,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "8361f4af0ec2c3fcc47061b5ab80e4242e1f56a2eac9bfd3724bc239044a8f45",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 24
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 24
+        }
+      ],
+      "raw": "98",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 24,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "8e6d9b513d6630697634498547d3c147a8b2acaca91824c8d4a89e8ab332a52e",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 25
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 25
+        }
+      ],
+      "raw": "99",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 25,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6e79385316d88d49eee6c8054a16fd6637ca30b598793d2cec76446ece68c858",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 26
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 26
+        }
+      ],
+      "raw": "9a",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 26,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "fd5ee71bbf4b1379461dd19a13ea303357218aa30946c549c63af388d927b380",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 27
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 27
+        }
+      ],
+      "raw": "9b",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 27,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "21c8fe19543d7211c66e6fbc8f387be319133b27aeeb7affbcbd89f6980f48f8",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 28
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 28
+        }
+      ],
+      "raw": "9c",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 28,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "1bf13f2552de45f318745f3cebdc3d609dcef8ec610a2dcee49347541f65e993",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 29
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 29
+        }
+      ],
+      "raw": "9d",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 29,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a23970712d39213a7f490202d76fe30dc220c69cd1fed1d8febc5b8537a47b43",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 30
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 30
+        }
+      ],
+      "raw": "9e",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 30,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "16209d7850f03bf2bfbed45780e77d768bd877d6cb3a098c1019ad3528916e9c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 31
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 31
+        }
+      ],
+      "raw": "9f",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 31,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a84a12a180c9614822de8432bfeb9538ddda797ad2782fa8160eb9ba96cd30ed",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 32
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 32
+        }
+      ],
+      "raw": "a0",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 32,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d0ede2f4dc2a4934fb4a13fc2eaf7253d4889312ba3096ea28be0f7eb3ed3003",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 33
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 33
+        }
+      ],
+      "raw": "a1",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 33,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3670697b2528a57fecde3fddc6548e3299463a00c494063c9c9cea5673214a11",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 34
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 34
+        }
+      ],
+      "raw": "a2",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 34,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "9ac2134485a06df529e7713d822381dd8931e99d86e39825da23b4b91387ace8",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 35
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 35
+        }
+      ],
+      "raw": "a3",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 35,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "60e9732aa11ac3984a674a31fcc2e48106400722f6d0937c0e2b88153db90736",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 36
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 36
+        }
+      ],
+      "raw": "a4",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 36,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4bf26e6acb713ecd1eb82d68204fb7f291ad176d3ae1ad55bc0e9557d8d99fcb",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 37
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 37
+        }
+      ],
+      "raw": "a5",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 37,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6196acdaa3a7895bfc76cd7e24b10ff98e55a50a240639b5a407678d5bb18230",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 38
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 38
+        }
+      ],
+      "raw": "a6",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 38,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "27578a786775e2ce23996cb4dbfc2c26216f3806861c298bcf31d54225eaa65b",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 39
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 39
+        }
+      ],
+      "raw": "a7",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 39,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a3bfe8586b4fea072600f38395e64150a6eddb3f1993e1e05b005f95af718aea",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 40
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 40
+        }
+      ],
+      "raw": "a8",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 40,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c8a8c5e3659f0ed274f90e488ca9502712fcb253d33728f58e4064684fab5996",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 41
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 41
+        }
+      ],
+      "raw": "a9",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 41,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "112e3e64064ecb56a20a49127c2785d481750bd6e462050a7428fc4d090a1761",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 42
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 42
+        }
+      ],
+      "raw": "aa",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 42,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "bd1cfcc5db55e845489cead116a5e8e78caac7464aaa20ec46cd89a248e59c8c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 43
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 43
+        }
+      ],
+      "raw": "ab",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 43,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "64d063518f1def648a5670205bf9fe3a94e6542f476979d51c9a7c5844340404",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 44
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 44
+        }
+      ],
+      "raw": "ac",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 44,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "9c5b0fe5362c9c010dfa6fc46f3b0972d567d054ecd91e79ef55417491178d7c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 45
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 45
+        }
+      ],
+      "raw": "ad",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 45,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "9e8d78b7f1769e40d1913753d572a663d7cc983c55164f5ff86b5e8c7c5de1a3",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 46
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 46
+        }
+      ],
+      "raw": "ae",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 46,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "2581646807426d56ee047703a1bcc60d43062541b802348252fa663af76b937d",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 47
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 47
+        }
+      ],
+      "raw": "af",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 47,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "413d21487be9ef12584d8e83ecd43d9dc2de5a5a5309f3e4fd7acdaedf33a9be",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 48
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 48
+        }
+      ],
+      "raw": "b0",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 48,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5bcbe6c024fb17e2c7869b201ff5ab24f3dfd2c55f150c4378e4824fe877890b",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 49
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 49
+        }
+      ],
+      "raw": "b1",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 49,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c4b12898021a7def8c27af9042a617e819a154f66e475b57649bd3a2769b0b5e",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 50
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 50
+        }
+      ],
+      "raw": "b2",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 50,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "dd081c0625e13facab69f4d99bd6d68c58ccb2a3774c1411d946ebc7e9d0c074",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 51
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 51
+        }
+      ],
+      "raw": "b3",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 51,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "8d65fa0021b4901ff709584b6f3ac683b0d75b065703af8a2dc48b4311eeac7f",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 52
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 52
+        }
+      ],
+      "raw": "b4",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 52,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a429970b5f8901ef108f20cf0ac9792ca64a430d12e792d66262392955b0650c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 53
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 53
+        }
+      ],
+      "raw": "b5",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 53,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "43015b94b6b74fb1351ff99d872c7de974d24e78de24099658dd9c6ba2544b0b",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 54
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 54
+        }
+      ],
+      "raw": "b6",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 54,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "7e99d682996117df76f596211b208bf3402a4ebcf4d1b1ee305c00760d44be78",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 55
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 55
+        }
+      ],
+      "raw": "b7",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 55,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "905cc292d3208879b6dc7ced92ea2a0061c5c82d3b9fc9c1b6a3497ae4c17c64",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 56
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 56
+        }
+      ],
+      "raw": "b8",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 56,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "51863c6aae40c1c91bc9c675af5889429e3ca5a66c9cc382c56a3c36f2f65238",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 57
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 57
+        }
+      ],
+      "raw": "b9",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 57,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "a69eb8608efc7abe68b0e44ef4580fa0fec637388a42abad26f5274e7199f7de",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 58
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 58
+        }
+      ],
+      "raw": "ba",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 58,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b84a7d6711d9e8feba3359b558a7eee3ab0c7e9ca2573a616df229fa764ff91c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 59
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 59
+        }
+      ],
+      "raw": "bb",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 59,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "251a9c2157a944815fd6363e0026d55b2a6c76fa01c5b5a887bfd5e55fec4fcc",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 60
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 60
+        }
+      ],
+      "raw": "bc",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 60,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4de2061c41c984a8d026304a6d95f19eba3acbba5e7c18bef257d24b337ef57f",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 61
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 61
+        }
+      ],
+      "raw": "bd",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 61,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "db02ecd614c1416cb821e79552b12966384d3ddd435517ab4f899bcb3913cbf4",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 62
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 62
+        }
+      ],
+      "raw": "be",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 62,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "de38325f9bac6884a39225b219445ed52ad0698348f7e79fe8b44ec49fb55144",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 63
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 63
+        }
+      ],
+      "raw": "bf",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 63,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "e199fadb29327c85bf4ee42f39eacf7f7bb6dd4de264c8376c8cbd6940a53524",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967232
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967232
+        }
+      ],
+      "raw": "c0",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967232,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "51be17dd937fc5a701804f82546843f24b397b750f39966069a3a1f5edbd0ad1",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967233
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967233
+        }
+      ],
+      "raw": "c1",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967233,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "2d3f76af557322c9fffd716efd8f7fe9d853ffac1ccba28e2deeee2cc695b97e",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967234
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967234
+        }
+      ],
+      "raw": "c2",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967234,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b7ca9fccf9b877881f96e085e32cc3de12d12ab1e3ac1b7c9ce492f6b51b63d0",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967235
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967235
+        }
+      ],
+      "raw": "c3",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967235,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6378ef981264a08cd8d409d018b921dac3addf783091b3cc17f427213215e282",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967236
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967236
+        }
+      ],
+      "raw": "c4",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967236,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c588f4be0760b81a5586f7d28dd14613c1614ca2a6bbc962cd88ba6925330bf5",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967237
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967237
+        }
+      ],
+      "raw": "c5",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967237,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "bb63a6dfdbf673bf11084e8f1823d54f6230d50d21763388768716b00d0ad630",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967238
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967238
+        }
+      ],
+      "raw": "c6",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967238,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3e87eed75640ed13a3ea165f3193b8890b0ca714d951d0a32375ee03b1d4f7d0",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967239
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967239
+        }
+      ],
+      "raw": "c7",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967239,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "2b1fefd18dfd2b2a846d75d5a72f81980c5a9966105fde42eff2b40c5c443561",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967240
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967240
+        }
+      ],
+      "raw": "c8",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967240,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "fd09f2950da1173c0c970614568057a634df41edacc4b1a1c23a5261ce8597f5",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967241
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967241
+        }
+      ],
+      "raw": "c9",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967241,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3630ec50de542c5f18c9fd460e18aa11fcf4053b44941bde6d36ae0ad86ec707",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967242
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967242
+        }
+      ],
+      "raw": "ca",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967242,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "02d77977311f324075627546b4f6a0cb960c12d4016161a6289bf1571632674c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967243
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967243
+        }
+      ],
+      "raw": "cb",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967243,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "88721cbf5ab889fedc370f524c4b466ced00cd7e405b5c3dce62a64cfa084a40",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967244
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967244
+        }
+      ],
+      "raw": "cc",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967244,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "ed0b31d81c0b6690156515494b1abee73dfe70b39144bdf9e44533be69dfeab5",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967245
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967245
+        }
+      ],
+      "raw": "cd",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967245,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "1bd020b2f77fbb780bd504cb1fbdb41542340eeab892384218a5638eb2bd5b33",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967246
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967246
+        }
+      ],
+      "raw": "ce",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967246,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f72f538e34ee2cc466cc7ae91ef08e19de913ff669c6a72058e9a51a576f1cb2",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967247
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967247
+        }
+      ],
+      "raw": "cf",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967247,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5823e03081421884a145860939944d963e0e4939ef8e6f729fa3eb46a47e8161",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967248
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967248
+        }
+      ],
+      "raw": "d0",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967248,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "4159ed8ccf24ddf17587df5bc35bb02cf0e31bec9eb369974e3ec85bd26e796b",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967249
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967249
+        }
+      ],
+      "raw": "d1",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967249,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "809a2d6dc2014738a967757688adffe16859c70e0488af265ab58278dfa8a3bb",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967250
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967250
+        }
+      ],
+      "raw": "d2",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967250,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d229aa9441f92e88301942ee9eeefa8cc988c6f99e9b9b54143d3b2016f722cc",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967251
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967251
+        }
+      ],
+      "raw": "d3",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967251,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "abadaf8a46a21875f2fac4a15ee9868afe0baa82204c652380b846698cafe769",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967252
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967252
+        }
+      ],
+      "raw": "d4",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967252,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "20f680e6327ff3c977fbd1425735591e7e8d31b03b8ff51610d5ee58071e0d0d",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967253
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967253
+        }
+      ],
+      "raw": "d5",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967253,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "21d6bbbaf97f7e35f50163a2cec08406be53b257e2a097ce135ca63273949afb",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967254
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967254
+        }
+      ],
+      "raw": "d6",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967254,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "e1c7ce4f5e638d75dbd1dec7808b19b2f4741981a43dcd760d99ed46188bb6ca",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967255
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967255
+        }
+      ],
+      "raw": "d7",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967255,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "1a29e29812cbca0fbf3be91181b793400cd2be0a97d833edfa7d99584afad256",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967256
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967256
+        }
+      ],
+      "raw": "d8",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967256,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "9663aeb9c07505ef934d94cceb36c6fdc51f2813e8cab2a12cf33615e602536c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967257
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967257
+        }
+      ],
+      "raw": "d9",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967257,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "12a3f254b42c71b424750ffa7bb81d84186b99faab934caab254a99f26e1f110",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967258
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967258
+        }
+      ],
+      "raw": "da",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967258,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "91e67a6f5d843754a1653852695942b666773e152e61270bd34f5367a1bb19f9",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967259
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967259
+        }
+      ],
+      "raw": "db",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967259,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "cec443ef138be438f1b65bda0a3a1023342f9703f68e41e11781b78185f1dd17",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967260
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967260
+        }
+      ],
+      "raw": "dc",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967260,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c7961815518202557c26237d033c556dd813dc0eaefd1318bed720210ad0035a",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967261
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967261
+        }
+      ],
+      "raw": "dd",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967261,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "698ac59a859ae8dd54d45be6c36250f39c6ea1ffe46bdf1588039122a33de5a5",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967262
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967262
+        }
+      ],
+      "raw": "de",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967262,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f0bc7ce80a3805c9573fedb70e4b0f39085c2c27e1340a5324db177834643f80",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967263
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967263
+        }
+      ],
+      "raw": "df",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967263,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "355144b3e6fa5112557a37b1d6d6f2c361acc1cdbe543aaae4e0e9d0fb31e51c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967264
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967264
+        }
+      ],
+      "raw": "e0",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967264,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c623619a28b9000bf177ec0bd5b2c9bc1635d1784e58cfff61be3acba2683601",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967265
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967265
+        }
+      ],
+      "raw": "e1",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967265,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "23bc5393d52ec2bee4c4ea2849ab230ded0f652f75d0087a036bc4c43c99741a",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967266
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967266
+        }
+      ],
+      "raw": "e2",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967266,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "914dfcd5a557c8608aea525094bd50588d16cd4d342622c3b4f15adc56ad2b17",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967267
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967267
+        }
+      ],
+      "raw": "e3",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967267,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5eeeca4f97033e11be3c4c7bcdde495ea4d2bdb4287b64357bb17abf3d45a45f",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967268
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967268
+        }
+      ],
+      "raw": "e4",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967268,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "05228a2a31c25c680446592de1c48868e31fc8ce92ec6312203b5b73f96015eb",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967269
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967269
+        }
+      ],
+      "raw": "e5",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967269,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0cd5076f58f04c2212d4c93a9844f31f6f36c38e241b7e063c8e02c2d3c6fe49",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967270
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967270
+        }
+      ],
+      "raw": "e6",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967270,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "cac1ac05b3d5772349e1a0959378460584bebf6bf672f245f1d734c380d5ba85",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967271
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967271
+        }
+      ],
+      "raw": "e7",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967271,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b64311127361a531308f735763120a2d65b580b346bc58e122aea9b52e3c88ac",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967272
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967272
+        }
+      ],
+      "raw": "e8",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967272,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "33ea666b0f02e06ac90654474314f8fb8508335f78c2858a119d6015e6a14420",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967273
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967273
+        }
+      ],
+      "raw": "e9",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967273,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "6c563bfa1d0694ff90807a9fb35cf5fcd8facc53d71471b494f4fc26abc62f3e",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967274
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967274
+        }
+      ],
+      "raw": "ea",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967274,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "58d14df8d3a05b50149b9003b2dd29920c077299590013b58bf80b1e7cdc1051",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967275
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967275
+        }
+      ],
+      "raw": "eb",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967275,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d4604a950b40c05461f40088d7be10f385b55e91043714e329dce14fe1288dfc",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967276
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967276
+        }
+      ],
+      "raw": "ec",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967276,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "5fb4a289fd99247a46ddb362fdd7cb26ac4e03dc884b72b8cdb8d893a0d121e4",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967277
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967277
+        }
+      ],
+      "raw": "ed",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967277,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "3281fff5aa691aa962d3de271fb5db80ce5a4c47f7c696b05160c3d710e39dc4",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967278
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967278
+        }
+      ],
+      "raw": "ee",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967278,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "1c34cdb65373bd2cf44560bdb7dc248c54007d7a40414508322823108e17875b",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967279
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967279
+        }
+      ],
+      "raw": "ef",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967279,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "0c8eab617c8920bb8ee24a9f0da90a4a150794f2af0f798ecb67387e736f1e5c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967280
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967280
+        }
+      ],
+      "raw": "f0",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967280,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "428befc4f8ca3378c17e04007f8376aec793d1a243bbfb598dff9df45769c038",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967281
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967281
+        }
+      ],
+      "raw": "f1",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967281,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b3bbd21e97f09ba02080442056dbdcd2d946478fccc4aa7abccf88de6799eaee",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967282
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967282
+        }
+      ],
+      "raw": "f2",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967282,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "81805f1838aa72051094a31a22296e3527ae114d537a2472098b8ec8afd19eb0",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967283
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967283
+        }
+      ],
+      "raw": "f3",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967283,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "d74c9c24ad3871a2c5209838a1005f7d3e53ad2471580ae795ad15e246b9854e",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967284
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967284
+        }
+      ],
+      "raw": "f4",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967284,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "1c6a8061deda312e9342089e87fb31718f62427e3f1836c632ee557d51c09362",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967285
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967285
+        }
+      ],
+      "raw": "f5",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967285,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "843f797a875787bad7defef3dc8d7b1cfd694ce133cba94731d87b1cc5098dd4",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967286
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967286
+        }
+      ],
+      "raw": "f6",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967286,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "e940a40c50d88e9ee8007336c3b226066885f8a636969b9c5df31382c39c73e4",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967287
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967287
+        }
+      ],
+      "raw": "f7",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967287,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f3a03e7a2862964b3c2a60f626a08d1ec60aedcafa67fef90c87fdc14245925a",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967288
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967288
+        }
+      ],
+      "raw": "f8",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967288,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "25fe96585037f0870cb609c8a7d2a9f4a047d983322b9c558180d03bffa94f15",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967289
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967289
+        }
+      ],
+      "raw": "f9",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967289,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "401900857c9bc0de742e52d85f7061e6475b4e39f60e5b0ddfed3e2ede6a6d3c",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967290
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967290
+        }
+      ],
+      "raw": "fa",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967290,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "c09f540f3b42bf8837b76a3c06aa829b1456ca1f55fc911eb12feac9b878f981",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967291
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967291
+        }
+      ],
+      "raw": "fb",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967291,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f5dfb3b56e8262325488bb62bde225d33153ef796c174b825e7e81a5e2146865",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967292
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967292
+        }
+      ],
+      "raw": "fc",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967292,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "b677f24eb3691962d3b88fd4210c6bd27e1556eb7a8ee13fca8237a2f63498d3",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967293
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967293
+        }
+      ],
+      "raw": "fd",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967293,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "f0ec2a5ffe2cea060680079a6867b3ef48d49260fd0054d5ae97858aa5f531b1",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967294
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967294
+        }
+      ],
+      "raw": "fe",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967294,
+      "top_before": 256
+    },
+    {
+      "break_after": false,
+      "bus_transaction": null,
+      "idim_after": true,
+      "in_interrupt_after": false,
+      "memory_sha256_after": "2cc500f16822660daa275a3464a0a5194996797da4dbd1edd4083372803c41b9",
+      "mnemonic": "IM",
+      "next_after": 256,
+      "next_before": 287454020,
+      "pc_after": 1,
+      "pc_before": 0,
+      "ram_writes": [
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967295
+        },
+        {
+          "address": 32756,
+          "port": "A",
+          "value": 4294967295
+        }
+      ],
+      "raw": "ff",
+      "sp_after": 32756,
+      "sp_before": 32760,
+      "top_after": 4294967295,
+      "top_before": 256
+    }
+  ],
+  "scenarios": [
+    {
+      "boundaries": [
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 287454020,
+          "pc": 0,
+          "raw": "08",
+          "sp": 32760,
+          "time_ns": 51265,
+          "top": 32768
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 287454020,
+          "pc": 1,
+          "raw": "0b",
+          "sp": 32760,
+          "time_ns": 51315,
+          "top": 2309737967
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 287454020,
+          "pc": 2,
+          "raw": "0b",
+          "sp": 32760,
+          "time_ns": 51355,
+          "top": 2309737967
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 287454020,
+          "pc": 3,
+          "raw": "0b",
+          "sp": 32760,
+          "time_ns": 51395,
+          "top": 2309737967
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 287454020,
+          "pc": 4,
+          "raw": "40",
+          "sp": 32760,
+          "time_ns": 51435,
+          "top": 2309737967
+        }
+      ],
+      "case": 256,
+      "events": [
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51255,
+          "value": 32768
+        },
+        {
+          "address": 32768,
+          "kind": "ZPU_BUS_READ",
+          "time_ns": 51275,
+          "value": 2309737967
+        },
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51285,
+          "value": 2309737967
+        },
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51305,
+          "value": 2309737967
+        },
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51345,
+          "value": 2309737967
+        },
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51385,
+          "value": 2309737967
+        },
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51425,
+          "value": 2309737967
+        },
+        {
+          "address": 56,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "B",
+          "time_ns": 51445,
+          "value": 2309737967
+        }
+      ],
+      "initial_memory_sha256": "a42437d438afa80be8ac3781bb229b6e9a9d0579f7d3c1203c9c8c4450a51e40",
+      "name": "external-load"
+    },
+    {
+      "boundaries": [
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 287454020,
+          "pc": 0,
+          "raw": "0c",
+          "sp": 32760,
+          "time_ns": 51525,
+          "top": 32768
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 1073741827,
+          "pc": 1,
+          "raw": "0b",
+          "sp": 0,
+          "time_ns": 51595,
+          "top": 202050315
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 1073741827,
+          "pc": 2,
+          "raw": "0b",
+          "sp": 0,
+          "time_ns": 51635,
+          "top": 202050315
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 1073741827,
+          "pc": 3,
+          "raw": "0b",
+          "sp": 0,
+          "time_ns": 51675,
+          "top": 202050315
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 1073741827,
+          "pc": 4,
+          "raw": "40",
+          "sp": 0,
+          "time_ns": 51715,
+          "top": 202050315
+        }
+      ],
+      "case": 257,
+      "events": [
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51515,
+          "value": 32768
+        },
+        {
+          "address": 32768,
+          "kind": "ZPU_BUS_WRITE",
+          "time_ns": 51545,
+          "value": 287454020
+        },
+        {
+          "address": 0,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51585,
+          "value": 202050315
+        },
+        {
+          "address": 0,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51625,
+          "value": 202050315
+        },
+        {
+          "address": 0,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51665,
+          "value": 202050315
+        },
+        {
+          "address": 0,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51705,
+          "value": 202050315
+        }
+      ],
+      "initial_memory_sha256": "005db78ddf1e517713a508927b14972fc316d07f9fc98b38cd876aa8ded6feb4",
+      "name": "external-store"
+    },
+    {
+      "boundaries": [
+        {
+          "break_after": false,
+          "idim_after": true,
+          "in_interrupt_after": false,
+          "next": 287454020,
+          "pc": 0,
+          "raw": "81",
+          "sp": 32760,
+          "time_ns": 51785,
+          "top": 256
+        },
+        {
+          "break_after": false,
+          "idim_after": true,
+          "in_interrupt_after": false,
+          "next": 256,
+          "pc": 1,
+          "raw": "82",
+          "sp": 32756,
+          "time_ns": 51825,
+          "top": 1
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 256,
+          "pc": 2,
+          "raw": "0b",
+          "sp": 32756,
+          "time_ns": 51865,
+          "top": 130
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 256,
+          "pc": 3,
+          "raw": "0b",
+          "sp": 32756,
+          "time_ns": 51905,
+          "top": 130
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 256,
+          "pc": 4,
+          "raw": "40",
+          "sp": 32756,
+          "time_ns": 51945,
+          "top": 130
+        }
+      ],
+      "case": 258,
+      "events": [
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51775,
+          "value": 256
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51795,
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51815,
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51835,
+          "value": 130
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51855,
+          "value": 130
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51895,
+          "value": 130
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 51935,
+          "value": 130
+        },
+        {
+          "address": 52,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "B",
+          "time_ns": 51955,
+          "value": 130
+        }
+      ],
+      "initial_memory_sha256": "d3491a2734741c2fdf693946210571401b8658e556a1c392d453f528880d18ed",
+      "name": "continued-immediate"
+    },
+    {
+      "boundaries": [
+        {
+          "break_after": false,
+          "idim_after": true,
+          "in_interrupt_after": false,
+          "next": 287454020,
+          "pc": 0,
+          "raw": "81",
+          "sp": 32760,
+          "time_ns": 52045,
+          "top": 256
+        },
+        {
+          "break_after": false,
+          "idim_after": true,
+          "in_interrupt_after": false,
+          "next": 256,
+          "pc": 1,
+          "raw": "82",
+          "sp": 32756,
+          "time_ns": 52085,
+          "top": 1
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": false,
+          "next": 256,
+          "pc": 2,
+          "raw": "0b",
+          "sp": 32756,
+          "time_ns": 52125,
+          "top": 130
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": true,
+          "next": 256,
+          "pc": 3,
+          "raw": "0b",
+          "sp": 32756,
+          "time_ns": 52165,
+          "top": 130
+        },
+        {
+          "break_after": false,
+          "idim_after": false,
+          "in_interrupt_after": true,
+          "next": 130,
+          "pc": 32,
+          "raw": "40",
+          "sp": 32752,
+          "time_ns": 52205,
+          "top": 3
+        }
+      ],
+      "case": 259,
+      "events": [
+        {
+          "address": 32760,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 52035,
+          "value": 256
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 52055,
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 52075,
+          "value": 1
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 52095,
+          "value": 130
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 52115,
+          "value": 130
+        },
+        {
+          "address": 32756,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 52155,
+          "value": 130
+        },
+        {
+          "address": 32752,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 52175,
+          "value": 3
+        },
+        {
+          "address": 32752,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "A",
+          "time_ns": 52195,
+          "value": 3
+        },
+        {
+          "address": 48,
+          "kind": "ZPU_RAM_WRITE",
+          "port": "B",
+          "time_ns": 52215,
+          "value": 3
+        }
+      ],
+      "initial_memory_sha256": "d3491a2734741c2fdf693946210571401b8658e556a1c392d453f528880d18ed",
+      "name": "immediate-interrupt-deferral"
+    }
+  ],
+  "schema": "coding-adventures.zpu4-small-ghdl.v1",
+  "source_commit": "e29aef5f7aa741557d0eb16ecf13e974d55789ff",
+  "source_sha256": {
+    "zpu/COPYING": "8bc96909cb1b0dea55f1c1f98d3935085f2f1d9471e5b539782ef1de5a7f4eae",
+    "zpu/docs/zpu_arch.html": "44661240d60ffdbcb6c7a88113a866de17ffa7875c5b2147a60814e4f57c752f",
+    "zpu/hdl/zpu4/core/zpu_config.vhd": "e6b65d0d7cf41748c41444fbc2dd42980a48ee49ee264c79cab4c4240193ed7b",
+    "zpu/hdl/zpu4/core/zpu_core_small.vhd": "2b9cca96b3e59204796a57866ff74a166db343846ae449ff91d193033d88fb70",
+    "zpu/hdl/zpu4/core/zpupkg.vhd": "f7b36298967779778a4eb95ab4efb84035b46fa9d77c24181fbdf660298a94be",
+    "zpu/sw/simulator/com/zylin/zpu/simulator/Simulator.java": "7cefccdc3e7567acdb062054ae01a54f690cd392c51c8527c4eb489f54d1fa71"
+  }
+}

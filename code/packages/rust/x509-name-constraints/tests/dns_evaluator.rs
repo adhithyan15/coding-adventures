@@ -1,7 +1,8 @@
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use x509_name_constraints::{
-    decode_name_constraints, decode_name_constraints_contents, evaluate_dns_names,
-    ConstrainedDnsNames, DnsConstraintErrorKind, DnsNameSyntaxError, MAX_PRESENTED_DNS_NAMES,
+    decode_name_constraints, decode_name_constraints_contents, evaluate_dns_name_subtrees,
+    evaluate_dns_names, ConstrainedDnsNames, DnsConstraintErrorKind, DnsNameSyntaxError,
+    MAX_DNS_SUBTREES, MAX_PRESENTED_DNS_NAMES,
 };
 
 fn der_length(length: usize) -> Vec<u8> {
@@ -65,6 +66,78 @@ fn evaluate_full(
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     let constraints = decode_name_constraints(&mut decoder, &encoded).unwrap();
     evaluate_dns_names(&constraints, presented_dns_names)
+}
+
+#[test]
+fn dns_only_evaluation_fails_closed_when_ip_subtrees_are_retained() {
+    let ipv4 = [192, 0, 2, 0, 255, 255, 255, 0];
+    for field_tag in [0xa0, 0xa1] {
+        // One field may contain both GeneralName forms.
+        let mixed_contents = [
+            element(0x30, &element(0x82, b"example.test")),
+            element(0x30, &element(0x87, &ipv4)),
+        ]
+        .concat();
+        let encoded = element(0x30, &element(field_tag, &mixed_contents));
+        let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+        let constraints = decode_name_constraints(&mut decoder, &encoded).unwrap();
+
+        let error = evaluate_dns_names(&constraints, &["example.test"]).unwrap_err();
+        assert_eq!(error.kind(), DnsConstraintErrorKind::UnevaluatedIpSubtrees);
+        assert_eq!(error.item_index(), 0);
+    }
+}
+
+#[test]
+fn explicit_dns_component_can_be_composed_with_separate_ip_policy() {
+    let ipv4 = [192, 0, 2, 0, 255, 255, 255, 0];
+    let mixed_contents = [
+        element(0x30, &element(0x82, b"example.test")),
+        element(0x30, &element(0x87, &ipv4)),
+    ]
+    .concat();
+    let encoded = element(0x30, &element(0xa0, &mixed_contents));
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let constraints = decode_name_constraints(&mut decoder, &encoded).unwrap();
+
+    assert_eq!(
+        evaluate_dns_names(&constraints, &["api.example.test"])
+            .unwrap_err()
+            .kind(),
+        DnsConstraintErrorKind::UnevaluatedIpSubtrees
+    );
+    let evaluated = evaluate_dns_name_subtrees(
+        constraints.permitted_dns_subtrees(),
+        constraints.excluded_dns_subtrees(),
+        &["api.example.test"],
+    )
+    .unwrap();
+    assert_eq!(evaluated.count(), 1);
+    assert_eq!(constraints.permitted_ip_subtrees(), &[&ipv4[..]]);
+}
+
+#[test]
+fn explicit_dns_component_enforces_all_collection_ceilings() {
+    let oversized = vec!["example.test"; MAX_DNS_SUBTREES + 1];
+
+    assert_eq!(
+        evaluate_dns_name_subtrees(&oversized, &[], &[])
+            .unwrap_err()
+            .kind(),
+        DnsConstraintErrorKind::TooManyPermittedSubtrees
+    );
+    assert_eq!(
+        evaluate_dns_name_subtrees(&[], &oversized, &[])
+            .unwrap_err()
+            .kind(),
+        DnsConstraintErrorKind::TooManyExcludedSubtrees
+    );
+    assert_eq!(
+        evaluate_dns_name_subtrees(&[], &[], &oversized)
+            .unwrap_err()
+            .kind(),
+        DnsConstraintErrorKind::TooManyPresentedDnsNames
+    );
 }
 
 #[test]

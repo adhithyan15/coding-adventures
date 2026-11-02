@@ -93,6 +93,22 @@ pub const TOKEN_CONTEXT_KEYWORD: u32 = 2;
 /// `@no_newline_before` family of `.grammar` predicates.
 pub const TOKEN_PRECEDED_BY_SPACE: u32 = 4;
 
+/// Set on a token that the *parser* inserted rather than the lexer read: the
+/// zero-width token that a `.grammar` `@asi(T, C…)` element adds where
+/// ECMAScript's Automatic Semicolon Insertion supplies a `;` (F11
+/// "Automatic insertion").
+///
+/// ```text
+/// source       CST tokens of `a = 1` ⏎ `b = 2`
+/// a = 1;       … NUMBER("1")  SEMICOLON(";")                 (written)
+/// a = 1 ⏎      … NUMBER("1")  SEMICOLON("", TOKEN_SYNTHETIC) (inserted)
+/// ```
+///
+/// A synthetic token has an empty `value` and takes the line and column of
+/// the token in front of which it was inserted. `GrammarLexer` never sets
+/// this bit, so a consumer can trust it to mean "not in the source".
+pub const TOKEN_SYNTHETIC: u32 = 8;
+
 // ===========================================================================
 // TokenType — the classification of each token
 // ===========================================================================

@@ -32,6 +32,49 @@ finite variable-free real-arithmetic or exact tracked built-in-result leaves,
 including results over losslessly widened tracked integers, prove the same
 value over plain real bases. Exact variable-free built-in-result leaves may
 also participate; none of these forms requires a standard function in the base.
+ALGOL formatter provenance also keeps variable-free and tracked integer terms
+as checked `i64` values while an enclosing integer `div` or `mod` reduces them,
+including odd values above `2^53`; no binary64 conversion occurs before the
+reduction. Unreduced values, real `/`, and checked overflow still fail closed.
+Call-free built-in `abs`, `sign`, and `entier` preserve that exact integer
+domain for wide static arguments until the same enclosing reduction. User
+overrides and procedure-calling arguments remain outside the proof.
+Pure nested chains of those built-ins receive the same treatment when their
+root is call-free; shadowing or any other nested call still fails closed.
+Checked unary signs may separate the nested normalizers, with `i64::MIN`
+negation and every other overflow remaining outside the proof.
+Checked `+`, `-`, and `*` arithmetic may connect nested normalizers while all
+intermediates remain in `i64`; unsupported operators, overflow, overrides,
+other calls, and unreduced wide results remain outside the proof.
+Bounded nonnegative right-associative integer powers may also connect those
+normalizers. Every exponent is capped by the existing 4,096 unroll bound and
+every powered intermediate uses checked `i64` arithmetic; negative or
+oversized exponents and overflow continue to fail closed.
+Checked integer `div` and `mod` may also connect nested normalizers. Zero
+divisors, the `i64::MIN div -1` overflow, procedure-calling divisors, and
+unreduced wide results continue to fail closed.
+Conditional expressions may also connect nested normalizers when their
+selector is side-effect-free and static or every branch proves the same
+checked integer result. Effectful selectors, unequal branches,
+procedure-calling branches, and unreduced wide results continue to fail closed.
+Canonical standard-function identities may also connect nested normalizers:
+`sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and `ln(1)`. Non-identity inputs,
+user overrides, other procedure calls, and overflowing checked arithmetic
+continue to fail closed.
+Exact nonnegative perfect squares may also pass through `sqrt`, including
+radicands beyond binary64's exact integer range. Negative and non-square
+radicands, user overrides, and dynamic operands continue to fail closed.
+Built-in `entier(sqrt(n))` also preserves a non-square nonnegative exact integer
+radicand through its mathematical floor root before widening; negative,
+shadowed, and dynamic forms remain outside the proof.
+Unary signs may wrap that `sqrt` without widening. In particular,
+`entier(-sqrt(n))` uses the negated ceiling root for non-square `n`, preserving
+ALGOL floor semantics; negative radicands, overrides, and dynamic roots remain
+outside the proof.
+Checked integer additions and subtractions may also translate one exact square
+root before `entier`, including subtraction's negated ceiling-root case.
+Overflow, multiple roots, multiplication, real division, overrides, and
+dynamic roots remain outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
@@ -82,6 +125,9 @@ binary64 exact-integer ceiling while remaining within `i64::MAX` when a later
 static `div` or `mod` reduces the final result back below that ceiling before
 widening. Overflow and real `/` over an over-wide intermediate still fail
 closed.
+Integer-only additive subexpressions may use that same checked wider budget
+when nested inside the reducing `div` or `mod`; unreduced sums and real `/`
+over an over-wide sum remain outside the proof.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the right-associative chain stays within the power
 unroll cap. A zero result proves the complete power is exactly one; negative,

@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   ConsCell,
   GarbageCollector,
@@ -16,21 +17,21 @@ describe("MarkAndSweepGC", () => {
     const first = gc.allocate(new ConsCell(42, null));
     const second = gc.allocate(new Symbol("next"));
 
-    expect(first).toBe(0x10000);
-    expect(second).toBe(0x10001);
-    expect(gc.heapSize()).toBe(2);
-    expect(gc.deref(first)).toBeInstanceOf(ConsCell);
-    expect(gc.isValidAddress(second)).toBe(true);
+    assert.equal(first, 0x10000);
+    assert.equal(second, 0x10001);
+    assert.equal(gc.heapSize(), 2);
+    assert.ok(gc.deref(first) instanceof ConsCell);
+    assert.equal(gc.isValidAddress(second), true);
   });
 
   it("throws when dereferencing an invalid or freed object", () => {
     const gc = new MarkAndSweepGC();
     const address = gc.allocate(new Symbol("gone"));
 
-    expect(gc.deref(address)).toBeInstanceOf(Symbol);
-    expect(gc.collect([])).toBe(1);
-    expect(() => gc.deref(address)).toThrow(RangeError);
-    expect(gc.isValidAddress(address)).toBe(false);
+    assert.ok(gc.deref(address) instanceof Symbol);
+    assert.equal(gc.collect([]), 1);
+    assert.throws(() => gc.deref(address), RangeError);
+    assert.equal(gc.isValidAddress(address), false);
   });
 
   it("keeps a root and its transitive references alive", () => {
@@ -41,9 +42,9 @@ describe("MarkAndSweepGC", () => {
 
     const freed = gc.collect([head]);
 
-    expect(freed).toBe(0);
-    expect(gc.heapSize()).toBe(3);
-    expect(gc.isValidAddress(tail)).toBe(true);
+    assert.equal(freed, 0);
+    assert.equal(gc.heapSize(), 3);
+    assert.equal(gc.isValidAddress(tail), true);
   });
 
   it("collects unreachable cycles", () => {
@@ -55,8 +56,8 @@ describe("MarkAndSweepGC", () => {
     left.cdr = rightAddress;
     right.cdr = leftAddress;
 
-    expect(gc.collect([])).toBe(2);
-    expect(gc.heapSize()).toBe(0);
+    assert.equal(gc.collect([]), 2);
+    assert.equal(gc.heapSize(), 0);
   });
 
   it("scans nested root arrays and objects", () => {
@@ -67,10 +68,10 @@ describe("MarkAndSweepGC", () => {
 
     const freed = gc.collect([[fromArray], { global: fromObject, literal: 42 }]);
 
-    expect(freed).toBe(1);
-    expect(gc.isValidAddress(fromArray)).toBe(true);
-    expect(gc.isValidAddress(fromObject)).toBe(true);
-    expect(gc.isValidAddress(unreachable)).toBe(false);
+    assert.equal(freed, 1);
+    assert.equal(gc.isValidAddress(fromArray), true);
+    assert.equal(gc.isValidAddress(fromObject), true);
+    assert.equal(gc.isValidAddress(unreachable), false);
   });
 
   it("tracks collection statistics", () => {
@@ -78,9 +79,9 @@ describe("MarkAndSweepGC", () => {
     const root = gc.allocate(new Symbol("root"));
     gc.allocate(new Symbol("temp"));
 
-    expect(gc.collect([root])).toBe(1);
+    assert.equal(gc.collect([root]), 1);
 
-    expect(gc.stats()).toEqual({
+    assert.deepEqual(gc.stats(), {
       totalAllocations: 2,
       totalCollections: 1,
       totalFreed: 1,
@@ -93,11 +94,11 @@ describe("heap object types", () => {
   it("reports references from cons cells and closures", () => {
     const closure = new LispClosure("lambda", { x: 0x10000, y: "plain", z: 17.5 }, ["arg"]);
 
-    expect(new ConsCell(0x10000, "tail").references()).toEqual([0x10000]);
-    expect(new Symbol("plain").references()).toEqual([]);
-    expect(closure.references()).toEqual([0x10000]);
-    expect(closure.code).toBe("lambda");
-    expect(closure.params).toEqual(["arg"]);
+    assert.deepEqual(new ConsCell(0x10000, "tail").references(), [0x10000]);
+    assert.deepEqual(new Symbol("plain").references(), []);
+    assert.deepEqual(closure.references(), [0x10000]);
+    assert.equal(closure.code, "lambda");
+    assert.deepEqual(closure.params, ["arg"]);
   });
 
   it("allows custom collectors to use the abstract validity helper", () => {
@@ -129,8 +130,8 @@ describe("heap object types", () => {
     }
 
     const gc = new TinyCollector();
-    expect(gc.isValidAddress(1)).toBe(true);
-    expect(gc.isValidAddress(2)).toBe(false);
+    assert.equal(gc.isValidAddress(1), true);
+    assert.equal(gc.isValidAddress(2), false);
   });
 });
 
@@ -143,10 +144,10 @@ describe("SymbolTable", () => {
     const second = table.intern("foo");
     const other = table.intern("bar");
 
-    expect(first).toBe(second);
-    expect(first).not.toBe(other);
-    expect(table.lookup("foo")).toBe(first);
-    expect(table.allSymbols()).toEqual({ foo: first, bar: other });
+    assert.equal(first, second);
+    assert.notEqual(first, other);
+    assert.equal(table.lookup("foo"), first);
+    assert.deepEqual(table.allSymbols(), { foo: first, bar: other });
   });
 
   it("reallocates interned symbols after their heap object is collected", () => {
@@ -154,11 +155,11 @@ describe("SymbolTable", () => {
     const table = new SymbolTable(gc);
     const original = table.intern("foo");
 
-    expect(gc.collect([])).toBe(1);
-    expect(table.lookup("foo")).toBeUndefined();
+    assert.equal(gc.collect([]), 1);
+    assert.equal(table.lookup("foo"), undefined);
 
     const fresh = table.intern("foo");
-    expect(fresh).not.toBe(original);
-    expect(table.allSymbols()).toEqual({ foo: fresh });
+    assert.notEqual(fresh, original);
+    assert.deepEqual(table.allSymbols(), { foo: fresh });
   });
 });

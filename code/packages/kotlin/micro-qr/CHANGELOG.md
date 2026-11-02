@@ -6,6 +6,15 @@ Versioning follows [Semantic Versioning 2.0](https://semver.org/).
 
 ---
 
+## Unreleased
+
+### Added
+
+- Gradle package metadata with repository-local composite dependencies.
+- Fail-closed Unix and Windows BUILD fronts that execute the existing native
+  test suite.
+- An explicit schema-v1 empty capability profile for the pure encoder.
+
 ## [0.1.0] — 2026-04-26
 
 ### Added

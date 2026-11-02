@@ -1240,7 +1240,7 @@ fn emit_instr(
         return emit_shift(asm, alloc, instr, ShiftKind::Lsl, ty);
     }
     if let Some(ty) = op.strip_prefix("shr_") {
-        let kind = if ty.starts_with('i') { ShiftKind::Asr } else { ShiftKind::Lsr };
+        let kind = if is_signed_ty(ty) { ShiftKind::Asr } else { ShiftKind::Lsr };
         return emit_shift(asm, alloc, instr, kind, ty);
     }
 
@@ -2079,6 +2079,27 @@ fn emit_fp_cmp(
 #[derive(Debug, Clone, Copy)]
 enum CmpRel { Eq, Ne, Lt, Le, Gt, Ge }
 
+/// Is a CIR type suffix compared, divided and shifted as a **signed** integer?
+///
+/// `i*` types are signed and `u*` types unsigned, as the names say.  `bool`
+/// is signed too.  The suffix of a comparison is its *result* type when the
+/// frontend gave one (`aot-core`'s `spec_type` prefers the type hint), and
+/// Twig types every `<` / `string<?` result `bool` while its operands are
+/// `i64`s.  Treating `bool` as unsigned made `cmp_lt_bool -1, 0` the unsigned
+/// `LO` — `0xFFFF_FFFF_FFFF_FFFF < 0`, false — so natively `(< -5 0)` was
+/// `#f` and `(string<? "a" "b")` (a `str_cmp` of -1 against 0) was `#f`
+/// (#18453).  For genuine 0 / 1 booleans the signed and unsigned answers
+/// agree, so this costs nothing there.
+///
+/// | suffix          | signed? | `cmp_lt -1, 0` |
+/// |-----------------|---------|----------------|
+/// | `i8` … `i64`    | yes     | 1 (`LT`)       |
+/// | `bool`          | yes     | 1 (`LT`)       |
+/// | `u8` … `u64`    | no      | 0 (`LO`)       |
+fn is_signed_ty(ty: &str) -> bool {
+    ty.starts_with('i') || ty == "bool"
+}
+
 fn parse_cmp_suffix(s: &str) -> Option<(CmpRel, &str)> {
     // "eq_u8" → (Eq, "u8"); "lt_i32" → (Lt, "i32"); etc.
     let (rel_str, ty) = s.split_once('_')?;
@@ -2109,7 +2130,7 @@ fn emit_cmp(
     load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
     asm.cmp(Reg::X0, Reg::X1);
 
-    let signed = ty.starts_with('i');
+    let signed = is_signed_ty(ty);
     let cond = match (rel, signed) {
         (CmpRel::Eq, _)         => Cond::Eq,
         (CmpRel::Ne, _)         => Cond::Ne,
@@ -2165,7 +2186,7 @@ fn emit_div(
     load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
     load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
 
-    let signed = ty.starts_with('i');
+    let signed = is_signed_ty(ty);
 
     if want_mod {
         // quotient into X2 (scratch), then msub to get remainder
@@ -3280,6 +3301,35 @@ mod tests {
         ];
         let bytes = compile(&ctx("lt", &params, "u64"), &cir).expect("ok");
         assert!(!bytes.is_empty());
+    }
+
+    #[test]
+    fn bool_typed_compare_is_signed() {
+        // #18453: Twig types `(< a b)` and `(string<? a b)` results `bool`
+        // over `i64` operands, so `cmp_lt_bool -1, 0` must use the signed
+        // `LT` condition (1), not the unsigned `LO` (0).  A `bool` compare
+        // emits exactly what the `i64` one does, for every relation.
+        let params = vec![("a".into(), "i64".into()), ("b".into(), "i64".into())];
+        let body = |op: &str| {
+            let cir = vec![
+                CIRInstr { op: op.into(), dest: Some("v0".into()),
+                           srcs: vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+                           ty: "bool".into(), deopt_to: None },
+                ret_u64("v0"),
+            ];
+            compile(&ctx("lt", &params, "u64"), &cir).expect("ok")
+        };
+        for rel in ["lt", "le", "gt", "ge"] {
+            assert_eq!(body(&format!("cmp_{rel}_bool")), body(&format!("cmp_{rel}_i64")), "{rel}");
+            assert_ne!(body(&format!("cmp_{rel}_bool")), body(&format!("cmp_{rel}_u64")), "{rel}");
+        }
+        // `cset x0, lt` is CSINC x0, xzr, xzr, ge = 0x9A9FA7E0; the unsigned
+        // `cset x0, lo` would be 0x9A9F27E0.
+        let lt = body("cmp_lt_bool");
+        let words: Vec<u32> = lt.chunks(4).map(|c| u32::from_le_bytes(c.try_into().unwrap())).collect();
+        assert!(words.contains(&0x9A9F_A7E0), "expected cset lt in {words:08X?}");
+        assert!(!words.contains(&0x9A9F_27E0), "unexpected cset lo in {words:08X?}");
+        assert!(is_signed_ty("bool") && is_signed_ty("i64") && !is_signed_ty("u64"));
     }
 
     #[test]

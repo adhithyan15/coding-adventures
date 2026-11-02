@@ -3,8 +3,10 @@ use std::cell::Cell;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
     validate_certificate_role_extensions, validate_certificate_role_policy,
-    X509CertificatePolicyErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
-    X509CertificateRolePolicyErrorKind,
+    validate_certificate_role_with_critical_extension_policy,
+    validate_critical_extensions_with_policy, X509CertificatePolicyErrorKind, X509CertificateRole,
+    X509CertificateRoleErrorKind, X509CertificateRolePolicyErrorKind, X509CriticalExtensionPolicy,
+    X509CriticalExtensionPolicyDefinitionErrorKind, MAX_X509_CRITICAL_EXTENSION_POLICY_IDENTIFIERS,
 };
 use x509_key_usage::KeyUsageBit;
 
@@ -14,6 +16,9 @@ const BASIC_CONSTRAINTS_OID: &[u8] = &[0x55, 0x1d, 0x13];
 const KEY_USAGE_OID: &[u8] = &[0x55, 0x1d, 0x0f];
 const EXTENDED_KEY_USAGE_OID: &[u8] = &[0x55, 0x1d, 0x25];
 const SERVER_AUTH_OID: &[u8] = &[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x03, 0x01];
+const BASIC_CONSTRAINTS_ARCS: &[u64] = &[2, 5, 29, 19];
+const KEY_USAGE_ARCS: &[u64] = &[2, 5, 29, 15];
+const EXTENDED_KEY_USAGE_ARCS: &[u64] = &[2, 5, 29, 37];
 
 fn der(tag: u8, value: &[u8]) -> Vec<u8> {
     let mut encoded = Vec::with_capacity(value.len() + 4);
@@ -429,4 +434,115 @@ fn reports_role_failure_after_all_critical_extensions_are_recognized() {
         X509CertificateRolePolicyErrorKind::Role(X509CertificateRoleErrorKind::MissingKeyUsage)
     );
     assert_eq!(error.extension_index(), None);
+}
+
+#[test]
+fn validates_bounded_critical_extension_policy_data() {
+    let empty = X509CriticalExtensionPolicy::new(&[]).unwrap();
+    assert!(empty.recognized_identifiers().is_empty());
+
+    for identifiers in [
+        &[&[][..]][..],
+        &[&[1][..]][..],
+        &[&[3, 1][..]][..],
+        &[&[1, 40][..]][..],
+    ] {
+        let error = X509CriticalExtensionPolicy::new(identifiers).unwrap_err();
+        assert_eq!(
+            error.kind(),
+            X509CriticalExtensionPolicyDefinitionErrorKind::InvalidIdentifier
+        );
+        assert!(!error.to_string().contains("1.40"));
+    }
+
+    let error = X509CriticalExtensionPolicy::new(&[
+        BASIC_CONSTRAINTS_ARCS,
+        KEY_USAGE_ARCS,
+        BASIC_CONSTRAINTS_ARCS,
+    ])
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509CriticalExtensionPolicyDefinitionErrorKind::DuplicateIdentifier
+    );
+
+    let repeated = vec![BASIC_CONSTRAINTS_ARCS; MAX_X509_CRITICAL_EXTENSION_POLICY_IDENTIFIERS + 1];
+    let error = X509CriticalExtensionPolicy::new(&repeated).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509CriticalExtensionPolicyDefinitionErrorKind::TooManyIdentifiers
+    );
+}
+
+#[test]
+fn exact_policy_membership_controls_critical_extension_acceptance() {
+    let encoded = certificate(&[extension(&[0x2a, 0x03], true, &der(0x05, &[]))]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+
+    let accepted = [&[1, 2, 3][..]];
+    let policy = X509CriticalExtensionPolicy::new(&accepted).unwrap();
+    validate_critical_extensions_with_policy(&certificate, policy).unwrap();
+
+    let rejected = [&[1, 2, 4][..]];
+    let policy = X509CriticalExtensionPolicy::new(&rejected).unwrap();
+    let error = validate_critical_extensions_with_policy(&certificate, policy).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509CertificatePolicyErrorKind::UnsupportedCriticalExtension
+    );
+    assert_eq!(error.extension_index(), 0);
+}
+
+#[test]
+fn data_policy_retains_exact_policy_and_certificate_binding() {
+    let encoded = certificate(&[
+        basic_constraints(true, true),
+        key_usage(5, true),
+        extended_key_usage(false),
+    ]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let identifiers = [
+        BASIC_CONSTRAINTS_ARCS,
+        KEY_USAGE_ARCS,
+        EXTENDED_KEY_USAGE_ARCS,
+    ];
+    let policy = X509CriticalExtensionPolicy::new(&identifiers).unwrap();
+
+    let evidence = validate_certificate_role_with_critical_extension_policy(
+        &certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        policy,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(evidence.certificate(), &certificate));
+    assert_eq!(evidence.critical_extension_policy(), policy);
+    assert_eq!(
+        evidence.role_extensions().role(),
+        X509CertificateRole::IssuingCertificateAuthority
+    );
+}
+
+#[test]
+fn empty_data_policy_fails_closed_before_role_acceptance() {
+    let encoded = certificate(&[basic_constraints(true, true), key_usage(5, false)]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let policy = X509CriticalExtensionPolicy::new(&[]).unwrap();
+
+    let error = validate_certificate_role_with_critical_extension_policy(
+        &certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        policy,
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509CertificateRolePolicyErrorKind::CriticalExtension(
+            X509CertificatePolicyErrorKind::UnsupportedCriticalExtension
+        )
+    );
+    assert_eq!(error.extension_index(), Some(0));
 }

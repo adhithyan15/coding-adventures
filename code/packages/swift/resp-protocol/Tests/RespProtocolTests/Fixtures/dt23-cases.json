@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "cases": [
+    {"id":"simple-ok","wire_hex":"2b4f4b0d0a","outcome":"value","kind":"simple_string"},
+    {"id":"error-value","wire_hex":"2d45525220626f6f6d0d0a","outcome":"value","kind":"error"},
+    {"id":"integer-zero","wire_hex":"3a300d0a","outcome":"value","kind":"integer"},
+    {"id":"integer-min","wire_hex":"3a2d393232333337323033363835343737353830380d0a","outcome":"value","kind":"integer"},
+    {"id":"bulk-empty","wire_hex":"24300d0a0d0a","outcome":"value","kind":"bulk_string"},
+    {"id":"bulk-binary","wire_hex":"24340d0a00ff0d0a0d0a","outcome":"value","kind":"bulk_string"},
+    {"id":"bulk-null","wire_hex":"242d310d0a","outcome":"value","kind":"null_bulk"},
+    {"id":"array-empty","wire_hex":"2a300d0a","outcome":"value","kind":"array"},
+    {"id":"array-null","wire_hex":"2a2d310d0a","outcome":"value","kind":"null_array"},
+    {"id":"array-two-integers","wire_hex":"2a320d0a3a310d0a3a320d0a","outcome":"value","kind":"array"},
+    {"id":"invalid-utf8-line","wire_hex":"2bff0d0a","outcome":"error","error":"invalid_utf8"},
+    {"id":"invalid-integer-leading-zero","wire_hex":"3a30310d0a","outcome":"error","error":"invalid_integer"},
+    {"id":"invalid-integer-negative-zero","wire_hex":"3a2d300d0a","outcome":"error","error":"invalid_integer"},
+    {"id":"invalid-bulk-negative","wire_hex":"242d320d0a","outcome":"error","error":"negative_bulk"},
+    {"id":"invalid-array-negative","wire_hex":"2a2d320d0a","outcome":"error","error":"negative_array"},
+    {"id":"invalid-bulk-terminator","wire_hex":"24330d0a666f6f5858","outcome":"error","error":"bulk_terminator"},
+    {"id":"invalid-line-ending","wire_hex":"2b6261640a","outcome":"error","error":"line_terminator"},
+    {"id":"invalid-type","wire_hex":"3f780d0a","outcome":"error","error":"unknown_type"},
+    {"id":"incomplete-bulk","wire_hex":"24330d0a666f","outcome":"incomplete"}
+  ]
+}

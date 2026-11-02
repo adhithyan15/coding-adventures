@@ -1,0 +1,65 @@
+{
+  "kind": "in-progress-owner-main-merge-inventory-reconciliation",
+  "observed_at": "2026-10-29T12:20:35Z",
+  "inventory_revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
+  "previous_inventory_revision": "9d0843dc86975a0442bcc86c9ccd765eed3c20a8",
+  "branch_merge_revision": "1686ebbb6650537850629512fa8bf11ef5a59e05",
+  "intermediate_main_refresh": {
+    "revision": "f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0",
+    "branch_merge_revision": "865d3ec36d6cf1c16ac44bda5c52b8c369bc383c",
+    "note": "The first normal refresh introduced tls13-traffic-key-material. A final fetch found main had advanced again; the second normal merge preserves that history and adds no BUILD root or implementation identity."
+  },
+  "main_delta": {
+    "added_build_roots": 1,
+    "removed_build_roots": 0,
+    "new_implementation_identities": 1,
+    "roots": [
+      "code/packages/rust/tls13-traffic-key-material/BUILD"
+    ]
+  },
+  "classification": {
+    "identity": "tls13-traffic-key-material",
+    "owner": "tls13-fixed-memory-record-prerequisite-stack-classification",
+    "delivery_class": "boundary-classification",
+    "selection_blocked": true,
+    "notes": "Rust-only fixed-memory derivation of cipher-suite-bound TLS 1.3 traffic keys and static IVs from a caller-supplied traffic secret. It extends the existing TLS record-prerequisite classifier and still requires explicit neutral decomposition plus SHA-384, HMAC, HKDF, suite-policy, zeroization, and AEAD prerequisite review. It does not claim TLS, HTTPS, handshake, credential custody, constant-time assurance, network, trust, certificate, or deployment authority."
+  },
+  "reporter": {
+    "schema_version": 3,
+    "established_languages": 15,
+    "implementation_identities": 1606,
+    "implementation_package_slots": 4905,
+    "all_reported_identities": 1648,
+    "completion_bands": {
+      "1": {
+        "packages": 1123,
+        "missing_slots": 15722
+      },
+      "2-4": {
+        "packages": 181,
+        "missing_slots": 2282
+      },
+      "5-9": {
+        "packages": 123,
+        "missing_slots": 937
+      },
+      "10-15": {
+        "packages": 179,
+        "missing_slots": 244
+      }
+    },
+    "ocaml_packages": 5,
+    "canonical_collisions": 0,
+    "unknown_language_buckets": 0
+  },
+  "priority": {
+    "selected_owner": "sha512-existing-lane-hf04-conformance-audit",
+    "selection_changed": false,
+    "reason": "The new blocked TLS classification owner has no newly unlocked delivery child and does not overlap the selected twelve-lane SHA-512 paths. The in-progress SHA-512 owner remains dependency-ready and continues to gate its two direct and eighteen total unfinished descendants."
+  },
+  "limits": {
+    "package_presence_is_conformance_credit": false,
+    "native_or_security_qualification_claimed": false,
+    "publication_or_push_performed": false
+  }
+}

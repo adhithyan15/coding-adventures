@@ -47,13 +47,11 @@
 use semantic_ir::{walker, Expr, Module, Scope, Visitor};
 use twig_to_semantic_ir::compile_source;
 
-/// Lower `src` and check the module validates.
+/// Lower `src` and check the module validates with no errors at all.
 ///
-/// One validator complaint is tolerated: this frontend never declares
-/// `Feature::Pairs` although SIR11's manifest rules say a `cons` / `car` /
-/// `cdr` / `pair?` builtin call should.  That gap predates #18456, has
-/// nothing to do with name resolution, and needs its own fix; every
-/// other issue still fails the test.
+/// (This used to tolerate one complaint — the frontend never declared
+/// `Feature::Pairs` for `cons` / `car` / `cdr` / `pair?` — until #18460
+/// fixed that; see `tests/pairs_closures_and_entry_names.rs`.)
 fn lower(src: &str) -> Module {
     let m = compile_source(src, "t").unwrap_or_else(|e| panic!("{src}: {e}"));
     let r = semantic_ir::validate(&m);
@@ -61,7 +59,6 @@ fn lower(src: &str) -> Module {
         .issues
         .iter()
         .filter(|i| i.severity == semantic_ir::Severity::Error)
-        .filter(|i| !i.message.contains("feature `pairs`"))
         .collect();
     assert!(issues.is_empty(), "{src}: module failed validation: {issues:?}");
     m
@@ -79,11 +76,15 @@ fn scope_tag(s: Scope) -> &'static str {
 }
 
 /// Collects every call in the visited functions, in walk order.
+///
+/// The `lambda` marker is not recorded: `BuiltinCall("lambda",
+/// [MakeClosure])` *builds* a strict closure (#18461), it calls nothing.
 struct Calls(Vec<String>);
 
 impl Visitor for Calls {
     fn visit_expr(&mut self, e: &Expr, depth: usize) {
         match e {
+            Expr::BuiltinCall { name, .. } if name == "lambda" => {}
             Expr::BuiltinCall { name, .. } => self.0.push(format!("builtin:{name}")),
             Expr::DirectCall { fn_name, .. } => self.0.push(format!("direct:{fn_name}")),
             Expr::IndirectCall { target, .. } => match target.as_ref() {
@@ -184,16 +185,21 @@ fn user_function_named_like_a_builtin_is_a_direct_call() {
 }
 
 #[test]
-fn user_function_named_like_a_builtin_is_a_global_in_value_position() {
-    // Value position already resolved rows 2/3 before row 4; pin it.
+fn user_function_named_like_a_builtin_is_a_closure_in_value_position() {
+    // Value position already resolved rows 2/3 before row 4; pin it.  A
+    // function in value position is a capture-less closure over it
+    // (#18461) — it used to be a `VarRef Global` that read an empty slot.
     let m = lower("(define (car p) 42) car");
     let main = m.functions.iter().find(|f| f.name == "main").unwrap();
     match &main.body.value {
-        Expr::VarRef { name, scope, .. } => {
-            assert_eq!(name, "car");
-            assert_eq!(*scope, Scope::Global);
-        }
-        other => panic!("expected VarRef Global, got {other:?}"),
+        Expr::BuiltinCall { name, args, .. } if name == "lambda" => match &args[..] {
+            [Expr::MakeClosure { fn_name, captures, .. }] => {
+                assert_eq!(fn_name, "car");
+                assert!(captures.is_empty());
+            }
+            other => panic!("expected one MakeClosure, got {other:?}"),
+        },
+        other => panic!("expected a closure over `car`, got {other:?}"),
     }
 }
 

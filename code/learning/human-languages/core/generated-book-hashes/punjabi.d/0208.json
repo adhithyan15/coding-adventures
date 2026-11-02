@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:a31fcdb80e4d53da",
+  "lessonIds": [
+    "PA-C208-go-return",
+    "PA-C208-pia",
+    "PA-C208-pia-review",
+    "PA-C208-had-to-go",
+    "PA-C208-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch208-i-had-to-go.tex"
+}

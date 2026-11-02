@@ -72,6 +72,35 @@
 //! certain trap ever runs, so nothing after it needs a range check — but the
 //! statements are still lowered and range-checked when their values are
 //! known, which can only refuse more, never accept a wrong answer.
+//!
+//! ## Registers: `main` must fit one vm-core frame (#18419)
+//!
+//! vm-core refuses, before it runs anything, a function whose frame needs
+//! more than `VMFrame::MAX_FRAME_REGISTERS` (2¹⁶ = 65,536) registers,
+//! counted as `params + distinct instruction dests that are not params`.
+//! `main` has no parameters, so its registers are its distinct dests: one
+//! fresh `rbN` per literal, operator result and newline byte, plus the
+//! `rbN` of the `ret 0` that ends the program. The default budgets cannot
+//! reach 65,536, but the trusted ones (1 MiB, 256 Ki tokens) can, and such
+//! a program used to compile and then fail at VM load.
+//!
+//! So the walker counts distinct dests as it emits them, against
+//! [`MAX_REGISTERS_PER_FUNCTION`] (vm-core's constant itself), with the
+//! epilogue's one register reserved up front so the refusal names the
+//! statement that left no room:
+//!
+//! ```text
+//!   while lowering statements:   dests + 1 (exit)  ≤ 65,536
+//!   the epilogue:                dests             ≤ 65,536   (always holds)
+//! ```
+//!
+//! A program is refused if and only if its `main` would need more than
+//! 65,536 registers, as a `Budget` naming `main` and the statement's start.
+//! `lib.rs` then puts the finished module through vm-core's own
+//! `VMFrame::check_register_limit` as a backstop. This mirrors
+//! `python-iir-compiler`, which has the same shape.
+
+use std::collections::HashSet;
 
 use interpreter_ir::{IIRInstr, Operand};
 use lexer::token::Token;
@@ -82,6 +111,19 @@ use crate::profiles::{IntDiv, ReleaseProfile};
 
 /// LANG84 C5: most IIR instructions one module may hold.
 pub const MAX_IIR_INSTRUCTIONS: usize = 1_000_000;
+
+/// Most registers one lowered function may need: vm-core's per-frame limit,
+/// `VMFrame::MAX_FRAME_REGISTERS` (2¹⁶ = 65,536), re-exported rather than
+/// restated, so the compiler and the VM cannot disagree about it (#18419).
+pub const MAX_REGISTERS_PER_FUNCTION: usize = vm_core::frame::VMFrame::MAX_FRAME_REGISTERS;
+
+/// The one function the walker lowers into; `lib.rs` adds it to the module
+/// under this name.
+const LOWERED_FUNCTION: &str = "main";
+
+/// Registers the epilogue (`const rbN <- 0; ret rbN`) needs after the last
+/// statement, reserved while statements are lowered.
+const EPILOGUE_REGISTERS: usize = 1;
 
 /// Every CST rule name the compiler dispatches on. The `cst_contract` test
 /// (LANG84 C8) checks each one exists in every release that claims an IIR
@@ -176,6 +218,15 @@ pub(crate) struct Lowering<'a> {
     profile: &'a ReleaseProfile,
     instructions: Vec<IIRInstr>,
     next_register: usize,
+    /// Every distinct dest emitted so far: `main`'s registers, counted as
+    /// vm-core counts them (it has no parameters).
+    registers: HashSet<String>,
+    /// Registers held back for code still to come ([`EPILOGUE_REGISTERS`]
+    /// while statements are lowered, 0 for the epilogue itself).
+    reserved_registers: usize,
+    /// The 1-based start of the statement being lowered, for a `Budget`
+    /// error that refuses it.
+    statement_start: Option<(usize, usize)>,
 }
 
 impl<'a> Lowering<'a> {
@@ -185,6 +236,9 @@ impl<'a> Lowering<'a> {
             profile,
             instructions: Vec::new(),
             next_register: 0,
+            registers: HashSet::new(),
+            reserved_registers: EPILOGUE_REGISTERS,
+            statement_start: None,
         }
     }
 
@@ -220,7 +274,10 @@ impl<'a> Lowering<'a> {
         // A script that falls off its end exits 0. Returning a real `i64`
         // (rather than `ret_void`) is what every AOT entry point expects:
         // native and LLVM turn it into the exit status, the CLR launcher and
-        // BEAM read an integer back.
+        // BEAM read an integer back. Its register was reserved while the
+        // statements were lowered, so it always fits.
+        self.reserved_registers = 0;
+        self.statement_start = None;
         let exit = self.register();
         self.emit("const", Some(exit.clone()), vec![Operand::Int(0)], "i64")?;
         self.emit("ret", None, vec![Operand::Var(exit)], "i64")?;
@@ -229,6 +286,9 @@ impl<'a> Lowering<'a> {
 
     /// `statement = method_call | method_call_no_paren`.
     fn lower_statement(&mut self, statement: &GrammarASTNode) -> Result<(), FrontendError> {
+        // `puts 1; puts 2` is two statements on one line: a register refusal
+        // names the one that went over.
+        self.statement_start = statement.start_line.zip(statement.start_column);
         let [ASTNodeOrToken::Node(call)] = statement.children.as_slice() else {
             return Err(self.unsupported(statement, "a statement is exactly one call"));
         };
@@ -596,9 +656,41 @@ impl<'a> Lowering<'a> {
                 release: self.release.to_string(),
                 which: "IIR instructions",
                 limit: MAX_IIR_INSTRUCTIONS,
+                function: None,
+                start: None,
             });
         }
+        if let Some(name) = &dest {
+            self.claim_register(name)?;
+        }
         self.instructions.push(IIRInstr::new(op, dest, srcs, type_hint));
+        Ok(())
+    }
+
+    /// Count `name` as one of `main`'s registers, refusing the statement
+    /// being lowered if that leaves no room in a vm-core frame:
+    ///
+    /// ```text
+    ///   name is already a register             → Ok, nothing new to count
+    ///   new, and count + 1 + reserved ≤ limit  → Ok, counted
+    ///   new, and over                          → Budget naming main and
+    ///                                            the statement's start
+    /// ```
+    fn claim_register(&mut self, name: &str) -> Result<(), FrontendError> {
+        if self.registers.contains(name) {
+            return Ok(());
+        }
+        let needed = self.registers.len() + 1 + self.reserved_registers;
+        if needed > MAX_REGISTERS_PER_FUNCTION {
+            return Err(FrontendError::Budget {
+                release: self.release.to_string(),
+                which: "registers per function",
+                limit: MAX_REGISTERS_PER_FUNCTION,
+                function: Some(LOWERED_FUNCTION.to_string()),
+                start: self.statement_start,
+            });
+        }
+        self.registers.insert(name.to_string());
         Ok(())
     }
 

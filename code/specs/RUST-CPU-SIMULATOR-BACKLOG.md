@@ -4,7 +4,7 @@
 
 **Scope:** functional and gate-level Rust simulators for every CPU target in the
 07-series, followed by a complete cross-language port wave
-**Last reprioritized:** 2026-10-26
+**Last reprioritized:** 2026-10-28
 
 ## Definition of the matrix
 
@@ -123,6 +123,7 @@ particular die. A functional cell must merge before its paired gate cell.
 | RCPU-077 / RCPU-078 | 2019 | Microwatt / PowerISA | Functional in PR #18371 | Gate work waits for the functional cell to merge |
 | RCPU-079 / RCPU-080 | 2020 | LoongArch base integer ISA | Research | Confirm stable public specification and bounded initial profile |
 | RCPU-081 / RCPU-082 | 1976 | RCA CDP1802 | Complete locally: `cdp1802-simulator`, `cdp1802-gatelevel` | Gate Spec 07bc2 independently reviewed; gate-authoritative decode/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused bus/lifecycle/fault/allocation differentials, 40 release tests plus one doctest, eleven compiler-valid hostile fixtures, strict checks, and 95.62% line coverage (1,442/1,508); exact-head review remains before publication |
+| RCPU-091 / RCPU-092 | 1988 | Intel 80960KA scalar integer | Spec-only: `RCPU-091` ready for independent review | Spec 07bh pins the source-backed scalar functional boundary. `RCPU-089` / `RCPU-090` remain reserved for MIPS R4000. `RCPU-092` is merge-dependent and may claim only an educational repository-synthesized gate topology because no public KA RTL/netlist was found. |
 
 Apple M5/M6 are intentionally not queued as distinct microarchitectures: the
 public AArch64 ISA can be simulated by the existing AArch64 family, but there

@@ -249,7 +249,7 @@ fn verify_decode_authority(networks: &str, executor: &str, validator: &str) -> R
         ("transport_width", 0x2040_ffc0_ac40_1d6b),
         ("operation", 0x9ac2_8adf_5c72_d0b1),
         ("format_matches_operation", 0x4ad6_bb6c_d234_da31),
-        ("execute", 0xd23f_a2ec_eb10_29a9),
+        ("execute", 0x7763_02db_51fa_bdb2),
         ("execute_rr", 0x0eff_489c_cc30_d39b),
         ("execute_rx", 0x0aca_3dbb_e40d_8499),
         ("execute_rs", 0x5604_80ab_c44a_4da4),
@@ -259,11 +259,16 @@ fn verify_decode_authority(networks: &str, executor: &str, validator: &str) -> R
         require_body_digest(executor, function, digest)?;
     }
     for (function, digest) in [
-        ("decode_transition", 0x7de3_9596_a584_63e1),
+        ("decode_transition", 0x2001_30f0_f9c8_edbd),
         ("validate_gate_transition", 0xe541_8847_1eff_e819),
+        ("validate_rx_transition", 0x240f_422e_cdbc_aa83),
+        ("validate_ss_transition", 0x3251_7f7b_98c1_3112),
         ("validate_control_transition", 0x63cb_8bbd_bdfe_0fda),
         ("commit_transition", 0x5fb6_3d73_0d97_42f6),
-        ("step", 0x49e8_10bf_f82d_108f),
+        ("step", 0x73ab_6efd_2577_13cb),
+        ("try_step_embedded", 0xbf09_162c_4572_a874),
+        ("try_state_embedded", 0xa219_5e27_93c8_8c4e),
+        ("clone_state_embedded", 0x971e_8e09_259a_676c),
         ("run", 0xf70a_d777_3fa6_49be),
         ("execute", 0x5050_4f02_0534_5e98),
     ] {
@@ -288,24 +293,7 @@ fn verify_decode_authority(networks: &str, executor: &str, validator: &str) -> R
          let high=and_gate(high_bit,not_gate(low));
          or_gate(and_gate(bxh_select,high),and_gate(bxle_select,not_gate(high)),)",
     )?;
-    require_exact_body(
-        validator,
-        "step",
-        r#"let before=self.get_state();
-        let(authority,fetched)=decode_transition(&before)?;
-        let mut transition=System360Simulator::new();
-        transition.restore(before.clone())?;
-        let trace=transition.step()?;
-        let oracle_next=transition.get_state();
-        if trace.raw!=fetched||usize::from(trace.width)!=fetched.len(){
-            return Err(System360Error::Specification{reason:"reason",});
-        }
-        let gate_next=executor::execute(&before,&trace,&authority)?;
-        validate_gate_transition(&before,&gate_next,&trace,&authority)?;
-        if gate_next!=oracle_next{return Err(System360Error::Specification{reason:"reason",});}
-        self.commit_transition(&gate_next);
-        Ok(trace)"#,
-    )?;
+    require_exact_body(validator, "step", "self.try_step_embedded(&mut |_|Ok(()))")?;
 
     let executor_tokens = rust_tokens(executor);
     let validator_tokens = rust_tokens(validator);
@@ -594,7 +582,7 @@ fn compile_checked_hostile_dispatch_shapes_are_rejected() {
 
     let oracle_dispatch = replace_once(
         validator,
-        "let gate_next = executor::execute(&before, &trace, &authority)?;",
+        "let gate_next = executor::execute(&before, candidate, &trace, &authority)?;",
         "let gate_next = oracle_next.clone();",
     );
     assert_validator_mutant_rejected(networks, executor, &oracle_dispatch);

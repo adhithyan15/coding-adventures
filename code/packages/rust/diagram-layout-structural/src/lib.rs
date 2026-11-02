@@ -11,11 +11,12 @@ use diagram_ir::{
     LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
-    StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRouting,
+    StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRelationship,
+    StructuralRelationshipMetadata, StructuralRouting,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.30.0";
+pub const VERSION: &str = "0.39.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -151,6 +152,54 @@ fn structural_style(
     )
 }
 
+fn structural_relationship_style(
+    relationship: &StructuralRelationship,
+) -> diagram_ir::ResolvedDiagramStyle {
+    resolve_style_with_base(
+        relationship.style.as_ref(),
+        diagram_ir::ResolvedDiagramStyle {
+            fill: if matches!(relationship.kind, diagram_ir::RelKind::Composition) {
+                "#374151".into()
+            } else {
+                "#6b7280".into()
+            },
+            stroke: "#6b7280".into(),
+            stroke_width: 1.5,
+            stroke_dash: None,
+            text_color: "#374151".into(),
+            font_size: 14.0,
+            font_weight: 400,
+            font_italic: false,
+            font_family: "Helvetica".into(),
+            corner_radius: 0.0,
+        },
+    )
+}
+
+fn structural_group_style(
+    group: &diagram_ir::StructuralGroup,
+) -> diagram_ir::ResolvedDiagramStyle {
+    let deployment_node = matches!(
+        group.metadata,
+        Some(StructuralGroupMetadata::C4DeploymentNode { .. })
+    );
+    resolve_style_with_base(
+        group.style.as_ref(),
+        diagram_ir::ResolvedDiagramStyle {
+            fill: "#f8fafc".into(),
+            stroke: "#94a3b8".into(),
+            stroke_width: 1.5,
+            stroke_dash: (!deployment_node).then(|| vec![6.0, 4.0]),
+            text_color: "#475569".into(),
+            font_size: 14.0,
+            font_weight: 400,
+            font_italic: false,
+            font_family: "Helvetica".into(),
+            corner_radius: 8.0,
+        },
+    )
+}
+
 /// Lay out a `StructuralDiagram` using an explicit axis or the legacy grid.
 pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructuralDiagram {
     let mut nodes = match diagram.direction.as_ref() {
@@ -276,7 +325,11 @@ fn node_width(node: &StructuralNode, architecture_config: Option<&ArchitectureCo
         .map(str::len)
         .max()
         .unwrap_or(0);
-    let text_w = (label_width.max(max_entry) as f64 * char_width + 24.0).ceil();
+    let stereotype_width = structural_stereotype(node).map_or(0, |value| value.len());
+    let horizontal_padding = if c4_person_type(node).is_some() { 80.0 } else { 24.0 };
+    let text_w = (label_width.max(max_entry).max(stereotype_width) as f64 * char_width
+        + horizontal_padding)
+        .ceil();
     let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
         MIN_NODE_W * config.icon_size / 80.0
     });
@@ -307,7 +360,9 @@ fn node_header_height(
     architecture_config: Option<&ArchitectureConfig>,
     font_size: f64,
 ) -> f64 {
-    let base_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
+    let base_height = if c4_person_type(node).is_some() {
+        64.0_f64.max(font_size * 3.2)
+    } else if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
         architecture_config.map_or(72.0, |config| config.icon_size * 0.9).max(font_size * 2.4)
     } else {
         HEADER_H.max(font_size * 2.4)
@@ -318,6 +373,17 @@ fn node_header_height(
         base_height.max((label_lines + stereotype_lines) as f64 * font_size * 1.4 + 16.0)
     } else {
         base_height
+    }
+}
+
+fn c4_person_type(node: &StructuralNode) -> Option<&str> {
+    match node.metadata.as_ref() {
+        Some(StructuralNodeMetadata::C4(metadata))
+            if matches!(metadata.element_type.as_str(), "person" | "external_person") =>
+        {
+            Some(metadata.element_type.as_str())
+        }
+        _ => None,
     }
 }
 
@@ -339,12 +405,20 @@ fn architecture_icon_text(node: &StructuralNode) -> Option<&str> {
     }
 }
 
+fn structural_stereotype(node: &StructuralNode) -> Option<String> {
+    match node.metadata.as_ref() {
+        Some(StructuralNodeMetadata::C4(metadata)) => Some(metadata.element_type.clone()),
+        _ => node.stereotype.clone(),
+    }
+}
+
 fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
     let nodes = &diagram.nodes;
     let groups = &diagram.groups;
     let architecture_config = diagram.architecture_config.as_ref();
     let mut positioned: Vec<(usize, LayoutedStructuralNode)> = Vec::with_capacity(nodes.len());
     let placement_order = seeded_placement_order(nodes, architecture_config);
+    let columns = diagram.render_config.c4_shape_in_row.unwrap_or(COLS);
     // Track max height per row so rows don't overlap.
     let padding = outer_padding(architecture_config);
     let mut row_y: Vec<f64> = vec![padding];
@@ -353,8 +427,8 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
     let mut previous_index = None;
     for (slot, node_index) in placement_order.into_iter().enumerate() {
         let node = &nodes[node_index];
-        let col = slot % COLS;
-        let row = slot / COLS;
+        let col = slot % columns;
+        let row = slot / columns;
         let nw = node_width(node, architecture_config);
         let nh = node_height(node, architecture_config);
 
@@ -417,9 +491,10 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
                 width: nw,
                 height: nh,
                 header: node.label.clone(),
-                stereotype: node.stereotype.clone(),
+                stereotype: structural_stereotype(node),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
+                metadata: node.metadata.clone(),
                 style: structural_style(node, architecture_config),
                 compartments: comps,
             },
@@ -506,9 +581,10 @@ fn layout_directional_nodes(
                 width,
                 height,
                 header: node.label.clone(),
-                stereotype: node.stereotype.clone(),
+                stereotype: structural_stereotype(node),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
+                metadata: node.metadata.clone(),
                 style: structural_style(node, architecture_config),
                 compartments,
             },
@@ -585,9 +661,13 @@ fn layout_groups(
                 height: max_y - y,
                 label: group.label.clone(),
                 stereotype: group.stereotype.clone(),
-                icon_name: group.metadata.as_ref().map(
-                    |StructuralGroupMetadata::Architecture { icon_name }| icon_name.clone(),
-                ),
+                icon_name: group.metadata.as_ref().and_then(|metadata| match metadata {
+                    StructuralGroupMetadata::Architecture { icon_name } => Some(icon_name.clone()),
+                    StructuralGroupMetadata::C4Boundary { .. } => None,
+                    StructuralGroupMetadata::C4DeploymentNode { .. } => None,
+                }),
+                metadata: group.metadata.clone(),
+                style: structural_group_style(group),
                 parent_group: group.parent_group.clone(),
             })
         })
@@ -1391,9 +1471,14 @@ fn layout_relationships(
                     parallel_relationship_lane(diagram, relationship_index),
                 )
             };
-            let label = rel.label.as_ref().map(|label| {
-                (path_midpoint(&points), label.clone())
-            });
+            let label = structural_relationship_label(diagram, rel, relationship_index).map(
+                |label| {
+                    let mut position = path_midpoint(&points);
+                    position.x += rel.label_offset_x;
+                    position.y += rel.label_offset_y;
+                    (position, label)
+                },
+            );
             Some(LayoutedStructuralRelationship {
                 from_id: rel.from.clone(),
                 to_id: rel.to.clone(),
@@ -1409,9 +1494,32 @@ fn layout_relationships(
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
                 label,
+                metadata: rel.metadata.clone(),
+                style: structural_relationship_style(rel),
             })
         })
         .collect()
+}
+
+fn structural_relationship_label(
+    diagram: &StructuralDiagram,
+    relationship: &StructuralRelationship,
+    relationship_index: usize,
+) -> Option<String> {
+    let label = relationship.label.as_ref()?;
+    let label =
+        if diagram.render_config.c4_diagram_type == Some(diagram_ir::C4DiagramType::Dynamic) {
+            format!("{}: {label}", relationship_index + 1)
+        } else {
+            label.clone()
+        };
+    let mut lines = vec![label];
+    if let Some(StructuralRelationshipMetadata::C4(metadata)) = relationship.metadata.as_ref() {
+        if let Some(technology) = metadata.technology.as_ref().filter(|value| !value.is_empty()) {
+            lines.push(format!("[{technology}]"));
+        }
+    }
+    Some(lines.join("\n"))
 }
 
 fn relationship_endpoint_bounds(
@@ -1498,13 +1606,17 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: None,
+                label_offset_x: 0.0,
+                label_offset_y: 0.0,
+                metadata: None,
+                style: None,
             }],
         }
     }
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.30.0");
+        assert_eq!(crate::VERSION, "0.39.0");
     }
 
     #[test]
@@ -2012,6 +2124,7 @@ mod tests {
             label: "Domain".into(),
             stereotype: Some("System_Boundary".into()),
             metadata: None,
+            style: None,
             parent_group: None,
         });
 
@@ -2041,6 +2154,7 @@ mod tests {
             label: "Domain".into(),
             stereotype: None,
             metadata: None,
+            style: None,
             parent_group: None,
         });
         diagram.relationships[0].to_group = true;
@@ -2132,6 +2246,7 @@ mod tests {
             label: "Cache".into(),
             stereotype: None,
             metadata: None,
+            style: None,
             parent_group: None,
         });
         diagram.nodes.push(StructuralNode {
@@ -2253,6 +2368,7 @@ mod tests {
             label: "Platform".into(),
             stereotype: None,
             metadata: None,
+            style: None,
             parent_group: None,
         });
         diagram.alignments.push(StructuralAlignment {

@@ -951,6 +951,89 @@ fn executes_pair_aware_signed_64_bit_division_and_modulo() {
 }
 
 #[test]
+fn bool_typed_compare_is_signed() {
+    // #18453: a comparison's suffix is its RESULT type when the frontend gave
+    // one, and Twig types every `(< a b)` / `string<?` result `bool` over
+    // signed operands (`string<?` compares `str_cmp`'s -1/0/1 against 0).
+    // `bool` used to select the unsigned `sltu`, so -1 < 0 was 0.
+    let evaluate = |relation: &str, const_op: &str, ty: &str, a: i64, b: i64| {
+        let cir = vec![
+            ci(const_op, Some("a"), vec![CIROperand::Int(a)], ty),
+            ci(const_op, Some("b"), vec![CIROperand::Int(b)], ty),
+            ci(
+                &format!("cmp_{relation}_bool"),
+                Some("result"),
+                vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+                "bool",
+            ),
+            ci("ret_bool", None, vec![CIROperand::Var("result".into())], "bool"),
+        ];
+        compile_and_run(&cir)
+    };
+    for (const_op, ty) in [("const_i32", "i32"), ("const_i64", "i64")] {
+        assert_eq!(evaluate("lt", const_op, ty, -1, 0), 1, "{ty} -1 < 0");
+        assert_eq!(evaluate("le", const_op, ty, -5, 0), 1, "{ty} -5 <= 0");
+        assert_eq!(evaluate("gt", const_op, ty, -1, 0), 0, "{ty} -1 > 0");
+        assert_eq!(evaluate("ge", const_op, ty, -5, 0), 0, "{ty} -5 >= 0");
+        assert_eq!(evaluate("lt", const_op, ty, 1, 0), 0, "{ty} 1 < 0");
+        assert_eq!(evaluate("gt", const_op, ty, 1, -1), 1, "{ty} 1 > -1");
+    }
+    // Genuine 0 / 1 booleans compare the same either way.
+    assert_eq!(evaluate("lt", "const_i32", "i32", 0, 1), 1);
+    assert_eq!(evaluate("gt", "const_i32", "i32", 1, 0), 1);
+}
+
+#[test]
+fn bool_typed_compare_on_64_bit_pairs_compares_both_words() {
+    // #18453 review / #18463 item 2: a `cmp_*_bool` over `i64` operands —
+    // Twig's `(< a b)` shape — must compare the whole pair, not the low word.
+    // Low-word-only, `3e9 < 1` read 3e9's low word 0xB2D0_5E00 as negative
+    // (signed) and `2^32 == 0` saw two zero low words.
+    let evaluate = |relation: &str, a: i64, b: i64| {
+        let cir = vec![
+            ci("const_i64", Some("a"), vec![CIROperand::Int(a)], "i64"),
+            ci("const_i64", Some("b"), vec![CIROperand::Int(b)], "i64"),
+            ci(
+                &format!("cmp_{relation}_bool"),
+                Some("result"),
+                vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+                "bool",
+            ),
+            ci("ret_bool", None, vec![CIROperand::Var("result".into())], "bool"),
+        ];
+        compile_and_run(&cir)
+    };
+    const TWO_32: i64 = 1 << 32;
+    let wrong = [
+        ("lt", 3_000_000_000, 1, 0),
+        ("lt", 1, 3_000_000_000, 1),
+        ("lt", TWO_32, 1, 0),
+        // -5e9 and -1 have low words that are negative as i32, so the
+        // low-word compare got them right by accident; -2^32 and -(2^32 - 1)
+        // (low words 0 and 1) it did not.
+        ("lt", -5_000_000_000, 0, 1),
+        ("lt", -1, 0, 1),
+        ("lt", -TWO_32, 0, 1),
+        ("lt", -(TWO_32 - 1), 0, 1),
+        ("gt", 3_000_000_000, 1, 1),
+        ("le", TWO_32, 0, 0),
+        ("ge", -5_000_000_000, 0, 0),
+        ("eq", TWO_32, 0, 0),
+        ("ne", TWO_32, 0, 1),
+        ("eq", TWO_32 + 1, 1, 0),
+        ("ne", TWO_32 + 1, 1, 1),
+        ("eq", TWO_32 + 1, TWO_32 + 1, 1),
+    ]
+    .into_iter()
+    .filter_map(|(relation, a, b, want)| {
+        let got = evaluate(relation, a, b);
+        (got != want).then(|| format!("{a} {relation} {b}: got {got}, want {want}"))
+    })
+    .collect::<Vec<_>>();
+    assert!(wrong.is_empty(), "{wrong:#?}");
+}
+
+#[test]
 fn executes_pair_aware_signed_and_unsigned_64_bit_comparisons() {
     let signed = vec![
         ci(

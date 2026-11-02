@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.147.0";
+pub const VERSION: &str = "0.164.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -19,6 +19,7 @@ use diagram_ir::{
     PacketTheme, RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneIconForm,
     SwimlaneIconNode, SwimlaneImageNode, SwimlaneLabelPosition, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
+    C4DiagramType, StructuralRenderConfig,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -586,7 +587,8 @@ fn token_name(token: &Token) -> &str {
 // ============================================================================
 
 use diagram_ir::{
-    ArchitectureConfig, ArchitectureServiceMetadata, Axis, AxisKind, ChartDataPoint, ChartDiagram,
+    ArchitectureConfig, ArchitectureServiceMetadata, Axis, AxisKind, C4NodeMetadata,
+    C4RelationshipMetadata, ChartDataPoint, ChartDiagram,
     ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
@@ -601,7 +603,8 @@ use diagram_ir::{
     SeriesKind, StructuralAlignment, StructuralAlignmentAxis, StructuralDiagram, StructuralGroup,
     StructuralGroupMetadata, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralPort,
-    StructuralRelationship, StructuralRouting, TaskEnd, TaskStart, TemporalBody, TemporalDiagram,
+    StructuralRelationship, StructuralRelationshipMetadata, StructuralRouting, TaskEnd, TaskStart,
+    TemporalBody, TemporalDiagram,
     TemporalKind, TimelineConfig, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
@@ -1288,6 +1291,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
                 metadata: declaration.icon.map(|icon_name| {
                     StructuralGroupMetadata::Architecture { icon_name }
                 }),
+                style: None,
                 parent_group: declaration.parent,
             });
         } else if let Some(value) = statement.strip_prefix("service ") {
@@ -1624,6 +1628,9 @@ fn parse_architecture_edge(
         to_port: Some(parse_architecture_port(to_direction)),
         routing: StructuralRouting::Orthogonal,
         from_mult: None, to_mult: None, label,
+        label_offset_x: 0.0, label_offset_y: 0.0,
+        metadata: None,
+        style: None,
     })
 }
 
@@ -3962,6 +3969,10 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         from_mult: None,
         to_mult: None,
         label: Some(label),
+        label_offset_x: 0.0,
+        label_offset_y: 0.0,
+        metadata: None,
+        style: None,
     })
 }
 
@@ -4585,6 +4596,10 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     from_mult: None,
                     to_mult: None,
                     label,
+                    label_offset_x: 0.0,
+                    label_offset_y: 0.0,
+                    metadata: None,
+                    style: None,
                 });
             }
         }
@@ -13680,6 +13695,10 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
                 label: Some(label),
+                label_offset_x: 0.0,
+                label_offset_y: 0.0,
+                metadata: None,
+                style: None,
             });
         } else {
             let mut fields = Vec::new();
@@ -13781,6 +13800,9 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 fn parse_er_render_config(source: &str) -> diagram_ir::StructuralRenderConfig {
     let defaults = diagram_ir::StructuralRenderConfig::default();
     diagram_ir::StructuralRenderConfig {
+        c4_shape_in_row: None,
+        c4_boundary_in_row: None,
+        c4_diagram_type: None,
         use_max_width: parse_mermaid_boolean_config(
             source,
             "er",
@@ -14023,18 +14045,32 @@ fn upsert_er_node(
 
 /// Parse Mermaid C4 macros into the shared structural IR.
 pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
-    parse_mermaid_c4_ast(source)?;
+    let front_matter_title = mermaid_front_matter_value(source, "title");
+    let preprocessed = preprocess_mermaid_source(source)?;
+    parse_mermaid_c4_ast(&preprocessed.source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_c4(source));
+    let mut cursor = TokenCursor::new(tokenize_mermaid_c4(&preprocessed.source));
     cursor.skip_terminators();
-    cursor
+    let header = cursor
         .consume_if("HEADER")
         .ok_or_else(|| token_error(cursor.current(), "expected C4 diagram header"))?;
+    let c4_diagram_type = match header.value.as_str() {
+        "C4Context" => C4DiagramType::Context,
+        "C4Container" => C4DiagramType::Container,
+        "C4Component" => C4DiagramType::Component,
+        "C4Dynamic" => C4DiagramType::Dynamic,
+        "C4Deployment" => C4DiagramType::Deployment,
+        _ => return Err(token_error(&header, "unsupported C4 diagram header")),
+    };
     cursor.skip_terminators();
 
-    let mut title = None;
+    let mut title = front_matter_title;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
+    let mut render_config = StructuralRenderConfig {
+        c4_diagram_type: Some(c4_diagram_type),
+        ..StructuralRenderConfig::default()
+    };
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
     let mut groups = Vec::new();
@@ -14061,6 +14097,16 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     .split_once(':')
                     .map(|(_, value)| value.trim().to_string());
             }
+            "ACC_DESCRIPTION" => {
+                accessibility_description = Some(
+                    cursor
+                        .advance()
+                        .value
+                        .trim_start_matches("accDescription")
+                        .trim()
+                        .to_string(),
+                );
+            }
             "ACC_DESCR_BLOCK" => {
                 let value = cursor.advance().value.clone();
                 let open = value.find('{').expect("C4 accessibility block requires '{'");
@@ -14074,10 +14120,22 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         .join("\n"),
                 );
             }
-            "DIRECTION" | "CONFIG_MACRO" => {
+            "DIRECTION" => {
                 cursor.advance();
                 if token_name(cursor.current()) == "LPAREN" {
                     parse_c4_arguments(&mut cursor)?;
+                }
+            }
+            "CONFIG_MACRO" => {
+                let macro_token = cursor.advance().clone();
+                let args = parse_c4_arguments(&mut cursor)?;
+                match macro_token.value.as_str() {
+                    "UpdateElementStyle" => {
+                        apply_c4_element_style(&args, &mut nodes, &node_indices, &mut groups);
+                    }
+                    "UpdateRelStyle" => apply_c4_relationship_style(&args, &mut relationships),
+                    "UpdateLayoutConfig" => apply_c4_layout_config(&args, &mut render_config),
+                    _ => {}
                 }
             }
             "RBRACE" => {
@@ -14099,8 +14157,9 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 groups.push(StructuralGroup {
                     id: id.clone(),
                     label,
-                    stereotype: Some(macro_token.value),
-                    metadata: None,
+                    stereotype: Some(macro_token.value.clone()),
+                    metadata: c4_group_metadata(&macro_token.value, &args),
+                    style: None,
                     parent_group: group_stack.last().cloned(),
                 });
                 cursor.skip_terminators();
@@ -14126,26 +14185,27 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     &mut node_indices,
                     id,
                     label,
-                    macro_token.value,
+                    macro_token.value.clone(),
+                    c4_node_metadata(&macro_token.value, &args),
                     group_stack.last().cloned(),
                 );
-                let details: Vec<String> = args
-                    .iter()
-                    .skip(2)
-                    .filter(|value| !value.is_empty() && !value.starts_with('$'))
-                    .cloned()
-                    .collect();
-                if !details.is_empty() {
-                    nodes[index].compartments.push(Compartment {
-                        kind: CompartmentKind::Fields,
-                        entries: details,
-                    });
-                }
+                rebuild_c4_compartments(&mut nodes[index]);
             }
             "RELATION_MACRO" => {
                 let macro_token = cursor.advance().clone();
                 let args = parse_c4_arguments(&mut cursor)?;
-                if args.len() < 3 {
+                let relationship_args = if macro_token.value == "RelIndex" {
+                    if args.len() < 4 {
+                        return Err(token_error(
+                            &macro_token,
+                            "C4 RelIndex requires an index, source, target, and label",
+                        ));
+                    }
+                    &args[1..]
+                } else {
+                    &args[..]
+                };
+                if relationship_args.len() < 3 {
                     return Err(token_error(
                         &macro_token,
                         "C4 relationship requires source, target, and label",
@@ -14156,9 +14216,9 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     "Rel_Back" => (true, false),
                     _ => (false, true),
                 };
-                relationships.push(StructuralRelationship {
-                    from: args[0].clone(),
-                    to: args[1].clone(),
+                upsert_c4_relationship(&mut relationships, StructuralRelationship {
+                    from: relationship_args[0].clone(),
+                    to: relationship_args[1].clone(),
                     kind: RelKind::Association,
                     start_arrow,
                     end_arrow,
@@ -14169,7 +14229,14 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     routing: StructuralRouting::Direct,
                     from_mult: None,
                     to_mult: None,
-                    label: Some(args[2].clone()),
+                    label: Some(relationship_args[2].clone()),
+                    label_offset_x: 0.0,
+                    label_offset_y: 0.0,
+                    metadata: Some(c4_relationship_metadata(
+                        &macro_token.value,
+                        relationship_args,
+                    )),
+                    style: None,
                 });
             }
             _ => return Err(token_error(cursor.current(), "unsupported C4 statement")),
@@ -14180,7 +14247,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
         architecture_config: None,
-        render_config: Default::default(),
+        render_config,
         title,
         accessibility_title,
         accessibility_description,
@@ -14221,7 +14288,9 @@ fn parse_c4_arguments(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseErro
                 let value = parse_c4_argument_value(cursor)?;
                 format!("{}={value}", token.value)
             }
-            "STRING" | "IDENTIFIER" | "NUMBER" => parse_c4_argument_value(cursor)?,
+            "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION" => {
+                parse_c4_argument_value(cursor)?
+            }
             _ => return Err(token_error(&token, "expected C4 argument")),
         };
         args.push(value);
@@ -14233,10 +14302,383 @@ fn parse_c4_arguments(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseErro
 
 fn parse_c4_argument_value(cursor: &mut TokenCursor) -> Result<String, ParseError> {
     let token = cursor.current().clone();
-    if !matches!(token_name(&token), "STRING" | "IDENTIFIER" | "NUMBER") {
+    if !matches!(
+        token_name(&token),
+        "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION"
+    ) {
         return Err(token_error(&token, "expected C4 argument value"));
     }
     Ok(cursor.advance().value.clone())
+}
+
+fn upsert_c4_relationship(
+    relationships: &mut Vec<StructuralRelationship>,
+    mut relationship: StructuralRelationship,
+) {
+    let Some(existing) = relationships.iter_mut().find(|existing| {
+        existing.from == relationship.from && existing.to == relationship.to
+    }) else {
+        relationships.push(relationship);
+        return;
+    };
+
+    // Mermaid mutates an existing endpoint pair, so authored style updates survive redeclaration.
+    relationship.label_offset_x = existing.label_offset_x;
+    relationship.label_offset_y = existing.label_offset_y;
+    relationship.style = existing.style.take();
+    *existing = relationship;
+}
+
+fn apply_c4_element_style(
+    args: &[String],
+    nodes: &mut [StructuralNode],
+    node_indices: &HashMap<String, usize>,
+    groups: &mut [StructuralGroup],
+) {
+    let Some(id) = args.first() else {
+        return;
+    };
+    if let Some(index) = node_indices.get(id).copied() {
+        let mut style = nodes[index].style.clone().unwrap_or_default();
+        apply_c4_element_color_arguments(args, &mut style);
+        nodes[index].style = Some(style);
+        apply_c4_element_metadata_arguments(args, &mut nodes[index]);
+        return;
+    }
+    let Some(group) = groups.iter_mut().find(|group| group.id == *id) else {
+        return;
+    };
+    let mut style = group.style.clone().unwrap_or_default();
+    apply_c4_element_color_arguments(args, &mut style);
+    group.style = Some(style);
+    apply_c4_group_element_metadata_arguments(args, group);
+}
+
+fn c4_element_style_argument(args: &[String], key: &str, position: usize) -> Option<String> {
+    args.iter()
+        .find_map(|argument| {
+            argument
+                .split_once('=')
+                .filter(|(argument_key, value)| *argument_key == key && !value.is_empty())
+                .map(|(_, value)| value.to_string())
+        })
+        .or_else(|| {
+            args.get(position)
+                .filter(|value| !value.is_empty() && !value.starts_with('$'))
+                .cloned()
+        })
+}
+
+fn apply_c4_style_override_arguments(
+    args: &[String],
+    overrides: &mut diagram_ir::C4ElementStyleOverrides,
+) {
+    if let Some(value) = c4_element_style_argument(args, "$shadowing", 4) {
+        overrides.shadowing = Some(value);
+    }
+    if let Some(value) = c4_element_style_argument(args, "$shape", 5) {
+        overrides.shape = Some(value);
+    }
+    if let Some(value) = c4_element_style_argument(args, "$legendText", 8) {
+        overrides.legend_text = Some(value);
+    }
+    if let Some(value) = c4_element_style_argument(args, "$legendSprite", 9) {
+        overrides.legend_sprite = Some(value);
+    }
+}
+
+fn apply_c4_element_metadata_arguments(args: &[String], node: &mut StructuralNode) {
+    let Some(StructuralNodeMetadata::C4(metadata)) = node.metadata.as_mut() else { return };
+    let technology = c4_element_style_argument(args, "$techn", 7);
+    if let Some(value) = c4_element_style_argument(args, "$sprite", 6) {
+        metadata.sprite = Some(value);
+    }
+    if let Some(value) = technology.as_ref() {
+        metadata.technology = Some(value.clone());
+    }
+    apply_c4_style_override_arguments(args, &mut metadata.style_overrides);
+    if technology.is_some() {
+        rebuild_c4_compartments(node);
+    }
+}
+
+fn apply_c4_group_element_metadata_arguments(args: &[String], group: &mut StructuralGroup) {
+    let Some(metadata) = group.metadata.as_mut() else { return };
+    let technology = c4_element_style_argument(args, "$techn", 7);
+    let sprite = c4_element_style_argument(args, "$sprite", 6);
+    match metadata {
+        StructuralGroupMetadata::C4Boundary {
+            technology: group_technology,
+            sprite: group_sprite,
+            style_overrides,
+            ..
+        }
+        | StructuralGroupMetadata::C4DeploymentNode {
+            technology: group_technology,
+            sprite: group_sprite,
+            style_overrides,
+            ..
+        } => {
+            if let Some(value) = technology {
+                *group_technology = Some(value);
+            }
+            if let Some(value) = sprite {
+                *group_sprite = Some(value);
+            }
+            apply_c4_style_override_arguments(args, style_overrides);
+        }
+        _ => {}
+    }
+}
+
+fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata {
+    let uses_technology = macro_name.starts_with("Container") || macro_name.starts_with("Component");
+    let positional = |position: usize| {
+        args.get(position)
+            .filter(|value| !value.is_empty() && !value.starts_with('$'))
+            .cloned()
+    };
+    let keyed = |key: &str| {
+        args.iter().find_map(|argument| {
+            argument
+                .split_once('=')
+                .filter(|(argument_key, value)| *argument_key == key && !value.is_empty())
+                .map(|(_, value)| value.to_string())
+        })
+    };
+    StructuralNodeMetadata::C4(C4NodeMetadata {
+        element_type: c4_element_type(macro_name).into(),
+        technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
+        description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
+        sprite: keyed("$sprite").or_else(|| positional(if uses_technology { 4 } else { 3 })),
+        tags: keyed("$tags").or_else(|| positional(if uses_technology { 5 } else { 4 })),
+        link: keyed("$link").or_else(|| positional(if uses_technology { 6 } else { 5 })),
+        style_overrides: Default::default(),
+    })
+}
+
+fn c4_element_type(macro_name: &str) -> &'static str {
+    match macro_name {
+        "Person" => "person",
+        "Person_Ext" => "external_person",
+        "System" => "system",
+        "SystemDb" => "system_db",
+        "SystemQueue" => "system_queue",
+        "System_Ext" => "external_system",
+        "SystemDb_Ext" => "external_system_db",
+        "SystemQueue_Ext" => "external_system_queue",
+        "Container" => "container",
+        "ContainerDb" => "container_db",
+        "ContainerQueue" => "container_queue",
+        "Container_Ext" => "external_container",
+        "ContainerDb_Ext" => "external_container_db",
+        "ContainerQueue_Ext" => "external_container_queue",
+        "Component" => "component",
+        "ComponentDb" => "component_db",
+        "ComponentQueue" => "component_queue",
+        "Component_Ext" => "external_component",
+        "ComponentDb_Ext" => "external_component_db",
+        "ComponentQueue_Ext" => "external_component_queue",
+        _ => "element",
+    }
+}
+
+fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGroupMetadata> {
+    let argument = |key: &str, position: usize| {
+        args.iter()
+            .find_map(|value| value.split_once('=').filter(|(name, value)| *name == key && !value.is_empty()).map(|(_, value)| value.to_string()))
+            .or_else(|| args.get(position).filter(|value| !value.is_empty() && !value.starts_with('$')).cloned())
+    };
+    match macro_name {
+        "Deployment_Node" | "Node" | "Node_L" | "Node_R" => {
+            Some(StructuralGroupMetadata::C4DeploymentNode {
+                node_type: match macro_name {
+                    "Node_L" => diagram_ir::C4DeploymentNodeType::Left,
+                    "Node_R" => diagram_ir::C4DeploymentNodeType::Right,
+                    _ => diagram_ir::C4DeploymentNodeType::Node,
+                },
+                technology: argument("$type", 2),
+                description: argument("$descr", 3),
+                sprite: argument("$sprite", 4),
+                tags: argument("$tags", 5),
+                link: argument("$link", 6),
+                style_overrides: Default::default(),
+            })
+        }
+        "Enterprise_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "ENTERPRISE".into(),
+            technology: None,
+            sprite: None,
+            tags: argument("$tags", 2),
+            link: argument("$link", 3),
+            style_overrides: Default::default(),
+        }),
+        "System_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "SYSTEM".into(),
+            technology: None,
+            sprite: None,
+            tags: argument("$tags", 2),
+            link: argument("$link", 3),
+            style_overrides: Default::default(),
+        }),
+        "Container_Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: "CONTAINER".into(),
+            technology: None,
+            sprite: None,
+            tags: argument("$tags", 2),
+            link: argument("$link", 3),
+            style_overrides: Default::default(),
+        }),
+        "Boundary" => Some(StructuralGroupMetadata::C4Boundary {
+            boundary_type: argument("$type", 2).unwrap_or_else(|| "system".into()),
+            technology: None,
+            sprite: None,
+            tags: argument("$tags", 3),
+            link: argument("$link", 4),
+            style_overrides: Default::default(),
+        }),
+        _ => None,
+    }
+}
+
+fn c4_node_kind(macro_name: &str) -> StructuralNodeKind {
+    if macro_name.contains("Db") {
+        StructuralNodeKind::Database
+    } else if macro_name.contains("Queue") {
+        StructuralNodeKind::Queue
+    } else {
+        StructuralNodeKind::Class
+    }
+}
+
+fn c4_relationship_metadata(
+    macro_name: &str,
+    args: &[String],
+) -> StructuralRelationshipMetadata {
+    let positional = |position: usize| {
+        args.get(position)
+            .filter(|value| !value.is_empty() && !value.starts_with('$'))
+            .cloned()
+    };
+    let keyed = |key: &str| {
+        args.iter().find_map(|argument| {
+            argument
+                .split_once('=')
+                .filter(|(argument_key, value)| *argument_key == key && !value.is_empty())
+                .map(|(_, value)| value.to_string())
+        })
+    };
+    StructuralRelationshipMetadata::C4(C4RelationshipMetadata {
+        direction: match macro_name {
+            "Rel_U" | "Rel_Up" => Some(diagram_ir::C4RelationshipDirection::Up),
+            "Rel_D" | "Rel_Down" => Some(diagram_ir::C4RelationshipDirection::Down),
+            "Rel_L" | "Rel_Left" => Some(diagram_ir::C4RelationshipDirection::Left),
+            "Rel_R" | "Rel_Right" => Some(diagram_ir::C4RelationshipDirection::Right),
+            _ => None,
+        },
+        technology: keyed("$techn").or_else(|| positional(3)),
+        description: keyed("$descr").or_else(|| positional(4)),
+        sprite: keyed("$sprite").or_else(|| positional(5)),
+        tags: keyed("$tags").or_else(|| positional(6)),
+        link: keyed("$link").or_else(|| positional(7)),
+    })
+}
+
+fn rebuild_c4_compartments(node: &mut StructuralNode) {
+    let Some(StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref() else { return };
+    let entries = metadata
+        .technology
+        .iter()
+        .map(|technology| format!("[{technology}]"))
+        .chain(metadata.description.iter().cloned())
+        .collect::<Vec<_>>();
+    node.compartments = if entries.is_empty() {
+        Vec::new()
+    } else {
+        vec![Compartment { kind: CompartmentKind::Fields, entries }]
+    };
+}
+
+fn apply_c4_layout_config(args: &[String], config: &mut StructuralRenderConfig) {
+    for (position, argument) in args.iter().enumerate() {
+        let (key, value) = argument
+            .split_once('=')
+            .map_or((None, argument.as_str()), |(key, value)| (Some(key), value));
+        let Ok(value) = value.parse::<usize>() else { continue };
+        if value == 0 { continue; }
+        match key {
+            Some("$c4ShapeInRow") => config.c4_shape_in_row = Some(value),
+            Some("$c4BoundaryInRow") => config.c4_boundary_in_row = Some(value),
+            None if position == 0 => config.c4_shape_in_row = Some(value),
+            None if position == 1 => config.c4_boundary_in_row = Some(value),
+            _ => {}
+        }
+    }
+}
+
+fn apply_c4_element_color_arguments(args: &[String], style: &mut DiagramStyle) {
+    for (position, argument) in args.iter().skip(1).enumerate() {
+        let (key, value) = argument
+            .split_once('=')
+            .map_or_else(|| (None, argument.as_str()), |(key, value)| (Some(key), value));
+        let color = sanitize_railroad_color(Some(value), "");
+        if color.is_empty() {
+            continue;
+        }
+        match key {
+            Some("$bgColor") => style.fill = Some(color),
+            Some("$fontColor") => style.text_color = Some(color),
+            Some("$borderColor") => style.stroke = Some(color),
+            None if position == 0 => style.fill = Some(color),
+            None if position == 1 => style.text_color = Some(color),
+            None if position == 2 => style.stroke = Some(color),
+            _ => {}
+        }
+    }
+}
+
+fn apply_c4_relationship_style(args: &[String], relationships: &mut [StructuralRelationship]) {
+    let Some(relationship) = relationships.iter_mut().find(|relationship| {
+        args.first() == Some(&relationship.from) && args.get(1) == Some(&relationship.to)
+    }) else {
+        return;
+    };
+    let mut style = relationship.style.clone().unwrap_or_default();
+    for (position, argument) in args.iter().skip(2).enumerate() {
+        let (key, value) = argument
+            .split_once('=')
+            .map_or_else(|| (None, argument.as_str()), |(key, value)| (Some(key), value));
+        if key == Some("$offsetX") || (key.is_none() && position == 2) {
+            if let Ok(offset) = value.parse::<i64>() {
+                relationship.label_offset_x = offset as f64;
+            }
+            continue;
+        }
+        if key == Some("$offsetY") || (key.is_none() && position == 3) {
+            if let Ok(offset) = value.parse::<i64>() {
+                relationship.label_offset_y = offset as f64;
+            }
+            continue;
+        }
+        let color = sanitize_railroad_color(Some(value), "");
+        if color.is_empty() {
+            continue;
+        }
+        match key {
+            Some("$textColor") => style.text_color = Some(color),
+            Some("$lineColor") => {
+                style.fill = Some(color.clone());
+                style.stroke = Some(color);
+            }
+            None if position == 0 => style.text_color = Some(color),
+            None if position == 1 => {
+                style.fill = Some(color.clone());
+                style.stroke = Some(color);
+            }
+            _ => {}
+        }
+    }
+    relationship.style = Some(style);
 }
 
 fn upsert_c4_node(
@@ -14245,6 +14687,7 @@ fn upsert_c4_node(
     id: String,
     label: String,
     stereotype: String,
+    metadata: StructuralNodeMetadata,
     parent_group: Option<String>,
 ) -> usize {
     if let Some(index) = indices.get(&id).copied() {
@@ -14252,12 +14695,13 @@ fn upsert_c4_node(
     }
     let index = nodes.len();
     indices.insert(id.clone(), index);
+    let node_kind = c4_node_kind(&stereotype);
     nodes.push(StructuralNode {
         id,
         label,
         stereotype: Some(stereotype),
-        node_kind: StructuralNodeKind::Class,
-        metadata: None,
+        node_kind,
+        metadata: Some(metadata),
         style: None,
         compartments: Vec::new(),
         parent_group,
@@ -17110,6 +17554,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn c4_preserves_database_and_queue_element_kinds() {
+        let diagram = parse_c4_diagram(
+            "C4Component\nSystemDb_Ext(catalog, \"Catalog\")\nContainerQueue(events, \"Events\", \"Kafka\")\nComponentDb(store, \"Store\", \"SQLite\")",
+        )
+        .unwrap();
+        assert_eq!(diagram.nodes[0].node_kind, StructuralNodeKind::Database);
+        assert_eq!(diagram.nodes[1].node_kind, StructuralNodeKind::Queue);
+        assert_eq!(diagram.nodes[2].node_kind, StructuralNodeKind::Database);
+    }
+
+    #[test]
     fn dispatch_flowchart() {
         let src = "flowchart LR\n  A --> B";
         match parse_any_mermaid(src).unwrap() {
@@ -19677,7 +20132,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.147.0");
+        assert_eq!(crate::VERSION, "0.164.0");
     }
 
     #[test]

@@ -2,6 +2,55 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## Unreleased — a `DirectCall` to a closure body is refused (issue #18466)
+
+**Validator: a `DirectCall` may not target a function with captures**
+("direct call to `f`, a closure body with N capture(s); call it through
+`MakeClosure` and `IndirectCall`").  The call-arity rule counted `params`
+only, so a hand-written `DirectCall` passing `params.len()` arguments to a
+closure body validated; C, Go and Rust then failed to compile it (their
+function takes `captures…, params…`) and JavaScript shifted every argument
+into a capture slot.  No in-tree frontend emits one (Twig's own path was
+closed in #18461; the Ruby, Python, JavaScript and Java frontend suites
+pass unchanged), so the call is refused outright rather than given a
+captures-inclusive arity that no frontend could use.
+
+SIR10 now also states that the strict-closure error is `ArgumentError` on
+every backend, and that each backend reserves the names it generates
+("Generated names").
+
+## Unreleased — `Function::exact_arity` for strict closures; capture-count check (issue #18461)
+
+**Validator: a `MakeClosure` must supply exactly as many capture values as
+its target function declares** (`make-closure of `f` supplies N capture
+value(s) but the function declares M`).  Backends unpack captures by
+position — the C backend's thunk reads `caps[i]` from a buffer sized by the
+closure node — so a short closure was an out-of-bounds or NULL read in the
+emitted program, and a long one misaligned every parameter.  The security
+review of the #18461 fix found `twig-to-semantic-ir` could build one (F1);
+the frontend is fixed, and this check refuses a hand-written module that
+does the same.  Every in-tree frontend that builds closures (Twig, Ruby,
+Python, JavaScript, Java, Q) already satisfies it.
+
+Additive.  `Function::exact_arity()` returns the one argument count a
+*strict* closure over the function accepts, or `None` when no single count
+describes it:
+
+```text
+(lambda (x y) …)          Some(2)    every param plain, no default
+def f(a, b = 1)           None       1 or 2 arguments both fine
+def f(*rest) / f(a, x:)   None       variadic / keyword
+def f(a, __sir_block__)   None       the block slot is not positional
+```
+
+SIR10 now documents the strict-closure marker the Ruby frontend already
+emitted for `lambda { … }` — `BuiltinCall("lambda", [MakeClosure …])` —
+and every backend checks a strict closure's call against this number when
+the call runs.  A bare `MakeClosure` keeps its proc-lenient behaviour.
+Before, each backend computed (or skipped) the count its own way, so one
+Twig program printed `4` on C, `NaN` on JavaScript and panicked with an
+index error on Go.
+
 ## 0.28.1 — Fix: re-export `SwitchCase` from the crate root (task #69)
 
 `0.28.0` added `pub struct SwitchCase` to `nodes.rs` but never added it to

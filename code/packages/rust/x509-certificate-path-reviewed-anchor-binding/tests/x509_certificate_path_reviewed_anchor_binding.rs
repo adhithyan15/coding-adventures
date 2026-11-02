@@ -5,12 +5,28 @@ use x509_certificate_path_construction::{
 };
 use x509_certificate_path_reviewed_anchor_binding::{
     bind_constructed_x509_certificate_path_to_reviewed_anchor,
+    bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy,
     X509CertificatePathReviewedAnchorBindingErrorKind,
 };
+use x509_certificate_policy::{validate_certificate_role_policy, X509CertificateRole};
 use x509_webpki_root_anchor_selection::select_reviewed_webpki_root_anchor;
 use x509_webpki_roots_snapshot::{reviewed_webpki_roots, TrustAnchor};
 
 const SIGNATURE_OID: &[u8] = &[0x2a, 0x03];
+const ISRG_ROOT_X1_HEX: &str =
+    include_str!("../../x509-rsa-sha256-reviewed-anchor-link/tests/fixtures/isrg_root_x1.hex");
+
+fn fixture(hexadecimal: &str) -> Vec<u8> {
+    let hexadecimal = hexadecimal.trim().replace('\n', "");
+    assert!(hexadecimal.len().is_multiple_of(2));
+    hexadecimal
+        .as_bytes()
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
+        .collect()
+}
 
 fn der(tag: u8, value: &[u8]) -> Vec<u8> {
     let mut encoded = Vec::with_capacity(value.len() + 4);
@@ -218,4 +234,133 @@ fn rejects_byte_equal_terminal_certificate_evidence_from_a_distinct_decode() {
         X509CertificatePathReviewedAnchorBindingErrorKind::EvidenceMismatch
     );
     assert!(!error.to_string().contains("target.example"));
+}
+
+#[test]
+fn binds_complete_issuing_ca_role_policy_to_the_exact_reviewed_terminal() {
+    let root_encoded = fixture(ISRG_ROOT_X1_HEX);
+    let root = decoded(&root_encoded);
+    let target_encoded = certificate(
+        root.tbs_certificate().subject().contents(),
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [root];
+    let path = construct_path(
+        &target,
+        &candidates,
+        candidates[0].tbs_certificate().subject().contents(),
+    );
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    let reviewed_path =
+        bind_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+
+    let bound = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        bound
+            .reviewed_path()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        bound.anchor_role_policy().certificate()
+    ));
+    assert_eq!(
+        bound.anchor_role_policy().role_extensions().role(),
+        X509CertificateRole::IssuingCertificateAuthority
+    );
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundReviewedConstructedX509CertificatePathToAnchorRolePolicy"
+    );
+}
+
+#[test]
+fn rejects_byte_equal_role_policy_from_a_distinct_terminal_decode() {
+    let root_encoded = fixture(ISRG_ROOT_X1_HEX);
+    let root = decoded(&root_encoded);
+    let detached_root = decoded(&root_encoded);
+    let target_encoded = certificate(
+        root.tbs_certificate().subject().contents(),
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [root];
+    let path = construct_path(
+        &target,
+        &candidates,
+        candidates[0].tbs_certificate().subject().contents(),
+    );
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    let reviewed_path =
+        bind_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor).unwrap();
+    let detached_role_policy = validate_certificate_role_policy(
+        &detached_root,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+
+    let error = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        detached_role_policy,
+    )
+    .expect_err("byte-equal role evidence from another decode must fail closed");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathReviewedAnchorBindingErrorKind::RoleEvidenceMismatch
+    );
+}
+
+#[test]
+fn rejects_exact_reviewed_terminal_end_entity_role_evidence() {
+    let anchor = first_reviewed_anchor();
+    let root_encoded = certificate(
+        anchor.subject(),
+        anchor.subject(),
+        anchor.subject_public_key_info(),
+    );
+    let target_encoded = certificate(
+        anchor.subject(),
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [decoded(&root_encoded)];
+    let path = construct_path(&target, &candidates, anchor.subject());
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    let reviewed_path =
+        bind_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor).unwrap();
+    let end_entity_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+
+    let error = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        end_entity_policy,
+    )
+    .expect_err("reviewed terminal must retain issuing-CA role evidence");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathReviewedAnchorBindingErrorKind::AnchorNotCertificateAuthority
+    );
 }

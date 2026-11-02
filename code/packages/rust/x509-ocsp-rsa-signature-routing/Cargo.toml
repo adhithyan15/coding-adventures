@@ -1,0 +1,17 @@
+[package]
+name = "x509-ocsp-rsa-signature-routing"
+version = "0.1.0"
+edition = "2021"
+description = "Profile-index routing for repository-owned OCSP RSA signature verifiers"
+
+[dependencies]
+rsa-public-operation = { path = "../rsa-public-operation" }
+x509-ocsp-rsa-algorithm-policy = { path = "../x509-ocsp-rsa-algorithm-policy" }
+x509-ocsp-rsa-pkcs1-v1-5-sha256-signature = { path = "../x509-ocsp-rsa-pkcs1-v1-5-sha256-signature" }
+x509-ocsp-rsa-pkcs1-v1-5-sha512-signature = { path = "../x509-ocsp-rsa-pkcs1-v1-5-sha512-signature" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-ocsp-basic-response = { path = "../x509-ocsp-basic-response" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+x509-subject-public-key-info = { path = "../x509-subject-public-key-info" }

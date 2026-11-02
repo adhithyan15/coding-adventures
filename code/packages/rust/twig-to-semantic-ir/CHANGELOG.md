@@ -1,5 +1,63 @@
 # Changelog
 
+## Unreleased — Pairs, function values, strict closures, reserved names (#18460, #18461)
+
+Four lowering fixes, each pinned by
+`tests/pairs_closures_and_entry_names.rs` and run end to end by every
+`semantic-ir-to-*` backend's `tests/twig_pairs_and_closures.rs`:
+
+```text
+program                                   before                         now
+(car (cons 1 2))                          no Feature::Pairs: every       Pairs declared
+                                          validating backend refused it
+(define (h x) …) (define g h) (g 4)       VarRef h Global — functions    a closure over h
+                                          are not globals: empty slot
+((lambda (x y) (+ x y)) 4)                backend-specific: 4 / NaN /    a strict closure:
+                                          index panic                    arity error everywhere
+(define main 5) (main)                    called the generated `main`,   positioned "reserved"
+                                          which recursed forever         error
+```
+
+- **#18460 — `Feature::Pairs`.**  A `cons` / `car` / `cdr` / `pair?`
+  builtin call (or the builtin used as a value) now declares the feature
+  SIR11's manifest rules tie to it.  A program with no pair builtin still
+  does not declare it.
+- **#18461 item 2 — a function used as a value** lowers to a
+  capture-less closure over it (`BuiltinCall("lambda", [MakeClosure h []])`)
+  instead of a `VarRef Global` that read a globals slot no one wrote.
+- **#18461 item 4 — strict closures.**  Every closure this frontend emits
+  sits inside SIR10's `lambda` marker, so every backend raises an arity
+  error when it is called with the wrong number of arguments.  (Twig has
+  no Ruby-style blocks; the bare, lenient `MakeClosure` is never right
+  here.)
+- **#18461 item 3 — reserved names.**  `main`, `_init` and
+  `__lambda_<digits>` are the compiler's: `define`-ing one is an error at
+  the `define`'s line and column, and a *reference* to `main` / `_init` is
+  an unresolved name (they are no longer in the function table user code
+  resolves against).  `main2`, `_init_count` and `__lambda_x` are
+  ordinary.
+- **Security review follow-up (F1) — gensym'd names are not Twig names.**
+  `fresh_lambda_name` used to add each `__lambda_<n>` to the function
+  table user names resolve against, so with item 2 above
+  `(define (adder n) (lambda (x) (+ x n))) (define g __lambda_0)` built a
+  closure with **no** capture values over a body that expects one — the C
+  backend then read `caps[0]` through a NULL pointer, JS/TS computed a
+  wrong value, Go/Rust failed to compile — and `(__lambda_0 5)` was a
+  `DirectCall` passing `5` into the capture slot (broken before this
+  release too).  Now:
+  - generated closure bodies are never added to the resolution table, and
+    every reference to a reserved name (`main`, `_init`,
+    `__lambda_<digits>`), called or not, is an "unresolved name" error;
+  - a reserved name cannot be *bound* either — not as a function or
+    lambda parameter, nor by `let` / `let*` — a positioned "reserved"
+    error.  (`(define (f __lambda_0) …)` collided with the closure body of
+    that name in the emitted JS, Python and Go.)
+
+`tests/name_resolution.rs` no longer tolerates the missing-`pairs`
+validator error, its call collector skips the `lambda` marker (it builds a
+closure, it calls nothing), and its value-position test now expects the
+closure.
+
 ## 0.2.1 — Call position resolves names lexically (issue #18456)
 
 **Bug fix.** TW00 gives one name-resolution order, whether a name is

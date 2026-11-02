@@ -133,6 +133,24 @@ module BuildTool
       @reverse.fetch(node, Set.new).to_a
     end
 
+    # each_predecessor -- Lazily enumerate nodes with edges TO `node`.
+    #
+    # Callers that enforce their own work ceiling must not materialize the
+    # complete predecessor set before that ceiling can fire. Returning an
+    # Enumerator when no block is supplied also preserves normal Enumerable
+    # composition without copying the adjacency set.
+    #
+    # @param node [String]
+    # @yieldparam predecessor [String]
+    # @return [Enumerator, nil]
+    def each_predecessor(node)
+      return enum_for(__method__, node) unless block_given?
+      return unless @reverse.key?(node)
+
+      @reverse.fetch(node).each { |predecessor| yield predecessor }
+      nil
+    end
+
     # transitive_closure -- All nodes reachable from `node` (excluding itself).
     #
     # We do a simple iterative depth-first traversal following forward edges.

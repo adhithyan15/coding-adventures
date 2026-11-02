@@ -55,8 +55,8 @@ fn run_vm_i64(src: &str) -> i64 {
     let mut module = lang_aot::compile_source_to_iir(Language::Twig, src, "main")
         .unwrap_or_else(|e| panic!("compile {src:?} to IIR: {e}"));
     iir_builtin_lowering::lower_global_io(&mut module);
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).expect("closure lowering");
+    iir_builtin_lowering::lower_heap_builtins(&mut module).expect("heap lowering");
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
     let mut vm = VMCore::new();
     vm.execute(&mut module, &entry, &[])

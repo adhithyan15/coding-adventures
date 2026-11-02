@@ -69,8 +69,33 @@ here unchanged — the matrix's six scalar languages all share this one interpre
 (LANG-MATRIX Phase V).
 
 The default dynamic builtin registry includes arithmetic (`+`, `-`, `*`),
-equality (`=`), and the lisp-family equality spelling (`equal?`). Symbol
-literals interned to stable integer IDs therefore compare directly on the VM.
+ordering (`<`, `<=`, `>`, `>=`), equality (`=`), the lisp-family equality
+spelling (`equal?`), and the pair test (`pair?`). Symbol literals interned to
+stable integer IDs therefore compare directly on the VM.
+
+These are what a dynamically-typed frontend leaves in the IIR when it cannot
+prove an operand's type. Twig's `(define (f x) (if (< x 0) 42 7))` has an
+untyped `x`, so it compiles to `call_builtin "<", x, 0`, and before #18463 the
+VM stopped there with `UnknownOpcode("builtin \"<\"")`. The rules follow
+`twig-vm`:
+
+| Builtin | Two `Int`s | Two `Float`s | Anything else |
+|---------|-----------|--------------|---------------|
+| `+` `-` `*` | wrapping `i64` result | `f64` result | `TypeError` |
+| `<` `<=` `>` `>=` | signed compare → `Bool` | IEEE compare → `Bool` (`NaN` is never ordered) | `TypeError` (a `Bool` is not a number here) |
+
+`pair?` answers `#t` for a live heap cell (a non-null `HeapRef`, which is what
+the structural lowering makes of `cons`) and `#f` for nil and every atom.
+
+```rust
+use vm_core::builtins::BuiltinRegistry;
+use vm_core::value::Value;
+
+let reg = BuiltinRegistry::new();
+assert_eq!(reg.call("<", &[Value::Int(-5), Value::Int(0)]).unwrap(), Value::Bool(true));
+assert!(reg.call("<", &[Value::Str("a".into()), Value::Int(1)]).is_err());
+assert_eq!(reg.call("pair?", &[Value::Int(42)]).unwrap(), Value::Bool(false));
+```
 
 Integer arithmetic, bitwise, and shift results are **masked to the width named by
 the instruction's `type_hint`** (`u4`→`& 0xF`, `u8`→`& 0xFF`, `u16`, `u32`), so a
@@ -198,6 +223,17 @@ Fields are raw 64-bit words with no NaN-boxing — the same convention the
 native cons-cell path uses — so a field holds either a nested `HeapRef`'s raw
 address or a plain integer; storing anything else (a `Str`/`Float`/`Bool`)
 traps. See `tests/gc_heap.rs` for the full round-trip and reclamation proofs.
+
+**Field access needs a block's base address.** `gc_field_load` and
+`gc_field_store` first ask `FlatHeap::payload_size_at_base` for the size of
+the object that starts *exactly* at `obj`, and only then check
+`idx*8 + 8 <= size`. Null, a freed or foreign address, an address inside an
+object, and the address one past an object's end all trap with
+`"<op>: HeapRef is not the base address of a live heap object"` before any memory
+is touched. No IIR op produces such a `HeapRef`, but a host can pass one
+through `VMCore::execute`'s arguments; checking the size alone against an
+interior address would bound the access from the wrong starting point and let
+it run past the object's end (issue #18471).
 
 ---
 

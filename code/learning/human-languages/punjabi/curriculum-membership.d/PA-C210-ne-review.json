@@ -1,0 +1,11 @@
+{
+  "id": "PA-C210-ne-review",
+  "pathSegment": "PA-PATH-210-A2-NE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-210-A2-NE",
+      "order": 2
+    }
+  ]
+}

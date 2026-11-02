@@ -1,0 +1,11 @@
+[package]
+name = "x509-rsa-algorithm-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Certificate-bound data-driven RSA public-key policy"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }

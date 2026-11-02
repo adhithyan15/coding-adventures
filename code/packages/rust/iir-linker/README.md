@@ -94,6 +94,34 @@ Things that are *not* errors: the same private name in several modules
 user `main` beside its synthesized `main` — references bind to the first),
 and export aliases with distinct public names.
 
+## Private means private
+
+Every operand in the table above — every *function reference* — must name
+either a function its own module defines or the local name of one of its
+imports.  Anything else is `LinkError::UndeclaredCall` (issue #18432).
+Before that check existed such a name was simply left bare, so it bound to
+whichever function owned it after merging:
+
+```text
+  lib_a: private helper  ─┐   merged: helper          ← lib_a's (first)
+  lib_b: private helper  ─┤           lib_b::helper
+  app:   call helper     ─┘   app ran lib_a's private helper without importing it
+```
+
+Builtins are not function references: producers call them with
+`call_builtin`, which the linker never inspects, and neither VM resolves an
+unknown `call` target to a builtin.
+
+## Renaming never panics
+
+A renamed private function is called `<module>::<fn>`.  If that name is
+itself taken — an export alias can be spelled `b::c` — the merge pass adds
+`$0`, `$1`, … until the name is free.  The set of taken names is finite, so
+of `taken + 1` candidates one is always free; the search needs no bound.
+An earlier version `assert!`ed a bound of *functions + 1*, which a few
+crafted aliases (`b::c$0` … `b::c$3`, which claim names without adding
+functions) exceeded, panicking `link()` (issue #18432).
+
 ## Error types
 
 ```text
@@ -103,7 +131,7 @@ LinkError::DuplicateExport       — one module exports the same public name twi
 LinkError::ConflictingExport     — two different modules export the same public name
 LinkError::DuplicateModuleName   — two input modules share a name
 LinkError::UnresolvedEntryPoint  — entry point neither defined nor imported by its module
-LinkError::UndeclaredCall        — call instruction targets neither local nor import
+LinkError::UndeclaredCall        — call / closure / spawn names neither a local function nor an import
 ```
 
 ## Where it fits

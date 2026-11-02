@@ -26,7 +26,11 @@ echo $?    # → main()'s return value modulo 256
 ## How it works
 
 1. Parse the source with `twig-ir-compiler` → `IIRModule`
-2. For each function: infer types (`aot-core`), specialise to typed CIR
+2. For each function: infer types (`aot-core`), specialise to typed CIR.
+   Twig integers are signed 64-bit values, so integer ops and comparisons
+   are typed `i64` (`cmp_lt_i64`, never `cmp_lt_u64` or the frontend's
+   result hint `cmp_lt_bool`), and the backends pick signed condition codes:
+   `(< -8 100)` is true (#18483).
 3. Lower CIR → ARM64 bytes (`aarch64-backend`)
 4. Link per-function bytes (`aot-core::link`)
 5. Wrap in a Mach-O object file (`code-packager::macho_object`)

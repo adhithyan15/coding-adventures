@@ -8,6 +8,76 @@
 import { sqrt } from "trig";
 import { Point, Rect } from "@coding-adventures/point2d";
 
+const MAX_FLATTENING_DEPTH = 32;
+const MAX_FLATTENING_SUBDIVISIONS = 65_535;
+
+function finite(value: number): number {
+  if (!Number.isFinite(value)) throw new Error("Bezier subdivision produced nonfinite geometry");
+  return value;
+}
+
+function scaledDistance(left: Point, right: Point): number {
+  const dx = finite(left.x - right.x);
+  const dy = finite(left.y - right.y);
+  const scale = Math.max(Math.abs(dx), Math.abs(dy));
+  if (scale === 0) return 0;
+  const nx = dx / scale;
+  const ny = dy / scale;
+  return finite(scale * Math.sqrt(finite(nx * nx + ny * ny)));
+}
+
+function distanceToSegment(point: Point, start: Point, end: Point): number {
+  const dx = finite(end.x - start.x);
+  const dy = finite(end.y - start.y);
+  const scale = Math.max(Math.abs(dx), Math.abs(dy));
+  if (scale === 0) return scaledDistance(point, start);
+  const nx = dx / scale;
+  const ny = dy / scale;
+  const denominator = finite(nx * nx + ny * ny);
+  const nox = finite(finite(point.x - start.x) / scale);
+  const noy = finite(finite(point.y - start.y) / scale);
+  const projection = Math.max(0, Math.min(1, finite(finite(nox * nx + noy * ny) / denominator)));
+  const nearest = new Point(
+    finite(start.x + projection * dx),
+    finite(start.y + projection * dy),
+  );
+  return scaledDistance(point, nearest);
+}
+
+function flatten(
+  curve: QuadraticBezier | CubicBezier,
+  tolerance: number,
+  controls: readonly Point[],
+): Point[] {
+  if (!Number.isFinite(tolerance) || tolerance <= 0) {
+    throw new RangeError("tolerance must be finite and positive");
+  }
+  if (controls.some((point) => !Number.isFinite(point.x) || !Number.isFinite(point.y))) {
+    throw new RangeError("control points must be finite");
+  }
+
+  const points = [controls[0]];
+  const pending: [QuadraticBezier | CubicBezier, number][] = [[curve, 0]];
+  let subdivisions = 0;
+  while (pending.length > 0) {
+    const [current, depth] = pending.pop()!;
+    const endpoint = current instanceof QuadraticBezier ? current.p2 : current.p3;
+    const offCurve = current instanceof QuadraticBezier ? [current.p1] : [current.p1, current.p2];
+    const error = Math.max(...offCurve.map((point) => distanceToSegment(point, current.p0, endpoint)));
+    if (error <= tolerance) {
+      points.push(endpoint);
+      continue;
+    }
+    if (depth >= MAX_FLATTENING_DEPTH || subdivisions >= MAX_FLATTENING_SUBDIVISIONS) {
+      throw new Error("Bezier flattening exceeded the depth or subdivision budget");
+    }
+    subdivisions += 1;
+    const [left, right] = current.split(0.5);
+    pending.push([right, depth + 1], [left, depth + 1]);
+  }
+  return points;
+}
+
 // ============================================================================
 // QuadraticBezier
 // ============================================================================
@@ -57,16 +127,7 @@ export class QuadraticBezier {
    * Splits at midpoint if the flatness error exceeds tolerance.
    */
   toPolyline(tolerance: number): Point[] {
-    const chordMid = this.p0.lerp(this.p2, 0.5);
-    const curveMid = this.evaluate(0.5);
-    if (chordMid.distance(curveMid) <= tolerance) {
-      return [this.p0, this.p2];
-    }
-    const [left, right] = this.split(0.5);
-    const pts = left.toPolyline(tolerance);
-    const rightPts = right.toPolyline(tolerance);
-    pts.push(...rightPts.slice(1));
-    return pts;
+    return flatten(this, tolerance, [this.p0, this.p1, this.p2]);
   }
 
   /** Tight axis-aligned bounding box. */
@@ -167,15 +228,7 @@ export class CubicBezier {
 
   /** Adaptive polyline approximation within tolerance. */
   toPolyline(tolerance: number): Point[] {
-    const chordMid = this.p0.lerp(this.p3, 0.5);
-    const curveMid = this.evaluate(0.5);
-    if (chordMid.distance(curveMid) <= tolerance) {
-      return [this.p0, this.p3];
-    }
-    const [left, right] = this.split(0.5);
-    const pts = left.toPolyline(tolerance);
-    pts.push(...right.toPolyline(tolerance).slice(1));
-    return pts;
+    return flatten(this, tolerance, [this.p0, this.p1, this.p2, this.p3]);
   }
 
   /** Tight axis-aligned bounding box. */

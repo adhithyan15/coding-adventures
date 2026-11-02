@@ -6,8 +6,19 @@ The v0.5.12 release is published and audited (#18264), from
 and unsigned limitations are unchanged. The next Qt fidelity fix (#18305)
 preserves timeline labels' existing 150-pixel non-shrinking floor. It merged
 in #18306 with all payload validations passing in run 40280477318.
-The compatible v0.5.13 checkpoint (#18334) is prepared, not yet published;
-it also includes the authoritative toolkit dependency-pin change.
+The compatible v0.5.13 checkpoint (#18334) is published and audited via
+run 40340262448 from `d1730421d34c9fe6ebe9cc68473f505017659a5a`:
+13 assets, 12 checksum entries, and 11 manifest payloads, with unchanged
+coverage and unsigned limits. It also includes the toolkit dependency-pin change.
+The Qt due-date editor width floor (#18394) merged in #18396 with all payload
+validations passing. The v0.5.14 checkpoint (#18550), including
+the authoritative Notes changes, is published and audited via run 40824813766
+from `760775910601fc8523d9a4b5b3cbfbf9acae9e05`: 13 assets, 12 checksum
+entries, and 11 manifest payloads. The Qt empty Board drop-zone floor (#18559)
+merged in #18562 with all payload validations passing in run 40836764807.
+The v0.5.15 checkpoint (#18581) is published and audited. Its notes retain
+the explicit three-drop reporting change and follow-up #18563.
+Artifact coverage and unsigned-platform limitations are unchanged.
 
 A to-do app with **automatic scheduling**, built entirely on the shared `task-core`
 engine. Add tasks (with optional due dates), complete or delete them — and the engine
@@ -400,3 +411,11 @@ above, and dispatch the workflow with a new matching version and tag.
 - `mosaic-package.toml` — the package manifest.
 - `tests/package_compiles.rs` — `cargo test` verifies the Mosaic sources compile.
 - `scripts/build-web.{sh,ps1}` — build wasm + emit the component into `host/web`.
+# Qt Board spacing checkpoint
+
+The merged fix (#18563, #18612) preserves the Board drop target's authored
+9-pixel card gap and removes its three layout-style drops (Qt total 80 to 77).
+The compatible v0.5.16 checkpoint (#18746) is prepared for release validation
+and publication after its preparation PR merges; it is not yet published. v0.5.15 is published and audited
+under #18581: source `8819839dc63d78c4c5eeda21f833f51364746420`, 13 assets,
+12 checksums, and 11 manifest payloads. Artifact and signing limits are unchanged.

@@ -785,12 +785,13 @@ fn trap_instr(kind: &str) -> IIRInstr {
 /// never printed directly, so no backend's bool-to-integer convention matters).
 ///
 /// The comparison carries the `i64` type hint, the shape ALGOL emits. The `bool`
-/// hint Twig emits is NOT used here because the native pipeline miscompiles it
+/// hint Twig emits was not used here because the native pipeline miscompiled it
 /// for negative operands: `jit_core::specialise` names the CIR op after the
-/// *result* hint (`cmp_lt_bool`), so x86-64 compares the operands at `bool`
-/// width and `-1 < 2` is false (Twig `(if (< (- 0 1) 2) 7 3)` exits 3 natively).
-/// This suite found it; it is recorded as a separate follow-up rather than
-/// fixed in the LANG83 contract slice.
+/// *result* hint (`cmp_lt_bool`), and x86-64 / AArch64 took a `bool` suffix as
+/// unsigned, so `-1 < 2` was false (Twig `(if (< (- 0 1) 2) 7 3)` exited 3
+/// natively). This suite found it. #18453 fixed it: both backends now compare
+/// a `bool`-suffixed op as signed, and `lang_matrix.rs` has Twig rows with
+/// negative operands.
 fn compare(name: &str, a: i64, b: i64) -> IIRModule {
     program(vec![
         int("a", a),
@@ -2659,7 +2660,8 @@ fn pr7f2_lisp_rules_are_module_code_over_the_primitives() {
     // `__lisp_exit_code` and calls no runtime rule.
     let ll = lang_aot::compile_iir_to_llvm(case.module(), "opconf", "x86_64-unknown-linux-gnu").expect("llvm");
     for defined in ["@__lisp_equal(", "@__lisp_exit_code("] {
-        assert!(ll.contains(&format!("define i64 {defined}")), "{defined} is defined in the module");
+        // `internal`: only the entry point is exported (#18416).
+        assert!(ll.contains(&format!("define internal i64 {defined}")), "{defined} is defined in the module");
     }
     for gone in ["__dyn_truthy", "__dyn_not", "__dyn_equal", "__dyn_to_exit_code"] {
         assert!(!ll.contains(gone), "{gone} is no longer a runtime call");
