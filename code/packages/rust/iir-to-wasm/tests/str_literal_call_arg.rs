@@ -12,14 +12,15 @@
 //! (string-length s)) (strlen "HELLO")`, which returned 72 (= `'H'`, a byte of the
 //! raw literal read as a bogus length) before the promotion fix.
 
+mod common;
+
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_wasm::{encode_module, lower_iir_to_wasm, IIRWasmConfig};
-use wasm_runtime::WasmRuntime;
 
 fn run(module: IIRModule) -> i64 {
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
-    WasmRuntime::new()
+    common::runtime()
         .load_and_run(&bytes, "main", &[])
         .expect("wasm run failed")
         .first()

@@ -13,9 +13,10 @@
 //! `str_eq` the result against an expected literal — a byte-exact content+length
 //! check that reuses the already-verified runtime `str_eq` helper.
 
+mod common;
+
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_wasm::{encode_module, lower_iir_to_wasm, IIRWasmConfig};
-use wasm_runtime::WasmRuntime;
 
 /// Build a module that computes `str_eq(slice(src, start, end), expected)` with
 /// `slice`/`str_eq` as helper functions (so every string operand inside them is a
@@ -72,7 +73,7 @@ fn try_slice_eq(src: &str, start: i64, end: i64, expected: &str) -> Result<i64, 
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).map_err(|e| format!("{e:?}"))?;
     let bytes = encode_module(&wasm).map_err(|e| format!("{e:?}"))?;
-    WasmRuntime::new()
+    common::runtime()
         .load_and_run(&bytes, "main", &[])
         .map_err(|e| format!("{e:?}"))?
         .first()

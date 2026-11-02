@@ -37,9 +37,10 @@
 //! This is the wasm twin of the `iir-to-llvm` `str_lens`/`str_values` fix — same
 //! program shape, a different per-backend table.
 
+mod common;
+
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_wasm::{IIRWasmConfig, encode_module, lower_iir_to_wasm};
-use wasm_runtime::WasmRuntime;
 
 /// `string procedure pick(n)` — returns `"HI"` for `n > 0`, else `"LO"`.
 ///
@@ -106,7 +107,7 @@ fn run_reader(reader: IIRInstr) -> i64 {
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
-    WasmRuntime::new()
+    common::runtime()
         .load_and_run(&bytes, "main", &[])
         .expect("wasm run failed")
         .first()
@@ -198,7 +199,7 @@ fn mov_of_a_literal_into_a_runtime_valued_variable_copies_a_real_handle() {
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
-    let result = WasmRuntime::new()
+    let result = common::runtime()
         .load_and_run(&bytes, "main", &[])
         .expect("wasm run failed");
     assert_eq!(result, vec![5], "`HELLO` moved into a runtime-valued local is 5 bytes");
@@ -246,7 +247,7 @@ fn str_returned_from_a_single_block_callee_is_a_real_handle() {
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
-    let result = WasmRuntime::new()
+    let result = common::runtime()
         .load_and_run(&bytes, "main", &[])
         .expect("wasm run failed");
     assert_eq!(result, vec![5], "a returned literal must carry its length header");
@@ -284,7 +285,7 @@ fn literal_only_strings_still_fold_at_compile_time() {
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
-    let result = WasmRuntime::new()
+    let result = common::runtime()
         .load_and_run(&bytes, "main", &[])
         .expect("wasm run failed");
     assert_eq!(result, vec![1], "'H' ++ 'I' must still fold equal to 'HI'");
@@ -311,7 +312,7 @@ fn runtime_concat_preserves_aliased_operands() {
         let module = IIRModule { name: "concat_alias".into(), functions: vec![join, main], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![], release: None, str_max_bytes: None };
         let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).unwrap();
         let bytes = encode_module(&wasm).unwrap();
-        let result = WasmRuntime::new().load_and_run(&bytes, "main", &[]).unwrap();
+        let result = common::runtime().load_and_run(&bytes, "main", &[]).unwrap();
         assert_eq!(result, vec![1], "destination={dest}, right={right}");
     }
 }
@@ -364,7 +365,7 @@ fn runtime_str_slice_preserves_aliased_operand() {
         };
         let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).unwrap();
         let bytes = encode_module(&wasm).unwrap();
-        let result = WasmRuntime::new().load_and_run(&bytes, "main", &[]).unwrap();
+        let result = common::runtime().load_and_run(&bytes, "main", &[]).unwrap();
         assert_eq!(result, vec![1], "destination={dest}: slice(\"ABCDE\", 1, 4) must be {expected}");
     }
 }
