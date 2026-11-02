@@ -277,6 +277,18 @@ func readCargoManifestBytes(path string) ([]byte, bool, error) {
 		return nil, false, &CargoManifestError{Path: path, Reason: err.Error()}
 	}
 	defer file.Close()
+	// Lstat and Open are two lookups, so the name could be swapped for a
+	// symlink in between and Open would follow it. Stat the open handle and
+	// require the very file Lstat saw. (O_NOFOLLOW would say the same in one
+	// call, but Go has no portable spelling of it for Windows, where this
+	// tool also runs.)
+	opened, err := file.Stat()
+	if err != nil {
+		return nil, false, &CargoManifestError{Path: path, Reason: err.Error()}
+	}
+	if !opened.Mode().IsRegular() || !os.SameFile(info, opened) {
+		return nil, false, &CargoManifestError{Path: path, Reason: "changed while it was being opened"}
+	}
 	data, err := io.ReadAll(io.LimitReader(file, maxCargoManifestBytes+1))
 	if err != nil {
 		return nil, false, &CargoManifestError{Path: path, Reason: err.Error()}
@@ -472,18 +484,27 @@ func cargoLinkPrefix(path []string) int {
 // bare or quoted, as the lenient reader decodes them. No backslash is
 // accepted, because the lenient reader does not decode escapes: `"pa\u0074h"`
 // is the key `path` to Cargo and not to it.
+//
+// Nor is a `workspace` field. `emit = { workspace = true }` tells Cargo to take
+// the entry — path included — from the workspace root's
+// `[workspace.dependencies]`, a manifest the lenient reader never opens. The
+// entry is a real link that would draw no edge, so it is refused here rather
+// than silently dropped (cargoWorkspaceInheritance).
+//
+// Keys are quoted (%q) in every message: they come from the manifest, and a
+// quoted key may carry control bytes that should not reach a CI log raw.
 func screenCargoLinkEntry(entry string) string {
 	eq := tomlKeyValueSplit(entry)
 	key := strings.TrimSpace(entry[:eq])
 	value := strings.TrimSpace(entry[eq+1:])
 	if strings.ContainsRune(value, '\\') {
-		return fmt.Sprintf("%s uses a backslash escape, which the build graph's reader does not decode", key)
+		return fmt.Sprintf("%q uses a backslash escape, which the build graph's reader does not decode", key)
 	}
 	if _, ok := oneLineTomlString(value); ok {
 		return ""
 	}
 	if !strings.HasPrefix(value, "{") || !strings.HasSuffix(value, "}") {
-		return fmt.Sprintf("%s is neither a version string nor an inline table", key)
+		return fmt.Sprintf("%q is neither a version string nor an inline table", key)
 	}
 	body := strings.TrimSpace(value[1 : len(value)-1])
 	if body == "" {
@@ -492,14 +513,23 @@ func screenCargoLinkEntry(entry string) string {
 	for _, field := range splitTopLevel(body, ',') {
 		fieldEq := tomlKeyValueSplit(field)
 		if fieldEq < 0 {
-			return fmt.Sprintf("%s has an inline-table field %q that is not key = value (a trailing comma?)", key, strings.TrimSpace(field))
+			return fmt.Sprintf("%q has an inline-table field %q that is not key = value (a trailing comma?)", key, strings.TrimSpace(field))
 		}
-		if fieldKey, ok := decodeTomlKey(field[:fieldEq]); !ok || len(fieldKey) != 1 {
-			return fmt.Sprintf("%s has the inline-table key %q, which is not one bare or quoted key", key, strings.TrimSpace(field[:fieldEq]))
+		fieldKey, ok := decodeTomlKey(field[:fieldEq])
+		if !ok || len(fieldKey) != 1 {
+			return fmt.Sprintf("%q has the inline-table key %q, which is not one bare or quoted key", key, strings.TrimSpace(field[:fieldEq]))
+		}
+		if fieldKey[0] == "workspace" {
+			return fmt.Sprintf("%q %s", key, cargoWorkspaceInheritance)
 		}
 	}
 	return ""
 }
+
+// cargoWorkspaceInheritance is the refusal for `workspace = true` in a graph
+// link table, inline or in a sub-table.
+const cargoWorkspaceInheritance = "inherits from the workspace's [workspace.dependencies], which the build graph " +
+	"does not read; write the path in this manifest instead"
 
 // readCargoTriggerEntries reads the Cargo.toml at manifest and returns every
 // entry of the tables named by names (their target forms included), or
@@ -635,6 +665,9 @@ func readCargoTriggerEntries(manifest string, names map[string]bool, screenLinks
 				return refuse("line %d: the dotted key %q in a dependency table is not read by the build graph; "+
 					"write the entry as name = { ... }", lineNumber, rawKey)
 			case linkKind == cargoLinkSubTable:
+				if key[0] == "workspace" {
+					return refuse("line %d: the dependency %q %s", lineNumber, table[len(table)-1], cargoWorkspaceInheritance)
+				}
 				if len(stack) > 0 {
 					return refuse("line %d: the value of %q in a dependency sub-table spans lines", lineNumber, rawKey)
 				}

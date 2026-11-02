@@ -2,6 +2,20 @@
 
 ## 2026-11-02 — Cargo link-table edges: security-review fixes
 
+- **Workspace inheritance is refused in link tables (review round 2).**
+  `a = { workspace = true }` in `[dependencies]`, `[build-dependencies]` or a
+  target form, or a `workspace` key in a `[D.a]` sub-table (quoted or not),
+  passed the link-table screen yet drew no edge: Cargo takes the path from the
+  workspace root's `[workspace.dependencies]`, which the edge reader never
+  opens. A later change to that dependency would then re-run none of this
+  crate's tests. The strict reader now refuses it, as it already did in
+  dev-dependency tables. No repository manifest uses it.
+- **Manifest-derived keys are quoted** (`%q`) in the new link-screen
+  messages, so a quoted key cannot carry control bytes into a CI log.
+- **`readCargoManifestBytes` checks the open handle.** It `Stat`s the opened
+  file and requires `os.SameFile` with the `Lstat` it size-checked, so a
+  symlink swapped in between is refused instead of followed (portable, unlike
+  `O_NOFOLLOW`, which Go does not spell for Windows).
 - **Linear continuation join.** An inline Cargo entry continuing onto later
   lines was joined by appending each line to the whole value and rescanning
   the value's brackets per line — quadratic; a crafted 400 KB manifest took

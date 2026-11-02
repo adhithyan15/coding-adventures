@@ -816,7 +816,12 @@ that uses a multi-line string anywhere, and one that writes into
 `[dependencies]`, `[build-dependencies]`, `[build_dependencies]` or a
 `[target.<cfg>.…]` form of them in any shape this procedure does not model
 (including every dotted-key and inline-table shape above), so such a
-manifest stops the plan instead of silently losing an edge. Shared fixtures also avoid
+manifest stops the plan instead of silently losing an edge. It also refuses
+workspace inheritance in those tables (`name = { workspace = true }`, or a
+`workspace` key in a `[D.N]` sub-table, quoted or not): Cargo takes such an
+entry's path from the workspace root's `[workspace.dependencies]`, which
+this procedure never reads, so under step 5 it would contribute nothing
+while Cargo links it. Shared fixtures also avoid
 `[dev-dependencies.<name>]` and `[target.<cfg>.dev-dependencies.<name>]`
 sub-tables: they contribute no edge under this contract, but the Go reference
 tool's separate fail-closed test-trigger reader refuses them, so such a case

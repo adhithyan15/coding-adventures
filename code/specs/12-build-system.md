@@ -412,9 +412,14 @@ outside it:
   (`build-dependencies = { ... }` under `[target.<cfg>]`, `target = { ... }`),
   deeper headers and arrays of tables (`[dependencies.a.features]`,
   `[[dependencies]]`), any other value (an array, a number), a value that
-  spans lines in a sub-table, and any backslash in such a table's values;
+  spans lines in a sub-table, any backslash in such a table's values, and
+  workspace inheritance (`a = { workspace = true }`, or a `workspace` key in
+  a sub-table): Cargo takes that entry's path from the workspace root's
+  `[workspace.dependencies]`, which the edge reader never opens;
 - a manifest that is not a regular file or exceeds 1 MiB, or one entry
-  continuing past 256 lines or 64 KiB.
+  continuing past 256 lines or 64 KiB. The file is opened once, and the open
+  handle must be the very regular file the size check saw (`os.SameFile`),
+  so a symlink swapped in between is refused rather than followed.
 
 A leading UTF-8 byte-order mark is stripped, as TOML allows.
 

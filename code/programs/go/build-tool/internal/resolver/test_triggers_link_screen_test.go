@@ -52,6 +52,13 @@ func TestLinkScreenRefusesShapesTheEdgeReaderDrops(t *testing.T) {
 		"escape in a sub-table value":       "[dependencies.x]\npackage = \"emi\\u0074\"\npath = \"../emit\"\n",
 		"dotted field key":                  "[dependencies]\nemit = { path.x = \"../emit\" }\n",
 		"trailing comma in an inline table": "[dependencies]\nemit = { path = \"../emit\", }\n",
+		// Workspace inheritance: Cargo takes the path from the workspace
+		// root's [workspace.dependencies], which the edge reader never opens.
+		"inherited inline entry":         "[dependencies]\nemit = { workspace = true }\n",
+		"inherited quoted inline key":    "[build-dependencies]\nemit = { \"workspace\" = true, features = [\"x\"] }\n",
+		"inherited target entry":         "[target.'cfg(unix)'.dependencies]\nemit = { workspace = true }\n",
+		"inherited sub-table":            "[dependencies.emit]\nworkspace = true\n",
+		"inherited quoted sub-table key": "[target.'cfg(unix)'.build-dependencies.emit]\n'workspace' = true\n",
 	} {
 		t.Run(name, func(t *testing.T) {
 			manifest := body
