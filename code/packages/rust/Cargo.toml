@@ -141,6 +141,7 @@ members = [
     "constraint-core",
     "constraint-engine",
     "cdcl-sat",
+    "drat-check",
     "constraint-instructions",
     "constraint-vm",
     "core",
