@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C364-buzhun",
+    "language": "chinese",
+    "chapter": 364,
+    "sequence": 27940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7fcab2ef8a7715a"
+  },
+  "findings": []
+}

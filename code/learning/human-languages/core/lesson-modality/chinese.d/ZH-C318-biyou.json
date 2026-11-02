@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C318-biyou",
+    "language": "chinese",
+    "chapter": 318,
+    "sequence": 25000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3859cc11d3b3812"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C358-mianzi",
+    "language": "chinese",
+    "chapter": 358,
+    "sequence": 27660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e85a5e3931936d2"
+  },
+  "findings": []
+}

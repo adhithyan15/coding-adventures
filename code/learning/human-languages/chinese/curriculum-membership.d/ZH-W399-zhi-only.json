@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W399-zhi-only",
+  "pathSegment": "ZH-PATH-399-ONLYIF399",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-399-ONLYIF399",
+      "order": 2
+    }
+  ]
+}

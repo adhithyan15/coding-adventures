@@ -1,0 +1,21 @@
+{
+  "chapter": 345,
+  "title": "Looking Back",
+  "label": "ch:zh-looking-back",
+  "canDo": "I can say what people say about the past, say what happened from then on, ask about origins and keep in touch.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R345-review-final-345",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say what people say about the past, say what happened from then on, ask about origins and keep in touch.",
+    "assesses": [
+      "ZH-LEX-C345-LOOKBACK345-01",
+      "ZH-LEX-C345-LOOKBACK345-02",
+      "ZH-LEX-C345-LOOKBACK345-03",
+      "ZH-LEX-C345-LOOKBACK345-04",
+      "ZH-LEX-C345-LOOKBACK345-05"
+    ]
+  }
+}

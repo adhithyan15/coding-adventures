@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C348-shangliang",
+  "pathSegment": "ZH-PATH-348-TALK348",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-348-TALK348",
+      "order": 1
+    }
+  ]
+}

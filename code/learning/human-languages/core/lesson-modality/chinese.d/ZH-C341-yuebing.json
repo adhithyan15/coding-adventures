@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C341-yuebing",
+    "language": "chinese",
+    "chapter": 341,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca590c14b58ff920"
+  },
+  "findings": []
+}

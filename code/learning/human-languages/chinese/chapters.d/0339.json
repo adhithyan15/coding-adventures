@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "National Day",
+  "label": "ch:zh-national-day",
+  "canDo": "I can talk about a long holiday, National Day, celebrating, a festive house and fireworks.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C339-yanhua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can talk about a long holiday, National Day, celebrating, a festive house and fireworks.",
+    "assesses": [
+      "ZH-LEX-C339-NATION339-03",
+      "ZH-LEX-C339-NATION339-04",
+      "ZH-LEX-C339-NATION339-05"
+    ]
+  }
+}

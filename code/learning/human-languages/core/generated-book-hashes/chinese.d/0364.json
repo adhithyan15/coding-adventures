@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:ce422bed4030868a",
+  "lessonIds": [
+    "ZH-C364-quan",
+    "ZH-C364-buzhun",
+    "ZH-W364-zhun-allow",
+    "ZH-C364-biaozhun",
+    "ZH-C364-pizhun",
+    "ZH-C364-tixing"
+  ],
+  "tex": "chinese/book/chapters/ch364-not-allowed.tex"
+}

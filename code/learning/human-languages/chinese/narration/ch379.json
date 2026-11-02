@@ -1,0 +1,992 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 379,
+  "title": "Feeling Safe",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:0ef3cf92ee0f1ace",
+  "lessons": [
+    {
+      "id": "ZH-C379-loudao",
+      "sequence": 29250,
+      "title": "lóudào — stairwell; corridor (in a block of flats)",
+      "headword": "lóudào",
+      "romanization": "lóudào",
+      "gloss": "stairwell; corridor (in a block of flats)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d60ad649cedf01f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a stranger, then the Mandarin for the property management office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lóudào",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lóudào — \"stairwell; corridor (in a block of flats)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "lóudào lǐ de dēng huài le — The light in the stairwell is broken."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lóudào is built from lóu 'a building of several floors' and dào 'a way', both inherited from Middle Chinese, luw and dawX (Guangyun, in Baxter's transcription), which glosses the first 'a house on a house' and the second 'a road'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lóudào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lóudào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lóudào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lóudào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lóudào lǐ de dēng huài le — The light in the stairwell is broken.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lóudào lǐ de dēng huài le* — The light in the stairwell is broken.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a stranger, then the Mandarin for the property management office, then say lóudào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a stranger, then the Mandarin for the property management office, then say *lóudào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lóudào mean? (\"Stairwell; corridor (in a block of flats)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C379-anxin",
+      "sequence": 29260,
+      "title": "安心 (ānxīn) — with a mind at rest; settled",
+      "headword": "安心",
+      "romanization": "ānxīn",
+      "gloss": "with a mind at rest; settled",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:583a2a4b3c50abe3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the property management office, then the Mandarin for the stairwell of a block."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 安心",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "安心 — ānxīn — \"with a mind at rest; settled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这个社区很好我很安心 zhège shèqū hěn hǎo wǒ hěn ānxīn — This is a good neighbourhood, and my mind is at rest."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 安 (ān) — six strokes: the roof of 家 on top, three strokes, and 女 under it. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "安心 (ānxīn) is built from 安 (ān) 'calm' and 心 'the heart', both inherited from Middle Chinese, 'an and sim (Guangyun, in Baxter's transcription), which glosses the first 'peaceful' and 'to come to rest'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānxīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānxīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānxīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānxīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège shèqū hěn hǎo wǒ hěn ānxīn — This is a good neighbourhood, and my mind is at rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège shèqū hěn hǎo wǒ hěn ānxīn* — This is a good neighbourhood, and my mind is at rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the property management office, then the Mandarin for the stairwell of a block, then say ānxīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the property management office, then the Mandarin for the stairwell of a block, then say *ānxīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 安心 (ānxīn) mean? (\"With a mind at rest; settled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W379-an-calm",
+      "sequence": 29265,
+      "title": "安 (ān) — the roof of 家, then 女",
+      "headword": "安",
+      "romanization": "ān",
+      "gloss": "安 — the roof of 家, then 女",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bff8de67a8974a16",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the roof of 家, then 女",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the roof of 家, then 女 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ānxīn — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ānxīn* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "家 女."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — jiā, nǚ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *jiā*, *nǚ*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the roof of 家, then 女",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "安 (ān)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, top before bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The roof, three strokes, as on top of 家 and 字: a dot at the top, a short stroke down on the left, then a bar across that turns down at the right end and hooks."
+            },
+            {
+              "kind": "speech",
+              "text": "Under the roof, 女, three strokes, as you wrote it: a stroke that falls to the left and turns to the right, a long stroke falling to the left, then a long bar across."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 3 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "安 (ān), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 安, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 安 (ān)? (Six.) What is on top? (The roof of 家.) What sits under it? (女.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 安 (ān), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C379-buan",
+      "sequence": 29270,
+      "title": "不安 (bù'ān) — uneasy; worried",
+      "headword": "不安",
+      "romanization": "bù'ān",
+      "gloss": "uneasy; worried",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ddf207809ab8982",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the stairwell of a block, then the Mandarin for with a mind at rest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 不安",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不安 — bù'ān — \"uneasy; worried\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我一个人在家的时候有点儿不安 wǒ yí ge rén zài jiā de shíhou yǒudiǎnr bù'ān — When I'm at home on my own, I feel a little uneasy."
+            },
+            {
+              "kind": "speech",
+              "text": "Tone: 不 keeps its own falling tone here, bù, because ān after it is a level tone, not a falling one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不安 (bù'ān) is built from 不 'not' and 安 'calm', both inherited from Middle Chinese, pjut and 'an (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bù'ān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bù'ān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bù'ān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bù'ān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yí ge rén zài jiā de shíhou yǒudiǎnr bù'ān — When I'm at home on my own, I feel a little uneasy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yí ge rén zài jiā de shíhou yǒudiǎnr bù'ān* — When I'm at home on my own, I feel a little uneasy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the stairwell of a block, then the Mandarin for with a mind at rest, then say bù'ān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the stairwell of a block, then the Mandarin for with a mind at rest, then say *bù'ān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 不安 (bù'ān) mean? (\"Uneasy; worried\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C379-menjin",
+      "sequence": 29280,
+      "title": "ménjìn — door entry system; a card-entry door",
+      "headword": "ménjìn",
+      "romanization": "ménjìn",
+      "gloss": "door entry system; a card-entry door",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b6a1d3e23292329",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for with a mind at rest, then the Mandarin for uneasy (ill at ease)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ménjìn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ménjìn — \"door entry system; a card-entry door\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen xiǎoqū yǒu ménjìn suǒyǐ hěn ānquán — Our estate has a door entry system, so it's safe."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ménjìn is built from 门 'a gate' and jìn 'to forbid', both inherited from Middle Chinese, mwon and kimH (Guangyun, in Baxter's transcription), which glosses the second 'to restrain' and 'to stop'. The card-and-lock system is a modern use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ménjìn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ménjìn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ménjìn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ménjìn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen xiǎoqū yǒu ménjìn suǒyǐ hěn ānquán — Our estate has a door entry system, so it's safe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen xiǎoqū yǒu ménjìn suǒyǐ hěn ānquán* — Our estate has a door entry system, so it's safe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for with a mind at rest, then the Mandarin for uneasy (ill at ease), then say ménjìn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for with a mind at rest, then the Mandarin for uneasy (ill at ease), then say *ménjìn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ménjìn mean? (\"Door entry system; a card-entry door\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C379-zhian",
+      "sequence": 29290,
+      "title": "zhì'ān — law and order; public order",
+      "headword": "zhì'ān",
+      "romanization": "zhì'ān",
+      "gloss": "law and order; public order",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eadb228628a7d878",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for uneasy (ill at ease), then the Mandarin for a card-entry door."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhì'ān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhì'ān — \"law and order; public order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhèr de zhì'ān hěn hǎo suǒyǐ wǒ hěn fàngxīn — Law and order is good here, so I don't worry."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhì'ān is built from zhì 'to govern' and 安 'calm', both inherited from Middle Chinese, dri and 'an (Guangyun, in Baxter's transcription), which glosses the first 'to put in order' and also lists it twice in the departing tone, drijH and driH, with the same gloss. Mandarin zhì follows a departing reading."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhì'ān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhì'ān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhì'ān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhì'ān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr de zhì'ān hěn hǎo suǒyǐ wǒ hěn fàngxīn — Law and order is good here, so I don't worry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr de zhì'ān hěn hǎo suǒyǐ wǒ hěn fàngxīn* — Law and order is good here, so I don't worry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for uneasy (ill at ease), then the Mandarin for a card-entry door, then say zhì'ān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for uneasy (ill at ease), then the Mandarin for a card-entry door, then say *zhì'ān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhì'ān mean? (\"Law and order; public order\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R379-review-374-379",
+      "sequence": 29300,
+      "title": "Looking back: from People and Government to Feeling Safe",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from People and Government to Feeling Safe",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcac6a615c2733f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for the population (of a place) and the government."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the population (of a place), the government, a people's culture, an ethnic group, to develop and grow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the population (of a place), the government, a people's culture, an ethnic group, to develop and grow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poor (having little money), society, to donate (money), a volunteer, each other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: poor (having little money), society, to donate (money), a volunteer, each other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an organised event, a social worker, to treat with care, to give up one's seat, square dancing (in a public square)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an organised event, a social worker, to treat with care, to give up one's seat, square dancing (in a public square)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a resident (of a place), a local community, a housing estate, the area around (a place), a home near a good school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a resident (of a place), a local community, a housing estate, the area around (a place), a home near a good school]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unwanted noise, to grumble about, soundproofing (keeping sound out), a stranger, the property management office",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unwanted noise, to grumble about, soundproofing (keeping sound out), a stranger, the property management office]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the stairwell of a block, with a mind at rest, uneasy (ill at ease), a card-entry door, law and order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the stairwell of a block, with a mind at rest, uneasy (ill at ease), a card-entry door, law and order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "社 区 安 (ān) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 社 区 安 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The population (of a place)? (人口, rénkǒu.) The government? (zhèngfǔ.) A people's culture? (wénhuà.) An ethnic group? (mínzú.) To develop and grow? (fāzhǎn.) Poor (having little money)? (qióng.) Society? (社会, shèhuì.) To donate (money)? (juān.) A volunteer? (zhìyuànzhě.) Each other? (hùxiāng.) An organised event? (huódòng.) A social worker? (社工, shègōng.) To treat with care? (àihù.) To give up one's seat? (ràngzuò.) Square dancing (in a public square)? (guǎngchǎngwǔ.) A resident (of a place)? (jūmín.) A local community? (社区, shèqū.) A housing estate? (小区, xiǎoqū.) The area around (a place)? (zhōuwéi.) A home near a good school? (学区房, xuéqūfáng.) Unwanted noise? (zàoyīn.) To grumble about? (bàoyuàn.) Soundproofing (keeping sound out)? (géyīn.) A stranger? (生人, shēngrén.) The property management office? (wùyè.) The stairwell of a block? (lóudào.) With a mind at rest? (安心, ānxīn.) Uneasy (ill at ease)? (不安, bù'ān.) A card-entry door? (ménjìn.) Law and order? (zhì'ān.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

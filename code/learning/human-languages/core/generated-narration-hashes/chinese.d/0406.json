@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:d334a3f263878278",
+  "lessonIds": [
+    "ZH-C406-yongji",
+    "ZH-C406-laihui",
+    "ZH-C406-gaiqian",
+    "ZH-C406-qiche",
+    "ZH-C406-xinglijia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch406.txt",
+  "json": "chinese/narration/ch406.json",
+  "textHash": "fnv1a64:25adadacd7ba1dc6",
+  "jsonHash": "fnv1a64:97022cf88b38304e",
+  "findings": []
+}

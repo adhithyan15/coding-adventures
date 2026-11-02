@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Around the World",
+  "label": "ch:zh-around-the-world",
+  "canDo": "I can talk about countries, the world, the outside world, founding something and old civilizations.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C326-wenming",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can talk about countries, the world, the outside world, founding something and old civilizations.",
+    "assesses": [
+      "ZH-LEX-C326-WORLD326-03",
+      "ZH-LEX-C326-WORLD326-04",
+      "ZH-LEX-C326-WORLD326-05"
+    ]
+  }
+}

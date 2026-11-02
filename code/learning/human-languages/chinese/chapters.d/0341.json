@@ -1,0 +1,20 @@
+{
+  "chapter": 341,
+  "title": "Mooncakes",
+  "label": "ch:zh-mooncakes",
+  "canDo": "I can talk about mooncakes, bean paste, fillings and tasting, and say business is good.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C341-shengyi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can talk about mooncakes, bean paste, fillings and tasting, and say business is good.",
+    "assesses": [
+      "ZH-LEX-C341-MOONCAKE341-03",
+      "ZH-LEX-C341-MOONCAKE341-04",
+      "ZH-LEX-C341-MOONCAKE341-05",
+      "ZH-SCRIPT-BING-CAKE-01"
+    ]
+  }
+}

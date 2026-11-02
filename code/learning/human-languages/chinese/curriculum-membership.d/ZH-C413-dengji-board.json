@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C413-dengji-board",
+  "pathSegment": "ZH-PATH-413-FLY413",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-413-FLY413",
+      "order": 0
+    }
+  ]
+}

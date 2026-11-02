@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 322,
+  "title": "Back Then",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f89ba30081236cc7",
+  "lessons": [
+    {
+      "id": "ZH-C322-dangnian",
+      "sequence": 25200,
+      "title": "当年 (dāngnián) — back then; in those years",
+      "headword": "当年",
+      "romanization": "dāngnián",
+      "gloss": "back then; in those years",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80b4217d675b82d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for age-old, then the Mandarin for a script for a language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 当年",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当年 — dāngnián — \"back then; in those years\"."
+            },
+            {
+              "kind": "speech",
+              "text": "当年他常常给我写信 dāngnián tā chángcháng gěi wǒ xiě xìn — Back then he often sent me letters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当年 (dāngnián) is built from 当 'to face, that very' and 年 'a year', both inherited from Middle Chinese, tang and nen (Guangyun, in Baxter's transcription), which glosses the first 'to face' and 'to match' and says that when the grain ripens it is called a year."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāngnián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāngnián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāngnián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāngnián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāngnián tā chángcháng gěi wǒ xiě xìn — Back then he often sent me letters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāngnián tā chángcháng gěi wǒ xiě xìn* — Back then he often sent me letters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for age-old, then the Mandarin for a script for a language, then say dāngnián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for age-old, then the Mandarin for a script for a language, then say *dāngnián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 当年 (dāngnián) mean? (\"Back then; in those years\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C322-zaonian",
+      "sequence": 25210,
+      "title": "早年 (zǎonián) — one's early years; long ago",
+      "headword": "早年",
+      "romanization": "zǎonián",
+      "gloss": "one's early years; long ago",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94e14df47b060172",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a script for a language, then the Mandarin for in those years long ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 早年",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "早年 — zǎonián — \"one's early years; long ago\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他早年在外国工作过 tā zǎonián zài wàiguó gōngzuò guo — In his early years he worked abroad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "早年 (zǎonián) is built from 早 'early' and 年 'a year', both inherited from Middle Chinese, tsawX and nen (Guangyun, in Baxter's transcription), which glosses the first 'morning'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎonián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǎonián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎonián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǎonián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā zǎonián zài wàiguó gōngzuò guo — In his early years he worked abroad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā zǎonián zài wàiguó gōngzuò guo* — In his early years he worked abroad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a script for a language, then the Mandarin for in those years long ago, then say zǎonián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a script for a language, then the Mandarin for in those years long ago, then say *zǎonián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 早年 (zǎonián) mean? (\"One's early years; long ago\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C322-wannian",
+      "sequence": 25220,
+      "title": "晚年 (wǎnnián) — one's later years; old age",
+      "headword": "晚年",
+      "romanization": "wǎnnián",
+      "gloss": "one's later years; old age",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16e1378cd66474f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for in those years long ago, then the Mandarin for in one's early years."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 晚年",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "晚年 — wǎnnián — \"one's later years; old age\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他晚年的时候回了老家 tā wǎnnián de shíhou huí le lǎojiā — In his later years he went back to his home town."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "晚年 (wǎnnián) is built from 晚 'late' and 年 'a year', both inherited from Middle Chinese, mjonX and nen (Guangyun, in Baxter's transcription), which glosses the first 'dusk'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnnián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnnián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnnián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnnián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā wǎnnián de shíhou huí le lǎojiā — In his later years he went back to his home town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā wǎnnián de shíhou huí le lǎojiā* — In his later years he went back to his home town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for in those years long ago, then the Mandarin for in one's early years, then say wǎnnián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for in those years long ago, then the Mandarin for in one's early years, then say *wǎnnián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 晚年 (wǎnnián) mean? (\"One's later years; old age\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C322-yisheng",
+      "sequence": 25230,
+      "title": "一生 (yìshēng) — all one's life; a lifetime",
+      "headword": "一生",
+      "romanization": "yìshēng",
+      "gloss": "all one's life; a lifetime",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf6d72c473f01b11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for in one's early years, then the Mandarin for in one's later years."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 一生",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "一生 — yìshēng — \"all one's life; a lifetime\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他一生都在这个学校工作 tā yìshēng dōu zài zhège xuéxiào gōngzuò — He worked at this school all his life."
+            },
+            {
+              "kind": "speech",
+              "text": "A tone change: 一 is said with a falling tone, yì, before the level tone of shēng."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "一生 (yìshēng) is built from 一 'one' and 生 'to live', both inherited from Middle Chinese, 'jit and srjaeng (Guangyun, in Baxter's transcription), which calls the first the start of the numbers and glosses the second 'to grow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yìshēng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yìshēng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yìshēng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yìshēng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā yìshēng dōu zài zhège xuéxiào gōngzuò — He worked at this school all his life.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā yìshēng dōu zài zhège xuéxiào gōngzuò* — He worked at this school all his life.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for in one's early years, then the Mandarin for in one's later years, then say yìshēng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for in one's early years, then the Mandarin for in one's later years, then say *yìshēng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 一生 (yìshēng) mean? (\"All one's life; a lifetime\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C322-huainian",
+      "sequence": 25240,
+      "title": "huáiniàn — to cherish the memory of; to look back fondly on",
+      "headword": "huáiniàn",
+      "romanization": "huáiniàn",
+      "gloss": "to cherish the memory of; to look back fondly on",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41d2d280eb722b56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for in one's later years, then the Mandarin for all one's life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: huáiniàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huáiniàn — \"to cherish the memory of; to look back fondly on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ hěn huáiniàn xiǎoshíhou de shēnghuó — I really miss my childhood days."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huáiniàn is built from huái and niàn, both inherited from Middle Chinese, hweaj and nemH (Guangyun, in Baxter's transcription), which glosses the first 'to hold to the breast' and 'to think of', and the second 'to think of'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huáiniàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huáiniàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huáiniàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huáiniàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ hěn huáiniàn xiǎoshíhou de shēnghuó — I really miss my childhood days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ hěn huáiniàn xiǎoshíhou de shēnghuó* — I really miss my childhood days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for in one's later years, then the Mandarin for all one's life, then say huáiniàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for in one's later years, then the Mandarin for all one's life, then say *huáiniàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does huáiniàn mean? (\"To cherish the memory of; to look back fondly on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

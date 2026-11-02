@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:d3317bd59637ee5e",
+  "lessonIds": [
+    "ZH-C361-dazhaohu",
+    "ZH-C361-zhaodai",
+    "ZH-C361-jugong",
+    "ZH-C361-jingjiu",
+    "ZH-C361-kanbuqi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch361.txt",
+  "json": "chinese/narration/ch361.json",
+  "textHash": "fnv1a64:c360c85558c11c3e",
+  "jsonHash": "fnv1a64:dd0c34a0f085ad2a",
+  "findings": []
+}

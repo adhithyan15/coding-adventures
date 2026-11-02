@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:4785f7a8e95bc3a7",
+  "lessonIds": [
+    "ZH-C354-tiwen",
+    "ZH-C354-huati",
+    "ZH-W354-ti-topic",
+    "ZH-C354-timu",
+    "ZH-C354-neirong",
+    "ZH-C354-tanhua"
+  ],
+  "tex": "chinese/book/chapters/ch354-changing-the-subject.tex"
+}

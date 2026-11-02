@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:0ef3cf92ee0f1ace",
+  "lessonIds": [
+    "ZH-C379-loudao",
+    "ZH-C379-anxin",
+    "ZH-W379-an-calm",
+    "ZH-C379-buan",
+    "ZH-C379-menjin",
+    "ZH-C379-zhian",
+    "ZH-R379-review-374-379"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch379.txt",
+  "json": "chinese/narration/ch379.json",
+  "textHash": "fnv1a64:1b369f3f49afea8f",
+  "jsonHash": "fnv1a64:a3ac2220aa3b3166",
+  "findings": []
+}

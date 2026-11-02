@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C365-zhonggao",
+  "pathSegment": "ZH-PATH-365-YESBUT365",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-365-YESBUT365",
+      "order": 5
+    }
+  ]
+}

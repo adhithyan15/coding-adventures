@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:f691104ef7218647",
+  "lessonIds": [
+    "ZH-C400-tiaozheng",
+    "ZH-C400-yanchang",
+    "ZH-C400-suoduan",
+    "ZH-C400-yuanding",
+    "ZH-C400-anding"
+  ],
+  "tex": "chinese/book/chapters/ch400-moving-the-dates.tex"
+}

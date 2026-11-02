@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W377-qu-area",
+    "language": "chinese",
+    "chapter": 377,
+    "sequence": 29165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9ef4dc144fd0faf8",
+    "detachableSegments": [
+      "Script — a bar, a cross, then the frame"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

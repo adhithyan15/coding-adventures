@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:8516174f475495c0",
+  "lessonIds": [
+    "ZH-C354-tiwen",
+    "ZH-C354-huati",
+    "ZH-W354-ti-topic",
+    "ZH-C354-timu",
+    "ZH-C354-neirong",
+    "ZH-C354-tanhua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch354.txt",
+  "json": "chinese/narration/ch354.json",
+  "textHash": "fnv1a64:e19d2e27b660fe82",
+  "jsonHash": "fnv1a64:6863f13ee059ffef",
+  "findings": []
+}

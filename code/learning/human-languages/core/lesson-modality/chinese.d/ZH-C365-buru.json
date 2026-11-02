@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C365-buru",
+    "language": "chinese",
+    "chapter": 365,
+    "sequence": 28010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5af43b889f8539a5"
+  },
+  "findings": []
+}

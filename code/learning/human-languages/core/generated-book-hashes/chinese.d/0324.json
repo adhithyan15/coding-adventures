@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:4cd9fc19125f76c5",
+  "lessonIds": [
+    "ZH-C324-xiangqi",
+    "ZH-C324-jinian",
+    "ZH-C324-liuxia",
+    "ZH-C324-shidai",
+    "ZH-C324-yinxiang"
+  ],
+  "tex": "chinese/book/chapters/ch324-remembering.tex"
+}

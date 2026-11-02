@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:fac9f11613cad709",
+  "lessonIds": [
+    "ZH-C363-zunzhong",
+    "ZH-C363-xiaosheng",
+    "ZH-C363-falu",
+    "ZH-C363-fanfa",
+    "ZH-C363-suzhi",
+    "ZH-R363-review-358-363"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch363.txt",
+  "json": "chinese/narration/ch363.json",
+  "textHash": "fnv1a64:c5895e14b7153551",
+  "jsonHash": "fnv1a64:4c17f282d00f140c",
+  "findings": []
+}

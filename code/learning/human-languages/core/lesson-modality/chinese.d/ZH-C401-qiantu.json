@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C401-qiantu",
+    "language": "chinese",
+    "chapter": 401,
+    "sequence": 30390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87ecb42cb7e9aca9"
+  },
+  "findings": []
+}

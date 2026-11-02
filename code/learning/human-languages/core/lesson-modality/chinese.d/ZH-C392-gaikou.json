@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C392-gaikou",
+    "language": "chinese",
+    "chapter": 392,
+    "sequence": 29970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16767e619c9f8ef0"
+  },
+  "findings": []
+}

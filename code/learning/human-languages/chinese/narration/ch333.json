@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 333,
+  "title": "New Year's Eve",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:17fd6f8e6ef59362",
+  "lessons": [
+    {
+      "id": "ZH-C333-chunwan",
+      "sequence": 25770,
+      "title": "春晚 (Chūnwǎn) — the Spring Festival Gala",
+      "headword": "春晚",
+      "romanization": "Chūnwǎn",
+      "gloss": "the Spring Festival Gala",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e50737b9c9bcc22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for how absurd, then the Mandarin for the human world below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 春晚",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "春晚 — Chūnwǎn — \"the Spring Festival Gala\"."
+            },
+            {
+              "kind": "speech",
+              "text": "每年春节我们都在家看春晚 měinián Chūnjié wǒmen dōu zài jiā kàn Chūnwǎn — Every lunar new year we have the gala on at home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "春晚 (Chūnwǎn) is built from 春 'spring' and 晚 'evening', a short form of the longer name of the Spring Festival evening show. Both are inherited from Middle Chinese, tsyhwin and mjonX (Guangyun, in Baxter's transcription), which calls the first the first of the four seasons and glosses the second 'dusk'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chūnwǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chūnwǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chūnwǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chūnwǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "měinián Chūnjié wǒmen dōu zài jiā kàn Chūnwǎn — Every lunar new year we have the gala on at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *měinián Chūnjié wǒmen dōu zài jiā kàn Chūnwǎn* — Every lunar new year we have the gala on at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for how absurd, then the Mandarin for the human world below, then say Chūnwǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for how absurd, then the Mandarin for the human world below, then say *Chūnwǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 春晚 (Chūnwǎn) mean? (\"The Spring Festival Gala\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C333-chuxi",
+      "sequence": 25780,
+      "title": "Chúxī — lunar New Year's Eve",
+      "headword": "Chúxī",
+      "romanization": "Chúxī",
+      "gloss": "lunar New Year's Eve",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4db8d5bcc7dc9d8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the human world below, then the Mandarin for the Spring Festival Gala on TV."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Chúxī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chúxī — \"lunar New Year's Eve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Chúxī de shíhou wǒmen dōu huí jiā — On the eve of the lunar new year we all go home."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chúxī is built from chú 'to clear away' and xī 'dusk', both inherited from Middle Chinese, drjo and zjek (Guangyun, in Baxter's transcription), which glosses the first 'steps' and 'to remove', and the second 'dusk'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chúxī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chúxī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chúxī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chúxī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chúxī de shíhou wǒmen dōu huí jiā — On the eve of the lunar new year we all go home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chúxī de shíhou wǒmen dōu huí jiā* — On the eve of the lunar new year we all go home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the human world below, then the Mandarin for the Spring Festival Gala on TV, then say Chúxī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the human world below, then the Mandarin for the Spring Festival Gala on TV, then say *Chúxī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Chúxī mean? (\"Lunar New Year's Eve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C333-nianyefan",
+      "sequence": 25790,
+      "title": "niányèfàn — New Year's Eve dinner",
+      "headword": "niányèfàn",
+      "romanization": "niányèfàn",
+      "gloss": "New Year's Eve dinner",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d12b22d880e1cff2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the Spring Festival Gala on TV, then the Mandarin for lunar New Year's Eve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: niányèfàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "niányèfàn — \"New Year's Eve dinner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Chúxī de wǎnshang wǒmen zài nǎinai jiā chī le niányèfàn — On the last night of the year we had the reunion dinner at my grandma's."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "niányèfàn is built from 年 'a year', yè 'night' and 饭 'a meal', all three inherited from Middle Chinese, nen, yaeH and bjonH (Guangyun, in Baxter's transcription), which glosses the second 'evening' and says of the third that grain was first cooked into it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niányèfàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niányèfàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niányèfàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niányèfàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chúxī de wǎnshang wǒmen zài nǎinai jiā chī le niányèfàn — On the last night of the year we had the reunion dinner at my grandma's.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chúxī de wǎnshang wǒmen zài nǎinai jiā chī le niányèfàn* — On the last night of the year we had the reunion dinner at my grandma's.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the Spring Festival Gala on TV, then the Mandarin for lunar New Year's Eve, then say niányèfàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the Spring Festival Gala on TV, then the Mandarin for lunar New Year's Eve, then say *niányèfàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does niányèfàn mean? (\"New Year's Eve dinner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C333-shousui",
+      "sequence": 25800,
+      "title": "shǒusuì — to keep the New Year vigil",
+      "headword": "shǒusuì",
+      "romanization": "shǒusuì",
+      "gloss": "to keep the New Year vigil",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d6bac28c3b40c6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for lunar New Year's Eve, then the Mandarin for the New Year's Eve dinner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shǒusuì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shǒusuì — \"to keep the New Year vigil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "chī le niányèfàn yǐhòu wǒmen yìqǐ shǒusuì — After the reunion dinner we stayed up together."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shǒusuì is built from shǒu 'to guard' and 岁 'a year', both inherited from Middle Chinese, syuwX and sjwejH (Guangyun, in Baxter's transcription), which glosses the first 'to keep watch over'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǒusuì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǒusuì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǒusuì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǒusuì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chī le niányèfàn yǐhòu wǒmen yìqǐ shǒusuì — After the reunion dinner we stayed up together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chī le niányèfàn yǐhòu wǒmen yìqǐ shǒusuì* — After the reunion dinner we stayed up together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for lunar New Year's Eve, then the Mandarin for the New Year's Eve dinner, then say shǒusuì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for lunar New Year's Eve, then the Mandarin for the New Year's Eve dinner, then say *shǒusuì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shǒusuì mean? (\"To keep the New Year vigil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C333-bainian",
+      "sequence": 25810,
+      "title": "bàinián — to pay a New Year call",
+      "headword": "bàinián",
+      "romanization": "bàinián",
+      "gloss": "to pay a New Year call",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd03c1736244b316",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the New Year's Eve dinner, then the Mandarin for to keep the New Year vigil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bàinián",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bàinián — \"to pay a New Year call\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dì'èr tiān wǒmen qù yéye jiā bàinián — The next day we went to my grandpa's to wish him a happy new year."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bàinián is built from bài 'to bow' and 年 'a year', both inherited from Middle Chinese, peajH and nen (Guangyun, in Baxter's transcription), which lists the first among the forms of a bow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàinián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàinián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàinián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàinián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dì'èr tiān wǒmen qù yéye jiā bàinián — The next day we went to my grandpa's to wish him a happy new year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dì'èr tiān wǒmen qù yéye jiā bàinián* — The next day we went to my grandpa's to wish him a happy new year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the New Year's Eve dinner, then the Mandarin for to keep the New Year vigil, then say bàinián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the New Year's Eve dinner, then the Mandarin for to keep the New Year vigil, then say *bàinián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bàinián mean? (\"To pay a New Year call\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

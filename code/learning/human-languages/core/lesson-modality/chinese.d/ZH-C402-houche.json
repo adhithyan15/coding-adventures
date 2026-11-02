@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C402-houche",
+    "language": "chinese",
+    "chapter": 402,
+    "sequence": 31010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f18c8103abb9c982"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C352-kending",
+  "pathSegment": "ZH-PATH-352-AGREE352",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-352-AGREE352",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C388-choukong",
+  "pathSegment": "ZH-PATH-388-DATE388",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-388-DATE388",
+      "order": 0
+    }
+  ]
+}

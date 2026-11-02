@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W364-zhun-allow",
+    "language": "chinese",
+    "chapter": 364,
+    "sequence": 27945,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:50745d385b34054c",
+    "detachableSegments": [
+      "Script — the ice piece, then the bird piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

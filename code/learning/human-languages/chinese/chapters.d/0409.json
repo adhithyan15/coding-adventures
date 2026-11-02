@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Heavy Traffic",
+  "label": "ch:zh-heavy-traffic",
+  "canDo": "I can talk about rush hour and the traffic, say a line opens, find the conductor and take a taxi.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C409-dache",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about rush hour and the traffic, say a line opens, find the conductor and take a taxi.",
+    "assesses": [
+      "ZH-LEX-C409-TRAFFIC409-03",
+      "ZH-LEX-C409-TRAFFIC409-04",
+      "ZH-LEX-C409-TRAFFIC409-05"
+    ]
+  }
+}

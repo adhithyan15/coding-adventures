@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W360-bi-must",
+    "language": "chinese",
+    "chapter": 360,
+    "sequence": 27735,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:149b7694cae27a27",
+    "detachableSegments": [
+      "Script — the strokes of the heart, with a sweep through them"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

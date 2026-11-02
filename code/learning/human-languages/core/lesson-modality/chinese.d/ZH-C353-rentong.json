@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C353-rentong",
+    "language": "chinese",
+    "chapter": 353,
+    "sequence": 27400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10f388b0717d4bb2"
+  },
+  "findings": []
+}

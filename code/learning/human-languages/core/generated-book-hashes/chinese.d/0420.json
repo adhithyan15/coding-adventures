@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:fcde80d6cc8d2932",
+  "lessonIds": [
+    "ZH-C420-jiazhao",
+    "ZH-C420-chedao",
+    "ZH-C420-chewei",
+    "ZH-C420-daoche",
+    "ZH-C420-weizhang"
+  ],
+  "tex": "chinese/book/chapters/ch420-parking.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 419,
+  "title": "Arrivals",
+  "label": "ch:zh-arrivals",
+  "canDo": "I can meet someone off a plane, change money, and say a flight is international or domestic.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R419-review-414-419",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can meet someone off a plane, change money, and say a flight is international or domestic.",
+    "assesses": [
+      "ZH-LEX-C419-ARRIVE419-01",
+      "ZH-LEX-C419-ARRIVE419-02",
+      "ZH-LEX-C419-ARRIVE419-03",
+      "ZH-LEX-C419-ARRIVE419-04",
+      "ZH-LEX-C419-ARRIVE419-05"
+    ]
+  }
+}

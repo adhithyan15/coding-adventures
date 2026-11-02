@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:1c6a19bb2447834f",
+  "lessonIds": [
+    "ZH-C388-choukong",
+    "ZH-C388-yuehui",
+    "ZH-W388-yue-arrange",
+    "ZH-C388-shiyue",
+    "ZH-C388-tiqian",
+    "ZH-C388-shiqu"
+  ],
+  "tex": "chinese/book/chapters/ch388-making-a-date.tex"
+}

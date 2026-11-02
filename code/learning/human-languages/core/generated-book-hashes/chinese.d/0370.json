@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:272b75d22310dce6",
+  "lessonIds": [
+    "ZH-C370-yinsu",
+    "ZH-C370-bijing",
+    "ZH-C370-guanjian",
+    "ZH-C370-zuoyong",
+    "ZH-C370-zongzhi"
+  ],
+  "tex": "chinese/book/chapters/ch370-the-key-point.tex"
+}

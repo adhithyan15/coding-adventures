@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C342-guihua",
+  "pathSegment": "ZH-PATH-342-AUTUMN342",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-342-AUTUMN342",
+      "order": 4
+    }
+  ]
+}

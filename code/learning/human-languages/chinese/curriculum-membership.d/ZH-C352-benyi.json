@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C352-benyi",
+  "pathSegment": "ZH-PATH-352-AGREE352",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-352-AGREE352",
+      "order": 3
+    }
+  ]
+}

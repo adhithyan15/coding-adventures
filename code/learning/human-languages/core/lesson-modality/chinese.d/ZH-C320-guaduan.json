@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C320-guaduan",
+    "language": "chinese",
+    "chapter": 320,
+    "sequence": 25100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08e8b39322a9e141"
+  },
+  "findings": []
+}

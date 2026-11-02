@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:1bf51b8758b44ca6",
+  "lessonIds": [
+    "ZH-C416-yanwu",
+    "ZH-C416-chang",
+    "ZH-W416-chang-ground",
+    "ZH-C416-wuji",
+    "ZH-C416-zhuanji",
+    "ZH-C416-feixing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch416.txt",
+  "json": "chinese/narration/ch416.json",
+  "textHash": "fnv1a64:a86ecf0124f0bff9",
+  "jsonHash": "fnv1a64:cac518a6fe199ab1",
+  "findings": []
+}

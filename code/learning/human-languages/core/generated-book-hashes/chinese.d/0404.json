@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:6bd39a26f9cc590c",
+  "lessonIds": [
+    "ZH-C404-shoupiaochu",
+    "ZH-C404-jianpiao",
+    "ZH-W404-jian-check",
+    "ZH-C404-bupiao",
+    "ZH-C404-wopu",
+    "ZH-C404-yingzuo"
+  ],
+  "tex": "chinese/book/chapters/ch404-tickets-please.tex"
+}

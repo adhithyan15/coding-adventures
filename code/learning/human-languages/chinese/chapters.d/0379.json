@@ -1,0 +1,22 @@
+{
+  "chapter": 379,
+  "title": "Feeling Safe",
+  "label": "ch:zh-feeling-safe",
+  "canDo": "I can talk about the stairwell, feeling at ease or uneasy, the door system and law and order.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R379-review-374-379",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about the stairwell, feeling at ease or uneasy, the door system and law and order.",
+    "assesses": [
+      "ZH-LEX-C379-SAFE379-01",
+      "ZH-LEX-C379-SAFE379-02",
+      "ZH-LEX-C379-SAFE379-03",
+      "ZH-LEX-C379-SAFE379-04",
+      "ZH-LEX-C379-SAFE379-05",
+      "ZH-SCRIPT-AN-CALM-01"
+    ]
+  }
+}

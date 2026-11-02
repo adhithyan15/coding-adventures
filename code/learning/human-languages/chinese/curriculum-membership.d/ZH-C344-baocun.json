@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C344-baocun",
+  "pathSegment": "ZH-PATH-344-MEMORY344",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-344-MEMORY344",
+      "order": 0
+    }
+  ]
+}

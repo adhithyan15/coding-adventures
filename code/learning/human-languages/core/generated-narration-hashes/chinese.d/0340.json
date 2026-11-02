@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:db413992a7051ffe",
+  "lessonIds": [
+    "ZH-C340-chuantong",
+    "ZH-C340-jiangjiu",
+    "ZH-C340-guiju",
+    "ZH-C340-jieqi",
+    "ZH-C340-saomu",
+    "ZH-R340-review-336-340"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch340.txt",
+  "json": "chinese/narration/ch340.json",
+  "textHash": "fnv1a64:bd3fe8dc75d4dee3",
+  "jsonHash": "fnv1a64:452a4ff17d724b0d",
+  "findings": []
+}

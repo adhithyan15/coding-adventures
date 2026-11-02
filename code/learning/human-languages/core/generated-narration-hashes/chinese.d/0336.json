@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:87520918849b755c",
+  "lessonIds": [
+    "ZH-C336-gaobie",
+    "ZH-C336-huansong",
+    "ZH-W336-song-send",
+    "ZH-C336-songke",
+    "ZH-C336-songli",
+    "ZH-C336-woshou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch336.txt",
+  "json": "chinese/narration/ch336.json",
+  "textHash": "fnv1a64:1890d8c3ce31142d",
+  "jsonHash": "fnv1a64:acc52b1e3cb79f18",
+  "findings": []
+}

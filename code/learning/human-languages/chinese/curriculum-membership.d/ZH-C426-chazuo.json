@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C426-chazuo",
+  "pathSegment": "ZH-PATH-426-ROOM426",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-426-ROOM426",
+      "order": 4
+    }
+  ]
+}

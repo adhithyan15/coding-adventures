@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C320-datong",
+  "pathSegment": "ZH-PATH-320-PHONE320",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-320-PHONE320",
+      "order": 2
+    }
+  ]
+}

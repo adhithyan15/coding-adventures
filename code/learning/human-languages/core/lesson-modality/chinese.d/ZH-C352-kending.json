@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C352-kending",
+    "language": "chinese",
+    "chapter": 352,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47a06489bcfbd654"
+  },
+  "findings": []
+}

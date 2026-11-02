@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-344-MEMORY344",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-344-MEMORY344"
+  ],
+  "after": []
+}

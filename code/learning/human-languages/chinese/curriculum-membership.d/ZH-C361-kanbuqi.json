@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C361-kanbuqi",
+  "pathSegment": "ZH-PATH-361-GUEST361",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-361-GUEST361",
+      "order": 4
+    }
+  ]
+}
