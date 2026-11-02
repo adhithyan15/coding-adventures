@@ -147,6 +147,22 @@ The build system parses language-specific metadata files to discover inter-packa
 
 Dependencies on external packages (not in the monorepo) are silently ignored.
 
+A Rust (or, in the Go tool, WASM) package's edges come from `path` entries in
+every Cargo table that links into or builds the crate: `[dependencies]`,
+`[build-dependencies]` (and the legacy `build_dependencies`), and the same
+tables under `[target.<cfg>.…]` for every cfg, as a union over all targets
+because CI builds on several hosts. Entries are read both as one-line inline
+tables (`name = { path = "..." }`) and as `[<table>.<name>]` sub-tables with a
+`path = "..."` key; a quoted `package` field renames the dependency. Before
+2026-11-01 only the top-level `[dependencies]` table was read, so a change to
+a build or target-specific dependency rebuilt and re-tested none of its
+dependents: `paint-metal`, `paint-vm-cairo` and `paint-vm-direct2d` under the
+barcode crates, the sandbox crates under the chief-of-staff launchers, and
+`grammar-tools` under the lexers' and parsers' build scripts were all missed.
+`[dev-dependencies]` in every form are not edges; they are test triggers (see
+below). The exact line-reading procedure, including the out-of-scope TOML
+shapes, is the cross-implementation contract in `build-tool-conformance.md`.
+
 Mosaic is a domain language, not an implementation lane, so only the Go
 reference tool resolves it (the conformance contract does not require the
 other build-tool implementations to). Only the keys of the root
@@ -249,7 +265,8 @@ plan if the consumer is missing from discovery.
 
 A Cargo `[dev-dependencies]` entry links a crate into another crate's tests,
 never its library, so it is not a build-graph edge (the
-`resolution/rust-field-aware` conformance case pins that). It must still
+`resolution/rust-field-aware` conformance case pins that, while pinning
+build and target-specific dependencies as edges). It must still
 re-run the dependent's tests: every Mosaic package and app is tested by a
 Cargo smoke harness whose only in-repository dependencies are dev-dependencies
 on the Mosaic compilers and artifact builder, so without this a change to a
@@ -289,10 +306,18 @@ Unicode-normalization-aliased spelling of the path can move or drop the
 trigger. The target is:
 
 - a discovered package root: that package is a trigger. The chain does not
-  end there, because the build graph records only a Rust or WASM package's
-  top-level `[dependencies]`: its target-specific and build dependencies, and
-  any `Cargo.toml` at the root of another language's package (a native
-  extension), would otherwise be invisible;
+  end there. The build graph does record a Rust or WASM package's
+  `[dependencies]`, `[build-dependencies]` and target forms, so when every
+  link of that package resolves to another package, following it only
+  re-derives what the one-hop rule already reaches through `AffectedNodes`.
+  The graph cannot see the rest, though. It has no node for a crate that is
+  not a package root (a nested or orphan crate, which may itself be reached
+  only through a dev-dependency), so nothing such a crate links is a graph
+  edge. It reads another language's package through that language's manifest,
+  so a `Cargo.toml` at its root (a native extension) contributes no edge. And
+  it resolves entries by Cargo name, where triggers resolve by path. Following
+  every target keeps all three cases covered without depending on which of
+  them applies;
 - any other crate: if it lies inside a discovered package (another package,
   or the dependent itself), that package is a trigger, since prefix matching
   attributes changes there to it. If no package covers it, it must be listed

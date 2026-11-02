@@ -687,15 +687,97 @@ normalization: each run of hyphens, underscores, or periods becomes one hyphen
 before internal-package lookup. Extras, version specifiers, and environment
 markers do not form part of the normalized distribution name.
 
-For Rust `Cargo.toml` manifests, dependency candidates come only from inline
-entries in the top-level `[dependencies]` table whose value contains a `path`
-assignment. The dependency key before the first `=` is matched against known
-Cargo package names unless the inline table provides a quoted `package`
-override, in which case that published package name is authoritative. Resolvers
-ignore `[package]`, `[lib]`, features, workspace
-metadata, dev dependencies, build dependencies, target-specific dependency
-tables, non-path registry dependencies, comments, and every other field or
-table. Reaching any new TOML table ends the authoritative dependency table.
+For Rust `Cargo.toml` manifests, dependency candidates come from entries with
+a `path` field in the tables that link into, or build, the crate itself:
+`[dependencies]`, `[build-dependencies]` and its legacy spelling
+`[build_dependencies]`, and the same three tables under `[target.<cfg>.…]` for
+every `<cfg>`. A build dependency counts because it is compiled into the
+crate's build script, so changing it can change the crate. Target tables
+count for every configuration at once, as a union, because CI builds on
+several hosts and any of them may compile the entry. Dev dependencies do not
+count in any form: they link only into tests, examples and benches, and Cargo
+allows a dev-dependency cycle that would fail every build as a graph edge. The
+Go reference tool records them in a separate test-trigger relation instead
+(`12-build-system.md`). Resolvers read the manifest with the line procedure
+below; anything it does not describe contributes nothing.
+
+1. *Lines.* Split the text at LF and drop one trailing CR from each line; a
+   leading UTF-8 byte-order mark is ignored. A *string* is a basic string
+   `"..."`, in which a backslash makes the next character part of the string
+   (so `\"` does not end it), or a literal string `'...'`, which has no
+   escapes. Strings never span lines. On each line the comment begins at the
+   first `#` outside a string and is removed, and then leading and trailing
+   spaces and tabs are trimmed.
+2. *Headers.* A trimmed line that begins with `[` and ends with `]` is a
+   header. Every header ends the current table, including a header that is
+   malformed or that this contract does not read; the end of the file ends it
+   too. A header that begins with `[[` is an array of tables and opens no read
+   table. Otherwise the text between the outer brackets is split into
+   segments at each `.` outside a string. Each segment, trimmed of spaces and
+   tabs, must be a bare key (one or more ASCII letters, digits, `_` or `-`)
+   or exactly one complete string, whose value is the text between its
+   delimiters, verbatim (escapes are not decoded). An empty or otherwise
+   malformed segment, or an unterminated string, makes the header malformed.
+   With `D` standing for `dependencies`, `build-dependencies` or
+   `build_dependencies`, compared exactly and case-sensitively, exactly these
+   segment lists open a read table:
+   - `[D]` and `[target.C.D]` open an *inline dependency table*;
+   - `[D.N]` and `[target.C.D.N]` open a *dependency sub-table* for the
+     dependency key `N`.
+
+   Here `target` is the literal segment `target`, `C` is any one segment (a
+   quoted cfg such as `'cfg(any(unix, windows))'`, whose dots, commas and
+   parentheses lie inside the string, or a bare target triple such as
+   `x86_64-unknown-linux-gnu`), and `N` is any one segment. Because segment
+   values are compared rather than raw text, `["dependencies"]` and
+   `[target."cfg(unix)".build-dependencies]` are read. Every other segment
+   list opens no read table: `[package]`, `[features]`,
+   `[dev-dependencies]`, `[dev_dependencies]`, `[target.C.dev-dependencies]`,
+   `[D.N.features]`, `[target.C]`, `[patch.crates-io]`, `[replace]`,
+   `[workspace.dependencies]`, and so on.
+3. *Inline entries.* In an inline dependency table, each line that is not a
+   header and contains `=` outside strings is an entry. Its key is the
+   trimmed text before the first such `=`, and must be a bare key or exactly
+   one complete string (taken as its value, as in headers); a dotted key such
+   as `foo.path = "../foo"`, or any other key shape, contributes nothing. Its
+   value is the trimmed text after that `=`, and must begin with `{` and end
+   with `}` on the same line; any other value (a version string such as
+   `serde = "1"`, an array, or an inline table continued onto later lines)
+   contributes nothing. The text between the outer braces is split into
+   fields at each `,` that is outside strings and not nested inside `[...]`
+   or `{...}`, and each field's key is the trimmed text before its first `=`
+   outside strings. The entry is a candidate only if a field has the key
+   `path` (exactly: bare and lowercase) and its trimmed value is exactly one
+   non-empty string. The candidate's name is the value of a field with the
+   key `package` (exactly) whose trimmed value is exactly one non-empty
+   string, if there is such a field, and the entry key otherwise. Fields
+   inside a nested table, such as `x = { path = "..." }` as the value of a
+   field, are not fields of the entry.
+4. *Sub-table entries.* In a dependency sub-table, a line `K = V` whose key
+   `K` is exactly `path` or `package` (bare, lowercase) and whose trimmed
+   value `V` is exactly one non-empty string sets that field; the first such
+   line for a key wins and every other line is ignored. When the sub-table
+   ends it is a candidate if `path` was set, named by `package` if that was
+   set and by `N` otherwise.
+5. *Matching.* Each candidate name is ASCII-lowercased and matched against
+   the known Cargo package names, which are the package directory alias and
+   the `[package]` `name`. A `package` rename is authoritative: the entry key
+   of a renamed entry is not looked up. Candidates from every read table are
+   united, and duplicates collapse to one edge. A registry-only entry (one
+   without `path`), `git`, `version`, `workspace = true`, `optional`,
+   `default-features` and `features` fields (a feature list that names a
+   package included), comments, and every other key, field or table
+   contribute nothing.
+
+These shapes are out of scope: a conforming reader need not handle them, the
+shared fixtures do not use them, and the repository's manifests avoid them.
+They are multi-line strings (`"""` or `'''`) and everything inside them; an
+inline table continued onto later lines (TOML 1.1); dotted keys that spell a
+dependency or a dependency table (`foo.path = "..."` in a read table, or
+`dependencies.foo = { ... }` and `target = { ... }` elsewhere); a multi-line
+array value with a continuation line that begins with `[` and ends with `]`
+(which this procedure reads as a header); and escape sequences in keys and
+header segments, which are compared verbatim.
 
 For Ruby `.gemspec` manifests, dependency candidates come only from the first
 quoted gem-name argument of `add_dependency` and `add_runtime_dependency`

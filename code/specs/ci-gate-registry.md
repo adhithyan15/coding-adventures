@@ -244,10 +244,10 @@ L=Lua, P=Perl, Y=Python, B=Ruby, R=Rust, S=Swift, T=TypeScript.
 | `dart-field-aware`, `dotnet-cross-language-field-aware`, `haskell-field-aware` | G, H, Y |
 | `dotnet-csharp-field-aware`, `dotnet-fsharp-field-aware`, `gradle-java-field-aware`, `gradle-kotlin-field-aware` | G, H, Y |
 | `ecosystem-scoped-aliases` | G, Y |
-| `elixir-field-aware`, `go-field-aware`, `perl-field-aware`, `ruby-field-aware`, `swift-field-aware`, `typescript-field-aware` | G, H |
+| `elixir-field-aware`, `go-field-aware`, `perl-field-aware`, `ruby-field-aware`, `rust-field-aware`, `swift-field-aware`, `typescript-field-aware` | G, H |
 | `elixir-program-package` | B, R |
 | `elixir-self-edge` | R |
-| `lua-cycle`, `lua-field-aware`, `lua-program-package`, `python-diamond`, `python-field-aware`, `rust-field-aware` | H |
+| `lua-cycle`, `lua-field-aware`, `lua-program-package`, `python-diamond`, `python-field-aware` | H |
 | `lua-utf8`, `lua-invalid-utf8` | G, H, L, P, B, R, S, T |
 | `ocaml-field-aware` | G |
 
