@@ -29,9 +29,36 @@ portable runtime case: statically typed lanes may reject it before execution.
 `CT_SELECT_LENGTH_MISMATCH` before reading either input; native exception text
 is not standardized. The selection result must not alias a mutable input.
 
+### How a lane receives the selection bit
+
+`choice` is secret, so turning it into a mask must not branch on it. Many
+languages convert a boolean to the integer 0 or 1 as a plain value conversion,
+for example C, C++, Rust, TypeScript and Python, or let a lane read a
+boolean's stored byte, as .NET does with `Unsafe.As`. Those lanes take a
+boolean `choice`.
+
+Some languages have no branch-free way to turn a boolean into a number:
+- **Go** has no bool-to-integer conversion at all;
+- **Java and Kotlin** have none for `boolean`;
+- in **Ruby and Elixir**, every conversion is an `if`, a `?:` or a pattern match.
+
+Those lanes take `choice` as an **unsigned integer bit**: exactly 0 (select
+`right`) or 1 (select `left`). This is how Go's own `crypto/subtle`
+selection functions work. Any other value is a caller error, raised before
+either input is read.
+
+The validation itself must not leak the bit. It must take the same path for 0
+and for 1. Testing `choice & ~1` for zero, one computation whose result is the
+same for both valid values, is acceptable. Comparing `choice` against each
+valid value in turn is **not**: a check like `[true, false].include?(choice)`
+stops at its first match, and so does a different amount of work for each
+value. The conformance corpus keeps a boolean `choice`, and an integer-bit
+lane's adapter maps `true` to 1 and `false` to 0.
+
 For equal lengths, equality can XOR corresponding bytes into an accumulator
-and test only after the full loop. Selection can expand the boolean to an
-all-zero or all-one byte mask and compute `right ^ ((left ^ right) & mask)`.
+and test only after the full loop. Selection can expand the bit to an
+all-zero or all-one byte mask (`-bit & 0xFF`) and compute
+`right ^ ((left ^ right) & mask)`.
 An equivalent implementation is allowed, but no content-dependent early
 return, conditional selection branch, lookup index, or loop bound is allowed.
 The `eq_u64` reduction must inspect all 64 bits through a fixed operation

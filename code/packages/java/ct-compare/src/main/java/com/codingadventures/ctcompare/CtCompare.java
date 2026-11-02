@@ -24,14 +24,38 @@ public final class CtCompare {
         return ctEq(left, right);
     }
 
-    public static byte[] ctSelectBytes(byte[] left, byte[] right, boolean choice) {
+    /**
+     * Return a fresh copy of {@code left} when {@code choice} is 1 and of
+     * {@code right} when it is 0, without branching on {@code choice}.
+     *
+     * <p><b>Why an int and not a boolean.</b> Java has no conversion from
+     * {@code boolean} to an integer, so turning a boolean into a mask needs
+     * {@code choice ? 1 : 0}, a branch on the secret bit that CT01 forbids.
+     * The bit is therefore passed as an {@code int} that must be exactly 0 or
+     * 1, as Go's {@code crypto/subtle} does.
+     *
+     * <pre>
+     * choice = 0  -&gt;  mask = -0 = 0x00000000  -&gt;  result is right
+     * choice = 1  -&gt;  mask = -1 = 0xFFFFFFFF  -&gt;  result is left
+     * </pre>
+     *
+     * <p>Validation tests {@code choice & ~1}, which is 0 for both valid values,
+     * so a valid call takes the same path whichever bit is secret.
+     *
+     * @throws IllegalArgumentException if the lengths differ or {@code choice}
+     *     is not 0 or 1; thrown before either input is read
+     */
+    public static byte[] ctSelectBytes(byte[] left, byte[] right, int choice) {
         Objects.requireNonNull(left, "left");
         Objects.requireNonNull(right, "right");
         if (left.length != right.length) {
             throw new IllegalArgumentException("ctSelectBytes requires equal-length inputs");
         }
+        if ((choice & ~1) != 0) {
+            throw new IllegalArgumentException("ctSelectBytes requires choice to be 0 or 1");
+        }
 
-        int mask = 0 - (choice ? 1 : 0);
+        int mask = -choice;
         byte[] output = new byte[left.length];
         for (int i = 0; i < left.length; i++) {
             output[i] = (byte) (right[i] ^ ((left[i] ^ right[i]) & mask));

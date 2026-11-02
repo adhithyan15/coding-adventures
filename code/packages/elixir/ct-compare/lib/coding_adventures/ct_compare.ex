@@ -23,12 +23,35 @@ defmodule CodingAdventures.CtCompare do
 
   def ct_eq_fixed(left, right), do: ct_eq(left, right)
 
-  def ct_select_bytes(left, right, choice) when is_binary(left) and is_binary(right) and is_boolean(choice) do
+  @doc """
+  Select `left` when `choice` is 1 and `right` when it is 0, without branching
+  on `choice`.
+
+  Why an integer and not a boolean: Elixir has no branch-free way to turn a
+  boolean into a number. Every conversion is an `if` or a pattern match on the
+  secret bit, which CT01 forbids. The bit is therefore an integer that must
+  be exactly 0 or 1, as Go's `crypto/subtle` does:
+
+      choice = 0  ->  band(-0, 0xFF) = 0x00  ->  result is right
+      choice = 1  ->  band(-1, 0xFF) = 0xFF  ->  result is left
+
+  The guard checks only the *type*. The range check clears bit 0 and tests for
+  zero, a single computation whose result is the same for both valid values,
+  so a valid call takes the same path whichever bit is secret. A length
+  mismatch or a bit other than 0 or 1 raises `ArgumentError` before either
+  input is read.
+  """
+  def ct_select_bytes(left, right, choice)
+      when is_binary(left) and is_binary(right) and is_integer(choice) do
     if byte_size(left) != byte_size(right) do
       raise ArgumentError, "ct_select_bytes requires equal-length binaries"
     end
 
-    mask = if choice, do: 0xFF, else: 0x00
+    if band(choice, bnot(1)) != 0 do
+      raise ArgumentError, "ct_select_bytes requires choice to be 0 or 1"
+    end
+
+    mask = band(-choice, 0xFF)
 
     left
     |> :binary.bin_to_list()

@@ -24,19 +24,23 @@ defmodule CodingAdventures.CtCompareTest do
 
   test "ct_eq_fixed delegates to ct_eq" do
     assert CtCompare.ct_eq_fixed(:binary.copy(<<0x11>>, 16), :binary.copy(<<0x11>>, 16))
-    refute CtCompare.ct_eq_fixed(:binary.copy(<<0x11>>, 16), :binary.copy(<<0x11>>, 15) <> <<0x10>>)
+
+    refute CtCompare.ct_eq_fixed(
+             :binary.copy(<<0x11>>, 16),
+             :binary.copy(<<0x11>>, 15) <> <<0x10>>
+           )
   end
 
   test "ct_select_bytes preserves byte values" do
     left = :binary.list_to_bin(Enum.to_list(0..255))
     right = :binary.list_to_bin(Enum.reverse(0..255))
 
-    assert CtCompare.ct_select_bytes(left, right, true) == left
-    assert CtCompare.ct_select_bytes(left, right, false) == right
-    assert CtCompare.ct_select_bytes("", "", true) == ""
+    assert CtCompare.ct_select_bytes(left, right, 1) == left
+    assert CtCompare.ct_select_bytes(left, right, 0) == right
+    assert CtCompare.ct_select_bytes("", "", 1) == ""
 
     assert_raise ArgumentError, ~r/equal-length/, fn ->
-      CtCompare.ct_select_bytes(<<1>>, <<1, 2>>, true)
+      CtCompare.ct_select_bytes(<<1>>, <<1, 2>>, 1)
     end
   end
 
@@ -53,5 +57,15 @@ defmodule CodingAdventures.CtCompareTest do
 
     assert_raise ArgumentError, fn -> CtCompare.ct_eq_u64(-1, 0) end
     assert_raise ArgumentError, fn -> CtCompare.ct_eq_u64(0, bsl(1, 64)) end
+  end
+
+  test "ct_select_bytes rejects a choice other than 0 or 1" do
+    for bad <- [2, -1, 3, 255] do
+      assert_raise ArgumentError, fn -> CtCompare.ct_select_bytes(<<1>>, <<2>>, bad) end
+    end
+
+    for bad <- [true, false, 1.0, nil] do
+      assert_raise FunctionClauseError, fn -> CtCompare.ct_select_bytes(<<1>>, <<2>>, bad) end
+    end
   end
 end

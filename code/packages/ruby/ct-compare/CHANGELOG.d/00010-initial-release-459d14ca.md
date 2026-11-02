@@ -1,5 +1,3 @@
-# Changelog
-
 ## 0.1.0
 
 - Add the Ruby port of `ct-compare`, completing the eleven-language set. Ruby
