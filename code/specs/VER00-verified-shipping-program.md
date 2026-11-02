@@ -141,6 +141,13 @@ Rungs switch on **one at a time** as the tooling for each lands (§10). Once a
 rung is live it is blocking for every shipped package. A package that
 shipped before a rung went live must climb it before its next release.
 
+This is a deliberate, owner-approved relaxation of §1 during the build-out,
+and it is never hidden. A rung that is not yet live is reported as
+`not-live`, never `pass`, both in the assurance report and on the published
+package. Which rungs are live, and which language lanes have passed
+conformance, is part of the gate's policy data read from the protected ref
+(§9.2.1). A release commit therefore cannot declare a rung live or dead.
+
 ## 4. Warrant: the specification language
 
 *Warrant* is a working name: a warrant is what justifies a claim. The language
@@ -470,7 +477,9 @@ ported like TF00:
 - **Generators** derived from Warrant types and refinements (`i: Nat | i < 2^20`).
 - **Integrated shrinking**: shrinking is built into the generator, as in
   Hypothesis, so shrunk values still satisfy their refinements.
-- **Replay**: every failure prints a seed that reproduces it exactly.
+- **Replay**: every failure records a seed that reproduces it exactly.
+  Locally the seed is printed. In CI it is stored privately, never in public
+  logs (§7.3).
 - **Stateful (model-based) testing**: generate operation sequences, run them
   against the implementation and the Warrant `model`, and compare after each step.
 - **Generated fault plans** for the simulated host (§6.2).
@@ -517,13 +526,19 @@ classification:
 
 - **Every** fuzz, chaos or property failure is private until triaged. Public
   CI logs never print failing seeds or inputs. They print an opaque failure
-  ID, and the reproducer is uploaded as a restricted-access artifact.
+  ID, and the reproducer goes to a private store outside the repository.
+  On a public repository, any signed-in user can download a GitHub Actions
+  artifact, so that is not private.
 - Long fuzz and chaos campaigns run in a private context, not as public
   nightly jobs.
 - Triage defaults to the private security advisory path. A failure leaves
   it only once someone has classified it as not security-relevant.
-- The regression example is committed together with the fix, or after it.
-  This matters most when the affected package has already been published.
+- For a package that has never shipped, the regression example is
+  committed with the fix. For a package that has already shipped, the fix
+  is developed in a private advisory fork. The regression example reaches
+  public `main` only after the fixed release has been published, so the
+  example never goes public while the released version is still
+  vulnerable.
 
 ### 7.4 Bounds, timing and microbenchmarks — VER07, VER20
 
@@ -544,7 +559,7 @@ are proved under assumptions exactly as §7.5 describes:
 | `heap <= f(n)` | Bytes allocated | Memory exhaustion (CWE-400, CWE-770) |
 | `depth <= k` | Recursion or stack depth | Stack overflow on hostile nesting |
 | `output <= f(n)` | Size of what is produced | Decompression bombs (CWE-409) |
-| `steps` independent of a `secret` | Constant time | Timing side channels in cryptographic code |
+| `steps` independent of a `secret` | Constant time | Timing side channels in cryptographic code (secrets found by default, see below) |
 
 How they are proved:
 
@@ -565,6 +580,20 @@ How they are proved:
    and ask the solver for a pair whose step counts or memory addresses
    differ. UNSAT means no such pair exists: the code's timing reveals nothing
    about the secret, under the cost model.
+
+   **Secrets are found, not just declared.** This is the same rule as
+   hostile input (§7.5.2): if secrecy depended only on the author's
+   annotation, leaving it off would make every constant-time proof pass
+   trivially, because timing can reveal nothing about zero secrets. So
+   taint analysis treats these as secret by default:
+   - output of the `rand` capability;
+   - values of key, nonce, MAC and password types listed in the registry;
+   - inputs to and outputs of cryptographic primitives;
+   - any value compared against one of those.
+
+   Declassifying a value is an exemption needing approval (§9.1). In a
+   package the weakness registry marks as crypto-relevant, a constant-time
+   proof with no secret inputs is vacuous and fails the gate (§7.6.3).
 
    **The cost model is not the machine.** On a third-party runtime, a
    SIR-level constant-time proof says nothing about real timing: JIT
@@ -1008,8 +1037,10 @@ have one. What is missing is the audit:
    declared. It warns on **over-declaration**: a capability declared but
    never used.
 3. **The whole shipped closure is audited.** A package's effective
-   capabilities are the union of its own manifest and those of every in-repo
-   package it depends on, and that union is what users see.
+   capabilities are the union of its own manifest and those of every
+   package in its shipped closure, and that union is what users see. The
+   closure is computed from the artifact itself (§9.2, step 1). A
+   third-party dependency in it counts as holding unbounded capabilities.
 4. **Capability changes need approval at release.** The gate compares the
    **effective** set from rule 3 at the release tag against a baseline. It
    never compares the package's own manifest alone, because a capability
@@ -1040,7 +1071,7 @@ repository writes. Each entry records:
 | Field | Example (CWE-416, use after free) |
 |---|---|
 | Class and description | Memory is used after it was freed. |
-| Applies to | C, C++, Rust `unsafe`, any FFI boundary. Not safe Rust, Python, Ruby, TS, Go (without `unsafe`/cgo), JVM, .NET (without `unsafe`), BEAM. |
+| Applies to | C, C++, Rust `unsafe`, any FFI boundary. Not safe Rust, Python, Ruby, TS, JVM, .NET (without `unsafe`), BEAM. Go only conditionally: even without `unsafe`/cgo, a data race on a multi-word value (an interface, slice or string) can corrupt memory. So Go's exclusion holds only once race freedom is discharged (§8.4). |
 | Why it cannot occur elsewhere | The language has no manual deallocation. The analyzer must prove no `unsafe`, `ffi` or `cgo` is reachable. |
 | Attack patterns | Free then read, free then write, double free, dangling pointer escaping a scope, use after `realloc`. |
 | Required evidence | Attack corpus in the native harness (§8.3), fuzzing with the checked allocator, and a memory-safety proof obligation (E5). |
@@ -1177,8 +1208,10 @@ exemption. For example:
   CPU (§7.4.1).
 
 **Approvals are tied to what they approve.** Each approval of a capability
-change or an exemption is bound to a hash of the package, the version and
-the exact capability delta or exemption set. It is invalid for any other
+change or an exemption is bound to a hash of the package, the version, the
+**content hash of the shipped closure**, and the exact capability delta or
+exemption set. Re-tagging the same version on different code therefore
+invalidates the approval. It is invalid for any other
 release, and a merge-time CODEOWNERS approval of unrelated code does not
 count. "Someone other than the author" excludes everyone who authored a
 change to the shipped closure since the baseline, and also whoever triggers
@@ -1186,9 +1219,11 @@ the release. The protected environment enforces it with "prevent self-review".
 
 ### 9.2 One gate, every release path
 
-Every publish, release and deploy workflow calls a single reusable
-`ship-gate.yml` and cannot publish without it passing. Today that means
-`publish.yml` plus about 30 `release-*` and `deploy-*` workflows. The gate:
+Every release path goes through one gate, and only the gate's trusted
+publishing workflow can publish (§9.2.1). Today the release paths are
+`publish.yml` plus about 30 `release-*` and `deploy-*` workflows, and each
+of them becomes a request to the gate rather than a publisher in its own
+right. The gate:
 
 1. resolves the package's shipped closure from the **shipped artifact's
    real contents and imports**. The build tool's declared dependency graph
@@ -1224,7 +1259,7 @@ analyzer or a BUILD file. So:
 - **The judge's rules come from the protected ref too.** The gate reads
   all of its policy data from the protected ref, never from the release
   commit: the weakness registry, the assumption catalogue, coverage floors,
-  label floors and CODEOWNERS. A release of an old commit is judged
+  label floors, rung liveness and lane-conformance status, and CODEOWNERS. A release of an old commit is judged
   against **today's** registry. Policy data is part of every cache key.
 - **Only reviewed code can be released.** The tagged commit must be reachable
   from protected `main`, and release tags are protected, so only maintainers
@@ -1250,11 +1285,40 @@ analyzer or a BUILD file. So:
   publish step publishes **only that digest** and never rebuilds, because a
   rebuild could differ: other features or `cfg` flags (bringing the
   simulated host back), or different dependency resolution.
-- **Only the gate can publish.** Registry credentials exist only in a
-  protected environment that requires the gate job. Publishing uses OIDC
-  trusted publishing scoped to the single `ship-gate.yml` workflow
-  identity, so a new `release-*.yml` merged later cannot reach a registry
-  on its own.
+- **Only the current gate can publish.** A workflow that calls the gate is
+  read from the release commit, so an old commit could call an old gate,
+  and a workflow *name* says nothing about *which version* ran. So
+  publishing is not done by anything the release commit triggers directly.
+  It is a **separate top-level workflow that runs on `main`**, started by
+  the gate's completion (for example `workflow_run` or `repository_dispatch`).
+  It verifies, before doing anything, that:
+  - the attestation came from the gate at exactly the SHA in the protected
+    configuration (the OIDC `job_workflow_sha` claim), at or above the
+    minimum gate version;
+  - the attested artifact digest is the one about to be published.
+
+  Registry trusted publishing is bound to that publishing workflow's
+  identity on `main`, which is also the right shape for registries that
+  bind trusted publishing to the calling workflow, such as PyPI. **No
+  long-lived publish secret exists in any environment.** A GitHub
+  environment hands its secrets to any workflow that names it, so a
+  long-lived secret could not be confined to the gate.
+- **The judged code never touches the judge's credentials.** §9.2.1 treats
+  the release commit as hostile, and running it next to signing rights
+  would undo that. The release commit's code includes build scripts
+  (`build.rs`, `setup.py`, npm lifecycle hooks), tests and third-party
+  install hooks. Following the SLSA Build Level 3 model:
+  - Building the artifact and running every rung happen in **isolated,
+    unprivileged jobs**. Those jobs have no OIDC token, no signing key, no
+    publish credential and no cache-write right.
+  - Verdicts are produced by a harness **outside the process under test**.
+    Test code shares a process with an in-process reporter and could patch
+    it or forge its output. The D21 cage is a language-level wrapper, not
+    an operating-system sandbox, so it cannot prevent this.
+  - A separate trusted job, running only protected-ref code, receives the
+    artifact digest and the raw results. It re-derives the verdict itself,
+    then signs, writes the cache and hands off to publishing. Cache writes
+    happen only there.
 - **The release's own report is stored immutably and signed**, because it
   becomes the next release's capability baseline (§8.1). Plain release
   assets are not enough, since anyone with write access can replace them.
