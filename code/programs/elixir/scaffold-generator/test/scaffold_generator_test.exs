@@ -562,6 +562,21 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
       assert File.exists?(Path.join(target, "BUILD"))
       assert File.exists?(Path.join(target, "README.md"))
       assert String.contains?(cabal, "test-suite spec")
+
+      # The exact shape build-tool --validate-build-files accepts: the two-line
+      # explanation, then the Darwin-only DEVELOPER_DIR export in front of the
+      # unchanged `cabal test all`.
+      assert File.read!(Path.join(target, "BUILD")) ==
+               "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n" <>
+                 "# Scope the selection to Cabal and its children, keeping other packages intact.\n" <>
+                 ~s{if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; cabal test all\n}
+
+      # cmd /C cannot parse the POSIX prefix, so Windows keeps the plain
+      # command it ran before the prefix existed.
+      build_windows = File.read!(Path.join(target, "BUILD_windows"))
+      assert build_windows == "cabal test all\n"
+      refute String.contains?(build_windows, "uname")
+      refute String.contains?(build_windows, "DEVELOPER_DIR")
     end
 
     test "dry run does not create files" do
