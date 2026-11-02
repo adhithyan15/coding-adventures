@@ -1197,6 +1197,82 @@ LLVM column now links `twig_runtime.c` whenever a module calls
   struct-literal update, `twig-ir-compiler`), so the local Miri script
   applies.
 
+### PR5a follow-ups (#18800)
+
+The PR5a security reviews found five gaps. None of them was a fail-open on a
+path a frontend emits today, but each one weakened the string ceiling or the
+trap contract. This section says how each one is closed. Where it changes
+something "What PR5a landed" says, that text is left as it was and this
+section takes precedence.
+
+1. **Every column refuses an over-long literal before the program runs.**
+   `IIRModule::validate()` checked the ceiling, but no backend called it, so a
+   `str_const` longer than the module's `str_max_bytes` compiled everywhere.
+   The two ceiling checks (`StrMaxBytes`, `StrTooLong`) now live in
+   `IIRModule::str_ceiling_errors()`, and `validate()` includes them. Each
+   column calls that method in the place where it already refuses a module:
+
+   | Column | Where | Error |
+   | --- | --- | --- |
+   | WASM, JVM, CLR, BEAM, LLVM | `validate_for_wasm`, `validate_for_jvm`, `validate_iir_for_clr`, `validate_for_beam`, `validate_for_llvm`. The `lower_iir_to_*` entry points and the `iir-codegen-adapters` registry already run them | the backend's `ValidationFailed` / validation list |
+   | native x86-64 / AArch64 | `twig-aot`'s `prepare_module_for_aot` (every module compile), and `compile_typed_module_to_arm64_bytes`, which skips that step | `AotError::Compile` |
+   | VM | `vm-core`'s load-time check, beside the frame-register check, before any instruction runs | `VMError::InvalidModule { errors }` (new) |
+
+   The columns call only the ceiling checks, not the whole of `validate()`:
+   its other checks (duplicate names, the entry point) are not every column's
+   contract today, and widening them is a separate change. The JIT still
+   refuses every string op.
+2. **The ceiling survives linking and the wire format.** `iir-linker` gives
+   the merged module the smallest `str_max_bytes` of its inputs. `None` means
+   the registry ceiling, so it loses to any `Some`, and all-`None` inputs give
+   `None`. A linked program therefore never runs under a looser ceiling than
+   any of its modules was compiled for. `serialise` writes format **1.2** when
+   `str_max_bytes` is `Some`: after the imports section comes tag `0x12` and
+   the ceiling as a `u32`. A module whose ceiling is `None` is still written as
+   1.1, byte for byte as before, so the LANG84 release-class digests
+   (`release_classes.csv`) do not move. `deserialise` reads 1.0, 1.1 and 1.2.
+   A 1.2 stream without the ceiling section is an error. This replaces "The
+   field is not on the binary wire format" above.
+3. **`dynval-runtime`'s string builtins name LANG83 kinds.**
+   `lang-runtime-core`'s `RuntimeError` gains `Trap { kind }`, the twin of
+   vm-core's `VMError::Trap` and twig-vm's `RunError::Trap`.
+   - `string-ref` with an index that is negative or past the end, and
+     `substring` with `start < 0`, `end < start` or either end past the
+     string, return `Trap.Bounds`. They used to return `TypeError`. An operand
+     of the wrong type is still a `TypeError`.
+   - `string-append` checks `len a > ceiling − len b` before it allocates and
+     returns `Trap.Overflow`. It used to have no ceiling. The context-free
+     builtin uses the registry ceiling (`dynval_runtime::builtins::STR_MAX_BYTES`,
+     equal to `interpreter_ir::STR_MAX_BYTES`), and `string_append_within`
+     takes an explicit one.
+   - twig-vm, the VM that runs these builtins on IIR, passes the module's
+     `str_ceiling()` to `string-append` on every path that calls a builtin:
+     `call_builtin`, and a builtin closure called through `apply_closure`,
+     `call_closure` or a higher-order list operation. It turns
+     `RuntimeError::Trap { kind }` into `RunError::Trap { kind }`. So Twig's
+     `(string-ref s 3)` raises `trap: Trap.Bounds` whether it compiles to
+     `str_index` or to the builtin.
+4. **No literal fold past the ceiling on LLVM and WASM.** On both columns a
+   pre-pass works out every foldable string before the lowering runs. That
+   pre-pass joined two literals without checking the ceiling, so a chain of
+   `s = s ++ s` doubled at compile time with no bound. LLVM interned every
+   joined value as a module constant, even one its lowering then refused to
+   fold, and WASM added each one to its data segment. Both pre-passes now stop at the ceiling, as `twig-aot`'s
+   fold does. A join longer than `str_ceiling()` is not folded, its
+   destination is a run-time string, and the run-time concatenation raises
+   `Trap.Overflow`: through `@__twig_str_concat`'s `max` on LLVM, and through
+   the inline length check on WASM. WASM used to fold such a join and emit the
+   trap at the fold site; that site is gone. So the WASM row of the table above
+   now reads "a literal join past the ceiling is not folded; the run-time check
+   raises it". The behaviour does not change: the same bytes are written before
+   the same `Trap.Overflow`.
+5. Comments that still described `__twig_str_concat` with two arguments now
+   name the third, `max`.
+
+The follow-ups touch `interpreter-ir`, `lang-runtime-core`, `dynval-runtime`
+and `twig-vm`, so the per-PR Miri job (`lang-runtime-core`, `dynval-runtime`)
+and the local twig-vm Miri script both apply.
+
 ### Owner decisions (2026-11-02)
 
 The owner settled four of the open questions below:
