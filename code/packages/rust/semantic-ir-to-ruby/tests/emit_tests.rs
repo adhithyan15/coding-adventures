@@ -2640,3 +2640,254 @@ fn raise_is_always_a_parenthesised_call() {
     assert!(rb.contains("raise()"), "bare re-raise:\n{rb}");
     assert!(!rb.contains("Kernel.raise"), "got:\n{rb}");
 }
+
+// ── Class names that are not Ruby constants (#18778) ───────────────────────
+//
+// A SIR class name only has to be an identifier; a Ruby constant must also
+// start upper-case.  Python's `class dog:` used to emit
+// `Object.const_set(:dog, Class.new)` and die with `wrong constant name dog
+// (NameError)`.  Every constant position now goes through one renaming map
+// (`ruby_const` in emit.rs), and a renamed class shows its source name.
+
+/// `class dog`, `class Dog` and a class literally spelled like the renamed
+/// constant (`SirCldog`) live side by side: the map is one-to-one, so each
+/// is its own class, and each prints its own source name.
+#[test]
+fn lower_case_class_names_are_renamed_one_to_one_and_keep_their_names() {
+    let m = class_module(vec![
+        classdef("dog", None, vec![]),
+        classdef("Dog", None, vec![]),
+        classdef("SirCldog", None, vec![]),
+        classdef("__param_a", Some("dog"), vec![]),
+        let_bind("a", new_expr("dog", vec![])),
+        let_bind("b", new_expr("__param_a", vec![])),
+        puts(const_ref("dog")),
+        puts(const_ref("Dog")),
+        puts(const_ref("SirCldog")),
+        puts(const_ref("__param_a")),
+    ]);
+    let rb = compile(&m).expect("a lower-case class name compiles").source;
+    assert!(rb.contains("Object.const_set(:SirCldog, Class.new)"), "got:\n{rb}");
+    assert!(rb.contains("Object.const_set(:Dog, Class.new)"), "got:\n{rb}");
+    assert!(rb.contains("Object.const_set(:SirCvSirCldog, Class.new)"), "got:\n{rb}");
+    assert!(
+        rb.contains("Object.const_set(:SirCl__param_a, Class.new(SirCldog))"),
+        "the superclass is renamed like its definition:\n{rb}"
+    );
+    assert!(rb.contains("sir_new(SirCl__param_a)"), "got:\n{rb}");
+    // An upper-case name that is not the marker needs no renaming, so no
+    // display fix-up is emitted for it.
+    assert!(!rb.contains("sir_show_class_as(Dog,"), "got:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "dog\nDog\nSirCldog\n__param_a"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// A user exception class with a lower-case name is raised and rescued under
+/// the same renamed constant, and its default message (the class name, which
+/// `puts e` prints) is the source name.  The `rescue` was the last constant
+/// position that still emitted the name as written.
+#[test]
+fn a_lower_case_exception_class_is_rescued_by_its_renamed_constant() {
+    let mut m = class_module(vec![
+        classdef("my_error", Some("StandardError"), vec![]),
+        trycatch(
+            vec![raise_(Some(new_expr("my_error", vec![])))],
+            vec![rescue_clause(
+                vec!["my_error"],
+                Some("e"),
+                vec![puts(strlit("caught")), puts(local("e"))],
+            )],
+            None,
+        ),
+    ]);
+    m.manifest.add(Feature::Exceptions);
+    let rb = compile(&m).expect("a lower-case exception class compiles").source;
+    assert!(rb.contains("rescue SirClmy_error => e"), "got:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "caught\nmy_error"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// A renamed class's methods and its mixed-in module are reached through the
+/// same constants they were registered on, and the module prints its source
+/// name.
+#[test]
+fn methods_and_mixins_of_a_renamed_class_use_its_constant() {
+    let def_method = |class: &str, method: &str, fn_name: &str| Expr::BuiltinCall {
+        name: "__def_method__".into(),
+        args: vec![
+            strlit(class),
+            strlit(method),
+            Expr::MakeClosure { fn_name: fn_name.into(), captures: vec![], span: s2() },
+        ],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let call_method = |recv: Expr, method: &str| Expr::BuiltinCall {
+        name: "__method__".into(),
+        args: vec![recv, strlit(method)],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let include = Expr::BuiltinCall {
+        name: "__include__".into(),
+        args: vec![strlit("dog"), strlit("barks")],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let mut m = class_module(vec![
+        moduledef("barks", vec![]),
+        classdef("dog", None, vec![]),
+        Stmt::ExprStmt { expr: def_method("barks", "bark", "barks__bark"), span: s2() },
+        Stmt::ExprStmt { expr: include, span: s2() },
+        let_bind("d", new_expr("dog", vec![])),
+        puts(call_method(local("d"), "bark")),
+        puts(const_ref("barks")),
+    ]);
+    m.manifest.add(Feature::Modules);
+    m.manifest.add(Feature::Closures);
+    m.functions.insert(
+        0,
+        Function {
+            name: "barks__bark".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: strlit("woof"), span: s2() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s2(),
+        },
+    );
+    let rb = compile(&m).expect("a renamed class with a mixin compiles").source;
+    assert!(rb.contains("Object.const_set(:SirClbarks, Module.new)"), "got:\n{rb}");
+    assert!(rb.contains("SirClbarks.define_method(:sir_um_bark"), "got:\n{rb}");
+    assert!(rb.contains("(SirCldog).include(SirClbarks)"), "got:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "woof\nbarks"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ── `recv.each { … }` (#18778) ─────────────────────────────────────────────
+//
+// Built-in methods are the Collections batch, refused until then — but `each`
+// with a block is how Ruby iterates, so the backend refused the most ordinary
+// Ruby loop there is (`[1].each do |x| … end`).  It now runs through the
+// runtime's `sir_each`.
+
+#[test]
+fn each_with_a_block_runs_over_an_array_and_a_hash() {
+    let rb = ruby_to_ruby(
+        "xs = [1, 2]\nxs.each do |x|\n  puts x * 10\nend\n{a: 3}.each { |k, v| puts v }\n",
+    );
+    assert!(rb.contains("sir_each(xs, ->(*sir_args) { sir_fn___block_0(*sir_args) }, 1)"), "got:\n{rb}");
+    assert!(rb.contains("sir_each({:a => 3}, ->(*sir_args) { sir_fn___block_1(*sir_args) }, 2)"), "got:\n{rb}");
+    assert!(!rb.contains("(xs).public_send"), "got:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "10\n20\n3"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// A user class that defines its own `each` still gets it: `sir_each` asks
+/// the receiver first.  And `each` returns the receiver, as in Ruby.
+#[test]
+fn each_runs_a_user_classs_own_each_and_returns_the_receiver() {
+    let rb = ruby_to_ruby(
+        "class Pair\n  def each\n    yield 1\n    yield 2\n  end\nend\nPair.new.each { |x| puts x }\nys = [5, 6].each { |y| puts y }\nfor z in ys\n  puts z * 10\nend\n",
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "1\n2\n5\n6\n50\n60"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// Any other built-in method is still refused cleanly, and so is `each`
+/// without a block.
+#[test]
+fn other_built_in_methods_are_still_refused() {
+    for src in ["[1].map { |x| x }\n", "xs = [1]\nxs.each\n"] {
+        let module = ruby_to_semantic_ir::compile_source(src, "prog").expect("ruby lowering");
+        let err = compile(&module).expect_err(src);
+        assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature, "{src:?}");
+    }
+}
+
+/// Review of #18778: a renamed class's display name is its own, not its
+/// subclasses'.  `name`/`to_s`/`inspect` are singleton methods, which a
+/// subclass inherits, so `Puppy.name` read `"dog"`; and an exception
+/// subclass of a renamed `my_err` reported `my_err`.
+#[test]
+fn a_subclass_of_a_renamed_class_keeps_its_own_name() {
+    let mut m = class_module(vec![
+        classdef("dog", None, vec![]),
+        classdef("Puppy", Some("dog"), vec![]),
+        classdef("pup", Some("dog"), vec![]),
+        classdef("my_err", Some("StandardError"), vec![]),
+        classdef("SubErr", Some("my_err"), vec![]),
+        puts(const_ref("dog")),
+        puts(const_ref("Puppy")),
+        puts(const_ref("pup")),
+        trycatch(
+            vec![raise_(Some(new_expr("SubErr", vec![])))],
+            vec![rescue_clause(vec!["my_err"], Some("e"), vec![puts(local("e"))])],
+            None,
+        ),
+        puts(const_ref("SubErr")),
+    ]);
+    m.manifest.add(Feature::Exceptions);
+    let rb = compile(&m).expect("subclasses of renamed classes compile").source;
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "dog\nPuppy\npup\nSubErr\nSubErr"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// Review of #18778: the runtime's own top-level constants (`SirPair`,
+/// `SirNDArray`, `SirSymTerm`, `SIR_*`) are reserved, so a user class
+/// spelled like one is renamed instead of replacing the runtime's struct.
+/// Before, `class SirPair` replaced the cons-pair struct, and the next
+/// `cons` failed (`wrong number of arguments`).
+#[test]
+fn a_user_class_spelled_like_a_runtime_constant_does_not_replace_it() {
+    let cons = Expr::BuiltinCall {
+        name: "cons".into(),
+        args: vec![ilit(1), Expr::NilLit { span: s2() }],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let mut m = class_module(vec![
+        classdef("SirPair", None, vec![]),
+        classdef("SIR_DISPLAY_RUBY", None, vec![]),
+        let_bind("p", new_expr("SirPair", vec![])),
+        puts(const_ref("SirPair")),
+        puts(cons),
+    ]);
+    m.manifest.add(Feature::Pairs);
+    let rb = compile(&m).expect("compiles").source;
+    assert!(rb.contains("Object.const_set(:SirCvSirPair, Class.new)"), "got:\n{rb}");
+    assert!(rb.contains("Object.const_set(:SirCvSIR_DISPLAY_RUBY, Class.new)"), "got:\n{rb}");
+    assert!(!rb.contains("const_set(:SirPair"), "got:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "SirPair\n(1)"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// Review of #18778: Ruby gives a one-parameter block over a Hash the
+/// `[key, value]` pair.  `sir_each` called every block with two arguments,
+/// so `{a: 1}.each { |pair| … }` raised ArgumentError (the block is a
+/// strict lambda).
+#[test]
+fn each_over_a_hash_gives_a_one_parameter_block_the_pair() {
+    let rb = ruby_to_ruby("h = {a: 1, b: 2}\nh.each do |pair|\n  for x in pair\n    puts x\n  end\nend\n");
+    assert!(rb.contains("sir_each(h, ->(*sir_args) { sir_fn___block_0(*sir_args) }, 1)"), "got:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "a\n1\nb\n2"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
