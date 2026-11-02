@@ -70,6 +70,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: `_toml_bracket_scan` carries the bracket depth,
+  the open string's delimiter and a pending escape from line to line (so a
+  string left open at a line end still continues after the joining space),
+  and the pieces are joined once, instead of rescanning the growing value
+  for every appended line, which was quadratic. Quoted field and sub-table
+  keys (`a = { "path" = "../a" }`, `'package' = "..."`) are read as the bare
+  key, compared verbatim and case-sensitively, per the amended contract. A
+  Cargo path entry that resolves to the crate itself is now a
+  `CodingAdventures::BuildTool::DependencySelfEdgeError`
+  (`DEPENDENCY_SELF_EDGE`, repository-relative manifest; the CLI exits 2)
+  instead of a silently drawn self-loop. Tests: the 11 new one-shape cases
+  (57, now with a row-count assert), a 20,000-line continuation, 100,000
+  blank lines before the `[package]` name, self-edges by alias, by name and
+  from a target table, and a real CLI exit-2 test.
 - Rust resolution now follows the Cargo link-table contract: path
   dependencies count in `[dependencies]`, `[build-dependencies]`,
   `[build_dependencies]` and every `[target.<cfg>.…]` form of the three, in

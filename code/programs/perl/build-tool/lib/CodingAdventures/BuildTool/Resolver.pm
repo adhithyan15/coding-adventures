@@ -84,6 +84,40 @@ sub as_string {
 }
 
 # ===========================================================================
+# DependencySelfEdgeError -- A package whose manifest resolves itself
+# ===========================================================================
+#
+# The conformance contract rejects this as DEPENDENCY_SELF_EDGE: a self-edge
+# is neither dropped nor drawn (a drawn self-loop would surface later as a
+# cycle, far from its cause). A Cargo manifest can do it with nothing more
+# than a path entry named after its own directory or [package] name. The
+# manifest is repository-relative, so the string never discloses the
+# checkout root.
+
+package CodingAdventures::BuildTool::DependencySelfEdgeError;
+
+use overload '""' => 'as_string', fallback => 1;
+
+sub new {
+    my ($class, %args) = @_;
+    return bless {
+        code       => 'DEPENDENCY_SELF_EDGE',
+        package    => $args{package},
+        manifest   => $args{manifest},
+        dependency => $args{dependency},
+    }, $class;
+}
+
+sub as_string {
+    my ($self) = @_;
+    return join ' ',
+        $self->{code} . ':',
+        "package=$self->{package}",
+        "manifest=$self->{manifest}",
+        "dependency=$self->{dependency}";
+}
+
+# ===========================================================================
 # DirectedGraph -- Inline graph implementation
 # ===========================================================================
 #
@@ -339,6 +373,18 @@ sub resolve {
     # Parse dependencies for each package and add edges.
     for my $pkg (@{$packages_ref}) {
         my @deps = $self->resolve_dependencies($pkg, $known_names_by_scope{$pkg->{language}});
+        # Step 5 of the Rust contract: a Cargo candidate resolving to the
+        # crate itself (by directory alias or [package] name) is rejected,
+        # neither dropped nor drawn.
+        if (($pkg->{language} // '') =~ /\A(?:rust|wasm)\z/
+            && grep { $_ eq $pkg->{name} } @deps) {
+            die CodingAdventures::BuildTool::DependencySelfEdgeError->new(
+                package    => $pkg->{name},
+                manifest   => _repository_relative_manifest(
+                    File::Spec->catfile($pkg->{path}, 'Cargo.toml')),
+                dependency => $pkg->{name},
+            );
+        }
         for my $dep (@deps) {
             # Edge: dep -> pkg (dep must be built before pkg).
             $graph->add_edge($dep, $pkg->{name});
@@ -692,7 +738,12 @@ my %CARGO_LINK_TABLE = map { $_ => 1 } qw(dependencies build-dependencies build_
 #
 # So while the value still has an unclosed `{` or `[`, the next lines are
 # joined onto it with one space (and are not looked at as headers or
-# entries). If the file ends first, the entry contributes nothing.
+# entries). If the file ends first, the entry contributes nothing. The
+# brackets are counted over the joined value as one text -- a string left
+# open at the end of one line continues after the joining space -- but the
+# joined value is never rescanned: _toml_bracket_scan carries its state from
+# line to line and the pieces are joined once, so the join is linear in the
+# entry's length.
 sub cargo_link_dependency_names {
     my ($text) = @_;
 
@@ -731,23 +782,38 @@ sub cargo_link_dependency_names {
 
         if ($kind eq 'inline') {
             # Step 3: inline entries, continued while a bracket is open.
+            # The pieces are collected and joined once, and the scanner
+            # state carries from piece to piece, so the join is linear.
             my $value = _trim_spaces_and_tabs(substr($line, $equals + 1));
-            while (defined $value && $value =~ /\A\{/ && _toml_open_bracket_depth($value) > 0) {
-                if ($index >= @lines) {
-                    $value = undef;    # the file ended inside the value: no entry
-                    last;
+            if ($value =~ /\A\{/) {
+                my $scan = { depth => 0, quote => '', escape => 0 };
+                _toml_bracket_scan($scan, $value);
+                if ($scan->{depth} > 0) {
+                    my @pieces = ($value);
+                    my $closed = 0;
+                    while (!$closed && $index < @lines) {
+                        my $piece = $clean->($lines[$index++]);
+                        _toml_bracket_scan($scan, ' ');
+                        _toml_bracket_scan($scan, $piece);
+                        push @pieces, $piece;
+                        $closed = $scan->{depth} <= 0;
+                    }
+                    # If the file ended inside the value, there is no entry.
+                    $value = $closed ? join(' ', @pieces) : undef;
                 }
-                $value .= ' ' . $clean->($lines[$index++]);
             }
             next unless defined $value;
             my $crate = _cargo_path_dependency_name(substr($line, 0, $equals), $value);
             push @names, $crate if defined $crate;
         } elsif ($kind eq 'sub') {
-            # Step 4: only the two bare, lower-case keys matter; first wins.
-            # `version`, `features`, `optional` ... are ignored.
+            # Step 4: only the keys `path` and `package` matter, bare or
+            # quoted (`"path" = ...` is the same key); first wins.
+            # `version`, `features`, `optional` ... are ignored, and so is
+            # `Path`: TOML keys are case-sensitive.
             my $value = _toml_single_string(substr($line, $equals + 1));
             next unless defined $value;
-            my $key = _trim_spaces_and_tabs(substr($line, 0, $equals));
+            my $key = _toml_key_segment(substr($line, 0, $equals));
+            next unless defined $key;
             if ($key eq 'path') {
                 $sub_path //= $value;
             } elsif ($key eq 'package') {
@@ -805,8 +871,16 @@ sub _classify_cargo_link_header {
 #
 # Fields are split at commas outside strings AND outside nested `[...]` or
 # `{...}`, so a `features` array cannot leak a fake field and a nested
-# table's `path` is not the entry's. Field keys must be exactly `path` and
-# `package` (Cargo ignores `Package`). The first usable field of each wins.
+# table's `path` is not the entry's. A field key is decoded like an entry
+# key, so `"path"` and `'path'` are the key `path` (TOML, and so Cargo, read
+# them that way); the decoded key must then be exactly `path` or `package`
+# (Cargo ignores `Package`; escapes are not decoded). The first usable field
+# of each wins:
+#
+#   a = { "path" = "../a" }                 -> a
+#   x = { 'package' = "a", path = "../a" }  -> a
+#   a = { "Path" = "../a" }                 -> undef (keys are case-sensitive)
+#   a = { path.x = "../a" }                 -> undef (dotted field key)
 sub _cargo_path_dependency_name {
     my ($key, $value) = @_;
     my $crate = _toml_key_segment($key);
@@ -821,7 +895,9 @@ sub _cargo_path_dependency_name {
         next if $equals < 0;
         my $field_value = _toml_single_string(substr($field, $equals + 1));
         next unless defined $field_value;
-        my $field_key = _trim_spaces_and_tabs(substr($field, 0, $equals));
+        # A dotted or malformed field key is no key at all (undef).
+        my $field_key = _toml_key_segment(substr($field, 0, $equals));
+        next unless defined $field_key;
         if ($field_key eq 'path') {
             $path //= $field_value;
         } elsif ($field_key eq 'package') {
@@ -887,28 +963,50 @@ sub _index_toml_outside_strings {
     return -1;
 }
 
-# _toml_open_bracket_depth($text) -- how many `{` and `[` outside strings
-# stay unclosed. Zero (or less) means an inline value is complete:
+# _toml_bracket_scan($state, $text) -- count the `{` and `[` outside strings
+# left unclosed, over text fed in pieces. $state is a hashref
+# { depth, quote, escape }. Feeding "ab" and then "cd" leaves exactly the
+# state feeding "abcd" would, because the state keeps what a rescan of the
+# joined text would have to rediscover: whether it is inside a string (and
+# which delimiter closes it), and whether the previous character was a
+# backslash escaping the next one in a basic string. So a string still open
+# at the end of one line continues after the joining space, as it does in
+# the joined value:
+#
+#   feed '{ x = "q\\'   depth 1, inside "...", escape pending
+#   feed ' '            the space is escaped: still inside the string
+#   feed '", p = 1 }'   the string closes, `}` closes the table: depth 0
+#
+# Depth zero (or less) means an inline value is complete:
 #
 #   { path = "../a", features = [   -> 2
 #   { path = "../a" }               -> 0
-sub _toml_open_bracket_depth {
-    my ($text) = @_;
-    my $depth = 0;
-    my $length = length $text;
-    for (my $index = 0; $index < $length; $index++) {
-        my $character = substr($text, $index, 1);
-        if ($character eq '"' || $character eq "'") {
-            my $end = _toml_string_end($text, $index);
-            return $depth if $end < 0;
-            $index = $end - 1;
+#
+# Carrying this state is what keeps the continuation join linear: the reader
+# used to rescan the whole growing value for every appended line, which is
+# quadratic in a long entry.
+sub _toml_bracket_scan {
+    my ($state, $text) = @_;
+    my ($depth, $quote, $escape) = @{$state}{qw(depth quote escape)};
+    for my $character (split //, $text) {
+        if ($escape) {
+            $escape = 0;
+        } elsif ($quote ne '') {
+            if ($quote eq '"' && $character eq '\\') {
+                $escape = 1;
+            } elsif ($character eq $quote) {
+                $quote = '';
+            }
+        } elsif ($character eq '"' || $character eq "'") {
+            $quote = $character;
         } elsif ($character eq '{' || $character eq '[') {
             $depth++;
         } elsif ($character eq '}' || $character eq ']') {
             $depth--;
         }
     }
-    return $depth;
+    @{$state}{qw(depth quote escape)} = ($depth, $quote, $escape);
+    return;
 }
 
 # _split_toml_outside_strings($text, $separator, $nested) -- split at every
