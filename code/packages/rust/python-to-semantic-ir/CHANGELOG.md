@@ -94,8 +94,8 @@ one where they are written into the IR (`sir_function_name`): `main` →
   shared namespace.  Applied to locals, parameters, captures, loop
   variables and keyword-argument names alike.
 - Doc comments: `lower_augmented` now says which backends order the read
-  before the right-hand side and how (C needed a fix, `semantic-ir-to-c`
-  0.42.3); `lower_annotated` spells out the module-level divergence
+  before the right-hand side and how (C needed a fix in
+  `semantic-ir-to-c`, see its changelog); `lower_annotated` spells out the module-level divergence
   (CPython evaluates a module-level annotation, with its side effects and
   `NameError`s; this frontend never does).
 - Backend fixes found by the new end-to-end programs: JavaScript and
