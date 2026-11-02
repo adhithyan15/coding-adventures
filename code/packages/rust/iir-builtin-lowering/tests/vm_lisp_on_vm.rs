@@ -10,7 +10,9 @@
 //!
 //! Without the pass every one of these fails on the VM: the predicates and the
 //! division names are `UnknownOpcode`, `(if 0 …)` takes the else branch, and
-//! `(null? 0)` is `#t`.
+//! `(null? 0)` is `#t`. The division edges (a zero divisor, `i64::MIN` by −1,
+//! a non-integer operand) follow twig-vm's `dynval-runtime`: they stop the
+//! program, with `Trap.DivZero`, `Trap.Overflow` and a `TypeError`.
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_builtin_lowering::vm_lisp::lower_lisp_for_vm;
@@ -225,7 +227,40 @@ fn division_rounds_as_twig_vm_does() {
     }
     assert_eq!(div("modulo", -13, 4).unwrap(), Some(Value::Int(3)), "dynval-runtime's own example");
     assert_eq!(div("modulo", 13, -4).unwrap(), Some(Value::Int(-3)), "dynval-runtime's own example");
+    // #18470 review L1: every edge stops the program the same way for all
+    // four names, as twig-vm's `dynval-runtime` does.
+    let trap_kind = |r: Result<Option<Value>, VMError>| match r {
+        Err(VMError::Trap { kind }) => kind,
+        other => panic!("expected a trap, got {other:?}"),
+    };
     for name in ["/", "quotient", "remainder", "modulo"] {
-        assert!(div(name, 1, 0).is_err(), "({name} 1 0) stops the program");
+        assert_eq!(trap_kind(div(name, 1, 0)), "Trap.DivZero", "({name} 1 0)");
+        assert_eq!(trap_kind(div(name, i64::MIN, -1)), "Trap.Overflow", "({name} MIN -1) must not wrap");
+        // MIN by anything else, and anything by -1, still divide.
+        assert!(div(name, i64::MIN, 1).is_ok(), "({name} MIN 1)");
+        assert!(div(name, 7, -1).is_ok(), "({name} 7 -1)");
+    }
+}
+
+/// A non-integer operand of any division name stops the program with a type
+/// error — the VM's own `div` would have read `#t` as 1 and `#f` as 0.
+#[test]
+fn division_refuses_a_non_integer_operand() {
+    for name in ["/", "quotient", "remainder", "modulo"] {
+        for bad in [Lit::Bool(true), Lit::Bool(false), Lit::Nil, Lit::Sym("a"), Lit::Str("s"), Lit::Pair] {
+            for bad_is_dividend in [true, false] {
+                let mut b = Vec::new();
+                emit(bad, "bad", &mut b);
+                emit(Lit::Int(6), "six", &mut b);
+                let (x, y) = if bad_is_dividend { ("bad", "six") } else { ("six", "bad") };
+                b.push(ins("call_builtin", Some("r"), vec![var(name), var(x), var(y)], "any"));
+                b.push(ins("ret", None, vec![var("r")], "any"));
+                let got = run(b);
+                assert!(
+                    matches!(got, Err(VMError::TypeError { .. })),
+                    "({name} {x} {y}) with {bad:?}: {got:?}"
+                );
+            }
+        }
     }
 }

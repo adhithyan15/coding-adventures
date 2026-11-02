@@ -774,6 +774,13 @@ pass rewrites nil to `dyn_nil` (`Value::Null`) and a symbol to `dyn_symbol`
 booleans and symbols as their tagged-word spellings (1, 3 / 5,
 `(id << 32) | 010`). `(if 0 1 2)` and `(if "" 1 2)` are 1 on Vm and Jit.
 
+The JIT column needed one more change. `GenericCirJit` holds every value in
+an `i64` register, so a promoted `(define (id x) x)` handed `#f` back as
+`Int(0)` — true under the new rule. It now refuses to compile a function
+whose parameter or result is declared `any` (or another kind a register
+cannot carry), and its integer prologue takes only an `Int`; such a function
+stays on the interpreter tier (#18470 review).
+
 NativeAot, LLVM and WASM still answer 2 for `(if 0 1 2)` and for
 `(define (f x) (if x 1 2)) (f 0)`: the integer reaches their branch as a raw,
 untagged machine 0, so the tagged rule never runs. Only a 0 that went

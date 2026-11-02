@@ -26,6 +26,7 @@
 //! | `Bool` | 0 = false, 1 = true |
 //! | `Str` | index into the vm-runtime string intern pool |
 //! | `Ref` | opaque heap pointer (for LANG16 GC) |
+//! | `Symbol` | the VM's interned symbol id (vm-core `Value::Symbol`) |
 //! | `Trap` | lower 16 bits = trap code |
 //!
 //! The Rust `VmResult` struct mirrors this layout in safe code, storing the
@@ -58,6 +59,10 @@ pub enum VmResultTag {
     Str = 6,
     /// Opaque heap reference (LANG16 GC pointer).
     Ref = 7,
+    /// An interned symbol (vm-core `Value::Symbol`, #18470); the payload is
+    /// the VM's symbol id. Its own tag, so a symbol is never read as an
+    /// integer (`U64`) or a string (`Str`).
+    Symbol = 8,
     /// Execution trapped (unrecoverable error).
     Trap = 0xFF,
 }
@@ -82,6 +87,7 @@ impl VmResultTag {
             5 => Some(VmResultTag::Bool),
             6 => Some(VmResultTag::Str),
             7 => Some(VmResultTag::Ref),
+            8 => Some(VmResultTag::Symbol),
             0xFF => Some(VmResultTag::Trap),
             _ => None,
         }
@@ -99,6 +105,7 @@ impl std::fmt::Display for VmResultTag {
             VmResultTag::Bool => write!(f, "bool"),
             VmResultTag::Str => write!(f, "str"),
             VmResultTag::Ref => write!(f, "ref"),
+            VmResultTag::Symbol => write!(f, "symbol"),
             VmResultTag::Trap => write!(f, "trap"),
         }
     }
@@ -193,11 +200,10 @@ impl VmResult {
             Value::Bool(b) => VmResult::from_bool(b),
             Value::Str(_) => VmResult { tag: VmResultTag::Str, payload: 0 }, // intern idx TBD
             Value::HeapRef(r) => VmResult::from_ref(r.addr() as u64),
-            // vm-core #18470: a symbol is an interned name. The ABI has no
-            // symbol tag, so it travels as an interned string whose payload is
-            // the VM's symbol id (not a string-pool index) — never as an
-            // integer, which is the confusion the new variant removes.
-            Value::Symbol(id) => VmResult { tag: VmResultTag::Str, payload: u64::from(id) },
+            // vm-core #18470: a symbol is an interned atom with a tag of its
+            // own — never a `U64`, which would make it a number again, nor a
+            // `Str`, whose payload is a string-pool index.
+            Value::Symbol(id) => VmResult { tag: VmResultTag::Symbol, payload: u64::from(id) },
             Value::Null => VmResult::void(),
         }
     }
@@ -324,7 +330,8 @@ mod tests {
     #[test]
     fn from_value_symbol_is_not_an_integer() {
         let r = VmResult::from_value(Value::Symbol(3));
-        assert_eq!(r.tag, VmResultTag::Str);
+        assert_eq!(r.tag, VmResultTag::Symbol);
+        assert_eq!(r.tag.to_string(), "symbol");
         assert_eq!(r.payload, 3);
         assert_eq!(r.as_i64(), None);
     }
@@ -337,7 +344,7 @@ mod tests {
 
     #[test]
     fn tag_from_u8_roundtrip() {
-        for b in [0u8, 1, 2, 3, 4, 5, 6, 7, 0xFF] {
+        for b in [0u8, 1, 2, 3, 4, 5, 6, 7, 8, 0xFF] {
             assert!(VmResultTag::from_u8(b).is_some(), "failed for {}", b);
         }
         assert_eq!(VmResultTag::from_u8(0xAB), None);

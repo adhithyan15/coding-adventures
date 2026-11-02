@@ -214,7 +214,7 @@ The `lang_matrix` VM and JIT columns run the *structural* lowering on
 | a branch on a non-`bool` | TW00 truthiness first: `(dyn_tag c \| 2) ≠ 3` (only nil and `#f` fold to 3), so `(if 0 1 2)` is 1 |
 | `not`, `number?`, `symbol?`, `boolean?` | inline tag tests |
 | `list?` | an inline walk down the rest fields |
-| `/`, `quotient`, `remainder`, `modulo` | `div`, `div`, `mod`, `i64_mod_floor` (twig-vm's rounding) |
+| `/`, `quotient`, `remainder`, `modulo` | integer checks (`TypeError`), `Trap.DivZero` on 0, `Trap.Overflow` on `MIN / -1`, then `div`, `div`, `mod`, `i64_mod_floor` (twig-vm's rounding and errors) |
 
 Call it on a Lisp-family module only — it rewrites every branch — after
 `lower_closures_to_heap` and `lower_heap_builtins`.

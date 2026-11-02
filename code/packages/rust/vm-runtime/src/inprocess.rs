@@ -123,6 +123,9 @@ fn vmresult_to_value(r: &VmResult) -> Value {
         VmResultTag::Str => Value::Str(String::new()), // intern pool TBD
         VmResultTag::Void => Value::Null,
         VmResultTag::Trap => Value::Null,
+        // A symbol id is a `u32`; a wider payload was not made by
+        // `from_value`, so it is not read as some other symbol.
+        VmResultTag::Symbol => u32::try_from(r.payload).map(Value::Symbol).unwrap_or(Value::Null),
         // All integer / ref variants map to Int.
         _ => Value::Int(r.payload as i64),
     }
@@ -138,6 +141,16 @@ mod tests {
         let mut m = IIRModule::new("test", "tetrad");
         m.functions.push(fn_);
         m
+    }
+
+    /// #18470: a `Symbol` result maps back to `Value::Symbol`, and a payload no
+    /// `from_value` could have written is not read as some other symbol.
+    #[test]
+    fn symbol_result_round_trips_and_rejects_a_wide_payload() {
+        let r = VmResult::from_value(Value::Symbol(9));
+        assert_eq!(vmresult_to_value(&r), Value::Symbol(9));
+        let wide = VmResult { tag: VmResultTag::Symbol, payload: u64::from(u32::MAX) + 1 };
+        assert_eq!(vmresult_to_value(&wide), Value::Null);
     }
 
     #[test]

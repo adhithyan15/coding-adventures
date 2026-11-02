@@ -60,7 +60,7 @@
 //! | `"dyn_is_nil"` | any one value | `Bool`: is it nil (`Null`, or a null `HeapRef`)? Never `Int(0)` |
 //! | `"dyn_is_pair"` | any one value | `Bool`: the `pair?` answer below |
 //! | `"dyn_nil"` | nothing | `Null` |
-//! | `"dyn_symbol"` | one `Str`, the name | `Symbol(id)`: the same id for the same name, for the life of this registry |
+//! | `"dyn_symbol"` | one `Str`, the name | `Symbol(id)`: the same id for the same name, for the life of this registry (at most 2^20 names, 4 KiB each, 16 MiB in all) |
 //!
 //! The other five (`dyn_box_int`, `dyn_unbox_int`, `dyn_pair_new`,
 //! `dyn_pair_first`, `dyn_pair_rest`) stay unregistered: a cell on this VM is
@@ -311,6 +311,22 @@ fn dyn_is_nil(args: &[Value]) -> Result<Value, VMError> {
 /// unbounded growth of the table.
 pub const MAX_SYMBOLS: usize = 1 << 20;
 
+/// The longest name `dyn_symbol` will intern, in bytes. Source identifiers
+/// are short; a name past this is refused rather than stored.
+pub const MAX_SYMBOL_NAME_BYTES: usize = 4096;
+
+/// The most name bytes one registry's table will hold in all (16 MiB). With
+/// the count cap alone, 2^20 names of `MAX_SYMBOL_NAME_BYTES` each would be
+/// 4 GiB; this bounds the table's memory directly.
+pub const MAX_SYMBOL_TABLE_BYTES: usize = 16 << 20;
+
+/// The interning table behind `dyn_symbol`: name → id, and the bytes held.
+#[derive(Default)]
+struct SymbolTable {
+    ids: HashMap<String, u32>,
+    bytes: usize,
+}
+
 /// The `dyn_symbol` handler: intern `name`, answering the same
 /// [`Value::Symbol`] id for the same name every time.
 ///
@@ -322,11 +338,12 @@ pub const MAX_SYMBOLS: usize = 1 << 20;
 ///
 /// The table lives in the registry (one per `VMCore`), behind a mutex because
 /// a builtin must be `Send + Sync`. Ids are dense from 0, so `Symbol(id)` packs
-/// into a field word as `(id << 32) | 0b010`.
-fn intern_symbol(
-    table: &std::sync::Mutex<HashMap<String, u32>>,
-    args: &[Value],
-) -> Result<Value, VMError> {
+/// into a field word as `(id << 32) | 0b010`. Three caps fail closed, each
+/// checked before anything is stored: a name longer than
+/// [`MAX_SYMBOL_NAME_BYTES`], a table of [`MAX_SYMBOLS`] names, and a table
+/// holding [`MAX_SYMBOL_TABLE_BYTES`] of names. A name already in the table
+/// always resolves, whatever the caps.
+fn intern_symbol(table: &std::sync::Mutex<SymbolTable>, args: &[Value]) -> Result<Value, VMError> {
     let name = match one_arg("dyn_symbol", args)? {
         Value::Str(name) => name,
         other => {
@@ -340,17 +357,29 @@ fn intern_symbol(
     let mut table = table
         .lock()
         .map_err(|_| VMError::Custom("dyn_symbol: symbol table poisoned".into()))?;
-    if let Some(id) = table.get(name) {
+    if let Some(id) = table.ids.get(name) {
         return Ok(Value::Symbol(*id));
     }
-    if table.len() >= MAX_SYMBOLS {
+    if name.len() > MAX_SYMBOL_NAME_BYTES {
+        return Err(VMError::Custom(format!(
+            "dyn_symbol: a {}-byte name is longer than {MAX_SYMBOL_NAME_BYTES} bytes",
+            name.len()
+        )));
+    }
+    if table.ids.len() >= MAX_SYMBOLS {
         return Err(VMError::Custom(format!(
             "dyn_symbol: more than {MAX_SYMBOLS} distinct symbols"
         )));
     }
+    if table.bytes + name.len() > MAX_SYMBOL_TABLE_BYTES {
+        return Err(VMError::Custom(format!(
+            "dyn_symbol: symbol names would exceed {MAX_SYMBOL_TABLE_BYTES} bytes"
+        )));
+    }
     // `MAX_SYMBOLS` is far below `u32::MAX`, so the conversion cannot fail.
-    let id = u32::try_from(table.len()).expect("MAX_SYMBOLS fits in u32");
-    table.insert(name.clone(), id);
+    let id = u32::try_from(table.ids.len()).expect("MAX_SYMBOLS fits in u32");
+    table.bytes += name.len();
+    table.ids.insert(name.clone(), id);
     Ok(Value::Symbol(id))
 }
 
@@ -532,7 +561,7 @@ impl BuiltinRegistry {
                 )))
             }
         });
-        let symbols = std::sync::Mutex::new(HashMap::new());
+        let symbols = std::sync::Mutex::new(SymbolTable::default());
         reg.register("dyn_symbol", move |args: &[Value]| intern_symbol(&symbols, args));
 
         reg
@@ -855,16 +884,40 @@ mod tests {
         assert_eq!(other.call("dyn_symbol", &[Value::Str("b".into())]).unwrap(), Value::Symbol(0));
     }
 
-    /// The table is capped, so a program cannot grow it without bound by
-    /// interning strings it builds at run time.
+    /// The table is capped by count, so a program cannot grow it without
+    /// bound by interning strings it builds at run time.
     #[test]
     fn dyn_symbol_table_is_capped() {
-        let table = std::sync::Mutex::new(HashMap::new());
+        let table = std::sync::Mutex::new(SymbolTable::default());
         for i in 0..MAX_SYMBOLS {
-            table.lock().unwrap().insert(format!("s{i}"), i as u32);
+            table.lock().unwrap().ids.insert(format!("s{i}"), i as u32);
         }
         assert!(intern_symbol(&table, &[Value::Str("s0".into())]).is_ok(), "an old name still resolves");
         assert!(intern_symbol(&table, &[Value::Str("new".into())]).is_err());
+    }
+
+    /// …and by bytes: one name is at most `MAX_SYMBOL_NAME_BYTES`, and all
+    /// of them together at most `MAX_SYMBOL_TABLE_BYTES`. A refused name is
+    /// not stored, and the table's byte count is exact.
+    #[test]
+    fn dyn_symbol_names_are_capped_by_length_and_total_bytes() {
+        let table = std::sync::Mutex::new(SymbolTable::default());
+        let longest = "x".repeat(MAX_SYMBOL_NAME_BYTES);
+        assert_eq!(intern_symbol(&table, &[Value::Str(longest.clone())]).unwrap(), Value::Symbol(0));
+        let too_long = "y".repeat(MAX_SYMBOL_NAME_BYTES + 1);
+        let err = intern_symbol(&table, &[Value::Str(too_long)]).unwrap_err();
+        assert!(format!("{err:?}").contains("longer than"), "{err:?}");
+        assert_eq!(table.lock().unwrap().bytes, MAX_SYMBOL_NAME_BYTES, "the refused name is not counted");
+
+        // Fill the byte budget to one byte short, then a 2-byte name fails
+        // and a 1-byte name fits exactly.
+        table.lock().unwrap().bytes = MAX_SYMBOL_TABLE_BYTES - 1;
+        let err = intern_symbol(&table, &[Value::Str("ab".into())]).unwrap_err();
+        assert!(format!("{err:?}").contains("exceed"), "{err:?}");
+        assert_eq!(intern_symbol(&table, &[Value::Str("a".into())]).unwrap(), Value::Symbol(1));
+        assert_eq!(table.lock().unwrap().bytes, MAX_SYMBOL_TABLE_BYTES);
+        assert!(intern_symbol(&table, &[Value::Str("b".into())]).is_err(), "the budget is full");
+        assert_eq!(intern_symbol(&table, &[Value::Str(longest)]).unwrap(), Value::Symbol(0), "known names still resolve");
     }
 
     /// The Lisp rules themselves are never builtins here (LANG83 PR7).

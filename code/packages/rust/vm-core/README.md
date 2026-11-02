@@ -112,7 +112,7 @@ The VM lowers five of the LANG83 PR7f `Dynamic` primitives over those kinds:
 | `dyn_is_nil x` | `Bool`: `Null` or a null `HeapRef` — never `Int(0)` |
 | `dyn_is_pair x` | `Bool`: the `pair?` answer |
 | `dyn_nil` | `Null` |
-| `dyn_symbol "name"` | `Symbol(id)`, one id per name for the registry's life (at most 2^20 names) |
+| `dyn_symbol "name"` | `Symbol(id)`, one id per name for the registry's life (at most 2^20 names, 4 KiB per name, 16 MiB in all; past a cap it fails closed) |
 
 No language's *rule* is a builtin. Twig's truthiness (only `#f` and nil are
 false, so `0` is true), `not`, `number?`, `symbol?`, `boolean?` and `list?`

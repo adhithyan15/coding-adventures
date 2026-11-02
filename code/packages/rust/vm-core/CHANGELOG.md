@@ -34,8 +34,23 @@
   `dyn_is_nil` instead, which says `#f` for 0.
 - `Value::is_truthy` is unchanged (it is the machine's branch rule); its docs
   now say a language with another rule writes it as IIR before the branch.
-- Tests: `builtins.rs` gains seven unit tests (every kind's tag, nil vs 0,
-  `dyn_is_pair` = `pair?`, `dyn_nil`, interning, the table cap, and that no
+- **Behaviour every language can see (not only Twig):** `is_null` of
+  `Value::Null` is now `#t` (it was `#f`), and `gc_field_store` of
+  `Value::Null` now stores the nil word `1` and reads back as `Null` (it was
+  refused as an unsupported kind). Booleans and symbols in a field were
+  refused before and are stored now. Nothing that stored only `Int` /
+  `HeapRef` changes: those words are bit-for-bit the same.
+- `dyn_symbol` fails closed on three caps, checked before anything is
+  stored: 2^20 names (`MAX_SYMBOLS`), 4096 bytes in one name
+  (`MAX_SYMBOL_NAME_BYTES`) and 16 MiB of names in all
+  (`MAX_SYMBOL_TABLE_BYTES`). A name already interned always resolves.
+- `Value` is **not** marked `#[non_exhaustive]`. The one exhaustive `match`
+  outside this crate, `vm-runtime`'s `VmResult::from_value`, is what caught
+  the new `Symbol` variant at compile time; a wildcard arm there would have
+  turned the next new variant into a silent mapping instead.
+- Tests: `builtins.rs` gains eight unit tests (every kind's tag, nil vs 0,
+  `dyn_is_pair` = `pair?`, `dyn_nil`, interning, the count cap, the name
+  and byte caps, and that no
   Lisp predicate is a builtin); `value.rs` one (`Symbol` is not a number);
   `op_support.rs` one (exactly five `Dynamic` primitives lowered); new
   `tests/dyn_values.rs` runs them through `VMCore::execute` across a cell

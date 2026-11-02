@@ -49,6 +49,16 @@ expects the VM to lower the five kind primitives and refuse the other five;
 the `dyn_symbol` case, refused by every compiled backend, now runs on the VM
 (`dyn_tag` of a symbol is 2).
 
-No Twig function changes JIT tier: `execute_with_jit` compiled none of the
+**JIT promotion (security review M1).** New
+`twig_dynamic_values_agree_between_the_vm_and_a_promoted_jit` runs
+`(define (id x) x) (if (id V) 1 2)` and `(… (id V))` for `#f`, `#t`, nil, a
+symbol, `0` and `""` three times on one `JITCore` with promotion thresholds
+of 1, and requires every run to equal the plain VM's answer. Before the
+jit-core fix the second run of `(if (id #f) 1 2)` answered 1 (the compiled
+`id` returned `#f` as `Int(0)`, true under TW00) and nil / symbol arguments
+failed the call; `GenericCirJit` now leaves a function with an `any`
+signature on the interpreter tier.
+
+No Twig function changes JIT tier in the corpus: `execute_with_jit` compiled none of the
 Twig rows' functions before this change and compiles none after (every one
 has an `any`- or `void`-typed instruction).

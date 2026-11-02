@@ -5,10 +5,12 @@
 ### Fixed (`Value::Symbol` exhaustiveness)
 
 - `VmResult::from_value` handles `vm-core`'s new `Value::Symbol(id)` (#18470:
-  a symbol is an interned atom, no longer an integer in a reserved range). The
-  C ABI has no symbol tag, so it is returned as `VmResultTag::Str` with the
-  symbol id as payload — an interned name, never a `U64` that would make a
-  symbol look like a number again. Test: `from_value_symbol_is_not_an_integer`.
+  a symbol is an interned atom, no longer an integer in a reserved range).
+  It gets a tag of its own, **`VmResultTag::Symbol = 8`**, with the symbol id
+  as payload — never a `U64` that would make a symbol a number again, nor a
+  `Str`, whose payload means a string-pool index. `from_u8(8)` and `Display`
+  know it, and the in-process path maps it back to `Value::Symbol`. Tests:
+  `from_value_symbol_is_not_an_integer`, `tag_from_u8_roundtrip` (now with 8).
 
 ## [0.1.2] — 2026-08-02
 

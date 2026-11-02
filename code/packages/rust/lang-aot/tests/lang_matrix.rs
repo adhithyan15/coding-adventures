@@ -14626,6 +14626,46 @@ fn twig_truthiness_of_a_raw_word_matches_the_runtime_rule_it_replaced() {
     }
 }
 
+/// A function the JIT promotes must give the same answer as the interpreter,
+/// for every kind of Twig value (#18470 / #18493 security review, M1).
+///
+/// `GenericCirJit` keeps every value in an `i64` register. Once a Twig `#f`
+/// stopped being "the integer 0 the VM also calls false" — TW00 truthiness
+/// made `0` *true* — a promoted `(define (id x) x)` turned `#f` into `Int(0)`
+/// and flipped the branch after it: the reviewer saw the interpreter answer
+/// one way and the second run, with `id` compiled, the other. nil and a
+/// symbol could not enter the compiled function at all ("integer parameter 0
+/// received Null"). A register cannot carry a dynamic value's kind, so the
+/// JIT now refuses a function whose declared parameter or return type is not
+/// a scalar it can represent, and the parameter prologue accepts only an
+/// `Int` (or a `Bool` for a `bool` parameter).
+///
+/// Each program runs on one `JITCore` three times with promotion thresholds
+/// of 1, so `id` is past its threshold from the second run on, and every run
+/// must return exactly what the plain VM returns.
+#[test]
+fn twig_dynamic_values_agree_between_the_vm_and_a_promoted_jit() {
+    use jit_core::core::JITCore;
+    use jit_core::GenericCirJit;
+    use vm_core::core::VMCore;
+    for value in ["#f", "#t", "(list)", "(quote a)", "0", "\"\""] {
+        for shape in ["(define (id x) x) (if (id {v}) 1 2)", "(define (id x) x) (id {v})"] {
+            let src = shape.replace("{v}", value);
+            let mut module = lang_aot::compile_source_to_iir(Language::Twig, &src, "main").unwrap();
+            lower_dynamic_for_generic_engine(&mut module);
+            let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
+            let want = VMCore::new().execute(&mut module.clone(), &entry, &[]).expect("the VM runs it");
+
+            let mut vm = VMCore::new();
+            let mut jit = JITCore::with_config(Box::new(GenericCirJit::new()), 0, 1, 1, 1);
+            for run in 1..=3 {
+                let got = jit.execute_with_jit(&mut vm, &mut module, &entry, &[]);
+                assert_eq!(got.as_ref().ok(), Some(&want), "{src}: run {run}: JIT {got:?}, VM {want:?}");
+            }
+        }
+    }
+}
+
 /// `car` / `cdr` of a value that is not a pair fail closed on every column —
 /// no column reads memory through the word.
 ///

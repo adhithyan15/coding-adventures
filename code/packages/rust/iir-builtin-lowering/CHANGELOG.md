@@ -11,17 +11,28 @@
   `dyn_is_nil` / `dyn_is_pair`. Nil literals become `dyn_nil` and symbol
   literals `dyn_symbol "name"`, so neither is an integer on the VM. The dynamic
   division names become registry ops with twig-vm's rounding: `/` and
-  `quotient` → `div`, `remainder` → `mod`, `modulo` → `i64_mod_floor`.
+  `quotient` → `div`, `remainder` → `mod`, `modulo` → `i64_mod_floor`, behind
+  the checks twig-vm's `dynval-runtime` makes first: each operand must be an
+  integer (`dyn_tag = 0`, else a `type_assert` that fails with a `TypeError` —
+  LANG83 has no trap kind for a type error, LANG85 §11.2 Q1); a zero divisor
+  traps `Trap.DivZero` for all four (the bare ops gave an untyped
+  division-by-zero error); `i64::MIN` by −1 traps `Trap.Overflow` for all four
+  (`div` wrapped). A branch on an immediate integer, string or float gets the
+  truthiness rule too, so the rule is total (an immediate `#t` / `#f` does
+  not need it).
   Expansions keep `source_map` in lockstep, invent `__vm{n}_*` names that skip
   every name the function already uses, and are idempotent. Call it only on a
   Lisp-family module (it rewrites every branch).
-- Tests: eleven unit tests on the rewrites' shape (including source-map
+- Tests: twelve unit tests on the rewrites' shape (including immediate branch
+  conditions, the division guards, source-map
   lockstep, name collisions and a second run changing nothing), and
   `tests/vm_lisp_on_vm.rs`, which lowers frontend-shaped IIR and **runs it on
   `vm-core`** (new dev-dependency): truthiness, `not` and every predicate over
   every kind of value against TW00 stated independently, `list?` on proper and
   improper lists, symbol identity (`'a` ≠ 2^29, `(= 0 #f)` and `(= 0 '())` are
-  `#f`), and the four division names' signs and zero divisors.
+  `#f`), the four division names' signs, and their edges (zero divisor and
+  `MIN / -1` trap kinds; a non-integer dividend or divisor of every kind is a
+  `TypeError`).
 
 ## Unreleased — security review: fail-closed helper allowlist, every impostor refused, collision-proof closure temporaries
 

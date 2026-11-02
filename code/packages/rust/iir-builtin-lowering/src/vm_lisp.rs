@@ -49,13 +49,14 @@
 //! | `call_builtin "symbol?" x` | `tag = 2` |
 //! | `call_builtin "boolean?" x` | `(tag = 3) + (tag = 5) ≠ 0` |
 //! | `call_builtin "list?" x` | an inline walk down the `rest` fields (below) |
-//! | `call_builtin "/" a b`, `"quotient"` | `div a b` (truncating) |
-//! | `call_builtin "remainder" a b` | `mod a b` (truncating: the sign of `a`) |
-//! | `call_builtin "modulo" a b` | `i64_mod_floor a b` (floored: the sign of `b`) |
+//! | `call_builtin "/" a b`, `"quotient"` | checks (below), then `div a b` (truncating) |
+//! | `call_builtin "remainder" a b` | checks, then `mod a b` (truncating: the sign of `a`) |
+//! | `call_builtin "modulo" a b` | checks, then `i64_mod_floor a b` (floored: the sign of `b`) |
 //!
 //! `tag` is `call_builtin dyn_tag x`. Everything else is a registry op the VM
-//! already runs: `cmp_eq` / `cmp_ne`, `add`, `mul`, `field_load`, `mov`,
-//! `const`, `jmp`, `jmp_if_false`, `label`.
+//! already runs: `cmp_eq` / `cmp_ne`, `add`, `or`, `field_load`, `mov`,
+//! `const`, `jmp`, `jmp_if_false` / `jmp_if_true`, `label`, `trap`, and
+//! `type_assert`.
 //!
 //! ### Truthiness
 //!
@@ -116,11 +117,15 @@
 //! Twig emits `call_builtin "/"` (and `quotient`, `remainder`, `modulo`) when
 //! an operand is not statically an integer — every division on a parameter.
 //! The VM has no such builtins, so `(define (f x y) (/ x y))` stopped with
-//! `UnknownOpcode`. Each becomes the registry op with the same rounding as
-//! `dynval-runtime` (twig-vm): truncating `div` and `mod`, floored
-//! `i64_mod_floor`. A zero divisor stops the program on the VM (`div` / `mod`
-//! with a division-by-zero error, `i64_mod_floor` with `Trap.DivZero`), as
-//! twig-vm raises.
+//! `UnknownOpcode`. Each becomes the registry op with `dynval-runtime`'s
+//! (twig-vm's) rounding — truncating `div` and `mod`, floored
+//! `i64_mod_floor` — behind the checks it makes first:
+//!
+//! | operands | twig-vm | here |
+//! |----------|---------|------|
+//! | a non-integer (`#t`, nil, a symbol, a pair, a string) | `TypeError` | `type_assert` fails: `TypeError` (LANG83 has no trap kind for a type error, LANG85 §11.2 Q1) — the VM's own `div` would have read `#t` as 1 |
+//! | divisor 0, any of the four | error | `trap Trap.DivZero` (`div` / `mod` alone gave an untyped division error) |
+//! | `i64::MIN` by −1, any of the four | overflow error (`checked_*`) | `trap Trap.Overflow` (`div` alone wrapped to `i64::MIN`) |
 //!
 //! ## Who calls it
 //!
@@ -160,6 +165,10 @@ const TAG_SYMBOL: i64 = 2;
 const TAG_FALSE: i64 = 3;
 const TAG_TRUE: i64 = 5;
 const TAG_PAIR: i64 = 7;
+
+/// The LANG83 trap kinds the division checks raise.
+const TRAP_DIV_ZERO: &str = interpreter_ir::exception_kind::TRAP_DIV_ZERO;
+const TRAP_OVERFLOW: &str = interpreter_ir::exception_kind::TRAP_OVERFLOW;
 
 /// The field a pair keeps its rest in (`lower_heap_builtins`: `cdr` is
 /// `field_load x, 1`).
@@ -263,12 +272,17 @@ fn rewrite(instr: IIRInstr, bools: &HashSet<String>, fresh: &mut Fresh, out: &mu
 /// A branch on anything but a `bool` first computes Lisp truthiness.
 fn rewrite_branch(instr: IIRInstr, bools: &HashSet<String>, fresh: &mut Fresh, out: &mut Vec<IIRInstr>) {
     let cond = match instr.srcs.first() {
-        Some(Operand::Var(c)) if !bools.contains(c) => Operand::Var(c.clone()),
-        // A `bool` register, or an immediate (`Operand::Bool`) — nothing to do.
-        _ => {
-            out.push(instr);
-            return;
-        }
+        // A `bool` register or a `#t` / `#f` immediate: the VM's rule agrees.
+        Some(Operand::Var(c)) if bools.contains(c) => None,
+        Some(Operand::Bool(_)) | None => None,
+        // Any other register, and an immediate integer, string or float (a
+        // constant the optimiser folded into the branch): Lisp's rule. An
+        // immediate `0` is true — the VM's own rule would call it false.
+        Some(other) => Some(other.clone()),
+    };
+    let Some(cond) = cond else {
+        out.push(instr);
+        return;
     };
     let truthy = fresh.name("truthy");
     emit_false_fold("cmp_ne", &truthy, cond, fresh, out);
@@ -344,11 +358,59 @@ fn rewrite_builtin(instr: IIRInstr, fresh: &mut Fresh, out: &mut Vec<IIRInstr>) 
             let d = dest();
             emit_list_p(&d, x.clone(), fresh, out);
         }
-        ("/" | "quotient", [a, b]) => out.push(retarget(instr, "div", vec![a.clone(), b.clone()], I64)),
-        ("remainder", [a, b]) => out.push(retarget(instr, "mod", vec![a.clone(), b.clone()], I64)),
-        ("modulo", [a, b]) => out.push(retarget(instr, "i64_mod_floor", vec![a.clone(), b.clone()], I64)),
+        ("/" | "quotient", [a, b]) => emit_division(instr, "div", a, b, fresh, out),
+        ("remainder", [a, b]) => emit_division(instr, "mod", a, b, fresh, out),
+        ("modulo", [a, b]) => emit_division(instr, "i64_mod_floor", a, b, fresh, out),
         _ => out.push(instr),
     }
+}
+
+/// The checks twig-vm's `dynval-runtime` makes before it divides, then the
+/// division (module docs, "Division"):
+///
+/// ```text
+///   for x in a, b:                        ; integers only
+///     t = dyn_tag x ; i = cmp_eq t, 0
+///     jmp_if_true i, ok_x
+///     type_assert x : i64                 ; x is not an integer: TypeError
+///   ok_x:
+///   z = cmp_eq b, 0 ; jmp_if_false z, nonzero
+///   trap Trap.DivZero
+/// nonzero:
+///   m = cmp_eq a, i64::MIN ; jmp_if_false m, fits
+///   n = cmp_eq b, -1       ; jmp_if_false n, fits
+///   trap Trap.Overflow                    ; MIN / -1 has no i64 answer
+/// fits:
+///   dest = <op> a, b
+/// ```
+fn emit_division(instr: IIRInstr, op: &str, a: &Operand, b: &Operand, fresh: &mut Fresh, out: &mut Vec<IIRInstr>) {
+    for x in [a, b] {
+        let t = emit_tag(x.clone(), fresh, out);
+        let is_int = fresh.name("isint");
+        let ok = fresh.name("intok");
+        out.push(cmp("cmp_eq", &is_int, &t, TAG_INT));
+        out.push(IIRInstr::new("jmp_if_true", None, vec![var(&is_int), var(&ok)], "void"));
+        // Reached only for a non-integer, so the assertion always fails:
+        // the VM stops with a `TypeError` naming the value's kind.
+        out.push(IIRInstr::new("type_assert", None, vec![x.clone()], I64));
+        out.push(label(&ok));
+    }
+    let is_zero = fresh.name("divzero");
+    let nonzero = fresh.name("nonzero");
+    out.push(cmp_operand("cmp_eq", &is_zero, b, 0));
+    out.push(IIRInstr::new("jmp_if_false", None, vec![var(&is_zero), var(&nonzero)], "void"));
+    out.push(trap(TRAP_DIV_ZERO));
+    out.push(label(&nonzero));
+    let is_min = fresh.name("ismin");
+    let is_neg_one = fresh.name("isnegone");
+    let fits = fresh.name("fits");
+    out.push(cmp_operand("cmp_eq", &is_min, a, i64::MIN));
+    out.push(IIRInstr::new("jmp_if_false", None, vec![var(&is_min), var(&fits)], "void"));
+    out.push(cmp_operand("cmp_eq", &is_neg_one, b, -1));
+    out.push(IIRInstr::new("jmp_if_false", None, vec![var(&is_neg_one), var(&fits)], "void"));
+    out.push(trap(TRAP_OVERFLOW));
+    out.push(label(&fits));
+    out.push(retarget(instr, op, vec![a.clone(), b.clone()], I64));
 }
 
 /// Turn `instr` into a different one-instruction form, keeping its
@@ -405,6 +467,15 @@ fn builtin(dest: Option<&str>, name: &str, args: Vec<Operand>, ty: &str) -> IIRI
 
 fn cmp(op: &str, dest: &str, a: &str, k: i64) -> IIRInstr {
     IIRInstr::new(op, Some(dest.to_string()), vec![var(a), Operand::Int(k)], BOOL)
+}
+
+/// `dest = op x, k` for an operand that may be a register or an immediate.
+fn cmp_operand(op: &str, dest: &str, x: &Operand, k: i64) -> IIRInstr {
+    IIRInstr::new(op, Some(dest.to_string()), vec![x.clone(), Operand::Int(k)], BOOL)
+}
+
+fn trap(kind: &str) -> IIRInstr {
+    IIRInstr::new("trap", None, vec![Operand::Str(kind.to_string())], "void")
 }
 
 fn label(name: &str) -> IIRInstr {
@@ -576,7 +647,7 @@ mod tests {
     }
 
     #[test]
-    fn division_names_become_registry_ops() {
+    fn division_names_become_guarded_registry_ops() {
         for (name, op) in [("/", "div"), ("quotient", "div"), ("remainder", "mod"), ("modulo", "i64_mod_floor")] {
             let f = lowered(vec![("a", "any"), ("b", "any")], vec![ins(
                 "call_builtin",
@@ -584,7 +655,27 @@ mod tests {
                 vec![var(name), var("a"), var("b")],
                 "any",
             )]);
-            assert_eq!(shape(&f.instructions), shape(&[ins(op, Some("r"), vec![var("a"), var("b")], I64)]), "{name}");
+            let last = f.instructions.last().unwrap();
+            assert_eq!(shape(std::slice::from_ref(last)), shape(&[ins(op, Some("r"), vec![var("a"), var("b")], I64)]), "{name}");
+            let traps: Vec<&Operand> = f.instructions.iter().filter(|i| i.op == "trap").map(|i| &i.srcs[0]).collect();
+            assert_eq!(traps, [&Operand::Str(TRAP_DIV_ZERO.into()), &Operand::Str(TRAP_OVERFLOW.into())], "{name}");
+            assert_eq!(f.instructions.iter().filter(|i| i.op == "type_assert").count(), 2, "{name}: both operands");
+        }
+    }
+
+    #[test]
+    fn a_branch_on_an_immediate_gets_truthiness_unless_it_is_a_boolean() {
+        for (imm, wrapped) in [
+            (Operand::Int(0), true),
+            (Operand::Str(String::new()), true),
+            (Operand::Float(0.0), true),
+            (Operand::Bool(false), false),
+        ] {
+            let f = lowered(vec![], vec![ins("jmp_if_false", None, vec![imm.clone(), var("L")], "void")]);
+            assert_eq!(f.instructions.len() > 1, wrapped, "{imm:?}");
+            if wrapped {
+                assert_eq!(f.instructions[0].srcs[1], imm, "dyn_tag reads the immediate itself");
+            }
         }
     }
 
@@ -644,6 +735,7 @@ mod tests {
             ins("call_builtin", Some("r"), vec![var("not"), var("n")], "any"),
             ins("call_builtin", Some("l"), vec![var("list?"), var("n")], "any"),
             ins("call_builtin", Some("q"), vec![var("modulo"), var("n"), var("n")], "any"),
+            ins("jmp_if_true", None, vec![Operand::Int(0), var("L")], "void"),
             ins("jmp_if_false", None, vec![var("r"), var("L")], "void"),
             ins("jmp_if_false", None, vec![var("s"), var("L")], "void"),
         ];
