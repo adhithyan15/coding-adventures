@@ -773,8 +773,8 @@ protection that depends on it: the ban above, the mandatory bounds of
 exported symbol is `hostile`. The analyzer also marks as hostile any value
 that data flow traces back to a `net`, `fs`, `stdin`, `env` or IPC
 capability, wherever it ends up. Marking an input `trusted` is a
-downgrade, and it is an exemption (§9.1) that someone other than the author
-must approve.
+downgrade, and it is an exemption (§9.1) that a named approver must
+approve with a physical-presence signature.
 
 The gate enforces three rules:
 
@@ -1202,8 +1202,9 @@ falls short of its full requirement is an **exemption**, and so is a claim
 labelled `not-yet-provable`. Without this rule, adding exactly the riskiest
 constructs (`eval`, `unsafe`, FFI) would be a way to skip the proof rung.
 So every exemption is treated like a new capability (§8.1, rule 4): it
-blocks the release until someone other than the author approves it through
-a protected review, and the approval is recorded with the report.
+blocks the release until a named approver approves it with a
+physical-presence signature (§9.1, §9.5), and the approval is recorded with
+the report.
 
 **Label floors.** "Pass" is not left to interpretation. Each rung and
 each weakness class has a **minimum proof label** (§7.6.5), held in the
@@ -1234,15 +1235,22 @@ is disabled on every protected environment and branch the gate relies on.
 What separates approver from author is a **signature made with a key that
 requires physical presence**, not a GitHub account. Precisely:
 
-- The key is a FIDO2 security-key type, such as OpenSSH's `ed25519-sk`.
-  Software prompts like `ssh-add -c` do not count, because local
-  automation can click them.
-- The signature must have the **user-presence** flag set (a touch), and
-  must have the **user-verification** flag set (the key's PIN) where the
-  key was created with `verify-required`. A key created with
-  `no-touch-required` is rejected.
-- What is signed is exactly the approval hash defined above.
-- The protected policy data names the approved public keys.
+- The key is non-exportable and lives in dedicated hardware. That is
+  either the approval app on the maintainer's phone, in the Secure Enclave
+  or StrongBox (§9.5.1, preferred), or a FIDO2 security key such as
+  OpenSSH's `ed25519-sk` (§9.5). Software prompts like `ssh-add -c` do not
+  count, because local automation can click them.
+- Every approval signature proves **both a physical act and the owner's
+  verification**. For a security key, that means the signed flags byte
+  has user presence (UP, a touch) and user verification (UV, the PIN)
+  both set, and a signature with either clear is rejected. For the phone
+  app, it means a biometric or passcode check the key itself enforces.
+  The gate checks what the signature proves, never how a key claims to
+  have been created.
+- What is signed is the canonical approval message carrying the approval
+  hash defined above (§9.5).
+- The root-signed policy data names the approved public keys (§9.4,
+  rule 5).
 
 An agent holding an account's API token cannot produce such a signature.
 
@@ -1353,24 +1361,29 @@ analyzer or a BUILD file. So:
   The trigger's payload can be influenced by an attacker, so the publisher
   trusts nothing in it. It rejects triggers from any other repository or
   from forks. Before doing anything else, it verifies that:
-  - the verdict attestation was signed by **exactly the gate's trusted
-    job**. A commit SHA alone does not identify that job. Every workflow
+  - the verdict attestation was signed from **exactly the gate's
+    trusted-job workflow file**. GitHub's OIDC identity names a workflow
+    file, not a job, which is why that file contains only the trusted job
+    (§9.4, rule 6). A commit SHA alone identifies nothing: every workflow
     file at a commit shares the commit's SHA, and so does a branch anyone
     with write access pushes at that commit. So the publisher checks the
     full signer identity from the signing certificate, never from the
     predicate:
     - the OIDC issuer;
     - `repository_id` and `repository_owner_id`;
-    - `job_workflow_ref`, which must be the exact path of the gate's
-      trusted-job workflow;
-    - `job_workflow_sha`, which must equal the pin in the protected
-      configuration and be at or above the minimum gate version;
+    - `job_workflow_ref`, which must be the exact path of the trusted-job
+      workflow file;
+    - `job_workflow_sha`, which must equal the pin in the root-signed
+      policy data (§9.4, rule 5) and be at or above the minimum gate
+      version;
+    - `environment`, which must be the trusted job's dedicated environment;
     - the source ref, which must be a protected release tag;
     - the runner, which must be GitHub-hosted.
 
-    The same identity check applies to cache-entry signatures. No other
-    workflow may give a job that runs judged code the `id-token: write`
-    permission, and the trust-root rules (§9.4) enforce that;
+    Cache-entry signatures get the same check, with one difference: the
+    source ref may be a protected release tag **or** `main`, because
+    trusted runs on `main`, such as nightly runs, also write the cache.
+    The harness's identity (§9.4, rule 6) is rejected in both places;
   - the signed predicate is a **passing** verdict, for this repository, a
     protected release-tag ref, and a commit reachable from `main`;
   - the package name, version, registry target and artifact digest in the
@@ -1414,10 +1427,23 @@ analyzer or a BUILD file. So:
     runs as the same OS user as anything else in its job. It could replace
     the analyzer binary or rewrite a results file, and hiding an undeclared
     `net` capability is exactly what a malicious package would want. So
-    every static judgment runs **inside the trusted job itself**, over the
-    artifact bytes and source it has digested. It does not run in a
-    separate job of the same run, because results handed between jobs of
-    one run can be swapped (see the trusted-job rule below):
+    every static judgment runs **inside the trusted job itself**. It does
+    not run in a separate job of the same run, because results handed
+    between jobs of one run can be swapped (see the trusted-job rule
+    below). And it judges **the artifact's own contents**, the bytes that
+    ship, in the artifact's own languages, not the repository checkout.
+    Most shipped bytes are build output: compiled `dist/` files, bundled
+    extensions, wheels with native code. A build hook could inject a call
+    into those that no source analysis would ever see. Any file in the
+    artifact that no analyzer covers fails the gate. For compiled or
+    bundled output, one of these must also hold:
+    - a second, isolated build reproduces the artifact, and the two digests
+      are identical; or
+    - the build runs only build logic from the protected ref, and judged
+      build hooks (`build.rs`, npm scripts, `setup.py`) are banned, or are
+      themselves caged and judged.
+
+    The static judgments are:
     - closure and export resolution;
     - capability and subset analysis;
     - weakness exclusions;
@@ -1446,8 +1472,8 @@ analyzer or a BUILD file. So:
       the trusted job rejects any mismatch. Static analysis and tests
       therefore cannot have seen different bytes.
     - Dynamic results are accepted only if the harness signed them with its
-      own job identity, from the host side outside the VM boundary, where
-      the code under test cannot reach the key.
+      own workflow-file identity (§9.4, rule 6), from the host side outside
+      the VM boundary, where the code under test cannot reach the key.
     - Building runs in a **separate workflow run** from judging, so the
       build never holds the judging run's token at all. The build job has
       no network egress beyond fetching what the lockfile pins.
@@ -1483,49 +1509,111 @@ counters. No security conclusion rests on a coverage number.
 ### 9.4 The trust root, and the agents that work on it
 
 The gate is only as strong as whoever can change it. Most changes to this
-repository are made by coding agents. If those agents act with the
-maintainer's own GitHub account and token, they hold every power the
-maintainer holds. An agent could then:
+repository are made by coding agents, and an agent can be misled by
+prompt injection from a web page, an issue, a dependency's README or a
+test fixture. A misled agent does not follow policy. It uses whatever it
+can reach. If it can reach the maintainer's GitHub token, it holds every
+power the maintainer holds, and it could:
 
 - add its own software key to the approver list;
 - lower a label floor or a coverage floor;
-- edit the gate or the publisher workflow while keeping its filename, so
-  registry trusted publishing still accepts it;
+- edit the gate, the publisher workflow or one of their in-repo
+  dependencies, keeping the publisher's filename so registry trusted
+  publishing still accepts it;
 - turn admin bypass back on, or relax a ruleset.
 
 It could then release, and the physical-presence requirement would be
-defeated without ever being met. So:
+defeated without ever being met. The rules below exist so that **one thing
+stays outside every agent's reach: the ability to change the gate.** None of
+them needs a paid or enterprise plan.
 
-1. **Agents use their own identity.** Coding agents act through a
-   separate bot account or GitHub App, never through the maintainer's
-   personal token. That identity has:
-   - no admin or Administration permission;
-   - no permission to create release tags;
-   - no permission to change rulesets, environments or repository
-     settings.
-2. **Trust-root paths need a human.** These paths are the trust root:
-   - the gate and publisher workflows;
-   - the gate's toolchain: the build tool, analyzers, Warrant compiler,
-     solver and kernel;
-   - all policy data: weakness registry, assumption catalogue, floors,
-     liveness, approver keys and the gate pin;
-   - CODEOWNERS itself.
+1. **Agents have their own GitHub identity.** Agents act through a
+   separate identity, never the maintainer's token. Both options are free
+   for a personal account:
+   - a **GitHub App** that the maintainer creates and installs on their own
+     repositories (recommended);
+   - a **machine account**, added as a collaborator.
 
-   A change to any of them needs a review the agent identity cannot
-   give: a ruleset that requires CODEOWNERS review by the human account,
-   with no bypass. The repository's auto-merge practice continues for
-   everything else and stops at this boundary.
-3. **Policy data is signed by a root key.** The gate's policy data,
-   including the approver key list and the pin, is signed with a
-   physical-presence **root key** held by the maintainer, and the gate
-   verifies that signature. Root keys are rotated in the style of TUF (The
-   Update Framework): a new root is signed by the old one. Even an
-   identity that slipped past rule 2 could not silently swap the approver
-   list, because it cannot produce the root signature.
-4. **No `id-token: write` outside the gate.** No workflow other than the
-   gate's trusted job and the publisher may request `id-token: write`. The
-   gate's static checks enforce this over `.github/workflows/`, and any
-   change to it is a trust-root change.
+   The identity has *Contents* and *Pull requests* write, and nothing
+   else: no Administration permission, no release-tag creation, and no
+   ability to change rulesets, environments or settings.
+2. **Agents cannot reach the maintainer's credentials.** A separate
+   identity means nothing if the agent can read the maintainer's token
+   anyway. Agents run where they have **no access** to:
+   - the maintainer's credential stores: `gh` auth, the git credential
+     helper and the keychain;
+   - the `ssh-agent` socket;
+   - plugged-in USB security keys.
+
+   That means a separate OS user, a VM or container, or remote execution.
+   An agent working in the maintainer's own login session is an
+   **unconfined** agent, and the guarantees of this section do not hold
+   while one runs.
+3. **The maintainer's everyday token cannot administer.** The
+   maintainer's own day-to-day token has no Administration scope.
+   Repository settings, rulesets and environments are changed only in the
+   web UI, after GitHub re-authenticates the maintainer with a passkey or
+   security key ("sudo mode").
+4. **The trust root needs a human, and it is computed.** The trust root is
+   the gate workflow, the publisher workflow, the policy data and
+   CODEOWNERS, plus **the entire in-repo transitive closure** of every tool
+   they run. Listing the tools by name is not enough: the analyzers'
+   parsers, the Ed25519 and SHA-2 packages under the signature verifier,
+   `constraint-engine` and `semantic-ir` are all part of it, because
+   weakening any of them weakens the gate. That closure is computed the
+   same way as a shipped closure (§9.2, step 1), so:
+   - CODEOWNERS and ruleset coverage for the trust root are **generated
+     from the computed closure**, and the gate checks the coverage is
+     complete;
+   - every change inside the closure needs a review the agent identity
+     cannot give: a ruleset requiring CODEOWNERS review by the human
+     account, with no bypass. Auto-merge continues for everything outside
+     the closure and stops at this boundary;
+   - a gate-pin bump shows the human the diff of the **whole closure**
+     since the previous pin, not a one-line change. A pin whose closure
+     contains a commit that no human reviewed is refused.
+5. **Policy is signed, and the publisher anchors the signature.** The
+   policy data (approver keys, gate pin, minimum gate version, floors,
+   liveness, registry) is signed with physical-presence **root keys**, held
+   by the maintainer, that are separate from the daily approval key.
+   - **The publisher checks it first.** The publisher, not only the gate,
+     verifies the root signature over the policy data, including the pin,
+     *before* using the pin. A gate chosen by a forged pin is never
+     consulted.
+   - **The genesis anchor is outside the policy.** The fingerprint of the
+     first root is embedded in the publisher. Later roots form a chain in
+     the style of TUF (The Update Framework). Each root is signed by the
+     previous one and carries a strictly increasing version number, and
+     rollback to an older root or policy is rejected.
+   - **A threshold, with an offline backup.** Root actions need 2 of n
+     keys: the maintainer's root key plus an offline hardware backup kept
+     separately. Losing one key does not lock out every future policy
+     change, so no ad hoc recovery path quietly becomes the real trust
+     root.
+   - **A genesis ceremony.** VER21 specifies how the first root is created:
+     keys generated on the devices, fingerprints recorded on paper and in
+     the first signed policy, done once by the maintainer by hand.
+   - **What this protects.** A change that touches only the policy files
+     cannot swap the approver list or the pin, because it lacks the root
+     signature. A change to the publisher itself is caught by rule 4, not
+     rule 5.
+6. **`id-token: write` is tightly scoped, and the identity check carries
+   it.** GitHub's OIDC identity names a *workflow file*, not a job, so
+   every job in a file that can request a token gets that file's identity.
+   - The gate's trusted job is the **only** job with `id-token: write` in
+     its own dedicated workflow file. It is bound to a dedicated
+     environment, and the signer-identity check (§9.2.1) also requires that
+     environment's OIDC `environment` claim.
+   - The harness that signs dynamic results has a **different** workflow
+     file, and therefore a different identity. Verdict and cache verifiers
+     reject that identity, so a harness compromise cannot forge a verdict.
+   - The publisher has its own file and environment.
+
+   The gate's static checks enforce these placements over
+   `.github/workflows/`. A workflow on an agent-pushed branch can still
+   *request* a token. What makes that harmless is the signer-identity
+   check (exact file, pinned SHA, protected ref, environment), which no
+   such token can satisfy.
 
 ### 9.5 Release approval with a hardware key — VER21
 
@@ -1533,32 +1621,120 @@ GitHub has no "approve this release with your security key" button, and
 none is needed, because git can sign tags with a hardware-backed key.
 **The release tag is the approval.**
 
-1. The maintainer runs the repository's own `release-approve` tool. It
-   shows exactly what is being approved:
-   - the package and version;
-   - the closure content hash;
+1. **The gate does a dry run first.** The gate's trusted job judges the
+   release candidate and signs a **release summary**:
+   - the package, version and closure content hash;
    - new capabilities, with their justifications;
    - exemptions, with their reasons;
-   - the weakness matrix;
-   - the proof labels.
-2. On confirmation, the tool creates the release tag. The tag's message
-   is the approval hash of §9.1 plus that summary, and the tag is signed
-   with the maintainer's FIDO2 key through git's SSH signing. The key asks
-   for a touch, and for its PIN when created with `verify-required`. **The
-   touch is the consent**: touch only when you started the signing
-   yourself.
-3. The gate verifies the tag signature itself (§9.1). It does not rely on
-   GitHub's "Verified" badge. It checks:
-   - the key is a named approver key;
-   - the user-presence and user-verification flags are set;
-   - the signed approval hash equals the one it computes for the bytes
-     about to ship.
-4. GitHub's own controls are a backstop, not the authority. Tag rulesets
-   restrict who may create release tags, and uploading the key as a
-   signing key gives the "Verified" badge.
+   - the weakness matrix and the proof labels;
+   - the approval hash of §9.1.
+
+   This summary is produced in CI under the gate's identity, not on the
+   maintainer's machine.
+2. **`release-approve` shows the signed summary.** The repository's
+   `release-approve` tool fetches the summary and verifies the gate's
+   signature on it. It then displays the summary along with a short
+   fingerprint of the approval hash. The maintainer checks that fingerprint
+   on a **second device**, for example the pull request or release page on
+   a phone, before signing. A security key has no display. Without this
+   step, a compromised tool on the signing machine could show one summary
+   and have a different hash signed.
+3. **Signing.** The tool creates a tag whose message is in a strict
+   canonical form: exactly one approval-hash line, then the
+   human-readable summary. The tag is signed through git's SSH signing
+   with a **dedicated approval key**, a FIDO2 `ed25519-sk` key used for
+   nothing else: not SSH login, and not commit signing. A key used all day
+   for other things trains its owner to touch on reflex, which is what
+   makes hijacking a touch easy. The key asks for a touch and its PIN.
+   **The touch is the consent**: touch only for a signing you started, at
+   the moment you started it.
+4. **The gate verifies the tag itself.** It does not rely on GitHub's
+   "Verified" badge. Its checks:
+   - the tag is an annotated, signed tag;
+   - the tag object's `object` and `tag` fields match the release commit
+     and the release tag name;
+   - the message is in the canonical form;
+   - the SSHSIG magic, version and namespace (`git`) are correct, and the
+     hash algorithm is on an allowlist (`sha512` or `sha256`);
+   - the signature type matches the key type, `sk-ssh-ed25519@openssh.com`.
+     `webauthn-sk-*` types are rejected. Key types the gate cannot yet
+     verify, such as `sk-ecdsa-sha2-nistp256@openssh.com` before P-256
+     lands, **fail closed**;
+   - the key is a named approver key in the root-signed policy data;
+   - the signed flags byte has **user presence (UP, 0x01) and user
+     verification (UV, 0x04) both set**. Key-creation options such as
+     `verify-required` or `no-touch-required` are not recorded in the key
+     or the signature, so the gate checks the flags, not how the key was
+     made. A signature with either flag clear is rejected;
+   - the approval hash in the message equals the one the gate computes
+     itself, from its own inputs, for the bytes about to ship.
+5. **GitHub's own controls are a backstop, not the authority.** Tag rulesets
+   restrict who may create release tags. The agent identity cannot create
+   them, and unsigned or lightweight tags are rejected anyway. Uploading
+   the key as a signing key gives the "Verified" badge.
 
 One touch per release covers every capability change and exemption in
 it. Nothing extra is needed per pull request.
+
+#### 9.5.1 Approving from a phone (preferred)
+
+A USB security key has one weakness for this job: **it has no screen**. It
+signs whatever the computer it is plugged into sends it. So if that
+computer is compromised, the key can be made to sign something other
+than what the maintainer believes. A phone has a screen, and it is a
+separate device that agents never run on. So the preferred approver is a
+small **approval app** on the maintainer's phone, built in this repository
+with its native UI stack.
+
+1. **The key lives in the phone's secure hardware.** That is the Secure
+   Enclave on iOS or StrongBox on Android. It is created on the device and
+   **non-exportable**, and every use requires Face ID, a fingerprint or the
+   device passcode, enforced by the hardware itself. It is device-bound and
+   **never a synced passkey**: a passkey synced through iCloud Keychain or
+   Google Password Manager is copied into a cloud account and onto other
+   devices, possibly including the very computer this design distrusts.
+   Where the platform offers **key attestation** (Android key attestation
+   for StrongBox), the policy records it at enrollment. That proves the key
+   is hardware-bound and gated on the user.
+2. **The phone fetches the gate-signed summary itself.** It does not get
+   the summary from the maintainer's computer. The phone holds the gate's
+   public identity, verifies the signature on the summary (§9.5, step 1),
+   recomputes the approval hash, and **displays the full summary on its own
+   screen**. What the maintainer reads is what gets signed, with no
+   computer in between.
+3. **Approve with a biometric.** The phone signs the canonical approval
+   message with its hardware key. These keys are P-256, so this needs the
+   P-256 verifier from VER21.
+4. **The signature travels back over an untrusted channel.** The phone
+   posts it somewhere the gate reads, such as the release's tag message or
+   an approval file. The channel needs no protection, because the gate
+   verifies the signature against the named approver key and recomputes
+   the approval hash. A forged or altered approval simply fails.
+
+**Why this is stronger.** With the phone as the approver, compromising the
+maintainer's computer gains an attacker no signing power and no way to
+misrepresent what is being signed. To subvert a release, the attacker would
+have to compromise **the phone** as well. Hardware-bound keys also cannot be
+copied off either device. That is the property this design is after: one
+compromised device does not compromise the key.
+
+**Roles of the two kinds of key.**
+
+| Key | Role |
+|---|---|
+| Phone approval app (Secure Enclave or StrongBox) | Day-to-day release approvals |
+| USB FIDO2 security key | A second root key, held offline, for the 2-of-n root threshold (§9.4, rule 5), and a fallback approver if the phone is lost |
+
+Losing the phone does not lock the project out: the offline USB root key,
+together with any other remaining root key, enrolls a replacement
+phone key through a root-signed policy update.
+
+**What remains.** With the phone approver, the phone is part of the trust
+base. With a USB key, the signing computer is. In that case, the dry-run
+summary, the second-device fingerprint check, the dedicated key and rule 2
+of §9.4 make subverting a release signature require *both* a compromised
+computer *and* a maintainer who skips the fingerprint check. Neither setup
+makes subversion impossible, and this spec does not claim either does.
 
 **Building the hardware-key stack in-house.** In keeping with B06, VER21
 builds the stack this needs in the repository, sharing it with the Vault
@@ -1566,12 +1742,13 @@ work in VLT-PM51:
 
 | Piece | Status |
 |---|---|
-| Ed25519, SHA-256/512, HMAC, HKDF, canonical CBOR, base64, DER/ASN.1 | Exist, across many languages |
-| SSHSIG verification for `-sk` keys: OpenSSH's signed-data layout, with application hash, flags and counter | New. Pure code on top of Ed25519 and SHA-256, and the first thing the gate needs |
-| P-256 ECDSA | New. Most WebAuthn and passkey credentials use it, and it unblocks VLT-PM51's `WebAuthnPrfAuthenticator`, which currently always refuses |
+| Ed25519, SHA-256/512, HMAC, HKDF, canonical CBOR, base64, DER/ASN.1 | Exist, across many languages (and become trust root under §9.4 rule 4) |
+| SSHSIG verification for `-sk` keys. Signed data is `SHA256(application) ‖ flags ‖ counter (big-endian u32) ‖ SHA-256 or SHA-512 of the SSHSIG blob`, and git defaults to SHA-512. | New. Pure code on top of Ed25519, SHA-256 and SHA-512, and the first thing the gate needs |
+| P-256 ECDSA | New. Needed for `ecdsa-sk` keys (older security keys support only those) and most WebAuthn and passkey credentials. It also unblocks VLT-PM51's `WebAuthnPrfAuthenticator`, which currently always refuses |
 | USB HID transport: IOKit on macOS, hidraw on Linux, HID APIs on Windows | New. Replaces the `hidapi` dependency of `vault-webauthn-ctap2-hid` |
 | CTAPHID framing and CTAP2 commands (`MakeCredential`, `GetAssertion`) | New. Replaces `ctap-hid-fido2` |
-| `release-approve` CLI | New. Shows the approval, then requests the signature |
+| `release-approve` CLI | New. Verifies and shows the gate-signed summary, then requests the signature |
+| Phone approval app (iOS Secure Enclave, Android StrongBox), built on the repo's native UI stack | New, and the preferred approver (§9.5.1). Needs P-256 |
 | PIV and OpenPGP smart cards (CCID/APDU); Secure Enclave; TPM | Later |
 
 Until VER21 lands, the maintainer can sign with OpenSSH's own FIDO
@@ -1640,7 +1817,7 @@ S4 for S1.
 | VER18 | Hardware equivalence checking, synthesis translation validation, k-induction |
 | VER19 | SIR symbolic execution and bit-precise proofs |
 | VER20 | Resource-bound and timing proofs: cost semantics, ranking functions, constant time, gate-level WCET |
-| VER21 | Hardware-key release approval: SSHSIG `-sk` verification, P-256, in-house USB HID and CTAP2, `release-approve` (shared with VLT-PM51) |
+| VER21 | Hardware-key release approval: phone approval app, SSHSIG `-sk` verification, P-256, in-house USB HID and CTAP2, `release-approve`, root-key ceremony (shared with VLT-PM51) |
 
 ## 12. Open decisions
 
