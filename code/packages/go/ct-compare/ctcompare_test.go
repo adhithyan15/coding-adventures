@@ -53,13 +53,13 @@ func TestCTSelectBytes(t *testing.T) {
 		right[index] = byte(255 - index)
 	}
 
-	if !bytes.Equal(CTSelectBytes(left, right, true), left) {
+	if !bytes.Equal(CTSelectBytes(left, right, 1), left) {
 		t.Fatal("true should select left")
 	}
-	if !bytes.Equal(CTSelectBytes(left, right, false), right) {
+	if !bytes.Equal(CTSelectBytes(left, right, 0), right) {
 		t.Fatal("false should select right")
 	}
-	if len(CTSelectBytes(nil, nil, true)) != 0 {
+	if len(CTSelectBytes(nil, nil, 1)) != 0 {
 		t.Fatal("empty select should stay empty")
 	}
 
@@ -68,7 +68,7 @@ func TestCTSelectBytes(t *testing.T) {
 			t.Fatal("length mismatch should panic")
 		}
 	}()
-	CTSelectBytes([]byte{1}, []byte{1, 2}, true)
+	CTSelectBytes([]byte{1}, []byte{1, 2}, 1)
 }
 
 func TestCTEqU64(t *testing.T) {
@@ -84,5 +84,27 @@ func TestCTEqU64(t *testing.T) {
 		if CTEqU64(base, base^(1<<bit)) {
 			t.Fatalf("flip at bit %d not detected", bit)
 		}
+	}
+}
+
+func TestCTSelectBytesRejectsChoiceOtherThanZeroOrOne(t *testing.T) {
+	for _, bad := range []int{2, -1, 3, 0xFF, -2} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Fatalf("choice %d should panic", bad)
+				}
+			}()
+			CTSelectBytes([]byte{1}, []byte{2}, bad)
+		}()
+	}
+}
+
+func TestCTSelectBytesReturnsAFreshCopy(t *testing.T) {
+	left := []byte{1, 2, 3}
+	picked := CTSelectBytes(left, []byte{4, 5, 6}, 1)
+	left[0] = 99
+	if !bytes.Equal(picked, []byte{1, 2, 3}) {
+		t.Fatalf("output aliased its input: %v", picked)
 	}
 }
