@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 import pytest
 
 from build_tool.discovery import Package, discover_packages
 from build_tool.resolver import (
+    DependencySelfEdgeError,
     DirectedGraph,
     MetadataEncodingError,
     _build_known_names,
@@ -25,6 +27,7 @@ from build_tool.resolver import (
     _parse_rust_deps,
     _parse_swift_deps,
     _parse_typescript_deps,
+    _read_cargo_package_name,
     resolve_dependencies,
 )
 
@@ -875,6 +878,97 @@ class TestParseRustDeps:
             ["a", "a"],
             id="union across tables keeps duplicates for the caller",
         ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { \"path\" = \"../a\" }\n"
+            ),
+            ["a"],
+            id="quoted inline path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { 'path' = \"../a\" }\n"
+            ),
+            ["a"],
+            id="literal-quoted inline path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "x = { \"package\" = \"a\", path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="quoted inline package key renames",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { \"Path\" = \"../a\" }\n"
+            ),
+            [],
+            id="quoted capitalised inline Path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { \"pa\\u0074h\" = \"../a\" }\n"
+            ),
+            [],
+            id="escaped inline path key is compared verbatim",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path.x = \"../a\" }\n"
+            ),
+            [],
+            id="dotted inline field key",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "\"path\" = \"../a\"\n"
+            ),
+            ["a"],
+            id="quoted sub-table path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies.x]\n"
+                "'package' = \"a\"\n"
+                "path = \"../a\"\n"
+            ),
+            ["a"],
+            id="quoted sub-table package key",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "\"Path\" = \"../a\"\n"
+            ),
+            [],
+            id="quoted capitalised sub-table Path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a\", x = \"q [\n"
+                "\" }\n"
+            ),
+            ["a"],
+            id="open string continues across the join",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { x = \"q\\\n"
+                "\", path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="line-final backslash escapes the joining space",
+        ),
         ],
     )
     def test_cargo_link_dependency_names(self, manifest, expected):
@@ -928,6 +1022,92 @@ class TestParseRustDeps:
         package = Package(name="rust/empty", path=tmp_path, language="rust")
 
         assert _parse_rust_deps(package, {}) == []
+
+    def test_continuation_join_is_linear(self):
+        # Rescanning the whole joined value for every appended line is
+        # quadratic: a 20,000-line continuation (about 500 KB) took tens of
+        # seconds. Carrying the scanner state makes it a single pass; the
+        # bound is generous so a loaded CI machine cannot flake it.
+        manifest = (
+            "[dependencies]\n"
+            'a = { path = "../a", features = [\n'
+            + '  "feature-name-padding",\n' * 20_000
+            + "] }\n"
+        )
+
+        start = time.monotonic()
+        names = _cargo_link_dependency_names(manifest)
+        elapsed = time.monotonic() - start
+
+        assert names == ["a"]
+        assert elapsed < 10, f"a 20,000-line continuation took {elapsed:.1f}s"
+
+    def test_package_name_reader_is_linear_in_blank_lines(self, tmp_path):
+        # `^\s*name` with re.MULTILINE runs `\s*` across every following
+        # blank line from each line start and backtracks when the match then
+        # fails (here: an unterminated name), which is quadratic in a run of
+        # blank lines -- 1.2 s at 20,000 of them, minutes at 100,000.
+        (tmp_path / "Cargo.toml").write_text(
+            "\n" * 100_000 + 'name = "unterminated\n', encoding="utf-8"
+        )
+
+        start = time.monotonic()
+        name = _read_cargo_package_name(tmp_path)
+        elapsed = time.monotonic() - start
+
+        assert name is None
+        assert elapsed < 5, f"100,000 blank lines took {elapsed:.1f}s"
+
+        (tmp_path / "Cargo.toml").write_text(
+            "\n" * 100_000 + '[package]\nname = "Late-Crate"\n', encoding="utf-8"
+        )
+        assert _read_cargo_package_name(tmp_path) == "late-crate"
+
+    def test_package_name_does_not_span_lines(self, tmp_path):
+        (tmp_path / "Cargo.toml").write_text(
+            '[package]\nname =\n"split"\nname = "app"\n', encoding="utf-8"
+        )
+
+        assert _read_cargo_package_name(tmp_path) == "app"
+
+    @pytest.mark.parametrize(
+        "entry",
+        [
+            pytest.param(
+                '[dependencies]\napp-dir = { path = "." }\n', id="directory alias"
+            ),
+            pytest.param(
+                '[build-dependencies.self]\npackage = "app-crate"\npath = "."\n',
+                id="cargo name via a renamed sub-table",
+            ),
+            pytest.param(
+                "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n",
+                id="target table",
+            ),
+        ],
+    )
+    def test_self_edge_is_a_diagnostic(self, tmp_path, entry):
+        # Step 5: a candidate resolving to the crate itself is rejected as
+        # DEPENDENCY_SELF_EDGE -- neither dropped nor drawn as a self-loop.
+        app = tmp_path / "code" / "packages" / "rust" / "app-dir"
+        app.mkdir(parents=True)
+        (app / "Cargo.toml").write_text(
+            '[package]\nname = "app-crate"\n\n' + entry, encoding="utf-8"
+        )
+        packages = [Package(name="rust/app-dir", path=app, language="rust")]
+
+        with pytest.raises(DependencySelfEdgeError) as error:
+            resolve_dependencies(packages)
+
+        assert error.value.code == "DEPENDENCY_SELF_EDGE"
+        assert error.value.package == "rust/app-dir"
+        assert error.value.path == "code/packages/rust/app-dir/Cargo.toml"
+        assert error.value.dependency == "rust/app-dir"
+        assert str(error.value) == (
+            "DEPENDENCY_SELF_EDGE: package=rust/app-dir "
+            "manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir"
+        )
+        assert str(tmp_path) not in str(error.value)
 
 
 class TestResolveDependencies:

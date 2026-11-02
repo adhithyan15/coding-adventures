@@ -61,6 +61,7 @@ from build_tool.plan import (
 )
 from build_tool.reporter import print_report
 from build_tool.resolver import (
+    DependencySelfEdgeError,
     DirectedGraph,
     MetadataEncodingError,
     resolve_dependencies,
@@ -370,7 +371,7 @@ def main(argv: list[str] | None = None) -> int:
     # Step 4: Resolve dependencies
     try:
         graph = resolve_dependencies(packages)
-    except MetadataEncodingError as exc:
+    except (MetadataEncodingError, DependencySelfEdgeError) as exc:
         print(f"Dependency resolution failed: {exc}", file=sys.stderr)
         return 2
 

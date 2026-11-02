@@ -80,6 +80,45 @@ class MetadataEncodingError(ValueError):
         )
 
 
+def _repository_manifest_path(manifest: Path) -> str:
+    """Spell a manifest path from its last ``code/packages`` or ``code/programs``.
+
+    This is the same rule as the Go reference tool, so a diagnostic never
+    discloses the checkout root: everything from the last such pair of
+    components on, or just the file name when there is none::
+
+        /home/me/repo/code/packages/rust/app/Cargo.toml
+            -> code/packages/rust/app/Cargo.toml
+    """
+    parts = manifest.parts
+    for index in range(len(parts) - 2, -1, -1):
+        if parts[index] == "code" and parts[index + 1] in {"packages", "programs"}:
+            return "/".join(parts[index:])
+    return manifest.name
+
+
+class DependencySelfEdgeError(ValueError):
+    """A package's own manifest resolves the package itself as a dependency.
+
+    The conformance contract rejects this as ``DEPENDENCY_SELF_EDGE``: a
+    self-edge is neither dropped nor drawn (a drawn self-loop would surface
+    later as a cycle, far from its cause). A Cargo manifest can do it with
+    nothing more than a path entry named after its own directory or its
+    ``[package]`` name. The manifest path is repository-relative.
+    """
+
+    code = "DEPENDENCY_SELF_EDGE"
+
+    def __init__(self, package: str, manifest: Path, dependency: str) -> None:
+        self.package = package
+        self.path = _repository_manifest_path(manifest)
+        self.dependency = dependency
+        super().__init__(
+            f"{self.code}: package={package} manifest={self.path} "
+            f"dependency={dependency}"
+        )
+
+
 class DirectedGraph:
     """A minimal directed graph for dependency resolution.
 
@@ -677,30 +716,55 @@ def _index_toml_outside_strings(text: str, target: str) -> int:
     return -1
 
 
-def _toml_open_bracket_depth(text: str) -> int:
-    """Count the ``{`` and ``[`` outside strings that ``text`` leaves unclosed.
+class _TomlBracketScanner:
+    """Count the ``{`` and ``[`` outside strings left unclosed, fed in pieces.
+
+    Feeding ``"ab"`` and then ``"cd"`` leaves exactly the state feeding
+    ``"abcd"`` would, because the scanner keeps what a rescan of the joined
+    text would have to rediscover: whether it is inside a string (and which
+    delimiter closes it), and whether the previous character was a backslash
+    escaping the next one in a basic string. So a string still open at the
+    end of one line continues after the joining space, as it does in the
+    joined value (step 3 of the contract)::
+
+        feed('{ x = "q\\')   depth 1, inside "...", escape pending
+        feed(" ")             the space is escaped: still inside the string
+        feed('", p = 1 }')    the string closes, ``}`` closes the table: 0
 
     Zero (or less) means an inline value is complete::
 
         { path = "../a", features = [     ->  2
         { path = "../a" }                 ->  0
+
+    Carrying this state is what keeps the continuation join linear: the
+    reader used to rescan the whole growing value for every appended line,
+    which is quadratic (a crafted 20,000-line entry took tens of seconds).
     """
-    depth = 0
-    index = 0
-    while index < len(text):
-        character = text[index]
-        if character in "\"'":
-            end = _toml_string_end(text, index)
-            if end < 0:
-                return depth
-            index = end
-            continue
-        if character in "{[":
-            depth += 1
-        elif character in "}]":
-            depth -= 1
-        index += 1
-    return depth
+
+    __slots__ = ("depth", "escape", "quote")
+
+    def __init__(self) -> None:
+        self.depth = 0
+        self.quote = ""  # the delimiter of the string being scanned, or ""
+        self.escape = False  # the previous character was a backslash in "..."
+
+    def feed(self, text: str) -> None:
+        depth, quote, escape = self.depth, self.quote, self.escape
+        for character in text:
+            if escape:
+                escape = False
+            elif quote:
+                if quote == '"' and character == "\\":
+                    escape = True
+                elif character == quote:
+                    quote = ""
+            elif character in "\"'":
+                quote = character
+            elif character in "{[":
+                depth += 1
+            elif character in "}]":
+                depth -= 1
+        self.depth, self.quote, self.escape = depth, quote, escape
 
 
 def _split_toml_outside_strings(text: str, separator: str, nested: bool) -> list[str]:
@@ -822,9 +886,17 @@ def _cargo_path_dependency_name(key: str, value: str) -> str | None:
 
     Fields are split at commas outside strings AND outside nested ``[...]``
     or ``{...}``, so a ``features`` array cannot leak a fake field and a
-    nested table's ``path`` is not the entry's. Field keys must be exactly
-    ``path`` and ``package``: Cargo ignores ``Package``, so it must not count
-    as a rename. The first usable field of each key wins.
+    nested table's ``path`` is not the entry's. A field key is decoded like
+    an entry key, so ``"path"`` and ``'path'`` are the key ``path`` (TOML,
+    and so Cargo, read them that way); the decoded key must then be exactly
+    ``path`` or ``package`` -- Cargo ignores ``Package``, so it must not
+    count as a rename, and escapes are not decoded. The first usable field
+    of each key wins::
+
+        a = { "path" = "../a" }                 -> a
+        x = { 'package' = "a", path = "../a" }  -> a
+        a = { "Path" = "../a" }                 -> None (keys are case-sensitive)
+        a = { path.x = "../a" }                 -> None (dotted field key)
     """
     crate_name = _toml_key_segment(key)
     if crate_name is None:
@@ -841,7 +913,8 @@ def _cargo_path_dependency_name(key: str, value: str) -> str | None:
         field_value = _toml_single_string(field[equals + 1 :])
         if field_value is None:
             continue
-        field_key = _trim_spaces_and_tabs(field[:equals])
+        # A dotted or malformed field key is no key at all (None).
+        field_key = _toml_key_segment(field[:equals])
         if field_key == "path" and path is None:
             path = field_value
         elif field_key == "package" and package_name is None:
@@ -870,7 +943,12 @@ def _cargo_link_dependency_names(text: str) -> list[str]:
 
     So while the entry's value still has an unclosed ``{`` or ``[``, the next
     lines are joined onto it with one space (and are not looked at as headers
-    or entries). If the file ends first, the entry contributes nothing.
+    or entries). If the file ends first, the entry contributes nothing. The
+    brackets are counted over the joined value as one text -- a string left
+    open at the end of one line continues after the joining space -- but the
+    joined value is never rescanned: a ``_TomlBracketScanner`` carries its
+    state from line to line and the pieces are joined once, so the join is
+    linear in the entry's length.
     """
     # Step 1: lines. Split at LF only (``str.splitlines`` would also split at
     # \\r, \\v, \\f, U+2028, ...), drop one trailing CR, ignore a leading BOM.
@@ -913,34 +991,48 @@ def _cargo_link_dependency_names(text: str) -> list[str]:
 
         if kind == _CARGO_INLINE_TABLE:
             # Step 3: inline entries, continued while a bracket is open.
+            # The pieces are collected and joined once, and the scanner
+            # carries its state from piece to piece, so the join is linear.
             value: str | None = _trim_spaces_and_tabs(line[equals + 1 :])
-            while (
-                value is not None
-                and value.startswith("{")
-                and _toml_open_bracket_depth(value) > 0
-            ):
-                if index >= len(lines):
-                    value = None  # the file ended inside the value: no entry
-                    break
-                value += " " + clean(lines[index])
-                index += 1
+            if value.startswith("{"):
+                scanner = _TomlBracketScanner()
+                scanner.feed(value)
+                if scanner.depth > 0:
+                    pieces = [value]
+                    closed = False
+                    while not closed and index < len(lines):
+                        piece = clean(lines[index])
+                        index += 1
+                        scanner.feed(" ")
+                        scanner.feed(piece)
+                        pieces.append(piece)
+                        closed = scanner.depth <= 0
+                    # If the file ended inside the value, there is no entry.
+                    value = " ".join(pieces) if closed else None
             if value is not None:
                 crate_name = _cargo_path_dependency_name(line[:equals], value)
                 if crate_name is not None:
                     names.append(crate_name)
         elif kind == _CARGO_SUB_TABLE:
-            # Step 4: only the two bare, lower-case keys matter, first wins.
-            # `version`, `features`, `optional` ... are ignored.
+            # Step 4: only the keys `path` and `package` matter, bare or
+            # quoted (`"path" = ...` is the same key), first wins.
+            # `version`, `features`, `optional` ... are ignored, and so is
+            # `Path`: TOML keys are case-sensitive.
             field_value = _toml_single_string(line[equals + 1 :])
             if field_value is None:
                 continue
-            field_key = _trim_spaces_and_tabs(line[:equals])
+            field_key = _toml_key_segment(line[:equals])
             if field_key == "path" and sub_path is None:
                 sub_path = field_value
             elif field_key == "package" and sub_package is None:
                 sub_package = field_value
     finish_table()
     return names
+
+
+_CARGO_PACKAGE_NAME_RE = re.compile(
+    r'^[ \t]*name[ \t]*=[ \t]*"([^"\n]+)"', re.MULTILINE
+)
 
 
 def _read_cargo_package_name(package_path: Path) -> str | None:
@@ -955,7 +1047,10 @@ def _read_cargo_package_name(package_path: Path) -> str | None:
     if not cargo_toml.is_file():
         return None
     text = cargo_toml.read_text(encoding="utf-8")
-    match = re.search(r'^\s*name\s*=\s*"([^"]+)"', text, re.MULTILINE)
+    # `[ \t]*`, not `\s*`: with re.MULTILINE a `\s*` after `^` runs across
+    # every following blank line from each line start and backtracks, which
+    # is quadratic in a run of blank lines. Names never span lines either.
+    match = _CARGO_PACKAGE_NAME_RE.search(text)
     if match is None:
         return None
     return match.group(1).strip().lower()
@@ -1774,6 +1869,10 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
 
     Returns:
         A DirectedGraph with dependency edges.
+
+    Raises:
+        MetadataEncodingError: a rockspec is not valid UTF-8.
+        DependencySelfEdgeError: a Cargo manifest resolves its own crate.
     """
     graph = DirectedGraph()
 
@@ -1807,6 +1906,12 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_typescript_deps(pkg, known_names)
         elif pkg.language == "rust":
             deps = _parse_rust_deps(pkg, known_names)
+            # Step 5 of the Rust contract: a candidate resolving to the crate
+            # itself (by directory alias or [package] name) is rejected.
+            if pkg.name in deps:
+                raise DependencySelfEdgeError(
+                    pkg.name, pkg.path / "Cargo.toml", pkg.name
+                )
         elif pkg.language == "elixir":
             deps = _parse_elixir_deps(pkg, known_names)
         elif pkg.language == "dart":
