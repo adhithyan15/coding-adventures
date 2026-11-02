@@ -43,25 +43,30 @@
 //! `pkg::mosaic-pkg-draft-editor::DraftEditor`. DraftEditor's own gate is
 //! clean at its own root, and the editor convergence audit's R2 found that
 //! that does NOT certify it when nested: mounted inside NoteEditor it loses
-//! two things its own gate never sees. So this gate measures the composed
+//! something its own gate never sees. So this gate measures the composed
 //! package, and its pins name the **part** as well as the backend and
-//! property, as `mosaic-pkg-notes`' E2 gate does. A `(Flutter, "width")` pin
-//! would license every part of the package to drop `width`.
+//! property, as `mosaic-pkg-notes`' E2 gate does. A `(SwiftUI, "gap")` pin
+//! would license every part of the package to drop `gap`.
 //!
 //! The measured set, identical in both themes (0.1.0 had only the first):
 //!
 //! ```text
-//!                  font-weight    gap                    min-height  width
+//!                  font-weight    gap                    min-height
 //!                  editor-title   draft-editor-          draft-editor-body
 //!                                 title-group
-//!   SwiftUI                         x                                         1
-//!   Qt                                                    x                   1
-//!   Xaml                                                                      0
-//!   Flutter          x                                    x           x       3
-//!   Compose                                                                   0
-//!                                                                            --
-//!                                                                             5
+//!   SwiftUI                         x                                     1
+//!   Qt                                                    x               1
+//!   Xaml                                                                  0
+//!   Flutter          x                                    x               2
+//!   Compose                                                               0
+//!                                                                        --
+//!                                                                         4
 //! ```
+//!
+//! Before #18467 Flutter also dropped `width: 100%` on `draft-editor-body`:
+//! the field sat under NoteEditor's `Row [ editor-body ]`, which gave it no
+//! bounded width. That emitter fix wraps such a child in `Expanded`, so the
+//! width now lowers and its pin is gone.
 //!
 //! Why each is pinned rather than fixed (audit §8, D4):
 //!
@@ -70,11 +75,6 @@
 //!   package inliner folds it away and the part never appears in the emitted
 //!   Swift. The SwiftUI reporter counts the style of a part with no
 //!   occurrence as "not lowered". Nothing on screen is missing.
-//! - **Flutter `width` on `draft-editor-body`** is a real constraint. The
-//!   field sits under NoteEditor's `Row [ editor-body ]`, whose children get
-//!   unbounded width, and Flutter can fill 100% only of a bounded parent, so
-//!   the emitter declines rather than emit a layout that throws. The 0.1.0
-//!   field asked for no width, so it is no narrower than before.
 //! - **Qt and Flutter `min-height` on `draft-editor-body`** is the drop
 //!   DraftEditor's own gate pins: neither lowers `min-height` on a text
 //!   field yet.
@@ -107,8 +107,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str, &str)] = &[
     // DraftEditor's own pinned gap: no `min-height` on a text field.
     (Backend::Qt, "min-height", "draft-editor-body"),
     (Backend::Flutter, "min-height", "draft-editor-body"),
-    // `width: 100%` under NoteEditor's Row, which bounds no width.
-    (Backend::Flutter, "width", "draft-editor-body"),
 ];
 
 fn package_root() -> PathBuf {
@@ -237,7 +235,7 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
 /// gate green. Engram's own copy of this pattern had 11 of 21 pins in exactly
 /// that state before it was checked.
 ///
-/// Checked per theme, not over the union of both: the five drops occur in each
+/// Checked per theme, not over the union of both: the four drops occur in each
 /// theme today, so a pin that one theme stopped producing is already a change
 /// worth seeing.
 #[test]
@@ -283,7 +281,7 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
 /// The pin list itself has no duplicates, so its length is the drop count.
 ///
 /// Together with the two tests above this makes `ALLOWED_STYLE_DROPS.len()`
-/// the package's exact per-theme drop count: 1 in 0.1.0, 5 since E4 mounted
+/// the package's exact per-theme drop count: 1 in 0.1.0, 4 since E4 mounted
 /// DraftEditor. That is the number an emitter fix for any of them moves.
 #[test]
 fn the_pin_list_names_each_drop_once() {

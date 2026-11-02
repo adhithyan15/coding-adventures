@@ -81,8 +81,7 @@ to select.
 
 `tests/native_complete_gate.rs` runs the real degradation analyser on the five
 native backends in both themes. Capability degradations: zero. Style drops:
-five per theme, each pinned by backend, property and part, and checked in both
-directions. Four of them come from mounting DraftEditor here (SwiftUI `gap` on
-the title group the mount folds away, Qt and Flutter `min-height` on the body,
-Flutter `width` on the body under this package's Row). The gate's header says
-why each is pinned rather than fixed.
+four per theme, each pinned by backend, property and part, and checked in both
+directions. Three of them come from mounting DraftEditor here (SwiftUI `gap` on
+the title group the mount folds away, and Qt and Flutter `min-height` on the
+body). The gate's header says why each is pinned rather than fixed.

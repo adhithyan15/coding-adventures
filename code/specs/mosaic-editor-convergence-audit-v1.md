@@ -274,7 +274,8 @@ E5 to E8 (§6) are independent of this order.
   `NoteEditor`'s `Box`/`Row` context, it drops SwiftUI `gap` (on a title
   group that `title-label: ""` removes at runtime) and Flutter `width: 100%`
   on the body. Each consumer's gate must still be run on the composed
-  package, and E4 must pin or fix both drops.
+  package, and E4 must pin or fix both drops. (E4 pins the first; #18467
+  fixed the second in the Flutter emitter, see D4.)
 - **R3. Engram changes behaviour.** A multi-line field changes Enter from
   "nothing" to "line break". Ctrl/Cmd+Enter is a new save path. Any Engram
   native UI test that types into the field by its part tag
@@ -393,8 +394,8 @@ are now `draft-editor-body-label` and `draft-editor-body`. Every other
   `onSaveNote` is all it takes. The host needs no change: the chord raises
   the same event as the Save note button, and the host handles it the same
   way.
-- **D4. R2's nested drops are pinned, not fixed.** Both are measured, both
-  are explained, and neither loses anything 0.1.0 had:
+- **D4. R2's nested drops: one pinned, one fixed in the emitter.** Both
+  were measured, and neither loses anything 0.1.0 had:
   - *SwiftUI `gap` on `draft-editor-title-group`* is a reporting artifact.
     `title-label : ""` makes the title group's `If` a constant, so the
     package inliner folds it away. The part never appears in the emitted
@@ -402,23 +403,24 @@ are now `draft-editor-body-label` and `draft-editor-body`. Every other
     no occurrence as not lowered. Nothing on screen is missing. Fixing that
     is a SwiftUI reporter change that would also move other packages'
     gates, so it is filed as new work rather than done here.
-  - *Flutter `width: 100%` on `draft-editor-body`* is a real constraint.
-    In `NoteEditor`, the field sits under `Row [ editor-body ]`, which gives
-    its children unbounded width. Flutter can fill 100% only of a bounded
-    parent, so the emitter declines rather than emit a layout that throws.
-    0.1.0's field asked for no width, so it is no narrower than it was.
+  - *Flutter `width: 100%` on `draft-editor-body`* was a real constraint,
+    now fixed. In `NoteEditor`, the field sits under `Row [ editor-body ]`,
+    which gave its children unbounded width, and Flutter can fill 100% only
+    of a bounded parent. #18467 (backlog 6d4, found while measuring E4) made
+    the Flutter emitter wrap such a child in `Expanded`, which also stopped
+    NoteEditor's 0.1.0 text fields throwing "InputDecorator cannot have an
+    unbounded width". The width now lowers, and its pin is gone.
   - The body's `min-height` on Qt and Flutter is the drop DraftEditor's own
     gate already pins. Mounted here it is the same drop on the same part.
 - **D5. `NoteEditor`'s gate pins by part, per theme, and counts.** It follows
   the E2 gate for `Notes`: each pin is `(backend, property, part)`, the
   inverse ratchet runs per theme, and the pin list's length is the exact
-  per-theme drop count. A `(backend, property)` pin for `(Flutter, "width")`
-  would license any part of the package to drop `width`.
+  per-theme drop count. A `(backend, property)` pin for `(SwiftUI, "gap")`
+  would license any part of the package to drop `gap`.
 - **D6. Engram's app gate gains part-scoped pins for the new kinds.** Its
-  existing pins are by `(backend, property)` across the whole app. Three of
-  the four nested drops are kinds that list does not pin: SwiftUI `gap` was
-  removed from it on purpose, Qt `min-height` and Flutter `width` were never
-  there. Adding them as property pins would let any part of Engram drop them.
+  existing pins are by `(backend, property)` across the whole app. Two of
+  the three nested drops are kinds that list does not pin: SwiftUI `gap` was
+  removed from it on purpose, and Qt `min-height` was never there. Adding them as property pins would let any part of Engram drop them.
   So they go in a separate `(backend, property, part)` list, checked in both
   directions. Flutter `min-height` is already pinned by property.
 
@@ -434,15 +436,16 @@ themes, for `NoteEditor` and for Engram.
 | SwiftUI | 0 | 1 | `gap` on `draft-editor-title-group` (D4) |
 | Qt | 0 | 1 | `min-height` on `draft-editor-body` |
 | XAML | 0 | 0 | |
-| Flutter | 1 | 3 | `min-height` and `width` on `draft-editor-body` |
+| Flutter | 1 | 2 | `min-height` on `draft-editor-body` |
 | Compose | 0 | 0 | |
-| **Total** | **1** | **5** | |
+| **Total** | **1** | **4** | |
 
 The one 0.1.0 drop (Flutter `font-weight` on `editor-title`) is unchanged.
-This is exactly what probe B (§3.1) measured.
+Probe B (§3.1) measured a fifth, Flutter `width` on `draft-editor-body`,
+which #18467 fixed before E4 landed (D4).
 
-Engram (`theme: None`, both layouts) goes from 372 to 380 reported style
-drops: the same four drops, once for each of the two layouts that mount
+Engram (`theme: None`, both layouts) reports six more style drops than
+before: the same three, once for each of the two layouts that mount
 `NoteEditor`.
 
 ### 8.4 R3: Engram's UI tests
@@ -466,3 +469,20 @@ core's JSON, so it needs no change.
   them. This is the visual cost of one shared editor.
 - A screen reader announces the field by its name, and announces the tags
   field as "Tags". Neither had an accessible name before.
+
+### 8.6 Reachability in a default 800 x 600 window
+
+The taller field makes the Add screen taller: measured on Compose desktop,
+its content grows from about 565 to 733 px. Before Engram's screens could
+scroll, that pushed the tags field and the Save note / Delete / Cancel row
+out of a default 800 x 600 window with no way to reach them. That blocked
+E4. The options were (a) give Engram's screens a scroll container, (b) shrink
+DraftEditor's minimum height, which is a shared-package change, or
+(c) accept the loss. The decision was (a), shipped as EN-6 (#18477): every
+native backend but Qt scrolls the screen region, and #18481 (with its
+content-sizing follow-up) brings Qt in.
+
+Re-measured on this branch with Engram's Compose screenshot harness at
+800 x 600, after scrolling the Add screen to its end: Tags at y 418 to 442,
+and Save note, Delete and Cancel at y 512 to 548, all inside the window. The
+header and screen switcher stay fixed above the scrolled region.

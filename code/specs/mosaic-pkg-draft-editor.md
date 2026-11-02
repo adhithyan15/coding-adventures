@@ -120,8 +120,8 @@ and size only (#15276).
   (E4): `title-label`, `save-label`, `delete-label` and `cancel-label` are
   `""`, `body-label` is the field's name, `body-placeholder` its hint, and
   `onSave` (Ctrl/Cmd+Enter) is forwarded to `onSaveNote`. The field became
-  multi-line. Mounted there, it adds two style drops that its own gate cannot
-  see: SwiftUI `gap` on the folded-away title group, and Flutter `width` on
-  the body under `NoteEditor`'s Row. See
+  multi-line. Mounted there, it adds one style drop that its own gate cannot
+  see: SwiftUI `gap` on the folded-away title group. (Flutter `width` on the
+  body under `NoteEditor`'s Row also dropped until #18467.) See
   [`mosaic-editor-convergence-audit-v1.md`](mosaic-editor-convergence-audit-v1.md)
   §8.

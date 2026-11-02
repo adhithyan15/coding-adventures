@@ -6,9 +6,9 @@
 
 - The README and the spec's Adoption list say that `NoteEditor` 0.2.0 mounts
   DraftEditor body-only for Engram's focused field. Nothing in the package
-  changes. Mounted there it has two style drops its own gate cannot see
-  (SwiftUI `gap` on the folded-away title group, and Flutter `width` on the
-  body under NoteEditor's Row). NoteEditor's and Engram's gates pin them.
+  changes. Mounted there it has one style drop its own gate cannot see
+  (SwiftUI `gap` on the folded-away title group). NoteEditor's and Engram's
+  gates pin it.
 
 ### Added — `body-placeholder` (0.2.0, E1 of the editor convergence audit)
 

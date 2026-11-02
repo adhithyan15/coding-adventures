@@ -226,24 +226,20 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
 ///
 /// Engram's focused note field is now a body-only
 /// `pkg::mosaic-pkg-draft-editor::DraftEditor`, nested in NoteEditor
-/// (`mosaic-editor-convergence-audit-v1.md` §8). Nested there it drops four
+/// (`mosaic-editor-convergence-audit-v1.md` §8). Nested there it drops three
 /// things, each once per layout that mounts NoteEditor (`EngramApp.mll` and
 /// `EngramApp.touch.mll`). Flutter `min-height` is already pinned by property
-/// above; the other three are kinds that list does not pin:
+/// above; the other two are kinds that list does not pin:
 ///
 /// - SwiftUI `gap` on `draft-editor-title-group`: a reporting artifact. The
 ///   title group is folded away at compile time (`title-label : ""`), and
 ///   the reporter counts the style of a part with no occurrence as unlowered.
 /// - Qt `min-height` on `draft-editor-body`: DraftEditor's own pinned gap.
-/// - Flutter `width` on `draft-editor-body`: `width: 100%` under
-///   NoteEditor's `Row [ editor-body ]`, which bounds no width, so Flutter
-///   declines it. The 0.1.0 field asked for no width at all.
 ///
 /// NoteEditor's own gate pins the same set, measured on the package alone.
 const ALLOWED_PART_STYLE_DROPS: &[(Backend, &str, &str)] = &[
     (Backend::SwiftUI, "gap", "draft-editor-title-group"),
     (Backend::Qt, "min-height", "draft-editor-body"),
-    (Backend::Flutter, "width", "draft-editor-body"),
 ];
 
 /// The part a style drop was reported on (`$style.<part>`), or `None`, which

@@ -16,14 +16,15 @@ What changes on the Add/Edit screen:
 Tests:
 
 - `native_complete_gate.rs` gains `ALLOWED_PART_STYLE_DROPS`, pins by
-  `(backend, property, part)` checked in both directions. It holds the three
+  `(backend, property, part)` checked in both directions. It holds the two
   nested-DraftEditor drops that the property list does not pin: SwiftUI `gap`
-  on `draft-editor-title-group`, Qt `min-height` and Flutter `width` on
+  on `draft-editor-title-group`, and Qt `min-height` on
   `draft-editor-body`. Pinning them by property would re-license SwiftUI
   `gap` everywhere in Engram, which the property list removed on purpose.
   Flutter `min-height` was already pinned by property. Measured with
-  `theme: None`: 372 → 380 reported drops, the four new ones once per
-  layout. Capability degradations stay at zero.
+  `theme: None`: six more reported drops, the three new ones once per
+  layout. (Flutter `width` on `draft-editor-body` also dropped until
+  #18467.) Capability degradations stay at zero.
 - `package_compiles.rs` expects the 0.2.0 requirement, and checks on the
   HTML build that the focused field is a `<textarea>` whose
   `data-on-commit` is `onNoteEditorSaveNote`.

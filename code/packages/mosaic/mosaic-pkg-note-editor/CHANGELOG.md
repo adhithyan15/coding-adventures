@@ -33,14 +33,15 @@ E4 of `mosaic-editor-convergence-audit-v1.md` (probe B; decisions in §8).
 - Pins are `(backend, property, part)`, as in `mosaic-pkg-notes`' E2 gate.
   The inverse ratchet runs per theme, and a new test keeps the pin list free
   of duplicates, so its length is the exact per-theme drop count.
-- **Measured 1 → 5 per theme**, identical in dark and light. Kept: Flutter
+- **Measured 1 → 4 per theme**, identical in dark and light. Kept: Flutter
   `font-weight` on `editor-title`. Added by the nested mount (audit R2):
   SwiftUI `gap` on `draft-editor-title-group` (a reporter artifact: the
-  part is folded away at compile time), Qt and Flutter `min-height` on
-  `draft-editor-body` (DraftEditor's own pinned gap), and Flutter `width` on
-  `draft-editor-body` (`100%` under this package's Row, which gives no
-  bounded width). Capability degradations stay at zero.
-- Mutation-tested: moving the Flutter `width` pin to another part fails the
+  part is folded away at compile time), and Qt and Flutter `min-height` on
+  `draft-editor-body` (DraftEditor's own pinned gap). Flutter `width: 100%`
+  on `draft-editor-body`, under this package's Row, also dropped until
+  #18467 bounded such children with `Expanded`; it now lowers. Capability
+  degradations stay at zero.
+- Mutation-tested: moving the SwiftUI `gap` pin to another part fails the
   forward test (the real drop is unpinned) and the inverse test (the pin
   matches nothing), in both themes.
 
