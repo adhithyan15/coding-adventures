@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C508-qifu",
+    "language": "chinese",
+    "chapter": 508,
+    "sequence": 38160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6381c36a52c8d6c2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C485-xintai",
+    "language": "chinese",
+    "chapter": 485,
+    "sequence": 36420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:714c27af99a910b3"
+  },
+  "findings": []
+}

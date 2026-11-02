@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W502-hua-paint",
+    "language": "chinese",
+    "chapter": 502,
+    "sequence": 37835,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a7de8718dc858a69",
+    "detachableSegments": [
+      "Script — a bar, a field, an open box"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

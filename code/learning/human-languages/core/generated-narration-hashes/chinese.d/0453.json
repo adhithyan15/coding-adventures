@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:65232637d4024d1c",
+  "lessonIds": [
+    "ZH-C453-beibao",
+    "ZH-C453-xinglixiang",
+    "ZH-C453-sai",
+    "ZH-C453-lin",
+    "ZH-C453-biaoqian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch453.txt",
+  "json": "chinese/narration/ch453.json",
+  "textHash": "fnv1a64:ea743fc6296039b7",
+  "jsonHash": "fnv1a64:4932709e485fc5df",
+  "findings": []
+}

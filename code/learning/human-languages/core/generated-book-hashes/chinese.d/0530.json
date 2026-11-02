@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:8adb216af56fa6ee",
+  "lessonIds": [
+    "ZH-C530-caipiao",
+    "ZH-C530-choujiang",
+    "ZH-C530-zhongjiang",
+    "ZH-C530-jiangpin",
+    "ZH-C530-toujiang"
+  ],
+  "tex": "chinese/book/chapters/ch530-winning-a-prize.tex"
+}

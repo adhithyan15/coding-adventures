@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C466-xintiao",
+    "language": "chinese",
+    "chapter": 466,
+    "sequence": 35430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb6888dfeacc8cc1"
+  },
+  "findings": []
+}

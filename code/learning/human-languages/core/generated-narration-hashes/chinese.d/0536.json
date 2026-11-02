@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:630ad8932a601b85",
+  "lessonIds": [
+    "ZH-C536-chengzhen",
+    "ZH-C536-yuanmeng",
+    "ZH-C536-meihao",
+    "ZH-C536-mengjian",
+    "ZH-C536-pantou",
+    "ZH-R536-review-532-536"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch536.txt",
+  "json": "chinese/narration/ch536.json",
+  "textHash": "fnv1a64:4c60d646b66bf650",
+  "jsonHash": "fnv1a64:15b8d9ef96283800",
+  "findings": []
+}

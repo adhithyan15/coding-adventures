@@ -1,0 +1,996 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 525,
+  "title": "At Your Service",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:39d1a240663140c3",
+  "lessons": [
+    {
+      "id": "ZH-C525-zhoudao",
+      "sequence": 39560,
+      "title": "zhōudào — attentive and thorough (of service)",
+      "headword": "zhōudào",
+      "romanization": "zhōudào",
+      "gloss": "attentive and thorough (of service)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:281ed20956a61659",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to offer a lower price back, then the Mandarin for the cost of living."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhōudào",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhōudào — \"attentive and thorough (of service)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè jiā fàndiàn de fúwùyuán bǐ nà jiā zhōudào — The waiters in this restaurant are more attentive than in that one."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhōudào is built from zhōu and 到 'to reach', both inherited from Middle Chinese, tsyuw and tawH (Guangyun, in Baxter's transcription), which glosses the first 'all round', 'complete' and 'close' and the second 'to arrive': reaching all round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōudào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōudào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōudào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōudào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè jiā fàndiàn de fúwùyuán bǐ nà jiā zhōudào — The waiters in this restaurant are more attentive than in that one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè jiā fàndiàn de fúwùyuán bǐ nà jiā zhōudào* — The waiters in this restaurant are more attentive than in that one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to offer a lower price back, then the Mandarin for the cost of living, then say zhōudào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to offer a lower price back, then the Mandarin for the cost of living, then say *zhōudào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhōudào mean? (\"Attentive and thorough (of service)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C525-gewai",
+      "sequence": 39570,
+      "title": "格外 (géwài) — more than usual; unusually",
+      "headword": "格外",
+      "romanization": "géwài",
+      "gloss": "more than usual; unusually",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c3375122a449f9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the cost of living, then the Mandarin for attentive and thorough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 格外",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "格外 — géwài — \"more than usual; unusually\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今天的菜格外好吃 jīntiān de cài géwài hǎochī — The food is especially good today."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 格 (gé) — ten strokes in three pieces: on the left the tree piece, four strokes, as in 机; on the right the walking foot, three strokes, as in the middle of 客; and 口 under it, three strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "格外 (géwài) is built from 格 (gé) and 外 'outside', both inherited from Middle Chinese, kaek and ngwajH (Guangyun, in Baxter's transcription). The dictionary glosses the first 'a pattern' and 'a measure', and lists another reading, kak, for a branch; outside the measure is beyond the usual, though how the pair came to mean 'especially' is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "géwài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *géwài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "géwài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *géwài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān de cài géwài hǎochī — The food is especially good today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān de cài géwài hǎochī* — The food is especially good today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the cost of living, then the Mandarin for attentive and thorough, then say géwài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the cost of living, then the Mandarin for attentive and thorough, then say *géwài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 格外 (géwài) mean? (\"More than usual; unusually\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W525-ge-pattern",
+      "sequence": 39575,
+      "title": "格 (gé) — the tree piece, then the walking foot over 口",
+      "headword": "格",
+      "romanization": "gé",
+      "gloss": "格 — the tree piece, then the walking foot over 口",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d7b441808af60405",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the tree piece, then the walking foot over 口",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the tree piece, then the walking foot over 口 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say géwài — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *géwài* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "客 机."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — kè, jī",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *kè*, *jī*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the tree piece, then the walking foot over 口",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "格 (gé)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces: the tree piece on the left, then the walking foot, then 口 under it. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, the tree piece, four strokes, narrow, as in 机: a short bar, a vertical down through it, a stroke falling to the left, then a short dot to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The walking foot, three strokes, as in 客: a short stroke falling to the left, a bar that turns into a long stroke falling to the left, then a long stroke falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "口, three strokes, at the foot: a vertical, a bar that turns down, and a bar closing it."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 3 + 3 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "格 (gé), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 格, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 格 (gé) have? (Three: the tree piece, the walking foot and 口.) Which character has the same right side at its foot? (客.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 格 (gé), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C525-shouhuoyuan",
+      "sequence": 39580,
+      "title": "shòuhuòyuán — shop assistant",
+      "headword": "shòuhuòyuán",
+      "romanization": "shòuhuòyuán",
+      "gloss": "shop assistant",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6943b58c44626ef7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for attentive and thorough, then the Mandarin for more than usual."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shòuhuòyuán",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shòuhuòyuán — \"shop assistant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ juéde zhèr de shòuhuòyuán zuì rèqíng — I think the shop assistants here are the friendliest."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shòuhuòyuán is built from shòu 'to sell', huò 'goods' and yuán 'a member of staff', all inherited from Middle Chinese, dzyuwH, xwaH and hjwen (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to sell goods', the second 'wealth' and the third as the number of things; the sense 'staff' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shòuhuòyuán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shòuhuòyuán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shòuhuòyuán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shòuhuòyuán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ juéde zhèr de shòuhuòyuán zuì rèqíng — I think the shop assistants here are the friendliest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ juéde zhèr de shòuhuòyuán zuì rèqíng* — I think the shop assistants here are the friendliest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for attentive and thorough, then the Mandarin for more than usual, then say shòuhuòyuán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for attentive and thorough, then the Mandarin for more than usual, then say *shòuhuòyuán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shòuhuòyuán mean? (\"Shop assistant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C525-tousu",
+      "sequence": 39590,
+      "title": "tóusù — to make a formal complaint",
+      "headword": "tóusù",
+      "romanization": "tóusù",
+      "gloss": "to make a formal complaint",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2da9cfdd57af20f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for more than usual, then the Mandarin for a shop assistant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tóusù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tóusù — \"to make a formal complaint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ tóusù guo zhè jiā shāngdiàn — I've complained about this shop before."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tóusù is built from tóu 'to throw, to hand in' and sù 'to accuse', both inherited from Middle Chinese, duw and suH (Guangyun, in Baxter's transcription), which glosses the first 'to entrust' and 'to throw' and the second 'to bring a case' and 'to tell'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tóusù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tóusù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tóusù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tóusù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ tóusù guo zhè jiā shāngdiàn — I've complained about this shop before.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ tóusù guo zhè jiā shāngdiàn* — I've complained about this shop before.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for more than usual, then the Mandarin for a shop assistant, then say tóusù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for more than usual, then the Mandarin for a shop assistant, then say *tóusù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tóusù mean? (\"To make a formal complaint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C525-tuikuan",
+      "sequence": 39600,
+      "title": "tuìkuǎn — to give the money back; to refund",
+      "headword": "tuìkuǎn",
+      "romanization": "tuìkuǎn",
+      "gloss": "to give the money back; to refund",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15c9371e38c61a05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a shop assistant, then the Mandarin for to make a formal complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tuìkuǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tuìkuǎn — \"to give the money back; to refund\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ děng le yí ge xīngqī tāmen cái tuìkuǎn — I waited a week before they gave me my money back."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tuìkuǎn is built from tuì 'to go back' and kuǎn, both inherited from Middle Chinese, thwojH and khwanX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to retreat' and the second 'sincere' and 'to knock'; the sense 'a sum of money' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuìkuǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuìkuǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuìkuǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuìkuǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ děng le yí ge xīngqī tāmen cái tuìkuǎn — I waited a week before they gave me my money back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ děng le yí ge xīngqī tāmen cái tuìkuǎn* — I waited a week before they gave me my money back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a shop assistant, then the Mandarin for to make a formal complaint, then say tuìkuǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a shop assistant, then the Mandarin for to make a formal complaint, then say *tuìkuǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tuìkuǎn mean? (\"To give the money back; to refund\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R525-review-520-525",
+      "sequence": 39610,
+      "title": "Looking back: from Around the House to At Your Service",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Around the House to At Your Service",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6a4700682abffff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a household appliance and a light switch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a household appliance, a light switch, a water heater, central heating, to use little electricity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a household appliance, a light switch, a water heater, central heating, to use little electricity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to scrub clean, to sew by hand, to lay out a room, neat and orderly, hygiene",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to scrub clean, to sew by hand, to lay out a room, neat and orderly, hygiene]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to leak water, to call at the house, the water bill, a doorbell, the floor of a room",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to leak water, to call at the house, the water bill, a doorbell, the floor of a room]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sell wholesale, buying and selling for a living, the seller (in a sale), the buyer (in a sale), to sell retail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sell wholesale, buying and selling for a living, the seller (in a sale), the buyer (in a sale), to sell retail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to settle the bill, at half price, to name one's price, to offer a lower price back, the cost of living",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to settle the bill, at half price, to name one's price, to offer a lower price back, the cost of living]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "attentive and thorough, more than usual, a shop assistant, to make a formal complaint, to give the money back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: attentive and thorough, more than usual, a shop assistant, to make a formal complaint, to give the money back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "卖 价 格 (gé) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 卖 价 格 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A household appliance? (家电, jiādiàn.) A light switch? (开关, kāiguān.) A water heater? (rèshuǐqì.) Central heating? (nuǎnqì.) To use little electricity? (shěngdiàn.) To scrub clean? (shuā.) To sew by hand? (féng.) To lay out a room? (bùzhì.) Neat and orderly? (zhěngqí.) Hygiene? (wèishēng.) To leak water? (lòushuǐ.) To call at the house? (上门, shàngmén.) The water bill? (shuǐfèi.) A doorbell? (ménlíng.) The floor of a room? (dìbǎn.) To sell wholesale? (pīfā.) Buying and selling for a living? (买卖, mǎimai.) The seller (in a sale)? (卖家, màijiā.) The buyer (in a sale)? (买家, mǎijiā.) To sell retail? (língshòu.) To settle the bill? (jiézhàng.) At half price? (半价, bànjià.) To name one's price? (要价, yàojià.) To offer a lower price back? (还价, huánjià.) The cost of living? (wùjià.) Attentive and thorough? (zhōudào.) More than usual? (格外, géwài.) A shop assistant? (shòuhuòyuán.) To make a formal complaint? (tóusù.) To give the money back? (tuìkuǎn.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

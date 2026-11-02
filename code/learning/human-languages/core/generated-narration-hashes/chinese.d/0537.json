@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:6404079e9dacd157",
+  "lessonIds": [
+    "ZH-C537-qiyin",
+    "ZH-C537-yuanlai",
+    "ZH-W537-yuan-origin",
+    "ZH-C537-daozhi",
+    "ZH-C537-zaocheng",
+    "ZH-C537-xiaoguo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch537.txt",
+  "json": "chinese/narration/ch537.json",
+  "textHash": "fnv1a64:c4097d9618d9e3c1",
+  "jsonHash": "fnv1a64:576505d0223cf7db",
+  "findings": []
+}

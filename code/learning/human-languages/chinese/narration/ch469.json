@@ -1,0 +1,992 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 469,
+  "title": "Gentle and Steady",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:2bd55684b835702f",
+  "lessons": [
+    {
+      "id": "ZH-C469-chongdong",
+      "sequence": 35560,
+      "title": "chōngdòng — impulsive; rash",
+      "headword": "chōngdòng",
+      "romanization": "chōngdòng",
+      "gloss": "impulsive; rash",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:811c028744cdd077",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for quick to pitch in, then the Mandarin for thoughtful of others' needs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chōngdòng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chōngdòng — \"impulsive; rash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā tài chōngdòng le chángcháng shuō cuò huà — He's too impulsive and often says the wrong thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chōngdòng is built from chōng 'to dash against' and dòng 'to move', both inherited from Middle Chinese, tsyhowng and duwngX (Guangyun, in Baxter's transcription), which glosses the first 'to rush at' and the second 'restless' and 'to move'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōngdòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōngdòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōngdòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōngdòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā tài chōngdòng le chángcháng shuō cuò huà — He's too impulsive and often says the wrong thing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā tài chōngdòng le chángcháng shuō cuò huà* — He's too impulsive and often says the wrong thing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for quick to pitch in, then the Mandarin for thoughtful of others' needs, then say chōngdòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for quick to pitch in, then the Mandarin for thoughtful of others' needs, then say *chōngdòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chōngdòng mean? (\"Impulsive; rash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C469-wenhe",
+      "sequence": 35570,
+      "title": "温和 (wēnhé) — gentle in manner; soft-spoken",
+      "headword": "温和",
+      "romanization": "wēnhé",
+      "gloss": "gentle in manner; soft-spoken",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f06f71cba0c07ff8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for thoughtful of others' needs, then the Mandarin for impulsive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 温和",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "温和 — wēnhé — \"gentle in manner; soft-spoken\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他的个性比我温和 tā de gèxìng bǐ wǒ wēnhé — He has a gentler nature than I do."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 温 (wēn) — twelve strokes in three pieces: on the left the water piece, a dot, a second dot and a rising stroke; at the top right 日 rì, four strokes; at the foot a dish of five strokes, a vertical, a stroke that runs right and turns down, two short verticals and a bar. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "温和 (wēnhé) is built from 温 (wēn) 'warm' and 和 'harmony', both inherited from Middle Chinese, 'won and hwa (Guangyun, in Baxter's transcription), which glosses the first 'mild', 'good', 'soft' and 'warm' and the second 'in tune'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wēnhé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wēnhé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wēnhé, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wēnhé*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā de gèxìng bǐ wǒ wēnhé — He has a gentler nature than I do.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā de gèxìng bǐ wǒ wēnhé* — He has a gentler nature than I do.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for thoughtful of others' needs, then the Mandarin for impulsive, then say wēnhé again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for thoughtful of others' needs, then the Mandarin for impulsive, then say *wēnhé* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 温和 (wēnhé) mean? (\"Gentle in manner; soft-spoken\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W469-wen-warm",
+      "sequence": 35575,
+      "title": "温 (wēn) — the water piece, then 日 over a dish",
+      "headword": "温",
+      "romanization": "wēn",
+      "gloss": "温 — the water piece, 日, then a dish at the foot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8c743f2b931b0e35",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the water piece, then 日 over a dish",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the water piece, then 日 over a dish and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wēnhé — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wēnhé* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "汉 日 和."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — hàn, rì, hé",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *hàn*, *rì*, *hé*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the water piece, then 日 over a dish",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "温 (wēn)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces: the left, then the top right, then the foot. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, three strokes: the water piece, as in 汉. A dot, a second dot under it, then a stroke that rises from the bottom left up to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The top right, 日, four strokes. A vertical down the left, a stroke that runs right and turns down, a bar inside, then the bar across the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "The foot, a dish, five strokes. A short vertical on the left, a stroke that runs right and turns down, two short verticals inside, then a long bar across the bottom, under everything."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 4 + 5 = twelve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "温 (wēn), all twelve, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 温, all twelve, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 温 (wēn) have? (Three: three strokes, four and five.) Which written character sits at the top right? (日.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 温 (wēn), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C469-zhengjing",
+      "sequence": 35580,
+      "title": "正经 (zhèngjīng) — decent; serious and proper",
+      "headword": "正经",
+      "romanization": "zhèngjīng",
+      "gloss": "decent; serious and proper",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9e72e4376b4cb48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for impulsive, then the Mandarin for gentle in manner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 正经",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "正经 — zhèngjīng — \"decent; serious and proper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他是一个很正经的人 tā shì yí ge hěn zhèngjīng de rén — He's a very decent man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "正经 (zhèngjīng) is built from 正 'straight' and 经 'the warp thread', both inherited from Middle Chinese, tsyengH and keng (Guangyun, in Baxter's transcription), which glosses the first 'right' and 'proper' and the second 'constant' and as the warp of cloth. The sense 'decent' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèngjīng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèngjīng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèngjīng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèngjīng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shì yí ge hěn zhèngjīng de rén — He's a very decent man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shì yí ge hěn zhèngjīng de rén* — He's a very decent man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for impulsive, then the Mandarin for gentle in manner, then say zhèngjīng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for impulsive, then the Mandarin for gentle in manner, then say *zhèngjīng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 正经 (zhèngjīng) mean? (\"Decent; serious and proper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C469-wenzhong",
+      "sequence": 35590,
+      "title": "wěnzhòng — steady; calm and reliable",
+      "headword": "wěnzhòng",
+      "romanization": "wěnzhòng",
+      "gloss": "steady; calm and reliable",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3826256bd90232c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for gentle in manner, then the Mandarin for decent and proper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wěnzhòng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wěnzhòng — \"steady; calm and reliable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā bǐ tā jiějie wěnzhòng — She's steadier than her big sister."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wěnzhòng is built from wěn 'settled' and 重 'heavy', both inherited from Middle Chinese, 'wonX and drjowngX (Guangyun, in Baxter's transcription), which glosses the first as grain gathered and 'safe and settled', and the second 'thick' and 'careful'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wěnzhòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wěnzhòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wěnzhòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wěnzhòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā bǐ tā jiějie wěnzhòng — She's steadier than her big sister.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā bǐ tā jiějie wěnzhòng* — She's steadier than her big sister.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for gentle in manner, then the Mandarin for decent and proper, then say wěnzhòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for gentle in manner, then the Mandarin for decent and proper, then say *wěnzhòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wěnzhòng mean? (\"Steady; calm and reliable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C469-jixingzi",
+      "sequence": 35600,
+      "title": "jíxìngzi — an impatient sort; a hothead",
+      "headword": "jíxìngzi",
+      "romanization": "jíxìngzi",
+      "gloss": "an impatient sort; a hothead",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc03b61d072011a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for decent and proper, then the Mandarin for steady and reliable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jíxìngzi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jíxìngzi — \"an impatient sort; a hothead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ bàba shì ge jíxìngzi — My dad is the impatient sort."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jíxìngzi is built from jí 'hasty', 性 'nature' and 子, a noun ending, all inherited from Middle Chinese, kip, sjengH and tsiX (Guangyun, in Baxter's transcription), which glosses the first 'urgent' and 'quick'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jíxìngzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jíxìngzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jíxìngzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jíxìngzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ bàba shì ge jíxìngzi — My dad is the impatient sort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ bàba shì ge jíxìngzi* — My dad is the impatient sort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for decent and proper, then the Mandarin for steady and reliable, then say jíxìngzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for decent and proper, then the Mandarin for steady and reliable, then say *jíxìngzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jíxìngzi mean? (\"An impatient sort; a hothead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R469-review-464-469",
+      "sequence": 35610,
+      "title": "Looking back: from Losing My Temper to Gentle and Steady",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Losing My Temper to Gentle and Steady",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb6afd74033d3fb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to lose one's temper and a hot temper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lose one's temper, a hot temper, to be infuriating, to take it out on someone, furious",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lose one's temper, a hot temper, to be infuriating, to take it out on someone, furious]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to one's heart's content, the fun spoiled, optimistic, pessimistic, sure of oneself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to one's heart's content, the fun spoiled, optimistic, pessimistic, sure of oneself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be lost in a daze, cool-headed, a heartbeat, to give a gentle smile, peaceful inside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be lost in a daze, cool-headed, a heartbeat, to give a gentle smile, peaceful inside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a person's temperament, a strong personality, an inborn trait, cheerful and outgoing, full of life",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a person's temperament, a strong personality, an inborn trait, cheerful and outgoing, full of life]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kind-hearted, pleasant to deal with, strong in spirit, quick to pitch in, thoughtful of others' needs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: kind-hearted, pleasant to deal with, strong in spirit, quick to pitch in, thoughtful of others' needs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "impulsive, gentle in manner, decent and proper, steady and reliable, an impatient sort",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: impulsive, gentle in manner, decent and proper, steady and reliable, an impatient sort]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "兴 静 性 温 (wēn) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 兴 静 性 温 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To lose one's temper? (发火, fāhuǒ.) A hot temper? (火气, huǒqì.) To be infuriating? (气人, qìrén.) To take it out on someone? (出气, chūqì.) Furious? (fènnù.) To one's heart's content? (tòngkuài.) The fun spoiled? (扫兴, sǎoxìng.) Optimistic? (lèguān.) Pessimistic? (bēiguān.) Sure of oneself? (自信, zìxìn.) To be lost in a daze? (fādāi.) Cool-headed? (冷静, lěngjìng.) A heartbeat? (xīntiào.) To give a gentle smile? (wēixiào.) Peaceful inside? (píngjìng.) A person's temperament? (píqi.) A strong personality? (个性, gèxìng.) An inborn trait? (天性, tiānxìng.) Cheerful and outgoing? (kāilǎng.) Full of life? (huópō.) Kind-hearted? (shànliáng.) Pleasant to deal with? (和气, héqi.) Strong in spirit? (jiānqiáng.) Quick to pitch in? (qínkuài.) Thoughtful of others' needs? (tǐtiē.) Impulsive? (chōngdòng.) Gentle in manner? (温和, wēnhé.) Decent and proper? (正经, zhèngjīng.) Steady and reliable? (wěnzhòng.) An impatient sort? (jíxìngzi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

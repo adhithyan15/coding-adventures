@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C469-wenhe",
+    "language": "chinese",
+    "chapter": 469,
+    "sequence": 35570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f06f71cba0c07ff8"
+  },
+  "findings": []
+}

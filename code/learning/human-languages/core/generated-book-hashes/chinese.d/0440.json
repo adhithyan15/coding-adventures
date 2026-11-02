@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:126dceb5e4a193e5",
+  "lessonIds": [
+    "ZH-C440-ganji",
+    "ZH-C440-shancun",
+    "ZH-W440-cun-village",
+    "ZH-C440-cunzhang",
+    "ZH-C440-cunmin",
+    "ZH-C440-jiesu"
+  ],
+  "tex": "chinese/book/chapters/ch440-a-mountain-village.tex"
+}

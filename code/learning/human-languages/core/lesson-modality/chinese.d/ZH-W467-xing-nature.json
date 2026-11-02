@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W467-xing-nature",
+    "language": "chinese",
+    "chapter": 467,
+    "sequence": 35475,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ea0ef0033d5192ff",
+    "detachableSegments": [
+      "Script — the heart piece, then 生"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

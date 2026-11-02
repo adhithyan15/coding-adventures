@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C503-zuopin",
+    "language": "chinese",
+    "chapter": 503,
+    "sequence": 37890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9735b856b5f9fc30"
+  },
+  "findings": []
+}

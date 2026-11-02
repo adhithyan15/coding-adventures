@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C520-nuanqi",
+    "language": "chinese",
+    "chapter": 520,
+    "sequence": 39340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0eb4f8f2c08118f2"
+  },
+  "findings": []
+}

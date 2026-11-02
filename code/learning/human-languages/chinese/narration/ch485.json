@@ -1,0 +1,910 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 485,
+  "title": "Body and Mind",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:b7a870a94453d908",
+  "lessons": [
+    {
+      "id": "ZH-C485-yali",
+      "sequence": 36390,
+      "title": "yālì — pressure; stress",
+      "headword": "yālì",
+      "romanization": "yālì",
+      "gloss": "pressure; stress",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23ef80f7dc785c95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for worn out, then the Mandarin for resistance to illness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yālì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yālì — \"pressure; stress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zuìjìn yālì hěn dà — I've been under a lot of stress lately."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yālì is built from yā 'to press' and 力 'strength', both inherited from Middle Chinese, 'aep and lik (Guangyun, in Baxter's transcription), which glosses the first 'to press down' and the second 'sinew'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yālì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yālì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yālì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yālì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zuìjìn yālì hěn dà — I've been under a lot of stress lately.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zuìjìn yālì hěn dà* — I've been under a lot of stress lately.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for worn out, then the Mandarin for resistance to illness, then say yālì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for worn out, then the Mandarin for resistance to illness, then say *yālì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yālì mean? (\"Pressure; stress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C485-jingshen",
+      "sequence": 36400,
+      "title": "jīngshen — vigour; get-up-and-go",
+      "headword": "jīngshen",
+      "romanization": "jīngshen",
+      "gloss": "vigour; get-up-and-go",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4169d8bcae8ed263",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for resistance to illness, then the Mandarin for stress and pressure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jīngshen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīngshen — \"vigour; get-up-and-go\"."
+            },
+            {
+              "kind": "speech",
+              "text": "hē le kāfēi yǐhòu wǒ gǎnjué hěn yǒu jīngshen — After a coffee, I feel full of energy."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīngshen is built from jīng 'refined' and shén 'spirit', both inherited from Middle Chinese, tsjeng and zyin (Guangyun, in Baxter's transcription), which glosses the first 'bright' and 'pure' and the second 'divine'. In this sense the second is said light."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīngshen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīngshen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīngshen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīngshen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hē le kāfēi yǐhòu wǒ gǎnjué hěn yǒu jīngshen — After a coffee, I feel full of energy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hē le kāfēi yǐhòu wǒ gǎnjué hěn yǒu jīngshen* — After a coffee, I feel full of energy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for resistance to illness, then the Mandarin for stress and pressure, then say jīngshen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for resistance to illness, then the Mandarin for stress and pressure, then say *jīngshen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jīngshen mean? (\"Vigour; get-up-and-go\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C485-shenxin",
+      "sequence": 36410,
+      "title": "身心 (shēnxīn) — body and mind",
+      "headword": "身心",
+      "romanization": "shēnxīn",
+      "gloss": "body and mind",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48b6840a7c37f1f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for stress and pressure, then the Mandarin for get-up-and-go."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 身心",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "身心 — shēnxīn — \"body and mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "眼前最要紧的是身心都好 yǎnqián zuì yàojǐn de shì shēnxīn dōu hǎo — For now, what matters most is being well in body and mind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "身心 (shēnxīn) is built from 身 'body' and 心 'heart', both inherited from Middle Chinese, syin and sim (Guangyun, in Baxter's transcription), which glosses the first 'oneself'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēnxīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēnxīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēnxīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēnxīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǎnqián zuì yàojǐn de shì shēnxīn dōu hǎo — For now, what matters most is being well in body and mind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǎnqián zuì yàojǐn de shì shēnxīn dōu hǎo* — For now, what matters most is being well in body and mind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for stress and pressure, then the Mandarin for get-up-and-go, then say shēnxīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for stress and pressure, then the Mandarin for get-up-and-go, then say *shēnxīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 身心 (shēnxīn) mean? (\"Body and mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C485-xintai",
+      "sequence": 36420,
+      "title": "xīntài — mindset; attitude of mind",
+      "headword": "xīntài",
+      "romanization": "xīntài",
+      "gloss": "mindset; attitude of mind",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:714c27af99a910b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for get-up-and-go, then the Mandarin for body and mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xīntài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xīntài — \"mindset; attitude of mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "kǎoshì de shíhou xīntài zuì zhòngyào — In an exam, your mindset matters most."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xīntài is built from 心 'heart' and tài 'a manner', both inherited from Middle Chinese, sim and thojH (Guangyun, in Baxter's transcription), which glosses the second 'bearing and manner'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīntài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīntài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīntài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīntài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎoshì de shíhou xīntài zuì zhòngyào — In an exam, your mindset matters most.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎoshì de shíhou xīntài zuì zhòngyào* — In an exam, your mindset matters most.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for get-up-and-go, then the Mandarin for body and mind, then say xīntài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for get-up-and-go, then the Mandarin for body and mind, then say *xīntài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xīntài mean? (\"Mindset; attitude of mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C485-jianya",
+      "sequence": 36430,
+      "title": "jiǎnyā — to relieve stress",
+      "headword": "jiǎnyā",
+      "romanization": "jiǎnyā",
+      "gloss": "to relieve stress",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:470f41d1677b2791",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for body and mind, then the Mandarin for a mindset."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiǎnyā",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiǎnyā — \"to relieve stress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tīng yīnyuè kěyǐ jiǎnyā — Listening to music helps relieve stress."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiǎnyā is built from jiǎn 'to lessen' and yā 'to press', both inherited from Middle Chinese, keamX and 'aep (Guangyun, in Baxter's transcription). The dictionary lists the first under two readings and glosses keamX 'to reduce'; it glosses the second 'to press down'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎnyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎnyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎnyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎnyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīng yīnyuè kěyǐ jiǎnyā — Listening to music helps relieve stress.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīng yīnyuè kěyǐ jiǎnyā* — Listening to music helps relieve stress.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for body and mind, then the Mandarin for a mindset, then say jiǎnyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for body and mind, then the Mandarin for a mindset, then say *jiǎnyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiǎnyā mean? (\"To relieve stress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R485-review-481-485",
+      "sequence": 36440,
+      "title": "Looking back: from Is It Serious? to Body and Mind",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Is It Serious? to Body and Mind",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8db4b98786d5fe1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for serious or urgent and how an illness is going."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "serious or urgent, how an illness is going, the cause of an illness, to become infected, a virus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: serious or urgent, how an illness is going, the cause of an illness, to become infected, a virus]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the emergency department, to give medical treatment, a pill, to disinfect, to care for the sick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the emergency department, to give medical treatment, a pill, to disinfect, to care for the sick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to start to improve, to get well again, nourishment, looking after one's health, chronic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to start to improve, to get well again, nourishment, looking after one's health, chronic]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to guard against, to give up drinking, to get into a habit, worn out, resistance to illness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to guard against, to give up drinking, to get into a habit, worn out, resistance to illness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stress and pressure, get-up-and-go, body and mind, a mindset, to relieve stress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stress and pressure, get-up-and-go, body and mind, a mindset, to relieve stress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "紧 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 紧 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Serious or urgent? (要紧, yàojǐn.) How an illness is going? (病情, bìngqíng.) The cause of an illness? (病因, bìngyīn.) To become infected? (gǎnrǎn.) A virus? (bìngdú.) The emergency department? (jízhěn.) To give medical treatment? (zhìliáo.) A pill? (yàopiàn.) To disinfect? (xiāodú.) To care for the sick? (护理, hùlǐ.) To start to improve? (hǎozhuǎn.) To get well again? (kāngfù.) Nourishment? (yíngyǎng.) Looking after one's health? (bǎojiàn.) Chronic? (mànxìng.) To guard against? (yùfáng.) To give up drinking? (jièjiǔ.) To get into a habit? (yǎngchéng.) Worn out? (píláo.) Resistance to illness? (dǐkànglì.) Stress and pressure? (yālì.) Get-up-and-go? (jīngshen.) Body and mind? (身心, shēnxīn.) A mindset? (xīntài.) To relieve stress? (jiǎnyā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R485-review-final-485",
+      "sequence": 36450,
+      "title": "Body and Mind — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af8f5121bd75e2eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for stress and pressure and get-up-and-go."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stress and pressure, get-up-and-go, body and mind, a mindset, to relieve stress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stress and pressure, get-up-and-go, body and mind, a mindset, to relieve stress]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Stress and pressure? (yālì.) Get-up-and-go? (jīngshen.) Body and mind? (身心, shēnxīn.) A mindset? (xīntài.) To relieve stress? (jiǎnyā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-456-LOST456",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ZH-EXT-456-LOST456"
+  ],
+  "after": []
+}

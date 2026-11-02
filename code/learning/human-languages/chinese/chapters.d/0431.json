@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "A Spring Outing",
+  "label": "ch:zh-a-spring-outing",
+  "canDo": "I can follow a guide's commentary, go on a spring outing, take a pleasure boat, say there are many and pose for a group photo.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C431-heying",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can follow a guide's commentary, go on a spring outing, take a pleasure boat, say there are many and pose for a group photo.",
+    "assesses": [
+      "ZH-LEX-C431-OUTING431-03",
+      "ZH-LEX-C431-OUTING431-04",
+      "ZH-LEX-C431-OUTING431-05"
+    ]
+  }
+}

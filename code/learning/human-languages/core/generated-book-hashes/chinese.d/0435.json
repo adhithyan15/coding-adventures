@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:8afd3f434d23fda7",
+  "lessonIds": [
+    "ZH-C435-dengshan",
+    "ZH-C435-shanding",
+    "ZH-C435-richu",
+    "ZH-C435-zhuangguan",
+    "ZH-C435-xiashan",
+    "ZH-R435-review-430-435"
+  ],
+  "tex": "chinese/book/chapters/ch435-at-the-top.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C526-zhongliang",
+    "language": "chinese",
+    "chapter": 526,
+    "sequence": 39640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7422f93f2dd2ba4"
+  },
+  "findings": []
+}

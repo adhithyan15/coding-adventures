@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W507-fu-father",
+  "pathSegment": "ZH-PATH-507-FATHER507",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-507-FATHER507",
+      "order": 2
+    }
+  ]
+}

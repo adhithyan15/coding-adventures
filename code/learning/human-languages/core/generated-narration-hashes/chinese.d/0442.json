@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:d0eff4a2f23c156f",
+  "lessonIds": [
+    "ZH-C442-duian",
+    "ZH-C442-he",
+    "ZH-W442-he-river",
+    "ZH-C442-shangyou",
+    "ZH-C442-zhangshui",
+    "ZH-C442-jiang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch442.txt",
+  "json": "chinese/narration/ch442.json",
+  "textHash": "fnv1a64:c207239f1a009033",
+  "jsonHash": "fnv1a64:db20e8604de3c3a9",
+  "findings": []
+}

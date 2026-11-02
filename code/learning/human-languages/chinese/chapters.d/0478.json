@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Injuries",
+  "label": "ch:zh-injuries",
+  "canDo": "I can say I burned myself, talk about a wound and serious injuries, a sprain and having a wound dressed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C478-baoza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can say I burned myself, talk about a wound and serious injuries, a sprain and having a wound dressed.",
+    "assesses": [
+      "ZH-LEX-C478-HURT478-03",
+      "ZH-LEX-C478-HURT478-04",
+      "ZH-LEX-C478-HURT478-05"
+    ]
+  }
+}

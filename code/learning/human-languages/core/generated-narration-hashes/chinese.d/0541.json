@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:0ee34d22a571ddae",
+  "lessonIds": [
+    "ZH-C541-yaobushi",
+    "ZH-C541-duokui",
+    "ZH-C541-gaishan",
+    "ZH-C541-zhuyao",
+    "ZH-C541-yaome",
+    "ZH-R541-review-537-541",
+    "ZH-R541-review-final-541"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch541.txt",
+  "json": "chinese/narration/ch541.json",
+  "textHash": "fnv1a64:5f27223d0f551058",
+  "jsonHash": "fnv1a64:4bcca9eabd12b730",
+  "findings": []
+}

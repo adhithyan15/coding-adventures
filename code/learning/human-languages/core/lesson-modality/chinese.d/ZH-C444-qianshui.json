@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C444-qianshui",
+    "language": "chinese",
+    "chapter": 444,
+    "sequence": 33720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b812f4b73c9414f7"
+  },
+  "findings": []
+}

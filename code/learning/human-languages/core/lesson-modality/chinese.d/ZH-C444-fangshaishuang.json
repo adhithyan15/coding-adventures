@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C444-fangshaishuang",
+    "language": "chinese",
+    "chapter": 444,
+    "sequence": 33760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7de6cfc6d99b22cd"
+  },
+  "findings": []
+}

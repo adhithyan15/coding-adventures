@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C534-ningke",
+    "language": "chinese",
+    "chapter": 534,
+    "sequence": 40030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07d23b8b02af0c79"
+  },
+  "findings": []
+}

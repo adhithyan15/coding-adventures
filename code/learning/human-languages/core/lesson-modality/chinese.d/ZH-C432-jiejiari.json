@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C432-jiejiari",
+    "language": "chinese",
+    "chapter": 432,
+    "sequence": 33120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfd514cb3795cc07"
+  },
+  "findings": []
+}

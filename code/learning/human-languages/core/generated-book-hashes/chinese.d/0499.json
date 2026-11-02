@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:b747f7520b317681",
+  "lessonIds": [
+    "ZH-C499-qiudui",
+    "ZH-C499-qiuyuan",
+    "ZH-C499-duizhang",
+    "ZH-C499-xunlian",
+    "ZH-C499-chuanqiu"
+  ],
+  "tex": "chinese/book/chapters/ch499-the-team.tex"
+}

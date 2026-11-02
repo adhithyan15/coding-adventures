@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Grandparents",
+  "label": "ch:zh-grandparents",
+  "canDo": "I can talk about my grandma on my mother's side, grandsons and granddaughters, doting and soothing a child.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C510-hong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about my grandma on my mother's side, grandsons and granddaughters, doting and soothing a child.",
+    "assesses": [
+      "ZH-LEX-C510-GRAND510-03",
+      "ZH-LEX-C510-GRAND510-04",
+      "ZH-LEX-C510-GRAND510-05"
+    ]
+  }
+}

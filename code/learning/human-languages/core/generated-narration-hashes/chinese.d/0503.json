@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:f4e92cec50bec00e",
+  "lessonIds": [
+    "ZH-C503-shufa",
+    "ZH-C503-yishu",
+    "ZH-C503-zuopin",
+    "ZH-C503-chuangzuo",
+    "ZH-C503-nianhua",
+    "ZH-R503-review-498-503"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch503.txt",
+  "json": "chinese/narration/ch503.json",
+  "textHash": "fnv1a64:2f9ae5793960afbb",
+  "jsonHash": "fnv1a64:3e363d5db5b4eecc",
+  "findings": []
+}

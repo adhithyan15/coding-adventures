@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W494-kao-test",
+    "language": "chinese",
+    "chapter": 494,
+    "sequence": 37415,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:18ce6214a0fbf255",
+    "detachableSegments": [
+      "Script — the top of lǎo, then two strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

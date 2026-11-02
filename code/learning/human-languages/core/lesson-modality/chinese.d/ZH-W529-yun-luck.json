@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W529-yun-luck",
+    "language": "chinese",
+    "chapter": 529,
+    "sequence": 39785,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b5a4f05386e61404",
+    "detachableSegments": [
+      "Script — 云 first, then the walking piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C530-jiangpin",
+    "language": "chinese",
+    "chapter": 530,
+    "sequence": 39850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b3e9d55f2cdd4de"
+  },
+  "findings": []
+}

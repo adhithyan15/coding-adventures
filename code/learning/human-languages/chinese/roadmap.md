@@ -297,8 +297,27 @@ characters are written (最 然 第 突 意 如 所 该 应 怎 走 坐 感 当 
 all; four of them are anchored by the grammar lesson whose pattern first prints them
 (先…然后…最后, 因为…所以…, 去…怎么走, 坐火车去). A thirteen-line story in written characters, and three
 compositions: one controlled line (281), a four-line note (285) and six connected lines
-(289). B1 headwords 1,290 -> 1,329 and verbs 403 -> 410. B1 is not attained: the B1
-vocabulary (about 1,170 more headwords, with 126 more characters planned) comes next.
+(289). B1 headwords 1,290 -> 1,329 and verbs 403 -> 410.
+
+## The B1 vocabulary (delivered, chapters 290-541)
+
+1,260 words (456 verbs) in nine reviewed tranches of 28 chapters each:
+- i (290-317) and j (318-345): narrating events;
+- k (346-373): giving reasons;
+- l (374-401): reasons, then conditions;
+- m (402-429) and n (430-457): handling travel;
+- o (458-485) and p (486-513): describing experience;
+- q (514-541): experience, then conditions.
+
+126 more characters are written, fourteen a tranche (发 报 新 故 救 死 活 记 经 自 偷 警 才 又 /
+信 古 代 世 界 传 王 鬼 红 送 祝 庆 饼 秋 / 思 法 理 道 题 错 真 必 须 准 可 解 但 虽 / 社 区 安 全 保 成 变
+约 定 改 万 取 难 只 / 旅 检 入 交 通 船 飞 场 停 速 北 南 酒 往 / 游 海 方 部 村 河 护 岛 城 市 味 特 色 图 /
+情 爱 怕 兴 静 性 温 眼 脸 牙 力 伤 血 紧 / 业 职 司 教 考 级 球 赛 画 歌 舞 父 母 亲 / 季 树 光 阳 卖 价 格
+量 运 望 希 愿 原 怪), 353 inventory rows in all. 449 words are headed in written
+characters and 811 are taught by ear with pinyin headwords. Chinese attains B1: 2,589
+headwords and 866 verbs at or below B1. Next: the B2 rung, whose four spine nodes
+(arguing a view, reporting what others said, reading extended prose and discussing the
+abstract) are all still unrealized.
 
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 

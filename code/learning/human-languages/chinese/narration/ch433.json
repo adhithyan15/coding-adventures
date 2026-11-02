@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 433,
+  "title": "From Overseas",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:0618baacb385e548",
+  "lessons": [
+    {
+      "id": "ZH-C433-jiedai",
+      "sequence": 33150,
+      "title": "jiēdài — to receive visitors; to take care of guests",
+      "headword": "jiēdài",
+      "romanization": "jiēdài",
+      "gloss": "to receive visitors; to take care of guests",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e1f0ee7c78ea61d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a full-price ticket, then the Mandarin for to be shut to the public."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiēdài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiēdài — \"to receive visitors; to take care of guests\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè jiā jiǔdiàn jiēdài le hěn duō wàiguó yóukè — This hotel has had lots of foreign visitors."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiēdài is built from jiē 'to meet' and dài 'to wait on', both inherited from Middle Chinese, tsjep and dojX (Guangyun, in Baxter's transcription), which glosses the first 'to join' and the second 'to wait for'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiēdài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiēdài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiēdài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiēdài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè jiā jiǔdiàn jiēdài le hěn duō wàiguó yóukè — This hotel has had lots of foreign visitors.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè jiā jiǔdiàn jiēdài le hěn duō wàiguó yóukè* — This hotel has had lots of foreign visitors.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a full-price ticket, then the Mandarin for to be shut to the public, then say jiēdài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a full-price ticket, then the Mandarin for to be shut to the public, then say *jiēdài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiēdài mean? (\"To receive visitors; to take care of guests\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C433-haiwai",
+      "sequence": 33160,
+      "title": "海外 (hǎiwài) — overseas; beyond the sea",
+      "headword": "海外",
+      "romanization": "hǎiwài",
+      "gloss": "overseas; beyond the sea",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22eb616b468652db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be shut to the public, then the Mandarin for to receive visitors."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 海外",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "海外 — hǎiwài — \"overseas; beyond the sea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "hěn duō hǎiwài yóukè zhù zài zhè jiā jiǔdiàn — A lot of visitors from overseas stay at this hotel."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 海 (hǎi) — ten strokes in two pieces: on the left the water piece of 洗, three strokes; on the right 每 měi, seven strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "海外 (hǎiwài) is built from 海 (hǎi) 'the sea' and 外 'outside', both inherited from Middle Chinese, xojX and ngwajH (Guangyun, in Baxter's transcription), which glosses the first, after an older dictionary, as the great pool that takes in a hundred rivers, and the second 'outside'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎiwài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎiwài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎiwài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎiwài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hěn duō hǎiwài yóukè zhù zài zhè jiā jiǔdiàn — A lot of visitors from overseas stay at this hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hěn duō hǎiwài yóukè zhù zài zhè jiā jiǔdiàn* — A lot of visitors from overseas stay at this hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be shut to the public, then the Mandarin for to receive visitors, then say hǎiwài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be shut to the public, then the Mandarin for to receive visitors, then say *hǎiwài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 海外 (hǎiwài) mean? (\"Overseas; beyond the sea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W433-hai-sea",
+      "sequence": 33165,
+      "title": "海 (hǎi) — the water piece, then 每",
+      "headword": "海",
+      "romanization": "hǎi",
+      "gloss": "海 — the water piece of 洗, then 每",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8e4c57ef89316915",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the water piece, then 每",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the water piece, then 每 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hǎiwài — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hǎiwài* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "洗 每."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — xǐ, měi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *xǐ*, *měi*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the water piece, then 每",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "海 (hǎi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, the water piece, three strokes, as in 洗: two dots, then a stroke that rises to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, 每 měi, seven strokes, as you wrote it: a short stroke falling to the left and a bar; a stroke that runs down and turns right along the foot; a bar that turns down and hooks; a dot; a long bar across; and a last dot."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 7 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "海 (hǎi), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 海, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 海 (hǎi)? (Ten.) What is the right piece? (每 měi.) How many dots does 每 have? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 海 (hǎi), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C433-renshanrenhai",
+      "sequence": 33170,
+      "title": "人山人海 (rénshānrénhǎi) — huge crowds; a sea of people",
+      "headword": "人山人海",
+      "romanization": "rénshānrénhǎi",
+      "gloss": "huge crowds; a sea of people",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7eed1315f9ef829",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to receive visitors, then the Mandarin for beyond the sea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 人山人海",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "人山人海 — rénshānrénhǎi — \"huge crowds; a sea of people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhōumò gōngyuán lǐ rénshānrénhǎi — At the weekend the park is packed with people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "人山人海 (rénshānrénhǎi) is built from 人 'people', 山 'a mountain' and 海 (hǎi) 'the sea', said twice with 人: people like mountains, people like seas. The parts are inherited from Middle Chinese, nyin, srean and xojX (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rénshānrénhǎi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rénshānrénhǎi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rénshānrénhǎi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rénshānrénhǎi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōumò gōngyuán lǐ rénshānrénhǎi — At the weekend the park is packed with people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōumò gōngyuán lǐ rénshānrénhǎi* — At the weekend the park is packed with people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to receive visitors, then the Mandarin for beyond the sea, then say rénshānrénhǎi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to receive visitors, then the Mandarin for beyond the sea, then say *rénshānrénhǎi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 人山人海 (rénshānrénhǎi) mean? (\"Huge crowds; a sea of people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C433-huaqiao",
+      "sequence": 33180,
+      "title": "huáqiáo — overseas Chinese; a Chinese person settled abroad",
+      "headword": "huáqiáo",
+      "romanization": "huáqiáo",
+      "gloss": "overseas Chinese; a Chinese person settled abroad",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be18ff348feab2c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for beyond the sea, then the Mandarin for a sea of people."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: huáqiáo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huáqiáo — \"overseas Chinese; a Chinese person settled abroad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā shì zhù zài hǎiwài de huáqiáo — He's one of the Chinese who live overseas."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huáqiáo is built from huá 'Chinese' and qiáo 'to live away from home', both inherited from Middle Chinese, hwae and gjew (Guangyun, in Baxter's transcription), which glosses the first 'flourishing' and the second 'to lodge' and 'a guest'; the sense 'Chinese' for the first is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huáqiáo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huáqiáo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huáqiáo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huáqiáo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shì zhù zài hǎiwài de huáqiáo — He's one of the Chinese who live overseas.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shì zhù zài hǎiwài de huáqiáo* — He's one of the Chinese who live overseas.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for beyond the sea, then the Mandarin for a sea of people, then say huáqiáo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for beyond the sea, then the Mandarin for a sea of people, then say *huáqiáo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does huáqiáo mean? (\"Overseas Chinese; a Chinese person settled abroad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C433-chuhai",
+      "sequence": 33190,
+      "title": "出海 (chūhǎi) — to go out to sea",
+      "headword": "出海",
+      "romanization": "chūhǎi",
+      "gloss": "to go out to sea",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e6d7a01240039ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a sea of people, then the Mandarin for a Chinese person settled abroad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 出海",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "出海 — chūhǎi — \"to go out to sea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今天风很大我们不能出海 jīntiān fēng hěn dà wǒmen bù néng chūhǎi — It's very windy today, so we can't go out to sea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "出海 (chūhǎi) is built from 出 'to go out' and 海 (hǎi) 'the sea', both inherited from Middle Chinese, tsyhwit and xojX (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūhǎi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūhǎi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūhǎi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūhǎi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān fēng hěn dà wǒmen bù néng chūhǎi — It's very windy today, so we can't go out to sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān fēng hěn dà wǒmen bù néng chūhǎi* — It's very windy today, so we can't go out to sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a sea of people, then the Mandarin for a Chinese person settled abroad, then say chūhǎi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a sea of people, then the Mandarin for a Chinese person settled abroad, then say *chūhǎi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 出海 (chūhǎi) mean? (\"To go out to sea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

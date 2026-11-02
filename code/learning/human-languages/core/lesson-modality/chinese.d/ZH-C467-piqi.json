@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C467-piqi",
+    "language": "chinese",
+    "chapter": 467,
+    "sequence": 35460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94b4c8276fb4e013"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C467-kailang",
+    "language": "chinese",
+    "chapter": 467,
+    "sequence": 35490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df021784ad0b9740"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C467-huopo",
+    "language": "chinese",
+    "chapter": 467,
+    "sequence": 35500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:caad83456face5a2"
+  },
+  "findings": []
+}

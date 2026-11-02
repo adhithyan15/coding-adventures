@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Songs",
+  "label": "ch:zh-songs",
+  "canDo": "I can talk about the words of a song, nursery rhymes, the national anthem, folk songs and singing on stage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C504-yanchang-sing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about the words of a song, nursery rhymes, the national anthem, folk songs and singing on stage.",
+    "assesses": [
+      "ZH-LEX-C504-SONGS504-03",
+      "ZH-LEX-C504-SONGS504-04",
+      "ZH-LEX-C504-SONGS504-05"
+    ]
+  }
+}

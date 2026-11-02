@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:38cc5bdbbe6543c1",
+  "lessonIds": [
+    "ZH-C531-tuoxian",
+    "ZH-C531-jihu",
+    "ZH-C531-jiaoxing",
+    "ZH-C531-buxing",
+    "ZH-C531-shishou",
+    "ZH-R531-review-526-531"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch531.txt",
+  "json": "chinese/narration/ch531.json",
+  "textHash": "fnv1a64:9c6b619e688a87f9",
+  "jsonHash": "fnv1a64:0f205f1a8b3c0646",
+  "findings": []
+}

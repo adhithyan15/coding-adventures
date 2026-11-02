@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:ab43f7ee19a6a030",
+  "lessonIds": [
+    "ZH-C444-qianshui",
+    "ZH-C444-dao",
+    "ZH-W444-dao-island",
+    "ZH-C444-bandao",
+    "ZH-C444-dengta",
+    "ZH-C444-fangshaishuang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch444.txt",
+  "json": "chinese/narration/ch444.json",
+  "textHash": "fnv1a64:7f16b153b5a49a9a",
+  "jsonHash": "fnv1a64:2ff849af8756cdbc",
+  "findings": []
+}

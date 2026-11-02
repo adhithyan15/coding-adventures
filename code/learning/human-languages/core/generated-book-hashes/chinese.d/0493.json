@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:eb1a14ea774982ae",
+  "lessonIds": [
+    "ZH-C493-buxi",
+    "ZH-C493-jiajiao",
+    "ZH-W493-jiao-instruct",
+    "ZH-C493-jiaoyu",
+    "ZH-C493-fudao",
+    "ZH-C493-qingjiao"
+  ],
+  "tex": "chinese/book/chapters/ch493-extra-lessons.tex"
+}

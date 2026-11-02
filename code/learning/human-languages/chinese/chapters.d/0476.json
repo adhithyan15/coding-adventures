@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Neck and Shoulders",
+  "label": "ch:zh-neck-and-shoulders",
+  "canDo": "I can talk about my neck, tongue and shoulders, shaking my head, and pain getting better.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C476-tengtong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about my neck, tongue and shoulders, shaking my head, and pain getting better.",
+    "assesses": [
+      "ZH-LEX-C476-NECK476-03",
+      "ZH-LEX-C476-NECK476-04",
+      "ZH-LEX-C476-NECK476-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:a8cb4af5646ba07e",
+  "lessonIds": [
+    "ZH-C533-xiangwang",
+    "ZH-C533-xiwang",
+    "ZH-W533-xi-hope",
+    "ZH-C533-kewang",
+    "ZH-C533-juewang",
+    "ZH-C533-xinxiangshicheng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch533.txt",
+  "json": "chinese/narration/ch533.json",
+  "textHash": "fnv1a64:bd63562ba12d1344",
+  "jsonHash": "fnv1a64:cf83be5ce3463486",
+  "findings": []
+}

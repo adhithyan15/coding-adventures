@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C521-buzhi",
+    "language": "chinese",
+    "chapter": 521,
+    "sequence": 39380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4715e9f5945b84d9"
+  },
+  "findings": []
+}

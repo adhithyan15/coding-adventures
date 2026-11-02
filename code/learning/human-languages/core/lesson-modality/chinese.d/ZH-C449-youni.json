@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C449-youni",
+    "language": "chinese",
+    "chapter": 449,
+    "sequence": 34020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdf142a3bb67248e"
+  },
+  "findings": []
+}

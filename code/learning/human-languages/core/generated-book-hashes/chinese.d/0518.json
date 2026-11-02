@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:c2ace6fdca749b5c",
+  "lessonIds": [
+    "ZH-C518-qinglang",
+    "ZH-C518-yangguang",
+    "ZH-W518-yang-sun",
+    "ZH-C518-taiyangneng",
+    "ZH-C518-dasan",
+    "ZH-C518-dawu"
+  ],
+  "tex": "chinese/book/chapters/ch518-sunshine.tex"
+}

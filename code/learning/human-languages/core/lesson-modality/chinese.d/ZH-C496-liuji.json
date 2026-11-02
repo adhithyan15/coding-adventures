@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C496-liuji",
+    "language": "chinese",
+    "chapter": 496,
+    "sequence": 37550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a85a64abadcd553"
+  },
+  "findings": []
+}

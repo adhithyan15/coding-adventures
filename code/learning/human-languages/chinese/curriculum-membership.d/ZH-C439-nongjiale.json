@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C439-nongjiale",
+  "pathSegment": "ZH-PATH-439-COUNTRY439",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-439-COUNTRY439",
+      "order": 2
+    }
+  ]
+}

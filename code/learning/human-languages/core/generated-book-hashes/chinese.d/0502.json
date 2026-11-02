@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:0cfd418a464465f5",
+  "lessonIds": [
+    "ZH-C502-youhua",
+    "ZH-C502-guohua",
+    "ZH-W502-hua-paint",
+    "ZH-C502-huajia",
+    "ZH-C502-minghua",
+    "ZH-C502-huazhan"
+  ],
+  "tex": "chinese/book/chapters/ch502-painting.tex"
+}

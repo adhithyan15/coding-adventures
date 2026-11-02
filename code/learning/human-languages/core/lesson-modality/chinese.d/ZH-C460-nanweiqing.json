@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C460-nanweiqing",
+    "language": "chinese",
+    "chapter": 460,
+    "sequence": 35120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c580f219da9f945"
+  },
+  "findings": []
+}

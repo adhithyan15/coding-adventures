@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:ed22cc4c0479831c",
+  "lessonIds": [
+    "ZH-C488-gongchengshi",
+    "ZH-C488-chushi",
+    "ZH-C488-kexuejia",
+    "ZH-C488-fanyi",
+    "ZH-C488-zhuan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch488.txt",
+  "json": "chinese/narration/ch488.json",
+  "textHash": "fnv1a64:ff4a108f97740477",
+  "jsonHash": "fnv1a64:43051a14dfc1cde7",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C517-faguang",
+    "language": "chinese",
+    "chapter": 517,
+    "sequence": 39170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8b66a6568c7ae5b"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:e3d7e14a1b9f8652",
+  "lessonIds": [
+    "ZH-C446-hutong",
+    "ZH-C446-cheng",
+    "ZH-W446-cheng-town",
+    "ZH-C446-gucheng",
+    "ZH-C446-chengqiang",
+    "ZH-C446-jincheng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch446.txt",
+  "json": "chinese/narration/ch446.json",
+  "textHash": "fnv1a64:c69b0510450a3231",
+  "jsonHash": "fnv1a64:7d1d696fd1703a08",
+  "findings": []
+}

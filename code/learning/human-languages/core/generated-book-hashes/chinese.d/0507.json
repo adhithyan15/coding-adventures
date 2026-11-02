@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:059f46566c6556b0",
+  "lessonIds": [
+    "ZH-C507-xiongdi",
+    "ZH-C507-fuzi",
+    "ZH-W507-fu-father",
+    "ZH-C507-funu",
+    "ZH-C507-fuqi",
+    "ZH-C507-zhangbei"
+  ],
+  "tex": "chinese/book/chapters/ch507-fathers-and-sons.tex"
+}

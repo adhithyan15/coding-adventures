@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:06d02742e2b67f8c",
+  "lessonIds": [
+    "ZH-C482-jizhen",
+    "ZH-C482-zhiliao",
+    "ZH-C482-yaopian",
+    "ZH-C482-xiaodu",
+    "ZH-C482-huli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch482.txt",
+  "json": "chinese/narration/ch482.json",
+  "textHash": "fnv1a64:af60d80173683857",
+  "jsonHash": "fnv1a64:34d4d116fa474580",
+  "findings": []
+}

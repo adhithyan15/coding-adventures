@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W450-te-special",
+    "language": "chinese",
+    "chapter": 450,
+    "sequence": 34045,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a78474a98e126c0a",
+    "detachableSegments": [
+      "Script — the cow piece, then two pieces stacked"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

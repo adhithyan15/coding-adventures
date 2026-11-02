@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 434,
+  "title": "With a Tour Group",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5f9a4ec4458d303d",
+  "lessons": [
+    {
+      "id": "ZH-C434-luyoutuan",
+      "sequence": 33200,
+      "title": "lǚyóutuán — tour group",
+      "headword": "lǚyóutuán",
+      "romanization": "lǚyóutuán",
+      "gloss": "tour group",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6ae6237b01d7472",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a Chinese person settled abroad, then the Mandarin for to go out to sea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lǚyóutuán",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǚyóutuán — \"tour group\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ gēn yí ge lǚyóutuán zuò fēijī qù Běijīng — I'm flying to Beijing with a tour group."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǚyóutuán is built from 旅游 'to travel' and tuán 'a group', all inherited from Middle Chinese, ljoX, yuw and dwan (Guangyun, in Baxter's transcription), which glosses the last 'round'; the sense 'a group' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚyóutuán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚyóutuán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚyóutuán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚyóutuán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ gēn yí ge lǚyóutuán zuò fēijī qù Běijīng — I'm flying to Beijing with a tour group.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ gēn yí ge lǚyóutuán zuò fēijī qù Běijīng* — I'm flying to Beijing with a tour group.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a Chinese person settled abroad, then the Mandarin for to go out to sea, then say lǚyóutuán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a Chinese person settled abroad, then the Mandarin for to go out to sea, then say *lǚyóutuán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lǚyóutuán mean? (\"Tour group\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C434-jihe",
+      "sequence": 33210,
+      "title": "jíhé — to gather; to assemble; to meet up as a group",
+      "headword": "jíhé",
+      "romanization": "jíhé",
+      "gloss": "to gather; to assemble; to meet up as a group",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:adcdc6410e8ac180",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to go out to sea, then the Mandarin for a tour group."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jíhé",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jíhé — \"to gather; to assemble; to meet up as a group\"."
+            },
+            {
+              "kind": "speech",
+              "text": "míngtiān zǎoshang bā diǎn wǒmen zài jiǔdiàn dàtáng jíhé — Tomorrow at eight in the morning we meet in the hotel lobby."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jíhé is built from jí 'to gather' and hé 'to join', both inherited from Middle Chinese, dzip and hop (Guangyun, in Baxter's transcription), which glosses the first 'to gather' and the second 'to join'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jíhé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jíhé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jíhé, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jíhé*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "míngtiān zǎoshang bā diǎn wǒmen zài jiǔdiàn dàtáng jíhé — Tomorrow at eight in the morning we meet in the hotel lobby.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *míngtiān zǎoshang bā diǎn wǒmen zài jiǔdiàn dàtáng jíhé* — Tomorrow at eight in the morning we meet in the hotel lobby.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to go out to sea, then the Mandarin for a tour group, then say jíhé again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to go out to sea, then the Mandarin for a tour group, then say *jíhé* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jíhé mean? (\"To gather; to assemble; to meet up as a group\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C434-gouwu",
+      "sequence": 33220,
+      "title": "gòuwù — to go shopping; to do some shopping",
+      "headword": "gòuwù",
+      "romanization": "gòuwù",
+      "gloss": "to go shopping; to do some shopping",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37b101334c0544da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a tour group, then the Mandarin for to meet up as a group."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gòuwù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gòuwù — \"to go shopping; to do some shopping\"."
+            },
+            {
+              "kind": "speech",
+              "text": "xiàwǔ wǒmen zuò gōngjiāo qù shìzhōngxīn gòuwù — In the afternoon we're taking the bus into the centre to do some shopping."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gòuwù is built from gòu 'to buy' and wù 'a thing', both inherited from Middle Chinese, kuwH and mjut (Guangyun, in Baxter's transcription), which glosses the first 'to buy back' and the second as the ten thousand things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gòuwù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gòuwù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gòuwù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gòuwù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàwǔ wǒmen zuò gōngjiāo qù shìzhōngxīn gòuwù — In the afternoon we're taking the bus into the centre to do some shopping.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàwǔ wǒmen zuò gōngjiāo qù shìzhōngxīn gòuwù* — In the afternoon we're taking the bus into the centre to do some shopping.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a tour group, then the Mandarin for to meet up as a group, then say gòuwù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a tour group, then the Mandarin for to meet up as a group, then say *gòuwù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gòuwù mean? (\"To go shopping; to do some shopping\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C434-liunian",
+      "sequence": 33230,
+      "title": "liúniàn — to keep as a souvenir",
+      "headword": "liúniàn",
+      "romanization": "liúniàn",
+      "gloss": "to keep as a souvenir",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd9e116c0222573d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to meet up as a group, then the Mandarin for to do some shopping."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: liúniàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "liúniàn — \"to keep as a souvenir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zài ménkǒu zhàoxiàng liúniàn — We're having our photo taken at the entrance to remember the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "liúniàn is built from liú 'to keep' and niàn 'to remember', both inherited from Middle Chinese, ljuw and nemH (Guangyun, in Baxter's transcription), which glosses the first 'to stay' and the second 'to think of'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liúniàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liúniàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liúniàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liúniàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zài ménkǒu zhàoxiàng liúniàn — We're having our photo taken at the entrance to remember the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zài ménkǒu zhàoxiàng liúniàn* — We're having our photo taken at the entrance to remember the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to meet up as a group, then the Mandarin for to do some shopping, then say liúniàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to meet up as a group, then the Mandarin for to do some shopping, then say *liúniàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does liúniàn mean? (\"To keep as a souvenir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C434-youji",
+      "sequence": 33240,
+      "title": "游记 (yóujì) — travel notes; account of a journey",
+      "headword": "游记",
+      "romanization": "yóujì",
+      "gloss": "travel notes; account of a journey",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4462e4174d13361d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to do some shopping, then the Mandarin for to keep as a souvenir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 游记",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "游记 — yóujì — \"travel notes; account of a journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "huílai yǐhòu tā xiě le yì běn yóujì — After she came back, she wrote a book about the trip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "游记 (yóujì) is built from 游 'to roam' and 记 'to record', both inherited from Middle Chinese, yuw and kiH (Guangyun, in Baxter's transcription), which glosses the second 'to record'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóujì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóujì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóujì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóujì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huílai yǐhòu tā xiě le yì běn yóujì — After she came back, she wrote a book about the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huílai yǐhòu tā xiě le yì běn yóujì* — After she came back, she wrote a book about the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to do some shopping, then the Mandarin for to keep as a souvenir, then say yóujì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to do some shopping, then the Mandarin for to keep as a souvenir, then say *yóujì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 游记 (yóujì) mean? (\"Travel notes; account of a journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:118f7567d4b2e1af",
+  "lessonIds": [
+    "ZH-C461-peifu",
+    "ZH-C461-aixin",
+    "ZH-W461-ai-love",
+    "ZH-C461-aiqing",
+    "ZH-C461-xinai",
+    "ZH-C461-panwang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch461.txt",
+  "json": "chinese/narration/ch461.json",
+  "textHash": "fnv1a64:bf2aedea22fa8cb0",
+  "jsonHash": "fnv1a64:65088c6ae8c260f8",
+  "findings": []
+}
