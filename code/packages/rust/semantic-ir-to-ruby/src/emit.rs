@@ -729,6 +729,94 @@ fn is_valid_constant_path(name: &str) -> bool {
         })
 }
 
+// ---------------------------------------------------------------------------
+// Class and constant names (#18778)
+// ---------------------------------------------------------------------------
+//
+// A SIR class or constant name only has to be an identifier.  A Ruby
+// constant must also start with an UPPER-case letter: `Object.const_set(:dog,
+// …)` raises `wrong constant name dog (NameError)`.  Python allows
+// `class dog:`, and the Python frontend invents names such as `__param_a`, so
+// the backend cannot emit every class name as it stands.
+//
+// [`ruby_const`] maps each `::` segment of a name to a valid Ruby constant:
+//
+// | SIR segment                         | Ruby constant      | why                         |
+// |-------------------------------------|--------------------|-----------------------------|
+// | `Dog`, `StandardError`              | unchanged          | already a constant          |
+// | `dog`, `__param_a`                  | `SirCldog`, `SirCl__param_a` | `l`: lower-case or `_` start |
+// | `SirPair`, `SirCldog`, `SIR_RULE`   | `SirCvSirPair`, …  | `v`: a reserved name, kept verbatim after the marker |
+//
+// RESERVED names are the runtime's own: it defines `SirPair`, `SirNDArray`,
+// `SirSymTerm` and `SIR_*` constants (`SIR_DISPLAY_RUBY`, …) at the top
+// level, and a user `class SirPair` defined with `const_set` would replace
+// the runtime's struct (every cons pair would then be built from the user's
+// class).  So every name that starts with `Sir` and an upper-case letter, or
+// with `SIR_`, is renamed — which also covers `SirC…`, the marker itself.
+//
+// The map is one-to-one, so two different classes never share a constant:
+//
+// - a segment that passes through is never reserved;
+// - every renamed segment starts with [`CONST_MARKER`] (`SirC`), which is
+//   reserved, followed by a tag (`l` or `v`) that says which rule renamed
+//   it, so the two renamed sets cannot meet either;
+// - within one rule the original spelling follows the tag unchanged.
+//
+// Every position that emits a class or constant name goes through it: the
+// `const_set` that defines a class, module or constant, `Class.new(<super>)`,
+// `sir_new`, `define_method` and `define_singleton_method`, `public_send` on a
+// class, `super`, `include`/`extend`, a `Scope::Const` read, and a `rescue`
+// clause.  Built-in classes (`StandardError`, `ZeroDivisionError`, …) start
+// upper-case and pass through, so a rescue of one still names the real class.
+//
+// A renamed class must still SHOW its source name.  `sir_show_class_as` (see
+// the runtime) gives the class back its own spelling for `name`, `to_s`,
+// `inspect`, an instance's default `to_s`/`inspect`, and so for Ruby's own
+// messages that ask for the name (`undefined method 'x' for an instance of
+// dog`).
+
+/// The prefix of every renamed constant segment (see [`ruby_const`]); it is
+/// itself reserved (`Sir` + an upper-case letter).
+const CONST_MARKER: &str = "SirC";
+
+/// Whether a constant segment is in the runtime's reserved namespace:
+/// `Sir` followed by an upper-case letter (`SirPair`, `SirC…`), or `SIR_`.
+fn is_reserved_const(seg: &str) -> bool {
+    seg.starts_with("SIR_")
+        || (seg.starts_with("Sir") && seg[3..].starts_with(|c: char| c.is_ascii_uppercase()))
+}
+
+/// One `::`-free segment of a class/constant name, as a Ruby constant.  See
+/// the table above.  The caller has already checked (in the scan) that the
+/// segment is an identifier, so no character needs escaping here.
+fn ruby_const_segment(seg: &str) -> String {
+    let upper = seg.starts_with(|c: char| c.is_ascii_uppercase());
+    if upper && !is_reserved_const(seg) {
+        seg.to_string()
+    } else if upper {
+        format!("{CONST_MARKER}v{seg}")
+    } else {
+        format!("{CONST_MARKER}l{seg}")
+    }
+}
+
+/// A SIR class/constant name (`dog`, `Foo::Bar`) as a Ruby constant
+/// reference, renaming each segment with [`ruby_const_segment`].
+fn ruby_const(name: &str) -> String {
+    name.split("::")
+        .map(ruby_const_segment)
+        .collect::<Vec<_>>()
+        .join("::")
+}
+
+/// After a class or module named `name` is defined under its Ruby constant,
+/// the statement that gives it back its source name — or nothing, when the
+/// constant already IS the source name.
+fn show_class_as(name: &str) -> Option<String> {
+    let constant = ruby_const(name);
+    (constant != name).then(|| format!("sir_show_class_as({constant}, {})", quote_ruby_string(name)))
+}
+
 /// Whether `name` is a syntactically valid Ruby instance-variable name — a `@`
 /// followed by an identifier (`@v`, `@_x1`).  The frontend puts the `@` in the
 /// node's `name`, and the emitter renders `@v` VERBATIM (a bare local/ivar write
@@ -813,6 +901,10 @@ impl Scan {
             // batch, so it must not compile-then-`NoMethodError` at runtime.
             if name == "__method__" {
                 match args.get(1) {
+                    // #18778 — `recv.each { … }` is the one built-in method
+                    // this backend runs (see `is_each_with_block`); a user
+                    // class's own `each` still wins at run time.
+                    Some(Expr::StrLit { .. }) if is_each_with_block(args) => {}
                     Some(Expr::StrLit { value, span }) => {
                         if !self.registered_methods.contains(value) {
                             return Some(ScanHit::Unsupported(
@@ -1138,7 +1230,7 @@ fn emit_stmt(s: &Stmt) -> String {
             name, scope, value, ..
         } => {
             if matches!(scope, Scope::Const) {
-                format!("Object.const_set(:{}, {})", name, emit_expr(value))
+                format!("Object.const_set(:{}, {})", ruby_const(name), emit_expr(value))
             } else if matches!(scope, Scope::Instance) {
                 // A `Scope::Instance` target (`@v = …`, `Feature::InstanceVars`,
                 // OOP slice 3): the name already INCLUDES the `@`, emitted VERBATIM
@@ -1292,7 +1384,12 @@ fn emit_stmt(s: &Stmt) -> String {
             for rc in rescues {
                 s.push_str("rescue");
                 if !rc.exception_types.is_empty() {
-                    let _ = write!(s, " {}", rc.exception_types.join(", "));
+                    // Each type through `ruby_const`, so a user exception
+                    // class named `my_error` is rescued under the constant it
+                    // was defined as (#18778).
+                    let types: Vec<String> =
+                        rc.exception_types.iter().map(|t| ruby_const(t)).collect();
+                    let _ = write!(s, " {}", types.join(", "));
                 }
                 if let Some(bind) = &rc.binding {
                     let _ = write!(s, " => {}", sanitize_ident(bind));
@@ -1336,10 +1433,19 @@ fn emit_stmt(s: &Stmt) -> String {
             body,
             ..
         } => {
+            // Both names through `ruby_const` (#18778): a Python `class dog`
+            // is defined as `SirCldog`, and a subclass of it names the same
+            // constant.  A renamed class then gets its source name back.
+            let constant = ruby_const(name);
             let mut s = match superclass {
-                Some(sup) => format!("Object.const_set(:{name}, Class.new({sup}))"),
-                None => format!("Object.const_set(:{name}, Class.new)"),
+                Some(sup) => {
+                    format!("Object.const_set(:{constant}, Class.new({}))", ruby_const(sup))
+                }
+                None => format!("Object.const_set(:{constant}, Class.new)"),
             };
+            if let Some(show) = show_class_as(name) {
+                let _ = write!(s, "\n{show}");
+            }
             // OOP slice 6: a class-BODY `@@x = <init>` (`Scope::ClassVar` Assign,
             // the ONLY body content the scan admits) initialises a class variable.
             // It runs where `self` is `main`, NOT the class, so it CANNOT use the
@@ -1355,7 +1461,7 @@ fn emit_stmt(s: &Stmt) -> String {
                 {
                     let _ = write!(
                         s,
-                        "\n{name}.class_variable_set({}, {})",
+                        "\n{constant}.class_variable_set({}, {})",
                         emit_symbol(cv),
                         emit_expr(value)
                     );
@@ -1370,7 +1476,13 @@ fn emit_stmt(s: &Stmt) -> String {
         // a bare `Object.const_set(:M, Module.new)`.  Its methods are hoisted and
         // registered separately with `__def_method__` (reusing slice-2 machinery),
         // and a class mixes it in with the native `include`/`extend` below.
-        Stmt::ModuleDef { name, .. } => format!("Object.const_set(:{name}, Module.new)"),
+        Stmt::ModuleDef { name, .. } => {
+            let mut s = format!("Object.const_set(:{}, Module.new)", ruby_const(name));
+            if let Some(show) = show_class_as(name) {
+                let _ = write!(s, "\n{show}");
+            }
+            s
+        }
         // ── SIR22: array/matrix indexed assignment ──────────────────
         // `target[indices...] = value` — mutates IN PLACE via
         // `sir_array_index_set` (see `runtime.rs`), matching the SIR22
@@ -1845,7 +1957,8 @@ fn emit_var_ref(name: &str, scope: Scope) -> String {
         // which would lowercase-prefix an uppercase name away from constant-hood).
         // `first_scan_issue` has already validated the name as a constant path at
         // this position, so it carries no injectable metacharacter.
-        Scope::Const => name.to_string(),
+        // Renamed by `ruby_const` exactly as where it was defined (#18778).
+        Scope::Const => ruby_const(name),
         // A `Scope::Instance` reference (`Feature::InstanceVars`, OOP slice 3) is
         // a Ruby instance variable — the name already INCLUDES the `@` (`@v`),
         // emitted VERBATIM (NOT through `sanitize_ident`, which would mangle the
@@ -2042,7 +2155,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
                 // The scan rejects a malformed `__new__` before emit.
                 _ => unreachable!("__new__ requires a string class-name first argument"),
             };
-            let mut parts = vec![class];
+            let mut parts = vec![ruby_const(&class)];
             parts.extend_from_slice(&a[1..]);
             format!("sir_new({})", parts.join(", "))
         }
@@ -2056,7 +2169,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // `self` to the receiver at call time, so the hoisted body sees the
         // instance (its `@ivars`, once slice 3 lands).
         "__def_method__" => {
-            let class = str_arg(args, 0);
+            let class = ruby_const(&str_arg(args, 0));
             let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
             format!("{class}.define_method({sym}, &({}))", a[2])
         }
@@ -2066,6 +2179,22 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // `sir_um_*`), so a crafted method name cannot reach `instance_eval` /
         // `send` / any reflection sink.  `args[0]` = receiver (`a[0]`), `args[1]`
         // = method name, `args[2..]` (in `a`) = call arguments.
+        // #18778 — `recv.each { |x| … }` through the runtime's `sir_each`,
+        // which runs a user class's own `each` when the receiver has one and
+        // Ruby's native `Array#each` / `Hash#each` otherwise.
+        // The block's own parameter count goes along (or `nil` when it has
+        // no single count): Ruby gives a one-parameter block over a Hash the
+        // `[key, value]` pair, a two-parameter block the key and the value.
+        "__method__" if is_each_with_block(args) => {
+            let arity = match &args[2] {
+                Expr::MakeClosure { fn_name, .. } => {
+                    STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+                }
+                _ => None,
+            };
+            let arity = arity.map_or_else(|| "nil".to_string(), |n| n.to_string());
+            format!("sir_each({}, {}, {arity})", a[0], a[2])
+        }
         "__method__" => {
             let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
             let mut parts = vec![sym];
@@ -2085,7 +2214,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // (a quoted symbol), so `instance_method` can only fetch a user method —
         // never a reflection built-in (anti-RCE, as with `__method__` dispatch).
         "__super__" => {
-            let class = str_arg(args, 1);
+            let class = ruby_const(&str_arg(args, 1));
             let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 0)));
             format!(
                 "({class}).superclass.instance_method({sym}).bind(self).call({})",
@@ -2099,7 +2228,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // prefix as instance methods (separate method tables, so no collision) —
         // keeping class-method dispatch closed (anti-RCE).
         "__def_class_method__" => {
-            let class = str_arg(args, 0);
+            let class = ruby_const(&str_arg(args, 0));
             let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
             format!("{class}.define_singleton_method({sym}, &({}))", a[2])
         }
@@ -2109,7 +2238,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // registered class method (anti-RCE).  `args[2..]` (in `a`) are the call
         // arguments.
         "__class_method__" => {
-            let class = str_arg(args, 0);
+            let class = ruby_const(&str_arg(args, 0));
             let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
             let mut parts = vec![sym];
             parts.extend_from_slice(&a[2..]);
@@ -2120,11 +2249,33 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // the module's methods as INSTANCE methods (resolved through the ancestry
         // by the existing `__method__`/`public_send` dispatch); `extend` adds them
         // as SINGLETON (class) methods.  Native Ruby — no runtime helper.
-        "__include__" => format!("({}).include({})", str_arg(args, 0), str_arg(args, 1)),
-        "__extend__" => format!("({}).extend({})", str_arg(args, 0), str_arg(args, 1)),
+        "__include__" => format!(
+            "({}).include({})",
+            ruby_const(&str_arg(args, 0)),
+            ruby_const(&str_arg(args, 1))
+        ),
+        "__extend__" => format!(
+            "({}).extend({})",
+            ruby_const(&str_arg(args, 0)),
+            ruby_const(&str_arg(args, 1))
+        ),
         // Unreachable: first_scan_issue rejected anything else.
         other => unreachable!("v0 Ruby backend reached unsupported builtin: {other}"),
     }
+}
+
+/// #18778 — is this `__method__` call `recv.each { … }`: the method name
+/// `each` and exactly one argument, a closure (the block)?
+///
+/// Every other built-in method is still refused (the Collections batch), but
+/// `each` with a block is how Ruby iterates, and the Ruby frontend lowers
+/// `[1].each do |x| … end` to exactly this shape.  The call renders as
+/// `sir_each(recv, block, arity)` (see the runtime), never as a `public_send` of a
+/// source-derived name, so dispatch stays closed.
+fn is_each_with_block(args: &[Expr]) -> bool {
+    matches!(args.get(1), Some(Expr::StrLit { value, .. }) if value == "each")
+        && args.len() == 3
+        && matches!(args[2], Expr::MakeClosure { .. })
 }
 
 /// Join operands with a binary operator, or fall back to `empty` for 0 args.
