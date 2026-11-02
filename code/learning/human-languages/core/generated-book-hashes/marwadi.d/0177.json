@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:a5417dfe5dce8036",
+  "lessonIds": [
+    "MW-C177-pharno",
+    "MW-C177-batan",
+    "MW-C177-takno",
+    "MW-C177-theglo",
+    "MW-C177-pallo"
+  ],
+  "tex": "marwadi/book/chapters/ch177-torn-and-mended.tex"
+}

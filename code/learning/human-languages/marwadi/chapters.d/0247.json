@@ -1,0 +1,21 @@
+{
+  "chapter": 247,
+  "title": "A Wedding in the Village",
+  "label": "ch:mw-a-wedding-in-the-village",
+  "canDo": "I can say who is getting married.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-R247-review-241-247",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say who is getting married.",
+    "assesses": [
+      "MW-LEX-C247-BYAV247-01",
+      "MW-LEX-C247-BYAV247-02",
+      "MW-LEX-C247-BYAV247-03",
+      "MW-LEX-C247-BYAV247-04",
+      "MW-LEX-C247-BYAV247-05"
+    ]
+  }
+}

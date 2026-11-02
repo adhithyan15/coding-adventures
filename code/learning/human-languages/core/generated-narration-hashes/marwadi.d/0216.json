@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:70412159b6bbff86",
+  "lessonIds": [
+    "MW-C216-nikalno",
+    "MW-C216-sathi",
+    "MW-C216-kos",
+    "MW-C216-musaphar",
+    "MW-C216-dero"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch216.txt",
+  "json": "marwadi/narration/ch216.json",
+  "textHash": "fnv1a64:95973786b5b1b4fe",
+  "jsonHash": "fnv1a64:4c8bd834b8299a98",
+  "findings": []
+}

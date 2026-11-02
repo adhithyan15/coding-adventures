@@ -1,0 +1,11 @@
+{
+  "id": "MW-C270-pachhtano",
+  "pathSegment": "MW-PATH-270-MAPHI270",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-270-MAPHI270",
+      "order": 2
+    }
+  ]
+}

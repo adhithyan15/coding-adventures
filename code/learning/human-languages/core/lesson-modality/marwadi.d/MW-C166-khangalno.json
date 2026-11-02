@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C166-khangalno",
+    "language": "marwadi",
+    "chapter": 166,
+    "sequence": 11010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31c7f27c631fc71e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:7e8c8c3f4a9f426a",
+  "lessonIds": [
+    "MW-C229-ujas",
+    "MW-C229-ujlo",
+    "MW-C229-jhino",
+    "MW-C229-dholo",
+    "MW-C229-chamakno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch229.txt",
+  "json": "marwadi/narration/ch229.json",
+  "textHash": "fnv1a64:8a33a5383ea10a69",
+  "jsonHash": "fnv1a64:6ab43a6e90ede77a",
+  "findings": []
+}

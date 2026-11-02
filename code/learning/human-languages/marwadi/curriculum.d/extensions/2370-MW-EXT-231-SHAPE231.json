@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-231-SHAPE231",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether a path is crooked or straight, and how a thing stands.",
+  "prerequisites": []
+}

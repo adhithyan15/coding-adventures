@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 200,
+  "title": "Scales and Weights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0c976cf9a81cffd8",
+  "lessons": [
+    {
+      "id": "MW-C200-taraju",
+      "sequence": 13460,
+      "title": "तराजू (tarājū) — a pair of scales",
+      "headword": "तराजू",
+      "romanization": "tarājū",
+      "gloss": "a pair of scales",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:565f5bf5916fe036",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a reckoning, then the Marwadi for to write down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तराजू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तराजू — tarājū — \"a pair of scales\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तराजू दुकान मांय है। tarājū dukān mā̃y hai. The scales are in the shop."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तराजू (tarājū) is usually traced to Persian tarāzū, \"balance, scales\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarājū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarājū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarājū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarājū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarājū dukān mā̃y hai. — The scales are in the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarājū dukān mā̃y hai.* — The scales are in the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a reckoning, then the Marwadi for to write down, then say tarājū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a reckoning, then the Marwadi for to write down, then say *tarājū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तराजू (tarājū) mean? (\"A pair of scales\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C200-taraju-type",
+              "prompt": "Say the Marwadi for 'scales'.",
+              "assesses": [
+                "MW-LEX-C200-WEIGH200-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तराजू",
+                "tarājū"
+              ],
+              "feedback": {
+                "correct": "Right: तराजू (tarājū) is 'a pair of scales'.",
+                "incorrect": "'scales' is तराजू (tarājū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C200-ser",
+      "sequence": 13470,
+      "title": "सेर (ser) — a seer (a measure of weight)",
+      "headword": "सेर",
+      "romanization": "ser",
+      "gloss": "a seer (a measure of weight)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cd897525aa52231",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to write down, then the Marwadi for scales."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सेर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेर — ser — \"a seer (a measure of weight)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एक सेर आटो दो। ek ser āṭo do. Give me a seer of flour."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेर (ser) is inherited from a reconstructed satēra, \"a measure of weight\"; CDIAL lists Old Marwari sera (CDIAL 13106)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ser",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ser*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ser, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ser*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek ser āṭo do. — Give me a seer of flour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek ser āṭo do.* — Give me a seer of flour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to write down, then the Marwadi for scales, then say ser again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to write down, then the Marwadi for scales, then say *ser* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सेर (ser) mean? (\"A seer (a measure of weight)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C200-ser-type",
+              "prompt": "Say the Marwadi for 'a seer'.",
+              "assesses": [
+                "MW-LEX-C200-WEIGH200-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सेर",
+                "ser"
+              ],
+              "feedback": {
+                "correct": "Right: सेर (ser) is 'a seer (a measure of weight)'.",
+                "incorrect": "'a seer' is सेर (ser)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C200-kilo",
+      "sequence": 13480,
+      "title": "किलो (kilo) — a kilo",
+      "headword": "किलो",
+      "romanization": "kilo",
+      "gloss": "a kilo",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae66dba727759122",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for scales, then the Marwadi for a seer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किलो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किलो — kilo — \"a kilo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दो किलो चावळ लावो। do kilo chāvaḷ lāvo. Bring two kilos of rice."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किलो (kilo) is borrowed from English kilo, short for kilogram."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kilo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kilo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kilo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kilo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "do kilo chāvaḷ lāvo. — Bring two kilos of rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *do kilo chāvaḷ lāvo.* — Bring two kilos of rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for scales, then the Marwadi for a seer, then say kilo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for scales, then the Marwadi for a seer, then say *kilo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किलो mean? (\"A kilo\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C200-kilo-type",
+              "prompt": "Say the Marwadi for 'a kilo'.",
+              "assesses": [
+                "MW-LEX-C200-WEIGH200-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "किलो",
+                "kilo"
+              ],
+              "feedback": {
+                "correct": "Right: किलो (kilo) is 'a kilo'.",
+                "incorrect": "'a kilo' is किलो (kilo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C200-pav",
+      "sequence": 13490,
+      "title": "पाव (pāv) — a quarter (of a seer)",
+      "headword": "पाव",
+      "romanization": "pāv",
+      "gloss": "a quarter (of a seer)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60623e12f5e3f3ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a seer, then the Marwadi for a kilo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाव — pāv — \"a quarter (of a seer)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एक पाव घी दो। ek pāv ghī do. Give me a quarter of ghee."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाव (pāv) is inherited from Sanskrit pāda, \"foot; a fourth part\"; CDIAL lists Old Marwari pāva, \"foot\", and Hindi pāu, \"quarter\" (CDIAL 8056)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāv",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāv*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāv, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāv*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek pāv ghī do. — Give me a quarter of ghee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek pāv ghī do.* — Give me a quarter of ghee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a seer, then the Marwadi for a kilo, then say pāv again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a seer, then the Marwadi for a kilo, then say *pāv* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाव (pāv) mean? (\"A quarter (of a seer)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C200-pav-type",
+              "prompt": "Say the Marwadi for 'a quarter'.",
+              "assesses": [
+                "MW-LEX-C200-WEIGH200-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पाव",
+                "pāv"
+              ],
+              "feedback": {
+                "correct": "Right: पाव (pāv) is 'a quarter (of a seer)'.",
+                "incorrect": "'a quarter' is पाव (pāv)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C200-litar",
+      "sequence": 13500,
+      "title": "लीटर (līṭar) — a litre",
+      "headword": "लीटर",
+      "romanization": "līṭar",
+      "gloss": "a litre",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ce57696be342ec2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a kilo, then the Marwadi for a quarter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लीटर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लीटर — līṭar — \"a litre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एक लीटर दूध दो। ek līṭar dūdh do. Give me a litre of milk."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लीटर (līṭar) is borrowed from English litre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "līṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *līṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "līṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *līṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek līṭar dūdh do. — Give me a litre of milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek līṭar dūdh do.* — Give me a litre of milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a kilo, then the Marwadi for a quarter, then say līṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a kilo, then the Marwadi for a quarter, then say *līṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लीटर (līṭar) mean? (\"A litre\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C200-litar-type",
+              "prompt": "Say the Marwadi for 'a litre'.",
+              "assesses": [
+                "MW-LEX-C200-WEIGH200-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लीटर",
+                "līṭar"
+              ],
+              "feedback": {
+                "correct": "Right: लीटर (līṭar) is 'a litre'.",
+                "incorrect": "'a litre' is लीटर (līṭar)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

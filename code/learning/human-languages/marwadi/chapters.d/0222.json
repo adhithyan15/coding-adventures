@@ -1,0 +1,21 @@
+{
+  "chapter": 222,
+  "title": "Wind, Wet and Cold",
+  "label": "ch:mw-wind-wet-and-cold",
+  "canDo": "I can talk about dust storms, getting wet, dew and fog.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-R222-review-216-222",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can talk about dust storms, getting wet, dew and fog.",
+    "assesses": [
+      "MW-LEX-C222-COLD222-01",
+      "MW-LEX-C222-COLD222-02",
+      "MW-LEX-C222-COLD222-03",
+      "MW-LEX-C222-COLD222-04",
+      "MW-LEX-C222-COLD222-05"
+    ]
+  }
+}

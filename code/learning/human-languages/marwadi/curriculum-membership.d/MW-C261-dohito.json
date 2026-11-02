@@ -1,0 +1,11 @@
+{
+  "id": "MW-C261-dohito",
+  "pathSegment": "MW-PATH-261-MASI261",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-261-MASI261",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C155-khau-pivai",
+  "pathSegment": "MW-PATH-155-VSTEM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-155-VSTEM",
+      "order": 1
+    }
+  ]
+}

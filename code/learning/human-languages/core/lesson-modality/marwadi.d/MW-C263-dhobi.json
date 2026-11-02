@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C263-dhobi",
+    "language": "marwadi",
+    "chapter": 263,
+    "sequence": 18160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43a68f0e77152fe7"
+  },
+  "findings": []
+}

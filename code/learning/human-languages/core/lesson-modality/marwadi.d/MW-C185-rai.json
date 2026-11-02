@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C185-rai",
+    "language": "marwadi",
+    "chapter": 185,
+    "sequence": 11990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f19b4b67133fbd7"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "People of the Village",
+  "label": "ch:mw-people-of-the-village",
+  "canDo": "I can name people in the village and say who they are.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-C262-karigar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can name people in the village and say who they are.",
+    "assesses": [
+      "MW-LEX-C262-JANO262-03",
+      "MW-LEX-C262-JANO262-04",
+      "MW-LEX-C262-JANO262-05"
+    ]
+  }
+}

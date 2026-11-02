@@ -1,0 +1,11 @@
+{
+  "id": "MW-C171-majno",
+  "pathSegment": "MW-PATH-171-BASAN171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-171-BASAN171",
+      "order": 2
+    }
+  ]
+}

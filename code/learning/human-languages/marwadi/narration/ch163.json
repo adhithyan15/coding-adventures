@@ -1,0 +1,765 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 163,
+  "title": "Plans and Perhaps",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8e82f96cd6059959",
+  "lessons": [
+    {
+      "id": "MW-C163-plan",
+      "sequence": 9970,
+      "title": "परसूं हूं बाजार जासूं — a plan",
+      "headword": "परसूं हूं बाजार जासूं।",
+      "romanization": "parsū̃ hū̃ bājār jāsū̃.",
+      "gloss": "a plan: the time first, then the future",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:962576d62658e261",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I will go to the market tomorrow. Then the day after tomorrow: परसूं."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the time first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A plan opens on its time, then says what you will do:"
+            },
+            {
+              "kind": "speech",
+              "text": "परसूं हूं बाजार जासूं। parsū̃ hū̃ bājār jāsū̃. — The day after tomorrow I'll go to the market."
+            },
+            {
+              "kind": "speech",
+              "text": "आज आथण हूं घरै आसूं। āj āthaṇ hū̃ gharai āsū̃. — This evening I'll come home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two plans join with अर:"
+            },
+            {
+              "kind": "speech",
+              "text": "काल हूं दिनूगै उठसूं अर बाजार जासूं। kāl hū̃ dinūgai uṭhsū̃ ar bājār jāsū̃. — Tomorrow I'll get up early and go to the market."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "परसूं हूं बाजार जासूं। — parsū̃ hū̃ bājār jāsū̃. — The day after tomorrow I'll go to the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **परसूं हूं बाजार जासूं।** — *parsū̃ hū̃ bājār jāsū̃.* — The day after tomorrow I'll go to the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आज आथण हूं घरै आसूं। — āj āthaṇ hū̃ gharai āsū̃. — This evening I'll come home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आज आथण हूं घरै आसूं।** — *āj āthaṇ hū̃ gharai āsū̃.* — This evening I'll come home.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the time go in a plan? (First.) What does the verb take? (-सूं.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C163-plan-market",
+              "prompt": "Say your plan: the day after tomorrow you'll go to the market.",
+              "assesses": [
+                "MW-GRAMMAR-C163-FUT-PLAN-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "परसूं हूं बाजार जासूं।",
+                "parsū̃ hū̃ bājār jāsū̃",
+                "parsu hu bajar jasu"
+              ],
+              "feedback": {
+                "correct": "Right: the day first, then the future.",
+                "incorrect": "Open on परसूं, then हूं बाजार जासूं."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C163-sayad",
+      "sequence": 9980,
+      "title": "सायद (sāyad) — perhaps",
+      "headword": "सायद",
+      "romanization": "sāyad",
+      "gloss": "perhaps",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0162f62867d4197",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say now, today and every day. (अबार, आज, रोज.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सायद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सायद — sāyad — \"perhaps\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सायद हूं काल आसूं। sāyad hū̃ kāl āsū̃. — Perhaps I'll come tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सायद (sāyad) is a loan, usually traced to Persian shāyad, \"it may be\". Marwari says s where the Persian has sh, as it does in हमेसा."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सायद opens the sentence and leaves the rest as it was: सायद परसूं हूं बाजार जासूं। (sāyad parsū̃ hū̃ bājār jāsū̃.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "सायद हूं काल कोनी आसूं। — sāyad hū̃ kāl konī āsū̃. — Perhaps I won't come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **सायद हूं काल कोनी आसूं।** — *sāyad hū̃ kāl konī āsū̃.* — Perhaps I won't come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say now, then sāyad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *now*, then *sāyad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सायद (sāyad) mean? (\"Perhaps\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C163-sayad-type",
+              "prompt": "Say the Marwadi for 'perhaps'.",
+              "assesses": [
+                "MW-LEX-C163-PLAN163-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सायद",
+                "sāyad",
+                "sayad"
+              ],
+              "feedback": {
+                "correct": "Right: सायद (sāyad) is 'perhaps'.",
+                "incorrect": "'perhaps' is सायद (sāyad)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C163-pher",
+      "sequence": 9990,
+      "title": "फेर (pher) — again",
+      "headword": "फेर",
+      "romanization": "pher",
+      "gloss": "again",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:837e96073847ec5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say perhaps I'll come tomorrow. Then later, पछै."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फेर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेर — pher — \"again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल फेर आसूं। hū̃ kāl pher āsū̃. — I'll come again tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens on a letter you have not written yet: ph, a प with a breath after it. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेर (pher) is built on the old verb for turning. CDIAL gives Hindi and Gujarati pher, \"again\", under a reconstructed phirati, \"turns\", and lists Old Marwari phiraï, \"turns\", in the same entry (CDIAL 9078)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेर (pher) sits right before the verb: फेर (pher) आसूं, फेर (pher) जासूं."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "राम फेर आयो। — rām pher āyo. — Ram came again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **राम फेर आयो।** — *rām pher āyo.* — Ram came again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say later, then pher again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *later*, then *pher* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फेर (pher) mean? (\"Again\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C163-pher-type",
+              "prompt": "Say the Marwadi for 'again'.",
+              "assesses": [
+                "MW-LEX-C163-PLAN163-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फेर",
+                "pher"
+              ],
+              "feedback": {
+                "correct": "Right: फेर (pher) is 'again'.",
+                "incorrect": "'again' is फेर (pher)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W50-pha",
+      "sequence": 10000,
+      "title": "फ (pha) — the letter that opens फेर (pher)",
+      "headword": "फ",
+      "romanization": "pha",
+      "gloss": "pha — the letter that opens फेर",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:c1b7a63808d3fcd3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: फ",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: फ, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write प once, and name it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say फेर (pher), \"again\". It opens on a प with a breath after it: ph. This lesson puts that letter in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: फ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फ — pha, the breathed p."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens फेर (pher). It stands beside प as ध stands beside द. Its left part is a stem and a lower bowl joined to a central stem, much like प; then comes a separate arch on the right, and the headline."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: फ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. descend the left stem, curve right around the lower bowl, rise along the central side to the headline, then retrace down the central stem without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at the central junction and sweep clockwise over and down through the open right arch."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2."
+            },
+            {
+              "kind": "speech",
+              "text": "verified three-stroke teaching form; another learner source stages the components differently."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order; hands and teachers vary. Source: JackPotte, ‘Devanagari pʰ फ (pha).gif’, strokes 1–3, Wikimedia Commons, 29 March 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at फेर (pher) and point at फ (pha) at its start",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **फेर** and point at फ at its start]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "फ (pha) three times, saying ph as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: फ three times, saying *ph* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "प, then फ (pha), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: प, then फ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "फेर (pher) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **फेर** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — फ? (pha, the breathed p.) Which word did it come from? (फेर, pher, \"again\".)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MW-W50-pha-recall",
+              "prompt": "Write the letter that opens pher (again).",
+              "assesses": [
+                "MW-SCRIPT-C163-PHA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फ"
+              ],
+              "feedback": {
+                "correct": "Yes: फ, from pher.",
+                "incorrect": "The letter is फ. Find it at the start of फेर and write it once more."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R163-plans",
+      "sequence": 10010,
+      "title": "Plans and perhaps — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "review of plans, perhaps, again and the letter फ",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17024a0b203e4c05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the day after tomorrow I'll go to the market."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "this evening I'll come home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *this evening I'll come home*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomorrow I'll get up early and go to the market",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomorrow I'll get up early and go to the market*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perhaps I'll come tomorrow; perhaps I won't come tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perhaps I'll come tomorrow*; *perhaps I won't come tomorrow*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I'll come again tomorrow; Ram came again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I'll come again tomorrow*; *Ram came again*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "फेर (pher), and name its first letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **फेर**, and name its first letter]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Perhaps? (सायद (sāyad).) Again? (फेर (pher).) I'll come? (आसूं.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R163-plans-again",
+              "prompt": "Say: perhaps I'll come again tomorrow.",
+              "assesses": [
+                "MW-LEX-C163-PLAN163-01",
+                "MW-LEX-C163-PLAN163-02"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "सायद हूं काल फेर आसूं।",
+                "sāyad hū̃ kāl pher āsū̃",
+                "sayad hu kal pher asu"
+              ],
+              "feedback": {
+                "correct": "Right: सायद first, फेर just before the verb.",
+                "incorrect": "सायद, then हूं काल, then फेर आसूं."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

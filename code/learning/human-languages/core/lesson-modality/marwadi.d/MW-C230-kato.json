@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C230-kato",
+    "language": "marwadi",
+    "chapter": 230,
+    "sequence": 15760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0bda2f517099f60"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C256-umang",
+    "language": "marwadi",
+    "chapter": 256,
+    "sequence": 17810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75abff7941afd8ad"
+  },
+  "findings": []
+}

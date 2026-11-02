@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Worry and Patience",
+  "label": "ch:mw-worry-and-patience",
+  "canDo": "I can say what worries me and whom I trust.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C258-hiyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say what worries me and whom I trust.",
+    "assesses": [
+      "MW-LEX-C258-CHINTA258-03",
+      "MW-LEX-C258-CHINTA258-04",
+      "MW-LEX-C258-CHINTA258-05"
+    ]
+  }
+}

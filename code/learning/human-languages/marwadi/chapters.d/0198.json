@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "At the Office",
+  "label": "ch:mw-at-the-office",
+  "canDo": "I can ask for something at an office.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-C198-samjhavno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can ask for something at an office.",
+    "assesses": [
+      "MW-LEX-C198-OFFICE198-03",
+      "MW-LEX-C198-OFFICE198-04",
+      "MW-LEX-C198-OFFICE198-05"
+    ]
+  }
+}

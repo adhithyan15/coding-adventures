@@ -1,0 +1,11 @@
+{
+  "id": "MW-C243-thagno",
+  "pathSegment": "MW-PATH-243-CHOR243",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-243-CHOR243",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C205-atakno",
+  "pathSegment": "MW-PATH-205-BUS205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-205-BUS205",
+      "order": 3
+    }
+  ]
+}

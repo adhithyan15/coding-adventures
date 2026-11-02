@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C171-basan",
+    "language": "marwadi",
+    "chapter": 171,
+    "sequence": 11250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6072842a47264442"
+  },
+  "findings": []
+}

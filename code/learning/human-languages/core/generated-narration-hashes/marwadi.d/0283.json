@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:6f360a9829c4ef4a",
+  "lessonIds": [
+    "MW-C283-moti",
+    "MW-C283-bidhno",
+    "MW-C283-jarno",
+    "MW-C283-kasido",
+    "MW-C283-sajavno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch283.txt",
+  "json": "marwadi/narration/ch283.json",
+  "textHash": "fnv1a64:5831c503be4f5684",
+  "jsonHash": "fnv1a64:7bf02896a69a374d",
+  "findings": []
+}

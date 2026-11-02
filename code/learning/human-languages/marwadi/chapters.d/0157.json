@@ -1,0 +1,21 @@
+{
+  "chapter": 157,
+  "title": "Not Today",
+  "label": "ch:mw-a2-not-today",
+  "canDo": "I can say that I or someone else does not do something, that someone is not here, and ask someone not to do something.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-R157-not-today",
+    "kind": "production",
+    "summary": "Complete MW-R157-not-today: say what you and others do not do, who is not here, and ask someone not to go.",
+    "assesses": [
+      "MW-GRAMMAR-C157-KONI-VERB-01",
+      "MW-GRAMMAR-C157-KONI-ISNOT-01",
+      "MW-GRAMMAR-C157-MAT-01",
+      "MW-LEX-C157-VERB157-01",
+      "MW-SCRIPT-C157-JHA-01"
+    ]
+  }
+}

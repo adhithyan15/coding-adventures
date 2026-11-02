@@ -1,0 +1,11 @@
+{
+  "id": "MW-C202-ado",
+  "pathSegment": "MW-PATH-202-WAY202",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-202-WAY202",
+      "order": 3
+    }
+  ]
+}

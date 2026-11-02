@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 176,
+  "title": "Covering, Tying and Hanging",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:51bb3ce6e0f86ee8",
+  "lessons": [
+    {
+      "id": "MW-C176-dhakno",
+      "sequence": 11510,
+      "title": "ढांकणो (ḍhā̃kṇo) — to cover",
+      "headword": "ढांकणो",
+      "romanization": "ḍhā̃kṇo",
+      "gloss": "to cover",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e21141beb4b0066b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a small water pot, then the Marwadi for a spouted water pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ढांकणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढांकणो — ḍhā̃kṇo — \"to cover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां दूध ढांकै है। mā̃ dūdh ḍhā̃kai hai. Mother covers the milk."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दूध ढांक्यो, mhaĩ dūdh ḍhā̃kyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढांकणो (ḍhā̃kṇo) is inherited from a reconstructed ḍhakk, \"cover\"; CDIAL lists Marwari ḍhā̃kṇo under it (CDIAL 5574)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhā̃kṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhā̃kṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhā̃kṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhā̃kṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ dūdh ḍhā̃kai hai. — Mother covers the milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ dūdh ḍhā̃kai hai.* — Mother covers the milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a small water pot, then the Marwadi for a spouted water pot, then say ḍhā̃kṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a small water pot, then the Marwadi for a spouted water pot, then say *ḍhā̃kṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ढांकणो (ḍhā̃kṇo) mean? (\"To cover\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C176-dhakno-type",
+              "prompt": "Say the Marwadi for 'to cover'.",
+              "assesses": [
+                "MW-LEX-C176-GANTH176-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ढांकणो",
+                "ḍhā̃kṇo"
+              ],
+              "feedback": {
+                "correct": "Right: ढांकणो (ḍhā̃kṇo) is 'to cover'.",
+                "incorrect": "'to cover' is ढांकणो (ḍhā̃kṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C176-badhno",
+      "sequence": 11520,
+      "title": "बांधणो (bā̃dhṇo) — to tie",
+      "headword": "बांधणो",
+      "romanization": "bā̃dhṇo",
+      "gloss": "to tie",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73879239a9dfd945",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a spouted water pot, then the Marwadi for to cover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बांधणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बांधणो — bā̃dhṇo — \"to tie\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं गाय बांधूं हूं। hū̃ gāy bā̃dhū̃ hū̃. I tie up the cow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं गाय बांधी, mhaĩ gāy bā̃dhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बांधणो (bā̃dhṇo) is inherited from Sanskrit bandhati, \"binds\"; CDIAL lists the Old Marwari verb under it (CDIAL 9139)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃dhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃dhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃dhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃dhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ gāy bā̃dhū̃ hū̃. — I tie up the cow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ gāy bā̃dhū̃ hū̃.* — I tie up the cow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a spouted water pot, then the Marwadi for to cover, then say bā̃dhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a spouted water pot, then the Marwadi for to cover, then say *bā̃dhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बांधणो (bā̃dhṇo) mean? (\"To tie\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C176-badhno-type",
+              "prompt": "Say the Marwadi for 'to tie'.",
+              "assesses": [
+                "MW-LEX-C176-GANTH176-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बांधणो",
+                "bā̃dhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बांधणो (bā̃dhṇo) is 'to tie'.",
+                "incorrect": "'to tie' is बांधणो (bā̃dhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C176-gath",
+      "sequence": 11530,
+      "title": "गांठ (gā̃ṭh) — a knot",
+      "headword": "गांठ",
+      "romanization": "gā̃ṭh",
+      "gloss": "a knot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dd853d8282a8c82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to cover, then the Marwadi for to tie."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गांठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गांठ — gā̃ṭh — \"a knot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गांठ घणी कड़क है। gā̃ṭh ghaṇī kaṛak hai. The knot is very tight."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गांठ (gā̃ṭh) is inherited from Sanskrit granthi, \"a knot\"; CDIAL lists Hindi and Gujarati gā̃ṭh (CDIAL 4354). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃ṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃ṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃ṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃ṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃ṭh ghaṇī kaṛak hai. — The knot is very tight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃ṭh ghaṇī kaṛak hai.* — The knot is very tight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to cover, then the Marwadi for to tie, then say gā̃ṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to cover, then the Marwadi for to tie, then say *gā̃ṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गांठ (gā̃ṭh) mean? (\"A knot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C176-gath-type",
+              "prompt": "Say the Marwadi for 'a knot'.",
+              "assesses": [
+                "MW-LEX-C176-GANTH176-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गांठ",
+                "gā̃ṭh"
+              ],
+              "feedback": {
+                "correct": "Right: गांठ (gā̃ṭh) is 'a knot'.",
+                "incorrect": "'a knot' is गांठ (gā̃ṭh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C176-sakal",
+      "sequence": 11540,
+      "title": "सांकळ (sā̃kaḷ) — a door chain",
+      "headword": "सांकळ",
+      "romanization": "sā̃kaḷ",
+      "gloss": "a door chain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cc7fd769f260ca0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to tie, then the Marwadi for a knot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सांकळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांकळ — sā̃kaḷ — \"a door chain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "किवाड़ माथै सांकळ है। kivāṛ māthai sā̃kaḷ hai. There's a chain on the door."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांकळ (sā̃kaḷ) is inherited from Sanskrit śṛṅkhala, \"a chain\"; CDIAL lists Gujarati sā̃kaḷ and Hindi sā̃kal (CDIAL 12580). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃kaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃kaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃kaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃kaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kivāṛ māthai sā̃kaḷ hai. — There's a chain on the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kivāṛ māthai sā̃kaḷ hai.* — There's a chain on the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to tie, then the Marwadi for a knot, then say sā̃kaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to tie, then the Marwadi for a knot, then say *sā̃kaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सांकळ (sā̃kaḷ) mean? (\"A door chain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C176-sakal-type",
+              "prompt": "Say the Marwadi for 'a door chain'.",
+              "assesses": [
+                "MW-LEX-C176-GANTH176-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सांकळ",
+                "sā̃kaḷ"
+              ],
+              "feedback": {
+                "correct": "Right: सांकळ (sā̃kaḷ) is 'a door chain'.",
+                "incorrect": "'a door chain' is सांकळ (sā̃kaḷ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C176-tagno",
+      "sequence": 11550,
+      "title": "टांगणो (ṭā̃gṇo) — to hang up",
+      "headword": "टांगणो",
+      "romanization": "ṭā̃gṇo",
+      "gloss": "to hang up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6da9d652014e0462",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a knot, then the Marwadi for a door chain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टांगणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टांगणो — ṭā̃gṇo — \"to hang up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं कमीज खूंटी माथै टांगूं हूं। hū̃ kamīj khū̃ṭī māthai ṭā̃gū̃ hū̃. I hang my shirt on the peg."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं कमीज टांगी, mhaĩ kamīj ṭā̃gī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टांगणो (ṭā̃gṇo) comes from a reconstructed ṭaṅg, \"hang up\"; CDIAL lists Hindi ṭā̃gnā and Gujarati ṭā̃gvũ (CDIAL 5436). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭā̃gṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭā̃gṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭā̃gṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭā̃gṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kamīj khū̃ṭī māthai ṭā̃gū̃ hū̃. — I hang my shirt on the peg.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kamīj khū̃ṭī māthai ṭā̃gū̃ hū̃.* — I hang my shirt on the peg.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a knot, then the Marwadi for a door chain, then say ṭā̃gṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a knot, then the Marwadi for a door chain, then say *ṭā̃gṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टांगणो (ṭā̃gṇo) mean? (\"To hang up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C176-tagno-type",
+              "prompt": "Say the Marwadi for 'to hang up'.",
+              "assesses": [
+                "MW-LEX-C176-GANTH176-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "टांगणो",
+                "ṭā̃gṇo"
+              ],
+              "feedback": {
+                "correct": "Right: टांगणो (ṭā̃gṇo) is 'to hang up'.",
+                "incorrect": "'to hang up' is टांगणो (ṭā̃gṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

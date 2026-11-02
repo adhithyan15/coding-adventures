@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Rain to Come",
+  "label": "ch:mw-rain-to-come",
+  "canDo": "I can talk about the rain, thunder and lightning to come.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C221-jhari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can talk about the rain, thunder and lightning to come.",
+    "assesses": [
+      "MW-LEX-C221-RAIN221-03",
+      "MW-LEX-C221-RAIN221-04",
+      "MW-LEX-C221-RAIN221-05"
+    ]
+  }
+}

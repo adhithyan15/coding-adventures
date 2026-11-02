@@ -1,0 +1,11 @@
+{
+  "id": "MW-C213-ghatavno",
+  "pathSegment": "MW-PATH-213-PRICE213",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-213-PRICE213",
+      "order": 2
+    }
+  ]
+}

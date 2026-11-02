@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C213-muphat",
+    "language": "marwadi",
+    "chapter": 213,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77dda5ae709cf6ac"
+  },
+  "findings": []
+}

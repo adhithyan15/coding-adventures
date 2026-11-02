@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-191-NOTICE191",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand a shop's notice and its rules.",
+  "prerequisites": []
+}

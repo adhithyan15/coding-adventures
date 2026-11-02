@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 210,
+  "title": "Choosing the Right One",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0d3d23e8caf9a321",
+  "lessons": [
+    {
+      "id": "MW-C210-parakhno",
+      "sequence": 13980,
+      "title": "परखणो (parakhṇo) — to test; to check",
+      "headword": "परखणो",
+      "romanization": "parakhṇo",
+      "gloss": "to test; to check",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b06af5bf13987562",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a deal, then the Marwadi for to order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परखणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परखणो — parakhṇo — \"to test; to check\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां कपड़ा परखै है। mā̃ kapṛā parkhai hai. Mother checks the cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं कपड़ा परख्या, mhaĩ kapṛā parakhyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परखणो (parakhṇo) is inherited from Sanskrit parīkṣate, \"observes, examines\"; CDIAL lists an Old Marwari form beside Hindi parakhnā, \"to test\" (CDIAL 7904)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parakhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parakhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parakhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parakhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ kapṛā parkhai hai. — Mother checks the cloth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ kapṛā parkhai hai.* — Mother checks the cloth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a deal, then the Marwadi for to order, then say parakhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a deal, then the Marwadi for to order, then say *parakhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परखणो (parakhṇo) mean? (\"To test; to check\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C210-parakhno-type",
+              "prompt": "Say the Marwadi for 'to test'.",
+              "assesses": [
+                "MW-LEX-C210-CHOOSE210-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "परखणो",
+                "parakhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: परखणो (parakhṇo) is 'to test; to check'.",
+                "incorrect": "'to test' is परखणो (parakhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C210-bhat",
+      "sequence": 13990,
+      "title": "भांत (bhā̃t) — a sort; a kind",
+      "headword": "भांत",
+      "romanization": "bhā̃t",
+      "gloss": "a sort; a kind",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1415d3169a0a9a38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to order, then the Marwadi for to test."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भांत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भांत — bhā̃t — \"a sort; a kind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दूजी भांत दिखावो। dūjī bhā̃t dikhāvo. Show me another kind."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भांत (bhā̃t) is inherited from Sanskrit bhakti, \"a share; an arrangement, a manner\"; CDIAL lists Old Marwari bhā̃ti, \"manner, kind\" (CDIAL 9338)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhā̃t",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhā̃t*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhā̃t, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhā̃t*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūjī bhā̃t dikhāvo. — Show me another kind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūjī bhā̃t dikhāvo.* — Show me another kind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to order, then the Marwadi for to test, then say bhā̃t again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to order, then the Marwadi for to test, then say *bhā̃t* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भांत (bhā̃t) mean? (\"A sort; a kind\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C210-bhat-type",
+              "prompt": "Say the Marwadi for 'a sort'.",
+              "assesses": [
+                "MW-LEX-C210-CHOOSE210-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भांत",
+                "bhā̃t"
+              ],
+              "feedback": {
+                "correct": "Right: भांत (bhā̃t) is 'a sort; a kind'.",
+                "incorrect": "'a sort' is भांत (bhā̃t)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C210-namuno",
+      "sequence": 14000,
+      "title": "नमूनो (namūno) — a sample",
+      "headword": "नमूनो",
+      "romanization": "namūno",
+      "gloss": "a sample",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af796fd950805bca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to test, then the Marwadi for a sort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नमूनो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमूनो — namūno — \"a sample\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ये नमूनो आछो है। ye namūno āchho hai. This sample is good."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमूनो (namūno) is usually traced to Persian namūna, \"a sample, a model\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namūno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namūno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namūno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namūno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ye namūno āchho hai. — This sample is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ye namūno āchho hai.* — This sample is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to test, then the Marwadi for a sort, then say namūno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to test, then the Marwadi for a sort, then say *namūno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नमूनो (namūno) mean? (\"A sample\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C210-namuno-type",
+              "prompt": "Say the Marwadi for 'a sample'.",
+              "assesses": [
+                "MW-LEX-C210-CHOOSE210-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नमूनो",
+                "namūno"
+              ],
+              "feedback": {
+                "correct": "Right: नमूनो (namūno) is 'a sample'.",
+                "incorrect": "'a sample' is नमूनो (namūno)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C210-nakli",
+      "sequence": 14010,
+      "title": "नकली (naklī) — fake",
+      "headword": "नकली",
+      "romanization": "naklī",
+      "gloss": "fake",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83f59cc107ca4e06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a sort, then the Marwadi for a sample."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नकली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नकली — naklī — \"fake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ये घड़ी नकली है। ye ghaṛī naklī hai. This watch is a fake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नकली (naklī) is usually traced, through Persian, to Arabic naql, \"a copy\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naklī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naklī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naklī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naklī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ye ghaṛī naklī hai. — This watch is a fake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ye ghaṛī naklī hai.* — This watch is a fake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a sort, then the Marwadi for a sample, then say naklī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a sort, then the Marwadi for a sample, then say *naklī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नकली (naklī) mean? (\"Fake\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C210-nakli-type",
+              "prompt": "Say the Marwadi for 'fake'.",
+              "assesses": [
+                "MW-LEX-C210-CHOOSE210-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नकली",
+                "naklī"
+              ],
+              "feedback": {
+                "correct": "Right: नकली (naklī) is 'fake'.",
+                "incorrect": "'fake' is नकली (naklī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C210-chunno",
+      "sequence": 14020,
+      "title": "चुणणो (chuṇṇo) — to pick out; to choose",
+      "headword": "चुणणो",
+      "romanization": "chuṇṇo",
+      "gloss": "to pick out; to choose",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31c2e264cdba99a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a sample, then the Marwadi for fake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चुणणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चुणणो — chuṇṇo — \"to pick out; to choose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं चोखी जूती चुणूं हूं। hū̃ chokhī jūtī chuṇū̃ hū̃. I pick out a good pair of shoes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं लाल टोपी चुणी, mhaĩ lāl ṭopī chuṇī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चुणणो (chuṇṇo) is inherited from Sanskrit cinoti, \"heaps up, collects\". CDIAL gives no Marwari form in this entry, but lists Hindi cunnā, \"to pick up, gather\" (CDIAL 4814); picking out the best is probably a later step from gathering."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chuṇṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chuṇṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chuṇṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chuṇṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ chokhī jūtī chuṇū̃ hū̃. — I pick out a good pair of shoes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ chokhī jūtī chuṇū̃ hū̃.* — I pick out a good pair of shoes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a sample, then the Marwadi for fake, then say chuṇṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a sample, then the Marwadi for fake, then say *chuṇṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चुणणो (chuṇṇo) mean? (\"To pick out; to choose\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C210-chunno-type",
+              "prompt": "Say the Marwadi for 'to pick out'.",
+              "assesses": [
+                "MW-LEX-C210-CHOOSE210-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चुणणो",
+                "chuṇṇo"
+              ],
+              "feedback": {
+                "correct": "Right: चुणणो (chuṇṇo) is 'to pick out; to choose'.",
+                "incorrect": "'to pick out' is चुणणो (chuṇṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

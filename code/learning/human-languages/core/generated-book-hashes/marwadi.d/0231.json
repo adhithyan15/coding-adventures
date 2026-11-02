@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:ac47a6c146759377",
+  "lessonIds": [
+    "MW-C231-bako",
+    "MW-C231-sidho",
+    "MW-C231-ubho",
+    "MW-C231-gol",
+    "MW-C231-dhilo"
+  ],
+  "tex": "marwadi/book/chapters/ch231-bent-and-straight.tex"
+}

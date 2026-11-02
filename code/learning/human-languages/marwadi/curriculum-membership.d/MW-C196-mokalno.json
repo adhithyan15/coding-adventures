@@ -1,0 +1,11 @@
+{
+  "id": "MW-C196-mokalno",
+  "pathSegment": "MW-PATH-196-POST196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-196-POST196",
+      "order": 4
+    }
+  ]
+}

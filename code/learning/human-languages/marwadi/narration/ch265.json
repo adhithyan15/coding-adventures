@@ -1,0 +1,1047 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 265,
+  "title": "Shoes, Shaves and Shirts",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:3c8192f514ccba8f",
+  "lessons": [
+    {
+      "id": "MW-C265-mochi",
+      "sequence": 18230,
+      "title": "मोची (mochī) — a cobbler",
+      "headword": "मोची",
+      "romanization": "mochī",
+      "gloss": "a cobbler",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25c4e58fd126b817",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a potter, then the Marwadi for a carpenter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोची",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोची — mochī — \"a cobbler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मोची जूती सीवै है। mochī jūtī sīvai hai. The cobbler stitches a shoe."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोची (mochī) is inherited from Sanskrit mocika, \"tanner and cobbler\", which CDIAL takes from an Iranian word for a shoe. CDIAL gives no Marwari form in this entry; it lists Hindi mocī (CDIAL 10349)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochī jūtī sīvai hai. — The cobbler stitches a shoe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochī jūtī sīvai hai.* — The cobbler stitches a shoe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a potter, then the Marwadi for a carpenter, then say mochī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a potter, then the Marwadi for a carpenter, then say *mochī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मोची (mochī) mean? (\"A cobbler\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C265-mochi-type",
+              "prompt": "Say the Marwadi for 'a cobbler'.",
+              "assesses": [
+                "MW-LEX-C265-MOCHI265-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मोची",
+                "mochī"
+              ],
+              "feedback": {
+                "correct": "Right: मोची (mochī) is 'a cobbler'.",
+                "incorrect": "'a cobbler' is मोची (mochī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C265-nai",
+      "sequence": 18240,
+      "title": "नाई (nāī) — a barber",
+      "headword": "नाई",
+      "romanization": "nāī",
+      "gloss": "a barber",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2949dfca45260a66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a carpenter, then the Marwadi for a cobbler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाई — nāī — \"a barber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नाई बाळ काटै है। nāī bāḷ kāṭai hai. The barber cuts hair."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाई (nāī) is inherited from Sanskrit nāpita, \"barber\". CDIAL gives no Marwari form in this entry; it lists Hindi nāū, \"barber\" (CDIAL 13792)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī bāḷ kāṭai hai. — The barber cuts hair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī bāḷ kāṭai hai.* — The barber cuts hair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a carpenter, then the Marwadi for a cobbler, then say nāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a carpenter, then the Marwadi for a cobbler, then say *nāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाई (nāī) mean? (\"A barber\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C265-nai-type",
+              "prompt": "Say the Marwadi for 'a barber'.",
+              "assesses": [
+                "MW-LEX-C265-MOCHI265-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नाई",
+                "nāī"
+              ],
+              "feedback": {
+                "correct": "Right: नाई (nāī) is 'a barber'.",
+                "incorrect": "'a barber' is नाई (nāī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C265-mudno",
+      "sequence": 18250,
+      "title": "मूंडणो (mū̃ḍṇo) — to shave",
+      "headword": "मूंडणो",
+      "romanization": "mū̃ḍṇo",
+      "gloss": "to shave",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d6a696eb93d5363",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a cobbler, then the Marwadi for a barber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मूंडणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूंडणो — mū̃ḍṇo — \"to shave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नाई माथो मूंडै है। nāī mātho mū̃ḍai hai. The barber shaves a head."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं माथो मूंड्यो, mhaĩ mātho mū̃ḍyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूंडणो (mū̃ḍṇo) is inherited from Sanskrit muṇḍayati, \"shaves\". CDIAL gives no Marwari form in this entry; it lists Hindi mū̃ḍnā (CDIAL 10194)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mū̃ḍṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mū̃ḍṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mū̃ḍṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mū̃ḍṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī mātho mū̃ḍai hai. — The barber shaves a head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī mātho mū̃ḍai hai.* — The barber shaves a head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a cobbler, then the Marwadi for a barber, then say mū̃ḍṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a cobbler, then the Marwadi for a barber, then say *mū̃ḍṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मूंडणो (mū̃ḍṇo) mean? (\"To shave\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C265-mudno-type",
+              "prompt": "Say the Marwadi for 'to shave'.",
+              "assesses": [
+                "MW-LEX-C265-MOCHI265-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मूंडणो",
+                "mū̃ḍṇo"
+              ],
+              "feedback": {
+                "correct": "Right: मूंडणो (mū̃ḍṇo) is 'to shave'.",
+                "incorrect": "'to shave' is मूंडणो (mū̃ḍṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C265-darji",
+      "sequence": 18260,
+      "title": "दरजी (darjī) — a tailor",
+      "headword": "दरजी",
+      "romanization": "darjī",
+      "gloss": "a tailor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6864ec1bf167779c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a barber, then the Marwadi for to shave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दरजी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरजी — darjī — \"a tailor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दरजी कुरतो सीवै है। darjī kurto sīvai hai. The tailor sews a kurta."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरजी (darjī) is usually traced to Persian darzī, \"tailor\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darjī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darjī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darjī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darjī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darjī kurto sīvai hai. — The tailor sews a kurta.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darjī kurto sīvai hai.* — The tailor sews a kurta.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a barber, then the Marwadi for to shave, then say darjī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a barber, then the Marwadi for to shave, then say *darjī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दरजी (darjī) mean? (\"A tailor\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C265-darji-type",
+              "prompt": "Say the Marwadi for 'a tailor'.",
+              "assesses": [
+                "MW-LEX-C265-MOCHI265-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दरजी",
+                "darjī"
+              ],
+              "feedback": {
+                "correct": "Right: दरजी (darjī) is 'a tailor'.",
+                "incorrect": "'a tailor' is दरजी (darjī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C265-chakar",
+      "sequence": 18270,
+      "title": "चाकर (chākar) — a servant",
+      "headword": "चाकर",
+      "romanization": "chākar",
+      "gloss": "a servant",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55e807d49588b79a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to shave, then the Marwadi for a tailor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चाकर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाकर — chākar — \"a servant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चाकर पाणी लावै है। chākar pāṇī lāvai hai. The servant brings water."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाकर (chākar) is usually traced to Persian chākar, \"servant\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chākar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chākar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chākar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chākar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chākar pāṇī lāvai hai. — The servant brings water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chākar pāṇī lāvai hai.* — The servant brings water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to shave, then the Marwadi for a tailor, then say chākar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to shave, then the Marwadi for a tailor, then say *chākar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चाकर (chākar) mean? (\"A servant\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C265-chakar-type",
+              "prompt": "Say the Marwadi for 'a servant'.",
+              "assesses": [
+                "MW-LEX-C265-MOCHI265-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चाकर",
+                "chākar"
+              ],
+              "feedback": {
+                "correct": "Right: चाकर (chākar) is 'a servant'.",
+                "incorrect": "'a servant' is चाकर (chākar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R265-review-260-265",
+      "sequence": 18280,
+      "title": "Looking back: from Married Into the Family to Shoes, Shaves and Shirts",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Married Into the Family to Shoes, Shaves and Shirts",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:735f2c4c7c9148dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for a daughter-in-law and a son-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a daughter-in-law, a son-in-law, a brother's wife, a sister's husband, a wife's brother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a daughter-in-law, a son-in-law, a brother's wife, a sister's husband, a wife's brother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mother's sister, a brother's son, a sister's son, a son's son, a daughter's son",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mother's sister, a brother's son, a sister's son, a son's son, a daughter's son]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a person (when counting), a travelling trader, a woman's friend, a village headman, a craftsman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a person (when counting), a travelling trader, a woman's friend, a village headman, a craftsman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a temple priest, a gardener, an oil-presser, a washerman, a goldsmith",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a temple priest, a gardener, an oil-presser, a washerman, a goldsmith]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to shape (metal or clay), a blacksmith, to hammer, a potter, a carpenter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to shape (metal or clay), a blacksmith, to hammer, a potter, a carpenter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cobbler, a barber, to shave, a tailor, a servant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cobbler, a barber, to shave, a tailor, a servant]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A daughter-in-law? (बहू, bahū.) A son-in-law? (जंवाई, jãvāī.) A brother's wife? (भावज, bhāvaj.) A sister's husband? (बहनोई, bahnoī.) A wife's brother? (साळो, sāḷo.) A mother's sister? (मासी, māsī.) A brother's son? (भतीजो, bhatījo.) A sister's son? (भाणजो, bhāṇjo.) A son's son? (पोतो, poto.) A daughter's son? (दोहितो, dohito.) A person (when counting)? (जणो, jaṇo.) A travelling trader? (बणजारो, baṇjāro.) A woman's friend? (सहेली, sahelī.) A village headman? (चौधरी, chaudhrī.) A craftsman? (कारीगर, kārīgar.) A temple priest? (पुजारी, pujārī.) A gardener? (माळी, māḷī.) An oil-presser? (तेली, telī.) A washerman? (धोबी, dhobī.) A goldsmith? (सुनार, sunār.) To shape (metal or clay)? (घड़णो, ghaṛṇo.) A blacksmith? (लुहार, luhār.) To hammer? (ठोकणो, ṭhokṇo.) A potter? (कुम्हार, kumhār.) A carpenter? (सुथार, suthār.) A cobbler? (मोची, mochī.) A barber? (नाई, nāī.) To shave? (मूंडणो, mū̃ḍṇo.) A tailor? (दरजी, darjī.) A servant? (चाकर, chākar.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R265-review-260-265-type",
+              "prompt": "Say the Marwadi for 'a daughter-in-law'.",
+              "assesses": [
+                "MW-LEX-C260-BAHU260-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बहू",
+                "bahū"
+              ],
+              "feedback": {
+                "correct": "Right: बहू (bahū) is 'a daughter-in-law; a young wife of the house'.",
+                "incorrect": "'a daughter-in-law' is बहू (bahū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R265-review-final-265",
+      "sequence": 18290,
+      "title": "Shoes, Shaves and Shirts — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0666e434178669e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for a cobbler and a barber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cobbler, a barber, to shave, a tailor, a servant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cobbler, a barber, to shave, a tailor, a servant]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A cobbler? (मोची, mochī.) A barber? (नाई, nāī.) To shave? (मूंडणो, mū̃ḍṇo.) A tailor? (दरजी, darjī.) A servant? (चाकर, chākar.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R265-review-final-265-type",
+              "prompt": "Say the Marwadi for 'a cobbler'.",
+              "assesses": [
+                "MW-LEX-C265-MOCHI265-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मोची",
+                "mochī"
+              ],
+              "feedback": {
+                "correct": "Right: मोची (mochī) is 'a cobbler'.",
+                "incorrect": "'a cobbler' is मोची (mochī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

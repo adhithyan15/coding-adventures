@@ -1,0 +1,11 @@
+{
+  "id": "MW-C279-kusti",
+  "pathSegment": "MW-PATH-279-GOTHIYO279",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-279-GOTHIYO279",
+      "order": 4
+    }
+  ]
+}

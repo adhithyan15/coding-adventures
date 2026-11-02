@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C281-thapno",
+    "language": "marwadi",
+    "chapter": 281,
+    "sequence": 19790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd8a4c84ccfc18f0"
+  },
+  "findings": []
+}

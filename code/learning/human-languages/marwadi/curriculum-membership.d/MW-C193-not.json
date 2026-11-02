@@ -1,0 +1,11 @@
+{
+  "id": "MW-C193-not",
+  "pathSegment": "MW-PATH-193-MONEY193",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-193-MONEY193",
+      "order": 2
+    }
+  ]
+}

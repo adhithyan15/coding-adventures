@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C254-vaid",
+    "language": "marwadi",
+    "chapter": 254,
+    "sequence": 17670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:811b623fc2c44d87"
+  },
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 159,
+  "title": "Went Home",
+  "label": "ch:mw-a2-went-home",
+  "canDo": "I can say that someone is at home, and that I or someone else went somewhere.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-R159-went-home",
+    "kind": "production",
+    "summary": "Complete MW-R159-went-home: say who is at home and who went where, with the ending that agrees.",
+    "assesses": [
+      "MW-GRAMMAR-C159-GHARAI-01",
+      "MW-GRAMMAR-C159-GAYO-01"
+    ]
+  }
+}

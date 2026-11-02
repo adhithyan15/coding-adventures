@@ -1,0 +1,11 @@
+{
+  "id": "MW-R156-mine-in-from",
+  "pathSegment": "MW-PATH-156-POSTP",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-156-POSTP",
+      "order": 3
+    }
+  ]
+}

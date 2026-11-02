@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 219,
+  "title": "Guests Are Coming",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4d1bfb122cc727c4",
+  "lessons": [
+    {
+      "id": "MW-C219-padharno",
+      "sequence": 15150,
+      "title": "पधारणो (padhārṇo) — to come (said with respect)",
+      "headword": "पधारणो",
+      "romanization": "padhārṇo",
+      "gloss": "to come (said with respect)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0887358c3d550ce2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to depart, then the Marwadi for to take to a place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पधारणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पधारणो — padhārṇo — \"to come (said with respect)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आप काल पधारो हो? āp kāl padhāro ho? Will you be coming tomorrow?"
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो घरै पधार्यो, vo gharai padhāryo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पधारणो (padhārṇo) is inherited from a reconstructed paddhārayati, \"steps\"; CDIAL lists the Old Marwari verb padhāraï, \"comes, goes\" (CDIAL 7768). It is the polite word for a guest's coming."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padhārṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padhārṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padhārṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padhārṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp kāl padhāro ho? — Will you be coming tomorrow?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āp kāl padhāro ho?* — Will you be coming tomorrow?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to depart, then the Marwadi for to take to a place, then say padhārṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to depart, then the Marwadi for to take to a place, then say *padhārṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पधारणो (padhārṇo) mean? (\"To come (said with respect)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C219-padharno-type",
+              "prompt": "Say the Marwadi for 'to come (said with respect)'.",
+              "assesses": [
+                "MW-LEX-C219-GUEST219-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पधारणो",
+                "padhārṇo"
+              ],
+              "feedback": {
+                "correct": "Right: पधारणो (padhārṇo) is 'to come (said with respect)'.",
+                "incorrect": "'to come (said with respect)' is पधारणो (padhārṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C219-bhet",
+      "sequence": 15160,
+      "title": "भेट (bheṭ) — a gift (brought on a visit); a meeting",
+      "headword": "भेट",
+      "romanization": "bheṭ",
+      "gloss": "a gift (brought on a visit); a meeting",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf4e1d4e6f65fb22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to take to a place, then the Marwadi for to come (said with respect)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भेट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेट — bheṭ — \"a gift (brought on a visit); a meeting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल भेट लासूं। hū̃ kāl bheṭ lāsū̃. Tomorrow I'll bring a gift."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेट (bheṭ) is inherited from a reconstructed bhiṭ, \"meet\"; CDIAL lists Old Marwari bheṭi, \"a meeting\", and Hindi bheṭī and Sindhi bheṭa, \"a present\" (CDIAL 9490): the gift you bring to a meeting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bheṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bheṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bheṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bheṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl bheṭ lāsū̃. — Tomorrow I'll bring a gift.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl bheṭ lāsū̃.* — Tomorrow I'll bring a gift.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to take to a place, then the Marwadi for to come (said with respect), then say bheṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to take to a place, then the Marwadi for to come (said with respect), then say *bheṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भेट (bheṭ) mean? (\"A gift (brought on a visit); a meeting\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C219-bhet-type",
+              "prompt": "Say the Marwadi for 'a gift'.",
+              "assesses": [
+                "MW-LEX-C219-GUEST219-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भेट",
+                "bheṭ"
+              ],
+              "feedback": {
+                "correct": "Right: भेट (bheṭ) is 'a gift (brought on a visit); a meeting'.",
+                "incorrect": "'a gift' is भेट (bheṭ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C219-haphto",
+      "sequence": 15170,
+      "title": "हफ्तो (haphto) — a week",
+      "headword": "हफ्तो",
+      "romanization": "haphto",
+      "gloss": "a week",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8cb0c7cd6972ac4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to come (said with respect), then the Marwadi for a gift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हफ्तो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हफ्तो — haphto — \"a week\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं एक हफ्तो गांव मांय रैसूं। hū̃ ek haphto gā̃v mā̃y raisū̃. I'll stay a week in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हफ्तो (haphto) is usually traced to Persian hafta, \"a week\", from haft, \"seven\"; Marwadi ends it in -o like its own nouns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haphto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haphto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haphto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haphto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ ek haphto gā̃v mā̃y raisū̃. — I'll stay a week in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ ek haphto gā̃v mā̃y raisū̃.* — I'll stay a week in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to come (said with respect), then the Marwadi for a gift, then say haphto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to come (said with respect), then the Marwadi for a gift, then say *haphto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हफ्तो (haphto) mean? (\"A week\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C219-haphto-type",
+              "prompt": "Say the Marwadi for 'a week'.",
+              "assesses": [
+                "MW-LEX-C219-GUEST219-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हफ्तो",
+                "haphto"
+              ],
+              "feedback": {
+                "correct": "Right: हफ्तो (haphto) is 'a week'.",
+                "incorrect": "'a week' is हफ्तो (haphto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C219-tij",
+      "sequence": 15180,
+      "title": "तीज (tīj) — the Teej festival; the third day of a lunar fortnight",
+      "headword": "तीज",
+      "romanization": "tīj",
+      "gloss": "the Teej festival; the third day of a lunar fortnight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b368362af5148f2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a gift, then the Marwadi for a week."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तीज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीज — tīj — \"the Teej festival; the third day of a lunar fortnight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "परसूं तीज है। parsū̃ tīj hai. The day after tomorrow is Teej."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीज (tīj) is inherited from Sanskrit tṛtīyā, \"the third day of the lunar fortnight\" (CDIAL 5920, which lists Marwari tīj). The women's festival of Teej falls on such a third day, in the rains."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parsū̃ tīj hai. — The day after tomorrow is Teej.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parsū̃ tīj hai.* — The day after tomorrow is Teej.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a gift, then the Marwadi for a week, then say tīj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a gift, then the Marwadi for a week, then say *tīj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तीज (tīj) mean? (\"The Teej festival; the third day of a lunar fortnight\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C219-tij-type",
+              "prompt": "Say the Marwadi for 'the Teej festival'.",
+              "assesses": [
+                "MW-LEX-C219-GUEST219-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तीज",
+                "tīj"
+              ],
+              "feedback": {
+                "correct": "Right: तीज (tīj) is 'the Teej festival; the third day of a lunar fortnight'.",
+                "incorrect": "'the Teej festival' is तीज (tīj)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C219-utavlo",
+      "sequence": 15190,
+      "title": "उतावळो (utāvḷo) — in a hurry; hasty",
+      "headword": "उतावळो",
+      "romanization": "utāvḷo",
+      "gloss": "in a hurry; hasty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61b56334a027d7a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a week, then the Marwadi for the Teej festival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उतावळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उतावळो — utāvḷo — \"in a hurry; hasty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं उतावळो हूं क्यूंकै बस आथण छूटै है। hū̃ utāvḷo hū̃ kyū̃kai bas āthaṇ chhūṭai hai. I'm in a hurry because the bus leaves in the evening."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उतावळो (utāvḷo) goes back to a reconstructed uttāpala, \"impetuous\", built on Sanskrit uttāpa, \"heat\"; CDIAL lists a Gujarati word for impetuous under it. CDIAL gives no Marwari form in this entry (CDIAL 1788)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utāvḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utāvḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utāvḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utāvḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ utāvḷo hū̃ kyū̃kai bas āthaṇ chhūṭai hai. — I'm in a hurry because the bus leaves in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ utāvḷo hū̃ kyū̃kai bas āthaṇ chhūṭai hai.* — I'm in a hurry because the bus leaves in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a week, then the Marwadi for the Teej festival, then say utāvḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a week, then the Marwadi for the Teej festival, then say *utāvḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उतावळो (utāvḷo) mean? (\"In a hurry; hasty\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C219-utavlo-type",
+              "prompt": "Say the Marwadi for 'in a hurry'.",
+              "assesses": [
+                "MW-LEX-C219-GUEST219-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उतावळो",
+                "utāvḷo"
+              ],
+              "feedback": {
+                "correct": "Right: उतावळो (utāvḷo) is 'in a hurry; hasty'.",
+                "incorrect": "'in a hurry' is उतावळो (utāvḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

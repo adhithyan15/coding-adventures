@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:81f9681b38aead79",
+  "lessonIds": [
+    "MW-C217-laghno",
+    "MW-C217-charhno",
+    "MW-C217-bojh",
+    "MW-C217-ladno",
+    "MW-C217-thairno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch217.txt",
+  "json": "marwadi/narration/ch217.json",
+  "textHash": "fnv1a64:f64bf57680a7293a",
+  "jsonHash": "fnv1a64:e92b6c4fd4438b90",
+  "findings": []
+}

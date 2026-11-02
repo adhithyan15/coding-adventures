@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Anger and Shame",
+  "label": "ch:mw-anger-and-shame",
+  "canDo": "I can say when someone is angry or shy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C257-olmo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say when someone is angry or shy.",
+    "assesses": [
+      "MW-LEX-C257-RIS257-03",
+      "MW-LEX-C257-RIS257-04",
+      "MW-LEX-C257-RIS257-05"
+    ]
+  }
+}

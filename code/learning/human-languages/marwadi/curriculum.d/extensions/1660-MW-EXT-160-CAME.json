@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-160-CAME",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that someone came, got up, sat down or arrived, with the ending that agrees with them.",
+  "prerequisites": [
+    "MW-EXT-159-WENT"
+  ]
+}

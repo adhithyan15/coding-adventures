@@ -1,0 +1,526 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 162,
+  "title": "Tomorrow",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:4397904adf804e93",
+  "lessons": [
+    {
+      "id": "MW-C162-jasu",
+      "sequence": 9930,
+      "title": "हूं काल (kāl) जासूं (jāsū̃) — I will go",
+      "headword": "जासूं",
+      "romanization": "jāsū̃",
+      "gloss": "I will go: the future, said of yourself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efc76ef51ff008bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I went to the market yesterday. The same काल (kāl) also points the other way, to tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -सूं",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Add -सूं to a stem and you have I will:"
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल बाजार जासूं। hū̃ kāl bājār jāsū̃. — I will go to the market tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "No हूं at the end: the future stands on its own. Every stem takes it the same way: आसूं, खासूं, बोलसूं, समझसूं. CDIAL quotes an Old Marwari line with this future in it, \"I will fan\" (CDIAL 5593). The spelling -सूं is central Marwari as this book writes it; other districts differ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You know two set phrases that look ahead: पाछे मिलसू and कितणो आखरी भाव दोगे? Keep saying them as you learned them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं काल आसूं। — hū̃ kāl āsū̃. — I will come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं काल आसूं।** — *hū̃ kāl āsū̃.* — I will come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं आथण दूध पीसूं। — hū̃ āthaṇ dūdh pīsū̃. — I will drink milk in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं आथण दूध पीसूं।** — *hū̃ āthaṇ dūdh pīsū̃.* — I will drink milk in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं काल बाजार जासूं। — hū̃ kāl bājār jāsū̃. — I will go to the market tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं काल बाजार जासूं।** — *hū̃ kāl bājār jāsū̃.* — I will go to the market tomorrow.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I will go? (जासूं (jāsū̃).) I will come? (आसूं.) What comes after it? (Nothing.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C162-jasu-market",
+              "prompt": "Say that you will go to the market tomorrow.",
+              "assesses": [
+                "MW-GRAMMAR-C162-FUT-1SG-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "हूं काल बाजार जासूं।",
+                "hū̃ kāl bājār jāsū̃",
+                "hu kal bajar jasu"
+              ],
+              "feedback": {
+                "correct": "Right: जा, then -सूं, and nothing after it.",
+                "incorrect": "The future is the stem and -सूं: जासूं."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C162-koni-jasu",
+      "sequence": 9940,
+      "title": "हूं काल (kāl) कोनी जासूं (konī jāsū̃) — I won't go",
+      "headword": "कोनी जासूं",
+      "romanization": "konī jāsū̃",
+      "gloss": "I won't go: कोनी in front of the future",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89987a01ab7b9175",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I will come tomorrow. Then I don't drink tea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: कोनी before the future",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोनी goes in front of the future, as it does in front of the present:"
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल कोनी जासूं। hū̃ kāl konī jāsū̃. — I won't go tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं परसूं कोनी आसूं। hū̃ parsū̃ konī āsū̃. — I won't come the day after tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं मांस कोनी खासूं। — hū̃ mā̃s konī khāsū̃. — I won't eat meat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं मांस कोनी खासूं।** — *hū̃ mā̃s konī khāsū̃.* — I won't eat meat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं आज बाजार कोनी जासूं। — hū̃ āj bājār konī jāsū̃. — I won't go to the market today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं आज बाजार कोनी जासूं।** — *hū̃ āj bājār konī jāsū̃.* — I won't go to the market today.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I won't go? (कोनी जासूं (konī jāsū̃).) I don't go? (कोनी जाऊं.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C162-koni-jasu-tomorrow",
+              "prompt": "Say that you won't go tomorrow.",
+              "assesses": [
+                "MW-GRAMMAR-C162-FUT-NEG-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "हूं काल कोनी जासूं।",
+                "hū̃ kāl konī jāsū̃",
+                "hu kal koni jasu"
+              ],
+              "feedback": {
+                "correct": "Right: कोनी, then जासूं.",
+                "incorrect": "Put कोनी in front of जासूं."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C162-kal",
+      "sequence": 9950,
+      "title": "काल (kāl) — yesterday or tomorrow",
+      "headword": "काल",
+      "romanization": "kāl",
+      "gloss": "yesterday or tomorrow: the verb decides",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bd4406a0cfe5b0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I won't go tomorrow. Then say काल (kāl) and परसूं on their own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb decides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काल (kāl) is one word for two days, and the verb tells you which:"
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल गयो। hū̃ kāl gayo. — I went yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल जासूं। hū̃ kāl jāsū̃. — I will go tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "परसूं works the same way, for the day before yesterday or the day after tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "राम काल आयो। — rām kāl āyo. — Ram came yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **राम काल आयो।** — *rām kāl āyo.* — Ram came yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं काल आसूं। — hū̃ kāl āsū̃. — I will come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं काल आसूं।** — *hū̃ kāl āsū̃.* — I will come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "मां परसूं आई। — mā̃ parsū̃ āī. — Mother came the day before yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **मां परसूं आई।** — *mā̃ parsū̃ āī.* — Mother came the day before yesterday.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In हूं काल (kāl) गयो।, which day? (Yesterday.) In हूं काल (kāl) जासूं (jāsū̃)।? (Tomorrow.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C162-kal-yesterday",
+              "prompt": "Say that Ram came yesterday.",
+              "assesses": [
+                "MW-GRAMMAR-C162-KAL-TENSE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "राम काल आयो।",
+                "rām kāl āyo",
+                "ram kal ayo"
+              ],
+              "feedback": {
+                "correct": "Right: आयो is a past, so काल is yesterday.",
+                "incorrect": "A past verb makes काल yesterday: राम काल आयो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R162-tomorrow",
+      "sequence": 9960,
+      "title": "Tomorrow — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "review of the future, its negative, and काल",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a641a0ed4641bfb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I will come tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I will go to the market tomorrow; I won't go to the market today",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I will go to the market tomorrow*; *I won't go to the market today*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I will drink milk in the evening; I won't eat meat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I will drink milk in the evening*; *I won't eat meat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I went yesterday; I will go tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I went yesterday*; *I will go tomorrow*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I drew water; I will draw water tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I drew water*; *I will draw water tomorrow*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I will go? (जासूं.) I won't go? (कोनी जासूं (konī jāsū̃).) I went? (गयो.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R162-tomorrow-two-days",
+              "prompt": "Say: I went yesterday, but I won't go tomorrow.",
+              "assesses": [
+                "MW-GRAMMAR-C162-KAL-TENSE-01",
+                "MW-GRAMMAR-C162-FUT-NEG-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "हूं काल गयो पण काल कोनी जासूं।",
+                "हूं काल गई पण काल कोनी जासूं।",
+                "hū̃ kāl gayo paṇ kāl konī jāsū̃",
+                "hu kal gayo pan kal koni jasu"
+              ],
+              "feedback": {
+                "correct": "Right: the past makes the first काल yesterday, the future makes the second tomorrow.",
+                "incorrect": "गयो for yesterday, कोनी जासूं for tomorrow."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

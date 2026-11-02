@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:3905b55c41e32366",
+  "lessonIds": [
+    "MW-C167-kam",
+    "MW-C167-pailo",
+    "MW-C167-chhatno",
+    "MW-C167-chhelo",
+    "MW-C167-jhat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch167.txt",
+  "json": "marwadi/narration/ch167.json",
+  "textHash": "fnv1a64:f6823ed413cb2f1c",
+  "jsonHash": "fnv1a64:78badd61e0e5ccf0",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:3a72f39693022d4e",
+  "lessonIds": [
+    "MW-C290-bahi",
+    "MW-C290-rojgar",
+    "MW-C290-saru",
+    "MW-C290-khatam",
+    "MW-C290-abhyas",
+    "MW-R290-review-285-290",
+    "MW-R290-review-final-290"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch290.txt",
+  "json": "marwadi/narration/ch290.json",
+  "textHash": "fnv1a64:a34bb0da45a65ca8",
+  "jsonHash": "fnv1a64:3832735641d77582",
+  "findings": []
+}

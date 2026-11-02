@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Ball Games",
+  "label": "ch:mw-ball-games",
+  "canDo": "I can say what I do on the playing field.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "MW-C280-sadhno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say what I do on the playing field.",
+    "assesses": [
+      "MW-LEX-C280-MAIDAN280-03",
+      "MW-LEX-C280-MAIDAN280-04",
+      "MW-LEX-C280-MAIDAN280-05"
+    ]
+  }
+}

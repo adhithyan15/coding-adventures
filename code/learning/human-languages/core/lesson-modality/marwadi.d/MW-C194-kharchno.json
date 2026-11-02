@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C194-kharchno",
+    "language": "marwadi",
+    "chapter": 194,
+    "sequence": 13160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29091c7ae70b1308"
+  },
+  "findings": []
+}

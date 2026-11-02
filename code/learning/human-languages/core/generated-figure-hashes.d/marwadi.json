@@ -301,6 +301,48 @@
       "sourceHash": "fnv1a64:c457386e90db10f2",
       "svgHash": "fnv1a64:e6fd17fd82083bc1",
       "svg": "marwadi/book/figures/MW-W43-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W45-uu",
+      "sourceHash": "fnv1a64:e25612109c060f16",
+      "svgHash": "fnv1a64:9ae019aebe781937",
+      "svg": "marwadi/book/figures/MW-W45-uu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W46-dha",
+      "sourceHash": "fnv1a64:2c6682a832dad405",
+      "svgHash": "fnv1a64:60bebbfdfa6415b8",
+      "svg": "marwadi/book/figures/MW-W46-dha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W47-jha",
+      "sourceHash": "fnv1a64:c1ea8bea55ab954a",
+      "svgHash": "fnv1a64:33dd08bca5d575bc",
+      "svg": "marwadi/book/figures/MW-W47-jha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W48-o",
+      "sourceHash": "fnv1a64:f96896aec8dcedb2",
+      "svgHash": "fnv1a64:6c6318b37f0a8323",
+      "svg": "marwadi/book/figures/MW-W48-o-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W49-ddha",
+      "sourceHash": "fnv1a64:aefb1f503a98b6c7",
+      "svgHash": "fnv1a64:aec462e401492c42",
+      "svg": "marwadi/book/figures/MW-W49-ddha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W50-pha",
+      "sourceHash": "fnv1a64:6665fb50594bb60b",
+      "svgHash": "fnv1a64:b15295de035a8639",
+      "svg": "marwadi/book/figures/MW-W50-pha-filmstrip.svg"
     }
   ]
 }

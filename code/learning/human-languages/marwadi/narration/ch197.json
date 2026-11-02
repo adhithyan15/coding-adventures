@@ -1,0 +1,963 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 197,
+  "title": "A Call and a Message",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fa484640b0fcec0c",
+  "lessons": [
+    {
+      "id": "MW-C197-phon",
+      "sequence": 13300,
+      "title": "फोन (phon) — a phone",
+      "headword": "फोन",
+      "romanization": "phon",
+      "gloss": "a phone",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09980ea42deffa95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an address, then the Marwadi for to send off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फोन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फोन — phon — \"a phone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फोन मेज माथै है। phon mej māthai hai. The phone is on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फोन (phon) is borrowed from English phone, short for telephone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phon mej māthai hai. — The phone is on the table.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phon mej māthai hai.* — The phone is on the table.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an address, then the Marwadi for to send off, then say phon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an address, then the Marwadi for to send off, then say *phon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फोन (phon) mean? (\"A phone\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C197-phon-type",
+              "prompt": "Say the Marwadi for 'a phone'.",
+              "assesses": [
+                "MW-LEX-C197-PHONE197-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फोन",
+                "phon"
+              ],
+              "feedback": {
+                "correct": "Right: फोन (phon) is 'a phone'.",
+                "incorrect": "'a phone' is फोन (phon)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C197-nambar",
+      "sequence": 13310,
+      "title": "नंबर (nambar) — a phone number",
+      "headword": "नंबर",
+      "romanization": "nambar",
+      "gloss": "a phone number",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c134ecdbe01f950d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to send off, then the Marwadi for a phone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नंबर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नंबर — nambar — \"a phone number\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थारो नंबर कांई है? thāro nambar kāĩ hai? What's your number?"
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नंबर (nambar) is borrowed from English number."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nambar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nambar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nambar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nambar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāro nambar kāĩ hai? — What's your number?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāro nambar kāĩ hai?* — What's your number?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to send off, then the Marwadi for a phone, then say nambar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to send off, then the Marwadi for a phone, then say *nambar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नंबर (nambar) mean? (\"A phone number\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C197-nambar-type",
+              "prompt": "Say the Marwadi for 'a phone number'.",
+              "assesses": [
+                "MW-LEX-C197-PHONE197-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नंबर",
+                "nambar"
+              ],
+              "feedback": {
+                "correct": "Right: नंबर (nambar) is 'a phone number'.",
+                "incorrect": "'a phone number' is नंबर (nambar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C197-bajno",
+      "sequence": 13320,
+      "title": "बाजणो (bājṇo) — to ring; to sound",
+      "headword": "बाजणो",
+      "romanization": "bājṇo",
+      "gloss": "to ring; to sound",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc610a65b74cd290",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a phone, then the Marwadi for a phone number."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाजणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाजणो — bājṇo — \"to ring; to sound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फोन बाजै है। phon bājai hai. The phone is ringing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो फोन बाज्यो, vo phon bājyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाजणो (bājṇo) is inherited from Sanskrit vādyate, \"is made to sound\"; CDIAL lists the Old Marwari verb bājaï, \"to sound\" (CDIAL 11513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bājṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bājṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bājṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bājṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phon bājai hai. — The phone is ringing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phon bājai hai.* — The phone is ringing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a phone, then the Marwadi for a phone number, then say bājṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a phone, then the Marwadi for a phone number, then say *bājṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाजणो (bājṇo) mean? (\"To ring; to sound\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C197-bajno-type",
+              "prompt": "Say the Marwadi for 'to ring'.",
+              "assesses": [
+                "MW-LEX-C197-PHONE197-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बाजणो",
+                "bājṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बाजणो (bājṇo) is 'to ring; to sound'.",
+                "incorrect": "'to ring' is बाजणो (bājṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C197-sandeso",
+      "sequence": 13330,
+      "title": "संदेसो (sandeso) — a message",
+      "headword": "संदेसो",
+      "romanization": "sandeso",
+      "gloss": "a message",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a562d1c4bb6e7c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a phone number, then the Marwadi for to ring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संदेसो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संदेसो — sandeso — \"a message\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हैं संदेसो सुण्यो। mhaĩ sandeso suṇyo. I listened to the message."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संदेसो (sandeso) is inherited from Sanskrit sandeśa, \"message, information\". CDIAL gives no Marwari form in this entry, but lists Hindi sãdesā, \"news\" (CDIAL 12904)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandeso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandeso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandeso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandeso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaĩ sandeso suṇyo. — I listened to the message.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhaĩ sandeso suṇyo.* — I listened to the message.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a phone number, then the Marwadi for to ring, then say sandeso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a phone number, then the Marwadi for to ring, then say *sandeso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संदेसो (sandeso) mean? (\"A message\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C197-sandeso-type",
+              "prompt": "Say the Marwadi for 'a message'.",
+              "assesses": [
+                "MW-LEX-C197-PHONE197-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "संदेसो",
+                "sandeso"
+              ],
+              "feedback": {
+                "correct": "Right: संदेसो (sandeso) is 'a message'.",
+                "incorrect": "'a message' is संदेसो (sandeso)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C197-mitavno",
+      "sequence": 13340,
+      "title": "मिटावणो (miṭāvṇo) — to rub out; to delete",
+      "headword": "मिटावणो",
+      "romanization": "miṭāvṇo",
+      "gloss": "to rub out; to delete",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b227dff4b9693375",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to ring, then the Marwadi for a message."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मिटावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिटावणो — miṭāvṇo — \"to rub out; to delete\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संदेसो मत मिटावो। sandeso mat miṭāvo. Don't delete the message."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं संदेसो मिटायो, mhaĩ sandeso miṭāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिटावणो (miṭāvṇo) is the causative of a verb inherited from Sanskrit mṛṣṭa, \"rubbed, wiped\"; CDIAL lists Old Marwari miṭaï, \"to be rubbed out\" (CDIAL 10299)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṭāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṭāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṭāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṭāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandeso mat miṭāvo. — Don't delete the message.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandeso mat miṭāvo.* — Don't delete the message.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to ring, then the Marwadi for a message, then say miṭāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to ring, then the Marwadi for a message, then say *miṭāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मिटावणो (miṭāvṇo) mean? (\"To rub out; to delete\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C197-mitavno-type",
+              "prompt": "Say the Marwadi for 'to rub out'.",
+              "assesses": [
+                "MW-LEX-C197-PHONE197-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मिटावणो",
+                "miṭāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: मिटावणो (miṭāvṇo) is 'to rub out; to delete'.",
+                "incorrect": "'to rub out' is मिटावणो (miṭāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R197-review-191-197",
+      "sequence": 13350,
+      "title": "Looking back: from A Notice on the Door to A Call and a Message",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from A Notice on the Door to A Call and a Message",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5df989a3e7363e2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for a notice and a rule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a notice, a rule, forbidden, careful, to obey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a notice, a rule, forbidden, careful, to obey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "danger, slowly, a pit, to print, to mend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: danger, slowly, a pit, to print, to mend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rupee, a coin, a banknote, in cash, to pay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rupee, a coin, a banknote, in cash, to pay]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to earn, to spend, a salary, a profit, credit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to earn, to spend, a salary, a profit, credit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bank, a bank account, a debt, remaining, to be left over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bank, a bank account, a debt, remaining, to be left over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the post, an envelope, a parcel, an address, to send off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the post, an envelope, a parcel, an address, to send off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a phone, a phone number, to ring, a message, to rub out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a phone, a phone number, to ring, a message, to rub out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A notice? (सूचना, sūchnā.) A rule? (नियम, niyam.) Forbidden? (मना, manā.) Careful? (सावधान, sāvdhān.) To obey? (मानणो, mānṇo.) Danger? (खतरो, khatro.) Slowly? (धीरे, dhīre.) A pit? (खाड़ो, khāṛo.) To print? (छापणो, chhāpṇo.) To mend? (सुधारणो, sudhārṇo.) A rupee? (रुपियो, rupiyo.) A coin? (सिक्को, sikko.) A banknote? (नोट, noṭ.) In cash? (नगद, nagad.) To pay? (चुकावणो, chukāvṇo.) To earn? (कमावणो, kamāvṇo.) To spend? (खरचणो, kharchṇo.) A salary? (तनखा, tankhā.) A profit? (नफो, napho.) Credit? (उधार, udhār.) A bank? (बैंक, baiṅk.) A bank account? (खातो, khāto.) A debt? (करज, karaj.) Remaining? (बाकी, bākī.) To be left over? (बचणो, bachṇo.) The post? (डाक, ḍāk.) An envelope? (लिफाफो, liphāpho.) A parcel? (पारसल, pārsal.) An address? (ठिकाणो, ṭhikāṇo.) To send off? (मोकलणो, mokalṇo.) A phone? (फोन, phon.) A phone number? (नंबर, nambar.) To ring? (बाजणो, bājṇo.) A message? (संदेसो, sandeso.) To rub out? (मिटावणो, miṭāvṇo.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R197-review-191-197-type",
+              "prompt": "Say the Marwadi for 'a notice'.",
+              "assesses": [
+                "MW-LEX-C191-NOTICE191-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सूचना",
+                "sūchnā"
+              ],
+              "feedback": {
+                "correct": "Right: सूचना (sūchnā) is 'a notice'.",
+                "incorrect": "'a notice' is सूचना (sūchnā)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

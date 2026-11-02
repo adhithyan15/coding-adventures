@@ -1,0 +1,1043 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 215,
+  "title": "Wrapping Up",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:1352d402b6901abc",
+  "lessons": [
+    {
+      "id": "MW-C215-lapetno",
+      "sequence": 14230,
+      "title": "लपेटणो (lapeṭṇo) — to wrap",
+      "headword": "लपेटणो",
+      "romanization": "lapeṭṇo",
+      "gloss": "to wrap",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a115182f882ae1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to flip over, then the Marwadi for to turn up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लपेटणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लपेटणो — lapeṭṇo — \"to wrap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां रोटी कपड़ा मांय लपेटै है। mā̃ roṭī kapṛā mā̃y lapeṭai hai. Mother wraps the flatbread in a cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं रोटी लपेटी, mhaĩ roṭī lapeṭī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लपेटणो (lapeṭṇo) is inherited from a reconstructed lappēṭṭ, \"wrap\". CDIAL gives no Marwari form in this entry, but lists Hindi lapeṭnā, \"to wrap, fold, wind\" (CDIAL 10942)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lapeṭṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lapeṭṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lapeṭṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lapeṭṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ roṭī kapṛā mā̃y lapeṭai hai. — Mother wraps the flatbread in a cloth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ roṭī kapṛā mā̃y lapeṭai hai.* — Mother wraps the flatbread in a cloth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to flip over, then the Marwadi for to turn up, then say lapeṭṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to flip over, then the Marwadi for to turn up, then say *lapeṭṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लपेटणो (lapeṭṇo) mean? (\"To wrap\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C215-lapetno-type",
+              "prompt": "Say the Marwadi for 'to wrap'.",
+              "assesses": [
+                "MW-LEX-C215-WRAP215-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लपेटणो",
+                "lapeṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: लपेटणो (lapeṭṇo) is 'to wrap'.",
+                "incorrect": "'to wrap' is लपेटणो (lapeṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C215-kagad",
+      "sequence": 14240,
+      "title": "कागद (kāgad) — paper; a letter",
+      "headword": "कागद",
+      "romanization": "kāgad",
+      "gloss": "paper; a letter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bb751f43beae744",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to turn up, then the Marwadi for to wrap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कागद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कागद — kāgad — \"paper; a letter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कागद मेज माथै है। kāgad mej māthai hai. The paper is on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कागद (kāgad) is usually traced to Persian kāghaz, \"paper\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāgad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāgad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāgad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāgad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāgad mej māthai hai. — The paper is on the table.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāgad mej māthai hai.* — The paper is on the table.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to turn up, then the Marwadi for to wrap, then say kāgad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to turn up, then the Marwadi for to wrap, then say *kāgad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कागद (kāgad) mean? (\"Paper; a letter\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C215-kagad-type",
+              "prompt": "Say the Marwadi for 'paper'.",
+              "assesses": [
+                "MW-LEX-C215-WRAP215-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कागद",
+                "kāgad"
+              ],
+              "feedback": {
+                "correct": "Right: कागद (kāgad) is 'paper; a letter'.",
+                "incorrect": "'paper' is कागद (kāgad)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C215-potli",
+      "sequence": 14250,
+      "title": "पोटली (poṭlī) — a small bundle",
+      "headword": "पोटली",
+      "romanization": "poṭlī",
+      "gloss": "a small bundle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e64bf2f99c29e09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to wrap, then the Marwadi for paper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पोटली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोटली — poṭlī — \"a small bundle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पोटली मांय रोटी है। poṭlī mā̃y roṭī hai. There is flatbread in the bundle."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोटली (poṭlī) is inherited from a reconstructed pōṭṭa, \"bundle\". CDIAL gives no Marwari form in this entry, but lists Hindi poṭlī, \"small bundle\" (CDIAL 8396)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭlī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭlī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭlī mā̃y roṭī hai. — There is flatbread in the bundle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭlī mā̃y roṭī hai.* — There is flatbread in the bundle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to wrap, then the Marwadi for paper, then say poṭlī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to wrap, then the Marwadi for paper, then say *poṭlī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पोटली (poṭlī) mean? (\"A small bundle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C215-potli-type",
+              "prompt": "Say the Marwadi for 'a small bundle'.",
+              "assesses": [
+                "MW-LEX-C215-WRAP215-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पोटली",
+                "poṭlī"
+              ],
+              "feedback": {
+                "correct": "Right: पोटली (poṭlī) is 'a small bundle'.",
+                "incorrect": "'a small bundle' is पोटली (poṭlī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C215-ochho",
+      "sequence": 14260,
+      "title": "ओछो (ochho) — too small; short",
+      "headword": "ओछो",
+      "romanization": "ochho",
+      "gloss": "too small; short",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20dd786c330c2e5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for paper, then the Marwadi for a small bundle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओछो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओछो — ochho — \"too small; short\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी टोपी ओछी है। mhārī ṭopī ochhī hai. My cap is too small."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओछो (ochho) is inherited from a reconstructed ōccha, \"small, thin, mean\". CDIAL gives no Marwari form in this entry, but lists Hindi ochā, \"empty, small\", and Gujarati ochũ, \"deficient\" (CDIAL 2540)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ochho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ochho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ochho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ochho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī ṭopī ochhī hai. — My cap is too small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī ṭopī ochhī hai.* — My cap is too small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for paper, then the Marwadi for a small bundle, then say ochho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for paper, then the Marwadi for a small bundle, then say *ochho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओछो (ochho) mean? (\"Too small; short\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C215-ochho-type",
+              "prompt": "Say the Marwadi for 'too small'.",
+              "assesses": [
+                "MW-LEX-C215-WRAP215-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ओछो",
+                "ochho"
+              ],
+              "feedback": {
+                "correct": "Right: ओछो (ochho) is 'too small; short'.",
+                "incorrect": "'too small' is ओछो (ochho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C215-khutno",
+      "sequence": 14270,
+      "title": "खुटणो (khuṭṇo) — to run out",
+      "headword": "खुटणो",
+      "romanization": "khuṭṇo",
+      "gloss": "to run out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b5b3c1cc218a0ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a small bundle, then the Marwadi for too small."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खुटणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुटणो — khuṭṇo — \"to run out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घर मांय आटो खुटै है। ghar mā̃y āṭo khuṭai hai. We're running out of flour at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो आटो खुट्यो, vo āṭo khuṭyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुटणो (khuṭṇo) is inherited from a reconstructed khuṭṭa, \"defective\". CDIAL gives no Marwari form in this entry, but lists Gujarati khuṭvũ, \"to be exhausted\", and Sindhi khuṭaṇu, \"to fall short\" (CDIAL 3895)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khuṭṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khuṭṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khuṭṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khuṭṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghar mā̃y āṭo khuṭai hai. — We're running out of flour at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghar mā̃y āṭo khuṭai hai.* — We're running out of flour at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a small bundle, then the Marwadi for too small, then say khuṭṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a small bundle, then the Marwadi for too small, then say *khuṭṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खुटणो (khuṭṇo) mean? (\"To run out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C215-khutno-type",
+              "prompt": "Say the Marwadi for 'to run out'.",
+              "assesses": [
+                "MW-LEX-C215-WRAP215-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खुटणो",
+                "khuṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: खुटणो (khuṭṇo) is 'to run out'.",
+                "incorrect": "'to run out' is खुटणो (khuṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R215-review-210-215",
+      "sequence": 14280,
+      "title": "Looking back: from Choosing the Right One to Wrapping Up",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Choosing the Right One to Wrapping Up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c633b8858181c9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for to test and a sort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to test, a sort, a sample, fake, to pick out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to test, a sort, a sample, fake, to pick out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a size, to measure, roomy, tight, to fit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a size, to measure, roomy, tight, to fit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plus a quarter, one and a half, two and a half, double, a chhatak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: plus a quarter, one and a half, two and a half, double, a chhatak]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cost, to decrease, to lower, free of charge, to be sold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cost, to decrease, to lower, free of charge, to be sold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to give back, alike, a small bag, to flip over, to turn up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to give back, alike, a small bag, to flip over, to turn up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wrap, paper, a small bundle, too small, to run out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wrap, paper, a small bundle, too small, to run out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To test? (परखणो, parakhṇo.) A sort? (भांत, bhā̃t.) A sample? (नमूनो, namūno.) Fake? (नकली, naklī.) To pick out? (चुणणो, chuṇṇo.) A size? (माप, māp.) To measure? (नापणो, nāpṇo.) Roomy? (मोकळो, mokḷo.) Tight? (तंग, taṅg.) To fit? (समावणो, samāvṇo.) Plus a quarter? (सवा, savā.) One and a half? (डेढ, ḍeḍh.) Two and a half? (अढाई, aḍhāī.) Double? (दूणो, dūṇo.) A chhatak? (छटांक, chhaṭā̃k.) The cost? (मोल, mol.) To decrease? (घटणो, ghaṭṇo.) To lower? (घटावणो, ghaṭāvṇo.) Free of charge? (मुफत, muphat.) To be sold? (बिकणो, bikṇo.) To give back? (फेरणो, pherṇo.) Alike? (सारीखो, sārīkho.) A small bag? (थैली, thailī.) To flip over? (पलटणो, palaṭṇo.) To turn up? (लाधणो, lādhṇo.) To wrap? (लपेटणो, lapeṭṇo.) Paper? (कागद, kāgad.) A small bundle? (पोटली, poṭlī.) Too small? (ओछो, ochho.) To run out? (खुटणो, khuṭṇo.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R215-review-210-215-type",
+              "prompt": "Say the Marwadi for 'to test'.",
+              "assesses": [
+                "MW-LEX-C210-CHOOSE210-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "परखणो",
+                "parakhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: परखणो (parakhṇo) is 'to test; to check'.",
+                "incorrect": "'to test' is परखणो (parakhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R215-review-final-215",
+      "sequence": 14290,
+      "title": "Wrapping Up — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5115def3efe3a24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for to wrap and paper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wrap, paper, a small bundle, too small, to run out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wrap, paper, a small bundle, too small, to run out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To wrap? (लपेटणो, lapeṭṇo.) Paper? (कागद, kāgad.) A small bundle? (पोटली, poṭlī.) Too small? (ओछो, ochho.) To run out? (खुटणो, khuṭṇo.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R215-review-final-215-type",
+              "prompt": "Say the Marwadi for 'to wrap'.",
+              "assesses": [
+                "MW-LEX-C215-WRAP215-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लपेटणो",
+                "lapeṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: लपेटणो (lapeṭṇo) is 'to wrap'.",
+                "incorrect": "'to wrap' is लपेटणो (lapeṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

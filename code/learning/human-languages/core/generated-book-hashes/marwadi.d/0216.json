@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:c516e2fd9e34f7cf",
+  "lessonIds": [
+    "MW-C216-nikalno",
+    "MW-C216-sathi",
+    "MW-C216-kos",
+    "MW-C216-musaphar",
+    "MW-C216-dero"
+  ],
+  "tex": "marwadi/book/chapters/ch216-setting-out.tex"
+}

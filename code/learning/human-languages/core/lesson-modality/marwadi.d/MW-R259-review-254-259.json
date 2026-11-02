@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R259-review-254-259",
+    "language": "marwadi",
+    "chapter": 259,
+    "sequence": 17970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed545516e2f5d2f6"
+  },
+  "findings": []
+}

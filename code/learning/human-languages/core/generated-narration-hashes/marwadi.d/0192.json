@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:ec9085f52c42e068",
+  "lessonIds": [
+    "MW-C192-khatro",
+    "MW-C192-dhire",
+    "MW-C192-kharo",
+    "MW-C192-chhapno",
+    "MW-C192-sudharno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch192.txt",
+  "json": "marwadi/narration/ch192.json",
+  "textHash": "fnv1a64:2ffdbdc7844ff97b",
+  "jsonHash": "fnv1a64:578cbb99f339e959",
+  "findings": []
+}

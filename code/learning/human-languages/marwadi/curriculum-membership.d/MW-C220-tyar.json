@@ -1,0 +1,11 @@
+{
+  "id": "MW-C220-tyar",
+  "pathSegment": "MW-PATH-220-PLAN220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-220-PLAN220",
+      "order": 1
+    }
+  ]
+}

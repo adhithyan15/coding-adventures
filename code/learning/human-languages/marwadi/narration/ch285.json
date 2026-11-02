@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 285,
+  "title": "Learning by Heart",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:00db67f0e4f85b01",
+  "lessons": [
+    {
+      "id": "MW-C285-akhar",
+      "sequence": 19980,
+      "title": "आखर (ākhar) — a letter of the alphabet",
+      "headword": "आखर",
+      "romanization": "ākhar",
+      "gloss": "a letter of the alphabet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d708f16c1b692abc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an inkpot, then the Marwadi for to study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आखर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आखर — ākhar — \"a letter of the alphabet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो आखर नुवो है। yo ākhar nuvo hai. This letter is new."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आखर (ākhar) is inherited from Sanskrit akṣara, \"a syllable, a letter\"; CDIAL gives no Marwari form in this entry, but lists Hindi ākhar, \"letter\" (CDIAL 38)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo ākhar nuvo hai. — This letter is new.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo ākhar nuvo hai.* — This letter is new.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an inkpot, then the Marwadi for to study, then say ākhar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an inkpot, then the Marwadi for to study, then say *ākhar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आखर (ākhar) mean? (\"A letter of the alphabet\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C285-akhar-type",
+              "prompt": "Say the Marwadi for 'a letter of the alphabet'.",
+              "assesses": [
+                "MW-LEX-C285-AKHAR285-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "आखर",
+                "ākhar"
+              ],
+              "feedback": {
+                "correct": "Right: आखर (ākhar) is 'a letter of the alphabet'.",
+                "incorrect": "'a letter of the alphabet' is आखर (ākhar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C285-pano",
+      "sequence": 19990,
+      "title": "पानो (pāno) — a page",
+      "headword": "पानो",
+      "romanization": "pāno",
+      "gloss": "a page",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f843c17e9d1cb2cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to study, then the Marwadi for a letter of the alphabet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पानो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पानो — pāno — \"a page\"."
+            },
+            {
+              "kind": "speech",
+              "text": "किताब मांय सो पाना है। kitāb mā̃y so pānā hai. The book has a hundred pages."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पानो (pāno) is inherited from Sanskrit parṇa, \"a leaf\"; CDIAL lists Marwari pān, \"leaf\", Sindhi pano, \"page of book\", and Hindi pannā, \"leaf, page\" (CDIAL 7918)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitāb mā̃y so pānā hai. — The book has a hundred pages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitāb mā̃y so pānā hai.* — The book has a hundred pages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to study, then the Marwadi for a letter of the alphabet, then say pāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to study, then the Marwadi for a letter of the alphabet, then say *pāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पानो (pāno) mean? (\"A page\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C285-pano-type",
+              "prompt": "Say the Marwadi for 'a page'.",
+              "assesses": [
+                "MW-LEX-C285-AKHAR285-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पानो",
+                "pāno"
+              ],
+              "feedback": {
+                "correct": "Right: पानो (pāno) is 'a page'.",
+                "incorrect": "'a page' is पानो (pāno)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C285-path",
+      "sequence": 20000,
+      "title": "पाठ (pāṭh) — a lesson",
+      "headword": "पाठ",
+      "romanization": "pāṭh",
+      "gloss": "a lesson",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2c1c90eb176f653",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a letter of the alphabet, then the Marwadi for a page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाठ — pāṭh — \"a lesson\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो पाठ सोरो है। yo pāṭh soro hai. This lesson is easy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाठ (pāṭh) is a tatsama, taken from Sanskrit pāṭha, \"recitation, study\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo pāṭh soro hai. — This lesson is easy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo pāṭh soro hai.* — This lesson is easy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a letter of the alphabet, then the Marwadi for a page, then say pāṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a letter of the alphabet, then the Marwadi for a page, then say *pāṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाठ (pāṭh) mean? (\"A lesson\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C285-path-type",
+              "prompt": "Say the Marwadi for 'a lesson'.",
+              "assesses": [
+                "MW-LEX-C285-AKHAR285-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पाठ",
+                "pāṭh"
+              ],
+              "feedback": {
+                "correct": "Right: पाठ (pāṭh) is 'a lesson'.",
+                "incorrect": "'a lesson' is पाठ (pāṭh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C285-ratno",
+      "sequence": 20010,
+      "title": "रटणो (raṭṇo) — to learn by heart",
+      "headword": "रटणो",
+      "romanization": "raṭṇo",
+      "gloss": "to learn by heart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fb6680df34ae754",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a page, then the Marwadi for a lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रटणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रटणो — raṭṇo — \"to learn by heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरो पाठ रटै है। chhoro pāṭh raṭai hai. The boy learns the lesson by heart."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं पाठ रट्यो, mhaĩ pāṭh raṭyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रटणो (raṭṇo) is inherited from Sanskrit raṭati, \"cries, yells\"; CDIAL gives no Marwari form in this entry, but lists Hindi raṭnā, \"to cry out, repeat\" (CDIAL 10590). Saying a thing over and over is how it is learnt by heart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṭṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṭṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṭṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṭṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoro pāṭh raṭai hai. — The boy learns the lesson by heart.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoro pāṭh raṭai hai.* — The boy learns the lesson by heart.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a page, then the Marwadi for a lesson, then say raṭṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a page, then the Marwadi for a lesson, then say *raṭṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रटणो (raṭṇo) mean? (\"To learn by heart\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C285-ratno-type",
+              "prompt": "Say the Marwadi for 'to learn by heart'.",
+              "assesses": [
+                "MW-LEX-C285-AKHAR285-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रटणो",
+                "raṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: रटणो (raṭṇo) is 'to learn by heart'.",
+                "incorrect": "'to learn by heart' is रटणो (raṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C285-ucharno",
+      "sequence": 20020,
+      "title": "उचारणो (uchārṇo) — to pronounce",
+      "headword": "उचारणो",
+      "romanization": "uchārṇo",
+      "gloss": "to pronounce",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a840e4ff3f3c23a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a lesson, then the Marwadi for to learn by heart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उचारणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उचारणो — uchārṇo — \"to pronounce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरो आखर उचारै है। chhoro ākhar uchārai hai. The boy pronounces the letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं सबद उचार्यो, mhaĩ sabad uchāryo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उचारणो (uchārṇo) is inherited from Sanskrit uccārayati, \"utters\"; CDIAL lists Old Marwari ūcaraï, \"recites\", and Hindi ucārnā, \"to pronounce\" (CDIAL 1641)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchārṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchārṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchārṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchārṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoro ākhar uchārai hai. — The boy pronounces the letters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoro ākhar uchārai hai.* — The boy pronounces the letters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a lesson, then the Marwadi for to learn by heart, then say uchārṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a lesson, then the Marwadi for to learn by heart, then say *uchārṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उचारणो (uchārṇo) mean? (\"To pronounce\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C285-ucharno-type",
+              "prompt": "Say the Marwadi for 'to pronounce'.",
+              "assesses": [
+                "MW-LEX-C285-AKHAR285-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उचारणो",
+                "uchārṇo"
+              ],
+              "feedback": {
+                "correct": "Right: उचारणो (uchārṇo) is 'to pronounce'.",
+                "incorrect": "'to pronounce' is उचारणो (uchārṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-195-BANK195",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what I keep and what I owe at the bank.",
+  "prerequisites": []
+}

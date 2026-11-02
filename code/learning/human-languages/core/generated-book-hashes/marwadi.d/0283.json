@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:f86c8ad27862e0e6",
+  "lessonIds": [
+    "MW-C283-moti",
+    "MW-C283-bidhno",
+    "MW-C283-jarno",
+    "MW-C283-kasido",
+    "MW-C283-sajavno"
+  ],
+  "tex": "marwadi/book/chapters/ch283-pearls-and-embroidery.tex"
+}

@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 186,
+  "title": "Seats, Beds and Lids",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a83bfabbbfb09086",
+  "lessons": [
+    {
+      "id": "MW-C186-dhakkan",
+      "sequence": 12030,
+      "title": "ढक्कण (ḍhakkaṇ) — a lid",
+      "headword": "ढक्कण",
+      "romanization": "ḍhakkaṇ",
+      "gloss": "a lid",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f72899fe71f6a61d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for asafoetida, then the Marwadi for fennel seed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ढक्कण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढक्कण — ḍhakkaṇ — \"a lid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हांडी माथै ढक्कण है। hā̃ḍī māthai ḍhakkaṇ hai. There's a lid on the pot."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढक्कण (ḍhakkaṇ) is built on a reconstructed ḍhakk, \"cover\", the word behind ढांकणो; CDIAL lists Sindhi and Gujarati words for a lid under it, beside Marwari ḍhā̃kṇo (CDIAL 5574)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhakkaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhakkaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhakkaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhakkaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃ḍī māthai ḍhakkaṇ hai. — There's a lid on the pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃ḍī māthai ḍhakkaṇ hai.* — There's a lid on the pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for asafoetida, then the Marwadi for fennel seed, then say ḍhakkaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for asafoetida, then the Marwadi for fennel seed, then say *ḍhakkaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ढक्कण (ḍhakkaṇ) mean? (\"A lid\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C186-dhakkan-type",
+              "prompt": "Say the Marwadi for 'a lid'.",
+              "assesses": [
+                "MW-LEX-C186-DHAKKAN186-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ढक्कण",
+                "ḍhakkaṇ"
+              ],
+              "feedback": {
+                "correct": "Right: ढक्कण (ḍhakkaṇ) is 'a lid'.",
+                "incorrect": "'a lid' is ढक्कण (ḍhakkaṇ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C186-kudo",
+      "sequence": 12040,
+      "title": "कूंडो (kū̃ḍo) — an earthen basin",
+      "headword": "कूंडो",
+      "romanization": "kū̃ḍo",
+      "gloss": "an earthen basin",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51dac64b7daa9feb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for fennel seed, then the Marwadi for a lid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कूंडो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कूंडो — kū̃ḍo — \"an earthen basin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कूंडो भारी है। kū̃ḍo bhārī hai. The earthen basin is heavy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कूंडो (kū̃ḍo) is inherited from Sanskrit kuṇḍa, \"a bowl, a waterpot\"; CDIAL lists Hindi kū̃ḍā, a clay pot that dough is kneaded in (CDIAL 3264). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kū̃ḍo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kū̃ḍo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kū̃ḍo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kū̃ḍo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kū̃ḍo bhārī hai. — The earthen basin is heavy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kū̃ḍo bhārī hai.* — The earthen basin is heavy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for fennel seed, then the Marwadi for a lid, then say kū̃ḍo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for fennel seed, then the Marwadi for a lid, then say *kū̃ḍo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कूंडो (kū̃ḍo) mean? (\"An earthen basin\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C186-kudo-type",
+              "prompt": "Say the Marwadi for 'an earthen basin'.",
+              "assesses": [
+                "MW-LEX-C186-DHAKKAN186-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कूंडो",
+                "kū̃ḍo"
+              ],
+              "feedback": {
+                "correct": "Right: कूंडो (kū̃ḍo) is 'an earthen basin'.",
+                "incorrect": "'an earthen basin' is कूंडो (kū̃ḍo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C186-pidho",
+      "sequence": 12050,
+      "title": "पीढो (pīḍho) — a low stool",
+      "headword": "पीढो",
+      "romanization": "pīḍho",
+      "gloss": "a low stool",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3321d7d6fa68631e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a lid, then the Marwadi for an earthen basin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पीढो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पीढो — pīḍho — \"a low stool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रसोई मांय एक पीढो है। rasoī mā̃y ek pīḍho hai. There's a low stool in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पीढो (pīḍho) is inherited from Sanskrit pīṭha, \"a stool, a bench\"; CDIAL lists Hindi pīṛhā, \"a large square stool\" (CDIAL 8222). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīḍho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīḍho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīḍho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīḍho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasoī mā̃y ek pīḍho hai. — There's a low stool in the kitchen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasoī mā̃y ek pīḍho hai.* — There's a low stool in the kitchen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a lid, then the Marwadi for an earthen basin, then say pīḍho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a lid, then the Marwadi for an earthen basin, then say *pīḍho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पीढो (pīḍho) mean? (\"A low stool\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C186-pidho-type",
+              "prompt": "Say the Marwadi for 'a low stool'.",
+              "assesses": [
+                "MW-LEX-C186-DHAKKAN186-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पीढो",
+                "pīḍho"
+              ],
+              "feedback": {
+                "correct": "Right: पीढो (pīḍho) is 'a low stool'.",
+                "incorrect": "'a low stool' is पीढो (pīḍho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C186-pato",
+      "sequence": 12060,
+      "title": "पाटो (pāṭo) — a plank seat",
+      "headword": "पाटो",
+      "romanization": "pāṭo",
+      "gloss": "a plank seat",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9948b28f78934555",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an earthen basin, then the Marwadi for a low stool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाटो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाटो — pāṭo — \"a plank seat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाटो नीचो है। pāṭo nīcho hai. The plank seat is low."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाटो (pāṭo) is inherited from Sanskrit paṭṭa, \"a slab, a tablet\"; CDIAL lists Old Marwari pāṭī, \"a plank\", and a Hindi board to sit on while eating (CDIAL 7699)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭo nīcho hai. — The plank seat is low.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭo nīcho hai.* — The plank seat is low.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an earthen basin, then the Marwadi for a low stool, then say pāṭo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an earthen basin, then the Marwadi for a low stool, then say *pāṭo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाटो (pāṭo) mean? (\"A plank seat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C186-pato-type",
+              "prompt": "Say the Marwadi for 'a plank seat'.",
+              "assesses": [
+                "MW-LEX-C186-DHAKKAN186-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पाटो",
+                "pāṭo"
+              ],
+              "feedback": {
+                "correct": "Right: पाटो (pāṭo) is 'a plank seat'.",
+                "incorrect": "'a plank seat' is पाटो (pāṭo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C186-palang",
+      "sequence": 12070,
+      "title": "पलंग (palaṅg) — a bedstead",
+      "headword": "पलंग",
+      "romanization": "palaṅg",
+      "gloss": "a bedstead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61c6422ae41b749b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a low stool, then the Marwadi for a plank seat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पलंग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पलंग — palaṅg — \"a bedstead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो पलंग नुवो है। mhāro palaṅg nuvo hai. My bed is new."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पलंग (palaṅg) is inherited from Sanskrit palyaṅka, \"a bed\"; CDIAL lists an Old Marwari word for a bed under it (CDIAL 7964). It is a framed bed; खाट is the string bed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palaṅg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palaṅg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palaṅg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palaṅg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro palaṅg nuvo hai. — My bed is new.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro palaṅg nuvo hai.* — My bed is new.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a low stool, then the Marwadi for a plank seat, then say palaṅg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a low stool, then the Marwadi for a plank seat, then say *palaṅg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पलंग (palaṅg) mean? (\"A bedstead\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C186-palang-type",
+              "prompt": "Say the Marwadi for 'a bedstead'.",
+              "assesses": [
+                "MW-LEX-C186-DHAKKAN186-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पलंग",
+                "palaṅg"
+              ],
+              "feedback": {
+                "correct": "Right: पलंग (palaṅg) is 'a bedstead'.",
+                "incorrect": "'a bedstead' is पलंग (palaṅg)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

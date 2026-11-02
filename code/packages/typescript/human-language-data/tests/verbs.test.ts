@@ -131,7 +131,11 @@ describe("corpus snapshot", () => {
     // VERB-HAVE, VERB-PAST and VERB-LIKE-LOVE — for four characters between
     // them. This is the join working: a total of taught verbs would not have
     // moved, because the track already taught 看, 是 and 上学.
-    expect(report.summary.tracksWithNoCoreVerb).toBe(2);
+    // 2 -> 1. Marwadi leaves it with its A2 core (chapters 152-165): its
+    // verbs sit under namespaced MW-VERB-* tags, and the core's हूं · है
+    // grammar lesson puts the canonical VERB-BE on the board, the one core
+    // verb among its tags.
+    expect(report.summary.tracksWithNoCoreVerb).toBe(1);
     expect(report.summary.universallyMissing).toHaveLength(0);
     // 38 -> 39 -> 40. The 39 was Marathi's pre-A1 verb tranche (chapters 22-25),
     // which put ten more CANONICAL core-verb tags on the board -- GIVE, DRINK,

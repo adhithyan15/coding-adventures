@@ -1,0 +1,11 @@
+{
+  "id": "MW-C275-inam",
+  "pathSegment": "MW-PATH-275-SABAS275",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-275-SABAS275",
+      "order": 2
+    }
+  ]
+}

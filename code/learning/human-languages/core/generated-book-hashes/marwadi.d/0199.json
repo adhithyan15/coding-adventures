@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:f128c608995cfdae",
+  "lessonIds": [
+    "MW-C199-mohar",
+    "MW-C199-daskhat",
+    "MW-C199-rasid",
+    "MW-C199-lekho",
+    "MW-C199-madno"
+  ],
+  "tex": "marwadi/book/chapters/ch199-seal-and-signature.tex"
+}

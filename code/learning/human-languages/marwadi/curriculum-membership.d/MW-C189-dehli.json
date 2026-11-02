@@ -1,0 +1,11 @@
+{
+  "id": "MW-C189-dehli",
+  "pathSegment": "MW-PATH-189-THANBHO189",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-189-THANBHO189",
+      "order": 3
+    }
+  ]
+}

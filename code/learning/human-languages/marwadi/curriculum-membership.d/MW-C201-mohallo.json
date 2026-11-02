@@ -1,0 +1,11 @@
+{
+  "id": "MW-C201-mohallo",
+  "pathSegment": "MW-PATH-201-TOWN201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-201-TOWN201",
+      "order": 1
+    }
+  ]
+}

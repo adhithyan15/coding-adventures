@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:1459c5995130542a",
+  "lessonIds": [
+    "MW-C252-had",
+    "MW-C252-sas",
+    "MW-C252-haphno",
+    "MW-C252-chabno",
+    "MW-C252-pir"
+  ],
+  "tex": "marwadi/book/chapters/ch252-bones-and-breath.tex"
+}

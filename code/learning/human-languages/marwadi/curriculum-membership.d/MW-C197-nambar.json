@@ -1,0 +1,11 @@
+{
+  "id": "MW-C197-nambar",
+  "pathSegment": "MW-PATH-197-PHONE197",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-197-PHONE197",
+      "order": 1
+    }
+  ]
+}

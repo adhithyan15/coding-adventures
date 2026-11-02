@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 218,
+  "title": "Bus and Train",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8e5cef829957ed9a",
+  "lessons": [
+    {
+      "id": "MW-C218-rel",
+      "sequence": 15100,
+      "title": "रेल (rel) — a train",
+      "headword": "रेल",
+      "romanization": "rel",
+      "gloss": "a train",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7b2fce7b221c397",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to load, then the Marwadi for to halt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रेल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रेल — rel — \"a train\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल रेल मांय बैठसूं। hū̃ kāl rel mā̃y baiṭhsū̃. Tomorrow I'll take the train."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रेल (rel) is borrowed from English rail; Marwadi uses it for the train itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl rel mā̃y baiṭhsū̃. — Tomorrow I'll take the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl rel mā̃y baiṭhsū̃.* — Tomorrow I'll take the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to load, then the Marwadi for to halt, then say rel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to load, then the Marwadi for to halt, then say *rel* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रेल (rel) mean? (\"A train\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C218-rel-type",
+              "prompt": "Say the Marwadi for 'a train'.",
+              "assesses": [
+                "MW-LEX-C218-RAIL218-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रेल",
+                "rel"
+              ],
+              "feedback": {
+                "correct": "Right: रेल (rel) is 'a train'.",
+                "incorrect": "'a train' is रेल (rel)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C218-savari",
+      "sequence": 15110,
+      "title": "सवारी (savārī) — a passenger; a ride",
+      "headword": "सवारी",
+      "romanization": "savārī",
+      "gloss": "a passenger; a ride",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e5e9717eec79b28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to halt, then the Marwadi for a train."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सवारी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सवारी — savārī — \"a passenger; a ride\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सवारी बस मांय बैठै है। savārī bas mā̃y baiṭhai hai. The passenger sits in the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सवारी (savārī) is usually traced to Persian savārī, \"riding, a mount\"; in Marwadi it has come to mean the one who rides, a passenger."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savārī bas mā̃y baiṭhai hai. — The passenger sits in the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savārī bas mā̃y baiṭhai hai.* — The passenger sits in the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to halt, then the Marwadi for a train, then say savārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to halt, then the Marwadi for a train, then say *savārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सवारी (savārī) mean? (\"A passenger; a ride\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C218-savari-type",
+              "prompt": "Say the Marwadi for 'a passenger'.",
+              "assesses": [
+                "MW-LEX-C218-RAIL218-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सवारी",
+                "savārī"
+              ],
+              "feedback": {
+                "correct": "Right: सवारी (savārī) is 'a passenger; a ride'.",
+                "incorrect": "'a passenger' is सवारी (savārī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C218-draivar",
+      "sequence": 15120,
+      "title": "ड्राइवर (ḍrāivar) — a driver",
+      "headword": "ड्राइवर",
+      "romanization": "ḍrāivar",
+      "gloss": "a driver",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9f73fc3aff16038",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a train, then the Marwadi for a passenger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ड्राइवर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ड्राइवर — ḍrāivar — \"a driver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ड्राइवर दिनूगै आवै है। ḍrāivar dinūgai āvai hai. The driver comes early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ड्राइवर (ḍrāivar) is borrowed from English driver."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍrāivar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍrāivar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍrāivar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍrāivar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍrāivar dinūgai āvai hai. — The driver comes early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍrāivar dinūgai āvai hai.* — The driver comes early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a train, then the Marwadi for a passenger, then say ḍrāivar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a train, then the Marwadi for a passenger, then say *ḍrāivar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ड्राइवर (ḍrāivar) mean? (\"A driver\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C218-draivar-type",
+              "prompt": "Say the Marwadi for 'a driver'.",
+              "assesses": [
+                "MW-LEX-C218-RAIL218-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ड्राइवर",
+                "ḍrāivar"
+              ],
+              "feedback": {
+                "correct": "Right: ड्राइवर (ḍrāivar) is 'a driver'.",
+                "incorrect": "'a driver' is ड्राइवर (ḍrāivar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C218-chhutno",
+      "sequence": 15130,
+      "title": "छूटणो (chhūṭṇo) — to depart (of a bus or a train); to get loose",
+      "headword": "छूटणो",
+      "romanization": "chhūṭṇo",
+      "gloss": "to depart (of a bus or a train); to get loose",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d43cd56baf581ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a passenger, then the Marwadi for a driver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छूटणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छूटणो — chhūṭṇo — \"to depart (of a bus or a train); to get loose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बस आथण छूटै है। bas āthaṇ chhūṭai hai. The bus leaves in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो बस छूटी, vo bas chhūṭī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छूटणो (chhūṭṇo) is inherited from a reconstructed kṣuṭyate, \"is released\"; CDIAL lists the Marwari verb, \"to get loose\", under it (CDIAL 3707)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhūṭṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhūṭṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhūṭṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhūṭṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bas āthaṇ chhūṭai hai. — The bus leaves in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bas āthaṇ chhūṭai hai.* — The bus leaves in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a passenger, then the Marwadi for a driver, then say chhūṭṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a passenger, then the Marwadi for a driver, then say *chhūṭṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छूटणो (chhūṭṇo) mean? (\"To depart (of a bus or a train); to get loose\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C218-chhutno-type",
+              "prompt": "Say the Marwadi for 'to depart'.",
+              "assesses": [
+                "MW-LEX-C218-RAIL218-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छूटणो",
+                "chhūṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: छूटणो (chhūṭṇo) is 'to depart (of a bus or a train); to get loose'.",
+                "incorrect": "'to depart' is छूटणो (chhūṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C218-pugavno",
+      "sequence": 15140,
+      "title": "पुगावणो (pugāvṇo) — to take to a place; to see off",
+      "headword": "पुगावणो",
+      "romanization": "pugāvṇo",
+      "gloss": "to take to a place; to see off",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fbec79352a11dfd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a driver, then the Marwadi for to depart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुगावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुगावणो — pugāvṇo — \"to take to a place; to see off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल दूध सहर पुगासूं। hū̃ kāl dūdh sahar pugāsū̃. Tomorrow I'll take the milk to the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दूध सहर पुगायो, mhaĩ dūdh sahar pugāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुगावणो (pugāvṇo) is built from पूगणो, to reach, with the causative -āv-: to make someone or something reach a place. पूगणो goes back to Sanskrit pūryate, \"is filled\"; CDIAL gives no Marwari form in this entry (CDIAL 8342)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pugāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pugāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pugāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pugāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl dūdh sahar pugāsū̃. — Tomorrow I'll take the milk to the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl dūdh sahar pugāsū̃.* — Tomorrow I'll take the milk to the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a driver, then the Marwadi for to depart, then say pugāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a driver, then the Marwadi for to depart, then say *pugāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुगावणो (pugāvṇo) mean? (\"To take to a place; to see off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C218-pugavno-type",
+              "prompt": "Say the Marwadi for 'to take to a place'.",
+              "assesses": [
+                "MW-LEX-C218-RAIL218-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पुगावणो",
+                "pugāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: पुगावणो (pugāvṇo) is 'to take to a place; to see off'.",
+                "incorrect": "'to take to a place' is पुगावणो (pugāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

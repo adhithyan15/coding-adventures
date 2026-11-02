@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C286-imtihan",
+    "language": "marwadi",
+    "chapter": 286,
+    "sequence": 20030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e99b619bc30c63e"
+  },
+  "findings": []
+}

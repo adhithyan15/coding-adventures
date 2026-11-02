@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C216-dero",
+    "language": "marwadi",
+    "chapter": 216,
+    "sequence": 15040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7431129f10bd1d1f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:17be3ca485d38a29",
+  "lessonIds": [
+    "MW-C282-sut",
+    "MW-C282-charkho",
+    "MW-C282-kaatno",
+    "MW-C282-mala",
+    "MW-C282-guthno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch282.txt",
+  "json": "marwadi/narration/ch282.json",
+  "textHash": "fnv1a64:01f18ec482db08e5",
+  "jsonHash": "fnv1a64:4c1f910c64a55282",
+  "findings": []
+}

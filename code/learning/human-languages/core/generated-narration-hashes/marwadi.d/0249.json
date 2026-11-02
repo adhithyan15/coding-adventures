@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:3a233d8b6c894dcc",
+  "lessonIds": [
+    "MW-C249-holi",
+    "MW-C249-gulal",
+    "MW-C249-sugan",
+    "MW-C249-divali",
+    "MW-C249-puja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch249.txt",
+  "json": "marwadi/narration/ch249.json",
+  "textHash": "fnv1a64:e71350603dc73c07",
+  "jsonHash": "fnv1a64:ff2615484d2b29fe",
+  "findings": []
+}

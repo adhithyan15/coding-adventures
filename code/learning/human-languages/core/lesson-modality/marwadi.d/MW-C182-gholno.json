@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C182-gholno",
+    "language": "marwadi",
+    "chapter": 182,
+    "sequence": 11830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2c70a454824b0b0"
+  },
+  "findings": []
+}

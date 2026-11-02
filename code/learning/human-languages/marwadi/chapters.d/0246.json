@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "News from Home",
+  "label": "ch:mw-news-from-home",
+  "canDo": "I can say who went home and what news came.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-C246-marno-die",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say who went home and what news came.",
+    "assesses": [
+      "MW-LEX-C246-PIHAR246-03",
+      "MW-LEX-C246-PIHAR246-04",
+      "MW-LEX-C246-PIHAR246-05"
+    ]
+  }
+}

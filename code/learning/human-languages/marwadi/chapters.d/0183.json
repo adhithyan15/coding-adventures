@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Small Things Around the House",
+  "label": "ch:mw-small-things-around-the-house",
+  "canDo": "I can name small things I use around the house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C183-besan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can name small things I use around the house.",
+    "assesses": [
+      "MW-LEX-C183-HATH183-03",
+      "MW-LEX-C183-HATH183-04",
+      "MW-LEX-C183-HATH183-05"
+    ]
+  }
+}

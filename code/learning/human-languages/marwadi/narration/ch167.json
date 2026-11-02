@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 167,
+  "title": "The Day's Work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3905b55c41e32366",
+  "lessons": [
+    {
+      "id": "MW-C167-kam",
+      "sequence": 11050,
+      "title": "काम (kām) — work",
+      "headword": "काम",
+      "romanization": "kām",
+      "gloss": "work",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88ace7115e17e064",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to lie down, then the Marwadi for dusk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: काम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काम — kām — \"work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं रोज घणो काम करूं हूं। hū̃ roj ghaṇo kām karū̃ hū̃. I do a lot of work every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काम (kām) is inherited from Sanskrit karman, \"act, work\"; CDIAL lists Marwari kām (CDIAL 2892). With करणो it is to work: काम करो."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ roj ghaṇo kām karū̃ hū̃. — I do a lot of work every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ roj ghaṇo kām karū̃ hū̃.* — I do a lot of work every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to lie down, then the Marwadi for dusk, then say kām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to lie down, then the Marwadi for dusk, then say *kām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does काम (kām) mean? (\"Work\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C167-kam-type",
+              "prompt": "Say the Marwadi for 'work'.",
+              "assesses": [
+                "MW-LEX-C167-KAM167-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "काम",
+                "kām"
+              ],
+              "feedback": {
+                "correct": "Right: काम (kām) is 'work'.",
+                "incorrect": "'work' is काम (kām)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C167-pailo",
+      "sequence": 11060,
+      "title": "पैलो (pailo) — first",
+      "headword": "पैलो",
+      "romanization": "pailo",
+      "gloss": "first",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3ae5e6912af2694",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for dusk, then the Marwadi for work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पैलो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैलो — pailo — \"first\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पैलो काम घणो दोरो है। pailo kām ghaṇo doro hai. The first job is very hard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैलो (pailo) is inherited from a reconstructed prathila, \"first\"; CDIAL lists Old Marwari pahalo (CDIAL 8652). It agrees like an adjective: पैली रोटी, the first roti."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pailo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pailo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pailo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pailo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pailo kām ghaṇo doro hai. — The first job is very hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pailo kām ghaṇo doro hai.* — The first job is very hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for dusk, then the Marwadi for work, then say pailo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for dusk, then the Marwadi for work, then say *pailo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पैलो (pailo) mean? (\"First\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C167-pailo-type",
+              "prompt": "Say the Marwadi for 'first'.",
+              "assesses": [
+                "MW-LEX-C167-KAM167-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पैलो",
+                "pailo"
+              ],
+              "feedback": {
+                "correct": "Right: पैलो (pailo) is 'first'.",
+                "incorrect": "'first' is पैलो (pailo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C167-chhatno",
+      "sequence": 11070,
+      "title": "छांटणो (chhā̃ṭṇo) — to sprinkle",
+      "headword": "छांटणो",
+      "romanization": "chhā̃ṭṇo",
+      "gloss": "to sprinkle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5d271e480c1a0a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for work, then the Marwadi for first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छांटणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छांटणो — chhā̃ṭṇo — \"to sprinkle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दिनूगै मां पाणी छांटै है। dinūgai mā̃ pāṇī chhā̃ṭai hai. Early in the morning my mother sprinkles water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं पाणी छांट्यो, mhaĩ pāṇī chhā̃ṭyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छांटणो (chhā̃ṭṇo) comes from a reconstructed chaṇṭ, \"scatter\"; CDIAL lists Gujarati chā̃ṭvũ, \"to sprinkle\" (CDIAL 4970). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhā̃ṭṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhā̃ṭṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhā̃ṭṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhā̃ṭṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dinūgai mā̃ pāṇī chhā̃ṭai hai. — Early in the morning my mother sprinkles water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dinūgai mā̃ pāṇī chhā̃ṭai hai.* — Early in the morning my mother sprinkles water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for work, then the Marwadi for first, then say chhā̃ṭṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for work, then the Marwadi for first, then say *chhā̃ṭṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छांटणो (chhā̃ṭṇo) mean? (\"To sprinkle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C167-chhatno-type",
+              "prompt": "Say the Marwadi for 'to sprinkle'.",
+              "assesses": [
+                "MW-LEX-C167-KAM167-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छांटणो",
+                "chhā̃ṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: छांटणो (chhā̃ṭṇo) is 'to sprinkle'.",
+                "incorrect": "'to sprinkle' is छांटणो (chhā̃ṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C167-chhelo",
+      "sequence": 11080,
+      "title": "छेलो (chhelo) — last",
+      "headword": "छेलो",
+      "romanization": "chhelo",
+      "gloss": "last",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6553bcc6e32deed4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for first, then the Marwadi for to sprinkle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छेलो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छेलो — chhelo — \"last\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छेलो काम सोरो है। chhelo kām soro hai. The last job is easy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छेलो (chhelo) is inherited from Sanskrit cheda, \"a piece cut off; a stopping\"; CDIAL lists Old Marwari chehalaü, \"last, final\" (CDIAL 5064). It agrees like पैलो (pailo): छेली बात, the last thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhelo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhelo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhelo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhelo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhelo kām soro hai. — The last job is easy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhelo kām soro hai.* — The last job is easy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for first, then the Marwadi for to sprinkle, then say chhelo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for first, then the Marwadi for to sprinkle, then say *chhelo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छेलो (chhelo) mean? (\"Last\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C167-chhelo-type",
+              "prompt": "Say the Marwadi for 'last'.",
+              "assesses": [
+                "MW-LEX-C167-KAM167-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छेलो",
+                "chhelo"
+              ],
+              "feedback": {
+                "correct": "Right: छेलो (chhelo) is 'last'.",
+                "incorrect": "'last' is छेलो (chhelo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C167-jhat",
+      "sequence": 11090,
+      "title": "झट (jhaṭ) — at once",
+      "headword": "झट",
+      "romanization": "jhaṭ",
+      "gloss": "at once",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d3b0d4d3380364d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to sprinkle, then the Marwadi for last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झट — jhaṭ — \"at once\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां झट रोटी बणावै है। mā̃ jhaṭ roṭī baṇāvai hai. Mother makes the rotis in no time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झट (jhaṭ) comes from a reconstructed jhaṭ, \"a sudden movement\"; CDIAL lists Hindi and Gujarati jhaṭ, \"quickly\" (CDIAL 5327). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what you do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ jhaṭ roṭī baṇāvai hai. — Mother makes the rotis in no time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ jhaṭ roṭī baṇāvai hai.* — Mother makes the rotis in no time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to sprinkle, then the Marwadi for last, then say jhaṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to sprinkle, then the Marwadi for last, then say *jhaṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झट (jhaṭ) mean? (\"At once\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C167-jhat-type",
+              "prompt": "Say the Marwadi for 'at once'.",
+              "assesses": [
+                "MW-LEX-C167-KAM167-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "झट",
+                "jhaṭ"
+              ],
+              "feedback": {
+                "correct": "Right: झट (jhaṭ) is 'at once'.",
+                "incorrect": "'at once' is झट (jhaṭ)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

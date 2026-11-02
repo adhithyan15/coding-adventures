@@ -1,0 +1,11 @@
+{
+  "id": "MW-C180-chhabri",
+  "pathSegment": "MW-PATH-180-DHARO180",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-180-DHARO180",
+      "order": 4
+    }
+  ]
+}

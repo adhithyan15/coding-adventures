@@ -1,0 +1,14 @@
+{
+  "language": "marwadi",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:f5d8ddc8239421cf",
+  "lessonIds": [
+    "MW-C203-atro",
+    "MW-C203-dag",
+    "MW-C203-disa",
+    "MW-C203-bhatakno",
+    "MW-C203-disno",
+    "MW-R203-review-198-203"
+  ],
+  "tex": "marwadi/book/chapters/ch203-how-far-is-it.tex"
+}

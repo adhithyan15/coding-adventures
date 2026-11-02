@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C276-sur",
+    "language": "marwadi",
+    "chapter": 276,
+    "sequence": 19530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46bc6202f55f8507"
+  },
+  "findings": []
+}

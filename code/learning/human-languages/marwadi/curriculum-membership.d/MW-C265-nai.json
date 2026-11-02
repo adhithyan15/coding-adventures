@@ -1,0 +1,11 @@
+{
+  "id": "MW-C265-nai",
+  "pathSegment": "MW-PATH-265-MOCHI265",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-265-MOCHI265",
+      "order": 1
+    }
+  ]
+}

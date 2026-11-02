@@ -1,0 +1,963 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 222,
+  "title": "Wind, Wet and Cold",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2e9263de50af86ff",
+  "lessons": [
+    {
+      "id": "MW-C222-adhi",
+      "sequence": 15300,
+      "title": "आंधी (ā̃dhī) — a dust storm",
+      "headword": "आंधी",
+      "romanization": "ā̃dhī",
+      "gloss": "a dust storm",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d399a4bf7bda66a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to thunder, then the Marwadi for a spell of steady rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आंधी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आंधी — ā̃dhī — \"a dust storm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जेठ मांय आंधी आवै है। jeṭh mā̃y ā̃dhī āvai hai. Dust storms come in early summer."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आंधी (ā̃dhī) is inherited from Sanskrit andhikā, \"night\", perhaps for the darkness a dust storm brings; CDIAL lists Hindi and Gujarati ā̃dhī, \"a dust storm\". CDIAL gives no Marwari form in this entry (CDIAL 390)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃dhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃dhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃dhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃dhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭh mā̃y ā̃dhī āvai hai. — Dust storms come in early summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭh mā̃y ā̃dhī āvai hai.* — Dust storms come in early summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to thunder, then the Marwadi for a spell of steady rain, then say ā̃dhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to thunder, then the Marwadi for a spell of steady rain, then say *ā̃dhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आंधी (ā̃dhī) mean? (\"A dust storm\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C222-adhi-type",
+              "prompt": "Say the Marwadi for 'a dust storm'.",
+              "assesses": [
+                "MW-LEX-C222-COLD222-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "आंधी",
+                "ā̃dhī"
+              ],
+              "feedback": {
+                "correct": "Right: आंधी (ā̃dhī) is 'a dust storm'.",
+                "incorrect": "'a dust storm' is आंधी (ā̃dhī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C222-bhijno",
+      "sequence": 15310,
+      "title": "भीजणो (bhījṇo) — to get wet",
+      "headword": "भीजणो",
+      "romanization": "bhījṇo",
+      "gloss": "to get wet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8301dcc5022d54bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a spell of steady rain, then the Marwadi for a dust storm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भीजणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीजणो — bhījṇo — \"to get wet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल बरसात मांय भीजसूं। hū̃ kāl barsāt mā̃y bhījsū̃. Tomorrow I'll get wet in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो बरसात मांय भीज्यो, vo barsāt mā̃y bhījyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीजणो (bhījṇo) goes back to a reconstructed bhiyajyate, \"is smeared\"; CDIAL lists Hindi bhījnā and Gujarati bhijvũ, \"to be wet\", under it. CDIAL gives no Marwari form in this entry (CDIAL 9502)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhījṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhījṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhījṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhījṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl barsāt mā̃y bhījsū̃. — Tomorrow I'll get wet in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl barsāt mā̃y bhījsū̃.* — Tomorrow I'll get wet in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a spell of steady rain, then the Marwadi for a dust storm, then say bhījṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a spell of steady rain, then the Marwadi for a dust storm, then say *bhījṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भीजणो (bhījṇo) mean? (\"To get wet\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C222-bhijno-type",
+              "prompt": "Say the Marwadi for 'to get wet'.",
+              "assesses": [
+                "MW-LEX-C222-COLD222-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भीजणो",
+                "bhījṇo"
+              ],
+              "feedback": {
+                "correct": "Right: भीजणो (bhījṇo) is 'to get wet'.",
+                "incorrect": "'to get wet' is भीजणो (bhījṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C222-os",
+      "sequence": 15320,
+      "title": "ओस (os) — dew",
+      "headword": "ओस",
+      "romanization": "os",
+      "gloss": "dew",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44dd1064c6b5d143",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a dust storm, then the Marwadi for to get wet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओस — os — \"dew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दिनूगै खेत मांय ओस है। dinūgai khet mā̃y os hai. Early in the morning there's dew on the field."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओस (os) is inherited from Sanskrit avaśyā, \"hoar-frost\"; CDIAL lists Hindi and Gujarati os, \"dew\". CDIAL gives no Marwari form in this entry (CDIAL 855)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "os",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *os*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "os, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *os*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dinūgai khet mā̃y os hai. — Early in the morning there's dew on the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dinūgai khet mā̃y os hai.* — Early in the morning there's dew on the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a dust storm, then the Marwadi for to get wet, then say os again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a dust storm, then the Marwadi for to get wet, then say *os* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओस (os) mean? (\"Dew\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C222-os-type",
+              "prompt": "Say the Marwadi for 'dew'.",
+              "assesses": [
+                "MW-LEX-C222-COLD222-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ओस",
+                "os"
+              ],
+              "feedback": {
+                "correct": "Right: ओस (os) is 'dew'.",
+                "incorrect": "'dew' is ओस (os)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C222-dhujno",
+      "sequence": 15330,
+      "title": "धूजणो (dhūjṇo) — to shiver; to tremble",
+      "headword": "धूजणो",
+      "romanization": "dhūjṇo",
+      "gloss": "to shiver; to tremble",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59409a22e55a1600",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to get wet, then the Marwadi for dew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धूजणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धूजणो — dhūjṇo — \"to shiver; to tremble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात ठंडी है अर हूं धूजूं हूं। rāt ṭhaṇḍī hai ar hū̃ dhūjū̃ hū̃. The night is cold and I'm shivering."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो धूज्यो, vo dhūjyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धूजणो (dhūjṇo) is inherited from Sanskrit dhūyate, \"is shaken\"; CDIAL lists Gujarati dhujvũ, \"to tremble\", under it. CDIAL gives no Marwari form in this entry (CDIAL 6863)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūjṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūjṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūjṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūjṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt ṭhaṇḍī hai ar hū̃ dhūjū̃ hū̃. — The night is cold and I'm shivering.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt ṭhaṇḍī hai ar hū̃ dhūjū̃ hū̃.* — The night is cold and I'm shivering.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to get wet, then the Marwadi for dew, then say dhūjṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to get wet, then the Marwadi for dew, then say *dhūjṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धूजणो (dhūjṇo) mean? (\"To shiver; to tremble\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C222-dhujno-type",
+              "prompt": "Say the Marwadi for 'to shiver'.",
+              "assesses": [
+                "MW-LEX-C222-COLD222-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धूजणो",
+                "dhūjṇo"
+              ],
+              "feedback": {
+                "correct": "Right: धूजणो (dhūjṇo) is 'to shiver; to tremble'.",
+                "incorrect": "'to shiver' is धूजणो (dhūjṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C222-dhuvar",
+      "sequence": 15340,
+      "title": "धूंवर (dhū̃var) — fog; mist",
+      "headword": "धूंवर",
+      "romanization": "dhū̃var",
+      "gloss": "fog; mist",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4dadbfdb69a9edf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for dew, then the Marwadi for to shiver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धूंवर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धूंवर — dhū̃var — \"fog; mist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज दिनूगै धूंवर है। āj dinūgai dhū̃var hai. There's fog this morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धूंवर (dhū̃var) is inherited from Sanskrit dhūmarī, \"mist, fog\", which CDIAL sets beside a reconstructed dhūmara, \"smoky\", from dhūma, \"smoke\" (CDIAL 6852); CDIAL lists Gujarati dhũvar, \"fog\". CDIAL gives no Marwari form in this entry (CDIAL 6853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhū̃var",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhū̃var*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhū̃var, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhū̃var*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj dinūgai dhū̃var hai. — There's fog this morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj dinūgai dhū̃var hai.* — There's fog this morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for dew, then the Marwadi for to shiver, then say dhū̃var again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for dew, then the Marwadi for to shiver, then say *dhū̃var* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धूंवर (dhū̃var) mean? (\"Fog; mist\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C222-dhuvar-type",
+              "prompt": "Say the Marwadi for 'fog'.",
+              "assesses": [
+                "MW-LEX-C222-COLD222-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धूंवर",
+                "dhū̃var"
+              ],
+              "feedback": {
+                "correct": "Right: धूंवर (dhū̃var) is 'fog; mist'.",
+                "incorrect": "'fog' is धूंवर (dhū̃var)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R222-review-216-222",
+      "sequence": 15350,
+      "title": "Looking back: from Setting Out to Wind, Wet and Cold",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Setting Out to Wind, Wet and Cold",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed4a7487700f6181",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for to set out and a companion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to set out, a companion, a kos, a traveller, a camp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to set out, a companion, a kos, a traveller, a camp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cross over, to climb, a burden, to load, to halt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cross over, to climb, a burden, to load, to halt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a train, a passenger, a driver, to depart, to take to a place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a train, a passenger, a driver, to depart, to take to a place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to come (said with respect), a gift, a week, the Teej festival, in a hurry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to come (said with respect), a gift, a week, the Teej festival, in a hurry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "settled, ready, to put off, to change, to find out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: settled, ready, to put off, to change, to find out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rains, to rain, lightning, to thunder, a spell of steady rain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rains, to rain, lightning, to thunder, a spell of steady rain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dust storm, to get wet, dew, to shiver, fog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dust storm, to get wet, dew, to shiver, fog]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To set out? (निकळणो, nikaḷṇo.) A companion? (साथी, sāthī.) A kos? (कोस, kos.) A traveller? (मुसाफर, musāphar.) A camp? (डेरो, ḍero.) To cross over? (लांघणो, lā̃ghṇo.) To climb? (चढ़णो, chaṛhṇo.) A burden? (बोझ, bojh.) To load? (लादणो, lādṇo.) To halt? (ठैरणो, ṭhairṇo.) A train? (रेल, rel.) A passenger? (सवारी, savārī.) A driver? (ड्राइवर, ḍrāivar.) To depart? (छूटणो, chhūṭṇo.) To take to a place? (पुगावणो, pugāvṇo.) To come (said with respect)? (पधारणो, padhārṇo.) A gift? (भेट, bheṭ.) A week? (हफ्तो, haphto.) The Teej festival? (तीज, tīj.) In a hurry? (उतावळो, utāvḷo.) Settled? (पक्को, pakko.) Ready? (त्यार, tyār.) To put off? (टालणो, ṭālṇo.) To change? (बदळणो, badaḷṇo.) To find out? (सोधणो, sodhṇo.) The rains? (मेह, meh.) To rain? (बरसणो, barasṇo.) Lightning? (बीजळी, bījḷī.) To thunder? (गाजणो, gājṇo.) A spell of steady rain? (झड़ी, jhaṛī.) A dust storm? (आंधी, ā̃dhī.) To get wet? (भीजणो, bhījṇo.) Dew? (ओस, os.) To shiver? (धूजणो, dhūjṇo.) Fog? (धूंवर, dhū̃var.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R222-review-216-222-type",
+              "prompt": "Say the Marwadi for 'to set out'.",
+              "assesses": [
+                "MW-LEX-C216-OUT216-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "निकळणो",
+                "nikaḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: निकळणो (nikaḷṇo) is 'to set out; to come out'.",
+                "incorrect": "'to set out' is निकळणो (nikaḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

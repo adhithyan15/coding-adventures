@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:03e599ab60861faa",
+  "lessonIds": [
+    "MW-C268-kaivno",
+    "MW-C268-sunavno",
+    "MW-C268-salah",
+    "MW-C268-matlab",
+    "MW-C268-sipharas"
+  ],
+  "tex": "marwadi/book/chapters/ch268-telling-and-explaining.tex"
+}

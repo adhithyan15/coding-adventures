@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-153-BE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say am, is and are with हूं, आप, वो and any noun, and write the letter ऊ from ऊंट.",
+  "prerequisites": [
+    "MW-EXT-152-HE-THAT"
+  ]
+}

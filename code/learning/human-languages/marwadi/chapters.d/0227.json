@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "The Village Well",
+  "label": "ch:mw-the-village-well",
+  "canDo": "I can describe the well, a thirsty camel and a dry year.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C227-dukal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can describe the well, a thirsty camel and a dry year.",
+    "assesses": [
+      "MW-LEX-C227-WELL227-03",
+      "MW-LEX-C227-WELL227-04",
+      "MW-LEX-C227-WELL227-05"
+    ]
+  }
+}
