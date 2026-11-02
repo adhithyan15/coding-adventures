@@ -8,10 +8,10 @@
 //!
 //! | backend    | `puts(1 == 1)` was            | now |
 //! |------------|-------------------------------|-----|
-//! | Python     | `NameError: builtin '=='`     | ✅ `#t` — emitter maps `==`→`_sir_eq`, and `!=`/`<=`/`>=` to new `ne`/`le`/`ge` |
-//! | JavaScript | `TypeError: unknown builtin ==`| ✅ `#t` — only `==` was unmapped; `!=`/`<=`/`>=` already routed |
-//! | Go         | `panic: unknown builtin: ==`  | ✅ `#t` — emitter + runtime dispatch gain the four names |
-//! | Rust       | emitted a call to a missing fn | ✅ `#t` — emitter maps them to new `ne`/`le`/`ge` helpers |
+//! | Python     | `NameError: builtin '=='`     | ✅ `true` — emitter maps `==`→`_sir_eq`, and `!=`/`<=`/`>=` to new `ne`/`le`/`ge` |
+//! | JavaScript | `TypeError: unknown builtin ==`| ✅ `true` — only `==` was unmapped; `!=`/`<=`/`>=` already routed |
+//! | Go         | `panic: unknown builtin: ==`  | ✅ `true` — emitter + runtime dispatch gain the four names |
+//! | Rust       | emitted a call to a missing fn | ✅ `true` — emitter maps them to new `ne`/`le`/`ge` helpers |
 //! | C, Ruby    | (already worked)              | ✅ unchanged |
 //!
 //! `==` is a synonym for the `=` (structural equality) each backend already
@@ -33,8 +33,9 @@
 //! the `sequences` feature, so an array-literal program lowers and asserts on
 //! each — C was the last that skipped it.
 //!
-//! Booleans render in the harness's default (Lisp) convention, so the expected
-//! strings are `#t` / `#f`.
+//! The programs are Ruby, so booleans print as Ruby prints them, `true` /
+//! `false`.  (They used to print `#t` / `#f`, the Lisp convention, because the
+//! Ruby frontend never said its module came from Ruby; #18798 fixed that.)
 
 use sir_conformance::{run_source, RunOutcome, Target};
 
@@ -43,45 +44,45 @@ use sir_conformance::{run_source, RunOutcome, Target};
 /// the conformance harness emits.
 const CASES: &[(&str, &str)] = &[
     // `==` — equality, including cross int/float (Ruby `1 == 1.0` is true).
-    ("1 == 1", "#t"),
-    ("1 == 2", "#f"),
-    ("1 == 1.0", "#t"),
-    ("\"a\" == \"a\"", "#t"),
-    ("\"a\" == \"b\"", "#f"),
+    ("1 == 1", "true"),
+    ("1 == 2", "false"),
+    ("1 == 1.0", "true"),
+    ("\"a\" == \"a\"", "true"),
+    ("\"a\" == \"b\"", "false"),
     // `!=` — the exact negation of `==`.
-    ("1 != 2", "#t"),
-    ("1 != 1", "#f"),
-    ("\"a\" != \"b\"", "#t"),
-    ("\"a\" != \"a\"", "#f"),
+    ("1 != 2", "true"),
+    ("1 != 1", "false"),
+    ("\"a\" != \"b\"", "true"),
+    ("\"a\" != \"a\"", "false"),
     // `<=` — less-than-or-equal: strictly-less, equal, and strictly-greater.
-    ("1 <= 2", "#t"),
-    ("2 <= 2", "#t"),
-    ("3 <= 2", "#f"),
-    ("1 <= 1.0", "#t"), // int vs float compares by value
+    ("1 <= 2", "true"),
+    ("2 <= 2", "true"),
+    ("3 <= 2", "false"),
+    ("1 <= 1.0", "true"), // int vs float compares by value
     // `>=` — the mirror of `<=`.
-    ("2 >= 1", "#t"),
-    ("2 >= 2", "#t"),
-    ("1 >= 2", "#f"),
+    ("2 >= 1", "true"),
+    ("2 >= 2", "true"),
+    ("1 >= 2", "false"),
     // `<` / `>` — already worked for numbers; guard against a regression from
     // the new sibling arms landing in the same match.
-    ("1 < 2", "#t"),
-    ("2 > 1", "#t"),
+    ("1 < 2", "true"),
+    ("2 > 1", "true"),
     // String ORDERING — lexicographic on every backend (Go gained this here).
-    ("\"a\" < \"b\"", "#t"),
-    ("\"b\" < \"a\"", "#f"),
-    ("\"a\" <= \"a\"", "#t"),
-    ("\"b\" > \"a\"", "#t"),
-    ("\"a\" >= \"a\"", "#t"),
-    ("\"ab\" < \"b\"", "#t"), // prefix vs longer: 'a' < 'b'
+    ("\"a\" < \"b\"", "true"),
+    ("\"b\" < \"a\"", "false"),
+    ("\"a\" <= \"a\"", "true"),
+    ("\"b\" > \"a\"", "true"),
+    ("\"a\" >= \"a\"", "true"),
+    ("\"ab\" < \"b\"", "true"), // prefix vs longer: 'a' < 'b'
     // COMPOSITE equality — `==`/`!=` are STRUCTURAL for arrays, not reference
     // identity. This is the end-to-end proof that the JavaScript `eq`→`valEq`
     // change agrees cross-backend: JS used to answer `[1,2] == [1,2]` false
     // (reference), the other backends true (structural). Now asserts on ALL SIX
     // backends — Ruby and C gained the `sequences` feature (C was last).
-    ("[1, 2] == [1, 2]", "#t"),
-    ("[1, 2] == [1, 3]", "#f"),
-    ("[1, 2] != [1, 3]", "#t"),
-    ("[1, 2] != [1, 2]", "#f"),
+    ("[1, 2] == [1, 2]", "true"),
+    ("[1, 2] == [1, 3]", "false"),
+    ("[1, 2] != [1, 3]", "true"),
+    ("[1, 2] != [1, 2]", "false"),
 ];
 
 /// The frontier: every backend that *runs* a case must reproduce Ruby's

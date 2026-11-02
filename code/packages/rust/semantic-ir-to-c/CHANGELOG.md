@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — `nil` inside an array; Ruby's `[]=` (#18798)
+
+- **`print [nil, false]` printed `[, false]`.**  Ruby shows a collection's
+  elements with `inspect`, where `nil` is `nil`; only a value printed on its
+  own is empty.  `_sir_fmt_elem` / `_sir_display_elem` render an Array or
+  Hash element.
+- **`a[i] = v` follows Ruby**: `_sir_array_bracket_set` counts a negative
+  index from the end and pads with `nil` past the end (in a fresh buffer,
+  as `push` does); before the start, or past index 2^28, it raises
+  `IndexError`, and a non-integer index raises `TypeError`.  It shared
+  the strict `_sir_seq_set`, which exited on both.  End-to-end check:
+  `sir-conformance`'s `rb_array_index_size_and_index_assignment`.
+
 ## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
 
 ### Test temp files live in a private scratch directory

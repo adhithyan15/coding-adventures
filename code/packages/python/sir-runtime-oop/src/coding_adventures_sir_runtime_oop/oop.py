@@ -607,6 +607,8 @@ _BOOL_METHODS = frozenset({"&", "|", "^"})
 # a later PR; they are deliberately absent here so ``respond_to?`` stays honest.
 _ARRAY_METHODS = frozenset(
     {
+        "[]",
+        "[]=",
         "length",
         "size",
         "count",
@@ -699,6 +701,7 @@ _HASH_METHODS = frozenset(
         "to_a",
         "to_h",
         "dig",
+        "[]",
         "store",
         "[]=",
         "merge",
@@ -1007,9 +1010,56 @@ def _bool_method(recv: bool, name: str, args: list[Val]) -> Val:
     return recv != other
 
 
+# The largest index ``a[i] = v`` grows an array to.  Ruby refuses an index past
+# its own (far larger) limit with ``IndexError: index N too big``; this one is
+# shared by every backend's runtime, so a program cannot ask any of them for an
+# allocation big enough to exhaust memory or overflow a size computation.
+_ARRAY_MAX_INDEX = 1 << 28
+
+
+def _array_index(recv: list[Val], index: Val) -> int:
+    """The position a Ruby integer ``index`` names in ``recv``: a negative index
+    counts back from the end (``-1`` is the last element).  The result may lie
+    outside the array; the callers decide what that means.  A non-integer index
+    (a ``bool`` is not one, though Python says it is an ``int``) is Ruby's
+    ``TypeError``."""
+    if not isinstance(index, int) or isinstance(index, bool):
+        raise_error("TypeError", f"no implicit conversion of {class_of(index)} into Integer")
+    return index + len(recv) if index < 0 else index
+
+
 def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
     """Non-block ``Array`` methods.  Returns :data:`_MISS` if ``name`` is not a
     catalogued array method."""
+    # #18798 (item 13) — ``a[i]`` and ``a[i] = v``.  The Ruby frontend lowers
+    # both to method calls (``[]`` / ``[]=``), because it cannot tell an Array
+    # from a Hash or a user object; they were missing here, so ``z[1]`` raised
+    # ``undefined method '[]' for Array``.
+    #
+    # | call            | Ruby                                         |
+    # |-----------------|----------------------------------------------|
+    # | ``[3, 4][1]``   | ``4``                                        |
+    # | ``[3, 4][-1]``  | ``4`` (counts from the end)                  |
+    # | ``[3, 4][5]``   | ``nil`` (out of range is nil, not an error)  |
+    # | ``a[3] = 7``    | pads with ``nil`` up to index 3, then stores |
+    # | ``a[-9] = 7``   | ``IndexError`` (before the start)            |
+    # | ``a[2**40] = 7``| ``IndexError`` (past ``_ARRAY_MAX_INDEX``)   |
+    if name == "[]" and len(args) == 1:
+        position = _array_index(recv, args[0])
+        return recv[position] if 0 <= position < len(recv) else None
+    if name == "[]=" and len(args) == 2:
+        position = _array_index(recv, args[0])
+        if position < 0:
+            raise_error(
+                "IndexError",
+                f"index {args[0]} too small for array; minimum: -{len(recv)}",
+            )
+        if position >= _ARRAY_MAX_INDEX:
+            raise_error("IndexError", f"index {args[0]} too big")
+        if position >= len(recv):
+            recv.extend([None] * (position - len(recv) + 1))
+        recv[position] = args[1]
+        return args[1]
     if name in ("length", "size"):
         return len(recv)
     if name == "count":
@@ -1365,6 +1415,10 @@ def _hash_method(recv: dict[Val, Val], name: str, args: list[Val]) -> Val:
         return dict(recv)
     if name == "dig":
         # v0: single-level dig; nested dig is a documented follow-up.
+        return recv.get(args[0])
+    if name == "[]":
+        # #18798 — ``h[k]``: the value, or ``nil`` for a missing key (unlike
+        # ``fetch``, which raises).  It was missing, so ``h[:a]`` raised.
         return recv.get(args[0])
     if name in ("store", "[]="):
         recv[args[0]] = args[1]

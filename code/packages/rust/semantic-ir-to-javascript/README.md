@@ -95,10 +95,11 @@ as names, such as the class of `raise Foo`.
 
 | Accepted (v0 + SIR16 + E1 + O3 + MX4) | Rejected (deferred / unsupported)  |
 |---------------------------------|------------------------------------------|
-| `Closures`                      | `StringInterpolation` (`StrConcat`, SIR18) |
-| `Pairs`                         | `SingletonClassDef` OOP dispatch         |
+| `Closures`                      | `SingletonClassDef` OOP dispatch         |
+| `Pairs`                         |                                          |
 | `Symbols`                       | `TailCalls` (V8 has no reliable TCO)     |
 | `Strings`                       | `Intrinsics` (empty whitelist)           |
+| `StringInterpolation` (`StrConcat`, SIR18) |                               |
 | `DynamicTyping`                 |                                          |
 | `OptionalTypeAnnotations`       |                                          |
 | `MutualRecursion`               |                                          |

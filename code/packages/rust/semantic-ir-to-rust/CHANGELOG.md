@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased — interpolation, `nil`'s display, Ruby's `[]=` (#18798)
+
+- **`StrConcat` (string interpolation) is accepted**, as
+  `__sir::str_concat(&[parts…])`, which joins each part's Ruby `to_s`; the
+  assignment scan now looks inside its parts.
+- **`puts nil` prints an empty line** under the Ruby display convention
+  (the new `to_s`: `format`, except that `nil` is `""`).
+- **`a[i] = v` follows Ruby.**  It shared `SeqSet`'s strict `0 <= i < len`
+  rule, so `a[-1] = 8` and `a[3] = 7` panicked; a negative index now counts
+  from the end, a write past the end pads with `nil`, and one before the
+  start (or past index 2^28) raises `IndexError`.  `a[i]` with a
+  non-integer index raises `TypeError` instead of an uncatchable panic.
+  (`SeqSet` itself stays strict.)  Tests
+  `array_bracket_write_past_the_end_pads_with_nil` and
+  `array_bracket_write_before_the_start_raises_index_error` (replacing
+  `array_bracket_write_out_of_range_panics_not_silently_no_ops`).
+
 ## Unreleased — `not` is a builtin; stores inside `begin`/`rescue` (#18798)
 
 - **A `rescue => e` binding the clause stores into** (`e = 5`) is now

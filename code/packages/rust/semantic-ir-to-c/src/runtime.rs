@@ -943,6 +943,15 @@ SirValue _sir_global_get(SirValue name)               { return _sir_global_get_s
 
 void _sir_fmt(FILE *out, SirValue v);
 
+/* An element of an Array or a Hash.  Ruby shows a collection with `inspect`,
+ * where `nil` is `nil` — only a value printed on its own (`to_s`) is empty.
+ * `print [nil, false]` printed `[, false]` (#18798); every other element
+ * renders as `_sir_fmt` does. */
+void _sir_fmt_elem(FILE *out, SirValue v) {
+    if (v.tag == SIR_NIL) fputs("nil", out);
+    else _sir_fmt(out, v);
+}
+
 /* A sequence renders as `[e0, e1, …]` (bracket, comma-space separator),
  * matching the Go/Rust backends. Elements render through `_sir_fmt`, whose
  * depth counter bounds a self-referential sequence (constructible via the
@@ -951,7 +960,7 @@ void _sir_fmt_seq(FILE *out, SirValue v) {
     fputc('[', out);
     for (int64_t i = 0; i < v.as.seq->len; i++) {
         if (i) fputs(", ", out);
-        _sir_fmt(out, v.as.seq->items[i]);
+        _sir_fmt_elem(out, v.as.seq->items[i]);
     }
     fputc(']', out);
 }
@@ -968,9 +977,9 @@ void _sir_fmt_map(FILE *out, SirValue v) {
     fputc('{', out);
     for (int64_t i = 0; i < v.as.map->len; i++) {
         if (i) fputs(", ", out);
-        _sir_fmt(out, v.as.map->entries[i].key);
+        _sir_fmt_elem(out, v.as.map->entries[i].key);
         fputs(": ", out);
-        _sir_fmt(out, v.as.map->entries[i].val);
+        _sir_fmt_elem(out, v.as.map->entries[i].val);
     }
     fputc('}', out);
 }
@@ -1101,12 +1110,17 @@ void _sir_fmt(FILE *out, SirValue v) {
  * so `#{arr}` and `puts arr` always agree. */
 char *_sir_display_str(SirValue v);
 
+/* The string twin of `_sir_fmt_elem`: `nil` inside a collection is `nil`. */
+char *_sir_display_elem(SirValue v) {
+    return v.tag == SIR_NIL ? _sir_dup("nil") : _sir_display_str(v);
+}
+
 char *_sir_display_seq(SirValue v) {
     char *acc = _sir_dup("[");
     int64_t i;
     for (i = 0; i < v.as.seq->len; i++) {
         if (i) acc = _sir_cat(acc, ", ");
-        acc = _sir_cat(acc, _sir_display_str(v.as.seq->items[i]));
+        acc = _sir_cat(acc, _sir_display_elem(v.as.seq->items[i]));
     }
     return _sir_cat(acc, "]");
 }
@@ -1116,9 +1130,9 @@ char *_sir_display_map(SirValue v) {
     int64_t i;
     for (i = 0; i < v.as.map->len; i++) {
         if (i) acc = _sir_cat(acc, ", ");
-        acc = _sir_cat(acc, _sir_display_str(v.as.map->entries[i].key));
+        acc = _sir_cat(acc, _sir_display_elem(v.as.map->entries[i].key));
         acc = _sir_cat(acc, ": ");
-        acc = _sir_cat(acc, _sir_display_str(v.as.map->entries[i].val));
+        acc = _sir_cat(acc, _sir_display_elem(v.as.map->entries[i].val));
     }
     return _sir_cat(acc, "}");
 }
@@ -2031,6 +2045,48 @@ static void _sir_array_push_one(SirSeq *s, SirValue v) {
     ni[s->len] = v;
     s->items = ni;
     s->len++;
+}
+/* #18798 (item 13) — `a[i] = v` on an Array, as Ruby does it.  The strict
+ * `_sir_seq_set` (the SIR-native `SeqSet` statement) exits on anything outside
+ * `0 <= i < len`, and `[]=` used to share it:
+ *
+ * | call         | Ruby                                        |
+ * |--------------|---------------------------------------------|
+ * | `a[-1] = 8`  | stores into the last element                |
+ * | `a[3] = 7`   | pads with `nil` up to index 3, then stores  |
+ * | `a[-9] = 7`  | `IndexError` (before the start)             |
+ *
+ * Growing allocates a fresh buffer, never reallocating in place, for the
+ * reason `_sir_array_push_one` does (a block helper may hold a snapshot
+ * pointer into the old one).  An index past `SIR_ARRAY_MAX_INDEX` is refused
+ * as Ruby refuses one past its own limit ("index N too big"), so a program
+ * cannot ask for an allocation whose byte size overflows `size_t`. */
+#define SIR_ARRAY_MAX_INDEX ((int64_t)1 << 28)
+static SirValue _sir_array_bracket_set(SirSeq *s, SirValue idx, SirValue val) {
+    char msg[96];
+    if (idx.tag != SIR_INT) {
+        return _sir_raise(_sir_error("TypeError", _sir_str("no implicit conversion into Integer")));
+    }
+    int64_t i = idx.as.i;
+    if (i < 0) i += s->len;
+    if (i < 0) {
+        snprintf(msg, sizeof(msg), "index %lld too small for array; minimum: -%lld",
+                 (long long)idx.as.i, (long long)s->len);
+        return _sir_raise(_sir_error("IndexError", _sir_str(_sir_dup(msg))));
+    }
+    if (i >= SIR_ARRAY_MAX_INDEX) {
+        snprintf(msg, sizeof(msg), "index %lld too big", (long long)idx.as.i);
+        return _sir_raise(_sir_error("IndexError", _sir_str(_sir_dup(msg))));
+    }
+    if (i >= s->len) {
+        SirValue *ni = (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)(i + 1));
+        for (int64_t k = 0; k < s->len; k++) ni[k] = s->items[k];
+        for (int64_t k = s->len; k < i; k++) ni[k] = _sir_nil();
+        s->items = ni;
+        s->len = i + 1;
+    }
+    s->items[i] = val;
+    return val;
 }
 static SirValue _sir_array_pop(SirSeq *s) {
     if (s->len == 0) return _sir_nil();
@@ -3601,7 +3657,7 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SEQ && argc == 1) return _sir_seq_index(recv, args[0]);
         if (recv.tag == SIR_MAP && argc == 1) return _sir_map_get(recv, args[0]);
     } else if (strcmp(m, "[]=") == 0) {
-        if (recv.tag == SIR_SEQ && argc == 2) return _sir_seq_set(recv, args[0], args[1]);
+        if (recv.tag == SIR_SEQ && argc == 2) return _sir_array_bracket_set(recv.as.seq, args[0], args[1]);
         if (recv.tag == SIR_MAP && argc == 2) return _sir_map_set(recv, args[0], args[1]);
     }
     /* Collections slice 2: 1-arg String queries (arg is a String); slice 4

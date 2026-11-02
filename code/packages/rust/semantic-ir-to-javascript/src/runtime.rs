@@ -429,6 +429,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // on the active render path; an array already on the path is a cycle and
   // renders as `[...]` (matching Ruby's `inspect`), then we recurse no further.
   function format(v) { return formatSeen(v, new Set()); }
+  // A value as `puts`, `print` and `"#{…}"` show it: Ruby's `to_s`.  The one
+  // difference from `format` is `nil`, whose `to_s` is the empty string, so
+  // `puts nil` prints an empty line (#18798, item 11).  `format` keeps
+  // `nil` for an array element, as Ruby's `inspect` of an array does.
+  function toS(v) {
+    if (SIR_DISPLAY_RUBY && (v === null || v === undefined)) { return ""; }
+    return format(v);
+  }
+  // `"a#{x}b"` — SIR's `StrConcat`: every part shown with `toS`, joined.
+  function strConcat(...parts) { return parts.map(toS).join(""); }
   function formatSeen(v, seen) {
     if (v === null || v === undefined) { return "nil"; }
     if (v === true) { return SIR_DISPLAY_RUBY ? "true" : "#t"; }
@@ -757,7 +767,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       seen.delete(v);
       return;
     }
-    out.write(format(v) + "\n");
+    out.write(toS(v) + "\n");
   }
   function write(stream, terminator, unpackArrays, ...values) {
     const out = stream === "stderr" ? process.stderr : process.stdout;
@@ -768,11 +778,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return null;
     }
     if (terminator === "once") {
-      out.write(values.map((v) => format(v)).join(" ") + "\n");
+      out.write(values.map((v) => toS(v)).join(" ") + "\n");
       return null;
     }
     // "none"
-    for (const v of values) { out.write(format(v)); }
+    for (const v of values) { out.write(toS(v)); }
     return null;
   }
 
@@ -1598,7 +1608,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   const HASH_METHODS = new Set([
     "keys", "values", "size", "length", "empty?", "has_key?", "key?",
     "include?", "member?", "has_value?", "value?", "to_a", "merge", "dig",
-    "invert", "delete", "store", "[]=", "fetch", "clear", "each", "each_pair",
+    "invert", "delete", "store", "[]", "[]=", "fetch", "clear", "each", "each_pair",
     "map", "select", "filter", "reject", "transform_values", "transform_keys",
     "find", "detect", "any?", "all?", "none?", "count",
     "sort_by", "min_by", "max_by",
@@ -1652,6 +1662,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         if (recv.has(args[0])) { const v = recv.get(args[0]); recv.delete(args[0]); return v; }
         return null;
       }
+      // #18798 — `h[k]`: the value, or nil for a missing key (unlike
+      // `fetch`, which raises).  It was missing, so `h[:a]` raised.
+      case "[]":
+        return recv.has(args[0]) ? recv.get(args[0]) : null;
       case "store": case "[]=": {
         // Ruby `store(k, v)` (alias `[]=`): mutates, returns the value.
         recv.set(args[0], args[1]);
@@ -1961,6 +1975,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "flatten", "compact", "rotate", "zip",
     "include?", "index",
     "each_slice", "each_cons", "chunk_while", "slice_when", "tally", "cycle",
+    "[]", "[]=", "size", "length",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
@@ -2012,12 +2027,66 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
     return false;
   }
+  // The position a Ruby integer index names in `recv`: a negative index
+  // counts back from the end.  The result may lie outside the array; the
+  // caller decides what that means.  A non-integer index is Ruby's
+  // `TypeError` — and is never used to index the JS array.
+  // The largest index `a[i] = v` grows an array to (shared by every
+  // backend's runtime): past it Ruby's own `IndexError: index N too big`,
+  // so a program cannot make the padding loop run for ever.
+  const ARRAY_MAX_INDEX = 2 ** 28;
+  function arrayIndex(recv, raw) {
+    if (typeof raw !== "number" || !Number.isInteger(raw)) {
+      raiseError("TypeError",
+        "no implicit conversion of " + classDescription(raw) + " into Integer");
+    }
+    return raw < 0 ? recv.length + raw : raw;
+  }
   function arrayMethod(recv, name, args) {
     // A trailing function positional is the block (`arr.map { … }`).
     const blk = args.length > 0 && typeof args[args.length - 1] === "function"
       ? args[args.length - 1]
       : null;
     switch (name) {
+      // #18798 (item 13) — `a[i]`, `a[i] = v` and `a.size`.  The Ruby
+      // frontend lowers indexing to the method calls `[]` / `[]=` (it cannot
+      // tell an Array from a Hash), and none of the three was here, so
+      // `z[1]` raised `undefined method []` and `[1, 2].size` (a JS array has
+      // `length`, not `size`) did too.
+      //
+      // | call           | Ruby                                          |
+      // |----------------|-----------------------------------------------|
+      // | `[3, 4][1]`    | `4`                                           |
+      // | `[3, 4][-1]`   | `4` (counts from the end)                     |
+      // | `[3, 4][5]`    | `nil` (out of range is nil, not an error)     |
+      // | `a[3] = 7`     | pads with `nil` up to index 3, then stores    |
+      // | `a[-9] = 7`    | `IndexError` (before the start)               |
+      // | `a[2**40] = 7` | `IndexError` (past `ARRAY_MAX_INDEX`)         |
+      //
+      // SECURITY: the index is source-controlled, so it must be a real
+      // integer before it touches `recv` — `recv["constructor"]` would be a
+      // reflective property read (see `.fetch` in `callMethod`).
+      case "[]": {
+        if (args.length !== 1) { return ARR_MISS; }
+        const i = arrayIndex(recv, args[0]);
+        return i >= 0 && i < recv.length ? recv[i] : null;
+      }
+      case "[]=": {
+        if (args.length !== 2) { return ARR_MISS; }
+        const i = arrayIndex(recv, args[0]);
+        if (i < 0) {
+          raiseError("IndexError",
+            "index " + format(args[0]) + " too small for array; minimum: -" + recv.length);
+        }
+        if (i >= ARRAY_MAX_INDEX) {
+          raiseError("IndexError", "index " + format(args[0]) + " too big");
+        }
+        while (recv.length < i) { recv.push(null); }
+        recv[i] = args[1];
+        return args[1];
+      }
+      case "size": case "length":
+        return recv.length;
       case "each":
         if (blk) { for (const x of recv) { blk(x); } }
         return recv;
@@ -6562,7 +6631,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
 
   return {
     Sym, Pair, Closure,
-    intern, applyClosure, truthy, matlabTruthy, format, write,
+    intern, applyClosure, truthy, matlabTruthy, format, toS, strConcat, write,
     plus, times, divide, shiftLeft,
     // SIR21 T3b-2: `div_trunc`/`udiv_trunc`/`div_true` — the three
     // genuinely-new division ops (`div_floor` is `divide` above, exported

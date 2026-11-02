@@ -150,6 +150,53 @@ def sir_each(recv, blk, arity = nil)
   recv
 end
 
+# `recv[i]`, `recv[i] = v` and `recv.size` (#18798) — the SIR collection
+# methods `[]`, `[]=` and `size`/`length`.  A receiver whose class defines the
+# method (`sir_um_[]`, …) runs it, as any user method does; an Array, a Hash or
+# (for reads) a String runs Ruby's own method; anything else raises
+# `NoMethodError`, as Ruby would.  The method is always one of these fixed
+# names, never one a program spells, so no reflection is reachable.
+#
+# `a[i] = v` past `SIR_ARRAY_MAX_INDEX` raises Ruby's own `IndexError: index N
+# too big` — the same limit every other backend's runtime has, so all six
+# agree on a program that asks for an absurd padding.
+SIR_ARRAY_MAX_INDEX = 1 << 28
+
+def sir_index(recv, key)
+  return recv.public_send(:"sir_um_[]", key) if recv.respond_to?(:"sir_um_[]")
+
+  case recv
+  when Array, Hash, String then recv[key]
+  else raise NoMethodError, "undefined method '[]' for #{recv.inspect}"
+  end
+end
+
+def sir_index_set(recv, key, val)
+  return recv.public_send(:"sir_um_[]=", key, val) if recv.respond_to?(:"sir_um_[]=")
+
+  case recv
+  when Array
+    raise IndexError, "index #{key} too big" if key.is_a?(Integer) && key >= SIR_ARRAY_MAX_INDEX
+
+    recv[key] = val
+  when Hash then recv[key] = val
+  else raise NoMethodError, "undefined method '[]=' for #{recv.inspect}"
+  end
+end
+
+def sir_size(recv)
+  return recv.public_send(:sir_um_size) if recv.respond_to?(:sir_um_size)
+
+  case recv
+  when Array, Hash, String then recv.size
+  else raise NoMethodError, "undefined method 'size' for #{recv.inspect}"
+  end
+end
+
+# `"a#{x}b"` (#18798) — SIR's `StrConcat`: every part shown with `sir_fmt`,
+# joined.
+def sir_str_concat(*parts) = parts.map { |p| sir_fmt(p) }.join
+
 # OOP slice 6 — the class that owns a `@@class variable` in the CURRENT method.
 # A method body runs in a hoisted top-level function (not a lexical class scope),
 # so `@@x` cannot be written directly ("class variable access from toplevel").

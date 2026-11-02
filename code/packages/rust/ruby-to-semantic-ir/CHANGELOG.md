@@ -2,6 +2,51 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## Unreleased — Ruby display, `#{true}`, early `return`/`break`/`next`, a `begin`/`rescue` value (#18798, items 11–15 and 19)
+
+### Fixed
+
+- **`puts true` printed `#t`, `puts nil` printed `nil`, on every backend
+  (item 11).**  The module now carries `source_language = "ruby"`; every
+  backend already chose its display convention by it
+  (`code/specs/sir-display-convention.md`).  Test
+  `a_ruby_module_says_it_came_from_ruby`.
+- **`"#{true}"` was refused (item 12).**  The interpolation fast path read
+  any bare identifier as a local, so `true`, `false` and `nil` became reads
+  of unknown locals.  They are literals now; `self`, `yield` and the other
+  keywords take the full parse; and a bare method name is a call, by the
+  same rule as anywhere else (`bare_name_call`).  Test
+  `interpolated_keyword_literals_are_values`.
+- **Early `return`, `break` and `next` ran nowhere (items 14 and 19).**
+  SIR has no return statement, and the lowerer's
+  `BuiltinCall("return" | "break" | "next")` markers reached the backends,
+  which raised "unknown builtin" (caught by the method's own `rescue` on
+  Python, JavaScript and Go, so `def f; return 1; rescue; 2; end` returned
+  2), panicked (Rust) or refused the program (C, Ruby).  The new `jumps`
+  module lowers them, after the rest of lowering, to stores into two fresh
+  locals (`__ret_<n>`, `__jump_<n>`) and `if __jump == 0` guards around the
+  statements after each one that may jump; loops test the flag too, and
+  the flag is reset where a `break` or `next` ends.  So an early `return`
+  works in every method (through `rescue` and `ensure`), `break`/`next`
+  work in `while`/`until`/`for`, and `next` in a block ends that call of
+  the block.  `return` or `break` inside a block (they leave the method
+  around it), `break`/`next` outside a loop, and a jump inside an
+  expression are refused by name.  A body with no jump is not touched.
+  Tests: `return_with_value_stores_the_value_and_the_returning_flag`,
+  `break_and_next_in_a_loop_set_their_own_flag`,
+  `next_in_a_block_returns_its_value_from_the_block`,
+  `a_jump_with_no_place_to_go_is_refused_by_name`, and the `jumps` unit
+  tests; earlier tests that pinned the marker shape now pin the stores.
+- **`return x if c`, `next if c`, `break unless c` did not parse.**
+  `lower_modifier_statement` now takes a jump on the left of a modifier
+  (the grammar and lexer change is in `ruby.grammar` and `ruby-lexer`).
+  Test `a_jump_with_a_modifier_lowers_inside_an_if`.
+- **A method ending in `begin … rescue … end` returned `nil` (item 15).**
+  `lower_tail` gives such a tail the result local a method-level `rescue`
+  already uses, in method bodies and `if` branches.  A loop body ending in
+  one drops the local's read instead of making it a statement.  Test
+  `a_begin_rescue_ending_a_method_is_its_value`.
+
 ## Unreleased — lexer refusals are typed errors (#18814)
 
 ### Changed
