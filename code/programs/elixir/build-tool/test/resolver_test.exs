@@ -116,11 +116,41 @@ defmodule BuildTool.ResolverTest do
     {"CRLF and BOM", "\uFEFF[dependencies]\r\na = { path = \"../a\" }\r\n", ["a"]},
     {"union across tables keeps duplicates for the caller",
      "[dependencies]\na = { path = \"../a\" }\n[build-dependencies]\na = { path = \"../a\" }\n",
-     ["a", "a"]}
+     ["a", "a"]},
+    {"quoted inline path key", "[dependencies]\na = { \"path\" = \"../a\" }\n", ["a"]},
+    {"literal-quoted inline path key", "[dependencies]\na = { 'path' = \"../a\" }\n", ["a"]},
+    {"quoted inline package key renames",
+     "[dependencies]\nx = { \"package\" = \"a\", path = \"../a\" }\n", ["a"]},
+    {"quoted capitalised inline Path key", "[dependencies]\na = { \"Path\" = \"../a\" }\n", []},
+    {"escaped inline path key is compared verbatim",
+     "[dependencies]\na = { \"pa\\u0074h\" = \"../a\" }\n", []},
+    {"dotted inline field key", "[dependencies]\na = { path.x = \"../a\" }\n", []},
+    {"quoted sub-table path key", "[dependencies.a]\n\"path\" = \"../a\"\n", ["a"]},
+    {"quoted sub-table package key", "[dependencies.x]\n'package' = \"a\"\npath = \"../a\"\n",
+     ["a"]},
+    {"quoted capitalised sub-table Path key", "[dependencies.a]\n\"Path\" = \"../a\"\n", []},
+    {"open string continues across the join",
+     "[dependencies]\na = { path = \"../a\", x = \"q [\n\" }\n", ["a"]},
+    {"line-final backslash escapes the joining space",
+     "[dependencies]\na = { x = \"q\\\n\", path = \"../a\" }\n", ["a"]}
   ]
 
-  test "the Cargo shape table matches the Go reference's 46 cases" do
-    assert length(@cargo_link_cases) == 46
+  test "the Cargo shape table matches the Go reference's 57 cases" do
+    assert length(@cargo_link_cases) == 57
+  end
+
+  # Rescanning the whole joined value for every appended line is quadratic:
+  # a 20,000-line continuation (about 500 KB) took tens of seconds. Carrying
+  # the scanner state makes it one pass; the bound is generous so a loaded CI
+  # machine cannot flake it.
+  test "a 20,000-line continuation is joined in linear time" do
+    manifest =
+      "[dependencies]\na = { path = \"../a\", features = [\n" <>
+        String.duplicate("  \"feature-name-padding\",\n", 20_000) <> "] }\n"
+
+    {micros, names} = :timer.tc(fn -> Resolver.cargo_link_dependency_names(manifest) end)
+    assert names == ["a"]
+    assert micros < 10_000_000
   end
 
   for {name, manifest, want} <- @cargo_link_cases do
@@ -201,6 +231,96 @@ defmodule BuildTool.ResolverTest do
     known = Resolver.build_known_names([package("rust/logic-gates", dir, "rust")], "rust")
     assert known["logic-gates"] == "rust/logic-gates"
     assert known["coding-adventures-logic-gates"] == "rust/logic-gates"
+  end
+
+  # `^\s*name` with the `m` flag runs `\s*` across every following blank
+  # line from each line start and backtracks when the match then fails
+  # (here: an unterminated name), which is quadratic in a run of blank lines
+  # (4.3 s at 40,000 of them).
+  test "the [package] name reader is linear in a run of blank lines", %{tmp_dir: tmp_dir} do
+    dir =
+      write_cargo!(tmp_dir, "rust/late-dir", String.duplicate("\n", 100_000) <> "name = \"x")
+
+    {micros, known} =
+      :timer.tc(fn ->
+        Resolver.build_known_names([package("rust/late-dir", dir, "rust")], "rust")
+      end)
+
+    assert known == %{"late-dir" => "rust/late-dir"}
+    assert micros < 5_000_000
+
+    File.write!(
+      Path.join(dir, "Cargo.toml"),
+      String.duplicate("\n", 100_000) <> "[package]\nname = \"Late-Crate\"\n"
+    )
+
+    known = Resolver.build_known_names([package("rust/late-dir", dir, "rust")], "rust")
+    assert known["late-crate"] == "rust/late-dir"
+  end
+
+  test "a [package] name does not span lines", %{tmp_dir: tmp_dir} do
+    dir = write_cargo!(tmp_dir, "rust/app", "[package]\nname =\n\"split\"\nname = \"app\"\n")
+    known = Resolver.build_known_names([package("rust/app", dir, "rust")], "rust")
+    refute Map.has_key?(known, "split")
+  end
+
+  # Step 5: a candidate resolving to the crate itself -- by its directory
+  # alias, by its [package] name through a renamed sub-table, or from a
+  # target table -- is DEPENDENCY_SELF_EDGE, neither dropped nor drawn.
+  for {label, entry} <- [
+        {"directory alias", "[dependencies]\napp-dir = { path = \".\" }\n"},
+        {"cargo name via a renamed sub-table",
+         "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n"},
+        {"target table", "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n"}
+      ] do
+    test "a Cargo self-edge by #{label} is DEPENDENCY_SELF_EDGE", %{tmp_dir: tmp_dir} do
+      dir =
+        write_cargo!(
+          tmp_dir,
+          "code/packages/rust/app-dir",
+          "[package]\nname = \"app-crate\"\n\n" <> unquote(entry)
+        )
+
+      error =
+        assert_raise Resolver.DependencySelfEdgeError, fn ->
+          Resolver.resolve_dependencies([package("rust/app-dir", dir, "rust")])
+        end
+
+      assert error.code == "DEPENDENCY_SELF_EDGE"
+      assert error.package == "rust/app-dir"
+      assert error.manifest == "code/packages/rust/app-dir/Cargo.toml"
+      assert error.dependency == "rust/app-dir"
+
+      assert Exception.message(error) ==
+               "DEPENDENCY_SELF_EDGE: package=rust/app-dir " <>
+                 "manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir"
+
+      refute Exception.message(error) =~ tmp_dir
+    end
+  end
+
+  test "the CLI exits 2 for a Cargo self-edge", %{tmp_dir: tmp_dir} do
+    dir =
+      write_cargo!(
+        tmp_dir,
+        "code/packages/rust/app",
+        "[package]\nname = \"app\"\n\n[dependencies]\napp = { path = \".\" }\n"
+      )
+
+    File.write!(Path.join(dir, "BUILD"), "echo build app\n")
+
+    stderr =
+      ExUnit.CaptureIO.capture_io(:stderr, fn ->
+        ExUnit.CaptureIO.capture_io(fn ->
+          assert BuildTool.CLI.run(["--root", tmp_dir, "--force", "--dry-run"]) == 2
+        end)
+      end)
+
+    assert stderr =~
+             "DEPENDENCY_SELF_EDGE: package=rust/app " <>
+               "manifest=code/packages/rust/app/Cargo.toml dependency=rust/app"
+
+    refute stderr =~ tmp_dir
   end
 
   # A WASM wrapper claiming its bare directory name ("graph") would turn its

@@ -132,12 +132,16 @@ ASCII-lowercased, against each Rust package's directory name and declared
 own dependency on the Rust crate it wraps is not a self-edge. Dev-dependencies
 in every form, `[patch]`, `[replace]`, `[workspace]`, package metadata,
 features, comments, and registry-only dependencies never create edges.
+Field and sub-table keys may be bare or quoted (`"path" = "..."`),
+continuation lines are joined in linear time, and a crate that resolves
+itself is a `DEPENDENCY_SELF_EDGE` error
+(`BuildTool.Resolver.DependencySelfEdgeError`, exit status 2).
 `BuildTool.Resolver.cargo_link_dependency_names/1` walks the manifest's bytes
 (not graphemes, so CRLF splits correctly) with the line procedure of the Rust
 paragraph of `code/specs/build-tool-conformance.md`; `test/resolver_test.exs`
-pins it with the Go reference's 46 shape cases, and it returns the same
+pins it with the Go reference's 57 shape cases, and it returns the same
 dependency names as the Go reference reader for all 1,650 tracked
-`Cargo.toml` files (checked 2026-11-01).
+`Cargo.toml` files (checked 2026-11-02).
 
 ## Toolchain detection
 
