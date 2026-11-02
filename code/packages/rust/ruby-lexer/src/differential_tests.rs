@@ -50,7 +50,7 @@ type Snapshot = (String, Vec<Token>, Vec<bool>);
 /// The era only gates the fusion passes (`run_era_token_fusions` is the one
 /// reader of `self.era`), so this stream is the same for every era and is
 /// lexed once per input, with the 1.8 baseline.
-fn prefusion(source: &str) -> Option<(Vec<Token>, Vec<bool>)> {
+pub(crate) fn prefusion(source: &str) -> Option<(Vec<Token>, Vec<bool>)> {
     let mut lexer = RubyLexer::new("1.8").ok()?;
     lexer.push(source).ok()?;
     lexer.drain_machine().ok()?;

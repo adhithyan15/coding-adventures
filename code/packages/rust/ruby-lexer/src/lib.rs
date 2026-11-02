@@ -42,6 +42,8 @@ mod oracle;
 mod reference_passes;
 #[cfg(test)]
 mod differential_tests;
+#[cfg(test)]
+mod linear_time_tests;
 
 /// LANG84 per-release token tables, generated from
 /// `code/grammars/ruby/ruby<release>.tokens` by
@@ -77,6 +79,70 @@ pub struct Diagnostic {
     pub code: String,
     pub line: usize,
     pub column: usize,
+}
+
+/// #18814 — the most source bytes one lexer accepts: 1 MiB.
+///
+/// Source text is untrusted, so every entry point ([`RubyLexer::push`],
+/// and through it [`tokenize_ruby`], [`tokenize_ruby_for_version`],
+/// [`tokenize_ruby_with_oracle`] and [`tokenize_ruby_diag`]) refuses a
+/// larger input before lexing any of it, instead of holding a caller for
+/// as long as the input takes.
+///
+/// Why 1 MiB: it is `MAX_TRUSTED_SOURCE_BYTES` in
+/// `coding-adventures-ruby-parser`, the most source the parser's release
+/// API lets even a trusted caller parse (its untrusted default is 64 KiB),
+/// so no caller that can parse the result is refused here.  Lexing is
+/// linear since #18814 — every fusion pass is one sweep — so 1 MiB lexes
+/// in a few seconds in a debug build; before #18814 the passes were
+/// quadratic and 400 KB of `a&.b` took about 150 s.
+pub const MAX_SOURCE_BYTES: usize = 1024 * 1024;
+
+/// #18814 — why lexing stopped, for the entry points that return a
+/// `Result` ([`RubyLexer::push`], [`tokenize_ruby_for_version`]).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RubyLexError {
+    /// A budget was exceeded, and nothing of the offending input was
+    /// lexed.  `which` names the budget (`"source bytes"`), `limit` is its
+    /// value, and `actual` is what the input would have brought the total
+    /// to.
+    Budget {
+        which: &'static str,
+        limit: usize,
+        actual: usize,
+    },
+    /// Every other failure: an unknown era, or a state-machine error.  The
+    /// message is the one these entry points returned as a bare `String`
+    /// before #18814.
+    Lex(String),
+}
+
+impl std::fmt::Display for RubyLexError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Budget { which, limit, actual } => write!(
+                f,
+                "ruby lexer: {which} ({actual}) exceed the limit of {limit}"
+            ),
+            Self::Lex(message) => f.write_str(message),
+        }
+    }
+}
+
+impl std::error::Error for RubyLexError {}
+
+impl From<String> for RubyLexError {
+    fn from(message: String) -> Self {
+        Self::Lex(message)
+    }
+}
+
+/// Callers that carry lexer failures as a `String` (the legacy parser API,
+/// `try_create_ruby_parser`) keep working with `?`.
+impl From<RubyLexError> for String {
+    fn from(error: RubyLexError) -> Self {
+        error.to_string()
+    }
 }
 
 /// Stateful Ruby lexer.
@@ -153,6 +219,9 @@ pub struct RubyLexer {
     /// state machine emits `/` as a plain Op token.  The compound-
     /// assign fusion pass then folds `Op(/) Equals` → `Name("/=")`.
     suppress_regex_open: bool,
+    /// #18814 — source bytes accepted by [`RubyLexer::push`] so far, held
+    /// against [`MAX_SOURCE_BYTES`] across every call.
+    bytes_pushed: usize,
 }
 
 /// Phase 3c — a heredoc opener whose body we still owe.
@@ -236,6 +305,7 @@ impl RubyLexer {
             whitespace_before_token: Vec::new(),
             whitespace_pending: false,
             suppress_regex_open: false,
+            bytes_pushed: 0,
         })
     }
 
@@ -256,7 +326,21 @@ impl RubyLexer {
     /// resume.  This is the cleanest way to implement Ruby's
     /// "line-based" heredoc semantics on top of a fundamentally
     /// character-based state machine.
-    pub fn push(&mut self, source: &str) -> Result<(), String> {
+    ///
+    /// #18814: refuses, before reading a byte, any source that would take
+    /// the total pushed into this lexer past [`MAX_SOURCE_BYTES`], with
+    /// [`RubyLexError::Budget`].  A refused call changes nothing, so the
+    /// lexer still holds exactly what earlier calls fed it.
+    pub fn push(&mut self, source: &str) -> Result<(), RubyLexError> {
+        let total = self.bytes_pushed.saturating_add(source.len());
+        if total > MAX_SOURCE_BYTES {
+            return Err(RubyLexError::Budget {
+                which: "source bytes",
+                limit: MAX_SOURCE_BYTES,
+                actual: total,
+            });
+        }
+        self.bytes_pushed = total;
         let chars: Vec<char> = source.chars().collect();
         let mut i = 0;
         while i < chars.len() {
@@ -589,6 +673,109 @@ impl RubyLexer {
         after_each("mark_statement_ends", self);
     }
 
+    /// #18814 — the one engine every token-fusion pass runs on: fold runs
+    /// of adjacent tokens in a single left-to-right sweep, in place.
+    ///
+    /// ## Why not `Vec::remove`
+    ///
+    /// The passes used to fold a pair by overwriting the left token and
+    /// calling `tokens.remove(i + 1)` (and the same on the whitespace
+    /// flags).  `Vec::remove` shifts every later token one slot left, so a
+    /// file with `k` fusions among `n` tokens paid `O(n·k)`: 400 KB of
+    /// `a&.b` — one fusion per line — took about 150 s to lex.
+    ///
+    /// ## How this sweep works
+    ///
+    /// Two cursors walk the same vector.  `r` reads the next unexamined
+    /// token; `w` counts the tokens already settled, which sit packed in
+    /// `tokens[..w]`.  The last settled token, `tokens[w - 1]`, is the
+    /// *left half* the pass tries to extend:
+    ///
+    /// ```text
+    ///   settled            gap (stale)       unread
+    ///  ┌─────────────────┬─────────────────┬──────────────────────┐
+    ///  │ … Name(a)  `&`  │ (moved / fused) │ Dot(.)  Name(b)  …   │
+    ///  └─────────────────┴─────────────────┴──────────────────────┘
+    ///               ↑ w-1                    ↑ r
+    /// ```
+    ///
+    /// - If `fuse(left, tokens[r..r + followers], their whitespace flags)`
+    ///   returns a token, it replaces the left half and the followers are
+    ///   skipped (`r += followers`): nothing moves.
+    /// - Otherwise `tokens[r]` is settled: swapped down to slot `w` (a
+    ///   no-op while nothing has fused yet), and it becomes the next left
+    ///   half.
+    ///
+    /// Every token is read once and moved at most once, so the pass is
+    /// `O(n)` whatever the number of fusions.  At the end the vector is
+    /// truncated to `w`, and the whitespace flags, compacted in step,
+    /// lose the same slots.
+    ///
+    /// ## Exactly the old stream
+    ///
+    /// `after` says what the old loop did with its index after a fusion,
+    /// and this sweep mirrors it:
+    ///
+    /// | old loop after a fusion        | `AfterFusion` | next left half       |
+    /// |--------------------------------|---------------|----------------------|
+    /// | stays on `i` (`continue`)      | `Retry`       | the fused token      |
+    /// | `i += 1`                       | `MoveOn`      | the token after it   |
+    ///
+    /// `fuse` sees the follower's whitespace flag at its own index, as the
+    /// old loop did (it kept the flags parallel by removing the same
+    /// slots).  Flags past the end of the token vector are left exactly
+    /// where they were; see `finalize_heredoc`, which removes a token
+    /// without its flag.  The differential tests in
+    /// `differential_tests.rs` hold every pass to the pre-#18814 stream,
+    /// step by step.
+    fn fuse_adjacent(
+        &mut self,
+        followers: usize,
+        after: AfterFusion,
+        fuse: impl Fn(&Token, &[Token], &[bool]) -> Option<Token>,
+    ) {
+        debug_assert!((1..=MAX_FOLLOWERS).contains(&followers));
+        let tokens = &mut self.tokens;
+        let ws = &mut self.whitespace_before_token;
+        let n = tokens.len();
+        let gap_at = |ws: &[bool], k: usize| ws.get(k).copied().unwrap_or(false);
+        let mut w = 0;
+        let mut r = 0;
+        // `MoveOn`: the token just fused may not be extended again.
+        let mut sealed = false;
+        while r < n {
+            if w > 0 && !sealed && r + followers <= n {
+                let mut gaps = [false; MAX_FOLLOWERS];
+                for (k, gap) in gaps.iter_mut().enumerate().take(followers) {
+                    *gap = gap_at(ws, r + k);
+                }
+                if let Some(fused) = fuse(&tokens[w - 1], &tokens[r..r + followers], &gaps[..followers]) {
+                    tokens[w - 1] = fused;
+                    r += followers;
+                    sealed = after == AfterFusion::MoveOn;
+                    continue;
+                }
+            }
+            if w != r {
+                tokens.swap(w, r);
+                if r < ws.len() {
+                    ws[w] = ws[r];
+                }
+            }
+            w += 1;
+            r += 1;
+            sealed = false;
+        }
+        tokens.truncate(w);
+        // Drop the flags of the folded tokens (slots `w..n`), keeping any
+        // flags beyond `n` in place.
+        if ws.len() >= n {
+            ws.drain(w..n);
+        } else {
+            ws.truncate(w);
+        }
+    }
+
     /// Phase 4l — fuse radix-prefixed integer literals emitted by the
     /// 1.8-baseline state machine into a single `Number` token.
     ///
@@ -624,42 +811,18 @@ impl RubyLexer {
     ///   the parser ends up with `Int(0)` + `Name("x9z")` which it
     ///   will reject as a syntax error.
     fn fuse_radix_integers(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_zero = a.type_ == TokenType::Number && a.value == "0";
-                let b_is_radix_body = b.type_ == TokenType::Name
-                    && is_radix_integer_body(&b.value);
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_zero && b_is_radix_body && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!(
-                    "0{}",
-                    self.tokens[i + 1].value
-                );
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        // `0` `xDEAD_BEEF` → `0xDEAD_BEEF`.  The fused token is never the
+        // left half of another radix literal, so the scan moves past it.
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let b = &f[0];
+            let fuses = a.type_ == TokenType::Number
+                && a.value == "0"
+                && b.type_ == TokenType::Name
+                && is_radix_integer_body(&b.value)
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Number, format!("0{}", b.value)))
+        });
     }
 
     /// Phase 4k — fuse float-literal token sequences emitted by the
@@ -695,170 +858,61 @@ impl RubyLexer {
     /// approach is uniform with how `..` / `...` / `->` / `&.` / `2r`
     /// / `_1` already work and avoids that complexity.
     fn fuse_float_literals(&mut self) {
-        // Step 1: `Int Dot Int` (no whitespace between any of the
-        // three) fuses to a single `Number("X.Y")` token.
-        let mut i = 0;
-        while i + 2 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let c = &self.tokens[i + 2];
-                let a_is_int = a.type_ == TokenType::Number
-                    && is_integer_lexeme(&a.value);
-                let b_is_dot = b.type_ == TokenType::Dot;
-                let c_is_int = c.type_ == TokenType::Number
-                    && is_integer_lexeme(&c.value);
-                let same_line = a.line == b.line && b.line == c.line;
-                let no_ws_b = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                let no_ws_c = !self
-                    .whitespace_before_token
-                    .get(i + 2)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_int && b_is_dot && c_is_int && same_line && no_ws_b && no_ws_c
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!(
-                    "{}.{}",
-                    self.tokens[i].value,
-                    self.tokens[i + 2].value
-                );
-                self.tokens.remove(i + 2);
-                self.whitespace_before_token.remove(i + 2);
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-                // Don't advance i — the scientific-notation suffix
-                // (if any) may follow.
-            } else {
-                i += 1;
-            }
-        }
+        // Three linear sweeps, one per shape.  Each retries the fused token
+        // as the left half of the next match, which is how `1.5e10` (step
+        // 1 makes `1.5`) and `1.5e-3` find their exponent in a later step
+        // and how a run of matches folds left to right.
+        //
+        // Step 1: `Int Dot Int` (no whitespace between any of the three)
+        // fuses to a single `Number("X.Y")` token.
+        self.fuse_adjacent(2, AfterFusion::Retry, |a, f, gap| {
+            let (b, c) = (&f[0], &f[1]);
+            let fuses = a.type_ == TokenType::Number
+                && is_integer_lexeme(&a.value)
+                && b.type_ == TokenType::Dot
+                && c.type_ == TokenType::Number
+                && is_integer_lexeme(&c.value)
+                && a.line == b.line
+                && b.line == c.line
+                && !gap[0]
+                && !gap[1];
+            fuses.then(|| fused_token(a, TokenType::Number, format!("{}.{}", a.value, c.value)))
+        });
         // Step 2: `Number Name(e<digits>)` (or `Int Name(e<digits>)`)
-        // fuses the trailing scientific notation when the name's
-        // lexeme is exactly `[eE]<digit_or_underscore>+`.  No sign
-        // case (handled in step 3).
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_num = a.type_ == TokenType::Number;
-                let b_is_unsigned_exp = b.type_ == TokenType::Name
-                    && is_unsigned_exponent_lexeme(&b.value);
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_num && b_is_unsigned_exp && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!(
-                    "{}{}",
-                    self.tokens[i].value,
-                    self.tokens[i + 1].value
-                );
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-                // Don't advance — the signed-exponent step below
-                // might still match (unlikely but harmless).
-            } else {
-                i += 1;
-            }
-        }
+        // fuses the trailing scientific notation when the name's lexeme
+        // is exactly `[eE]<digit_or_underscore>+`.  No sign case (handled
+        // in step 3).
+        self.fuse_adjacent(1, AfterFusion::Retry, |a, f, gap| {
+            let b = &f[0];
+            let fuses = a.type_ == TokenType::Number
+                && b.type_ == TokenType::Name
+                && is_unsigned_exponent_lexeme(&b.value)
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Number, format!("{}{}", a.value, b.value)))
+        });
         // Step 3: `Number Name("e"|"E") (Plus|Minus) Int` fuses the
         // trailing signed exponent.  Four tokens collapse to one.
-        let mut i = 0;
-        while i + 3 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let c = &self.tokens[i + 2];
-                let d = &self.tokens[i + 3];
-                let a_is_num = a.type_ == TokenType::Number;
-                let b_is_e = b.type_ == TokenType::Name
-                    && (b.value == "e" || b.value == "E");
-                let c_is_sign = (c.type_ == TokenType::Plus && c.value == "+")
-                    || (c.type_ == TokenType::Minus && c.value == "-");
-                let d_is_int = d.type_ == TokenType::Number
-                    && is_integer_lexeme(&d.value);
-                let same_line =
-                    a.line == b.line && b.line == c.line && c.line == d.line;
-                let no_ws_b = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                let no_ws_c = !self
-                    .whitespace_before_token
-                    .get(i + 2)
-                    .copied()
-                    .unwrap_or(false);
-                let no_ws_d = !self
-                    .whitespace_before_token
-                    .get(i + 3)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_num
-                    && b_is_e
-                    && c_is_sign
-                    && d_is_int
-                    && same_line
-                    && no_ws_b
-                    && no_ws_c
-                    && no_ws_d
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!(
-                    "{}{}{}{}",
-                    self.tokens[i].value,
-                    self.tokens[i + 1].value,
-                    self.tokens[i + 2].value,
-                    self.tokens[i + 3].value
-                );
-                for _ in 0..3 {
-                    self.tokens.remove(i + 1);
-                    self.whitespace_before_token.remove(i + 1);
-                }
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            } else {
-                i += 1;
-            }
-        }
+        self.fuse_adjacent(3, AfterFusion::Retry, |a, f, gap| {
+            let (b, c, d) = (&f[0], &f[1], &f[2]);
+            let fuses = a.type_ == TokenType::Number
+                && b.type_ == TokenType::Name
+                && (b.value == "e" || b.value == "E")
+                && ((c.type_ == TokenType::Plus && c.value == "+")
+                    || (c.type_ == TokenType::Minus && c.value == "-"))
+                && d.type_ == TokenType::Number
+                && is_integer_lexeme(&d.value)
+                && a.line == b.line
+                && b.line == c.line
+                && c.line == d.line
+                && !gap[0]
+                && !gap[1]
+                && !gap[2];
+            fuses.then(|| {
+                let value = format!("{}{}{}{}", a.value, b.value, c.value, d.value);
+                fused_token(a, TokenType::Number, value)
+            })
+        });
     }
 
     /// Phase 8a-2 (FC) companion — fold `>>` and `>>=`.
@@ -892,61 +946,21 @@ impl RubyLexer {
     /// Era: pre-1.0 Ruby — every era ≥ 1.8 emits the same problematic
     /// pre-fusion shape, so no gating.
     fn fuse_right_shifts(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            // Left token must be `Name(">")`.
-            let is_gt = {
-                let a = &self.tokens[i];
-                a.type_ == TokenType::Name && a.value == ">"
-            };
-            if !is_gt {
-                i += 1;
-                continue;
+        // Retry the fused token: three-`>` sequences (e.g. `a>>>b`, which
+        // is illegal in Ruby anyway) get partial-folded the same way the
+        // old one-`Vec::remove`-per-fusion loop folded them.
+        self.fuse_adjacent(1, AfterFusion::Retry, |a, f, gap| {
+            let b = &f[0];
+            if !(a.type_ == TokenType::Name && a.value == ">") {
+                return None;
             }
-            // Right token must be `Name(">")` or `Name(">=")`, on the
-            // same line, with no whitespace gap.
-            let (new_value_opt, same_line, no_ws) = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                let nv: Option<&'static str> = if b.type_ == TokenType::Name {
-                    match b.value.as_str() {
-                        ">" => Some(">>"),
-                        ">=" => Some(">>="),
-                        _ => None,
-                    }
-                } else {
-                    None
-                };
-                (nv, same_line, no_ws)
+            let value = match (b.type_, b.value.as_str()) {
+                (TokenType::Name, ">") => ">>",
+                (TokenType::Name, ">=") => ">>=",
+                _ => return None,
             };
-            if let Some(nv) = new_value_opt {
-                if same_line && no_ws {
-                    let span_line = self.tokens[i].line;
-                    let span_col = self.tokens[i].column;
-                    self.tokens.remove(i + 1);
-                    self.whitespace_before_token.remove(i + 1);
-                    self.tokens[i] = Token {
-                        type_: TokenType::Name,
-                        value: nv.to_string(),
-                        line: span_line,
-                        column: span_col,
-                        type_name: None,
-                        flags: None, cv: None,
-                    };
-                    // Don't advance — three-`>` sequences (e.g. `a>>>b`,
-                    // which is illegal in Ruby anyway) get correctly
-                    // partial-folded on the next iteration.
-                    continue;
-                }
-            }
-            i += 1;
-        }
+            (a.line == b.line && !gap[0]).then(|| fused_token(a, TokenType::Name, value.to_string()))
+        });
     }
 
     /// Phase 6p companion — fuse compound-assignment operators
@@ -982,79 +996,34 @@ impl RubyLexer {
     /// Era: pre-1.0 Ruby — every era ≥ 1.8 emits the same fused
     /// shape, so no gating.
     fn fuse_compound_assigns(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let (left_lexeme, is_arith): (&str, bool) = {
-                let a = &self.tokens[i];
-                match a.type_ {
-                    TokenType::Plus => ("+", true),
-                    TokenType::Minus => ("-", true),
-                    TokenType::Star => ("*", true),
-                    TokenType::Slash => ("/", true),
-                    // `||`, `&&`, `%`, `**`, `<<`, `&`, `|`, `^`
-                    // all come through as Name (catch-all in
-                    // classify_op_token).  Filter by value so we
-                    // don't accidentally fuse `foo =` into something.
-                    TokenType::Name
-                        if matches!(
-                            a.value.as_str(),
-                            "||" | "&&" | "%" | "**" | "<<" | "&" | "|" | "^"
-                        ) =>
-                    {
-                        let lex: &'static str = match a.value.as_str() {
-                            "||" => "||",
-                            "&&" => "&&",
-                            "%" => "%",
-                            "**" => "**",
-                            "<<" => "<<",
-                            "&" => "&",
-                            "|" => "|",
-                            "^" => "^",
-                            _ => unreachable!(),
-                        };
-                        (lex, false)
-                    }
-                    _ => {
-                        i += 1;
-                        continue;
-                    }
+        // Retry the fused token (chained compounds are illegal, and a fused
+        // `+=` never matches a left half, so this only matters for being
+        // exactly the stream the old loop produced).
+        self.fuse_adjacent(1, AfterFusion::Retry, |a, f, gap| {
+            let left_lexeme = match a.type_ {
+                TokenType::Plus => "+",
+                TokenType::Minus => "-",
+                TokenType::Star => "*",
+                TokenType::Slash => "/",
+                // `||`, `&&`, `%`, `**`, `<<`, `&`, `|`, `^` all come
+                // through as Name (catch-all in classify_op_token).
+                // Filter by value so we don't accidentally fuse `foo =`
+                // into something.
+                TokenType::Name
+                    if matches!(
+                        a.value.as_str(),
+                        "||" | "&&" | "%" | "**" | "<<" | "&" | "|" | "^"
+                    ) =>
+                {
+                    a.value.as_str()
                 }
+                _ => return None,
             };
-            let merge = {
-                let b = &self.tokens[i + 1];
-                let b_is_eq = b.type_ == TokenType::Equals;
-                let same_line = self.tokens[i].line == b.line;
-                // No whitespace gap between op and `=`.
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                b_is_eq && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!("{left_lexeme}=");
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-                // Don't advance — chained compounds are illegal but
-                // the next iteration's guard will handle it cleanly.
-            } else {
-                // Reference `is_arith` once so the compiler doesn't
-                // warn — the variable is documentary for now.
-                let _ = is_arith;
-                i += 1;
-            }
-        }
+            let b = &f[0];
+            // No whitespace gap between op and `=`.
+            let fuses = b.type_ == TokenType::Equals && a.line == b.line && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Name, format!("{left_lexeme}=")))
+        });
     }
 
     /// Phase 6q companion — re-tag trailing-modifier keywords.
@@ -1608,40 +1577,17 @@ impl RubyLexer {
     /// tokens (a number plus a stray identifier).  The era gate
     /// keeps that behaviour faithful for older programs.
     fn fuse_numeric_suffixes(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_num = a.type_ == TokenType::Number;
-                let b_is_suffix = b.type_ == TokenType::Name
-                    && (b.value == "r" || b.value == "i");
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_num && b_is_suffix && same_line && no_ws
-            };
-            if merge {
-                let suffix = self.tokens[i + 1].value.clone();
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!("{}{}", self.tokens[i].value, suffix);
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        // `2` `r` → `2r`.  Moves past the fused token, so `2ri` stays
+        // `2r` `i`, as before.
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let b = &f[0];
+            let fuses = a.type_ == TokenType::Number
+                && b.type_ == TokenType::Name
+                && (b.value == "r" || b.value == "i")
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Number, format!("{}{}", a.value, b.value)))
+        });
     }
 
     /// Unconditional: fold adjacent `Dot` tokens into a single
@@ -1651,71 +1597,21 @@ impl RubyLexer {
     /// leaves the multi-dot composition to this post-pass — same
     /// pattern Phase 4b/4c used for `->` and `&.`.
     fn fuse_range_ops(&mut self) {
-        // First pass: combine pairs of adjacent Dots into `..`.
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let both_dots =
-                    a.type_ == TokenType::Dot && b.type_ == TokenType::Dot;
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                both_dots && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: "..".to_string(),
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
-        // Second pass: `..` (now a Name token from the first pass)
-        // followed by a Dot fuses into `...`.
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_dotdot = a.type_ == TokenType::Name && a.value == "..";
-                let b_is_dot = b.type_ == TokenType::Dot;
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_dotdot && b_is_dot && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: "...".to_string(),
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        let adjacent = |a: &Token, b: &Token, gap: bool| a.line == b.line && !gap;
+        // First sweep: combine pairs of adjacent Dots into `..`.  It moves
+        // past each `..`, so `...` becomes `..` `.` here …
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let both_dots = a.type_ == TokenType::Dot && f[0].type_ == TokenType::Dot;
+            (both_dots && adjacent(a, &f[0], gap[0]))
+                .then(|| fused_token(a, TokenType::Name, "..".to_string()))
+        });
+        // … and the second sweep folds `..` (now a Name token) followed by
+        // a Dot into `...`.
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let dotdot_dot = a.type_ == TokenType::Name && a.value == ".." && f[0].type_ == TokenType::Dot;
+            (dotdot_dot && adjacent(a, &f[0], gap[0]))
+                .then(|| fused_token(a, TokenType::Name, "...".to_string()))
+        });
     }
 
     /// 2.6: tag `..` / `...` range tokens followed by a *closer*
@@ -1780,37 +1676,16 @@ impl RubyLexer {
     /// token's recorded column can be up to 2 ahead of the source
     /// position.
     fn fuse_safe_nav(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_amp = a.value == "&" && matches!(a.type_, TokenType::Name);
-                let b_is_dot = b.type_ == TokenType::Dot && b.value == ".";
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_amp && b_is_dot && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: "&.".to_string(),
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let b = &f[0];
+            let fuses = a.value == "&"
+                && a.type_ == TokenType::Name
+                && b.type_ == TokenType::Dot
+                && b.value == "."
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Name, "&.".to_string()))
+        });
     }
 
     /// 1.9.1: fold adjacent `Op("-")` + `Op(">")` tokens into a
@@ -1830,43 +1705,19 @@ impl RubyLexer {
     /// strictly ≥ 3 — `-` at col N, space at N+1, `>` token emitted
     /// from col N+3).
     fn fuse_lambda_arrow(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_minus =
-                    a.type_ == TokenType::Minus && a.value == "-";
-                let b_is_gt = b.value == ">"
-                    && matches!(b.type_, TokenType::Name);
-                let same_line = a.line == b.line;
-                // Phase 4c: require that no whitespace was consumed
-                // between the two tokens — the parallel array tracks
-                // this explicitly so we don't have to interpret
-                // peek-state column quirks.
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_minus && b_is_gt && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: "->".to_string(),
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let b = &f[0];
+            // Phase 4c: require that no whitespace was consumed between
+            // the two tokens — the parallel array tracks this explicitly
+            // so we don't have to interpret peek-state column quirks.
+            let fuses = a.type_ == TokenType::Minus
+                && a.value == "-"
+                && b.value == ">"
+                && b.type_ == TokenType::Name
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Name, "->".to_string()))
+        });
     }
 
     /// Take ownership of all tokens emitted so far.
@@ -2412,6 +2263,38 @@ pub const NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 0;
 /// parser can reject them.
 pub const ENDLESS_RANGE_FLAG: u32 = 1 << 1;
 
+/// #18814 — what a fusion pass does after folding tokens into the one
+/// before them; see [`RubyLexer::fuse_adjacent`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AfterFusion {
+    /// The fused token is tried again as the left half of the next match
+    /// (`1.5` then `e10`; `>` `>` `>`).
+    Retry,
+    /// The scan moves past the fused token: the next left half is the
+    /// token after it (`..` then `.` stays two tokens in the first range
+    /// sweep).
+    MoveOn,
+}
+
+/// #18814 — the most tokens a fusion pass folds into the one before them
+/// (the signed exponent: `e` `+` `3` after the mantissa).
+const MAX_FOLLOWERS: usize = 3;
+
+/// #18814 — the token a fusion pass leaves in place of the tokens it
+/// folded: the left token's position, a new type and value, and no type
+/// name, flags or code value (as every pass built it before #18814).
+fn fused_token(left: &Token, type_: TokenType, value: String) -> Token {
+    Token {
+        type_,
+        value,
+        line: left.line,
+        column: left.column,
+        type_name: None,
+        flags: None,
+        cv: None,
+    }
+}
+
 /// Phase 4k helper — true iff `s` is a pure integer-shaped lexeme
 /// (digits and underscore separators only, no dot or exponent).
 /// Used to discriminate already-fused float Numbers from the
@@ -2719,6 +2602,11 @@ fn is_identifier_like(value: &str) -> bool {
 /// Tokenize Ruby source (Phase-1 = Ruby 1.8 lexer).  Returns the
 /// EOF-terminated token list.  Diagnostics are dropped silently;
 /// call [`tokenize_ruby_diag`] to inspect them.
+///
+/// #18814: a source longer than [`MAX_SOURCE_BYTES`] is not lexed and
+/// yields no tokens at all (not even `Eof`); [`tokenize_ruby_diag`] says
+/// why, and [`tokenize_ruby_for_version`] returns the typed
+/// [`RubyLexError::Budget`].
 pub fn tokenize_ruby(source: &str) -> Vec<Token> {
     tokenize_ruby_diag(source).0
 }
@@ -2734,7 +2622,17 @@ pub fn tokenize_ruby(source: &str) -> Vec<Token> {
 /// deltas (e.g. lambda `->` in 1.9.1, safe-nav `&.` in 2.3) arrive
 /// in subsequent phases.  Callers that need version gating today
 /// can already plumb the era string through to downstream tooling.
-pub fn tokenize_ruby_for_version(source: &str, version: &str) -> Result<Vec<Token>, String> {
+///
+/// #18814: a source longer than [`MAX_SOURCE_BYTES`] is refused with
+/// [`RubyLexError::Budget`] before anything is built or lexed.
+pub fn tokenize_ruby_for_version(source: &str, version: &str) -> Result<Vec<Token>, RubyLexError> {
+    if source.len() > MAX_SOURCE_BYTES {
+        return Err(RubyLexError::Budget {
+            which: "source bytes",
+            limit: MAX_SOURCE_BYTES,
+            actual: source.len(),
+        });
+    }
     let mut lexer = RubyLexer::new(version)?;
     lexer.push(source)?;
     lexer.finish()?;
@@ -2745,6 +2643,9 @@ pub fn tokenize_ruby_for_version(source: &str, version: &str) -> Result<Vec<Toke
 /// caller already has a local-variable scope to consult — most
 /// notably the parser, which collects locals as it walks the
 /// source.
+///
+/// #18814: like [`tokenize_ruby`], a source longer than
+/// [`MAX_SOURCE_BYTES`] yields no tokens.
 pub fn tokenize_ruby_with_oracle(
     source: &str,
     oracle: Box<dyn ParserOracle>,
@@ -2760,6 +2661,10 @@ pub fn tokenize_ruby_with_oracle(
 }
 
 /// Same as [`tokenize_ruby`] but also returns recorded diagnostics.
+///
+/// #18814: a source longer than [`MAX_SOURCE_BYTES`] yields no tokens and
+/// one diagnostic, `lex-error:` followed by the [`RubyLexError::Budget`]
+/// message, at line 1, column 1.
 pub fn tokenize_ruby_diag(source: &str) -> (Vec<Token>, Vec<Diagnostic>) {
     let mut lexer = RubyLexer::new("1.8").expect("ruby 1.8 lexer definition");
     if let Err(e) = lexer.push(source) {
@@ -3652,7 +3557,8 @@ mod tests {
     #[test]
     fn tokenize_ruby_for_version_rejects_unknown() {
         let err = tokenize_ruby_for_version("x\n", "5.0").unwrap_err();
-        assert!(err.contains("not a recognized Ruby era"));
+        assert!(matches!(err, RubyLexError::Lex(_)), "{err:?}");
+        assert!(err.to_string().contains("not a recognized Ruby era"));
     }
 
     // -----------------------------------------------------------------
