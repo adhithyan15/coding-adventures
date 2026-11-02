@@ -81,6 +81,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         fresh_counter: 0,
         used_names: HashSet::new(),
         statement_puts: HashSet::new(),
+        hoisted_kinds: std::collections::HashMap::new(),
     };
     // #18798 — the bare `puts` names that are whole statements; only those
     // print a newline (see `Lowerer::bare_puts_call`).
@@ -144,6 +145,30 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
                 bound: &bound,
             };
             Lowerer::normalize_block_call_args(&mut f.body, &ctx);
+        }
+    }
+
+    // #18798 (items 14 and 19) — lower every early `return`, `break` and
+    // `next` to stores into a flag and guards on it (see `crate::jumps`).
+    // It runs last, on finished function bodies, so it sees each jump in
+    // the place it ended up; a body with no jump is left untouched.
+    for f in &mut functions {
+        let kind = match lw.hoisted_kinds.get(&f.name) {
+            Some(kind) => *kind,
+            None if f.name == "main" => crate::jumps::Body::Script,
+            None => crate::jumps::Body::Method,
+        };
+        let changed = crate::jumps::lower_jumps(&mut f.body, kind, &mut |prefix| {
+            lw.fresh_name(prefix)
+        })
+        .map_err(|e| RubyLowerError {
+            message: e.message,
+            line: e.span.start_line,
+            column: e.span.start_col,
+        })?;
+        if changed {
+            lw.features_used.insert(Feature::MutableBindings);
+            lw.features_used.insert(Feature::DynamicTyping);
         }
     }
 
@@ -224,7 +249,12 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         }],
         functions,
         globals: Vec::new(),
-        metadata: Metadata::new(),
+        // #18798 (item 11) — say the module came from Ruby.  Every backend
+        // reads `source_language` to pick its display convention (see
+        // `code/specs/sir-display-convention.md`): with it, `puts true`
+        // prints `true` and `puts nil` an empty line; without it the
+        // backends fell back to the Twig/Lisp form, `#t` and `nil`.
+        metadata: Metadata::new().with_source_language("ruby"),
         span: lw.span_of(program),
     })
 }
@@ -329,6 +359,22 @@ fn is_conditional_modifier(node: &GrammarASTNode) -> bool {
 /// value moves back into the statements as an `ExprStmt`, and the block's
 /// value becomes `nil`.
 fn loop_body(mut body: Block) -> Block {
+    // A value with no effect to keep (#18798: a body ending in
+    // `begin … rescue … end` has the `VarRef` of its result local here) is
+    // dropped rather than made a statement of its own.
+    if matches!(
+        body.value,
+        Expr::VarRef { .. }
+            | Expr::IntLit { .. }
+            | Expr::FloatLit { .. }
+            | Expr::StrLit { .. }
+            | Expr::SymLit { .. }
+            | Expr::BoolLit { .. }
+    ) {
+        body.value = Expr::NilLit {
+            span: body.span.clone(),
+        };
+    }
     if !matches!(body.value, Expr::NilLit { .. }) {
         let span = body.span.clone();
         let value = std::mem::replace(&mut body.value, Expr::NilLit { span: span.clone() });
@@ -1122,6 +1168,11 @@ struct Lowerer {
     /// statement on its own (an `expression_stmt` whose expression is just
     /// that name).  See [`Lowerer::bare_puts_call`].
     statement_puts: HashSet<(usize, usize)>,
+    /// #18798 (item 14) — the hoisted functions whose body is a block or a
+    /// lambda, by name.  A `return`, `break` or `next` means something
+    /// different in each (see [`crate::jumps::Body`]); every other function
+    /// is a method, except `main`, the script's top level.
+    hoisted_kinds: std::collections::HashMap<String, crate::jumps::Body>,
 }
 
 /// #18798 — record where a bare `puts` is a whole statement: an
@@ -1948,7 +1999,8 @@ impl Lowerer {
             // [`Self::lower_tail_value`] for the promotion table (which now
             // includes a trailing `if`/`unless`).
             if is_tail {
-                if let Some(v) = self.lower_tail_value(inner)? {
+                if let Some((prefix, v)) = self.lower_tail(inner)? {
+                    stmts_out.extend(prefix);
                     value = Some(v);
                     continue;
                 }
@@ -2009,6 +2061,38 @@ impl Lowerer {
     /// implicit return is observable.  A *script's* top-level value is not
     /// language-visible, so [`Self::lower_program`] keeps a bare trailing
     /// `if` as a `Stmt` (see its own promotion list).
+    /// #18798 (item 15) — [`Self::lower_tail_value`], for a tail that needs
+    /// statements before its value: `(statements, value)`.
+    ///
+    /// A `begin … rescue … end` has a value in Ruby — the body's last value,
+    /// or the catching clause's — but a SIR `TryCatch` is a statement, so
+    /// [`Self::lower_tail_value`] cannot produce it as one expression, and
+    /// a method (or an `if` branch) ending in one returned `nil`:
+    ///
+    /// ```ruby
+    /// def f
+    ///   begin
+    ///     raise "x"
+    ///   rescue
+    ///     5            # Ruby: f returns 5; it returned nil
+    ///   end
+    /// end
+    /// ```
+    ///
+    /// It takes the same shape as a method-level `rescue`
+    /// ([`Self::lower_rescued_method_body`]): a fresh local that the body's
+    /// and each clause's last statement store into, read as the value.
+    /// Every other tail is [`Self::lower_tail_value`]'s, with no statements.
+    fn lower_tail(
+        &mut self,
+        inner: &GrammarASTNode,
+    ) -> Result<Option<(Vec<Stmt>, Expr)>, RubyLowerError> {
+        if inner.rule_name == "begin_statement" {
+            return self.lower_rescued_method_body(inner).map(Some);
+        }
+        Ok(self.lower_tail_value(inner)?.map(|v| (Vec::new(), v)))
+    }
+
     fn lower_tail_value(&mut self, inner: &GrammarASTNode) -> Result<Option<Expr>, RubyLowerError> {
         let value = match inner.rule_name.as_str() {
             "expression_stmt" => {
@@ -6490,7 +6574,8 @@ impl Lowerer {
                     // method whose body ends in a conditional returns the
                     // branch value instead of `nil`.
                     if is_tail {
-                        if let Some(v) = self.lower_tail_value(inner)? {
+                        if let Some((prefix, v)) = self.lower_tail(inner)? {
+                            stmts_out.extend(prefix);
                             value = Some(v);
                             continue;
                         }
@@ -7690,7 +7775,8 @@ impl Lowerer {
                 continue;
             };
             if i + 1 == statements.len() {
-                if let Some(value) = self.lower_tail_value(inner)? {
+                if let Some((prefix, value)) = self.lower_tail(inner)? {
+                    body.extend(prefix);
                     body.push(Stmt::Assign {
                         name: result.to_string(),
                         scope: Scope::Local,
@@ -8523,6 +8609,8 @@ impl Lowerer {
         let n = self.block_counter;
         self.block_counter += 1;
         let fn_name = format!("__block_{n}");
+        self.hoisted_kinds
+            .insert(fn_name.clone(), crate::jumps::Body::Block);
 
         self.user_functions.push(Function {
             name: fn_name.clone(),
@@ -8710,6 +8798,8 @@ impl Lowerer {
         let n = self.block_counter;
         self.block_counter += 1;
         let fn_name = format!("__block_{n}");
+        self.hoisted_kinds
+            .insert(fn_name.clone(), crate::jumps::Body::Lambda);
 
         self.user_functions.push(Function {
             name: fn_name.clone(),
@@ -10242,6 +10332,34 @@ impl Lowerer {
             _ => false,
         };
         if is_bare_name {
+            // #18798 (item 12) — a keyword literal is a value, not a name:
+            // `"#{true}"` used to become a read of a local named `true`,
+            // which the validator refused ("references unknown name").  The
+            // keywords lower exactly as they do anywhere else in an
+            // expression (`lower_factor_atom`).  `self` and the other
+            // keywords are not bare names either, so they take the full
+            // parse below.
+            match trimmed {
+                "true" => return Expr::BoolLit { value: true, span },
+                "false" => return Expr::BoolLit { value: false, span },
+                "nil" => return Expr::NilLit { span },
+                // Keywords that are not literals (`self`, `yield`, …) parse
+                // like any other expression, so `"#{self}"` and `"#{yield}"`
+                // mean what they mean outside a string.
+                "self" | "super" | "yield" | "__method__" | "__FILE__" | "__LINE__"
+                | "__ENCODING__" => {
+                    if let Some(expr) = self.try_lower_interp_body(trimmed) {
+                        return expr;
+                    }
+                }
+                _ => {}
+            }
+            // #18798 — and a bare method name is a call, the same parse-order
+            // rule as anywhere else (`bare_name_call`): `"#{g}"` calls `g`
+            // until a local `g` is assigned.
+            if let Some(call) = self.bare_name_call(trimmed, &span) {
+                return call;
+            }
             let scope = if self.current_params.contains(trimmed) {
                 Scope::Param
             } else {

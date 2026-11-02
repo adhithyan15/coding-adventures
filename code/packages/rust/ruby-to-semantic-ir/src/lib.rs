@@ -39,6 +39,7 @@
 
 use coding_adventures_ruby_parser::try_create_ruby_parser;
 
+mod jumps;
 mod lower;
 
 pub use lower::{compile, RubyLowerError};
@@ -2577,47 +2578,128 @@ mod tests {
     // Phase 6j — control-flow keywords: `return`, `break`, `next`.
     // -----------------------------------------------------------------
 
+    /// #18798 (item 11) — the module says it came from Ruby, which is what
+    /// makes every backend print `true`/`false` and an empty line for `nil`
+    /// (`code/specs/sir-display-convention.md`); without it they used the
+    /// Twig form, `#t` and `nil`.
     #[test]
-    fn return_with_value_lowers_to_divergent_builtin_call() {
+    fn a_ruby_module_says_it_came_from_ruby() {
+        let m = lower("puts true\n");
+        assert_eq!(m.metadata.source_language.as_deref(), Some("ruby"));
+    }
+
+    /// #18798 (item 12) — `true`, `false` and `nil` inside `#{}` are
+    /// literals.  They were reads of locals named `true`, `false` and
+    /// `nil`, which the validator refused.
+    #[test]
+    fn interpolated_keyword_literals_are_values() {
+        let m = lower("x = \"a#{true}b#{nil}c#{false}\"\nputs x\n");
+        assert_valid(&m);
+        let b = main_body(&m);
+        let Stmt::LetBinding { value: Expr::StrConcat { parts, .. }, .. } = &b.stmts[0] else {
+            panic!("expected a concatenation: {b:?}");
+        };
+        assert!(matches!(parts[1], Expr::BoolLit { value: true, .. }), "{parts:?}");
+        assert!(matches!(parts[3], Expr::NilLit { .. }), "{parts:?}");
+        assert!(matches!(parts[5], Expr::BoolLit { value: false, .. }), "{parts:?}");
+        // A bare method name inside `#{}` is a call, like anywhere else.
+        let m = lower("def g\n  1\nend\nputs \"#{g}!\"\n");
+        assert_valid(&m);
+        assert!(format!("{m:?}").contains("fn_name: \"g\""), "{m:?}");
+    }
+
+    /// #18798 (item 15) — a `begin … rescue … end` that ends a method is the
+    /// method's value: the body's and each clause's last value are stored
+    /// into one local, and the method returns it.  It returned `nil`.
+    #[test]
+    fn a_begin_rescue_ending_a_method_is_its_value() {
+        let m = lower("def f\n  begin\n    raise \"x\"\n  rescue\n    5\n  end\nend\nputs f\n");
+        assert_valid(&m);
+        let f = func(&m, "f");
+        let Expr::VarRef { name: result, .. } = &f.body.value else {
+            panic!("the method's value is the result local: {:?}", f.body);
+        };
+        let Some(Stmt::TryCatch { rescues, .. }) = f.body.stmts.last() else {
+            panic!("expected the TryCatch last: {:?}", f.body);
+        };
+        assert!(
+            matches!(rescues[0].body.last(), Some(Stmt::Assign { name, value: Expr::IntLit { value: 5, .. }, .. }) if name == result),
+            "{rescues:?}"
+        );
+        // In an `if` branch too.
+        let m = lower("def g(c)\n  if c\n    begin\n      1\n    rescue\n      2\n    end\n  else\n    3\n  end\nend\nputs g(true)\n");
+        assert_valid(&m);
+        let g = func(&m, "g");
+        let Expr::If { then_branch, .. } = &g.body.value else {
+            panic!("{:?}", g.body);
+        };
+        assert!(matches!(&then_branch.value, Expr::VarRef { name, .. } if name.starts_with("__rescue_value_")));
+    }
+
+    /// #18798 (item 14) — the values stored, by the statements directly in
+    /// `stmts`, into the local the jump lowering invented with `prefix`
+    /// (`__ret_` or `__jump_`; see `crate::jumps`).
+    fn stores<'a>(stmts: &'a [Stmt], prefix: &str) -> Vec<&'a Expr> {
+        stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::Assign { name, value, .. } if name.starts_with(prefix) => Some(value),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// #18798 — no `return`/`break`/`next` marker survives lowering: each
+    /// became stores into the jump lowering's locals.
+    fn assert_no_jump_marker(m: &semantic_ir::Module) {
+        let dbg = format!("{m:?}");
+        for kw in ["return", "break", "next"] {
+            assert!(!dbg.contains(&format!("name: \"{kw}\"")), "a `{kw}` marker survived: {dbg}");
+        }
+    }
+
+    #[test]
+    fn return_with_value_stores_the_value_and_the_returning_flag() {
+        // #18798 — `return 42` at the top level: `__ret = 42`, then
+        // `__jump = 1` (returning), after the two locals' `let`s.
         let m = lower("return 42");
         let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
-                assert_eq!(name, "return");
-                assert!(matches!(args[0], Expr::IntLit { value: 42, .. }));
-                assert!(effects.contains(Effect::Divergent));
-            }
-            other => panic!("expected ExprStmt(BuiltinCall(return)), got {:?}", other),
-        }
+        assert!(matches!(stores(&b.stmts, "__ret_")[..], [Expr::IntLit { value: 42, .. }]), "{b:?}");
+        assert!(matches!(stores(&b.stmts, "__jump_")[..], [Expr::IntLit { value: 1, .. }]), "{b:?}");
+        assert!(matches!(&b.value, Expr::VarRef { name, .. } if name.starts_with("__ret_")));
+        assert_no_jump_marker(&m);
+        assert_valid(&m);
     }
 
     #[test]
-    fn bare_return_lowers_with_nil_arg() {
+    fn bare_return_stores_nil() {
         let m = lower("return");
         let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
-                assert_eq!(name, "return");
-                assert!(matches!(args[0], Expr::NilLit { .. }));
-            }
-            other => panic!("expected ExprStmt(BuiltinCall(return, [nil])), got {:?}", other),
-        }
+        assert!(matches!(stores(&b.stmts, "__ret_")[..], [Expr::NilLit { .. }]), "{b:?}");
+        assert_no_jump_marker(&m);
     }
 
     #[test]
-    fn break_and_next_lower_to_their_respective_builtins() {
-        for kw in &["break", "next"] {
-            let src = format!("{kw} 1");
-            let m = lower(&src);
+    fn break_and_next_in_a_loop_set_their_own_flag() {
+        // `break` is flag 2, `next` flag 3; the value of an unused `while`
+        // (`1`) has no effect, so only the flag is stored.
+        for (kw, flag) in [("break", 2), ("next", 3)] {
+            let m = lower(&format!("while true\n  {kw} 1\nend\n"));
             let b = main_body(&m);
-            match &b.stmts[0] {
-                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
-                    assert_eq!(name, kw);
-                    assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
-                    assert!(effects.contains(Effect::Divergent));
-                }
-                other => panic!("expected BuiltinCall({kw}), got {:?}", other),
-            }
+            let body = b
+                .stmts
+                .iter()
+                .find_map(|s| match s {
+                    Stmt::While { body, .. } => Some(body),
+                    _ => None,
+                })
+                .expect("the loop");
+            assert!(
+                matches!(stores(&body.stmts, "__jump_")[..], [Expr::IntLit { value, .. }] if *value == flag),
+                "{kw}: {body:?}"
+            );
+            assert_no_jump_marker(&m);
+            assert_valid(&m);
         }
     }
 
@@ -2625,11 +2707,12 @@ mod tests {
     fn return_inside_def_body() {
         let m = lower("def f(x)\n  return x + 1\nend\n");
         let f = m.functions.iter().find(|f| f.name == "f").expect("expected fn f");
-        let has_return = f.body.stmts.iter().any(|s| matches!(
-            s,
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "return"
-        ));
-        assert!(has_return);
+        assert!(
+            matches!(stores(&f.body.stmts, "__ret_")[..], [Expr::BuiltinCall { name, .. }] if name == "+"),
+            "{:?}",
+            f.body
+        );
+        assert_no_jump_marker(&m);
     }
 
     #[test]
@@ -2651,43 +2734,62 @@ mod tests {
     // -----------------------------------------------------------------
 
     #[test]
-    fn break_with_value_lowers_to_int_arg() {
-        let m = lower("break 5");
+    fn break_with_a_value_keeps_its_effect() {
+        // Ruby evaluates `break`'s value; one with an effect stays a
+        // statement, ahead of the flag.
+        let m = lower("def v\n  puts 1\nend\nwhile true\n  break v\nend\n");
         let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
-                assert_eq!(name, "break");
-                assert!(matches!(args[0], Expr::IntLit { value: 5, .. }));
-                assert!(effects.contains(Effect::Divergent));
-            }
-            other => panic!("expected ExprStmt(BuiltinCall(break, [5])), got {:?}", other),
-        }
+        let body = b
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::While { body, .. } => Some(body),
+                _ => None,
+            })
+            .expect("the loop");
+        assert!(
+            matches!(&body.stmts[0], Stmt::ExprStmt { expr: Expr::DirectCall { fn_name, .. }, .. } if fn_name == "v"),
+            "{body:?}"
+        );
+        assert_no_jump_marker(&m);
+        assert_valid(&m);
     }
 
     #[test]
-    fn next_with_value_lowers_to_int_arg() {
-        let m = lower("next 7");
-        let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
-                assert_eq!(name, "next");
-                assert!(matches!(args[0], Expr::IntLit { value: 7, .. }));
-                assert!(effects.contains(Effect::Divergent));
-            }
-            other => panic!("expected ExprStmt(BuiltinCall(next, [7])), got {:?}", other),
-        }
+    fn next_in_a_block_returns_its_value_from_the_block() {
+        // Outside a loop, `next 7` ends the block's call with 7: a store
+        // into the block function's `__ret`.
+        let m = lower("[1].each do |x|\n  next 7\nend\n");
+        let block = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block_"))
+            .expect("the block");
+        assert!(
+            matches!(stores(&block.body.stmts, "__ret_")[..], [Expr::IntLit { value: 7, .. }]),
+            "{:?}",
+            block.body
+        );
+        assert_no_jump_marker(&m);
+        assert_valid(&m);
     }
 
     #[test]
-    fn bare_break_lowers_with_nil_arg() {
-        let m = lower("break");
-        let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
-                assert_eq!(name, "break");
-                assert!(matches!(args[0], Expr::NilLit { .. }));
-            }
-            other => panic!("expected ExprStmt(BuiltinCall(break, [nil])), got {:?}", other),
+    fn a_jump_with_no_place_to_go_is_refused_by_name() {
+        // Ruby itself refuses `break`/`next` outside a loop; a `return` or
+        // `break` inside a block would leave the method around the block,
+        // which is not lowered.  (A jump inside an expression has no
+        // statement to become either; the grammar parses none today, so
+        // `jumps.rs` builds that one by hand.)
+        for (src, needle) in [
+            ("break\n", "`break` outside a loop"),
+            ("next 7\n", "`next` outside a loop or a block"),
+            ("def f\n  [1].each do |x|\n    return x\n  end\nend\n", "`return` inside a block"),
+            ("[1].each do |x|\n  break\nend\n", "`break` inside a block"),
+        ] {
+            let err = compile_source(src, "test").expect_err(src);
+            assert!(err.message.contains(needle), "{src:?}: {}", err.message);
+            assert!(err.line > 0, "{src:?}: the error has a position");
         }
     }
 
@@ -2695,7 +2797,7 @@ mod tests {
     fn break_with_local_var_value_passes_sir_validator() {
         // Assign `x` first so the VarRef payload resolves, then break
         // with it; the lowered module must satisfy the SIR validator.
-        let m = lower("x = 1\nbreak x\n");
+        let m = lower("x = 1\nwhile true\n  break x\nend\n");
         let result = semantic_ir::validate(&m);
         assert!(result.is_ok(), "validator rejected our output: {:?}", result);
     }
@@ -2808,31 +2910,17 @@ mod tests {
     // -----------------------------------------------------------------
 
     #[test]
-    fn return_with_array_value_lowers_to_seqlit_arg() {
+    fn return_with_array_value_stores_the_array() {
         let m = lower("return [1, 2]");
         let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
-                assert_eq!(name, "return");
-                assert!(matches!(args[0], Expr::SeqLit { .. }), "got {:?}", args[0]);
-                assert!(effects.contains(Effect::Divergent));
-            }
-            other => panic!("expected ExprStmt(BuiltinCall(return, [array])), got {:?}", other),
-        }
+        assert!(matches!(stores(&b.stmts, "__ret_")[..], [Expr::SeqLit { .. }]), "{b:?}");
     }
 
     #[test]
-    fn return_with_string_value_lowers_to_strlit_arg() {
+    fn return_with_string_value_stores_the_string() {
         let m = lower("return \"ok\"");
         let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
-                assert_eq!(name, "return");
-                assert!(matches!(args[0], Expr::StrLit { .. }), "got {:?}", args[0]);
-                assert!(effects.contains(Effect::Divergent));
-            }
-            other => panic!("expected ExprStmt(BuiltinCall(return, [string])), got {:?}", other),
-        }
+        assert!(matches!(stores(&b.stmts, "__ret_")[..], [Expr::StrLit { .. }]), "{b:?}");
     }
 
     #[test]
@@ -10357,11 +10445,12 @@ b = "y"
             "`foo` is a call of its own: {:?}",
             t.body
         );
+        // `return; 42` returns nil: the store is `__ret = nil`, and the
+        // `42` is a statement of its own after it.
         let m = lower("def f\n  return; 42\nend\n");
         let f = func(&m, "f");
         assert!(
-            matches!(&f.body.stmts[0], Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
-                if name == "return" && matches!(args.as_slice(), [Expr::NilLit { .. }])),
+            matches!(stores(&f.body.stmts, "__ret_")[..], [Expr::NilLit { .. }]),
             "{:?}",
             f.body
         );
@@ -10403,10 +10492,12 @@ b = "y"
             }
         }
         // `next;` / `return;` / `yield;` carry no value of their own.
+        // (#18798, item 14: a jump is a store into `__ret`.)
         let m = lower(&format!("{defs}[1].each {{ |x| next; bar }}\n"));
-        assert!(format!("{m:?}").contains("name: \"next\", args: [NilLit"), "{m:?}");
+        let block = m.functions.iter().find(|f| f.name.starts_with("__block_")).expect("block");
+        assert!(matches!(stores(&block.body.stmts, "__ret_")[..], [Expr::NilLit { .. }]), "{m:?}");
         let m = lower("def f(c)\n  if c then return; 5 end\n  6\nend\n");
-        assert!(format!("{m:?}").contains("name: \"return\", args: [NilLit"), "{m:?}");
+        assert!(format!("{m:?}").contains("Assign { name: \"__ret_1\", scope: Local, value: NilLit"), "{m:?}");
         // (`yield` lowers to a call of the method's block parameter.)
         let m = lower(&format!("{defs}def t\n  wrap {{ yield; cleanup }}\nend\n"));
         let dbg = format!("{m:?}");
