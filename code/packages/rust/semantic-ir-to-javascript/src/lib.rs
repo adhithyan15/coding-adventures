@@ -83,7 +83,8 @@ mod emit;
 mod runtime;
 
 use semantic_ir::{
-    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Feature, Module,
+    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Feature, Module, Scope,
+    Stmt, Visitor,
 };
 
 pub use emit::sanitize_ident;
@@ -168,7 +169,8 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // class or a named constant).  Accepted because a `raise Foo` names
     // its exception class as a `Const` VarRef; the `raise` arm consumes
     // that Const as a *string* class name, and any other constant read
-    // emits its bare identifier.  See `emit_var_ref`'s `Const` arm.
+    // emits an identifier (`const_ident`).  A constant *assignment* has no
+    // emit arm and is refused in `compile` (`first_constant_assignment`).
     Feature::Constants,
     // E1 (SIR17): structured exception handling.  `Stmt::TryCatch` lowers
     // to a native `try { … } catch (__exc) { … } finally { … }` whose
@@ -285,7 +287,24 @@ impl Backend for JavaScriptBackend {
             });
         }
 
-        // 4. Lower.
+        // 4. A constant *assignment* (`FOO = 4`, `Assign { scope: Const }`)
+        //    has no emit arm: `Constants` is accepted so that `raise Foo`
+        //    can name its class, and a constant *read* emits a bare
+        //    identifier, but nothing here binds one.  A validated module
+        //    that assigns a constant used to reach the emitter's
+        //    "deferred Assign scope" panic; refuse it cleanly instead.
+        if let Some(span) = first_constant_assignment(module) {
+            return Err(BackendError {
+                kind: BackendErrorKind::UnsupportedFeature,
+                message: "javascript backend cannot emit a constant assignment \
+                          (`Assign` of `Scope::Const`): constants are accepted only \
+                          as names, such as the class of `raise Foo`"
+                    .into(),
+                span,
+            });
+        }
+
+        // 5. Lower.
         let source = emit::emit_module(module);
         let metadata = ArtifactMetadata {
             bytes: source.len(),
@@ -299,6 +318,27 @@ impl Backend for JavaScriptBackend {
             metadata,
         })
     }
+}
+
+/// The span of the first `Assign { scope: Const }` anywhere in `module`
+/// (class bodies, loop bodies and nested blocks included), if any.
+fn first_constant_assignment(module: &Module) -> Option<semantic_ir::Span> {
+    struct Find(Option<semantic_ir::Span>);
+    impl Visitor for Find {
+        fn visit_stmt(&mut self, s: &Stmt, depth: usize) {
+            if self.0.is_some() {
+                return;
+            }
+            if let Stmt::Assign { scope: Scope::Const, span, .. } = s {
+                self.0 = Some(span.clone());
+                return;
+            }
+            semantic_ir::walk_stmt_default(self, s, depth);
+        }
+    }
+    let mut find = Find(None);
+    find.visit_module(module);
+    find.0
 }
 
 #[cfg(test)]
@@ -340,6 +380,29 @@ mod tests {
                 .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
             span: s(),
         }
+    }
+
+    /// `FOO = 4; FOO` -- valid SIR (the validator accepts a constant
+    /// assignment), which this backend has no way to bind.  It used to panic
+    /// inside `emit` ("deferred `Assign` scope `const`"); it is now an
+    /// ordinary `UnsupportedFeature` error, like the Go and Rust backends'.
+    #[test]
+    fn a_constant_assignment_is_refused_not_a_panic() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::Constants, Feature::MutableBindings]);
+        let main = &mut m.functions[0];
+        main.body.stmts.push(Stmt::Assign {
+            name: "FOO".into(),
+            scope: Scope::Const,
+            value: Expr::IntLit { value: 4, span: s() },
+            span: s(),
+        });
+        main.body.value = Expr::VarRef { name: "FOO".into(), scope: Scope::Const, span: s() };
+        let report = semantic_ir::validate(&m);
+        assert!(report.errors().next().is_none(), "the module is valid SIR: {:?}", report.issues);
+        let err = compile(&m).expect_err("a constant assignment is refused");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature, "{err:?}");
+        assert!(err.message.contains("constant assignment"), "{err:?}");
     }
 
     #[test]

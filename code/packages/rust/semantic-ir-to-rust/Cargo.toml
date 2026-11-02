@@ -8,4 +8,7 @@ description = "Semantic IR → self-contained Rust source code (SIR13). Second b
 semantic-ir = { path = "../semantic-ir" }
 
 [dev-dependencies]
+# Private scratch directories and an isolated Go build cache for the
+# execution tests (see sir-test-scratch's README).
+sir-test-scratch = { path = "../sir-test-scratch" }
 twig-to-semantic-ir = { path = "../twig-to-semantic-ir" }

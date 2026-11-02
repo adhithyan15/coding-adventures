@@ -42,6 +42,26 @@
 
 ### Fixed
 
+- Graph and diff selection runs about 7x faster on large path sets, with the
+  same answers. `test_graph_diff.lua`'s full-scale case (4,096 roots × 500-byte
+  paths) took 5.5 s CPU locally and 15.6–18.5 s on `windows-2025`, failing
+  its 12 s bound on every PR that selects this package; it now takes 0.76 s.
+  Measured linear before and after, so this is a constant-factor fix:
+  - `root_less` (the root-identity sort comparator, ~40% of samples) finds
+    the first differing byte by binary search over prefix equality instead
+    of reading every shared byte in Lua. It stays byte-wise; Lua's string
+    `<` would go through `strcoll` and follow the host locale.
+  - ASCII fast paths for NFC (identity), case folding (`A`..`Z` → `a`..`z`)
+    and full uppercase (`a`..`z` → `A`..`Z`), via explicit byte tables, not
+    the locale-dependent `string.lower`/`upper`. Non-ASCII strings still go
+    through the generated Unicode 17 module.
+  - The per-scalar control/forbidden-character loop is one byte-class
+    `find` (`[\0-\31` + the %-escaped forbidden set): in valid UTF-8 a
+    control scalar is one byte below 32 and every forbidden character is
+    ASCII. DEL (127) stays accepted.
+  - The separator scan in `prefix_materialization_work` uses `find`.
+  New tests pin each fast path's boundaries through the public API, and pass
+  against the old implementation too.
 - Package discovery without LuaFileSystem now uses `nul` for Windows directory
   probes as well as listings, so `dir /ad` results are not silently discarded
   by a Unix-only `/dev/null` redirection. Deterministic fallback tests cover

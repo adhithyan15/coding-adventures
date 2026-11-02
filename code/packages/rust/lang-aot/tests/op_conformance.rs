@@ -1610,10 +1610,12 @@ fn cases() -> Vec<Case> {
             ),
         },
         Case {
-            // No backend lowers a symbol built from a literal: a symbol reaches
-            // the tagged-word backends as an interned `const … : symbol`. So
-            // this case is refused everywhere, before any pass runs.
-            name: "dyn_symbol of a literal is refused at compile time (PR7f)",
+            // No compiled backend lowers a symbol built from a literal: a
+            // symbol reaches the tagged-word backends as an interned
+            // `const … : symbol`, so they refuse this case before any pass
+            // runs. The VM lowers it (#18470): `dyn_symbol "A"` interns the
+            // name to a `Value::Symbol`, whose `dyn_tag` is 2.
+            name: "dyn_symbol of a literal runs on the VM only (PR7f, #18470)",
             build: || {
                 program(vec![
                     IIRInstr::new(
@@ -2670,23 +2672,32 @@ fn pr7f2_lisp_rules_are_module_code_over_the_primitives() {
 }
 
 /// LANG83 PR7f: the dynamic-value primitives are calls into the tagged-word
-/// runtime, so they are lowered exactly where that runtime is linked (native
-/// x86-64 and AArch64, LLVM) and refused everywhere else, with the shared
-/// reason; `dyn_symbol` is refused everywhere (a symbol is an interned
-/// constant on the tagged-word backends). The case runs, with the expected
-/// output, on LLVM and native x86-64 whenever their toolchains are present,
-/// and every other backend refuses it before any lowering pass.
+/// runtime, so they are lowered where that runtime is linked (native x86-64
+/// and AArch64, LLVM) and refused, with the shared reason, by the other
+/// compiled backends; `dyn_symbol` is refused there too (a symbol is an
+/// interned constant on the tagged-word backends). The VM is the exception
+/// (#18470): it lowers the five primitives that read or make a value's kind
+/// (`dyn_tag`, `dyn_is_nil`, `dyn_is_pair`, `dyn_nil`, `dyn_symbol`) over its
+/// own `Value` kinds, and still refuses the five that build or take apart a
+/// tagged word or a cell. The pair case runs, with the expected output, on
+/// LLVM and native x86-64 whenever their toolchains are present, and every
+/// other backend — the VM included, for `dyn_box_int` — refuses it before
+/// any lowering pass.
 #[test]
 fn pr7f_dynamic_values_run_on_the_tagged_word_backends() {
     use interpreter_ir::op_registry::{NO_TAGGED_WORD_RUNTIME, SYMBOLS_ARE_INTERNED_CONSTANTS};
     let pr7f: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr7f()).map(|s| s.name).collect();
     assert_eq!(pr7f.len(), 10, "the PR7f primitives: {pr7f:?}");
     let tagged = [Backend::X86_64, Backend::Aarch64, Backend::Llvm];
+    let vm_kind_primitives = ["dyn_tag", "dyn_is_nil", "dyn_is_pair", "dyn_nil", "dyn_symbol"];
     for name in &pr7f {
         for backend in Backend::ALL {
             let want = match (tagged.contains(&backend), *name) {
                 (true, "dyn_symbol") => OpSupport::Refused(SYMBOLS_ARE_INTERNED_CONSTANTS),
                 (true, _) => OpSupport::Lowered,
+                (false, name) if backend == Backend::Vm && vm_kind_primitives.contains(&name) => {
+                    OpSupport::Lowered
+                }
                 (false, _) => OpSupport::Refused(NO_TAGGED_WORD_RUNTIME),
             };
             assert_eq!(backend.op_support(name), want, "{backend} {name}");

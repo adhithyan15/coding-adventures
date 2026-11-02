@@ -220,17 +220,35 @@ A frontend / runtime driver loop: `start(); while (!step(BUDGET)) { /* mutator r
 `Incremental::is_available()` flips to `true`; the existing `SuggestSwitch(Incremental, …)`
 high-pause recommendation (`policy.rs`) becomes actionable.
 
-**Root-snapshot caveat (documented, not a blocker).** Because roots are snapshotted at
-`start`, a stack slot that becomes live *after* start and holds the *only* reference to a
-*pre-existing white* object would be missed — **except** the write barrier catches it the
-moment that reference is *stored* into any heap object, and a value that lives *only* in a
-register/stack slot and is never stored is reachable from the next cycle's root scan anyway.
-The one true obligation, identical to precise roots today: the driver must not *pop* a frame
-that still holds the sole reference to a white object without that reference having passed
-through a store. In the current frontend every heap reference lives in an `any` slot and every
-inter-object link goes through a barriered `field_store`, so this holds. (A fully-robust
-answer re-scans roots at `finish` before sweeping — a cheap, strictly-additive hardening
-called out in §9.)
+**Root re-scan at `finish` (closes the root-snapshot gap).** Roots are snapshotted at
+`start`, and the barrier sees only stores into **heap** objects. A store into a **root** — a
+stack slot, a register, or a program global (`global_store` has no barrier) — is invisible to
+it. So an object the mutator moves out of the heap and into a root during the phase (load it
+from a field, clear the field, keep it only in a local or a global) is reachable but never
+shaded:
+
+```text
+  start:   global[0] → P (grey) → C (white)
+  mutator: global[1] = P.f ; P.f = 0   ; C now reachable only from a root
+  step:    P scanned (black)           ; C stays white
+  finish:  C swept, global[1] dangles  ← without the re-scan
+```
+
+The earlier draft of this section argued the gap was harmless ("every inter-object link goes
+through a barriered `field_store`"). That missed globals, which are roots written by
+`global_store` with no barrier. So `finish` now **re-scans the roots before sweeping**:
+`__gc_collect_incremental_finish` (and its `__twig_gc_*` alias) is a frame-building
+trampoline like `start`. It walks the stack again, adds the spilled registers and the
+registered global slots, and calls `FlatHeap::incremental_rescan_roots(slots, regions)`. That
+greys every white object the current roots reach and drains the worklist before the sweep.
+This is the standard root half of a Dijkstra (incremental-update) collector. The re-scan is
+the one unbounded step of the cycle, proportional to what the mutator moved into roots. If
+`finish` cannot trust the stack, it calls `FlatHeap::incremental_abandon()`: the phase ends,
+nothing is freed, and no stale-snapshot sweep happens. The re-scan must precede any stepped
+sweep (`incremental_rescan_roots` panics otherwise); the C ABI never steps the sweep. Tests:
+gc-core `incremental_rescan_keeps_an_object_moved_into_a_root` (with and without the
+re-scan) and gc-core-capi `incremental_finish_rescans_roots_stored_during_the_phase` (64
+children moved into registered globals; without the re-scan all 64 were swept).
 
 ---
 
@@ -287,7 +305,7 @@ remembered set" tests:
 3. **PR-3 (C ABI):** `__gc_collect_incremental_{start,step,finish}` in `gc-core-capi` (root
    snapshot via the precise walk) + flip `Incremental::is_available()`; host-driven ABI test.
 4. **PR-4 (frontend + differential):** a native `gc_collect_incremental_*` builtin trio +
-   test 5 (end-to-end). Optional `finish`-time root re-scan hardening (§6 caveat).
+   test 5 (end-to-end). `finish`-time root re-scan (§6): landed with #18765's follow-up.
 
 Lower-risk alternative if the barrier proof proves fiddly: land PR-1 (interruptible mark,
 roots-only, no mutation during mark — already useful for a cooperative single-shot driver) and
@@ -300,8 +318,8 @@ defer the barrier PRs, exactly as T3 offered a pin-only fallback.
 - **Barrier omission = UAF.** The one hard invariant. Mitigated by test 1's load-bearing twin
   (the disabled-barrier version *must* free the object) and by the single-call-site design
   (the barrier already exists for generational; we extend it, not add a new obligation).
-- **Root snapshot staleness (§6).** Bounded by the store-barrier argument; fully closed by the
-  optional `finish`-time root re-scan. Documented, not silently assumed.
+- **Root snapshot staleness (§6).** Closed by the `finish`-time root re-scan (stack, registers
+  and registered globals).
 - **Floating garbage.** Insertion barrier + alloc-black retain some dead objects one extra
   cycle — a throughput/footprint cost, never a safety one; acceptable and self-correcting.
 - **Sweep pause.** Now bounded too (gc-core 0.21.0): `incremental_sweep_step(budget)` carries a
