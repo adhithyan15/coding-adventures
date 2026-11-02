@@ -71,8 +71,9 @@ int64_t __gc_register_ref_array_kind(const int64_t *fixed, int64_t fixed_count,
  * Read-only; `ptr` is validated before any header read (a bogus value yields 0). */
 int64_t __gc_kind_of(int64_t ptr);
 
-/* Mark from `count` root words at `roots`, then sweep. Returns objects freed.
- * A null `roots` or count <= 0 means "no roots". */
+/* Mark from `count` root words at `roots`, plus the words in every registered
+ * global slot (__gc_register_global_roots), then sweep. Returns objects freed.
+ * A null `roots` or count <= 0 means "no roots" besides the globals. */
 int64_t __gc_collect_roots(const int64_t *roots, int64_t count);
 
 /* Mark from every candidate pointer in the raw region [base, base+len), then
@@ -80,7 +81,9 @@ int64_t __gc_collect_roots(const int64_t *roots, int64_t count);
  * from memory the collector must scan itself — a spilled-register block, or the
  * machine call stack between the stack pointer and the thread's stack base. The
  * argument-less native collect/safepoint drop-ins (a follow-up) discover that
- * range and call this. A null `base` or len <= 0 means "no region" → free all. */
+ * range and call this. The registered global slots (__gc_register_global_roots)
+ * are precise roots too. A null `base` or len <= 0 means "no region": only the
+ * globals root anything (none registered → free all). */
 int64_t __gc_collect_region(const uint8_t *base, int64_t len);
 
 /* Run a full conservative collection rooted at THIS THREAD'S live C stack and
@@ -268,9 +271,13 @@ int64_t __gc_collect_minor_compacting(void);
  * must go through __gc_write_barrier, whose incremental half shades the stored child grey
  * (the Dijkstra insertion barrier) so a live object is never stranded. `step` advances marking
  * by up to `budget` objects and returns 1 when marking is complete, 0 otherwise (a negative
- * budget is treated as 0). `finish` sweeps the unreachable objects and returns the count
- * reclaimed. If `start` could not trust the stack it enters no phase: `step` then returns 1
- * immediately and `finish` returns 0, so nothing is freed (bias-to-leak, as __gc_collect_precise).
+ * budget is treated as 0). `finish` RE-SCANS the current roots (stack, spilled registers and
+ * registered globals: stores into roots have no barrier, so an object moved out of the heap
+ * into a root during the phase is found here), then sweeps the unreachable objects and returns
+ * the count reclaimed; like `start` it walks the caller's stack. If `start` could not trust the
+ * stack it enters no phase: `step` then returns 1 immediately and `finish` returns 0, so
+ * nothing is freed (bias-to-leak, as __gc_collect_precise). If `finish` cannot trust the
+ * stack, it abandons the cycle without freeing anything.
  * Single-threaded; no other collection may run between start and finish. */
 void    __gc_collect_incremental_start(void);
 int64_t __gc_collect_incremental_step(int64_t budget);

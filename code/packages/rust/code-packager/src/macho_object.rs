@@ -296,6 +296,23 @@ const HEADER_TOTAL_WITH_DATA: usize = MACH_HEADER_SIZE
     + LC_BUILD_VERSION_SIZE
     + LC_SYMTAB_SIZE; // = 312
 
+/// Address of `__data` (and of `_twig_globals`) in an object whose `__text` is
+/// `code_len` bytes: the next 8-byte boundary after the code.
+///
+/// `__text` holds 4-byte AArch64 instructions, so `code_len` is often ≡ 4 (mod 8).
+/// Placing `__data` straight after the code then gave it an address ≡ 4 (mod 8), and
+/// `ld64` preserves a section's address **modulo its alignment** when it lays out the
+/// output (an atom's alignment is `2^align` *plus the modulus it had in the object*),
+/// so the declared `align = 2^3` did not help: `_twig_globals` landed 4 bytes off an
+/// 8-byte boundary in the linked image. Loads and stores still worked (AArch64
+/// tolerates unaligned access), but the GC's `__gc_register_global_roots` rejects a
+/// misaligned block, so on macOS the globals were silently not GC roots, and once
+/// twig-aot's start-up code began checking the registration it trapped. Rounding the
+/// address up (with zero padding after the code in the file) makes the modulus 0.
+fn data_section_addr(code_len: u64) -> u64 {
+    (code_len + 7) & !7
+}
+
 /// Like [`pack_object`] but also emits a `__DATA/__data` section that holds
 /// the Twig program's global variable slots, plus `ARM64_RELOC_PAGE21` /
 /// `ARM64_RELOC_PAGEOFF12` relocation records so the system linker can patch
@@ -317,14 +334,15 @@ const HEADER_TOTAL_WITH_DATA: usize = MACH_HEADER_SIZE
 ///
 /// ```text
 /// 0              │ 312     │ Headers (mach_header_64 + LC_SEGMENT_64×2 + LC_BUILD_VERSION + LC_SYMTAB)
-/// 312            │ N       │ __text bytes
-/// 312+N          │ M       │ __data bytes (zero-initialised globals, M = globals_n_slots * 8)
-/// 312+N+M        │ 2*R*8   │ text relocation records (2 per global access = 2 × R × 8 bytes)
-/// 312+N+M+2*R*8  │ 32      │ 2 nlist_64 entries: _main (sect 1) + _twig_globals (sect 2)
+/// 312            │ N       │ __text bytes, then zero padding up to N' = N rounded up to 8
+/// 312+N'         │ M       │ __data bytes (zero-initialised globals, M = globals_n_slots * 8)
+/// 312+N'+M       │ 2*R*8   │ text relocation records (2 per global access = 2 × R × 8 bytes)
+/// 312+N'+M+2*R*8 │ 32      │ 2 nlist_64 entries: _main (sect 1) + _twig_globals (sect 2)
 /// …              │ S       │ string table: "\0_main\0_twig_globals\0"
 /// ```
 ///
-/// where `R = text_relocs.len()`.
+/// where `R = text_relocs.len()`. `__data` (and `_twig_globals`) sits at the
+/// 8-aligned address `N'`, not `N`: see [`data_section_addr`].
 pub fn pack_object_with_globals(
     text_bytes: &[u8],
     entry_point: usize,
@@ -376,7 +394,9 @@ pub fn pack_object_with_globals(
 
     // ── File-offset calculations ──────────────────────────────────────────────
     let text_file_off  = HEADER_TOTAL_WITH_DATA as u64;
-    let data_file_off  = text_file_off + code_len;
+    // `__data` starts on an 8-byte boundary; the gap after `__text` is zero padding.
+    let data_addr      = data_section_addr(code_len);
+    let data_file_off  = text_file_off + data_addr;
     let reloc_file_off = data_file_off + data_len;
     let symtab_off     = reloc_file_off + reloc_bytes;
     let strtab_off     = symtab_off + 2 * NLIST_64_SIZE as u64; // 2 symbols
@@ -427,7 +447,7 @@ pub fn pack_object_with_globals(
     //
     // In MH_OBJECT files the segment command has an empty segname and covers
     // all sections.  The vmsize spans both sections back-to-back.
-    let segment_vmsize = code_len + data_len;
+    let segment_vmsize = data_addr + data_len;
     out.extend_from_slice(&LC_SEGMENT_64.to_le_bytes());
     out.extend_from_slice(&(LC_SEGMENT_TWO_SECTS as u32).to_le_bytes()); // cmdsize
     write_name16(&mut out, b"");                  // segname = empty
@@ -464,7 +484,7 @@ pub fn pack_object_with_globals(
     // No relocations in the data section itself.
     write_name16(&mut out, b"__data");
     write_name16(&mut out, b"__DATA");
-    out.extend_from_slice(&code_len.to_le_bytes());  // addr = immediately after __text
+    out.extend_from_slice(&data_addr.to_le_bytes()); // addr = after __text, 8-aligned
     out.extend_from_slice(&data_len.to_le_bytes());  // size = n_slots * 8
     out.extend_from_slice(&data_file_off_u32.to_le_bytes()); // offset
     out.extend_from_slice(&3u32.to_le_bytes());       // align = 2^3 = 8 (64-bit slots)
@@ -497,6 +517,7 @@ pub fn pack_object_with_globals(
 
     // ── __text bytes ─────────────────────────────────────────────────────────
     out.extend_from_slice(text_bytes);
+    out.resize(out.len() + (data_addr - code_len) as usize, 0u8); // pad to __data
 
     // ── __data bytes (zero-initialised) ──────────────────────────────────────
     let data_start = out.len();
@@ -573,7 +594,7 @@ pub fn pack_object_with_globals(
     out.push(N_SECT | N_EXT);                           // n_type
     out.push(2u8);                                       // n_sect = 2 (__data)
     out.extend_from_slice(&0u16.to_le_bytes());          // n_desc
-    out.extend_from_slice(&code_len.to_le_bytes());      // n_value = VM addr of __data start
+    out.extend_from_slice(&data_addr.to_le_bytes());     // n_value = VM addr of __data start
 
     // ── String table ─────────────────────────────────────────────────────────
     out.extend_from_slice(&strtab);
@@ -637,8 +658,10 @@ pub struct ExternBranchReloc {
 /// ```text
 /// 0              │ 312       │ Headers (mach_header_64 + 2×LC_SEGMENT_64 + LC_BUILD_VERSION + LC_SYMTAB)
 /// 312            │ N         │ __text bytes
-/// 312+N          │ M         │ __data bytes (zero-init, M = globals_n_slots × 8; may be 0)
-/// 312+N+M        │ (E+2G)×8  │ relocation records:
+/// 312+N'         │ M         │ __data bytes (zero-init, M = globals_n_slots × 8; may be 0),
+///                │           │ at N' = N rounded up to 8 (zero padding after __text; see
+///                │           │ [`data_section_addr`])
+/// 312+N'+M       │ (E+2G)×8  │ relocation records:
 ///                │           │   E × ARM64_RELOC_BRANCH26 (extern BL sites)
 ///                │           │   2G × ARM64_RELOC_PAGE21 / PAGEOFF12 (global ADRP+ADD pairs)
 /// …              │ (2+U)×16  │ symbol table: _main + _twig_globals + U undefined externals
@@ -745,7 +768,9 @@ pub fn pack_object_with_globals_and_externals(
 
     // ── File-offset calculations ──────────────────────────────────────────────
     let text_file_off  = HEADER_TOTAL_WITH_DATA as u64;
-    let data_file_off  = text_file_off + code_len;
+    // `__data` starts on an 8-byte boundary; the gap after `__text` is zero padding.
+    let data_addr      = data_section_addr(code_len);
+    let data_file_off  = text_file_off + data_addr;
     let reloc_file_off = data_file_off + data_len;
     let symtab_off     = reloc_file_off + reloc_bytes;
     let strtab_off     = symtab_off + (n_symbols as u64) * NLIST_64_SIZE as u64;
@@ -782,7 +807,7 @@ pub fn pack_object_with_globals_and_externals(
     debug_assert_eq!(out.len(), MACH_HEADER_SIZE);
 
     // ── LC_SEGMENT_64 (two sections: __text + __data) ─────────────────────
-    let segment_vmsize = code_len + data_len;
+    let segment_vmsize = data_addr + data_len;
     out.extend_from_slice(&LC_SEGMENT_64.to_le_bytes());
     out.extend_from_slice(&(LC_SEGMENT_TWO_SECTS as u32).to_le_bytes());
     write_name16(&mut out, b"");                 // segname = empty
@@ -812,7 +837,7 @@ pub fn pack_object_with_globals_and_externals(
     // ── section_64: __data / __DATA ─────────────────────────────────────────
     write_name16(&mut out, b"__data");
     write_name16(&mut out, b"__DATA");
-    out.extend_from_slice(&code_len.to_le_bytes());       // addr = immediately after __text
+    out.extend_from_slice(&data_addr.to_le_bytes());      // addr = after __text, 8-aligned
     out.extend_from_slice(&data_len.to_le_bytes());       // size (0 if no globals)
     out.extend_from_slice(&data_file_off_u32.to_le_bytes()); // offset
     out.extend_from_slice(&3u32.to_le_bytes());           // align = 2^3 = 8
@@ -845,6 +870,7 @@ pub fn pack_object_with_globals_and_externals(
 
     // ── __text bytes ─────────────────────────────────────────────────────────
     out.extend_from_slice(text_bytes);
+    out.resize(out.len() + (data_addr - code_len) as usize, 0u8); // pad to __data
 
     // ── __data bytes (zero-initialised) ──────────────────────────────────────
     let data_start = out.len();
@@ -922,7 +948,7 @@ pub fn pack_object_with_globals_and_externals(
     out.push(N_SECT | N_EXT);
     out.push(2u8);                                     // n_sect = 2 (__data)
     out.extend_from_slice(&0u16.to_le_bytes());        // n_desc
-    out.extend_from_slice(&code_len.to_le_bytes());    // n_value = VM addr of __data
+    out.extend_from_slice(&data_addr.to_le_bytes());   // n_value = VM addr of __data
 
     // index 2, 3, …: unique external symbols — undefined externals.
     //
@@ -1067,10 +1093,44 @@ mod tests {
         let code = vec![0x42u8; 4];
         let n_slots = 4;
         let bytes = arm64_globals_bytes(code.clone(), n_slots, &[]);
-        // __data starts at 312 + code_len = 312 + 4 = 316
-        let data_start = 312 + 4;
+        // __data starts at 312 + code_len rounded up to 8 = 312 + 8 = 320
+        let data_start = 312 + 8;
         let data = &bytes[data_start..data_start + n_slots * 8];
         assert_eq!(data, &vec![0u8; n_slots * 8][..], "__data must be zero-init");
+    }
+
+    /// `__data` and `_twig_globals` must be 8-aligned in the object, whatever the code
+    /// length: `ld64` keeps a section's address modulo its alignment, so a `__data` at
+    /// an address ≡ 4 (mod 8) ends up 4 bytes off an 8-byte boundary in the linked
+    /// image, where the GC refuses to register the globals block. AArch64 code is a
+    /// multiple of 4 bytes, so `code_len ≡ 4 (mod 8)` is the common case.
+    #[test]
+    fn data_section_and_twig_globals_are_8_aligned() {
+        for code_len in [4usize, 8, 12, 276] {
+            for packed in [
+                arm64_globals_bytes(vec![0u8; code_len], 1, &[]),
+                pack_object_with_globals_and_externals(
+                    &vec![0u8; code_len], 0, 1, &[], &[], &Target::macos_arm64(),
+                ).unwrap(),
+            ] {
+                // section_64 #2 (__data) follows the 72-byte segment command and the
+                // 80-byte __text section_64; its `addr` is at +32, `offset` at +48.
+                let sect = 32 + 72 + 80;
+                let addr = u64::from_le_bytes(packed[sect + 32..sect + 40].try_into().unwrap());
+                let offset = u32::from_le_bytes(packed[sect + 48..sect + 52].try_into().unwrap());
+                assert_eq!(addr % 8, 0, "code_len {code_len}: __data addr {addr} not 8-aligned");
+                assert!(addr >= code_len as u64 && addr < code_len as u64 + 8);
+                assert_eq!(offset as u64, 312 + addr, "file offset tracks the address");
+                // _twig_globals is nlist index 1; its n_value is the last 8 bytes.
+                let nsyms_off = 32 + 72 + 160 + 24 + 12; // LC_SYMTAB nsyms… symoff first
+                let symoff = u32::from_le_bytes(
+                    packed[nsyms_off - 4..nsyms_off].try_into().unwrap(),
+                ) as usize;
+                let g = symoff + 16;
+                let n_value = u64::from_le_bytes(packed[g + 8..g + 16].try_into().unwrap());
+                assert_eq!(n_value, addr, "code_len {code_len}: _twig_globals at the 8-aligned __data");
+            }
+        }
     }
 
     #[test]
@@ -1126,7 +1186,8 @@ mod tests {
         let m = 2 * 8;     // 2 global slots
         let r = 2usize;    // 2 reloc entries → 4 records × 8 bytes
         let strtab_len = 1 + 5 + 1 + 13 + 1; // "\0_main\0_twig_globals\0" = 21
-        let expected = 312 + n + m + 2 * r * 8 + 2 * 16 + strtab_len;
+        // 12 code bytes are padded to 16 so `__data` starts 8-aligned.
+        let expected = 312 + 16 + m + 2 * r * 8 + 2 * 16 + strtab_len;
         let relocs = vec![
             GlobalByteReloc { adrp_byte_offset: 0, add_byte_offset: 4 },
             GlobalByteReloc { adrp_byte_offset: 8, add_byte_offset: 12 },
@@ -1199,8 +1260,8 @@ mod tests {
         //   index 1: _twig_globals
         //   index 2: __twig_print_i64  ← we check this one
         //
-        // symtab_off = 312 + code(4) + data(0) + relocs(1×8) = 324.
-        let symtab_off = (312usize + 4) + 8;
+        // symtab_off = 312 + code(4, padded to 8) + data(0) + relocs(1×8) = 328.
+        let symtab_off = (312usize + 8) + 8;
         let ext_sym_off = symtab_off + 2 * 16; // skip _main and _twig_globals
 
         // nlist_64: n_strx(4) n_type(1) n_sect(1) n_desc(2) n_value(8)

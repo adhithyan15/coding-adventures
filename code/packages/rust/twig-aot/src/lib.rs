@@ -211,6 +211,7 @@ fn build_gc_wrapper(user_entry: &str) -> Result<(Vec<u8>, Vec<Reloc>), AotError>
 ///       add  x0, x0, _twig_globals@PAGEOFF                   (ARM64_RELOC_PAGEOFF12)
 ///       mov  x1, #<global count>
 ///       bl   __gc_register_global_roots
+///       mov  x1, #<global count> ; cmp x0, x1 ; b.eq 1f ; udf #0xdead ; 1:
 ///       ; ── per function F with records ──
 ///       adr  x0, F                   ; x0 = func_start   (patched in pass 2)
 ///       mov  x1, #<F byte length>    ; x1 = func_len
@@ -273,6 +274,14 @@ fn build_gc_init_stackmaps(
         glob.push(GlobalWordReloc { adrp_word, add_word });
         a.mov_imm64(Reg::X1, n_global_slots as u64); //   count
         a.bl_external(GC_REGISTER_GLOBAL_ROOTS);
+        // A refused registration would leave every global unrooted for the whole run:
+        // trap instead (`x0` must come back equal to the count).
+        a.mov_imm64(Reg::X1, n_global_slots as u64);
+        a.cmp(Reg::X0, Reg::X1);
+        let registered = a.create_label();
+        a.b_cond(aarch64_encoder::Cond::Eq, registered);
+        a.udf(0xDEAD);
+        a.bind(registered).map_err(gc_asm_err)?;
     }
 
     for fm in fn_maps {
@@ -1171,6 +1180,37 @@ struct FuncAddrRelocX86 {
     target: String,
 }
 
+/// After `call __gc_register_global_roots`: `ud2` unless `rax` (the slots it
+/// accepted) equals `n`. A refused registration would leave every global unrooted
+/// for the whole run, so the image stops at start-up instead.
+///
+/// ```text
+///   mov rcx, n ; cmp rax, rcx ; je ok ; ud2 ; ok:
+/// ```
+fn emit_trap_unless_rax_is(a: &mut x86_64_encoder::Assembler, n: usize) -> Result<(), AotError> {
+    use x86_64_encoder::{Cond, Reg};
+    a.mov_r64_imm64(Reg::Rcx, n as u64);
+    a.cmp(Reg::Rax, Reg::Rcx);
+    let ok = a.create_label();
+    a.jcc(Cond::E, ok);
+    a.ud2();
+    a.bind(ok).map_err(gc_asm_err_x86)
+}
+
+/// Refuse, at compile time, a module with more globals than the runtime will root
+/// (`gc_core_capi::MAX_GLOBAL_ROOT_SLOTS`, 2²⁴): `__gc_register_global_roots` would
+/// reject the block and every global would run unrooted. (AArch64 already stops at
+/// 4 096 globals, the reach of its `LDR` offset; x86-64 has no such limit.)
+fn check_global_root_capacity(n_global_slots: usize) -> Result<(), AotError> {
+    if n_global_slots as u64 > gc_core_capi::MAX_GLOBAL_ROOT_SLOTS as u64 {
+        return Err(AotError::Compile(format!(
+            "{n_global_slots} globals exceed the {} the GC runtime can root",
+            gc_core_capi::MAX_GLOBAL_ROOT_SLOTS
+        )));
+    }
+    Ok(())
+}
+
 /// Map an [`x86_64_encoder::EncodeError`] to an [`AotError`].
 fn gc_asm_err_x86(e: x86_64_encoder::EncodeError) -> AotError {
     AotError::Linker { status: None, stderr: format!("twig-aot: x86_64 GC init codegen: {e:?}") }
@@ -1199,6 +1239,7 @@ fn call_return_offsets_x86_64(relocs: &[x86_64_encoder::ExternalReloc]) -> Vec<u
 ///       lea  rdi, [rip + _twig_globals]   ; PcRel32 reloc, like every global_load
 ///       mov  rsi, <global count>
 ///       call __gc_register_global_roots
+///       mov  rcx, <global count> ; cmp rax, rcx ; je 1f ; ud2 ; 1:   ; refused → trap
 ///       ; ── per function F with records (System V) ──
 ///       lea  rdi, [rip + F]          ; func_start   (patched in pass 2b)
 ///       mov  rsi, <F byte length>    ; func_len
@@ -1241,6 +1282,7 @@ fn build_gc_init_stackmaps_x86_64(
         a.lea_rip_rel(Reg::Rdi, TWIG_GLOBALS, ExternalRelocKind::PcRel32); // base
         a.mov_r64_imm64(Reg::Rsi, n_global_slots as u64); //                  count
         a.call_rel32(GC_REGISTER_GLOBAL_ROOTS, ExternalRelocKind::PltRel32);
+        emit_trap_unless_rax_is(&mut a, n_global_slots)?;
     }
 
     for fm in fn_maps {
@@ -1337,6 +1379,7 @@ fn build_gc_init_stackmaps_x86_64(
 ///   lea  rcx, [rip + _twig_globals]    ; arg1 base   (PcRel32, like a global_load)
 ///   mov  rdx, <global count>           ; arg2 count
 ///   call __gc_register_global_roots
+///   mov  rcx, <global count> ; cmp rax, rcx ; je 1f ; ud2 ; 1:   ; refused → trap
 ///   add  rsp, 32
 /// ```
 #[allow(clippy::type_complexity)]
@@ -1357,6 +1400,7 @@ fn build_gc_init_stackmaps_x86_64_msx64(
         a.lea_rip_rel(Reg::Rcx, TWIG_GLOBALS, ExternalRelocKind::PcRel32); // arg1 base
         a.mov_r64_imm64(Reg::Rdx, n_global_slots as u64); //                  arg2 count
         a.call_rel32(GC_REGISTER_GLOBAL_ROOTS, ExternalRelocKind::PltRel32);
+        emit_trap_unless_rax_is(&mut a, n_global_slots)?;
         a.add_imm32(Reg::Rsp, 32);
     }
 
@@ -1641,11 +1685,12 @@ fn is_machine_scalar(ty: &str) -> bool {
 const GC_ALLOCATING_BUILTINS: &[&str] =
     &["alloc_bytes", "str_concat", "str_slice", "input_str", "dyn_pair_new"];
 
-/// Does `instr` produce a fresh GC block? The `alloc_bytes` / `alloc_array` ops
-/// (both lowered to `__twig_alloc_bytes`) and the [`GC_ALLOCATING_BUILTINS`].
+/// Does `instr` produce a fresh GC block? The `alloc_bytes` / `alloc_array` /
+/// `alloc_ref_array` ops (lowered to `__twig_alloc_bytes` or, for an array of
+/// references, `__twig_alloc_ref_array_bytes`) and the [`GC_ALLOCATING_BUILTINS`].
 fn allocates_gc_block(instr: &jit_core::cir::CIRInstr) -> bool {
     match instr.op.as_str() {
-        "alloc_bytes" | "alloc_array" => true,
+        "alloc_bytes" | "alloc_array" | "alloc_ref_array" => true,
         "call_builtin" => matches!(
             instr.srcs.first(),
             Some(jit_core::cir::CIROperand::Var(name)) if GC_ALLOCATING_BUILTINS.contains(&name.as_str())
@@ -1817,6 +1862,7 @@ fn compile_module_x86_64_to_text(
     check_program_function_names(module)?;
     check_direct_call_arities(module)?;
     let global_slots = collect_global_slots(module);
+    check_global_root_capacity(global_slots.len())?;
 
     // Pass 1: compile each function with the x86_64 backend.
     let mut fn_results: Vec<(String, Vec<u8>, Vec<x86_64_encoder::ExternalReloc>)> =
@@ -2566,8 +2612,53 @@ const AOT_BUILTIN_MAP: &[(&str, &str)] = &[
     ("not", "not"),  ("_move", "mov"),
 ];
 
-/// Step 1: lower `call_builtin "<op>"` instructions to named IIR ops.
+/// Is an `array<T>` element type a GC reference — a heap handle the collector must
+/// trace through the array, not an inline scalar? The same set `iir-to-llvm`'s
+/// `elem_is_gc_reference` uses: `str` (BASIC `A$`), `any`, `ref<any>`, `symbol` and
+/// any `ref<Lispy…>`.
+fn array_elem_is_gc_reference(elem: &str) -> bool {
+    matches!(elem, "str" | "any" | "ref<any>" | "symbol") || elem.starts_with("ref<Lispy")
+}
+
+/// Choose the allocator of every `alloc_array` while its element type is still
+/// known.
+///
+/// The native backends lower `alloc_array` to `__twig_alloc_bytes`, a **no-reference
+/// blob** kind: the collector never looks inside it. That is right for `i64` / `f64`
+/// elements and wrong for reference elements. In a BASIC `DIM A$(n)` each element is
+/// a string handle; a string reachable only through the array was invisible to every
+/// collection and freed while the array still held its handle. Each later `A$(i)`
+/// read is then a use-after-free.
+///
+/// The element type is in the IIR `type_hint` (`array<str>`), but `aot_specialise`
+/// erases `array<T>` to `any` before a backend sees it. So this rewrites, at the IIR
+/// level, an `alloc_array` of reference elements to the op `alloc_ref_array`, which
+/// both native backends lower to `__twig_alloc_ref_array_bytes`. That allocator's
+/// kind traces every word past the 8-byte length header (`__gc_register_ref_array_kind(
+/// NULL, 0, 8)`), so the strings are marked, and compaction moves them and rewrites
+/// the elements. Tracing is sound for these arrays because every element word is a
+/// handle or the zero the allocator fills with. A scalar array keeps the blob kind,
+/// where an element that looked like an address would otherwise be rewritten by
+/// compaction (see `__twig_alloc_ref_array_bytes` in `twig_runtime.c`).
+fn select_ref_array_allocator(func: &mut IIRFunction) {
+    for instr in &mut func.instructions {
+        if instr.op != "alloc_array" {
+            continue;
+        }
+        let elem = instr
+            .type_hint
+            .strip_prefix("array<")
+            .and_then(|rest| rest.strip_suffix('>'));
+        if elem.is_some_and(array_elem_is_gc_reference) {
+            instr.op = "alloc_ref_array".to_string();
+        }
+    }
+}
+
+/// Step 1: lower `call_builtin "<op>"` instructions to named IIR ops, and pick the
+/// tracing allocator for arrays of references ([`select_ref_array_allocator`]).
 fn pre_lower_aot_builtins(func: &mut IIRFunction) {
+    select_ref_array_allocator(func);
     let old = std::mem::take(&mut func.instructions);
     func.instructions = old.into_iter().map(|instr| {
         if instr.op != "call_builtin" { return instr; }
@@ -3271,7 +3362,9 @@ fn push_aot_string_literal(
 /// `collect_runtime_str_vars` exactly (same basic-block rule): a `label` starts
 /// a new block, and a terminator (`jmp`/`jmp_if_false`/`jmp_if_true`/`ret`/
 /// `ret_void`) ends one.  A str reassigned twice *straight-line* stays in one
-/// block and keeps the literal fast path — the linear tracking is right there.
+/// block, so it is not in this set; it still loses the literal fast path, because
+/// `lower_string_literals_for_aot` registers no literal for a multiply-defined
+/// destination at all (the same rule as its integer table).
 ///
 /// The native buffer built by `push_aot_string_literal` already has the
 /// `[i64 len][bytes]` layout and the var's stack slot already holds the
@@ -3285,9 +3378,21 @@ fn push_aot_string_literal(
 /// literal fast path, and when the `call` arm was emitted first the literal
 /// reached the join. So a variable is runtime when it has at least one `str`
 /// definition and its definitions, of any type, span two or more blocks.
+///
+/// **A parameter is a definition in the entry block.** `(define (f s c) (begin (if c
+/// (let ((s "hello")) 0) 0) (print s)))` writes `s` with a `str_const` only in the `c`
+/// arm; on the other path `s` still holds the argument. Counting only instructions,
+/// `s` looked single-block, so its literal (and a length register defined only in the
+/// `c` arm) reached `print s`: with `c` false that printed a garbage length.
 fn collect_runtime_str_vars_for_aot(func: &IIRFunction) -> HashSet<String> {
     let mut def_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
     let mut has_str_def: HashSet<&str> = HashSet::new();
+    for (name, ty) in &func.params {
+        def_blocks.entry(name.as_str()).or_default().insert(0);
+        if ty == "str" {
+            has_str_def.insert(name.as_str());
+        }
+    }
     let mut block: usize = 0;
     for instr in &func.instructions {
         let op = instr.op.as_str();
@@ -3482,7 +3587,11 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             // paths (reading the length header at run time) rather than baking in
             // one branch's last-written literal — which would print the wrong
             // length whenever the branches' strings differ in length.
-            if !runtime_str_vars.contains(&dest) {
+            // Never register a literal for a destination with more than one
+            // definition (a parameter counts as one): the fact would describe only
+            // this write, and `len_var` is defined only on this path. A reassigned
+            // string reads its length at run time instead.
+            if !runtime_str_vars.contains(&dest) && !mutable_vars.contains(dest.as_str()) {
                 strings.insert(dest.clone(), (dest, len_var, lit));
             }
             continue;
@@ -3521,7 +3630,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     // `print_string(s+8, len)` then read an UNINITIALISED
                     // register as the length. Measured: 4 MB of process memory
                     // (heap pointers, stack addresses) written to stdout.
-                    if runtime_str_vars.contains(&dest) {
+                    if runtime_str_vars.contains(&dest) || mutable_vars.contains(dest.as_str()) {
                         strings.remove(&dest);
                     } else {
                         strings.insert(dest.clone(), (dest, len_var, lit));
@@ -3594,9 +3703,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     lowered.push(IIRInstr::new(
                         "mov", Some(dest.clone()), vec![Operand::Var(buf_var)], "i64",
                     ));
-                    // A branch-selected destination cannot inherit one arm's
-                    // literal length: other paths carry a different buffer.
-                    if !runtime_str_vars.contains(&dest) {
+                    // A branch-selected or reassigned destination cannot inherit
+                    // one write's literal length: other paths carry a different buffer.
+                    if !runtime_str_vars.contains(&dest) && !mutable_vars.contains(dest.as_str()) {
                         strings.insert(dest.clone(), (dest, len_var, lit));
                     }
                     continue;
@@ -4105,6 +4214,7 @@ fn compile_module_to_text_raw(
     // ── Collect global names (LANG39) ─────────────────────────────────────────
     let global_slots = collect_global_slots(module);
     let n_global_slots = global_slots.len();
+    check_global_root_capacity(n_global_slots)?;
 
     // ── Pass 1: compile all functions, collecting cross-function + global relocs ─
     // Each entry: (fn_name, per-function bytes, ExternalRelocs, GlobalWordRelocs)
@@ -6256,12 +6366,15 @@ mod tests {
         assert!(reads_length_at_runtime(&f, "s"), "{:?}", f.instructions);
     }
 
-    /// A string reassigned twice *straight-line* (one basic block) is NOT
-    /// promoted: the last-writer-wins literal tracking is exactly right, so
-    /// `print_str` keeps the static-length fast path and emits no runtime
-    /// `field_load`. Mirrors the E4d-2/E4d-3 "straight-line not promoted" rule.
+    /// A string reassigned twice *straight-line* (one basic block) is not in the
+    /// branch-selected set, but it is multiply defined, so no literal is registered
+    /// for it and `print_str` reads the length at run time. (It used to keep the
+    /// static-length fast path; linear tracking happened to be right in one block, but
+    /// the same unguarded registration let a parameter overwritten in one branch keep
+    /// a literal whose length register exists only on that branch. One rule for
+    /// strings and integers: a fact needs a single definition.)
     #[test]
-    fn straight_line_reassignment_keeps_static_length() {
+    fn straight_line_reassignment_reads_length_at_runtime() {
         let mut f = IIRFunction::new(
             "main",
             vec![],
@@ -6278,11 +6391,42 @@ mod tests {
         lower_string_literals_for_aot(&mut f);
 
         assert!(
-            !f.instructions.iter().any(|i| i.op == "field_load"),
-            "a straight-line reassignment keeps the static-length fast path (no \
-             runtime field_load): {:?}",
+            reads_length_at_runtime(&f, "s"),
+            "a reassigned string reads its length at run time: {:?}",
             f.instructions
         );
+    }
+
+    /// A parameter overwritten by a literal in one branch (the Twig
+    /// `(if c (let ((s "hello")) 0) 0) (print s)` shape): on the other path `s` is still
+    /// the argument, so neither `str_len s` nor `print_str s` may use the literal or its
+    /// length register (defined only in the `c` arm).
+    #[test]
+    fn a_parameter_overwritten_in_one_branch_keeps_no_literal() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![("s".into(), "str".into()), ("c".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("c".into()), Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        assert!(collect_runtime_str_vars_for_aot(&f).contains("s"), "a param is an entry def");
+        lower_string_literals_for_aot(&mut f);
+        let loads = f
+            .instructions
+            .iter()
+            .filter(|i| {
+                i.op == "field_load" && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "s")
+            })
+            .count();
+        assert_eq!(loads, 2, "print_str and str_len both read s's header: {:?}", f.instructions);
     }
 
     /// Regression: a branch-selected string (E4d-4 promoted var) has ONE alias
@@ -6985,6 +7129,11 @@ mod gc_global_and_buffer_root_tests {
         assert_eq!(add & 0x3FF, 0, "x0 = x0 + pageoff");
         let calls: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
         assert_eq!(calls, [GC_REGISTER_GLOBAL_ROOTS, GC_REGISTER_STACKMAP], "globals first");
+        // A refused registration traps: `cmp x0, x1` then `b.eq` over a `udf #0xdead`.
+        let bl = relocs[0].word_idx;
+        let after: Vec<u32> = (bl + 1..bl + 8).map(word).collect();
+        assert!(after.iter().any(|&w| w & 0xFF00_001F == 0x5400_0000), "b.eq after the call");
+        assert!(after.contains(&0x0000_DEAD), "udf #0xdead traps a refused registration");
 
         let (_, relocs, _, glob) = build_gc_init_stackmaps(&one_map(), 0).expect("codegen");
         assert!(glob.is_empty());
@@ -7022,6 +7171,11 @@ mod gc_global_and_buffer_root_tests {
             let reg = (bytes[lea + 2] >> 3) & 7;
             let want = if abi == X86_64Abi::SysV { 7 } else { 1 }; // rdi / rcx
             assert_eq!(reg, want, "{abi:?}: base goes in the first argument register");
+            // `call` ; `mov rcx, n` ; `cmp rax, rcx` (48 39 C8) ; `je` ; `ud2` (0F 0B).
+            let call_end = relocs[1].patch_offset + 4;
+            let tail = &bytes[call_end..call_end + 24];
+            assert!(tail.windows(3).any(|w| w == [0x48, 0x39, 0xC8]), "{abi:?}: cmp rax, rcx");
+            assert!(tail.windows(2).any(|w| w == [0x0F, 0x0B]), "{abi:?}: ud2 on refusal");
             if abi == X86_64Abi::MsX64 {
                 // `sub rsp, 32` = 48 81 EC 20 ; `add rsp, 32` = 48 81 C4 20
                 assert!(bytes.windows(4).any(|w| w == [0x48, 0x81, 0xEC, 0x20]), "shadow space");
@@ -7033,6 +7187,39 @@ mod gc_global_and_buffer_root_tests {
                 "{abi:?}: no globals, no registration"
             );
         }
+    }
+
+    /// The macOS object for a program with a global puts `_twig_globals` on an 8-byte
+    /// boundary. Here the code is 0x114 bytes (≡ 4 mod 8). The block used to sit right
+    /// after it, and `ld64` kept it 4 bytes off an 8-byte boundary. The runtime then
+    /// refused to register it, and the init's registration check trapped (the macOS
+    /// `lang_matrix` failure of #18790).
+    #[test]
+    fn macos_object_puts_twig_globals_on_an_8_byte_boundary() {
+        let obj = compile_macos_arm64_object("(define (f) g) (define g 42) (f)", "m").unwrap();
+        // __data section_64: after mach_header_64 (32), LC_SEGMENT_64 (72), __text (80).
+        let sect = 32 + 72 + 80;
+        let text_size =
+            u64::from_le_bytes(obj[32 + 72 + 40..32 + 72 + 48].try_into().unwrap());
+        let addr = u64::from_le_bytes(obj[sect + 32..sect + 40].try_into().unwrap());
+        assert_eq!(addr % 8, 0, "__data at {addr:#x} (text {text_size:#x}) is not 8-aligned");
+        // LC_SYMTAB follows LC_BUILD_VERSION (24); symoff is its third word.
+        let symtab_cmd = 32 + 72 + 160 + 24;
+        let symoff =
+            u32::from_le_bytes(obj[symtab_cmd + 8..symtab_cmd + 12].try_into().unwrap()) as usize;
+        let n_value =
+            u64::from_le_bytes(obj[symoff + 16 + 8..symoff + 32].try_into().unwrap());
+        assert_eq!(n_value, addr, "_twig_globals is the start of the aligned __data");
+    }
+
+    /// A module with more globals than the runtime will root is refused at compile
+    /// time rather than run with every global unrooted.
+    #[test]
+    fn more_globals_than_the_runtime_roots_is_a_compile_error() {
+        let max = gc_core_capi::MAX_GLOBAL_ROOT_SLOTS as usize;
+        assert!(check_global_root_capacity(max).is_ok());
+        let err = check_global_root_capacity(max + 1).unwrap_err();
+        assert!(matches!(&err, AotError::Compile(m) if m.contains("globals exceed")), "{err:?}");
     }
 
     /// Whole x86-64 module: a program with a global hands the packager a

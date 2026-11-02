@@ -318,8 +318,15 @@ back into it.
   `__gc_global_roots_reset` does, for tests.
 - **Minor and incremental collections.** A store into a global has no write
   barrier, so the global slots are roots of every minor cycle (that is how a young
-  object only a global names is found). An incremental cycle snapshots them at
-  `start` with the stack roots and gives them the same treatment as stack slots.
+  object only a global names is found). An incremental cycle roots them at `start`
+  with the stack roots and **re-scans** both at `finish` before sweeping, because a
+  `global_store` (like any root store) has no barrier (`AOT00-T4` §6).
+- **Every public collect entry.** `__gc_collect_roots` adds each global slot's current
+  word to the caller's root words; `__gc_collect_region` passes the slots as precise
+  roots beside the caller's region.
+- **Registration cannot fail silently.** twig-aot refuses at compile time a module with
+  more globals than `MAX_GLOBAL_ROOT_SLOTS` (2²⁴), and the generated init traps if
+  `__gc_register_global_roots` returns anything other than the count.
 
 Regression tests: `twig-aot/tests/gc_global_and_buffer_roots.rs` (compacting and
 precise collections spliced in front of the global read, with `main`'s copy kept
