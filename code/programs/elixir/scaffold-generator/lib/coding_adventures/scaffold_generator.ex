@@ -53,6 +53,11 @@ defmodule CodingAdventures.ScaffoldGenerator do
 
   @kebab_case_re ~r/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/
 
+  # The Darwin-only DEVELOPER_DIR selection every generated Haskell BUILD line
+  # carries (explained in generate_haskell/6). It is the exact prefix shape that
+  # `build-tool --validate-build-files` accepts, so it is kept as one attribute.
+  @haskell_darwin_clt_prefix ~s{if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; }
+
   # =========================================================================
   # Name normalization
   # =========================================================================
@@ -1650,7 +1655,36 @@ defmodule CodingAdventures.ScaffoldGenerator do
     cabal_project_lines_suffix = if cabal_project_lines != "", do: "\n#{cabal_project_lines}", else: ""
     cabal_project = "packages: .#{cabal_project_lines_suffix}\n"
 
-    build = "cabal test all\n"
+    # --- BUILD: select the Command Line Tools linker on macOS ---
+    #
+    # GHC 9.4.8's macOS bindist hardcodes a Command Line Tools (CLT) SDK
+    # sysroot. On a runner whose default developer directory is an *older*
+    # Xcode, that Xcode's linker is handed CLT SDK stubs it cannot parse
+    # (`arm64e.x1`) and every link fails. Exporting DEVELOPER_DIR selects the
+    # matching CLT linker:
+    #
+    #   uname -s   effect of the prefix               then
+    #   Darwin     export DEVELOPER_DIR=<CLT path>    run cabal test all
+    #   Linux      nothing                            run cabal test all
+    #
+    # The build tool runs every BUILD line as its own `sh -c`, so the export
+    # lives only as long as that line's process tree, and `cabal test all`
+    # runs last, so its exit status is the line's. Cabal builds the whole
+    # local project inside that one process, so the package root itself must
+    # carry the selection. `build-tool --validate-build-files` rejects a
+    # Haskell BUILD without it (see lessons.d/
+    # ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md).
+    build =
+      "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n" <>
+        "# Scope the selection to Cabal and its children, keeping other packages intact.\n" <>
+        @haskell_darwin_clt_prefix <> "cabal test all\n"
+
+    # --- BUILD_windows: the plain command, without the POSIX prefix ---
+    #
+    # Windows runs BUILD lines under `cmd /C`, which cannot parse
+    # `if [ ... ]; then ...; fi`. Before the prefix existed Windows simply
+    # ran BUILD's `cabal test all`; this override keeps exactly that.
+    build_windows = "cabal test all\n"
 
     src_dir = Path.join(target_dir, "src")
     test_dir = Path.join(target_dir, "test")
@@ -1662,6 +1696,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
     write_dedented(Path.join(src_dir, "#{module_name}.hs"), lib_hs)
     write_dedented(Path.join(test_dir, "Spec.hs"), spec_hs)
     File.write!(Path.join(target_dir, "BUILD"), build)
+    File.write!(Path.join(target_dir, "BUILD_windows"), build_windows)
   end
 
   # =========================================================================
