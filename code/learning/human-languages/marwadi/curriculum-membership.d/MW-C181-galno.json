@@ -1,0 +1,11 @@
+{
+  "id": "MW-C181-galno",
+  "pathSegment": "MW-PATH-181-BILOVO181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-181-BILOVO181",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:f55a2a5fe44d191e",
+  "lessonIds": [
+    "MW-C245-terno",
+    "MW-C245-juhar",
+    "MW-C245-dhukno",
+    "MW-C245-achambho",
+    "MW-C245-badhai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch245.txt",
+  "json": "marwadi/narration/ch245.json",
+  "textHash": "fnv1a64:ffdd67711f442353",
+  "jsonHash": "fnv1a64:ccc29dee1f2b389a",
+  "findings": []
+}

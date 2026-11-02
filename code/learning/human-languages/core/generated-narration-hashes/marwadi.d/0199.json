@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:15bf8296deda30d5",
+  "lessonIds": [
+    "MW-C199-mohar",
+    "MW-C199-daskhat",
+    "MW-C199-rasid",
+    "MW-C199-lekho",
+    "MW-C199-madno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch199.txt",
+  "json": "marwadi/narration/ch199.json",
+  "textHash": "fnv1a64:38685cf0b77e5a60",
+  "jsonHash": "fnv1a64:2a91f242519ad02c",
+  "findings": []
+}

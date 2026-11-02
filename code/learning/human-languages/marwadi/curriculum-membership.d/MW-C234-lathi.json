@@ -1,0 +1,11 @@
+{
+  "id": "MW-C234-lathi",
+  "pathSegment": "MW-PATH-234-HERD234",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-234-HERD234",
+      "order": 1
+    }
+  ]
+}

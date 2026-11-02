@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:c63906842b5c5482",
+  "lessonIds": [
+    "MW-C171-basan",
+    "MW-C171-chithro",
+    "MW-C171-majno",
+    "MW-C171-saph",
+    "MW-C171-kachro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch171.txt",
+  "json": "marwadi/narration/ch171.json",
+  "textHash": "fnv1a64:d80d3fa25f80a1c2",
+  "jsonHash": "fnv1a64:0764addc5dfa805f",
+  "findings": []
+}

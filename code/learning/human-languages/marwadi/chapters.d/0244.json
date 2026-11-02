@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "A Quarrel Next Door",
+  "label": "ch:mw-a-quarrel-next-door",
+  "canDo": "I can say who quarrelled and whose fault it was.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-C244-dhamki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say who quarrelled and whose fault it was.",
+    "assesses": [
+      "MW-LEX-C244-JHAGRO244-03",
+      "MW-LEX-C244-JHAGRO244-04",
+      "MW-LEX-C244-JHAGRO244-05"
+    ]
+  }
+}

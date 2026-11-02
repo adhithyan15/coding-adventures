@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 270,
+  "title": "Saying Sorry",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cf16581356a35d2f",
+  "lessons": [
+    {
+      "id": "MW-C270-maphi",
+      "sequence": 19200,
+      "title": "माफी (māphī) — pardon",
+      "headword": "माफी",
+      "romanization": "māphī",
+      "gloss": "pardon",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b6f0c8645efc6ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for stubbornness, then the Marwadi for to interrupt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: माफी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माफी — māphī — \"pardon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं माफी मांगूं हूं। hū̃ māphī māṅgū̃ hū̃. I'm sorry: I ask your pardon."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माफी (māphī) is usually traced, through Persian muʿāfī, \"pardon\", to Arabic muʿāf, \"excused\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māphī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māphī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māphī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māphī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ māphī māṅgū̃ hū̃. — I'm sorry: I ask your pardon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ māphī māṅgū̃ hū̃.* — I'm sorry: I ask your pardon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for stubbornness, then the Marwadi for to interrupt, then say māphī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for stubbornness, then the Marwadi for to interrupt, then say *māphī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does माफी (māphī) mean? (\"Pardon\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C270-maphi-type",
+              "prompt": "Say the Marwadi for 'pardon'.",
+              "assesses": [
+                "MW-LEX-C270-MAPHI270-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "माफी",
+                "māphī"
+              ],
+              "feedback": {
+                "correct": "Right: माफी (māphī) is 'pardon'.",
+                "incorrect": "'pardon' is माफी (māphī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C270-kasur",
+      "sequence": 19210,
+      "title": "कसूर (kasūr) — a wrongdoing; a fault",
+      "headword": "कसूर",
+      "romanization": "kasūr",
+      "gloss": "a wrongdoing; a fault",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc32d4ac02218614",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to interrupt, then the Marwadi for pardon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कसूर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कसूर — kasūr — \"a wrongdoing; a fault\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थारो कोई कसूर कोनी। thāro koī kasūr konī. It isn't your fault at all."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कसूर (kasūr) is usually traced, through Persian qusūr, to Arabic quṣūr, \"falling short\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāro koī kasūr konī. — It isn't your fault at all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāro koī kasūr konī.* — It isn't your fault at all.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to interrupt, then the Marwadi for pardon, then say kasūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to interrupt, then the Marwadi for pardon, then say *kasūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कसूर (kasūr) mean? (\"A wrongdoing; a fault\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C270-kasur-type",
+              "prompt": "Say the Marwadi for 'a wrongdoing'.",
+              "assesses": [
+                "MW-LEX-C270-MAPHI270-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कसूर",
+                "kasūr"
+              ],
+              "feedback": {
+                "correct": "Right: कसूर (kasūr) is 'a wrongdoing; a fault'.",
+                "incorrect": "'a wrongdoing' is कसूर (kasūr)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C270-pachhtano",
+      "sequence": 19220,
+      "title": "पछताणो (pachhtāṇo) — to regret",
+      "headword": "पछताणो",
+      "romanization": "pachhtāṇo",
+      "gloss": "to regret",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cbb38fa5c8624ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for pardon, then the Marwadi for a wrongdoing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पछताणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पछताणो — pachhtāṇo — \"to regret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं घणो पछताऊं हूं। hū̃ ghaṇo pachhtāū̃ hū̃. I am very sorry for it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो पछतायो, vo pachhtāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पछताणो (pachhtāṇo) is inherited from a reconstructed paścottāpa, \"repentance\"; CDIAL lists Old Marwari pichatāi and pachitāi under it (CDIAL 8010)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachhtāṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachhtāṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachhtāṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachhtāṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ ghaṇo pachhtāū̃ hū̃. — I am very sorry for it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ ghaṇo pachhtāū̃ hū̃.* — I am very sorry for it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for pardon, then the Marwadi for a wrongdoing, then say pachhtāṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for pardon, then the Marwadi for a wrongdoing, then say *pachhtāṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पछताणो (pachhtāṇo) mean? (\"To regret\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C270-pachhtano-type",
+              "prompt": "Say the Marwadi for 'to regret'.",
+              "assesses": [
+                "MW-LEX-C270-MAPHI270-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पछताणो",
+                "pachhtāṇo"
+              ],
+              "feedback": {
+                "correct": "Right: पछताणो (pachhtāṇo) is 'to regret'.",
+                "incorrect": "'to regret' is पछताणो (pachhtāṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C270-phorno",
+      "sequence": 19230,
+      "title": "फोड़णो (phoṛṇo) — to smash; to break open",
+      "headword": "फोड़णो",
+      "romanization": "phoṛṇo",
+      "gloss": "to smash; to break open",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f63768ca997b4d87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a wrongdoing, then the Marwadi for to regret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फोड़णो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फोड़णो — phoṛṇo — \"to smash; to break open\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मटको मत फोड़ो। maṭko mat phoṛo. Don't smash the pot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं मटको फोड़्यो, mhaĩ maṭko phoṛyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फोड़णो (phoṛṇo) is inherited from Sanskrit sphoṭayati, \"bursts, splits, breaks\"; CDIAL gives no Marwari form in this entry, but lists Hindi phoṛnā, Gujarati phoṛvũ and Sindhi phoṛaṇu, all \"to break\" (CDIAL 13857). It is the transitive partner of फूटणो, to crack open: मटको फूट्यो, but म्हैं मटको फोड़्यो."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phoṛṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phoṛṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phoṛṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phoṛṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭko mat phoṛo. — Don't smash the pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭko mat phoṛo.* — Don't smash the pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a wrongdoing, then the Marwadi for to regret, then say phoṛṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a wrongdoing, then the Marwadi for to regret, then say *phoṛṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फोड़णो (phoṛṇo) mean? (\"To smash; to break open\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C270-phorno-type",
+              "prompt": "Say the Marwadi for 'to smash'.",
+              "assesses": [
+                "MW-LEX-C270-MAPHI270-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फोड़णो",
+                "phoṛṇo"
+              ],
+              "feedback": {
+                "correct": "Right: फोड़णो (phoṛṇo) is 'to smash; to break open'.",
+                "incorrect": "'to smash' is फोड़णो (phoṛṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C270-khijno",
+      "sequence": 19240,
+      "title": "खीजणो (khījṇo) — to get cross",
+      "headword": "खीजणो",
+      "romanization": "khījṇo",
+      "gloss": "to get cross",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e84ff9770ad6ab51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to regret, then the Marwadi for to smash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खीजणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खीजणो — khījṇo — \"to get cross\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मत खीजो सा। mat khījo sā. Please don't be cross."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो खीज्यो, vo khījyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खीजणो (khījṇo) is inherited from Sanskrit kṣīyate, \"is worn away, is injured\"; CDIAL lists Old Marwari khijaï, \"to be irritated\", and Gujarati khījvũ, \"to take offence\" (CDIAL 3695)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khījṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khījṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khījṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khījṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mat khījo sā. — Please don't be cross.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mat khījo sā.* — Please don't be cross.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to regret, then the Marwadi for to smash, then say khījṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to regret, then the Marwadi for to smash, then say *khījṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खीजणो (khījṇo) mean? (\"To get cross\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C270-khijno-type",
+              "prompt": "Say the Marwadi for 'to get cross'.",
+              "assesses": [
+                "MW-LEX-C270-MAPHI270-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खीजणो",
+                "khījṇo"
+              ],
+              "feedback": {
+                "correct": "Right: खीजणो (khījṇo) is 'to get cross'.",
+                "incorrect": "'to get cross' is खीजणो (khījṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

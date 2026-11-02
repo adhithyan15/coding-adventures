@@ -1,0 +1,11 @@
+{
+  "id": "MW-C263-teli",
+  "pathSegment": "MW-PATH-263-TELI263",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-263-TELI263",
+      "order": 2
+    }
+  ]
+}

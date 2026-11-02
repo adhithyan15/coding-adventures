@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-268-KAIVNO268",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "MW-EXT-268-KAIVNO268"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-R157-not-today",
+  "pathSegment": "MW-PATH-157-NEGATE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-157-NEGATE",
+      "order": 4
+    }
+  ]
+}

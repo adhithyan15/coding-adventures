@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 180,
+  "title": "Putting Things Away",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4587f65145e782d8",
+  "lessons": [
+    {
+      "id": "MW-C180-dharno",
+      "sequence": 11720,
+      "title": "धरणो (dharṇo) — to set down; to place",
+      "headword": "धरणो",
+      "romanization": "dharṇo",
+      "gloss": "to set down; to place",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:023ad9fd4f78cbc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to peel, then the Marwadi for to winnow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धरणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धरणो — dharṇo — \"to set down; to place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं घड़ो भींत कनै धरूं हूं। hū̃ ghaṛo bhī̃t kanai dharū̃ hū̃. I set the water pot down by the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं घड़ो भींत कनै धर्यो, mhaĩ ghaṛo bhī̃t kanai dharyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धरणो (dharṇo) is inherited from Sanskrit dharati, \"holds, keeps\"; CDIAL lists Marwari dharṇo, \"to keep, place\" (CDIAL 6747)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ ghaṛo bhī̃t kanai dharū̃ hū̃. — I set the water pot down by the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ ghaṛo bhī̃t kanai dharū̃ hū̃.* — I set the water pot down by the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to peel, then the Marwadi for to winnow, then say dharṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to peel, then the Marwadi for to winnow, then say *dharṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धरणो (dharṇo) mean? (\"To set down; to place\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C180-dharno-type",
+              "prompt": "Say the Marwadi for 'to set down'.",
+              "assesses": [
+                "MW-LEX-C180-DHARO180-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धरणो",
+                "dharṇo"
+              ],
+              "feedback": {
+                "correct": "Right: धरणो (dharṇo) is 'to set down; to place'.",
+                "incorrect": "'to set down' is धरणो (dharṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C180-ghalno",
+      "sequence": 11730,
+      "title": "घालणो (ghālṇo) — to put in",
+      "headword": "घालणो",
+      "romanization": "ghālṇo",
+      "gloss": "to put in",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61d784ca2304d1c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to winnow, then the Marwadi for to set down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घालणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घालणो — ghālṇo — \"to put in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां दाल मांय लूण घालै है। mā̃ dāl mā̃y lūṇ ghālai hai. Mother puts salt in the dal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दाल मांय लूण घाल्यो, mhaĩ dāl mā̃y lūṇ ghālyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घालणो (ghālṇo) is inherited from a reconstructed ghalyati, \"pours\"; CDIAL lists Old Marwari ghālaï, \"puts, places, gives\" (CDIAL 4457)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghālṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghālṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghālṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghālṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ dāl mā̃y lūṇ ghālai hai. — Mother puts salt in the dal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ dāl mā̃y lūṇ ghālai hai.* — Mother puts salt in the dal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to winnow, then the Marwadi for to set down, then say ghālṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to winnow, then the Marwadi for to set down, then say *ghālṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घालणो (ghālṇo) mean? (\"To put in\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C180-ghalno-type",
+              "prompt": "Say the Marwadi for 'to put in'.",
+              "assesses": [
+                "MW-LEX-C180-DHARO180-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "घालणो",
+                "ghālṇo"
+              ],
+              "feedback": {
+                "correct": "Right: घालणो (ghālṇo) is 'to put in'.",
+                "incorrect": "'to put in' is घालणो (ghālṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C180-nakhno",
+      "sequence": 11740,
+      "title": "नाखणो (nākhṇo) — to throw (away)",
+      "headword": "नाखणो",
+      "romanization": "nākhṇo",
+      "gloss": "to throw (away)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45133dfc2f16f0d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to set down, then the Marwadi for to put in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाखणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाखणो — nākhṇo — \"to throw (away)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं रोज कचरो नाखूं हूं। hū̃ roj kachro nākhū̃ hū̃. I throw out the rubbish every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं कचरो नाख्यो, mhaĩ kachro nākhyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाखणो (nākhṇo) is inherited, by CDIAL's account, from Sanskrit naṅkṣyati, \"will perish\", a sense far from today's; CDIAL lists Old Marwari nākhaï, \"puts, drops, strews\" (CDIAL 6930)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nākhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nākhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nākhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nākhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ roj kachro nākhū̃ hū̃. — I throw out the rubbish every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ roj kachro nākhū̃ hū̃.* — I throw out the rubbish every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to set down, then the Marwadi for to put in, then say nākhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to set down, then the Marwadi for to put in, then say *nākhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाखणो (nākhṇo) mean? (\"To throw (away)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C180-nakhno-type",
+              "prompt": "Say the Marwadi for 'to throw'.",
+              "assesses": [
+                "MW-LEX-C180-DHARO180-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नाखणो",
+                "nākhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: नाखणो (nākhṇo) is 'to throw (away)'.",
+                "incorrect": "'to throw' is नाखणो (nākhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C180-chhiko",
+      "sequence": 11750,
+      "title": "छींको (chhī̃ko) — a hanging net for pots",
+      "headword": "छींको",
+      "romanization": "chhī̃ko",
+      "gloss": "a hanging net for pots",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21ebd6ee5570b692",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to put in, then the Marwadi for to throw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छींको",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छींको — chhī̃ko — \"a hanging net for pots\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छींको नुवो है। chhī̃ko nuvo hai. The hanging net is new."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छींको (chhī̃ko) is inherited from Sanskrit śikya, \"a rope sling for carrying things\"; CDIAL lists Hindi chī̃kā and Sindhi chiko, a net or shelf that hangs (CDIAL 12427). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhī̃ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhī̃ko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhī̃ko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhī̃ko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhī̃ko nuvo hai. — The hanging net is new.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhī̃ko nuvo hai.* — The hanging net is new.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to put in, then the Marwadi for to throw, then say chhī̃ko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to put in, then the Marwadi for to throw, then say *chhī̃ko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छींको (chhī̃ko) mean? (\"A hanging net for pots\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C180-chhiko-type",
+              "prompt": "Say the Marwadi for 'a hanging net'.",
+              "assesses": [
+                "MW-LEX-C180-DHARO180-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छींको",
+                "chhī̃ko"
+              ],
+              "feedback": {
+                "correct": "Right: छींको (chhī̃ko) is 'a hanging net for pots'.",
+                "incorrect": "'a hanging net' is छींको (chhī̃ko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C180-chhabri",
+      "sequence": 11760,
+      "title": "छाबड़ी (chhābṛī) — a flat basket",
+      "headword": "छाबड़ी",
+      "romanization": "chhābṛī",
+      "gloss": "a flat basket",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccdae269c21d6f54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to throw, then the Marwadi for a hanging net."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छाबड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाबड़ी — chhābṛī — \"a flat basket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छाबड़ी मांय रोटी है। chhābṛī mā̃y roṭī hai. There are rotis in the flat basket."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाबड़ी (chhābṛī) is inherited, by CDIAL's account, from Sanskrit chadman, \"a roof\"; CDIAL lists Hindi chabṛī, \"a strainer, a bamboo basket\" (CDIAL 4981). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhābṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhābṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhābṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhābṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhābṛī mā̃y roṭī hai. — There are rotis in the flat basket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhābṛī mā̃y roṭī hai.* — There are rotis in the flat basket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to throw, then the Marwadi for a hanging net, then say chhābṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to throw, then the Marwadi for a hanging net, then say *chhābṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छाबड़ी (chhābṛī) mean? (\"A flat basket\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C180-chhabri-type",
+              "prompt": "Say the Marwadi for 'a flat basket'.",
+              "assesses": [
+                "MW-LEX-C180-DHARO180-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छाबड़ी",
+                "chhābṛī"
+              ],
+              "feedback": {
+                "correct": "Right: छाबड़ी (chhābṛī) is 'a flat basket'.",
+                "incorrect": "'a flat basket' is छाबड़ी (chhābṛī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

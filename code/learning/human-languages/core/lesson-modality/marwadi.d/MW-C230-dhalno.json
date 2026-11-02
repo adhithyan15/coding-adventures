@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C230-dhalno",
+    "language": "marwadi",
+    "chapter": 230,
+    "sequence": 15730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96a4e31f400c674a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C161-kiyo-liyo",
+  "pathSegment": "MW-PATH-161-DID",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-161-DID",
+      "order": 1
+    }
+  ]
+}

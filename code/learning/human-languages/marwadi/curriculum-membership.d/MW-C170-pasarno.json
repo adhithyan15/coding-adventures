@@ -1,0 +1,11 @@
+{
+  "id": "MW-C170-pasarno",
+  "pathSegment": "MW-PATH-170-DHOVO170",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-170-DHOVO170",
+      "order": 2
+    }
+  ]
+}

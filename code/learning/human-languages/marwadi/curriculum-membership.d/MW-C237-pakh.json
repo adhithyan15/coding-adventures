@@ -1,0 +1,11 @@
+{
+  "id": "MW-C237-pakh",
+  "pathSegment": "MW-PATH-237-FIELD237",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-237-FIELD237",
+      "order": 1
+    }
+  ]
+}

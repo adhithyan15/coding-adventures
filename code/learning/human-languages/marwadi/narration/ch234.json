@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 234,
+  "title": "The Herd",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3023fa95b81eaad9",
+  "lessons": [
+    {
+      "id": "MW-C234-evaliyo",
+      "sequence": 15920,
+      "title": "एवाळियो (evāḷiyo) — a shepherd",
+      "headword": "एवाळियो",
+      "romanization": "evāḷiyo",
+      "gloss": "a shepherd",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca41a02484bd50cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to tighten, then the Marwadi for a small bell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: एवाळियो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एवाळियो — evāḷiyo — \"a shepherd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एवाळियो जंगळ मांय जावै है। evāḷiyo jaṅgaḷ mā̃y jāvai hai. The shepherd goes out into the scrubland."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एवाळियो (evāḷiyo) is inherited from Sanskrit avipāla, \"a shepherd\", built from avi, \"sheep\", and pāla, \"a keeper\"; CDIAL lists Marwari evāḷiyo (CDIAL 893)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evāḷiyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evāḷiyo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evāḷiyo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evāḷiyo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evāḷiyo jaṅgaḷ mā̃y jāvai hai. — The shepherd goes out into the scrubland.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evāḷiyo jaṅgaḷ mā̃y jāvai hai.* — The shepherd goes out into the scrubland.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to tighten, then the Marwadi for a small bell, then say evāḷiyo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to tighten, then the Marwadi for a small bell, then say *evāḷiyo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does एवाळियो (evāḷiyo) mean? (\"A shepherd\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C234-evaliyo-type",
+              "prompt": "Say the Marwadi for 'a shepherd'.",
+              "assesses": [
+                "MW-LEX-C234-HERD234-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "एवाळियो",
+                "evāḷiyo"
+              ],
+              "feedback": {
+                "correct": "Right: एवाळियो (evāḷiyo) is 'a shepherd'.",
+                "incorrect": "'a shepherd' is एवाळियो (evāḷiyo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C234-lathi",
+      "sequence": 15930,
+      "title": "लाठी (lāṭhī) — a long stick",
+      "headword": "लाठी",
+      "romanization": "lāṭhī",
+      "gloss": "a long stick",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82d5cf16aa72d9ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a small bell, then the Marwadi for a shepherd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लाठी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाठी — lāṭhī — \"a long stick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एवाळियो लाठी राखै है। evāḷiyo lāṭhī rākhai hai. The shepherd carries a long stick."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाठी (lāṭhī) is inherited from a reconstructed laṣṭi, \"a stick\", beside Sanskrit yaṣṭi; CDIAL lists Marwari lāṭhī (CDIAL 10991)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāṭhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāṭhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāṭhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāṭhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evāḷiyo lāṭhī rākhai hai. — The shepherd carries a long stick.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evāḷiyo lāṭhī rākhai hai.* — The shepherd carries a long stick.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a small bell, then the Marwadi for a shepherd, then say lāṭhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a small bell, then the Marwadi for a shepherd, then say *lāṭhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लाठी (lāṭhī) mean? (\"A long stick\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C234-lathi-type",
+              "prompt": "Say the Marwadi for 'a long stick'.",
+              "assesses": [
+                "MW-LEX-C234-HERD234-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लाठी",
+                "lāṭhī"
+              ],
+              "feedback": {
+                "correct": "Right: लाठी (lāṭhī) is 'a long stick'.",
+                "incorrect": "'a long stick' is लाठी (lāṭhī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C234-charno",
+      "sequence": 15940,
+      "title": "चरणो (charṇo) — to graze",
+      "headword": "चरणो",
+      "romanization": "charṇo",
+      "gloss": "to graze",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba9a410c5b0cf3fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a shepherd, then the Marwadi for a long stick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चरणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चरणो — charṇo — \"to graze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भेड़ खेत मांय चरै है। bheṛ khet mā̃y charai hai. The sheep graze in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो ऊंट चर्यो, vo ū̃ṭ charyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चरणो (charṇo) is inherited from Sanskrit carati, \"moves, grazes\"; CDIAL lists the Old Marwari verb caraï, \"grazes\" (CDIAL 4686)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bheṛ khet mā̃y charai hai. — The sheep graze in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bheṛ khet mā̃y charai hai.* — The sheep graze in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a shepherd, then the Marwadi for a long stick, then say charṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a shepherd, then the Marwadi for a long stick, then say *charṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चरणो (charṇo) mean? (\"To graze\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C234-charno-type",
+              "prompt": "Say the Marwadi for 'to graze'.",
+              "assesses": [
+                "MW-LEX-C234-HERD234-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चरणो",
+                "charṇo"
+              ],
+              "feedback": {
+                "correct": "Right: चरणो (charṇo) is 'to graze'.",
+                "incorrect": "'to graze' is चरणो (charṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C234-hakno",
+      "sequence": 15950,
+      "title": "हांकणो (hā̃kṇo) — to drive (animals or a cart)",
+      "headword": "हांकणो",
+      "romanization": "hā̃kṇo",
+      "gloss": "to drive (animals or a cart)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b94e442b47b1434",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a long stick, then the Marwadi for to graze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हांकणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हांकणो — hā̃kṇo — \"to drive (animals or a cart)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल ऊंट हांकसूं। hū̃ kāl ū̃ṭ hā̃ksū̃. Tomorrow I'll drive the camel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं ऊंट हांक्यो, mhaĩ ū̃ṭ hā̃kyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हांकणो (hā̃kṇo) is inherited from Sanskrit hakkayati, \"calls to\"; CDIAL lists the Old Marwari verb, \"drives\", under it (CDIAL 13939): a herder drives the animals by calling to them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃kṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃kṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃kṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃kṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl ū̃ṭ hā̃ksū̃. — Tomorrow I'll drive the camel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl ū̃ṭ hā̃ksū̃.* — Tomorrow I'll drive the camel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a long stick, then the Marwadi for to graze, then say hā̃kṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a long stick, then the Marwadi for to graze, then say *hā̃kṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हांकणो (hā̃kṇo) mean? (\"To drive (animals or a cart)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C234-hakno-type",
+              "prompt": "Say the Marwadi for 'to drive (animals or a cart)'.",
+              "assesses": [
+                "MW-LEX-C234-HERD234-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हांकणो",
+                "hā̃kṇo"
+              ],
+              "feedback": {
+                "correct": "Right: हांकणो (hā̃kṇo) is 'to drive (animals or a cart)'.",
+                "incorrect": "'to drive (animals or a cart)' is हांकणो (hā̃kṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C234-sambhalno",
+      "sequence": 15960,
+      "title": "संभाळणो (sambhāḷṇo) — to look after; to take care of",
+      "headword": "संभाळणो",
+      "romanization": "sambhāḷṇo",
+      "gloss": "to look after; to take care of",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3aa19054b6fcb89d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to graze, then the Marwadi for to drive (animals or a cart)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संभाळणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संभाळणो — sambhāḷṇo — \"to look after; to take care of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं गाय संभाळूं हूं। hū̃ gāy sambhāḷū̃ hū̃. I look after the cow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं गाय संभाळी, mhaĩ gāy sambhāḷī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संभाळणो (sambhāḷṇo) is inherited from Sanskrit sambharati, \"brings together\"; CDIAL lists the Old Marwari verb samālaï, \"takes care of\" (CDIAL 12961)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāḷṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāḷṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ gāy sambhāḷū̃ hū̃. — I look after the cow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ gāy sambhāḷū̃ hū̃.* — I look after the cow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to graze, then the Marwadi for to drive (animals or a cart), then say sambhāḷṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to graze, then the Marwadi for to drive (animals or a cart), then say *sambhāḷṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संभाळणो (sambhāḷṇo) mean? (\"To look after; to take care of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C234-sambhalno-type",
+              "prompt": "Say the Marwadi for 'to look after'.",
+              "assesses": [
+                "MW-LEX-C234-HERD234-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "संभाळणो",
+                "sambhāḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: संभाळणो (sambhāḷṇo) is 'to look after; to take care of'.",
+                "incorrect": "'to look after' is संभाळणो (sambhāḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R234-review-229-234",
+      "sequence": 15970,
+      "title": "Looking back: from Light and White to The Herd",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Light and White to The Herd",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65bc4cb75927cf36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marwadi for daylight and bright."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daylight, bright, fine, white, to shine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: daylight, bright, fine, white, to shine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be scorching, to go down (of the sun), the earth, swallow-wort, a thorn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be scorching, to go down (of the sun), the earth, swallow-wort, a thorn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "crooked, straight, standing, round, loose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: crooked, straight, standing, round, loose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elderly, soil, smooth, a pebble, a jujube bush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: elderly, soil, smooth, a pebble, a jujube bush]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a camel saddle, a camel's nose-peg, trappings (of a camel or a horse), to tighten, a small bell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a camel saddle, a camel's nose-peg, trappings (of a camel or a horse), to tighten, a small bell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shepherd, a long stick, to graze, to drive (animals or a cart), to look after",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shepherd, a long stick, to graze, to drive (animals or a cart), to look after]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Daylight? (उजास, ujās.) Bright? (ऊजळो, ūjḷo.) Fine? (झीणो, jhīṇo.) White? (धोळो, dhoḷo.) To shine? (चमकणो, chamakṇo.) To be scorching? (बळणो, baḷṇo.) To go down (of the sun)? (ढळणो, ḍhaḷṇo.) The earth? (धरती, dhartī.) Swallow-wort? (आक, āk.) A thorn? (कांटो, kā̃ṭo.) Crooked? (बांको, bā̃ko.) Straight? (सीधो, sīdho.) Standing? (ऊभो, ūbho.) Round? (गोळ, goḷ.) Loose? (ढीलो, ḍhīlo.) Elderly? (बूढो, būḍho.) Soil? (माटी, māṭī.) Smooth? (चिकणो, chikṇo.) A pebble? (कांकरो, kā̃kro.) A jujube bush? (बोरड़ी, borṛī.) A camel saddle? (पलाण, palāṇ.) A camel's nose-peg? (नकेल, nakel.) Trappings (of a camel or a horse)? (साज, sāj.) To tighten? (कसणो, kasṇo.) A small bell? (घूघरो, ghūghro.) A shepherd? (एवाळियो, evāḷiyo.) A long stick? (लाठी, lāṭhī.) To graze? (चरणो, charṇo.) To drive (animals or a cart)? (हांकणो, hā̃kṇo.) To look after? (संभाळणो, sambhāḷṇo.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R234-review-229-234-type",
+              "prompt": "Say the Marwadi for 'daylight'.",
+              "assesses": [
+                "MW-LEX-C229-LIGHT229-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उजास",
+                "ujās"
+              ],
+              "feedback": {
+                "correct": "Right: उजास (ujās) is 'daylight; brightness'.",
+                "incorrect": "'daylight' is उजास (ujās)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

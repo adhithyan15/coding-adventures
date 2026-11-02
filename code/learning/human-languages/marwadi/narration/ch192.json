@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 192,
+  "title": "Danger on the Road",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ec9085f52c42e068",
+  "lessons": [
+    {
+      "id": "MW-C192-khatro",
+      "sequence": 13050,
+      "title": "खतरो (khatro) — danger",
+      "headword": "खतरो",
+      "romanization": "khatro",
+      "gloss": "danger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd2b4015a58cfaf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for careful, then the Marwadi for to obey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खतरो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खतरो — khatro — \"danger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुल माथै खतरो है। pul māthai khatro hai. The bridge is dangerous."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खतरो (khatro) is usually traced, through Persian, to Arabic khaṭar, \"danger\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khatro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khatro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khatro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khatro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pul māthai khatro hai. — The bridge is dangerous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pul māthai khatro hai.* — The bridge is dangerous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for careful, then the Marwadi for to obey, then say khatro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for careful, then the Marwadi for to obey, then say *khatro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खतरो (khatro) mean? (\"Danger\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C192-khatro-type",
+              "prompt": "Say the Marwadi for 'danger'.",
+              "assesses": [
+                "MW-LEX-C192-BOARD192-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खतरो",
+                "khatro"
+              ],
+              "feedback": {
+                "correct": "Right: खतरो (khatro) is 'danger'.",
+                "incorrect": "'danger' is खतरो (khatro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C192-dhire",
+      "sequence": 13060,
+      "title": "धीरे (dhīre) — slowly",
+      "headword": "धीरे",
+      "romanization": "dhīre",
+      "gloss": "slowly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dace7f3c7653bc0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to obey, then the Marwadi for danger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धीरे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धीरे — dhīre — \"slowly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गळी मांय धीरे चालो। gaḷī mā̃y dhīre chālo. Go slowly in the lane."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धीरे (dhīre) is inherited from Sanskrit dhīra, \"steady, resolute\". CDIAL gives no Marwari form in this entry, but lists Sindhi dhīre, \"quietly\", and Gujarati dhīrũ, \"slow\" (CDIAL 6817)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḷī mā̃y dhīre chālo. — Go slowly in the lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḷī mā̃y dhīre chālo.* — Go slowly in the lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to obey, then the Marwadi for danger, then say dhīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to obey, then the Marwadi for danger, then say *dhīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धीरे (dhīre) mean? (\"Slowly\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C192-dhire-type",
+              "prompt": "Say the Marwadi for 'slowly'.",
+              "assesses": [
+                "MW-LEX-C192-BOARD192-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धीरे",
+                "dhīre"
+              ],
+              "feedback": {
+                "correct": "Right: धीरे (dhīre) is 'slowly'.",
+                "incorrect": "'slowly' is धीरे (dhīre)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C192-kharo",
+      "sequence": 13070,
+      "title": "खाड़ो (khāṛo) — a pit; a pothole",
+      "headword": "खाड़ो",
+      "romanization": "khāṛo",
+      "gloss": "a pit; a pothole",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ed485d4bfd4c718",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for danger, then the Marwadi for slowly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खाड़ो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खाड़ो — khāṛo — \"a pit; a pothole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सड़क मांय बड़ो खाड़ो है। saṛak mā̃y baṛo khāṛo hai. There's a big hole in the road."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खाड़ो (khāṛo) is inherited from a reconstructed khāḍa, \"a hollow\"; CDIAL lists Marwari khāṛo, \"hole\" (CDIAL 3860)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṛo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṛo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṛak mā̃y baṛo khāṛo hai. — There's a big hole in the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṛak mā̃y baṛo khāṛo hai.* — There's a big hole in the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for danger, then the Marwadi for slowly, then say khāṛo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for danger, then the Marwadi for slowly, then say *khāṛo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खाड़ो (khāṛo) mean? (\"A pit; a pothole\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C192-kharo-type",
+              "prompt": "Say the Marwadi for 'a pit'.",
+              "assesses": [
+                "MW-LEX-C192-BOARD192-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खाड़ो",
+                "khāṛo"
+              ],
+              "feedback": {
+                "correct": "Right: खाड़ो (khāṛo) is 'a pit; a pothole'.",
+                "incorrect": "'a pit' is खाड़ो (khāṛo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C192-chhapno",
+      "sequence": 13080,
+      "title": "छापणो (chhāpṇo) — to print",
+      "headword": "छापणो",
+      "romanization": "chhāpṇo",
+      "gloss": "to print",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e0b41d1d50c8fdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for slowly, then the Marwadi for a pit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छापणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छापणो — chhāpṇo — \"to print\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अखबार रोज सूचना छापै है। akhbār roj sūchnā chhāpai hai. The newspaper prints notices every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं सूचना छापी, mhaĩ sūchnā chhāpī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छापणो (chhāpṇo) is inherited from a reconstructed chapp, \"press, cover, hide\"; CDIAL lists Old Marwari chipāvaï, \"hides\", and Hindi chāpnā, \"to print\", under it (CDIAL 4994). To print is to press letters onto paper."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāpṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāpṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāpṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāpṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhbār roj sūchnā chhāpai hai. — The newspaper prints notices every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhbār roj sūchnā chhāpai hai.* — The newspaper prints notices every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for slowly, then the Marwadi for a pit, then say chhāpṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for slowly, then the Marwadi for a pit, then say *chhāpṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छापणो (chhāpṇo) mean? (\"To print\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C192-chhapno-type",
+              "prompt": "Say the Marwadi for 'to print'.",
+              "assesses": [
+                "MW-LEX-C192-BOARD192-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छापणो",
+                "chhāpṇo"
+              ],
+              "feedback": {
+                "correct": "Right: छापणो (chhāpṇo) is 'to print'.",
+                "incorrect": "'to print' is छापणो (chhāpṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C192-sudharno",
+      "sequence": 13090,
+      "title": "सुधारणो (sudhārṇo) — to mend; to correct",
+      "headword": "सुधारणो",
+      "romanization": "sudhārṇo",
+      "gloss": "to mend; to correct",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2afc413d39cb733c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a pit, then the Marwadi for to print."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुधारणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुधारणो — sudhārṇo — \"to mend; to correct\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मिस्त्री सड़क सुधारै है। mistrī saṛak sudhārai hai. The mason is mending the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं साइकल सुधारी, mhaĩ sāikal sudhārī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुधारणो (sudhārṇo) is inherited from a reconstructed śuddhakāra, \"making clean\". CDIAL gives no Marwari form in this entry, but lists Hindi sudhārnā, \"to mend\" (CDIAL 12521)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sudhārṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sudhārṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sudhārṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sudhārṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mistrī saṛak sudhārai hai. — The mason is mending the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mistrī saṛak sudhārai hai.* — The mason is mending the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a pit, then the Marwadi for to print, then say sudhārṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a pit, then the Marwadi for to print, then say *sudhārṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुधारणो (sudhārṇo) mean? (\"To mend; to correct\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C192-sudharno-type",
+              "prompt": "Say the Marwadi for 'to mend'.",
+              "assesses": [
+                "MW-LEX-C192-BOARD192-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सुधारणो",
+                "sudhārṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सुधारणो (sudhārṇo) is 'to mend; to correct'.",
+                "incorrect": "'to mend' is सुधारणो (sudhārṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C207-nako",
+    "language": "marwadi",
+    "chapter": 207,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1288b00880b02e82"
+  },
+  "findings": []
+}

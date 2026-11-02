@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:bc759788dc380936",
+  "lessonIds": [
+    "MW-C244-jhagro",
+    "MW-C244-larno",
+    "MW-C244-jhuth",
+    "MW-C244-dos",
+    "MW-C244-dhamki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch244.txt",
+  "json": "marwadi/narration/ch244.json",
+  "textHash": "fnv1a64:4533e0d06f071845",
+  "jsonHash": "fnv1a64:0ce9d1ba7a868e29",
+  "findings": []
+}

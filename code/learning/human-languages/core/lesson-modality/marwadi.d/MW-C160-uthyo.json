@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C160-uthyo",
+    "language": "marwadi",
+    "chapter": 160,
+    "sequence": 9860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b54cd79f2393667"
+  },
+  "findings": []
+}

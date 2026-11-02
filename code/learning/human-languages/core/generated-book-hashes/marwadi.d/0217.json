@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:490128eedfd536ad",
+  "lessonIds": [
+    "MW-C217-laghno",
+    "MW-C217-charhno",
+    "MW-C217-bojh",
+    "MW-C217-ladno",
+    "MW-C217-thairno"
+  ],
+  "tex": "marwadi/book/chapters/ch217-over-the-river.tex"
+}

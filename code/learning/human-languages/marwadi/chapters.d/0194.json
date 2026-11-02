@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Earning and Spending",
+  "label": "ch:mw-earning-and-spending",
+  "canDo": "I can say what I earn and what I spend.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-C194-udhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say what I earn and what I spend.",
+    "assesses": [
+      "MW-LEX-C194-EARN194-03",
+      "MW-LEX-C194-EARN194-04",
+      "MW-LEX-C194-EARN194-05"
+    ]
+  }
+}

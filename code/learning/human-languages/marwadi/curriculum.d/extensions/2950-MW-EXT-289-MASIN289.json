@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-289-MASIN289",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what tools and machines I can use.",
+  "prerequisites": []
+}

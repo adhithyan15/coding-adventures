@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-215-WRAP215",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can wrap what I bought and say what has run out.",
+  "prerequisites": []
+}

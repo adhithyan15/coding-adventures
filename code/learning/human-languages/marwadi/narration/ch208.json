@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 208,
+  "title": "Offices in Town",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3e3f6d70c9ebf2e8",
+  "lessons": [
+    {
+      "id": "MW-C208-aspatal",
+      "sequence": 13870,
+      "title": "अस्पताल (aspatāl) — a hospital",
+      "headword": "अस्पताल",
+      "romanization": "aspatāl",
+      "gloss": "a hospital",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:599167d0080dd19d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a big gate, then the Marwadi for a tower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अस्पताल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अस्पताल — aspatāl — \"a hospital\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अस्पताल नदी कनै है। aspatāl nadī kanai hai. The hospital is near the river."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अस्पताल (aspatāl) is borrowed from English hospital, reshaped in everyday speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aspatāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aspatāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aspatāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aspatāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aspatāl nadī kanai hai. — The hospital is near the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aspatāl nadī kanai hai.* — The hospital is near the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a big gate, then the Marwadi for a tower, then say aspatāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a big gate, then the Marwadi for a tower, then say *aspatāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अस्पताल (aspatāl) mean? (\"A hospital\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C208-aspatal-type",
+              "prompt": "Say the Marwadi for 'a hospital'.",
+              "assesses": [
+                "MW-LEX-C208-OFFICES208-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अस्पताल",
+                "aspatāl"
+              ],
+              "feedback": {
+                "correct": "Right: अस्पताल (aspatāl) is 'a hospital'.",
+                "incorrect": "'a hospital' is अस्पताल (aspatāl)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C208-tahsil",
+      "sequence": 13880,
+      "title": "तहसील (tahsīl) — a sub-district office; a tehsil",
+      "headword": "तहसील",
+      "romanization": "tahsīl",
+      "gloss": "a sub-district office; a tehsil",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:352a7edb76ac1434",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a tower, then the Marwadi for a hospital."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तहसील",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तहसील — tahsīl — \"a sub-district office; a tehsil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तहसील सोमवार बंद है। tahsīl somvār band hai. The tehsil office is closed on Monday."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तहसील (tahsīl) is usually traced, through Persian, to Arabic taḥṣīl, \"collecting\": probably the office where land revenue was collected."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahsīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahsīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahsīl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahsīl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahsīl somvār band hai. — The tehsil office is closed on Monday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahsīl somvār band hai.* — The tehsil office is closed on Monday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a tower, then the Marwadi for a hospital, then say tahsīl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a tower, then the Marwadi for a hospital, then say *tahsīl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तहसील (tahsīl) mean? (\"A sub-district office; a tehsil\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C208-tahsil-type",
+              "prompt": "Say the Marwadi for 'a sub-district office'.",
+              "assesses": [
+                "MW-LEX-C208-OFFICES208-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तहसील",
+                "tahsīl"
+              ],
+              "feedback": {
+                "correct": "Right: तहसील (tahsīl) is 'a sub-district office; a tehsil'.",
+                "incorrect": "'a sub-district office' is तहसील (tahsīl)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C208-karkhano",
+      "sequence": 13890,
+      "title": "कारखानो (kārkhāno) — a factory",
+      "headword": "कारखानो",
+      "romanization": "kārkhāno",
+      "gloss": "a factory",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb366039edffa765",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a hospital, then the Marwadi for a sub-district office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कारखानो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कारखानो — kārkhāno — \"a factory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कारखानो सहर सूं दूर है। kārkhāno sahar sū̃ dūr hai. The factory is far from the city."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कारखानो (kārkhāno) is usually traced to Persian kārkhāna, \"workshop\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārkhāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārkhāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārkhāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārkhāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārkhāno sahar sū̃ dūr hai. — The factory is far from the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārkhāno sahar sū̃ dūr hai.* — The factory is far from the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a hospital, then the Marwadi for a sub-district office, then say kārkhāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a hospital, then the Marwadi for a sub-district office, then say *kārkhāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कारखानो (kārkhāno) mean? (\"A factory\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C208-karkhano-type",
+              "prompt": "Say the Marwadi for 'a factory'.",
+              "assesses": [
+                "MW-LEX-C208-OFFICES208-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कारखानो",
+                "kārkhāno"
+              ],
+              "feedback": {
+                "correct": "Right: कारखानो (kārkhāno) is 'a factory'.",
+                "incorrect": "'a factory' is कारखानो (kārkhāno)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C208-adalat",
+      "sequence": 13900,
+      "title": "अदालत (adālat) — a court of law",
+      "headword": "अदालत",
+      "romanization": "adālat",
+      "gloss": "a court of law",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18d1bb8621219e96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a sub-district office, then the Marwadi for a factory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अदालत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अदालत — adālat — \"a court of law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अदालत तहसील कनै है। adālat tahsīl kanai hai. The court is near the tehsil office."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अदालत (adālat) is usually traced, through Persian, to Arabic ʿadāla, \"justice\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adālat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adālat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adālat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adālat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adālat tahsīl kanai hai. — The court is near the tehsil office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adālat tahsīl kanai hai.* — The court is near the tehsil office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a sub-district office, then the Marwadi for a factory, then say adālat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a sub-district office, then the Marwadi for a factory, then say *adālat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अदालत (adālat) mean? (\"A court of law\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C208-adalat-type",
+              "prompt": "Say the Marwadi for 'a court of law'.",
+              "assesses": [
+                "MW-LEX-C208-OFFICES208-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अदालत",
+                "adālat"
+              ],
+              "feedback": {
+                "correct": "Right: अदालत (adālat) is 'a court of law'.",
+                "incorrect": "'a court of law' is अदालत (adālat)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C208-khulno",
+      "sequence": 13910,
+      "title": "खुलणो (khulṇo) — to come open; to open (of a shop or office)",
+      "headword": "खुलणो",
+      "romanization": "khulṇo",
+      "gloss": "to come open; to open (of a shop or office)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99239d10d5338c36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a factory, then the Marwadi for a court of law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खुलणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुलणो — khulṇo — \"to come open; to open (of a shop or office)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दफ्तर दिनूगै खुलै है। daphtar dinūgai khulai hai. The office opens early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो दफ्तर खुल्यो, vo daphtar khulyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खुलणो (khulṇo) is inherited from a reconstructed khull-, \"to be open\"; CDIAL lists Old Marwari khulo, \"open\", and Hindi khulnā, \"to be open\" (CDIAL 3945). खोलणो, \"to open\", is its transitive partner."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khulṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khulṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khulṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khulṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daphtar dinūgai khulai hai. — The office opens early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daphtar dinūgai khulai hai.* — The office opens early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a factory, then the Marwadi for a court of law, then say khulṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a factory, then the Marwadi for a court of law, then say *khulṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खुलणो (khulṇo) mean? (\"To come open; to open (of a shop or office)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C208-khulno-type",
+              "prompt": "Say the Marwadi for 'to come open'.",
+              "assesses": [
+                "MW-LEX-C208-OFFICES208-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खुलणो",
+                "khulṇo"
+              ],
+              "feedback": {
+                "correct": "Right: खुलणो (khulṇo) is 'to come open; to open (of a shop or office)'.",
+                "incorrect": "'to come open' is खुलणो (khulṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Offices in Town",
+  "label": "ch:mw-offices-in-town",
+  "canDo": "I can find an office or a hospital in town.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-C208-khulno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can find an office or a hospital in town.",
+    "assesses": [
+      "MW-LEX-C208-OFFICES208-03",
+      "MW-LEX-C208-OFFICES208-04",
+      "MW-LEX-C208-OFFICES208-05"
+    ]
+  }
+}

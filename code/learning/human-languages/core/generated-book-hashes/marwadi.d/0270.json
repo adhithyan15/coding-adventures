@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:5f2b2482da09d4fb",
+  "lessonIds": [
+    "MW-C270-maphi",
+    "MW-C270-kasur",
+    "MW-C270-pachhtano",
+    "MW-C270-phorno",
+    "MW-C270-khijno"
+  ],
+  "tex": "marwadi/book/chapters/ch270-saying-sorry.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:4e8fd4cb0dfe1d06",
+  "lessonIds": [
+    "MW-C237-titar",
+    "MW-C237-pakh",
+    "MW-C237-chugno",
+    "MW-C237-indo",
+    "MW-C237-midko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch237.txt",
+  "json": "marwadi/narration/ch237.json",
+  "textHash": "fnv1a64:16d3c0fe5710ece2",
+  "jsonHash": "fnv1a64:81da9836de03472b",
+  "findings": []
+}

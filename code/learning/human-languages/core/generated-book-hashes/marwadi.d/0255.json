@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:c5be3c72a0c0c622",
+  "lessonIds": [
+    "MW-C255-tabiyat",
+    "MW-C255-bigarno",
+    "MW-C255-sudharno-better",
+    "MW-C255-asu",
+    "MW-C255-kapno"
+  ],
+  "tex": "marwadi/book/chapters/ch255-better-or-worse.tex"
+}

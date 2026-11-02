@@ -369,7 +369,7 @@ fn run_array_program_expecting_failure(m: &Module, tag: &str, expected_stderr_su
         py_root.join("sir-runtime-array/src"),
     ])
     .expect("join PYTHONPATH");
-    let file = std::env::temp_dir().join(format!("sir_py_array_fail_{}_{}.py", std::process::id(), tag));
+    let file = std::env::temp_dir().join(format!("sir_py_array_fail_{}_{}.py", unique_suffix(), tag));
     std::fs::write(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
@@ -638,4 +638,15 @@ fn index_of_product_dos_guard_rejects_two_individually_legal_operands() {
         "index_of_product_dos",
         "exceeds the",
     );
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

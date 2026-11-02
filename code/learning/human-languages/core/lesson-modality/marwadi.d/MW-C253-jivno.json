@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C253-jivno",
+    "language": "marwadi",
+    "chapter": 253,
+    "sequence": 17630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66f30902a44a2e89"
+  },
+  "findings": []
+}

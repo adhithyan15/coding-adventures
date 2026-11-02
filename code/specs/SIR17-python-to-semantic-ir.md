@@ -207,8 +207,29 @@ expression, silently dropping `x += 2` and `x: int = 5`.)
   its names are not free names for capture analysis.  `t: T` with no value
   binds nothing; only a bare-name target is accepted there.
 
-**Temporaries** the frontend invents (`__chain_N`, `__for_N`,
-`__param_<name>_N`) never take a name spelled anywhere in the source.
+**Invented names come from one pool.**  The frontend invents four kinds of
+name, and the backends keep a function's locals and the module's functions
+in one namespace, so all four must differ from each other and from the
+source:
+
+| invented name          | kind     | for                              |
+|------------------------|----------|----------------------------------|
+| `__param_<name>_N`     | local    | the copy of an assigned parameter |
+| `__chain_N`, `__for_N` | local    | a chained assignment, a `for` over a bound variable |
+| `__lambda_N`           | function | a `lambda`                       |
+| `<Class>__<method>`    | function | a hoisted method (`_N` appended if taken) |
+
+Each is the first candidate that is not spelled anywhere in the source, not
+a user `def` or `class`, and not invented earlier, and it is claimed the
+moment it is chosen.  A hoisted method's name is claimed before its body is
+lowered.
+
+> **Revision (#18771).** Temporaries used to skip only source names, and
+> synthesised functions source names and other functions.  So the copy of
+> parameter `a__b` and the method `b_0` of a class `__param_a` were both
+> `__param_a__b_0`, and inside the function holding both, the copy shadowed
+> the method (`TypeError: __param_a__b_0 is not a function` on
+> JavaScript).  Only the `__param_` copies could collide this way.
 
 ## Return statement
 

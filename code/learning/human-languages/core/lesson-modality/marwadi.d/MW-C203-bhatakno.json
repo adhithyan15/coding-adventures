@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C203-bhatakno",
+    "language": "marwadi",
+    "chapter": 203,
+    "sequence": 13640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d3fbb58fe354cc9"
+  },
+  "findings": []
+}

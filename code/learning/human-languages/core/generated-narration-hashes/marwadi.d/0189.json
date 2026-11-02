@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:23a059c61fcdec8a",
+  "lessonIds": [
+    "MW-C189-thabho",
+    "MW-C189-it",
+    "MW-C189-chuno",
+    "MW-C189-dehli",
+    "MW-C189-chaubaro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch189.txt",
+  "json": "marwadi/narration/ch189.json",
+  "textHash": "fnv1a64:46158bc2a55d388d",
+  "jsonHash": "fnv1a64:52c965e3872a3bc7",
+  "findings": []
+}

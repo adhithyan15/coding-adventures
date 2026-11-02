@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C208-adalat",
+    "language": "marwadi",
+    "chapter": 208,
+    "sequence": 13900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18d1bb8621219e96"
+  },
+  "findings": []
+}

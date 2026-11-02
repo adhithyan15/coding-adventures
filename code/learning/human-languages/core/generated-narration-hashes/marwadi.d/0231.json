@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:cc71d49ca49b4bc6",
+  "lessonIds": [
+    "MW-C231-bako",
+    "MW-C231-sidho",
+    "MW-C231-ubho",
+    "MW-C231-gol",
+    "MW-C231-dhilo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch231.txt",
+  "json": "marwadi/narration/ch231.json",
+  "textHash": "fnv1a64:61dc7a8da364ebbf",
+  "jsonHash": "fnv1a64:7e8a31bbd51fe971",
+  "findings": []
+}

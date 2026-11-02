@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 275,
+  "title": "Well Done!",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f01affb1592d0796",
+  "lessons": [
+    {
+      "id": "MW-C275-saravno",
+      "sequence": 19460,
+      "title": "सरावणो (sarāvṇo) — to praise",
+      "headword": "सरावणो",
+      "romanization": "sarāvṇo",
+      "gloss": "to praise",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:345f11a854d70485",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for mercy, then the Marwadi for alms."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सरावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सरावणो — sarāvṇo — \"to praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सगळा गीत सरावै है। sagḷā gīt sarāvai hai. Everyone praises the song."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं गीत सरायो, mhaĩ gīt sarāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सरावणो (sarāvṇo) is inherited from Sanskrit ślāghate, \"praises\"; CDIAL lists Old Marwari sarāi, \"praises\" (CDIAL 12734)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagḷā gīt sarāvai hai. — Everyone praises the song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagḷā gīt sarāvai hai.* — Everyone praises the song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for mercy, then the Marwadi for alms, then say sarāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for mercy, then the Marwadi for alms, then say *sarāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सरावणो (sarāvṇo) mean? (\"To praise\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C275-saravno-type",
+              "prompt": "Say the Marwadi for 'to praise'.",
+              "assesses": [
+                "MW-LEX-C275-SABAS275-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सरावणो",
+                "sarāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सरावणो (sarāvṇo) is 'to praise'.",
+                "incorrect": "'to praise' is सरावणो (sarāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C275-sabas",
+      "sequence": 19470,
+      "title": "साबास (sābās) — well done",
+      "headword": "साबास",
+      "romanization": "sābās",
+      "gloss": "well done",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37d5a7f18eebbfbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for alms, then the Marwadi for to praise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: साबास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साबास — sābās — \"well done\"."
+            },
+            {
+              "kind": "speech",
+              "text": "साबास, छोरी! sābās, chhorī! Well done, girl!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साबास (sābās) is usually traced to Persian shābāsh, \"bravo\"; it is said on its own, as praise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sābās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sābās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sābās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sābās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sābās, chhorī! — Well done, girl!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sābās, chhorī!* — Well done, girl!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for alms, then the Marwadi for to praise, then say sābās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for alms, then the Marwadi for to praise, then say *sābās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does साबास (sābās) mean? (\"Well done\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C275-sabas-type",
+              "prompt": "Say the Marwadi for 'well done'.",
+              "assesses": [
+                "MW-LEX-C275-SABAS275-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "साबास",
+                "sābās"
+              ],
+              "feedback": {
+                "correct": "Right: साबास (sābās) is 'well done'.",
+                "incorrect": "'well done' is साबास (sābās)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C275-inam",
+      "sequence": 19480,
+      "title": "इनाम (inām) — a prize",
+      "headword": "इनाम",
+      "romanization": "inām",
+      "gloss": "a prize",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:baf06d3a513964c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to praise, then the Marwadi for well done."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इनाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इनाम — inām — \"a prize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरी इनाम जीतै है। chhorī inām jītai hai. The girl wins a prize."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इनाम (inām) is usually traced, through Persian inʿām, to Arabic inʿām, \"a gift, a favour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhorī inām jītai hai. — The girl wins a prize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhorī inām jītai hai.* — The girl wins a prize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to praise, then the Marwadi for well done, then say inām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to praise, then the Marwadi for well done, then say *inām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इनाम (inām) mean? (\"A prize\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C275-inam-type",
+              "prompt": "Say the Marwadi for 'a prize'.",
+              "assesses": [
+                "MW-LEX-C275-SABAS275-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "इनाम",
+                "inām"
+              ],
+              "feedback": {
+                "correct": "Right: इनाम (inām) is 'a prize'.",
+                "incorrect": "'a prize' is इनाम (inām)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C275-jas",
+      "sequence": 19490,
+      "title": "जस (jas) — credit; renown",
+      "headword": "जस",
+      "romanization": "jas",
+      "gloss": "credit; renown",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ceb0488e2109b36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for well done, then the Marwadi for a prize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जस — jas — \"credit; renown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो जस थारो है। yo jas thāro hai. The credit is yours."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जस (jas) is inherited from Sanskrit yaśas, \"splendour, renown\"; CDIAL gives no Marwari form in this entry, but lists Hindi jas, \"fame\" (CDIAL 10443)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jas, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jas*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo jas thāro hai. — The credit is yours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo jas thāro hai.* — The credit is yours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for well done, then the Marwadi for a prize, then say jas again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for well done, then the Marwadi for a prize, then say *jas* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जस (jas) mean? (\"Credit; renown\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C275-jas-type",
+              "prompt": "Say the Marwadi for 'credit for a deed'.",
+              "assesses": [
+                "MW-LEX-C275-SABAS275-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जस",
+                "jas"
+              ],
+              "feedback": {
+                "correct": "Right: जस (jas) is 'credit; renown'.",
+                "incorrect": "'credit for a deed' is जस (jas)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C275-ray",
+      "sequence": 19500,
+      "title": "राय (rāy) — an opinion",
+      "headword": "राय",
+      "romanization": "rāy",
+      "gloss": "an opinion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf582483e7e93d96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a prize, then the Marwadi for credit for a deed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: राय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राय — rāy — \"an opinion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थारी राय कांई है? thārī rāy kāĩ hai? What's your opinion?"
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राय (rāy) is usually traced, through Persian rāy, to Arabic raʾy, \"opinion, view\". It is feminine: थारी राय, your opinion."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thārī rāy kāĩ hai? — What's your opinion?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thārī rāy kāĩ hai?* — What's your opinion?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a prize, then the Marwadi for credit for a deed, then say rāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a prize, then the Marwadi for credit for a deed, then say *rāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does राय (rāy) mean? (\"An opinion\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C275-ray-type",
+              "prompt": "Say the Marwadi for 'an opinion'.",
+              "assesses": [
+                "MW-LEX-C275-SABAS275-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "राय",
+                "rāy"
+              ],
+              "feedback": {
+                "correct": "Right: राय (rāy) is 'an opinion'.",
+                "incorrect": "'an opinion' is राय (rāy)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

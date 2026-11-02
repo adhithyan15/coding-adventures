@@ -1,0 +1,11 @@
+{
+  "id": "MW-C274-daya",
+  "pathSegment": "MW-PATH-274-SAHARO274",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-274-SAHARO274",
+      "order": 3
+    }
+  ]
+}

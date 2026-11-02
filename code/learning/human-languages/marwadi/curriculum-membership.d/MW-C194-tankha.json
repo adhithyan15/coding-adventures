@@ -1,0 +1,11 @@
+{
+  "id": "MW-C194-tankha",
+  "pathSegment": "MW-PATH-194-EARN194",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-194-EARN194",
+      "order": 2
+    }
+  ]
+}

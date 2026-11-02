@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:eb33cb3c75daf925",
+  "lessonIds": [
+    "MW-C213-mol",
+    "MW-C213-ghatno",
+    "MW-C213-ghatavno",
+    "MW-C213-muphat",
+    "MW-C213-bikno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch213.txt",
+  "json": "marwadi/narration/ch213.json",
+  "textHash": "fnv1a64:238b8d70b43c0a72",
+  "jsonHash": "fnv1a64:8b8f6bbc19877e15",
+  "findings": []
+}

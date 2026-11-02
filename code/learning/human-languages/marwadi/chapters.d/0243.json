@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "A Thief at the Fair",
+  "label": "ch:mw-a-thief-at-the-fair",
+  "canDo": "I can say what a thief did and what I lost.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-C243-thagno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say what a thief did and what I lost.",
+    "assesses": [
+      "MW-LEX-C243-CHOR243-03",
+      "MW-LEX-C243-CHOR243-04",
+      "MW-LEX-C243-CHOR243-05"
+    ]
+  }
+}

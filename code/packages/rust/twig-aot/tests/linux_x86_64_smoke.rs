@@ -478,3 +478,42 @@ fn gc_recursive_frame_live_bytes_differential_on_linux() {
          address (PR-x4) (got {precise}, conservative={conservative})",
     );
 }
+
+/// A string chosen by an `if` and copied into the join with `mov` must have its
+/// length read at run time. Twig writes `(if c "hello!!" "x")` as one literal
+/// register per arm and a `mov` of it into the join variable in each arm. The
+/// string lowering's `mov` copied the arm's compile-time literal into the join
+/// even though the join has two definitions, so the second arm (last in
+/// emission order) won and `(string-length s)` was folded to 1 on every path.
+/// The first arm is taken here, so the answer is 7.
+///
+/// Twig's own literal form (`const Str`) is not lowered on this path (a separate
+/// gap), so the test rewrites it to the `str_const` that BASIC / ALGOL emit and
+/// leaves the `mov`s in place.
+#[test]
+fn branch_joined_string_copy_reads_its_length_at_run_time_on_linux() {
+    use interpreter_ir::instr::Operand;
+    let mut m = twig_ir_compiler::compile_source(
+        "(define (f c) (let ((s (if (pair? c) \"hello!!\" \"x\"))) (string-length s)))\n\
+         (f (cons 1 1))\n",
+        "join_len",
+    )
+    .expect("compiles");
+    for f in &mut m.functions {
+        for i in &mut f.instructions {
+            if i.op == "const" && matches!(i.srcs.first(), Some(Operand::Str(_))) {
+                i.op = "str_const".into();
+            }
+        }
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe = dir.path().join("join_len");
+    twig_aot::compile_module_to_linux_executable(&m, &exe).expect("compiles+links");
+    let out = Command::new(&exe).output().expect("runs");
+    assert_eq!(
+        out.status.code(),
+        Some(7),
+        "string-length of the taken arm (\"hello!!\") is 7; 1 means the other arm's \
+         literal length was folded in",
+    );
+}

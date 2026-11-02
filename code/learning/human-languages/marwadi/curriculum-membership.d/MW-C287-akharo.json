@@ -1,0 +1,11 @@
+{
+  "id": "MW-C287-akharo",
+  "pathSegment": "MW-PATH-287-GURU287",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-287-GURU287",
+      "order": 4
+    }
+  ]
+}

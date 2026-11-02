@@ -1,0 +1,11 @@
+{
+  "id": "MW-C217-bojh",
+  "pathSegment": "MW-PATH-217-CROSS217",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-217-CROSS217",
+      "order": 2
+    }
+  ]
+}

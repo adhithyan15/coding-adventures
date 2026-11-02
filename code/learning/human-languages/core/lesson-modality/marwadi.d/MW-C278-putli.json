@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C278-putli",
+    "language": "marwadi",
+    "chapter": 278,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36bbe0156e64096b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:06af3d84bb017bdb",
+  "lessonIds": [
+    "MW-C285-akhar",
+    "MW-C285-pano",
+    "MW-C285-path",
+    "MW-C285-ratno",
+    "MW-C285-ucharno"
+  ],
+  "tex": "marwadi/book/chapters/ch285-learning-by-heart.tex"
+}

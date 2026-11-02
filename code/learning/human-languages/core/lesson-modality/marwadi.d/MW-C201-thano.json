@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C201-thano",
+    "language": "marwadi",
+    "chapter": 201,
+    "sequence": 13530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44276ae1a06c3207"
+  },
+  "findings": []
+}

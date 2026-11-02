@@ -1,0 +1,11 @@
+{
+  "id": "MW-C260-bhavaj",
+  "pathSegment": "MW-PATH-260-BAHU260",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-260-BAHU260",
+      "order": 2
+    }
+  ]
+}

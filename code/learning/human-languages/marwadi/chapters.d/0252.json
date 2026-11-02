@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Bones and Breath",
+  "label": "ch:mw-bones-and-breath",
+  "canDo": "I can say where it aches and when I am out of breath.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C252-pir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say where it aches and when I am out of breath.",
+    "assesses": [
+      "MW-LEX-C252-HAD252-03",
+      "MW-LEX-C252-HAD252-04",
+      "MW-LEX-C252-HAD252-05"
+    ]
+  }
+}

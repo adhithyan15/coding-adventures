@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 262,
+  "title": "People of the Village",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1cfac75ee22c9214",
+  "lessons": [
+    {
+      "id": "MW-C262-jano",
+      "sequence": 18080,
+      "title": "जणो (jaṇo) — a person (when counting)",
+      "headword": "जणो",
+      "romanization": "jaṇo",
+      "gloss": "a person (when counting)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eb43cde2587b0cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a son's son, then the Marwadi for a daughter's son."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जणो — jaṇo — \"a person (when counting)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घर मांय पांच जणा है। ghar mā̃y pāṅch jaṇā hai. There are five people in the house."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जणो (jaṇo) is inherited from Sanskrit jana, \"person\"; CDIAL lists Marwari jaṇo under it (CDIAL 5098)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghar mā̃y pāṅch jaṇā hai. — There are five people in the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghar mā̃y pāṅch jaṇā hai.* — There are five people in the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a son's son, then the Marwadi for a daughter's son, then say jaṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a son's son, then the Marwadi for a daughter's son, then say *jaṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जणो (jaṇo) mean? (\"A person (when counting)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C262-jano-type",
+              "prompt": "Say the Marwadi for 'a person (when counting)'.",
+              "assesses": [
+                "MW-LEX-C262-JANO262-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जणो",
+                "jaṇo"
+              ],
+              "feedback": {
+                "correct": "Right: जणो (jaṇo) is 'a person (when counting)'.",
+                "incorrect": "'a person (when counting)' is जणो (jaṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C262-banjaro",
+      "sequence": 18090,
+      "title": "बणजारो (baṇjāro) — a travelling trader",
+      "headword": "बणजारो",
+      "romanization": "baṇjāro",
+      "gloss": "a travelling trader",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4f131aa8094660a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a daughter's son, then the Marwadi for a person (when counting)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बणजारो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बणजारो — baṇjāro — \"a travelling trader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बणजारो ऊंट माथै लूण लावै है। baṇjāro ū̃ṭ māthai lūṇ lāvai hai. The travelling trader brings salt on a camel."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बणजारो (baṇjāro) is inherited from a reconstructed vaṇijyākāra, \"trader\". CDIAL gives no Marwari form in this entry; it lists Gujarati vaṇjāro, \"travelling trader\", with the same ण (CDIAL 11234)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṇjāro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṇjāro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṇjāro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṇjāro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṇjāro ū̃ṭ māthai lūṇ lāvai hai. — The travelling trader brings salt on a camel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṇjāro ū̃ṭ māthai lūṇ lāvai hai.* — The travelling trader brings salt on a camel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a daughter's son, then the Marwadi for a person (when counting), then say baṇjāro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a daughter's son, then the Marwadi for a person (when counting), then say *baṇjāro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बणजारो (baṇjāro) mean? (\"A travelling trader\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C262-banjaro-type",
+              "prompt": "Say the Marwadi for 'a travelling trader'.",
+              "assesses": [
+                "MW-LEX-C262-JANO262-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बणजारो",
+                "baṇjāro"
+              ],
+              "feedback": {
+                "correct": "Right: बणजारो (baṇjāro) is 'a travelling trader'.",
+                "incorrect": "'a travelling trader' is बणजारो (baṇjāro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C262-saheli",
+      "sequence": 18100,
+      "title": "सहेली (sahelī) — a woman's friend",
+      "headword": "सहेली",
+      "romanization": "sahelī",
+      "gloss": "a woman's friend",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fe7d3cff6d89e49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a person (when counting), then the Marwadi for a travelling trader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सहेली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहेली — sahelī — \"a woman's friend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी सहेली मेंहदी लगावै है। mhārī sahelī mẽhdī lagāvai hai. My friend is putting on henna."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहेली (sahelī) is inherited from Sanskrit sakhī, \"a woman's confidante\"; CDIAL lists Old Marwari sahelī under it (CDIAL 13074)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahelī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahelī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahelī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahelī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī sahelī mẽhdī lagāvai hai. — My friend is putting on henna.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī sahelī mẽhdī lagāvai hai.* — My friend is putting on henna.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a person (when counting), then the Marwadi for a travelling trader, then say sahelī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a person (when counting), then the Marwadi for a travelling trader, then say *sahelī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सहेली (sahelī) mean? (\"A woman's friend\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C262-saheli-type",
+              "prompt": "Say the Marwadi for 'a woman's friend'.",
+              "assesses": [
+                "MW-LEX-C262-JANO262-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सहेली",
+                "sahelī"
+              ],
+              "feedback": {
+                "correct": "Right: सहेली (sahelī) is 'a woman's friend'.",
+                "incorrect": "'a woman's friend' is सहेली (sahelī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C262-chaudhri",
+      "sequence": 18110,
+      "title": "चौधरी (chaudhrī) — a village headman",
+      "headword": "चौधरी",
+      "romanization": "chaudhrī",
+      "gloss": "a village headman",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8acdb4f7633a46c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a travelling trader, then the Marwadi for a woman's friend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चौधरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौधरी — chaudhrī — \"a village headman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चौधरी घणो भलो आदमी है। chaudhrī ghaṇo bhalo ādmī hai. The headman is a very kind man."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौधरी (chaudhrī) is inherited from Sanskrit caturdhara, a family name. CDIAL gives no Marwari form in this entry; it lists Hindi caudharī, \"the headman of a village\" (CDIAL 4612)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaudhrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaudhrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaudhrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaudhrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaudhrī ghaṇo bhalo ādmī hai. — The headman is a very kind man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaudhrī ghaṇo bhalo ādmī hai.* — The headman is a very kind man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a travelling trader, then the Marwadi for a woman's friend, then say chaudhrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a travelling trader, then the Marwadi for a woman's friend, then say *chaudhrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चौधरी (chaudhrī) mean? (\"A village headman\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C262-chaudhri-type",
+              "prompt": "Say the Marwadi for 'a village headman'.",
+              "assesses": [
+                "MW-LEX-C262-JANO262-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चौधरी",
+                "chaudhrī"
+              ],
+              "feedback": {
+                "correct": "Right: चौधरी (chaudhrī) is 'a village headman'.",
+                "incorrect": "'a village headman' is चौधरी (chaudhrī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C262-karigar",
+      "sequence": 18120,
+      "title": "कारीगर (kārīgar) — a craftsman; a skilled worker",
+      "headword": "कारीगर",
+      "romanization": "kārīgar",
+      "gloss": "a craftsman; a skilled worker",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ce89fc288473f9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a woman's friend, then the Marwadi for a village headman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कारीगर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कारीगर — kārīgar — \"a craftsman; a skilled worker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गांव मांय दो कारीगर है। gā̃v mā̃y do kārīgar hai. There are two craftsmen in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कारीगर (kārīgar) is usually traced to Persian kārīgar, \"craftsman\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārīgar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārīgar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārīgar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārīgar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃v mā̃y do kārīgar hai. — There are two craftsmen in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃v mā̃y do kārīgar hai.* — There are two craftsmen in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a woman's friend, then the Marwadi for a village headman, then say kārīgar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a woman's friend, then the Marwadi for a village headman, then say *kārīgar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कारीगर (kārīgar) mean? (\"A craftsman; a skilled worker\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C262-karigar-type",
+              "prompt": "Say the Marwadi for 'a craftsman'.",
+              "assesses": [
+                "MW-LEX-C262-JANO262-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कारीगर",
+                "kārīgar"
+              ],
+              "feedback": {
+                "correct": "Right: कारीगर (kārīgar) is 'a craftsman; a skilled worker'.",
+                "incorrect": "'a craftsman' is कारीगर (kārīgar)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

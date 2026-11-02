@@ -1,0 +1,21 @@
+{
+  "chapter": 234,
+  "title": "The Herd",
+  "label": "ch:mw-the-herd",
+  "canDo": "I can name the shepherd and say how the animals are driven and grazed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-R234-review-229-234",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can name the shepherd and say how the animals are driven and grazed.",
+    "assesses": [
+      "MW-LEX-C234-HERD234-01",
+      "MW-LEX-C234-HERD234-02",
+      "MW-LEX-C234-HERD234-03",
+      "MW-LEX-C234-HERD234-04",
+      "MW-LEX-C234-HERD234-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C237-chugno",
+    "language": "marwadi",
+    "chapter": 237,
+    "sequence": 16100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b50733e5980bbb20"
+  },
+  "findings": []
+}

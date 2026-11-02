@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Seats, Beds and Lids",
+  "label": "ch:mw-seats-beds-and-lids",
+  "canDo": "I can name the seats, the bed and the lids in a house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C186-palang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can name the seats, the bed and the lids in a house.",
+    "assesses": [
+      "MW-LEX-C186-DHAKKAN186-03",
+      "MW-LEX-C186-DHAKKAN186-04",
+      "MW-LEX-C186-DHAKKAN186-05"
+    ]
+  }
+}

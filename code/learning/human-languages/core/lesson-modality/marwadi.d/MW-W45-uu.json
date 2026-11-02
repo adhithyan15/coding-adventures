@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "MW-W45-uu",
+    "language": "marwadi",
+    "chapter": 153,
+    "sequence": 9560,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5a56aba8fc85cb64",
+    "detachableSegments": [
+      "Script you'll notice: ऊ",
+      "Writing: ऊ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

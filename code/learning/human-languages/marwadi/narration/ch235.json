@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 235,
+  "title": "The Cattle Yard",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:494d6b82b8a5a436",
+  "lessons": [
+    {
+      "id": "MW-C235-guvaro",
+      "sequence": 15980,
+      "title": "गुवाड़ो (guvāṛo) — a cattle yard; a cowshed",
+      "headword": "गुवाड़ो",
+      "romanization": "guvāṛo",
+      "gloss": "a cattle yard; a cowshed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4908762d4e36354",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to drive (animals or a cart), then the Marwadi for to look after."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गुवाड़ो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुवाड़ो — guvāṛo — \"a cattle yard; a cowshed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गुवाड़ो घर कनै है। guvāṛo ghar kanai hai. The cattle yard is near the house."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुवाड़ो (guvāṛo) is inherited from Sanskrit govāṭa, \"a fold for cattle\", built from go, \"cow\", and vāṭa, \"an enclosure\"; CDIAL lists Marwari guvāṛo, \"a cowshed\" (CDIAL 4327)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guvāṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guvāṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guvāṛo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guvāṛo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guvāṛo ghar kanai hai. — The cattle yard is near the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guvāṛo ghar kanai hai.* — The cattle yard is near the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to drive (animals or a cart), then the Marwadi for to look after, then say guvāṛo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to drive (animals or a cart), then the Marwadi for to look after, then say *guvāṛo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गुवाड़ो (guvāṛo) mean? (\"A cattle yard; a cowshed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C235-guvaro-type",
+              "prompt": "Say the Marwadi for 'a cattle yard'.",
+              "assesses": [
+                "MW-LEX-C235-YARD235-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गुवाड़ो",
+                "guvāṛo"
+              ],
+              "feedback": {
+                "correct": "Right: गुवाड़ो (guvāṛo) is 'a cattle yard; a cowshed'.",
+                "incorrect": "'a cattle yard' is गुवाड़ो (guvāṛo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C235-charo",
+      "sequence": 15990,
+      "title": "चारो (chāro) — fodder",
+      "headword": "चारो",
+      "romanization": "chāro",
+      "gloss": "fodder",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83f5daeae1f30f85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to look after, then the Marwadi for a cattle yard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चारो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चारो — chāro — \"fodder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भैंस चारो खावै है। bhaĩs chāro khāvai hai. The buffalo eats fodder."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चारो (chāro) is inherited from Sanskrit cāra, \"motion\", which CDIAL also takes in the sense of grazing and fodder; CDIAL lists a Gujarati word for fodder under it. CDIAL gives no Marwari form in this entry (CDIAL 4755)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaĩs chāro khāvai hai. — The buffalo eats fodder.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaĩs chāro khāvai hai.* — The buffalo eats fodder.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to look after, then the Marwadi for a cattle yard, then say chāro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to look after, then the Marwadi for a cattle yard, then say *chāro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चारो (chāro) mean? (\"Fodder\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C235-charo-type",
+              "prompt": "Say the Marwadi for 'fodder'.",
+              "assesses": [
+                "MW-LEX-C235-YARD235-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चारो",
+                "chāro"
+              ],
+              "feedback": {
+                "correct": "Right: चारो (chāro) is 'fodder'.",
+                "incorrect": "'fodder' is चारो (chāro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C235-gobar",
+      "sequence": 16000,
+      "title": "गोबर (gobar) — cow dung",
+      "headword": "गोबर",
+      "romanization": "gobar",
+      "gloss": "cow dung",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12ab7c92dadfa087",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a cattle yard, then the Marwadi for fodder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गोबर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोबर — gobar — \"cow dung\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खेत मांय गोबर है। khet mā̃y gobar hai. There's cow dung on the field."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोबर (gobar) is inherited from Sanskrit govara, \"powdered cow dung\"; CDIAL lists Hindi gobar, \"cow dung\". CDIAL gives no Marwari form in this entry (CDIAL 4316)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gobar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gobar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gobar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gobar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khet mā̃y gobar hai. — There's cow dung on the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khet mā̃y gobar hai.* — There's cow dung on the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a cattle yard, then the Marwadi for fodder, then say gobar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a cattle yard, then the Marwadi for fodder, then say *gobar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गोबर (gobar) mean? (\"Cow dung\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C235-gobar-type",
+              "prompt": "Say the Marwadi for 'cow dung'.",
+              "assesses": [
+                "MW-LEX-C235-YARD235-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गोबर",
+                "gobar"
+              ],
+              "feedback": {
+                "correct": "Right: गोबर (gobar) is 'cow dung'.",
+                "incorrect": "'cow dung' is गोबर (gobar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C235-palno",
+      "sequence": 16010,
+      "title": "पाळणो (pāḷṇo) — to rear (animals); to keep",
+      "headword": "पाळणो",
+      "romanization": "pāḷṇo",
+      "gloss": "to rear (animals); to keep",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:076cee240a87d991",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for fodder, then the Marwadi for cow dung."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाळणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाळणो — pāḷṇo — \"to rear (animals); to keep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं बकरी पाळूं हूं। hū̃ bakrī pāḷū̃ hū̃. I keep goats."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं बकरी पाळी, mhaĩ bakrī pāḷī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाळणो (pāḷṇo) is inherited from Sanskrit pālayati, \"guards\"; CDIAL lists the Old Marwari verb pālaï, \"to rear, to keep\" (CDIAL 8129)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāḷṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāḷṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ bakrī pāḷū̃ hū̃. — I keep goats.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ bakrī pāḷū̃ hū̃.* — I keep goats.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for fodder, then the Marwadi for cow dung, then say pāḷṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for fodder, then the Marwadi for cow dung, then say *pāḷṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाळणो (pāḷṇo) mean? (\"To rear (animals); to keep\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C235-palno-type",
+              "prompt": "Say the Marwadi for 'to rear (animals)'.",
+              "assesses": [
+                "MW-LEX-C235-YARD235-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पाळणो",
+                "pāḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: पाळणो (pāḷṇo) is 'to rear (animals); to keep'.",
+                "incorrect": "'to rear (animals)' is पाळणो (pāḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C235-bhuso",
+      "sequence": 16020,
+      "title": "भूसो (bhūso) — chaff; straw fodder",
+      "headword": "भूसो",
+      "romanization": "bhūso",
+      "gloss": "chaff; straw fodder",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8ece31267094feb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for cow dung, then the Marwadi for to rear (animals)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भूसो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भूसो — bhūso — \"chaff; straw fodder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ऊंट भूसो खावै है। ū̃ṭ bhūso khāvai hai. The camel eats chaff."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भूसो (bhūso) is inherited from Sanskrit busa, \"chaff\"; CDIAL lists Hindi bhūsā, \"chaff, straw\", and a Gujarati cousin. CDIAL gives no Marwari form in this entry (CDIAL 9293)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ū̃ṭ bhūso khāvai hai. — The camel eats chaff.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ū̃ṭ bhūso khāvai hai.* — The camel eats chaff.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for cow dung, then the Marwadi for to rear (animals), then say bhūso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for cow dung, then the Marwadi for to rear (animals), then say *bhūso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भूसो (bhūso) mean? (\"Chaff; straw fodder\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C235-bhuso-type",
+              "prompt": "Say the Marwadi for 'chaff'.",
+              "assesses": [
+                "MW-LEX-C235-YARD235-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भूसो",
+                "bhūso"
+              ],
+              "feedback": {
+                "correct": "Right: भूसो (bhūso) is 'chaff; straw fodder'.",
+                "incorrect": "'chaff' is भूसो (bhūso)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

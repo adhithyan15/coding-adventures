@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-200-WEIGH200",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "MW-EXT-200-WEIGH200"
+  ],
+  "after": []
+}

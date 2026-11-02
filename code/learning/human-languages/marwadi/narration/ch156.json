@@ -1,0 +1,550 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 156,
+  "title": "Mine, In and From",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:4aae51d4a980d185",
+  "lessons": [
+    {
+      "id": "MW-C156-mhari",
+      "sequence": 9670,
+      "title": "म्हारो, म्हारी — my, agreeing with what is mine",
+      "headword": "म्हारो · म्हारी",
+      "romanization": "mhāro · mhārī",
+      "gloss": "my, agreeing with the thing that is mine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8307d1e321bfac95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say my name is Ram, then this is my house. Then say a boy and a girl: छोरो, छोरी."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the thing decides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म्हारो ends like छोरो, and it changes the way छोरो turns into छोरी: it follows the thing that is yours."
+            },
+            {
+              "kind": "speech",
+              "text": "यो म्हारो घर है। yo mhāro ghar hai. — This is my house."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी गाय अठै है। mhārī gāy aṭhai hai. — My cow is here."
+            },
+            {
+              "kind": "speech",
+              "text": "घर is masculine, so म्हारो; गाय is feminine, so म्हारी. A woman says म्हारो घर too: the ending follows the house, not the owner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थारो, your, does the same: थारो दूध, थारी रोटी."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "म्हारी रोटी गरम है। — mhārī roṭī garam hai. — My roti is hot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **म्हारी रोटी गरम है।** — *mhārī roṭī garam hai.* — My roti is hot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "थारो दूध अठै है। — thāro dūdh aṭhai hai. — Your milk is here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **थारो दूध अठै है।** — *thāro dūdh aṭhai hai.* — Your milk is here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "म्हारो भाई बठै है। — mhāro bhāī baṭhai hai. — My brother is there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **म्हारो भाई बठै है।** — *mhāro bhāī baṭhai hai.* — My brother is there.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "My house? (म्हारो घर.) My cow? (म्हारी गाय.) Who decides the ending? (The thing that is yours.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C156-mhari-cow",
+              "prompt": "Say: my cow is here.",
+              "assesses": [
+                "MW-GRAMMAR-C156-POSS-AGREE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "म्हारी गाय अठै है।",
+                "mhārī gāy aṭhai hai",
+                "mhari gay athai hai"
+              ],
+              "feedback": {
+                "correct": "Right: गाय is feminine, so म्हारी.",
+                "incorrect": "A cow is feminine: म्हारी गाय."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C156-maay-mathai",
+      "sequence": 9680,
+      "title": "रसोई मांय, मेज माथै — in and on",
+      "headword": "मांय · माथै",
+      "romanization": "mā̃y · māthai",
+      "gloss": "in and on, after a noun",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1162b5d11ff70e61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say inside and on top: मांय, माथै. Then my cow is here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a noun in front",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put a noun in front of मांय and माथै, and they say in and on:"
+            },
+            {
+              "kind": "speech",
+              "text": "दूध रसोई मांय है। dūdh rasoī mā̃y hai. — The milk is in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "किताब मेज माथै है। kitāb mej māthai hai. — The book is on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "कनै, near, works the same: घर कनै, near the house. Old Marwari already had kanai, \"near\", and māhī, \"in, into\" (CDIAL 2830, 9804)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "दुकान बाजार मांय है। — dukān bājār mā̃y hai. — The shop is in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **दुकान बाजार मांय है।** — *dukān bājār mā̃y hai.* — The shop is in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "चाय मेज माथै है। — chāy mej māthai hai. — The tea is on the table.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **चाय मेज माथै है।** — *chāy mej māthai hai.* — The tea is on the table.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "वो घर कनै है। — vo ghar kanai hai. — He is near the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **वो घर कनै है।** — *vo ghar kanai hai.* — He is near the house.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In the kitchen? (रसोई मांय.) On the table? (मेज माथै.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C156-maay-mathai-kitchen",
+              "prompt": "Say that the milk is in the kitchen.",
+              "assesses": [
+                "MW-GRAMMAR-C156-POSTP-LOC-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "दूध रसोई मांय है।",
+                "dūdh rasoī mā̃y hai",
+                "dudh rasoi may hai"
+              ],
+              "feedback": {
+                "correct": "Right: the noun first, then मांय.",
+                "incorrect": "Say रसोई, then मांय: दूध रसोई मांय है."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C156-su",
+      "sequence": 9690,
+      "title": "बाजार सूं (sū̃) — from",
+      "headword": "सूं",
+      "romanization": "sū̃",
+      "gloss": "from, after a place",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ab13172bb9256b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the shop is in the market. Then he comes every day, and the question word where, कठै."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: सूं",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूं (sū̃) after a place says where someone comes from:"
+            },
+            {
+              "kind": "speech",
+              "text": "वो बाजार सूं आवै है। vo bājār sū̃ āvai hai. — He comes from the market."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं दुकान सूं आऊं हूं। hū̃ dukān sū̃ āū̃ hū̃. — I come from the shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Old Marwari wrote it -su: talā-su, \"from below\" (CDIAL 5731)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ask with कठै in front of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "आप कठै सूं आवो हो? āp kaṭhai sū̃ āvo ho? — Where do you come from?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आप कठै सूं आवो हो? — āp kaṭhai sū̃ āvo ho? — Where do you come from?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आप कठै सूं आवो हो?** — *āp kaṭhai sū̃ āvo ho?* — Where do you come from?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं बाजार सूं आऊं हूं। — hū̃ bājār sū̃ āū̃ hū̃. — I come from the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं बाजार सूं आऊं हूं।** — *hū̃ bājār sū̃ āū̃ hū̃.* — I come from the market.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the market? (बाजार सूं (sū̃).) Where from? (कठै सूं (sū̃).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C156-su-where-from",
+              "prompt": "Ask politely: where do you come from?",
+              "assesses": [
+                "MW-GRAMMAR-C156-POSTP-SU-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "आप कठै सूं आवो हो?",
+                "āp kaṭhai sū̃ āvo ho?",
+                "aap kathai su avo ho"
+              ],
+              "feedback": {
+                "correct": "Right: कठै सूं, where from.",
+                "incorrect": "Put सूं after कठै: आप कठै सूं आवो हो?"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R156-mine-in-from",
+      "sequence": 9700,
+      "title": "Mine, in and from — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "review of my and your, in and on, and from",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65ff091db67b955b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say my cow is here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "my house; my cow; your roti; your milk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *my house*; *my cow*; *your roti*; *your milk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the milk is in the kitchen; the book is on the table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the milk is in the kitchen*; *the book is on the table*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shop is near the house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the shop is near the house*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where do you come from?; I come from the market",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *where do you come from?*; *I come from the market*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he comes from the shop every day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *he comes from the shop every day*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "My cow? (म्हारी गाय.) In the kitchen? (रसोई मांय.) From the shop? (दुकान सूं (sū̃).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R156-mine-in-from-roti",
+              "prompt": "Say: my roti is on the table.",
+              "assesses": [
+                "MW-GRAMMAR-C156-POSS-AGREE-01",
+                "MW-GRAMMAR-C156-POSTP-LOC-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "म्हारी रोटी मेज माथै है।",
+                "mhārī roṭī mej māthai hai",
+                "mhari roti mej mathai hai"
+              ],
+              "feedback": {
+                "correct": "Right: म्हारी for the roti, माथै after the table.",
+                "incorrect": "रोटी is feminine (म्हारी), and माथै comes after मेज."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

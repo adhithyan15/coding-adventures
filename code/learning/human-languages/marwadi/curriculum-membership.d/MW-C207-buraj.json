@@ -1,0 +1,11 @@
+{
+  "id": "MW-C207-buraj",
+  "pathSegment": "MW-PATH-207-GARDEN207",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-207-GARDEN207",
+      "order": 4
+    }
+  ]
+}

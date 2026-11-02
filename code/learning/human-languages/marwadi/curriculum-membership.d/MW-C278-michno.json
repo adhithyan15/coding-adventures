@@ -1,0 +1,11 @@
+{
+  "id": "MW-C278-michno",
+  "pathSegment": "MW-PATH-278-KAHANI278",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-278-KAHANI278",
+      "order": 2
+    }
+  ]
+}

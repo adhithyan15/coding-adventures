@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C196-dak",
+    "language": "marwadi",
+    "chapter": 196,
+    "sequence": 13250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f547a9bbaa62c0b"
+  },
+  "findings": []
+}

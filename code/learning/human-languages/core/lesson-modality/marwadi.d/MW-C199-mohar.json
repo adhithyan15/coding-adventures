@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C199-mohar",
+    "language": "marwadi",
+    "chapter": 199,
+    "sequence": 13410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9b91efb89f32cd4"
+  },
+  "findings": []
+}

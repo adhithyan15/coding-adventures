@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:f3b1535efad916ae",
+  "lessonIds": [
+    "MW-C288-mehnat",
+    "MW-C288-layak",
+    "MW-C288-ustad",
+    "MW-C288-dhandho",
+    "MW-C288-majur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch288.txt",
+  "json": "marwadi/narration/ch288.json",
+  "textHash": "fnv1a64:aa6d81e00535bc21",
+  "jsonHash": "fnv1a64:8e6e4076b4f8808a",
+  "findings": []
+}

@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 276,
+  "title": "Flute and Clapping",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d3c487e4be5ac18a",
+  "lessons": [
+    {
+      "id": "MW-C276-basli",
+      "sequence": 19510,
+      "title": "बांसळी (bā̃sḷī) — a flute",
+      "headword": "बांसळी",
+      "romanization": "bā̃sḷī",
+      "gloss": "a flute",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d57e4965ca688c8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for credit for a deed, then the Marwadi for an opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बांसळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बांसळी — bā̃sḷī — \"a flute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी बांसळी लांबी है। mhārī bā̃sḷī lā̃bī hai. My flute is long."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बांसळी (bā̃sḷī) is inherited from Sanskrit vamśī, \"a flute, a pipe\", itself from vamśa, \"bamboo\"; CDIAL gives no Marwari form in this entry, but lists Gujarati vā̃sḷī, \"pipe, flute\", and Hindi bãsī, \"flute\" (CDIAL 11180)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃sḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃sḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃sḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃sḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī bā̃sḷī lā̃bī hai. — My flute is long.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī bā̃sḷī lā̃bī hai.* — My flute is long.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for credit for a deed, then the Marwadi for an opinion, then say bā̃sḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for credit for a deed, then the Marwadi for an opinion, then say *bā̃sḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बांसळी (bā̃sḷī) mean? (\"A flute\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C276-basli-type",
+              "prompt": "Say the Marwadi for 'a flute'.",
+              "assesses": [
+                "MW-LEX-C276-BANSLI276-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बांसळी",
+                "bā̃sḷī"
+              ],
+              "feedback": {
+                "correct": "Right: बांसळी (bā̃sḷī) is 'a flute'.",
+                "incorrect": "'a flute' is बांसळी (bā̃sḷī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C276-bajavno",
+      "sequence": 19520,
+      "title": "बजावणो (bajāvṇo) — to play an instrument",
+      "headword": "बजावणो",
+      "romanization": "bajāvṇo",
+      "gloss": "to play an instrument",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ed366996af7a9c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an opinion, then the Marwadi for a flute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बजावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बजावणो — bajāvṇo — \"to play an instrument\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भाई बांसळी बजावै है। bhāī bā̃sḷī bajāvai hai. My brother plays the flute."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं बांसळी बजाई, mhaĩ bā̃sḷī bajāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बजावणो (bajāvṇo) is built on the verb CDIAL lists as Old Marwari bājaï, \"to sound\", under Sanskrit vādyate, \"is made to sound\" (CDIAL 11513); as a causative it means \"to make sound\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāī bā̃sḷī bajāvai hai. — My brother plays the flute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāī bā̃sḷī bajāvai hai.* — My brother plays the flute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an opinion, then the Marwadi for a flute, then say bajāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an opinion, then the Marwadi for a flute, then say *bajāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बजावणो (bajāvṇo) mean? (\"To play an instrument\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C276-bajavno-type",
+              "prompt": "Say the Marwadi for 'to play an instrument'.",
+              "assesses": [
+                "MW-LEX-C276-BANSLI276-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बजावणो",
+                "bajāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बजावणो (bajāvṇo) is 'to play an instrument'.",
+                "incorrect": "'to play an instrument' is बजावणो (bajāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C276-sur",
+      "sequence": 19530,
+      "title": "सुर (sur) — a tune",
+      "headword": "सुर",
+      "romanization": "sur",
+      "gloss": "a tune",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46bc6202f55f8507",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a flute, then the Marwadi for to play an instrument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुर — sur — \"a tune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो सुर मीठो है। yo sur mīṭho hai. This tune is sweet."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुर (sur) is inherited from Sanskrit sura, \"sound\", a variant of svara; CDIAL gives no Marwari form in this entry, but lists Hindi sur, \"sound, words, tune\" (CDIAL 13498)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo sur mīṭho hai. — This tune is sweet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo sur mīṭho hai.* — This tune is sweet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a flute, then the Marwadi for to play an instrument, then say sur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a flute, then the Marwadi for to play an instrument, then say *sur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुर (sur) mean? (\"A tune\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C276-sur-type",
+              "prompt": "Say the Marwadi for 'a tune'.",
+              "assesses": [
+                "MW-LEX-C276-BANSLI276-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सुर",
+                "sur"
+              ],
+              "feedback": {
+                "correct": "Right: सुर (sur) is 'a tune'.",
+                "incorrect": "'a tune' is सुर (sur)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C276-tali",
+      "sequence": 19540,
+      "title": "ताळी (tāḷī) — a clap",
+      "headword": "ताळी",
+      "romanization": "tāḷī",
+      "gloss": "a clap",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8239c4787cf0e96f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to play an instrument, then the Marwadi for a tune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ताळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताळी — tāḷī — \"a clap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सगळा ताळी बजावै है। sagḷā tāḷī bajāvai hai. Everyone claps."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताळी (tāḷī) is inherited from Sanskrit tāla, \"a clap, rhythm\"; CDIAL gives no Marwari form in this entry, but lists Gujarati tāḷī, \"clapping\" (CDIAL 5748). You clap with बजावणो (bajāvṇo): ताळी बजावो."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagḷā tāḷī bajāvai hai. — Everyone claps.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagḷā tāḷī bajāvai hai.* — Everyone claps.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to play an instrument, then the Marwadi for a tune, then say tāḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to play an instrument, then the Marwadi for a tune, then say *tāḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ताळी (tāḷī) mean? (\"A clap\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C276-tali-type",
+              "prompt": "Say the Marwadi for 'a clap'.",
+              "assesses": [
+                "MW-LEX-C276-BANSLI276-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ताळी",
+                "tāḷī"
+              ],
+              "feedback": {
+                "correct": "Right: ताळी (tāḷī) is 'a clap'.",
+                "incorrect": "'a clap' is ताळी (tāḷī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C276-gujno",
+      "sequence": 19550,
+      "title": "गूंजणो (gū̃jṇo) — to hum; to ring out",
+      "headword": "गूंजणो",
+      "romanization": "gū̃jṇo",
+      "gloss": "to hum; to ring out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90a66a8bf9760baf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a tune, then the Marwadi for a clap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गूंजणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गूंजणो — gū̃jṇo — \"to hum; to ring out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मंदिर मांय गीत गूंजै है। mandir mā̃y gīt gū̃jai hai. A song rings out in the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो गीत गूंज्यो, vo gīt gū̃jyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गूंजणो (gū̃jṇo) is inherited from Sanskrit guñjati, \"hums, buzzes\"; CDIAL gives no Marwari form in this entry, but lists Hindi gū̃jnā, \"to hum\" (CDIAL 4175). A sound that hums on fills the room."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gū̃jṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gū̃jṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gū̃jṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gū̃jṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandir mā̃y gīt gū̃jai hai. — A song rings out in the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandir mā̃y gīt gū̃jai hai.* — A song rings out in the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a tune, then the Marwadi for a clap, then say gū̃jṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a tune, then the Marwadi for a clap, then say *gū̃jṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गूंजणो (gū̃jṇo) mean? (\"To hum; to ring out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C276-gujno-type",
+              "prompt": "Say the Marwadi for 'to ring out'.",
+              "assesses": [
+                "MW-LEX-C276-BANSLI276-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गूंजणो",
+                "gū̃jṇo"
+              ],
+              "feedback": {
+                "correct": "Right: गूंजणो (gū̃jṇo) is 'to hum; to ring out'.",
+                "incorrect": "'to ring out' is गूंजणो (gū̃jṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

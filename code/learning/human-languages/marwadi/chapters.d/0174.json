@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Getting Dressed",
+  "label": "ch:mw-getting-dressed",
+  "canDo": "I can say what I put on and take off.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C174-choti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say what I put on and take off.",
+    "assesses": [
+      "MW-LEX-C174-ODHNI174-03",
+      "MW-LEX-C174-ODHNI174-04",
+      "MW-LEX-C174-ODHNI174-05"
+    ]
+  }
+}

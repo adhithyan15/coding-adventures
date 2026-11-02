@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:ff28aa72067444bf",
+  "lessonIds": [
+    "MW-C248-mehdi",
+    "MW-C248-parnavno",
+    "MW-C248-dayjo",
+    "MW-C248-sajno",
+    "MW-C248-sehro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch248.txt",
+  "json": "marwadi/narration/ch248.json",
+  "textHash": "fnv1a64:fce0e30d45814424",
+  "jsonHash": "fnv1a64:abec9eab44ff117f",
+  "findings": []
+}

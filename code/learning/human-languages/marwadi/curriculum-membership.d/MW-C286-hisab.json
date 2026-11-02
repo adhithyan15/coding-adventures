@@ -1,0 +1,11 @@
+{
+  "id": "MW-C286-hisab",
+  "pathSegment": "MW-PATH-286-IMTIHAN286",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-286-IMTIHAN286",
+      "order": 1
+    }
+  ]
+}

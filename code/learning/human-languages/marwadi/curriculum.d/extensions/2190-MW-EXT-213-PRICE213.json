@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-213-PRICE213",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask the cost and ask for a lower price.",
+  "prerequisites": []
+}

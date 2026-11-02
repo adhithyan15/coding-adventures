@@ -1,0 +1,11 @@
+{
+  "id": "MW-C177-theglo",
+  "pathSegment": "MW-PATH-177-PHAD177",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-177-PHAD177",
+      "order": 3
+    }
+  ]
+}

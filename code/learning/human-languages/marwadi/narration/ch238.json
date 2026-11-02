@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 238,
+  "title": "Sowing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dfc14a67a3342338",
+  "lessons": [
+    {
+      "id": "MW-C238-bovno",
+      "sequence": 16130,
+      "title": "बोवणो (bovṇo) — to sow",
+      "headword": "बोवणो",
+      "romanization": "bovṇo",
+      "gloss": "to sow",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb14a8e5ee43bafe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an egg, then the Marwadi for a frog."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बोवणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोवणो — bovṇo — \"to sow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल खेत मांय बाजरो बोसूं। hū̃ kāl khet mā̃y bājro bosū̃. Tomorrow I'll sow millet in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं बाजरो बोयो, mhaĩ bājro boyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोवणो (bovṇo) is inherited from Sanskrit vapati, \"scatters, sows\"; CDIAL lists Hindi boyā, \"sows\", and names a Gujarati verb beside it. CDIAL gives no Marwari form in this entry (CDIAL 11282)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bovṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bovṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bovṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bovṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl khet mā̃y bājro bosū̃. — Tomorrow I'll sow millet in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl khet mā̃y bājro bosū̃.* — Tomorrow I'll sow millet in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an egg, then the Marwadi for a frog, then say bovṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an egg, then the Marwadi for a frog, then say *bovṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बोवणो (bovṇo) mean? (\"To sow\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C238-bovno-type",
+              "prompt": "Say the Marwadi for 'to sow'.",
+              "assesses": [
+                "MW-LEX-C238-SOW238-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बोवणो",
+                "bovṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बोवणो (bovṇo) is 'to sow'.",
+                "incorrect": "'to sow' is बोवणो (bovṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C238-khodno",
+      "sequence": 16140,
+      "title": "खोदणो (khodṇo) — to dig",
+      "headword": "खोदणो",
+      "romanization": "khodṇo",
+      "gloss": "to dig",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0c9e6f295832bde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a frog, then the Marwadi for to sow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खोदणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोदणो — khodṇo — \"to dig\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं खेत खोदूं हूं। hū̃ khet khodū̃ hū̃. I dig the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं खेत खोद्यो, mhaĩ khet khodyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोदणो (khodṇo) is inherited from a reconstructed khōdd, \"dig\"; CDIAL lists Marwari khodṇo, \"to dig\" (CDIAL 3934)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khodṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khodṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khodṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khodṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ khet khodū̃ hū̃. — I dig the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ khet khodū̃ hū̃.* — I dig the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a frog, then the Marwadi for to sow, then say khodṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a frog, then the Marwadi for to sow, then say *khodṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खोदणो (khodṇo) mean? (\"To dig\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C238-khodno-type",
+              "prompt": "Say the Marwadi for 'to dig'.",
+              "assesses": [
+                "MW-LEX-C238-SOW238-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खोदणो",
+                "khodṇo"
+              ],
+              "feedback": {
+                "correct": "Right: खोदणो (khodṇo) is 'to dig'.",
+                "incorrect": "'to dig' is खोदणो (khodṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C238-ropno",
+      "sequence": 16150,
+      "title": "रोपणो (ropṇo) — to plant (a seedling or a tree)",
+      "headword": "रोपणो",
+      "romanization": "ropṇo",
+      "gloss": "to plant (a seedling or a tree)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a56b7da4733a052",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to sow, then the Marwadi for to dig."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रोपणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोपणो — ropṇo — \"to plant (a seedling or a tree)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल खेत कनै रूंख रोपसूं। hū̃ kāl khet kanai rū̃kh ropsū̃. Tomorrow I'll plant a tree by the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं रूंख रोप्यो, mhaĩ rū̃kh ropyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोपणो (ropṇo) is inherited from a reconstructed rupati, \"makes a hole, plants\", beside Sanskrit ropayati, \"plants\"; CDIAL lists the Old Marwari verb ropaï, \"plants\" (CDIAL 10783)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ropṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ropṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ropṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ropṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl khet kanai rū̃kh ropsū̃. — Tomorrow I'll plant a tree by the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl khet kanai rū̃kh ropsū̃.* — Tomorrow I'll plant a tree by the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to sow, then the Marwadi for to dig, then say ropṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to sow, then the Marwadi for to dig, then say *ropṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रोपणो (ropṇo) mean? (\"To plant (a seedling or a tree)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C238-ropno-type",
+              "prompt": "Say the Marwadi for 'to plant (a seedling or a tree)'.",
+              "assesses": [
+                "MW-LEX-C238-SOW238-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रोपणो",
+                "ropṇo"
+              ],
+              "feedback": {
+                "correct": "Right: रोपणो (ropṇo) is 'to plant (a seedling or a tree)'.",
+                "incorrect": "'to plant (a seedling or a tree)' is रोपणो (ropṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C238-hali",
+      "sequence": 16160,
+      "title": "हाळी (hāḷī) — a ploughman",
+      "headword": "हाळी",
+      "romanization": "hāḷī",
+      "gloss": "a ploughman",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2509872a112cb98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to dig, then the Marwadi for to plant (a seedling or a tree)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हाळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाळी — hāḷī — \"a ploughman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हाळी तड़कै खेत जावै है। hāḷī taṛkai khet jāvai hai. The ploughman goes to the field at daybreak."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाळी (hāḷī) is inherited from Sanskrit hālika, \"a ploughman\", from hala, \"a plough\"; CDIAL lists Hindi hālī and Gujarati hāḷi, \"a ploughman\". CDIAL gives no Marwari form in this entry (CDIAL 14067)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāḷī taṛkai khet jāvai hai. — The ploughman goes to the field at daybreak.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāḷī taṛkai khet jāvai hai.* — The ploughman goes to the field at daybreak.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to dig, then the Marwadi for to plant (a seedling or a tree), then say hāḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to dig, then the Marwadi for to plant (a seedling or a tree), then say *hāḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हाळी (hāḷī) mean? (\"A ploughman\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C238-hali-type",
+              "prompt": "Say the Marwadi for 'a ploughman'.",
+              "assesses": [
+                "MW-LEX-C238-SOW238-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हाळी",
+                "hāḷī"
+              ],
+              "feedback": {
+                "correct": "Right: हाळी (hāḷī) is 'a ploughman'.",
+                "incorrect": "'a ploughman' is हाळी (hāḷī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C238-bij",
+      "sequence": 16170,
+      "title": "बीज (bīj) — a seed",
+      "headword": "बीज",
+      "romanization": "bīj",
+      "gloss": "a seed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e65c92663de94ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to plant (a seedling or a tree), then the Marwadi for a ploughman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बीज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बीज — bīj — \"a seed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो बीज आछो है। mhāro bīj āchho hai. My seed is good."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बीज (bīj) is a tatsama, taken over from Sanskrit bīja, \"a seed\" (Monier-Williams); the inherited forms CDIAL lists, such as Hindi biyā, have lost the j (CDIAL 9250)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro bīj āchho hai. — My seed is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro bīj āchho hai.* — My seed is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to plant (a seedling or a tree), then the Marwadi for a ploughman, then say bīj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to plant (a seedling or a tree), then the Marwadi for a ploughman, then say *bīj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बीज (bīj) mean? (\"A seed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C238-bij-type",
+              "prompt": "Say the Marwadi for 'a seed'.",
+              "assesses": [
+                "MW-LEX-C238-SOW238-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बीज",
+                "bīj"
+              ],
+              "feedback": {
+                "correct": "Right: बीज (bīj) is 'a seed'.",
+                "incorrect": "'a seed' is बीज (bīj)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

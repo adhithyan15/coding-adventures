@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-165-NOTE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a neighbour's short note about a repair visit and decide when to be at home.",
+  "prerequisites": [
+    "MW-EXT-164-NOTICE"
+  ]
+}

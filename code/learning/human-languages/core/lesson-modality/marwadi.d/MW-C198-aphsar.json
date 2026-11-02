@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C198-aphsar",
+    "language": "marwadi",
+    "chapter": 198,
+    "sequence": 13370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:664f5039f6ec5f95"
+  },
+  "findings": []
+}

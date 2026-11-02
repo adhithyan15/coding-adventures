@@ -1,0 +1,11 @@
+{
+  "id": "MW-C261-poto",
+  "pathSegment": "MW-PATH-261-MASI261",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-261-MASI261",
+      "order": 3
+    }
+  ]
+}

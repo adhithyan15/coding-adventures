@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C153-aap-ho",
+    "language": "marwadi",
+    "chapter": 153,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6a1796ea27f08a0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Seal and Signature",
+  "label": "ch:mw-seal-and-signature",
+  "canDo": "I can say what a form still needs.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-C199-madno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say what a form still needs.",
+    "assesses": [
+      "MW-LEX-C199-SEAL199-03",
+      "MW-LEX-C199-SEAL199-04",
+      "MW-LEX-C199-SEAL199-05"
+    ]
+  }
+}

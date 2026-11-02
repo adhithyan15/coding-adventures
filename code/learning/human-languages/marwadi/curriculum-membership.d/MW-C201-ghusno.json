@@ -1,0 +1,11 @@
+{
+  "id": "MW-C201-ghusno",
+  "pathSegment": "MW-PATH-201-TOWN201",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-201-TOWN201",
+      "order": 4
+    }
+  ]
+}

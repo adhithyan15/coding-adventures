@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-240-HARV240",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "MW-EXT-240-HARV240"
+  ],
+  "after": []
+}

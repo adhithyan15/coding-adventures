@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-288-KAM288",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-288-KAM288"
+  ],
+  "after": []
+}

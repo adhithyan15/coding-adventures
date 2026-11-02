@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:b63a9e5b50e059c5",
+  "lessonIds": [
+    "MW-C166-jagno",
+    "MW-C166-khangalno",
+    "MW-C166-nid",
+    "MW-C166-podhno",
+    "MW-C166-sajh"
+  ],
+  "tex": "marwadi/book/chapters/ch166-up-at-daybreak.tex"
+}

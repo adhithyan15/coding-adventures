@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "A Fall in the Lane",
+  "label": "ch:mw-a-fall-in-the-lane",
+  "canDo": "I can say that I fell and got hurt.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-C241-khisakno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say that I fell and got hurt.",
+    "assesses": [
+      "MW-LEX-C241-FALL241-03",
+      "MW-LEX-C241-FALL241-04",
+      "MW-LEX-C241-FALL241-05"
+    ]
+  }
+}

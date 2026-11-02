@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C239-kupal",
+    "language": "marwadi",
+    "chapter": 239,
+    "sequence": 16220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2ef6d3b7b646121"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:4d1bfb122cc727c4",
+  "lessonIds": [
+    "MW-C219-padharno",
+    "MW-C219-bhet",
+    "MW-C219-haphto",
+    "MW-C219-tij",
+    "MW-C219-utavlo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch219.txt",
+  "json": "marwadi/narration/ch219.json",
+  "textHash": "fnv1a64:c0300c23f2c7912d",
+  "jsonHash": "fnv1a64:e53d17ec141a7249",
+  "findings": []
+}

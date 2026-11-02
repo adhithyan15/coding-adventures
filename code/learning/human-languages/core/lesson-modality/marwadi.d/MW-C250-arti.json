@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C250-arti",
+    "language": "marwadi",
+    "chapter": 250,
+    "sequence": 17490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64322506916f4231"
+  },
+  "findings": []
+}

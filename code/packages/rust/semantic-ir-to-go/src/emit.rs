@@ -15,7 +15,7 @@
 //! ```
 
 use std::cell::RefCell;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -38,6 +38,11 @@ pub fn emit_module(m: &Module) -> String {
         let mut t = t.borrow_mut();
         t.clear();
         t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
+    FUNCTION_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().map(|f| f.name.clone()));
     });
     // KW6: snapshot each function's *parameter shape* (name, is-keyword,
     // has-default) in declared order.  The `DirectCall` arm needs this to
@@ -101,6 +106,7 @@ pub fn emit_module(m: &Module) -> String {
     FN_ARITY.with(|t| t.borrow_mut().clear());
     FN_PARAMS.with(|t| t.borrow_mut().clear());
     STRICT_ARITY.with(|t| t.borrow_mut().clear());
+    FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
 
     out
 }
@@ -251,14 +257,14 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{} Value", sanitize_ident(&c.name));
+        let _ = write!(out, "{} Value", var_ident(&c.name));
     }
     for p in &f.params {
         if !first {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{} Value", sanitize_ident(&p.name));
+        let _ = write!(out, "{} Value", var_ident(&p.name));
     }
     out.push_str(") Value {\n");
 
@@ -299,7 +305,7 @@ fn emit_default_prologue(out: &mut String, f: &Function, indent: usize) {
     let body_pad = indent_str(indent + 1);
     for p in &f.params {
         let Some(default) = &p.default else { continue };
-        let name = sanitize_ident(&p.name);
+        let name = var_ident(&p.name);
         let _ = writeln!(out, "{}if _sir_is_missing({}) {{", pad, name);
         let _ = write!(out, "{}{} = ", body_pad, name);
         emit_expr(out, default, indent + 1);
@@ -337,7 +343,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             // Use `:=` for declare-and-assign.  Add a `_ = <name>`
             // line afterwards so unused-let bindings don't break Go
             // compilation.
-            let safe = sanitize_ident(name);
+            let safe = var_ident(name);
             let _ = write!(out, "{}{} := ", pad, safe);
             emit_expr(out, value, indent);
             out.push('\n');
@@ -413,7 +419,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             value,
             ..
         } => {
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, var_ident(name));
             emit_expr(out, value, indent);
             out.push('\n');
         }
@@ -748,7 +754,7 @@ fn emit_try_catch(
             // `rescue Foo => e` binds the caught value; only emit the
             // binding when the clause names one (avoids an unused `e`).
             if let Some(bind) = &r.binding {
-                let safe = sanitize_ident(bind);
+                let safe = var_ident(bind);
                 let _ = writeln!(
                     out,
                     "{}{} := _sir_exc_value(__sir_r)",
@@ -1313,7 +1319,7 @@ fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
 fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
     match scope {
         Scope::Local | Scope::Param | Scope::Capture => {
-            out.push_str(&sanitize_ident(name));
+            out.push_str(&var_ident(name));
         }
         Scope::Global => {
             let _ = write!(out, "_sir_global_get_static({})", quote_go_string(name));
@@ -1983,7 +1989,7 @@ fn emit_for_range(
     indent: usize,
 ) {
     let id = fresh_loop_id();
-    let v = sanitize_ident(var);
+    let v = var_ident(var);
     let pad = indent_str(indent);
     let inner = indent + 1;
     let inner_pad = indent_str(inner);
@@ -2027,7 +2033,7 @@ fn emit_for_range(
 /// ignores the element.  Mirrors the Rust backend's `seq_iter` approach.
 fn emit_for_each(out: &mut String, var: &str, iter: &Expr, body: &Block, indent: usize) {
     let pad = indent_str(indent);
-    let v = sanitize_ident(var);
+    let v = var_ident(var);
     let inner = indent + 1;
     let inner_pad = indent_str(inner);
     let _ = write!(out, "{}for _, {} := range _sir_seq_iter(", pad, v);
@@ -2074,6 +2080,11 @@ thread_local! {
     /// a unique suffix so its `__sir_i_`/`__sir_stop_`/`__sir_step_`
     /// temporaries never collide with a sibling or nested loop's.
     static LOOP_ID: RefCell<u64> = const { RefCell::new(0) };
+    /// The SIR name of every function in the module being emitted.  A
+    /// *variable* spelled like one of them is renamed by [`var_ident`] so
+    /// it cannot shadow the function (#18485).  Populated and cleared by
+    /// `emit_module` alongside `FN_ARITY`.
+    static FUNCTION_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 /// Allocate a fresh, module-unique loop id.
@@ -2139,6 +2150,42 @@ const TAG_VERBATIM: &str = "v";
 /// per-character escaping (contains an illegal character), or the
 /// empty-input sentinel.
 const TAG_ESCAPED: &str = "e";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a *variable* renamed
+/// because a function of the module has the same SIR name (see
+/// [`var_ident`]).  Distinct from [`TAG_VERBATIM`] and [`TAG_ESCAPED`], so a
+/// renamed variable can never equal any output of [`sanitize_ident`].
+const TAG_LOCAL: &str = "l";
+
+/// The Go identifier for the SIR *variable* `name`: a local, parameter,
+/// capture, loop variable or `rescue` binding.  (Globals live in the
+/// runtime's `_sir_globals` store, keyed by their SIR name, so they never
+/// reach here.)
+///
+/// SIR keeps functions and variables in two namespaces, and a source
+/// language may use both spellings at once (Ruby: `def f; 40; end; f = 2;
+/// f() + f` is 42).  Go has one: a local `f := …` shadows the package-level
+/// `func f`, and `f()` failed with `invalid operation: cannot call
+/// non-function f` (#18485).  A variable that collides with a function is
+/// renamed:
+///
+/// | SIR variable | module has a function of that name? | Go            |
+/// |--------------|-------------------------------------|---------------|
+/// | `x`          | no                                  | `x`           |
+/// | `f`          | yes                                 | `sir_esc_lf`  |
+///
+/// The renamed form is [`ESCAPE_MARKER`], [`TAG_LOCAL`], then
+/// `sanitize_ident(name)`: one-to-one because `sanitize_ident` is, and
+/// disjoint from every `sanitize_ident` output, which either lacks the
+/// marker or follows it with another tag.  It depends only on the name, so
+/// a variable's binding and every use of it agree.
+fn var_ident(name: &str) -> String {
+    if FUNCTION_NAMES.with(|t| t.borrow().contains(name)) {
+        format!("{ESCAPE_MARKER}{TAG_LOCAL}{}", sanitize_ident(name))
+    } else {
+        sanitize_ident(name)
+    }
+}
 
 /// Sanitize a SIR identifier for Go.
 ///
@@ -4371,5 +4418,103 @@ mod tests {
         assert!(out.contains("break\n"), "got {out}");
         assert!(!out.contains("func()"), "must not route through a func-literal IIFE: {out}");
         assert!(out.contains("} else {"), "got {out}");
+    }
+
+    // ── a variable never shadows a function (#18485) ─────────────────
+
+    /// `def f; 40; end` and a `main` whose local is also named `f`:
+    /// `let f = 2; f() + f`, which a source language with separate
+    /// namespaces (Ruby) evaluates to 42.
+    fn local_named_like_a_function() -> Module {
+        let sp = Span::synthetic;
+        let func = |name: &str, body: semantic_ir::Block| semantic_ir::Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let f = func(
+            "f",
+            semantic_ir::Block {
+                stmts: vec![],
+                value: Expr::IntLit { value: 40, span: sp() },
+                span: sp(),
+            },
+        );
+        let main = func(
+            "main",
+            semantic_ir::Block {
+                stmts: vec![Stmt::LetStarBinding {
+                    name: "f".to_string(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![
+                        Expr::DirectCall {
+                            fn_name: "f".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                        Expr::VarRef {
+                            name: "f".to_string(),
+                            scope: Scope::Local,
+                            span: sp(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+        );
+        Module {
+            name: "shadow".to_string(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    #[test]
+    fn a_local_named_like_a_function_is_renamed_and_the_function_is_not() {
+        let out = emit_module(&local_named_like_a_function());
+        // The function keeps its own spelling.  Everything from its
+        // definition on is the user's code (the inlined runtime comes
+        // first, and binds names of its own).
+        let at = out.find("func f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let out = &out[at..];
+        // The local is bound, and read, under its renamed spelling...
+        assert!(out.contains("sir_esc_lf := "), "{out}");
+        assert!(out.contains("sir_esc_lf"), "{out}");
+        // ...never under the function's own spelling, which the call keeps.
+        assert!(!out.contains("\tf := "), "{out}");
+        assert!(out.contains("f()"), "{out}");
+    }
+
+    #[test]
+    fn var_ident_renames_exactly_the_names_of_functions() {
+        FUNCTION_NAMES.with(|t| {
+            let mut t = t.borrow_mut();
+            t.clear();
+            t.insert("f".to_string());
+        });
+        assert_eq!(var_ident("f"), "sir_esc_lf");
+        assert_eq!(var_ident("x"), sanitize_ident("x"));
+        // A user variable spelled like the renamed form takes the verbatim
+        // escape, so the two stay apart.
+        assert_ne!(var_ident("sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
 }

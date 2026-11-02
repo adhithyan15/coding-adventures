@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:9062e967b01eaf2a",
+  "lessonIds": [
+    "MW-C281-chak",
+    "MW-C281-ghumavno",
+    "MW-C281-thapno",
+    "MW-C281-korno",
+    "MW-C281-bhatti"
+  ],
+  "tex": "marwadi/book/chapters/ch281-clay-wood-and-mud.tex"
+}

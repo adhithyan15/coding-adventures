@@ -1,0 +1,11 @@
+{
+  "id": "MW-R158-yes-or-no",
+  "pathSegment": "MW-PATH-158-ASK",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-158-ASK",
+      "order": 5
+    }
+  ]
+}

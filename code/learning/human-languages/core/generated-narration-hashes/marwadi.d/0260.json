@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:fc651c02bad0caa6",
+  "lessonIds": [
+    "MW-C260-bahu",
+    "MW-C260-javai",
+    "MW-C260-bhavaj",
+    "MW-C260-bahnoi",
+    "MW-C260-salo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch260.txt",
+  "json": "marwadi/narration/ch260.json",
+  "textHash": "fnv1a64:d4042175c0a0a88a",
+  "jsonHash": "fnv1a64:00dddda6b73c5da6",
+  "findings": []
+}

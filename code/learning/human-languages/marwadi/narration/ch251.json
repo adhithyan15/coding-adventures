@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 251,
+  "title": "Neck, Chest and Shoulders",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a35985d873e88c6b",
+  "lessons": [
+    {
+      "id": "MW-C251-gardan",
+      "sequence": 17510,
+      "title": "गरदन (gardan) — the neck",
+      "headword": "गरदन",
+      "romanization": "gardan",
+      "gloss": "the neck",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:931d83995aaa93cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the waving of a lamp in worship, then the Marwadi for an uproar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गरदन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गरदन — gardan — \"the neck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी गरदन लांबी है। mhārī gardan lā̃bī hai. My neck is long."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गरदन (gardan) is usually traced to Persian gardan, \"neck\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī gardan lā̃bī hai. — My neck is long.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī gardan lā̃bī hai.* — My neck is long.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the waving of a lamp in worship, then the Marwadi for an uproar, then say gardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the waving of a lamp in worship, then the Marwadi for an uproar, then say *gardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गरदन (gardan) mean? (\"The neck\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C251-gardan-type",
+              "prompt": "Say the Marwadi for 'the neck'.",
+              "assesses": [
+                "MW-LEX-C251-KANDHO251-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गरदन",
+                "gardan"
+              ],
+              "feedback": {
+                "correct": "Right: गरदन (gardan) is 'the neck'.",
+                "incorrect": "'the neck' is गरदन (gardan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C251-kadho",
+      "sequence": 17520,
+      "title": "कांधो (kā̃dho) — a shoulder",
+      "headword": "कांधो",
+      "romanization": "kā̃dho",
+      "gloss": "a shoulder",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d14ae109af7bbb39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an uproar, then the Marwadi for the neck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कांधो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कांधो — kā̃dho — \"a shoulder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो कांधो भारी लागै है। mhāro kā̃dho bhārī lāgai hai. My shoulder feels heavy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कांधो (kā̃dho) is inherited from Sanskrit skandha, \"shoulder\". CDIAL gives no Marwari form in this entry; it lists Hindi kā̃dhā (CDIAL 13627)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kā̃dho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kā̃dho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kā̃dho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kā̃dho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro kā̃dho bhārī lāgai hai. — My shoulder feels heavy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro kā̃dho bhārī lāgai hai.* — My shoulder feels heavy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an uproar, then the Marwadi for the neck, then say kā̃dho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an uproar, then the Marwadi for the neck, then say *kā̃dho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कांधो (kā̃dho) mean? (\"A shoulder\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C251-kadho-type",
+              "prompt": "Say the Marwadi for 'a shoulder'.",
+              "assesses": [
+                "MW-LEX-C251-KANDHO251-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कांधो",
+                "kā̃dho"
+              ],
+              "feedback": {
+                "correct": "Right: कांधो (kā̃dho) is 'a shoulder'.",
+                "incorrect": "'a shoulder' is कांधो (kā̃dho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C251-chhati",
+      "sequence": 17530,
+      "title": "छाती (chhātī) — the chest",
+      "headword": "छाती",
+      "romanization": "chhātī",
+      "gloss": "the chest",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9d3f42bac5e78ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the neck, then the Marwadi for a shoulder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छाती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाती — chhātī — \"the chest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी छाती मांय दरद है। mhārī chhātī mā̃y darad hai. I have a pain in my chest."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाती (chhātī) is inherited from a reconstructed chātti, \"chest, breast\"; CDIAL lists Marwari chātī under it (CDIAL 5014)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhātī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhātī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhātī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhātī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī chhātī mā̃y darad hai. — I have a pain in my chest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī chhātī mā̃y darad hai.* — I have a pain in my chest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the neck, then the Marwadi for a shoulder, then say chhātī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the neck, then the Marwadi for a shoulder, then say *chhātī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छाती (chhātī) mean? (\"The chest\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C251-chhati-type",
+              "prompt": "Say the Marwadi for 'the chest'.",
+              "assesses": [
+                "MW-LEX-C251-KANDHO251-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छाती",
+                "chhātī"
+              ],
+              "feedback": {
+                "correct": "Right: छाती (chhātī) is 'the chest'.",
+                "incorrect": "'the chest' is छाती (chhātī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C251-kohni",
+      "sequence": 17540,
+      "title": "कोहणी (kohṇī) — an elbow",
+      "headword": "कोहणी",
+      "romanization": "kohṇī",
+      "gloss": "an elbow",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e416ddfb87eb1d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a shoulder, then the Marwadi for the chest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कोहणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोहणी — kohṇī — \"an elbow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी कोहणी माथै घाव है। mhārī kohṇī māthai ghāv hai. There is a wound on my elbow."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोहणी (kohṇī) is inherited from Sanskrit kaphoṇi, \"elbow\". CDIAL gives no Marwari form in this entry; it lists Hindi kohnī (CDIAL 2757)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kohṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kohṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kohṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kohṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī kohṇī māthai ghāv hai. — There is a wound on my elbow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī kohṇī māthai ghāv hai.* — There is a wound on my elbow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a shoulder, then the Marwadi for the chest, then say kohṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a shoulder, then the Marwadi for the chest, then say *kohṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कोहणी (kohṇī) mean? (\"An elbow\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C251-kohni-type",
+              "prompt": "Say the Marwadi for 'an elbow'.",
+              "assesses": [
+                "MW-LEX-C251-KANDHO251-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कोहणी",
+                "kohṇī"
+              ],
+              "feedback": {
+                "correct": "Right: कोहणी (kohṇī) is 'an elbow'.",
+                "incorrect": "'an elbow' is कोहणी (kohṇī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C251-kamar",
+      "sequence": 17550,
+      "title": "कमर (kamar) — the waist; the lower back",
+      "headword": "कमर",
+      "romanization": "kamar",
+      "gloss": "the waist; the lower back",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7143a9c3a7ffc31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the chest, then the Marwadi for an elbow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कमर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमर — kamar — \"the waist; the lower back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी कमर पतळी है। mhārī kamar patḷī hai. My waist is slim."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमर (kamar) is usually traced to Persian kamar, \"waist\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī kamar patḷī hai. — My waist is slim.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī kamar patḷī hai.* — My waist is slim.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the chest, then the Marwadi for an elbow, then say kamar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the chest, then the Marwadi for an elbow, then say *kamar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कमर (kamar) mean? (\"The waist; the lower back\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C251-kamar-type",
+              "prompt": "Say the Marwadi for 'the waist'.",
+              "assesses": [
+                "MW-LEX-C251-KANDHO251-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कमर",
+                "kamar"
+              ],
+              "feedback": {
+                "correct": "Right: कमर (kamar) is 'the waist; the lower back'.",
+                "incorrect": "'the waist' is कमर (kamar)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

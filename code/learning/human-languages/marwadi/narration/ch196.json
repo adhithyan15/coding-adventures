@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 196,
+  "title": "At the Post",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:43fe4c8bcbe7f326",
+  "lessons": [
+    {
+      "id": "MW-C196-dak",
+      "sequence": 13250,
+      "title": "डाक (ḍāk) — the post; mail",
+      "headword": "डाक",
+      "romanization": "ḍāk",
+      "gloss": "the post; mail",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f547a9bbaa62c0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for remaining, then the Marwadi for to be left over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डाक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डाक — ḍāk — \"the post; mail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज डाक कोनी आई। āj ḍāk konī āī. The post didn't come today."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डाक (ḍāk) is inherited from a reconstructed ḍakka, \"relay, post\". CDIAL gives no Marwari form in this entry, but lists Hindi and Gujarati ḍāk, \"relay, post, posting stage\" (CDIAL 5519)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj ḍāk konī āī. — The post didn't come today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj ḍāk konī āī.* — The post didn't come today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for remaining, then the Marwadi for to be left over, then say ḍāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for remaining, then the Marwadi for to be left over, then say *ḍāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डाक (ḍāk) mean? (\"The post; mail\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C196-dak-type",
+              "prompt": "Say the Marwadi for 'the post'.",
+              "assesses": [
+                "MW-LEX-C196-POST196-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "डाक",
+                "ḍāk"
+              ],
+              "feedback": {
+                "correct": "Right: डाक (ḍāk) is 'the post; mail'.",
+                "incorrect": "'the post' is डाक (ḍāk)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C196-liphapho",
+      "sequence": 13260,
+      "title": "लिफाफो (liphāpho) — an envelope",
+      "headword": "लिफाफो",
+      "romanization": "liphāpho",
+      "gloss": "an envelope",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:443251a87c0911af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to be left over, then the Marwadi for the post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लिफाफो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिफाफो — liphāpho — \"an envelope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लिफाफो खाली है। liphāpho khālī hai. The envelope is empty."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिफाफो (liphāpho) is usually traced, through Persian, to Arabic lifāfa, \"a wrapper\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liphāpho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liphāpho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liphāpho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liphāpho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liphāpho khālī hai. — The envelope is empty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liphāpho khālī hai.* — The envelope is empty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to be left over, then the Marwadi for the post, then say liphāpho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to be left over, then the Marwadi for the post, then say *liphāpho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लिफाफो (liphāpho) mean? (\"An envelope\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C196-liphapho-type",
+              "prompt": "Say the Marwadi for 'an envelope'.",
+              "assesses": [
+                "MW-LEX-C196-POST196-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लिफाफो",
+                "liphāpho"
+              ],
+              "feedback": {
+                "correct": "Right: लिफाफो (liphāpho) is 'an envelope'.",
+                "incorrect": "'an envelope' is लिफाफो (liphāpho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C196-parsal",
+      "sequence": 13270,
+      "title": "पारसल (pārsal) — a parcel",
+      "headword": "पारसल",
+      "romanization": "pārsal",
+      "gloss": "a parcel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94f23b55045a73f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the post, then the Marwadi for an envelope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पारसल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पारसल — pārsal — \"a parcel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पारसल घणो भारी है। pārsal ghaṇo bhārī hai. The parcel is very heavy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पारसल (pārsal) is borrowed from English parcel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārsal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārsal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārsal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārsal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārsal ghaṇo bhārī hai. — The parcel is very heavy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārsal ghaṇo bhārī hai.* — The parcel is very heavy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the post, then the Marwadi for an envelope, then say pārsal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the post, then the Marwadi for an envelope, then say *pārsal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पारसल (pārsal) mean? (\"A parcel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C196-parsal-type",
+              "prompt": "Say the Marwadi for 'a parcel'.",
+              "assesses": [
+                "MW-LEX-C196-POST196-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पारसल",
+                "pārsal"
+              ],
+              "feedback": {
+                "correct": "Right: पारसल (pārsal) is 'a parcel'.",
+                "incorrect": "'a parcel' is पारसल (pārsal)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C196-thikano",
+      "sequence": 13280,
+      "title": "ठिकाणो (ṭhikāṇo) — an address; whereabouts",
+      "headword": "ठिकाणो",
+      "romanization": "ṭhikāṇo",
+      "gloss": "an address; whereabouts",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e526c3c34376cdf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an envelope, then the Marwadi for a parcel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठिकाणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठिकाणो — ṭhikāṇo — \"an address; whereabouts\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो ठिकाणो चिट्ठी माथै है। mhāro ṭhikāṇo chiṭṭhī māthai hai. My address is on the letter."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठिकाणो (ṭhikāṇo) is inherited from a reconstructed ṭhīkka, \"firm, right\"; CDIAL lists Old Marwari ṭhīka, \"trace, whereabouts\", and Hindi ṭhikānā under it (CDIAL 5503)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhikāṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhikāṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhikāṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhikāṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro ṭhikāṇo chiṭṭhī māthai hai. — My address is on the letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro ṭhikāṇo chiṭṭhī māthai hai.* — My address is on the letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an envelope, then the Marwadi for a parcel, then say ṭhikāṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an envelope, then the Marwadi for a parcel, then say *ṭhikāṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठिकाणो (ṭhikāṇo) mean? (\"An address; whereabouts\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C196-thikano-type",
+              "prompt": "Say the Marwadi for 'an address'.",
+              "assesses": [
+                "MW-LEX-C196-POST196-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ठिकाणो",
+                "ṭhikāṇo"
+              ],
+              "feedback": {
+                "correct": "Right: ठिकाणो (ṭhikāṇo) is 'an address; whereabouts'.",
+                "incorrect": "'an address' is ठिकाणो (ṭhikāṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C196-mokalno",
+      "sequence": 13290,
+      "title": "मोकलणो (mokalṇo) — to send off",
+      "headword": "मोकलणो",
+      "romanization": "mokalṇo",
+      "gloss": "to send off",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e64ba7804aec23d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a parcel, then the Marwadi for an address."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोकलणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोकलणो — mokalṇo — \"to send off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल पारसल मोकलसूं। hū̃ kāl pārsal mokalsū̃. I'll send the parcel off tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं चिट्ठी मोकली, mhaĩ chiṭṭhī moklī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोकलणो (mokalṇo) is inherited from a reconstructed mukna, \"loosed\"; CDIAL lists the Old Marwari verb mokaï, \"sends\", and Sindhi mokilaṇu, \"to send\", with the l this spelling keeps (CDIAL 10157): to send a thing is to let it go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokalṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokalṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokalṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokalṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl pārsal mokalsū̃. — I'll send the parcel off tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl pārsal mokalsū̃.* — I'll send the parcel off tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a parcel, then the Marwadi for an address, then say mokalṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a parcel, then the Marwadi for an address, then say *mokalṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मोकलणो (mokalṇo) mean? (\"To send off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C196-mokalno-type",
+              "prompt": "Say the Marwadi for 'to send off'.",
+              "assesses": [
+                "MW-LEX-C196-POST196-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मोकलणो",
+                "mokalṇo"
+              ],
+              "feedback": {
+                "correct": "Right: मोकलणो (mokalṇo) is 'to send off'.",
+                "incorrect": "'to send off' is मोकलणो (mokalṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

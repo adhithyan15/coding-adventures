@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:503e185ebf615450",
+  "lessonIds": [
+    "MW-C188-phul",
+    "MW-C188-phal",
+    "MW-C188-nim",
+    "MW-C188-jhupri",
+    "MW-C188-chhapro"
+  ],
+  "tex": "marwadi/book/chapters/ch188-around-the-courtyard.tex"
+}

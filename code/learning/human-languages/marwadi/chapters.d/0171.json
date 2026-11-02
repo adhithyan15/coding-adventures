@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Washing Up",
+  "label": "ch:mw-washing-up",
+  "canDo": "I can say how I clean the pots and the kitchen.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C171-kachro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say how I clean the pots and the kitchen.",
+    "assesses": [
+      "MW-LEX-C171-BASAN171-03",
+      "MW-LEX-C171-BASAN171-04",
+      "MW-LEX-C171-BASAN171-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:0c85cae57b6b24e2",
+  "lessonIds": [
+    "MW-C166-jagno",
+    "MW-C166-khangalno",
+    "MW-C166-nid",
+    "MW-C166-podhno",
+    "MW-C166-sajh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch166.txt",
+  "json": "marwadi/narration/ch166.json",
+  "textHash": "fnv1a64:1b32a1f450f9bb2f",
+  "jsonHash": "fnv1a64:70bc0fc49c85b18b",
+  "findings": []
+}

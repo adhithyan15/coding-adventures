@@ -1,0 +1,11 @@
+{
+  "id": "MW-C219-haphto",
+  "pathSegment": "MW-PATH-219-GUEST219",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-219-GUEST219",
+      "order": 2
+    }
+  ]
+}
