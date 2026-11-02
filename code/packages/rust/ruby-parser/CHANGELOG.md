@@ -8,6 +8,10 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
   `MAX_SOURCE_BYTES` (1 MiB) with the lexer's budget message, through the
   lexer's new `From<RubyLexError> for String`; no code change here.  Test
   `try_create_ruby_parser_refuses_source_past_the_lexer_budget`.
+- Test `budget_refusal_tokens_fail_to_parse`: the refusal that
+  `tokenize_ruby` returns for an oversized source does not parse (a lone
+  `Eof` does, as the empty program), so the infallible lexer wrappers fail
+  closed.
 
 ## Unreleased — statement ends before `-`, `+`, `(`, after a lone name and a `rescue` list (#18798)
 

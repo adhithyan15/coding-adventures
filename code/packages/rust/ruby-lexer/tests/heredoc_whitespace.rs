@@ -23,7 +23,10 @@ const CASES: &[(&str, &[&str])] = &[
     ("x & .y", &["x", "&", ".", "y"]),
     ("1 ..2", &["1", "..", "2"]),
     ("r = 1...2", &["r", "=", "1", "...", "2"]),
-    ("f = ->(x) { x }", &["f", "=", "->", "(", "x", ")", "{", "x", "}"]),
+    (
+        "f = ->(x) { x }",
+        &["f", "=", "->", "(", "x", ")", "{", "x", "}"],
+    ),
     ("x = 1.5", &["x", "=", "1.5"]),
     ("y = 0x1F", &["y", "=", "0x1F"]),
     ("z = 2r", &["z", "=", "2r"]),
@@ -89,10 +92,22 @@ fn recorded_spellings_match_live_ripper() {
             eprintln!("#18820: no `ruby` on PATH; checked against the recorded spellings only");
             return;
         };
-        child.stdin.take().unwrap().write_all(line.as_bytes()).unwrap();
+        child
+            .stdin
+            .take()
+            .unwrap()
+            .write_all(line.as_bytes())
+            .unwrap();
         let out = child.wait_with_output().unwrap();
         assert!(out.status.success(), "ruby failed on {line:?}");
-        let live: Vec<String> = String::from_utf8(out.stdout).unwrap().lines().map(str::to_string).collect();
-        assert_eq!(live, recorded, "Ripper disagrees with the recorded spellings of {line:?}");
+        let live: Vec<String> = String::from_utf8(out.stdout)
+            .unwrap()
+            .lines()
+            .map(str::to_string)
+            .collect();
+        assert_eq!(
+            live, recorded,
+            "Ripper disagrees with the recorded spellings of {line:?}"
+        );
     }
 }

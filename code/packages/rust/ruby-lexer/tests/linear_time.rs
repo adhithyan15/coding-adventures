@@ -11,9 +11,11 @@
 use std::time::{Duration, Instant};
 
 use coding_adventures_ruby_lexer::{
-    tokenize_ruby, tokenize_ruby_diag, tokenize_ruby_for_version, tokenize_ruby_with_oracle,
-    NoLocals, RubyLexError, RubyLexer, MAX_SOURCE_BYTES,
+    budget_refusal_tokens, source_spelling, tokenize_ruby, tokenize_ruby_diag,
+    tokenize_ruby_for_version, tokenize_ruby_with_oracle, NoLocals, RubyLexError, RubyLexer,
+    BUDGET_REFUSAL_TYPE_NAME, MAX_SOURCE_BYTES,
 };
+use lexer::token::TokenType;
 
 /// Generous for a debug build on a loaded runner; the linear lexer needs a
 /// few seconds for a whole megabyte, the quadratic one needed minutes for
@@ -142,15 +144,35 @@ fn push_budget_is_cumulative_and_a_refusal_changes_nothing() {
     assert_eq!(values, ["x", "=", "1", "\n", "y", "=", "2", "\n", ""]);
 }
 
-/// The entry points without a `Result` refuse too: no tokens, and the
-/// diagnostic variant says why.
+/// The entry points without a `Result` refuse too, and fail closed: a
+/// refusal token and `Eof`, never the empty list (an empty program).
 #[test]
 fn infallible_entry_points_refuse_oversized_source() {
     let source = "x".repeat(MAX_SOURCE_BYTES + 1);
-    assert!(tokenize_ruby(&source).is_empty());
-    assert!(tokenize_ruby_with_oracle(&source, Box::new(NoLocals)).is_empty());
+    let expected = budget_refusal_tokens(&RubyLexError::Budget {
+        which: "source bytes",
+        limit: MAX_SOURCE_BYTES,
+        actual: MAX_SOURCE_BYTES + 1,
+    });
+    assert_eq!(expected.len(), 2);
+    assert_eq!(
+        expected[0].type_name.as_deref(),
+        Some(BUDGET_REFUSAL_TYPE_NAME)
+    );
+    assert!(expected[0].value.contains("exceed the limit"));
+    assert_eq!(
+        source_spelling(&expected[0]),
+        None,
+        "the refusal is synthetic"
+    );
+    assert_eq!(expected[1].type_, TokenType::Eof);
+    assert_eq!(tokenize_ruby(&source), expected);
+    assert_eq!(
+        tokenize_ruby_with_oracle(&source, Box::new(NoLocals)),
+        expected
+    );
     let (tokens, diags) = tokenize_ruby_diag(&source);
-    assert!(tokens.is_empty());
+    assert_eq!(tokens, expected);
     assert_eq!(diags.len(), 1, "{diags:?}");
     assert!(
         diags[0]

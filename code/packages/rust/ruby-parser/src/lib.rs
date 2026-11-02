@@ -122,6 +122,23 @@ mod tests {
         );
     }
 
+    /// #18814 review — the lexer's infallible entry points fail closed on
+    /// an oversized source: the parser rejects the refusal tokens, where an
+    /// empty token list (or a lone `Eof`) would parse as an empty program.
+    #[test]
+    fn budget_refusal_tokens_fail_to_parse() {
+        use coding_adventures_ruby_lexer::{tokenize_ruby, MAX_SOURCE_BYTES};
+        let parses = |tokens| {
+            GrammarParser::new(tokens, _grammar::unversioned_parser_grammar())
+                .with_max_depth(MAX_RULE_DEPTH)
+                .parse()
+                .is_ok()
+        };
+        assert!(parses(tokenize_ruby("")), "a lone Eof is the empty program");
+        let refused = tokenize_ruby(&" ".repeat(MAX_SOURCE_BYTES + 1));
+        assert!(!parses(refused), "the refusal must not parse");
+    }
+
     fn assert_program_root(ast: &GrammarASTNode) {
         assert_eq!(
             ast.rule_name, "program",

@@ -93,7 +93,8 @@ pub struct Diagnostic {
 /// `coding-adventures-ruby-parser`, the most source the parser's release
 /// API lets even a trusted caller parse (its untrusted default is 64 KiB),
 /// so no caller that can parse the result is refused here.  Lexing is
-/// linear since #18814 — every fusion pass is one sweep — so 1 MiB lexes
+/// linear since #18814 — every fusion pass, and the removal of heredoc tag
+/// names, is one sweep — so 1 MiB lexes
 /// in a few seconds in a debug build; before #18814 the passes were
 /// quadratic and 400 KB of `a&.b` took about 150 s.
 pub const MAX_SOURCE_BYTES: usize = 1024 * 1024;
@@ -2721,14 +2722,55 @@ fn is_identifier_like(value: &str) -> bool {
         .is_some_and(|c| c.is_alphanumeric() || matches!(c, '_' | '@' | '$'))
 }
 
+/// #18814 review — the `type_name` of the token [`budget_refusal_tokens`]
+/// returns.  No grammar names it, so a grammar-driven parser handed the
+/// refusal fails at its first token.
+pub const BUDGET_REFUSAL_TYPE_NAME: &str = "RUBY_LEX_BUDGET_EXCEEDED";
+
+/// #18814 review — what the entry points that cannot return an error
+/// ([`tokenize_ruby`], [`tokenize_ruby_with_oracle`],
+/// [`tokenize_ruby_diag`]) return for a source they refused to lex.
+///
+/// An empty list would read as an empty program, and a lone `Eof` *is* the
+/// empty program, so either would let a caller run nothing and call it a
+/// success.  Instead the list fails closed: one synthetic token (flag
+/// `TOKEN_SYNTHETIC`, so [`source_spelling`] drops it) whose `type_name` is
+/// [`BUDGET_REFUSAL_TYPE_NAME`] and whose value is the error message, then
+/// `Eof`.  Both sit at line 1, column 1.
+pub fn budget_refusal_tokens(error: &RubyLexError) -> Vec<Token> {
+    vec![
+        Token {
+            type_: TokenType::Name,
+            value: error.to_string(),
+            line: 1,
+            column: 1,
+            type_name: Some(BUDGET_REFUSAL_TYPE_NAME.to_string()),
+            flags: Some(TOKEN_SYNTHETIC),
+            cv: None,
+        },
+        Token {
+            type_: TokenType::Eof,
+            value: String::new(),
+            line: 1,
+            column: 1,
+            type_name: None,
+            flags: None,
+            cv: None,
+        },
+    ]
+}
+
 /// Tokenize Ruby source (Phase-1 = Ruby 1.8 lexer).  Returns the
 /// EOF-terminated token list.  Diagnostics are dropped silently;
 /// call [`tokenize_ruby_diag`] to inspect them.
 ///
-/// #18814: a source longer than [`MAX_SOURCE_BYTES`] is not lexed and
-/// yields no tokens at all (not even `Eof`); [`tokenize_ruby_diag`] says
-/// why, and [`tokenize_ruby_for_version`] returns the typed
-/// [`RubyLexError::Budget`].
+/// #18814: a source longer than [`MAX_SOURCE_BYTES`] is not lexed.  This
+/// function cannot return an error, so it fails closed: the result is
+/// [`budget_refusal_tokens`] — one synthetic refusal token
+/// ([`BUDGET_REFUSAL_TYPE_NAME`], carrying the message) and `Eof` — which
+/// no grammar rule matches, so a parser rejects it rather than reading an
+/// empty program.  [`tokenize_ruby_for_version`] returns the typed
+/// [`RubyLexError::Budget`] instead.
 pub fn tokenize_ruby(source: &str) -> Vec<Token> {
     tokenize_ruby_diag(source).0
 }
@@ -2767,14 +2809,16 @@ pub fn tokenize_ruby_for_version(source: &str, version: &str) -> Result<Vec<Toke
 /// source.
 ///
 /// #18814: like [`tokenize_ruby`], a source longer than
-/// [`MAX_SOURCE_BYTES`] yields no tokens.
+/// [`MAX_SOURCE_BYTES`] fails closed with [`budget_refusal_tokens`].
 pub fn tokenize_ruby_with_oracle(
     source: &str,
     oracle: Box<dyn ParserOracle>,
 ) -> Vec<Token> {
     let mut lexer = RubyLexer::with_oracle("1.8", oracle).expect("ruby 1.8 lexer definition");
-    if lexer.push(source).is_err() {
-        return lexer.drain_tokens();
+    match lexer.push(source) {
+        Ok(()) => {}
+        Err(e @ RubyLexError::Budget { .. }) => return budget_refusal_tokens(&e),
+        Err(RubyLexError::Lex(_)) => return lexer.drain_tokens(),
     }
     if lexer.finish().is_err() {
         return lexer.drain_tokens();
@@ -2784,9 +2828,10 @@ pub fn tokenize_ruby_with_oracle(
 
 /// Same as [`tokenize_ruby`] but also returns recorded diagnostics.
 ///
-/// #18814: a source longer than [`MAX_SOURCE_BYTES`] yields no tokens and
-/// one diagnostic, `lex-error:` followed by the [`RubyLexError::Budget`]
-/// message, at line 1, column 1.
+/// #18814: a source longer than [`MAX_SOURCE_BYTES`] yields
+/// [`budget_refusal_tokens`] (a refusal token and `Eof`, so it fails
+/// closed) and one diagnostic, `lex-error:` followed by the
+/// [`RubyLexError::Budget`] message, at line 1, column 1.
 pub fn tokenize_ruby_diag(source: &str) -> (Vec<Token>, Vec<Diagnostic>) {
     let mut lexer = RubyLexer::new("1.8").expect("ruby 1.8 lexer definition");
     if let Err(e) = lexer.push(source) {
@@ -2796,7 +2841,11 @@ pub fn tokenize_ruby_diag(source: &str) -> (Vec<Token>, Vec<Diagnostic>) {
             line: lexer.line,
             column: lexer.column,
         });
-        return (lexer.drain_tokens(), diags);
+        let tokens = match e {
+            RubyLexError::Budget { .. } => budget_refusal_tokens(&e),
+            RubyLexError::Lex(_) => lexer.drain_tokens(),
+        };
+        return (tokens, diags);
     }
     if let Err(e) = lexer.finish() {
         let mut diags = lexer.diagnostics.clone();

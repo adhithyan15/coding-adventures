@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
-## Unreleased — linear token fusion and a source budget (#18814)
+## Unreleased — linear lexing and a source budget (#18814); whitespace after a heredoc (#18820)
 
 ### Fixed
 
@@ -25,6 +25,23 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
   | 80 000  | ~153 s (the issue)     | 2.3 s |
   | 200 000 | ~10 min (extrapolated) | 5.5 s |
 
+- **Heredoc tags are removed in one sweep** (#18814 security review).
+  `finalize_heredoc` removed each heredoc's tag `Name` with `Vec::remove`
+  as the heredoc closed, so `k` heredocs opened on one line
+  (`foo(<<A, <<A, …)` then `A` ⏎ × k) cost O(k²): 80 000 took 30 s in a
+  release build, a 1 MiB input about 2.5 min.  It now retires the tag, and
+  `remove_retired_heredoc_tags` removes them all with one `Vec::retain` at
+  the end of lexing (`finish`, `drain_tokens`).  150 000 heredocs on one
+  line lex in ~3.8 s in a debug build; the old finalizer did not finish in
+  180 s.  Output unchanged (differential-tested against the old finalizer).
+- **Fusions after a heredoc see the right whitespace (#18820).**  The tag
+  was removed without its entry in the parallel whitespace flags, so after
+  any heredoc every token read the flag of the token before it, and the
+  adjacency-gated fusions misfired: `foo(<<A)` ⏎ `A` ⏎ `x &.y` lexed `&`
+  `.`, `1 ..2` lexed `.` `.`, `x = 1.5` lexed `1` `.` `5`.  The flag is now
+  removed in the same sweep as the tag.  This changes output, to what Ruby
+  lexes: `tests/heredoc_whitespace.rs` checks 15 whitespace-sensitive lines
+  after four heredoc shapes against Ruby 3.3's `Ripper.lex`.
 - **The state machine's step trace no longer grows with the input.**  The
   engine keeps a copy of every step it takes; `push` now drops it every
   4 096 steps (`reset`, then `set_current_state` back).  Lexing 1 MiB
@@ -37,8 +54,13 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
   against it across calls (a refused call changes nothing) and
   `tokenize_ruby_for_version` checks it before building anything.
   `tokenize_ruby`, `tokenize_ruby_with_oracle` and `tokenize_ruby_diag`
-  return no tokens for an oversized source; `tokenize_ruby_diag` adds one
-  `lex-error:` diagnostic naming the budget.
+  cannot return an error, so they fail closed with
+  `budget_refusal_tokens`: one synthetic token whose `type_name` is
+  `BUDGET_REFUSAL_TYPE_NAME` (`RUBY_LEX_BUDGET_EXCEEDED`) and whose value
+  is the message, then `Eof`.  No grammar matches it, so a parser rejects
+  it; an empty list or a lone `Eof` would have parsed as an empty program.
+  `tokenize_ruby_diag` also adds one `lex-error:` diagnostic naming the
+  budget.
 - **`RubyLexError`**: `Budget { which, limit, actual }` or `Lex(String)`.
 
 ### Changed
@@ -63,7 +85,10 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
 - `tests/linear_time.rs`: the issue's two reproductions end to end, a
   source of exactly `MAX_SOURCE_BYTES` (lexed, ~6.5 s in debug), one byte
   past it (refused), UTF-8 byte counting, cumulative `push`, and the
-  infallible entry points.
+  infallible entry points' refusal tokens.
+- `batched_heredoc_tag_removal_matches_reference` (old finalizer kept in
+  `reference_passes.rs`), `many_heredocs_on_one_line_lex_in_linear_time`,
+  and `tests/heredoc_whitespace.rs` (#18820, against Ripper).
 
 ## Unreleased — a newline or `;` ends a statement before `-`, `+`, `(` and after a lone name or a `rescue` list (#18798)
 

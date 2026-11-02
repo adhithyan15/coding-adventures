@@ -103,13 +103,13 @@ trusted caller parse) before lexing any of it:
 |-------------|-------------|
 | `RubyLexer::push` | `Err(RubyLexError::Budget { .. })`; counts every call's bytes, and a refused call changes nothing |
 | `tokenize_ruby_for_version` | `Err(RubyLexError::Budget { .. })`, checked before the era |
-| `tokenize_ruby`, `tokenize_ruby_with_oracle` | no tokens |
-| `tokenize_ruby_diag` | no tokens, one `lex-error:` diagnostic naming the budget |
+| `tokenize_ruby`, `tokenize_ruby_with_oracle` | `budget_refusal_tokens`: a synthetic `RUBY_LEX_BUDGET_EXCEEDED` token carrying the message, then `Eof` — fails closed, since no grammar matches it |
+| `tokenize_ruby_diag` | the same tokens, plus one `lex-error:` diagnostic naming the budget |
 
 Lexing is linear in the source: the state machine takes one step per
 character, and every post-pass over the tokens (the era fusions `..`,
-`0x1F`, `1.5e-3`, `>>=`, `+=`, `->`, `2r`, `&.`, and the statement-end
-marking) is a single sweep.  The fusions compact the token vector in place
+`0x1F`, `1.5e-3`, `>>=`, `+=`, `->`, `2r`, `&.`, the statement-end
+marking, and the removal of heredoc tag names) is a single sweep.  The fusions compact the token vector in place
 rather than calling `Vec::remove` once per fusion, which made them
 quadratic until #18814 (80 000 lines of `a&.b` took ~153 s; they now take
 ~2 s in a debug build, and a whole megabyte ~6.5 s).

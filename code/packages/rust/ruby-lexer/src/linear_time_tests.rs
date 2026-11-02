@@ -207,7 +207,11 @@ fn repeated_stream_matches_lexing_the_repeated_source() {
 #[test]
 fn many_heredocs_on_one_line_lex_in_linear_time() {
     const HEREDOCS: usize = 150_000;
-    let source = format!("foo({}1)\n{}", "<<A,".repeat(HEREDOCS), "A\n".repeat(HEREDOCS));
+    let source = format!(
+        "foo({}1)\n{}",
+        "<<A,".repeat(HEREDOCS),
+        "A\n".repeat(HEREDOCS)
+    );
     assert!(source.len() <= super::MAX_SOURCE_BYTES);
     let mut lexer = RubyLexer::new("3.3").unwrap();
     let start = Instant::now();
@@ -220,7 +224,15 @@ fn many_heredocs_on_one_line_lex_in_linear_time() {
         elapsed < BOUND,
         "#18814: {HEREDOCS} heredocs took {elapsed:?} (bound {BOUND:?}); heredoc finalization has gone quadratic again"
     );
-    let heredocs = tokens.iter().filter(|t| t.type_ == TokenType::String && t.value == "<<A\nA").count();
+    let heredocs = tokens
+        .iter()
+        .filter(|t| t.type_ == TokenType::String && t.value == "<<A\nA")
+        .count();
     assert_eq!(heredocs, HEREDOCS);
-    assert!(!tokens.iter().any(|t| t.type_ == TokenType::Name && t.value == "A"), "a tag survived");
+    assert!(
+        !tokens
+            .iter()
+            .any(|t| t.type_ == TokenType::Name && t.value == "A"),
+        "a tag survived"
+    );
 }
