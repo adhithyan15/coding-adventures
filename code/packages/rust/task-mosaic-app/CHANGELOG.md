@@ -1,5 +1,25 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — a note's task name matches with Unicode lowercasing (6e2)
+
+- **Fixed: "écrire" did not attach a note to the task "Écrire".**
+  `save_note` compared the typed *Attach to task* name with
+  `eq_ignore_ascii_case`, which folds only `A`–`Z`, while the web host
+  lowercased all of Unicode, so the same name attached on the web and was
+  refused here. It now goes through the new `task_named`, which compares
+  `str::to_lowercase` of both names: Unicode's default, locale-independent
+  lowercasing (`task-app-notes-ui-v1.md`, addendum v1.4). The typed name is
+  still trimmed with `str::trim` (Unicode `White_Space`), and a tie still
+  goes to the first task in ascending id order, now stated as the rule.
+  Lowercasing is not case folding (`Straße` ≠ `STRASSE`, `σασ` ≠ `ΣΑΣ`) and
+  names are not Unicode-normalized (NFC ≠ NFD): `std` has neither, and the
+  crate takes no dependency for them.
+- Tests: `typed_task_names_match_by_the_shared_vectors` runs every case of
+  TaskApp's new `fixtures/task-name-matching-v1.json`, which the web host's
+  `notes.test.ts` also runs; `lowercasing_and_trimming_agree_with_the_web_host`
+  pins the `to_lowercase`/`trim` outputs the web asserts too; and
+  `task_named_breaks_a_tie_by_ascending_id` checks the tie rule directly.
+
 ## [Unreleased] — Notes 0.3.0 rows, and Delete only for a saved note (E3)
 
 - **`note-rows` rows are the toolkit RecordList's** `[key, heading, title,

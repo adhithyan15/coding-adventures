@@ -26,6 +26,7 @@ fn empty_module() -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -39,6 +40,7 @@ fn module_with(func: IIRFunction) -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -527,6 +529,7 @@ fn arith_rem_signed_emits_srem_unsigned_urem() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("srem i64"), "expected srem for i64; got:\n{ll}");
@@ -800,6 +803,7 @@ fn call_user_fn_non_void_emits_typed_call() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("%r = call i32 @square(i32 5)"),
@@ -846,6 +850,7 @@ fn boolean_call_result_stays_i1_for_logical_ops_and_branches() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
 
     let ll = lower(&module);
@@ -882,6 +887,7 @@ fn call_void_return_omits_lhs() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("  call void @sink(i32 7)"),
@@ -938,6 +944,7 @@ fn call_arg_count_mismatch_is_error() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let err = lower_iir_to_llvm(&module, &IIRLlvmConfig::default())
         .expect_err("arg-count mismatch should fail");
@@ -1000,6 +1007,7 @@ fn declare_for_print_i64_is_emitted_exactly_once_per_module() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let ll = lower(&module);
     assert_eq!(
@@ -1430,14 +1438,64 @@ fn e4_string_literal_index_out_of_bounds_traps() {
     );
     let ll = lower(&module);
 
+    // LANG83 PR5a: the registered `Trap.Bounds` through the module's own
+    // `@__iir_trap` (which flushes stdout first), not `@llvm.trap`.
     assert!(
-        ll.contains("declare void @llvm.trap()"),
-        "str_index OOB should declare llvm.trap:\n{ll}"
+        ll.contains("call void @__iir_trap(ptr @__iir_trap_msg.1, i64 18)"),
+        "str_index OOB should raise Trap.Bounds:\n{ll}"
     );
-    assert!(
-        ll.contains("call void @llvm.trap()"),
-        "str_index OOB should emit a runtime trap:\n{ll}"
+    assert!(ll.contains("@__iir_trap_msg.1 = "), "the Trap.Bounds message is defined:\n{ll}");
+    assert!(!ll.contains("call void @llvm.trap()"), "no bare llvm.trap:\n{ll}");
+}
+
+/// LANG83 PR5a: a folded out-of-range `str_slice` raises `Trap.Bounds` too.
+#[test]
+fn e4_string_literal_slice_out_of_bounds_traps_bounds() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_slice", Some("t".into()), vec![
+                Operand::Var("s".into()), Operand::Var("a".into()), Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("t".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
     );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call void @__iir_trap(ptr @__iir_trap_msg.1, i64 18)"), "{ll}");
+    assert!(!ll.contains("call void @llvm.trap()"), "{ll}");
+}
+
+/// `"01234567" ++ "01234567"`, then that `++ "x"`, under `ceiling`.
+fn concat_to_17(ceiling: Option<u32>) -> IIRModule {
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("01234567".into())], "str"),
+        IIRInstr::new("str_concat", Some("b".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+        IIRInstr::new("str_const", Some("x".into()), vec![Operand::Str("x".into())], "str"),
+        IIRInstr::new("str_concat", Some("c".into()), vec![Operand::Var("b".into()), Operand::Var("x".into())], "str"),
+        IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+    let mut m = module_with(f);
+    m.str_max_bytes = ceiling;
+    m
+}
+
+/// LANG83 PR5a: a literal concat folds only up to the module's ceiling. Past
+/// it the concat calls the runtime helper with the ceiling, which traps
+/// `Trap.Overflow`; the registry ceiling folds both.
+#[test]
+fn a_literal_concat_past_the_ceiling_is_a_runtime_call_with_the_ceiling() {
+    let ll = lower(&concat_to_17(None));
+    assert!(!ll.contains("call i64 @__twig_str_concat"), "both concats fold:\n{ll}");
+    let ll = lower(&concat_to_17(Some(16)));
+    assert_eq!(ll.matches("call i64 @__twig_str_concat(").count(), 1, "only the 17-byte concat:\n{ll}");
+    assert!(ll.contains(", i64 16)\n"), "the ceiling is the third argument:\n{ll}");
 }
 
 #[test]
@@ -2723,6 +2781,7 @@ fn e4dyn_string_procedure_return_and_call_result_print() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let ll = lower(&module);
 
@@ -2774,6 +2833,7 @@ fn e4dyn_str_len_of_runtime_string_reads_header() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("inttoptr i64") && ll.contains("load i64, ptr %__slp"),
@@ -2823,8 +2883,11 @@ fn runtime_str_concat_lowers_to_twig_str_concat_call() {
     let ll = lower(&module_with(f));
     assert!(ll.contains("call i64 @__twig_str_concat(i64 "),
         "runtime str_concat must call the runtime helper; got:\n{ll}");
-    assert!(ll.contains("declare i64 @__twig_str_concat(i64, i64)"),
+    // LANG83 PR5a: the third parameter is the module's string ceiling.
+    assert!(ll.contains("declare i64 @__twig_str_concat(i64, i64, i64)"),
         "the @__twig_str_concat extern must be declared; got:\n{ll}");
+    assert!(ll.contains(&format!(", i64 {})", interpreter_ir::STR_MAX_BYTES)),
+        "the registry ceiling is passed; got:\n{ll}");
 }
 
 /// A runtime string copy is represented as a concat with the empty literal suffix.
@@ -2906,6 +2969,7 @@ fn str_literal_call_arg_is_ptrtoint_to_i64() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("ptrtoint ptr @__twig_str"),
@@ -3199,6 +3263,7 @@ fn special_char_function_names_are_quoted_at_define_and_call() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let ll = lower(&module);
     assert!(ll.contains(r#"define internal i64 @"Some?"("#), "define not quoted:\n{ll}");
@@ -3487,6 +3552,7 @@ fn floor_program(op: &str, pairs: &[(i64, i64)]) -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -3723,6 +3789,7 @@ fn float_program(builtin: &str, values: &[f64]) -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -3969,6 +4036,7 @@ fn only_the_entry_point_has_external_linkage() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
 
     let ll = lower(&module(Some("main")));

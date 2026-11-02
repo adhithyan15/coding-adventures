@@ -1,5 +1,13 @@
 # Changelog — interpreter-ir
 
+## Unreleased — LANG83 PR5a — strings fail closed
+
+- **`STR_MAX_BYTES` and `IIRModule::str_max_bytes`.** A string is at most `STR_MAX_BYTES` = 2³⁰ − 64 bytes, the largest round value below .NET's `System.String` limit. A module may lower it with the new `str_max_bytes: Option<u32>` field (`None` = the registry value); `IIRModule::str_ceiling()` returns the effective value, clamped to `STR_MAX_BYTES`. `IIRModule::new` sets `None`. The field is not on the binary wire format, like `release`: a deserialised module uses the registry value.
+- **`validate` checks the ceiling.** A `str_max_bytes` above `STR_MAX_BYTES` is `StrMaxBytes`, and a `str_const` longer than the module's ceiling is `StrTooLong`.
+- **`str_concat` may trap `Trap.Overflow`** (registry `may_trap`): past the ceiling, the result's length does not fit the type (owner decision Q2: no new kind).
+- **`has_side_effects` lists `str_index`, `str_slice` and `str_concat`**, so dead-code elimination keeps an unused out-of-range read and its trap. New tests `pr5a_trapping_string_ops_have_side_effects` and `every_trapping_string_op_has_side_effects` (registry-derived).
+- Every in-repo `IIRModule { .. }` literal (151 in code, 22 in doc examples) gains `str_max_bytes: None`.
+
 ## Unreleased — #18417 — the JIT's Lisp `car` fails too
 
 - `op_registry`: the `Dynamic` family's comment drops its "one known exception". `lang_aot::jit_lisp`'s McCarthy callbacks now fail on a non-pair like every other implementation. Comment only.

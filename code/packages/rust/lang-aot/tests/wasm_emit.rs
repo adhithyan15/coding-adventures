@@ -75,6 +75,30 @@ impl wasm_execution::HostFunction for CapturePrintStr {
     }
 }
 
+/// LANG83 `env.__trap : (i32) -> ()`. These tests expect no trap, so a call
+/// is surfaced as a `TrapError` carrying the kind id, which fails the test
+/// with a precise message instead of an "unknown import" at link time.
+struct TrapImport;
+
+impl wasm_execution::HostFunction for TrapImport {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        Err(wasm_execution::TrapError::new(format!("env.__trap({:?})", args.first())))
+    }
+}
+
 struct PrintStrHost {
     bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
 }
@@ -85,11 +109,16 @@ impl wasm_execution::HostInterface for PrintStrHost {
         module_name: &str,
         name: &str,
     ) -> Option<Box<dyn wasm_execution::HostFunction>> {
-        (module_name == "env" && name == "__print_str").then(|| {
-            Box::new(CapturePrintStr {
+        match (module_name, name) {
+            ("env", "__print_str") => Some(Box::new(CapturePrintStr {
                 bytes: std::sync::Arc::clone(&self.bytes),
-            }) as Box<dyn wasm_execution::HostFunction>
-        })
+            }) as Box<dyn wasm_execution::HostFunction>),
+            // LANG83 PR5a: a runtime string op that can fail (the concat
+            // ceiling, an index or slice bound) imports `env.__trap`, so every
+            // module with runtime strings names it even when no path traps.
+            ("env", "__trap") => Some(Box::new(TrapImport)),
+            _ => None,
+        }
     }
 
     fn resolve_global(

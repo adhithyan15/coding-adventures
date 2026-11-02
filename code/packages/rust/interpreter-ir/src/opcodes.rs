@@ -426,6 +426,7 @@ pub fn is_exception_op(op: &str) -> bool {
 // | `i64_div_floor` | no            | yes      | yes              |
 // | `i64_add_ovf`   | no            | yes      | yes              |
 // | `array_get`     | no            | yes      | no  (legacy; see below) |
+// | `str_index`     | no            | yes      | yes (LANG83 PR5a)       |
 // | `jmp`           | yes           | no       | yes              |
 // | `ret`           | yes           | no       | yes              |
 // | `trap`          | yes           | yes      | yes              |
@@ -689,6 +690,14 @@ pub fn has_side_effects(op: &str) -> bool {
                 | "i64_sub_ovf"
                 | "i64_mul_ovf"
                 | "i64_neg_ovf"
+                // LANG83 PR5a: the string ops that may trap. `str_index` and
+                // `str_slice` raise `Trap.Bounds` out of range, and
+                // `str_concat` raises `Trap.Overflow` past the string
+                // ceiling. An unused out-of-range read is still a trap, so
+                // dead-code elimination must keep it (it deleted one before).
+                | "str_index"
+                | "str_slice"
+                | "str_concat"
         )
 }
 
@@ -1487,6 +1496,22 @@ mod tests {
         }
         // Legacy trapping ops keep their PR1a answer (documented divergence).
         assert!(!has_side_effects("div"));
+    }
+
+    /// LANG83 PR5a: the string ops that may trap survive dead-code
+    /// elimination, and the ones that cannot trap stay pure. Before PR5a an
+    /// unused out-of-range `str_index` could be deleted, and its trap with it.
+    #[test]
+    fn pr5a_trapping_string_ops_have_side_effects() {
+        for (op, kind) in [("str_index", "Trap.Bounds"), ("str_slice", "Trap.Bounds"), ("str_concat", "Trap.Overflow")] {
+            assert!(has_side_effects(op), "{op} must survive DCE");
+            assert!(may_trap(op), "{op}");
+            assert_eq!(trap_kinds(op), &[kind], "{op}");
+        }
+        for op in ["str_const", "str_len", "str_eq", "str_cmp"] {
+            assert!(!has_side_effects(op), "{op} cannot trap, so DCE may drop it");
+            assert!(!may_trap(op), "{op}");
+        }
     }
 
     #[test]
