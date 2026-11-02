@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C185-zhiqian",
+    "language": "chinese",
+    "chapter": 185,
+    "sequence": 14400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7dc595212aec08f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Switching Things On",
+  "label": "ch:zh-switching-things-on",
+  "canDo": "I can open things, put the air conditioning on, use the remote, press buttons and say what not to touch.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C171-peng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can open things, put the air conditioning on, use the remote, press buttons and say what not to touch.",
+    "assesses": [
+      "ZH-LEX-C171-SWITCH171-03",
+      "ZH-LEX-C171-SWITCH171-04",
+      "ZH-LEX-C171-SWITCH171-05"
+    ]
+  }
+}

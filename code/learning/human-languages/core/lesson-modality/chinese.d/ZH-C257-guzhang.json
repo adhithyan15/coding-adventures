@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C257-guzhang",
+    "language": "chinese",
+    "chapter": 257,
+    "sequence": 19500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:daf051aaf21be7d7"
+  },
+  "findings": []
+}

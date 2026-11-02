@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C263-bingjia",
+  "pathSegment": "ZH-PATH-263-LEAVE263",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-263-LEAVE263",
+      "order": 4
+    }
+  ]
+}

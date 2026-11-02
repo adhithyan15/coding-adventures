@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Rice and Meat",
+  "label": "ch:zh-rice-and-meat",
+  "canDo": "I can ask for rice, a portion, fried rice, beef and chicken.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C161-jirou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can ask for rice, a portion, fried rice, beef and chicken.",
+    "assesses": [
+      "ZH-LEX-C161-RICE161-03",
+      "ZH-LEX-C161-RICE161-04",
+      "ZH-LEX-C161-RICE161-05"
+    ]
+  }
+}

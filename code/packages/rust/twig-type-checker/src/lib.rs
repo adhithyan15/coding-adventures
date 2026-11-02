@@ -301,6 +301,12 @@ pub fn extract_module_exports(
 
     let mut out = std::collections::HashMap::new();
     for name in export_names {
+        // A builtin the module did not redefine is not the module's to
+        // export: an importer already sees the builtin itself, and listing it
+        // would make the importer treat it as a shadowing definition.
+        if env.resolves_to_builtin(&name) {
+            continue;
+        }
         if let Some(kind) = env.globals.get(&name) {
             out.insert(name, kind.clone());
         }
@@ -373,10 +379,13 @@ pub fn check_program_with_globals(
     // ── Seed env with imported globals ────────────────────────────────────
     let mut env = TypeEnv::new();
     for (name, kind) in extra_globals {
-        // Only pre-seed if the name is not already a builtin.  Builtins
-        // registered by TypeEnv::new() are trusted; caller-supplied entries
-        // for the same name would just be redundant noise.
-        env.globals.entry(name.clone()).or_insert_with(|| kind.clone());
+        // Each entry is another module's definition, so — like a local
+        // `define` — it shadows a builtin of the same name (#18438): the IR
+        // compiler `call`s the import, so its kind is the one that applies,
+        // and a guard `(< x k)` through an imported `<` narrows nothing.
+        // (`extract_module_exports` leaves out a builtin a module merely
+        // re-exports, so this never shadows a builtin with itself.)
+        env.bind_global(name.clone(), kind.clone());
     }
 
     // ── Pass 1: collect declarations ──────────────────────────────────────
@@ -1016,22 +1025,15 @@ mod tests {
 
     // ── TW05-C: call-site refinement checking ───────────────────────────────
 
-    /// Build the "ascii-info" function with an `(Int 0 128)` param annotation,
-    /// plus stubs for the arithmetic/comparison builtins used in the tests.
+    /// Build the "ascii-info" function with an `(Int 0 128)` param annotation.
     ///
-    /// The `twig-type-checker` does not pre-populate builtins into `TypeEnv` —
-    /// in a real program those come from the standard prelude.  The stubs below
-    /// let us write self-contained test programs without needing a prelude file.
+    /// The comparisons and `and` the tests use are the builtins `TypeEnv::new`
+    /// registers (TW05-O).  This prelude used to *define* stubs for them —
+    /// `(define (< a b) 0)` — from before that registration existed.  Since
+    /// #18438 a user definition shadows the builtin, so such a stub would make
+    /// `(< x 128)` the user's function, which proves nothing about `x`.
     fn ascii_info_prelude() -> String {
-        [
-            "(define (ascii-info (x : (Int 0 128))) x)",
-            "(define (< a b) 0)",     // comparison stub  — 2 args
-            "(define (<= a b) 0)",
-            "(define (> a b) 0)",
-            "(define (>= a b) 0)",
-            "(define (and a b) 0)",   // logical-and stub
-        ]
-        .join(" ")
+        "(define (ascii-info (x : (Int 0 128))) x)".to_string()
     }
 
     #[test]
@@ -1092,6 +1094,71 @@ mod tests {
         assert!(
             r.errors.iter().any(|e| e.message.contains("refinement error")),
             "expected refinement error; got: {:?}",
+            r.errors
+        );
+    }
+
+    #[test]
+    fn call_site_refinement_skips_parameter_shadowing_the_refined_fn() {
+        // #18435: `ascii-info` inside `g` is g's PARAMETER, not the global
+        // with the `(Int 0 128)` contract, so `(ascii-info 200)` is not a
+        // proven-unsafe call to the refined function.
+        let src = format!(
+            "{} (define (g ascii-info) (ascii-info 200))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            !r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "shadowed callee must not be refinement-checked; errors: {:?}",
+            r.errors
+        );
+
+        // The same goes for a `let` binding…
+        let src = format!(
+            "{} (let ((ascii-info (lambda (x) x))) (ascii-info 200))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            !r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "let-shadowed callee must not be refinement-checked; errors: {:?}",
+            r.errors
+        );
+    }
+
+    #[test]
+    fn call_site_refinement_still_checks_a_global_narrowed_by_an_if_guard() {
+        // `infer_if` narrows guard variables found in locals OR globals and
+        // binds them in a scope frame.  That frame is not a lexical binding:
+        // in the else-branch `ascii-info` is still the GLOBAL refined
+        // function, so `(ascii-info 200)` must still be a refinement error.
+        let src = format!(
+            "{} (define (g) (if (and #f (< ascii-info 1)) 0 (ascii-info 200)))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(!r.ok, "narrowed global must still be refinement-checked");
+        assert!(
+            r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "expected refinement error; got: {:?}",
+            r.errors
+        );
+    }
+
+    #[test]
+    fn arity_check_uses_the_shadowing_local() {
+        // The global `ascii-info` takes 1 argument; g's parameter of the same
+        // name is unconstrained (`Any`), so a 2-argument call is no arity
+        // error.
+        let src = format!(
+            "{} (define (g ascii-info) (ascii-info 1 2))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            !r.errors.iter().any(|e| e.message.contains("arity")),
+            "arity must come from the shadowing param; errors: {:?}",
             r.errors
         );
     }
@@ -1188,6 +1255,137 @@ mod tests {
         // RefinedInt + Any → Any.
         let with_any = TwigKind::unify(TwigKind::RefinedInt(p1), TwigKind::Any);
         assert_eq!(with_any, TwigKind::Any, "RefinedInt + Any should unify to Any");
+    }
+
+    // ── A user definition shadows a builtin (#18438) ────────────────────────
+    //
+    // Narrowing reads `(< x 128)` as a fact about `x` only while `<` is the
+    // builtin comparison.  A top-level define named `<` (or `not`, …) — or a
+    // parameter / `let` binding of that name (#18435) — is the function that
+    // actually runs, and it can return anything, so its guard proves nothing.
+
+    /// True when `r` reports a refinement error.
+    fn has_refinement_error(r: &TypeCheckResult<TypedProgram>) -> bool {
+        r.errors.iter().any(|e| e.message.contains("refinement error"))
+    }
+
+    #[test]
+    fn narrowing_ignores_a_user_defined_comparison() {
+        // `<` is the user's function returning #t, so `x` may be 500 in
+        // the then-branch: the call is not proven safe.
+        for op_def in [
+            "(define (< a b) #t)",
+            "(define < (lambda (a b) #t))",
+        ] {
+            let src = format!(
+                "{} {op_def} (define (process (x : int)) (if (< x 128) (ascii-info x) 0))",
+                ascii_info_prelude()
+            );
+            let r = tc_strict(&src);
+            assert!(has_refinement_error(&r), "{src}: {:?}", r.errors);
+        }
+        // Control: with the builtin `<` the same call IS proven safe.
+        let src = format!(
+            "{} (define (process (x : int)) (if (< x 128) (ascii-info x) 0))",
+            ascii_info_prelude()
+        );
+        assert!(tc_strict(&src).ok, "{src}");
+    }
+
+    #[test]
+    fn narrowing_ignores_a_user_defined_not() {
+        // With the builtin `not`, the else-branch of `(not (< x 128))` has
+        // x < 128 — safe.  The user's `not` is the identity, so there the
+        // else-branch has x >= 128.
+        let body = "(define (process (x : int)) (if (not (< x 128)) 0 (ascii-info x)))";
+        let src = format!("{} {body}", ascii_info_prelude());
+        assert!(tc_strict(&src).ok, "control: {src}");
+        let src = format!("{} (define (not c) c) {body}", ascii_info_prelude());
+        let r = tc_strict(&src);
+        assert!(has_refinement_error(&r), "{src}: {:?}", r.errors);
+    }
+
+    #[test]
+    fn narrowing_ignores_a_lexically_bound_comparison() {
+        // #18435's rule: a parameter named `<` is not the builtin either.
+        let src = format!(
+            "{} (define (process (x : int) <) (if (< x 128) (ascii-info x) 0))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(has_refinement_error(&r), "{src}: {:?}", r.errors);
+    }
+
+    #[test]
+    fn union_type_name_does_not_shadow_a_builtin() {
+        // A union's TYPE name is not a function the IR compiler generates:
+        // after `(union not (A) (B))`, `(not …)` still runs the builtin
+        // `not`, so the guard still narrows and the call is proven safe.
+        let src = format!(
+            "{} (union not (A) (B)) \
+             (define (process (x : int)) (if (not (>= x 128)) (ascii-info x) 0))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(r.ok, "{src}: {:?}", r.errors);
+        // A variant constructor IS a generated function, so it shadows.
+        let program = parse("(union T (not))").unwrap();
+        let r = check_program(&program, Some(TypedMode::Lenient));
+        assert!(!r.typed_ast.env.resolves_to_builtin("not"));
+        let program = parse("(union not (A))").unwrap();
+        let r = check_program(&program, Some(TypedMode::Lenient));
+        assert!(r.typed_ast.env.resolves_to_builtin("not"));
+    }
+
+    #[test]
+    fn imported_definition_named_like_a_builtin_shadows_it() {
+        // An imported `<` is the function that runs, so no narrowing — and
+        // its own kind (arity 2) applies at the call.
+        let program = parse(&format!(
+            "{} (define (process (x : int)) (if (< x 128) (ascii-info x) (< 1 2 3)))",
+            ascii_info_prelude()
+        ))
+        .unwrap();
+        let mut globals = std::collections::HashMap::new();
+        globals.insert("<".to_string(), TwigKind::Function { arity: 2 });
+        let r = check_program_with_globals(&program, Some(TypedMode::Strict), &globals);
+        assert!(has_refinement_error(&r), "{:?}", r.errors);
+        assert!(r.errors.iter().any(|e| e.message.contains("arity")), "{:?}", r.errors);
+    }
+
+    #[test]
+    fn exports_leave_out_builtins_the_module_did_not_define() {
+        // Re-exporting a builtin is not a definition: an importer must keep
+        // treating `<` as the builtin.  A defined `car` is exported.
+        let src = "(module m (export < car)) (define (car p) 1)";
+        let program = parse(src).unwrap();
+        let r = check_program(&program, Some(TypedMode::Lenient));
+        let exports = extract_module_exports(&program, &r.typed_ast.env);
+        assert!(!exports.contains_key("<"), "{exports:?}");
+        assert_eq!(exports.get("car"), Some(&TwigKind::Function { arity: 1 }));
+    }
+
+    #[test]
+    fn user_function_named_like_a_builtin_has_its_own_arity() {
+        // Call position resolves to the user's definition, as value
+        // position always did.
+        let r = tc_strict("(define (car a b) 0) (car 1)");
+        assert!(r.errors.iter().any(|e| e.message.contains("arity")), "{:?}", r.errors);
+        let r = tc_strict("(define car 5) (car 1)");
+        assert!(r.errors.is_empty(), "{:?}", r.errors);
+    }
+
+    #[test]
+    fn and_or_stay_special_forms_when_defined() {
+        // `(and …)` / `(or …)` are syntax in the IR compiler whatever is
+        // defined, so a user `and` of arity 2 does not make a 3-argument
+        // `(and …)` an arity error, and `and` still narrows.
+        let src = format!(
+            "{} (define (and a b) #f) (define (or a b) #f)              (define (process (x : int))                (if (and (>= x 0) (< x 128) #t) (ascii-info x) (or 1 2 3)))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(r.ok, "{src}: {:?}", r.errors);
     }
 
     #[test]

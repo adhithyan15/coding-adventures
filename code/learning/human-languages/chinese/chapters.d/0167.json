@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "The Day Before Yesterday",
+  "label": "ch:zh-the-day-before-yesterday",
+  "canDo": "I can say what happened the day before yesterday: a power cut, a noise, and that it was nothing.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C167-shengyin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say what happened the day before yesterday: a power cut, a noise, and that it was nothing.",
+    "assesses": [
+      "ZH-LEX-C167-PAST167-03",
+      "ZH-LEX-C167-PAST167-04",
+      "ZH-LEX-C167-PAST167-05"
+    ]
+  }
+}

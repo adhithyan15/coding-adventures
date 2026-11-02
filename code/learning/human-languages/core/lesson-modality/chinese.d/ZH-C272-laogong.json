@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C272-laogong",
+    "language": "chinese",
+    "chapter": 272,
+    "sequence": 20250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b47ef26ca05d9cb"
+  },
+  "findings": []
+}

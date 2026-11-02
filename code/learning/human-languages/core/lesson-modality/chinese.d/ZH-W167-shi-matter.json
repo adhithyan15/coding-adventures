@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W167-shi-matter",
+    "language": "chinese",
+    "chapter": 167,
+    "sequence": 13485,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fa4cdb858351e782",
+    "detachableSegments": [
+      "Script — a bar, 口, three bars and a long hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

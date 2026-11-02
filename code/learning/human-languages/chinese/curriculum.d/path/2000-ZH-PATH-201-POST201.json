@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-201-POST201",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-201-POST201"
+  ],
+  "after": []
+}

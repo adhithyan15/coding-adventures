@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C179-yigui",
+  "pathSegment": "ZH-PATH-179-WASH179",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-179-WASH179",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Grass and Lakes",
+  "label": "ch:zh-grass-and-lakes",
+  "canDo": "I can describe a lawn, a lake, a forest, grassland and the scenery.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C226-fengjing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can describe a lawn, a lake, a forest, grassland and the scenery.",
+    "assesses": [
+      "ZH-LEX-C226-LAKE226-03",
+      "ZH-LEX-C226-LAKE226-04",
+      "ZH-LEX-C226-LAKE226-05"
+    ]
+  }
+}

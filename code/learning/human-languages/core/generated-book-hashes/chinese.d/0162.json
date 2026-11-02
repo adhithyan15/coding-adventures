@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:3d011eef5d3c236a",
+  "lessonIds": [
+    "ZH-C162-yiban",
+    "ZH-C162-zongshi",
+    "ZH-C162-jingchang",
+    "ZH-C162-ouer",
+    "ZH-C162-tongchang"
+  ],
+  "tex": "chinese/book/chapters/ch162-how-often.tex"
+}

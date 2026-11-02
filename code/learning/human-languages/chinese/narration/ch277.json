@@ -1,0 +1,923 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 277,
+  "title": "Likes and Dislikes",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:98347541ffec64ac",
+  "lessons": [
+    {
+      "id": "ZH-C277-youqu",
+      "sequence": 20490,
+      "title": "yǒuqù — fun; amusing",
+      "headword": "yǒuqù",
+      "romanization": "yǒuqù",
+      "gloss": "fun; amusing",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7268a1725493cb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to retire, then the Mandarin for a big deal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yǒuqù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǒuqù — \"fun; amusing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhège gùshi hěn yǒuqù — This story is a lot of fun."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǒuqù is built from 有 'to have' and qù, both inherited from Middle Chinese, hjuwX and tshjuH (Guangyun, in Baxter's transcription), which glosses the second 'to tend towards'. How the pair came to mean amusing is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒuqù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒuqù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒuqù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒuqù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège gùshi hěn yǒuqù — This story is a lot of fun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège gùshi hěn yǒuqù* — This story is a lot of fun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to retire, then the Mandarin for a big deal, then say yǒuqù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to retire, then the Mandarin for a big deal, then say *yǒuqù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yǒuqù mean? (\"Fun; amusing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C277-taoyan",
+      "sequence": 20500,
+      "title": "tǎoyàn — to dislike; to hate",
+      "headword": "tǎoyàn",
+      "romanization": "tǎoyàn",
+      "gloss": "to dislike; to hate",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f6292469cc312b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a big deal, then the Mandarin for amusing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tǎoyàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tǎoyàn — \"to dislike; to hate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ tǎoyàn xiàyǔ tiān — I hate rainy days."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tǎoyàn is built from tǎo and yàn, both inherited from Middle Chinese, thawX and 'jiemH (Guangyun, in Baxter's transcription), which glosses the first 'to govern' and 'to punish', and for the second quotes the Analects, on not tiring of fine food. How the pair came to mean disliking is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tǎoyàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tǎoyàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tǎoyàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tǎoyàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ tǎoyàn xiàyǔ tiān — I hate rainy days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ tǎoyàn xiàyǔ tiān* — I hate rainy days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a big deal, then the Mandarin for amusing, then say tǎoyàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a big deal, then the Mandarin for amusing, then say *tǎoyàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tǎoyàn mean? (\"To dislike; to hate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C277-xinshang",
+      "sequence": 20510,
+      "title": "xīnshǎng — to admire; to appreciate",
+      "headword": "xīnshǎng",
+      "romanization": "xīnshǎng",
+      "gloss": "to admire; to appreciate",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4aad2c9927ade5f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for amusing, then the Mandarin for to dislike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xīnshǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xīnshǎng — \"to admire; to appreciate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ hěn xīnshǎng tā — I really admire him."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xīnshǎng is built from xīn 'glad' and shǎng 'to reward', both inherited from Middle Chinese, xj+n and syangX (Guangyun, in Baxter's transcription), which glosses the first 'glad' and the second 'to bestow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnshǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnshǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnshǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnshǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ hěn xīnshǎng tā — I really admire him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ hěn xīnshǎng tā* — I really admire him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for amusing, then the Mandarin for to dislike, then say xīnshǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for amusing, then the Mandarin for to dislike, then say *xīnshǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xīnshǎng mean? (\"To admire; to appreciate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C277-xiangshou",
+      "sequence": 20520,
+      "title": "xiǎngshòu — to enjoy",
+      "headword": "xiǎngshòu",
+      "romanization": "xiǎngshòu",
+      "gloss": "to enjoy",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1b481e1fa58c73b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to dislike, then the Mandarin for to admire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xiǎngshòu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎngshòu — \"to enjoy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zài xiǎngshòu jiàqī — We're enjoying the holidays."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎngshòu is built from xiǎng and shòu, both inherited from Middle Chinese, xjangX and dzyuwX (Guangyun, in Baxter's transcription), which lists the first under an older spelling and glosses it 'to offer' and 'to sacrifice', and glosses the second 'to take in'. How the first came to mean enjoying is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎngshòu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎngshòu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎngshòu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎngshòu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zài xiǎngshòu jiàqī — We're enjoying the holidays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zài xiǎngshòu jiàqī* — We're enjoying the holidays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to dislike, then the Mandarin for to admire, then say xiǎngshòu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to dislike, then the Mandarin for to admire, then say *xiǎngshòu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xiǎngshòu mean? (\"To enjoy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C277-reai",
+      "sequence": 20530,
+      "title": "rè'ài — to love deeply",
+      "headword": "rè'ài",
+      "romanization": "rè'ài",
+      "gloss": "to love deeply",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:334f08bc96f60381",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to admire, then the Mandarin for to enjoy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rè'ài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rè'ài — \"to love deeply\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā rè'ài yīnyuè — He loves music."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rè'ài is built from 热 'hot' and ài 'to love', both inherited from Middle Chinese, nyet and 'ojH (Guangyun, in Baxter's transcription), which glosses the second 'to cherish'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rè'ài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rè'ài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rè'ài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rè'ài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā rè'ài yīnyuè — He loves music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā rè'ài yīnyuè* — He loves music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to admire, then the Mandarin for to enjoy, then say rè'ài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to admire, then the Mandarin for to enjoy, then say *rè'ài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rè'ài mean? (\"To love deeply\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R277-review-272-277",
+      "sequence": 20540,
+      "title": "Looking back: from Husband and Wife to Likes and Dislikes",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Husband and Wife to Likes and Dislikes",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1dd70914d8c6eb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a wife and hubby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wife, hubby, grandpa on the mother's side, an uncle, an auntie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wife, hubby, grandpa on the mother's side, an uncle, an auntie]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "honest, hospitable, putting your heart into it, careless, careful with details",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: honest, hospitable, putting your heart into it, careless, careful with details]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to ice-skate, to collect things, all the rage, handicrafts, a sports fan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to ice-skate, to collect things, all the rage, handicrafts, a sports fan]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to apologise, to forgive, to say yes to a request, to accept, as you like",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to apologise, to forgive, to say yes to a request, to accept, as you like]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to have a job interview, to quit a job, an opportunity, to retire, a big deal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to have a job interview, to quit a job, an opportunity, to retire, a big deal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amusing, to dislike, to admire, to enjoy, to love deeply",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: amusing, to dislike, to admire, to enjoy, to love deeply]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "老 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 老 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A wife? (qīzi.) Hubby? (老公, lǎogōng.) Grandpa on the mother's side? (外公, wàigōng.) An uncle? (shūshu.) An auntie? (āyí.) Honest? (chéngshí.) Hospitable? (好客, hàokè.) Putting your heart into it? (用心, yòngxīn.) Careless? (cūxīn.) Careful with details? (xìxīn.) To ice-skate? (huábīng.) To collect things? (shōují.) All the rage? (热门, rèmén.) Handicrafts? (手工, shǒugōng.) A sports fan? (qiúmí.) To apologise? (dàoqiàn.) To forgive? (yuánliàng.) To say yes to a request? (dāying.) To accept? (jiēshòu.) As you like? (suíbiàn.) To have a job interview? (面试, miànshì.) To quit a job? (cízhí.) An opportunity? (机会, jīhuì.) To retire? (tuìxiū.) A big deal? (大事, dàshì.) Amusing? (yǒuqù.) To dislike? (tǎoyàn.) To admire? (xīnshǎng.) To enjoy? (xiǎngshòu.) To love deeply? (rè'ài.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R277-review-final-277",
+      "sequence": 20550,
+      "title": "Likes and Dislikes — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3062b0dc818ed6d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for amusing and to dislike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amusing, to dislike, to admire, to enjoy, to love deeply",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: amusing, to dislike, to admire, to enjoy, to love deeply]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Amusing? (yǒuqù.) To dislike? (tǎoyàn.) To admire? (xīnshǎng.) To enjoy? (xiǎngshòu.) To love deeply? (rè'ài.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

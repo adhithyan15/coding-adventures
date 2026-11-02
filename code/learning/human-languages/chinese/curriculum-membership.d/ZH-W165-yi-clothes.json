@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W165-yi-clothes",
+  "pathSegment": "ZH-PATH-165-COAT165",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-165-COAT165",
+      "order": 1
+    }
+  ]
+}

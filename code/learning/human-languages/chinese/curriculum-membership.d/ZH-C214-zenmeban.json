@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C214-zenmeban",
+  "pathSegment": "ZH-PATH-214-HELP214",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-214-HELP214",
+      "order": 4
+    }
+  ]
+}

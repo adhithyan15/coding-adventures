@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C201-shoudao",
+    "language": "chinese",
+    "chapter": 201,
+    "sequence": 15710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80e7792017a96dac"
+  },
+  "findings": []
+}

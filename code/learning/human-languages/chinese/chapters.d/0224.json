@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Spring Flowers",
+  "label": "ch:zh-spring-flowers",
+  "canDo": "I can say flowers are coming out, and talk about a florist's, a garden, butterflies and bees.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C224-mifeng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say flowers are coming out, and talk about a florist's, a garden, butterflies and bees.",
+    "assesses": [
+      "ZH-LEX-C224-BLOOM224-03",
+      "ZH-LEX-C224-BLOOM224-04",
+      "ZH-LEX-C224-BLOOM224-05"
+    ]
+  }
+}

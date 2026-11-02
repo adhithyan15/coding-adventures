@@ -22,15 +22,71 @@ let okm = hkdf_expand(&prk, b"info", 32, HashAlgorithm::Sha256).unwrap();
 let okm = hkdf(b"salt", b"ikm", b"info", 64, HashAlgorithm::Sha512).unwrap();
 ```
 
+For the repository-owned fixed-output Extract boundary used by future TLS key
+schedule composition:
+
+```rust
+use coding_adventures_hkdf::{FixedHkdfHash, hkdf_expand_fixed, hkdf_extract_fixed};
+
+let prk = hkdf_extract_fixed(b"salt", b"ikm", FixedHkdfHash::Sha384).unwrap();
+assert_eq!(prk.as_bytes().len(), 48);
+
+let mut output = [0u8; 64];
+hkdf_expand_fixed(&prk, b"application context", &mut output).unwrap();
+```
+
+When a protocol has already produced a valid hash-length pseudorandom key, it
+can move that value into the same fixed wipe-on-drop owner without routing
+through an allocation-backed compatibility API:
+
+```rust
+use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
+
+let already_derived = [0x5au8; 32];
+let prk = HkdfPrk::import_exact(FixedHkdfHash::Sha256, &already_derived)?;
+assert_eq!(prk.as_bytes(), &already_derived);
+# Ok::<(), coding_adventures_hkdf::HkdfPrkImportError>(())
+```
+
+Import requires exactly 32 bytes for SHA-256 or 48 bytes for SHA-384 before it
+copies any secret. It is not Extract: it does not establish entropy,
+provenance, or protocol suitability, and the borrowed input remains
+caller-owned. Raw input keying material must use `hkdf_extract_fixed`.
+
 ## API
 
 - `hkdf_extract(salt, ikm, algorithm) -> Vec<u8>` — Extract phase
 - `hkdf_expand(prk, info, length, algorithm) -> Result<Vec<u8>, HkdfError>` — Expand phase
 - `hkdf(salt, ikm, info, length, algorithm) -> Result<Vec<u8>, HkdfError>` — Combined
+- `hkdf_extract_fixed(salt, ikm, algorithm) -> Result<HkdfPrk, HkdfError>` — fixed-memory SHA-256/SHA-384 Extract with wipe-on-drop PRK ownership
+- `HkdfPrk::import_exact(algorithm, bytes) -> Result<HkdfPrk, HkdfPrkImportError>` — exact-hash-length import for an already-derived pseudorandom key
+- `hkdf_expand_fixed(prk, info, output) -> Result<(), HkdfError>` — fixed-memory SHA-256/SHA-384 Expand into caller-provided output storage
+
+The fixed-output API uses a data-driven `FixedHkdfHash` policy limited to the
+repository-owned SHA-256 and SHA-384 HMAC paths. Extract applies the RFC 5869
+HashLen-zero default salt and returns a PRK owner whose fixed backing array is
+wiped on drop. Expand takes that owner directly, so its algorithm cannot
+disagree with Extract, and writes into caller-provided output storage. It
+streams `T(i-1)`, `info`, and the counter as borrowed HMAC segments, retains
+one fixed wiped previous-block owner, and wipes each tag in its original HMAC
+result slot. Extract and exact import copy their PRK into the caller-owned
+result while retaining and wiping the original 48-byte staging storage. An
+optimized-IR regression gate checks those staging, tag, and previous-block
+scrubs and rejects allocator calls across Extract, import, and Expand. These
+fixed cores allocate no heap storage; successful output remains caller-owned.
+Exact import copies only an already-derived HashLen value into the same fixed
+wipe-on-drop owner and leaves source cleanup to the caller. The legacy APIs remain
+allocation-backed compatibility surfaces and are not promoted for TLS secret
+handling.
+
+This boundary does not compose a TLS key schedule, derive traffic keys or IVs,
+process certificates, establish trust, check revocation, perform transport, or
+make concrete HTTPS available.
 
 ## Dependencies
 
 - `coding_adventures_hmac` (which depends on `coding_adventures_sha256`, `coding_adventures_sha512`, etc.)
+- `coding_adventures_zeroize`
 
 ## How It Fits in the Stack
 
@@ -38,5 +94,6 @@ let okm = hkdf(b"salt", b"ikm", b"info", 64, HashAlgorithm::Sha512).unwrap();
 HKDF (this crate)
   └── HMAC
         ├── SHA-256
+        ├── SHA-384
         └── SHA-512
 ```

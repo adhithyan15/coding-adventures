@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C195-xinyongka",
+  "pathSegment": "ZH-PATH-195-BANK195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-195-BANK195",
+      "order": 2
+    }
+  ]
+}

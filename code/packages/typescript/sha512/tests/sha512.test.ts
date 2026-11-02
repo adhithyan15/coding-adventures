@@ -10,9 +10,134 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { sha512, sha512Hex, toHex, SHA512Hasher, VERSION } from "../src/index.js";
+import { closeSync, mkdtempSync, openSync, readSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { sha512, sha512Hex, toHex, SHA512Hasher, VERSION, encodeBitLength } from "../src/index.js";
 
 const enc = new TextEncoder();
+
+function parseFixture(raw: Uint8Array): string[] {
+  if (raw.byteLength === 0 || raw.byteLength > 4096) throw new Error("SHA-512 fixture byte size exceeds bounds");
+  const text = new TextDecoder("utf-8", { fatal: true }).decode(raw);
+  const lines = text.split("\n").map((line) => line.replace(/\r$/, ""))
+    .filter((line) => line.length > 0 && !line.startsWith("#"));
+  if (lines.length === 0 || lines.length > 64) throw new Error("SHA-512 fixture row count exceeds bounds");
+  for (const line of lines) {
+    const fields = line.split("|");
+    if (fields.length !== 5 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(fields[1])) throw new Error("malformed fixture row");
+    if (fields[0] === "V") {
+      if (fields[2].length > 8192 || !/^(?:[0-9a-f]{2})*$/.test(fields[2]) || !/^[0-9a-f]{128}$/.test(fields[4])) {
+        throw new Error("malformed vector row");
+      }
+      const byteCount = fields[2].length / 2;
+      if (byteCount > 4096 || (byteCount === 0) !== (fields[3] === "")) throw new Error("malformed vector size");
+      let chunks: number[] = [];
+      if (fields[3] !== "") {
+        if (!/^[1-9][0-9]*(?:,[1-9][0-9]*)*$/.test(fields[3])) throw new Error("malformed chunks");
+        chunks = fields[3].split(",").map((value) => {
+          const size = Number(value);
+          if (!Number.isSafeInteger(size) || size > 4096) throw new Error("malformed chunk");
+          return size;
+        });
+      }
+      if (chunks.length > 64 || chunks.reduce((sum, size) => sum + size, 0) !== byteCount) throw new Error("malformed chunks");
+    } else if (fields[0] === "L") {
+      if (!/^[0-9a-f]{16}$/.test(fields[2]) || !/^[0-9a-f]{16}$/.test(fields[3]) ||
+          (fields[4] !== "ERROR" && !/^[0-9a-f]{32}$/.test(fields[4]))) throw new Error("malformed length row");
+    } else {
+      throw new Error("unknown fixture row tag");
+    }
+  }
+  return lines;
+}
+
+function readFixture(path: URL | string): string[] {
+  const handle = openSync(path, "r");
+  const raw = Buffer.alloc(4097);
+  let length = 0;
+  try {
+    while (length < raw.length) {
+      const count = readSync(handle, raw, length, raw.length - length, null);
+      if (count === 0) break;
+      length += count;
+    }
+  } finally {
+    closeSync(handle);
+  }
+  return parseFixture(raw.subarray(0, length));
+}
+
+const fixtureLines = readFixture(new URL("../../../../specs/fixtures/sha512-v1/cases.txt", import.meta.url));
+if (fixtureLines.filter((row) => row.startsWith("V|")).length !== 9 ||
+    fixtureLines.filter((row) => row.startsWith("L|")).length !== 6) throw new Error("SHA-512 fixture corpus counts changed");
+
+describe("HF04 portable corpus", () => {
+  it("rejects an oversized file through the bounded reader", () => {
+    const directory = mkdtempSync(join(tmpdir(), "sha512-fixture-"));
+    const path = join(directory, "oversized.txt");
+    try {
+      writeFileSync(path, Buffer.alloc(4097, 0x78));
+      expect(() => readFixture(path)).toThrow(/byte size exceeds bounds/);
+    } finally {
+      rmSync(directory, { recursive: true });
+    }
+  });
+
+  it("rejects malformed rows", () => {
+    const digest = "0".repeat(128);
+    for (const row of ["X|id|||", `V|UPPER|00|1|${digest}`, `V|bad|0|1|${digest}`, `V|bad|00|2|${digest}`,
+      "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC"]) {
+      expect(() => parseFixture(new TextEncoder().encode(row))).toThrow();
+    }
+  });
+
+  it("matches one-shot and streaming APIs", () => {
+    for (const line of fixtureLines.filter((row) => row.startsWith("V|"))) {
+      const fields = line.split("|");
+      const data = Uint8Array.from(fields[2].match(/../g) ?? [], (pair) => Number.parseInt(pair, 16));
+      expect(sha512Hex(data)).toBe(fields[4]);
+      const hasher = new SHA512Hasher();
+      let offset = 0;
+      const chunks = fields[3] === "" ? [] : fields[3].split(",").map(Number);
+      expect(chunks.length).toBeLessThanOrEqual(64);
+      for (const size of chunks) {
+        expect(size).toBeGreaterThan(0);
+        expect(offset + size).toBeLessThanOrEqual(data.length);
+        hasher.update(data.slice(offset, offset + size));
+        offset += size;
+      }
+      expect(offset).toBe(data.length);
+      expect(hasher.hexDigest()).toBe(fields[4]);
+    }
+  });
+
+  it("encodes the full 128-bit length field without allocating messages", () => {
+    for (const line of fixtureLines.filter((row) => row.startsWith("L|"))) {
+      const fields = line.split("|");
+      const byteCount = (BigInt(`0x${fields[2]}`) << 64n) | BigInt(`0x${fields[3]}`);
+      if (fields[4] === "ERROR") {
+        expect(() => encodeBitLength(byteCount)).toThrow(RangeError);
+      } else {
+        expect(toHex(encodeBitLength(byteCount))).toBe(fields[4]);
+      }
+    }
+  });
+
+  it("consumes update input without aliasing", () => {
+    const input = enc.encode("abc");
+    const hasher = new SHA512Hasher().update(input);
+    input[0] = 0x7a;
+    expect(hasher.digest()).toEqual(sha512(enc.encode("abc")));
+  });
+
+  it("rejects invalid update input without changing state", () => {
+    expect(() => sha512("not bytes" as unknown as Uint8Array)).toThrow(TypeError);
+    const hasher = new SHA512Hasher().update(enc.encode("ab"));
+    expect(() => hasher.update("not bytes" as unknown as Uint8Array)).toThrow(TypeError);
+    expect(hasher.update(enc.encode("c")).digest()).toEqual(sha512(enc.encode("abc")));
+  });
+});
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 

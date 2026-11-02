@@ -1,0 +1,853 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 235,
+  "title": "For a Reason",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:329243f6610d0184",
+  "lessons": [
+    {
+      "id": "ZH-C235-weile",
+      "sequence": 17870,
+      "title": "为了 (wèile) — for; in order to",
+      "headword": "为了",
+      "romanization": "wèile",
+      "gloss": "for; in order to",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc9868ee18726385",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a raincoat, then the Mandarin for to shelter from the rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 为了",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "为了 — wèile — \"for; in order to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "为了身体我们都不吃点心了 wèile shēntǐ wǒmen dōu bù chī diǎnxin le — For our health, we've all given up snacks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "为了 (wèile) is built from 为 'for' and 了, both inherited from Middle Chinese, hjweH and lewX (Guangyun, in Baxter's transcription), which glosses the first 'to help'; in the word the second loses its tone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wèile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wèile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wèile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wèile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wèile shēntǐ wǒmen dōu bù chī diǎnxin le — For our health, we've all given up snacks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wèile shēntǐ wǒmen dōu bù chī diǎnxin le* — For our health, we've all given up snacks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a raincoat, then the Mandarin for to shelter from the rain, then say wèile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a raincoat, then the Mandarin for to shelter from the rain, then say *wèile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 为了 (wèile) mean? (\"For; in order to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C235-youyu",
+      "sequence": 17880,
+      "title": "yóuyú — owing to; because of",
+      "headword": "yóuyú",
+      "romanization": "yóuyú",
+      "gloss": "owing to; because of",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d2875685917ec74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to shelter from the rain, then the Mandarin for in order to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yóuyú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yóuyú — \"owing to; because of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yóuyú tiānqì bù hǎo wǒmen méi qù hǎibiān — Because of the bad weather, we didn't go to the seaside."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yóuyú is built from yóu 'from' and yú 'at', both inherited from Middle Chinese, yuw and 'jo (Guangyun, in Baxter's transcription), which glosses the first 'to follow' and 'by way of', and the second 'to dwell' and lists it as a particle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóuyú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóuyú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóuyú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóuyú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóuyú tiānqì bù hǎo wǒmen méi qù hǎibiān — Because of the bad weather, we didn't go to the seaside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóuyú tiānqì bù hǎo wǒmen méi qù hǎibiān* — Because of the bad weather, we didn't go to the seaside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to shelter from the rain, then the Mandarin for in order to, then say yóuyú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to shelter from the rain, then the Mandarin for in order to, then say *yóuyú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yóuyú mean? (\"Owing to; because of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C235-liyou",
+      "sequence": 17890,
+      "title": "lǐyóu — reason; grounds",
+      "headword": "lǐyóu",
+      "romanization": "lǐyóu",
+      "gloss": "reason; grounds",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a089d9085db69b98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for in order to, then the Mandarin for owing to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lǐyóu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǐyóu — \"reason; grounds\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ yǒu shénme lǐyóu — What are your grounds?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǐyóu is built from lǐ 'reason' and yóu 'cause', both inherited from Middle Chinese, liX and yuw (Guangyun, in Baxter's transcription), which glosses the first 'to put in order' and explains it, after an older book, as working jade."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǐyóu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǐyóu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǐyóu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǐyóu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ yǒu shénme lǐyóu — What are your grounds?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ yǒu shénme lǐyóu* — What are your grounds?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for in order to, then the Mandarin for owing to, then say lǐyóu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for in order to, then the Mandarin for owing to, then say *lǐyóu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lǐyóu mean? (\"Reason; grounds\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C235-zhihao",
+      "sequence": 17900,
+      "title": "zhǐhǎo — to have no choice but to",
+      "headword": "zhǐhǎo",
+      "romanization": "zhǐhǎo",
+      "gloss": "to have no choice but to",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05f5fcf3ef71e239",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for owing to, then the Mandarin for grounds for doing something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhǐhǎo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhǐhǎo — \"to have no choice but to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "méiyǒu chē le wǒmen zhǐhǎo zǒulù — There was no transport left, so we had to walk."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Tone: zhǐ and hǎo are both third tones, so the first rises and it sounds like zhíhǎo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhǐhǎo is built from zhǐ 'only' and 好 'good'. The second is inherited from Middle Chinese xawX (Guangyun, in Baxter's transcription); the dictionary lists the first, tsyeX there, as a particle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐhǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐhǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐhǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐhǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "méiyǒu chē le wǒmen zhǐhǎo zǒulù — There was no transport left, so we had to walk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *méiyǒu chē le wǒmen zhǐhǎo zǒulù* — There was no transport left, so we had to walk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for owing to, then the Mandarin for grounds for doing something, then say zhǐhǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for owing to, then the Mandarin for grounds for doing something, then say *zhǐhǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhǐhǎo mean? (\"To have no choice but to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C235-guaibude",
+      "sequence": 17910,
+      "title": "guàibude — no wonder",
+      "headword": "guàibude",
+      "romanization": "guàibude",
+      "gloss": "no wonder",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7abe4f0ee7e45869",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for grounds for doing something, then the Mandarin for to have no choice but."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: guàibude",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guàibude — \"no wonder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā gǎnmào le guàibude tā méi lái — He's got a cold; no wonder he didn't come."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Tone: 不 is light here, bu, with no tone of its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guàibude is built from guài 'to find strange', 不 'not' and 得 'can', all inherited from Middle Chinese, kweajH, pjut and tok (Guangyun, in Baxter's transcription), which glosses the first 'strange'; in the word the last two lose their tones."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guàibude",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guàibude*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guàibude, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guàibude*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā gǎnmào le guàibude tā méi lái — He's got a cold; no wonder he didn't come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā gǎnmào le guàibude tā méi lái* — He's got a cold; no wonder he didn't come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for grounds for doing something, then the Mandarin for to have no choice but, then say guàibude again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for grounds for doing something, then the Mandarin for to have no choice but, then say *guàibude* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does guàibude mean? (\"No wonder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R235-review-230-235",
+      "sequence": 17920,
+      "title": "Looking back: from Head to Toe to For a Reason",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Head to Toe to For a Reason",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b12b7588431a6e17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for on your person and body weight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on your person, body weight, a tummy, a nose, a leg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: on your person, body weight, a tummy, a nose, a leg]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chinese medicine, western medicine, to register at a clinic, a nurse, to prescribe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Chinese medicine, western medicine, to register at a clinic, a nurse, to prescribe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to have an accident, to get hurt, to bleed, to crash into, an ambulance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to have an accident, to get hurt, to bleed, to crash into, an ambulance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appearance, glasses for the eyes, a beard, slender, skin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: appearance, glasses for the eyes, a beard, slender, skin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to put off, to call off, some other day, a raincoat, to shelter from the rain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to put off, to call off, some other day, a raincoat, to shelter from the rain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in order to, owing to, grounds for doing something, to have no choice but, no wonder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in order to, owing to, grounds for doing something, to have no choice but, no wonder]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "身 体 医 西 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 身 体 医 西 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On your person? (身上, shēnshang.) Body weight? (体重, tǐzhòng.) A tummy? (dùzi.) A nose? (bízi.) A leg? (tuǐ.) Chinese medicine? (中医, zhōngyī.) Western medicine? (西医, xīyī.) To register at a clinic? (guàhào.) A nurse? (hùshi.) To prescribe? (kāiyào.) To have an accident? (出事, chūshì.) To get hurt? (shòushāng.) To bleed? (liúxuè.) To crash into? (zhuàng.) An ambulance? (jiùhùchē.) Appearance? (yàngzi.) Glasses for the eyes? (yǎnjìng.) A beard? (húzi.) Slender? (miáotiao.) Skin? (pífū.) To put off? (tuīchí.) To call off? (qǔxiāo.) Some other day? (gǎitiān.) A raincoat? (雨衣, yǔyī.) To shelter from the rain? (duǒyǔ.) In order to? (为了, wèile.) Owing to? (yóuyú.) Grounds for doing something? (lǐyóu.) To have no choice but? (zhǐhǎo.) No wonder? (guàibude.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

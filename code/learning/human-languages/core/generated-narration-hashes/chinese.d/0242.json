@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:bdb60b6332d6ab0e",
+  "lessonIds": [
+    "ZH-C242-zhu",
+    "ZH-C242-shanyang",
+    "ZH-C242-she",
+    "ZH-C242-chongzi",
+    "ZH-C242-wenzi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch242.txt",
+  "json": "chinese/narration/ch242.json",
+  "textHash": "fnv1a64:35a495e4f20c12ad",
+  "jsonHash": "fnv1a64:adfdbfaad356f8d0",
+  "findings": []
+}

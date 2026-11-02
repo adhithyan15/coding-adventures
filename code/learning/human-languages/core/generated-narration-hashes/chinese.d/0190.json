@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:3fb9ba7823c6983d",
+  "lessonIds": [
+    "ZH-C190-shudian",
+    "ZH-W190-dian-shop",
+    "ZH-C190-yaodian",
+    "ZH-C190-shangchang",
+    "ZH-C190-dianyingyuan",
+    "ZH-C190-bowuguan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch190.txt",
+  "json": "chinese/narration/ch190.json",
+  "textHash": "fnv1a64:f196fc0039a3e473",
+  "jsonHash": "fnv1a64:7b385772873904d5",
+  "findings": []
+}

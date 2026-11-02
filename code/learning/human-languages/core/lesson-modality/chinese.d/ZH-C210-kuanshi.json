@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C210-kuanshi",
+    "language": "chinese",
+    "chapter": 210,
+    "sequence": 16150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bcf9df1823ba9a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C212-dayin",
+    "language": "chinese",
+    "chapter": 212,
+    "sequence": 16240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b11eebd70280b13"
+  },
+  "findings": []
+}

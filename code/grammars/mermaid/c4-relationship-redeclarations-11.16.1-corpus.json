@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 relationship endpoint-pair redeclaration semantics",
+  "fixtures": [
+    {
+      "name": "relationship-endpoint-pair-redeclaration",
+      "source": "C4Context\nPerson(customer, \"Customer\")\nSystem(bank, \"Bank\")\nRel(customer, bank, \"Uses\", \"HTTPS\", \"Initial request\")\nUpdateRelStyle(customer, bank, $lineColor=\"#b91c1c\", $offsetX=\"14\")\nBiRel(customer, bank, \"Synchronizes\", \"gRPC\", \"Latest exchange\")"
+    }
+  ]
+}

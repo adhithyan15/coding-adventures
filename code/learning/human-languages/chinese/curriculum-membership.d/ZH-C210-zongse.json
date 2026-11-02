@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C210-zongse",
+  "pathSegment": "ZH-PATH-210-STYLE210",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-210-STYLE210",
+      "order": 1
+    }
+  ]
+}

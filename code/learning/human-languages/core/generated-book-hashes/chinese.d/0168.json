@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:7db5230503dab0f3",
+  "lessonIds": [
+    "ZH-C168-zheng",
+    "ZH-C168-zha",
+    "ZH-C168-dun",
+    "ZH-C168-shaoshui",
+    "ZH-C168-tang"
+  ],
+  "tex": "chinese/book/chapters/ch168-steamed-or-fried.tex"
+}

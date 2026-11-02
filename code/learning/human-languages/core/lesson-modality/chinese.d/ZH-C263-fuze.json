@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C263-fuze",
+    "language": "chinese",
+    "chapter": 263,
+    "sequence": 19780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01ee1f64e7df2229"
+  },
+  "findings": []
+}

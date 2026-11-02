@@ -8,9 +8,15 @@ never compensates for a failed skill.
 
 ## Reading — 100 points
 
+<!-- mock-part:prea1-reading-signs-and-words -->
 - signs and words: 40 points across 6 keyed items;
+<!-- /mock-part:prea1-reading-signs-and-words -->
+<!-- mock-part:prea1-reading-phrases-and-notices -->
 - phrases and notices: 30 points across 4 keyed items;
+<!-- /mock-part:prea1-reading-phrases-and-notices -->
+<!-- mock-part:prea1-reading-personal-details -->
 - personal details: 30 points across 4 keyed items.
+<!-- /mock-part:prea1-reading-personal-details -->
 
 Within each part, divide its points equally among keyed items and retain one
 decimal place. Accept only the keyed meaning or situation. Reading aloud does
@@ -19,9 +25,15 @@ sandhi is accepted but never required.
 
 ## Listening — 100 points
 
+<!-- mock-part:prea1-listening-sounds-and-words -->
 - sounds and words: 40 points across 6 keyed items;
+<!-- /mock-part:prea1-listening-sounds-and-words -->
+<!-- mock-part:prea1-listening-greeting-responses -->
 - greeting responses: 30 points across 4 keyed items;
+<!-- /mock-part:prea1-listening-greeting-responses -->
+<!-- mock-part:prea1-listening-personal-details -->
 - personal details: 30 points across 4 keyed items.
+<!-- /mock-part:prea1-listening-personal-details -->
 
 Play every item twice at 70–90 words per minute with an eight-second answer
 pause. Score only the learner's selected answer. Do not show a transcript,
@@ -29,9 +41,15 @@ romanization, or answer-bearing picture label.
 
 ## Writing — 100 points
 
+<!-- mock-part:prea1-writing-delayed-recall -->
 - delayed recall: 20 points, 10 per word;
+<!-- /mock-part:prea1-writing-delayed-recall -->
+<!-- mock-part:prea1-writing-dictation -->
 - dictation: 40 points, 10 per item;
+<!-- /mock-part:prea1-writing-dictation -->
+<!-- mock-part:prea1-writing-bounded-production -->
 - bounded independent production: 40 points, 20 per response.
+<!-- /mock-part:prea1-writing-bounded-production -->
 
 For each delayed-recall or dictation item award 4 points for a recognizable
 ordered Devanagari sequence and continuous śirorekhā, 3 for required vowel
@@ -45,9 +63,15 @@ sandhi at pre-A1; preserving unjoined word boundaries is correct.
 
 ## Speaking — 100 points
 
+<!-- mock-part:prea1-speaking-greeting-and-identity -->
 - greeting and identity: 30 points;
+<!-- /mock-part:prea1-speaking-greeting-and-identity -->
+<!-- mock-part:prea1-speaking-familiar-questions -->
 - three familiar questions: 40 points;
+<!-- /mock-part:prea1-speaking-familiar-questions -->
+<!-- mock-part:prea1-speaking-short-request -->
 - short request: 30 points.
+<!-- /mock-part:prea1-speaking-short-request -->
 
 For each part award 40% for completing the communicative purpose, 25% for
 intelligibility to a trained speaker of the living spoken register, 20% for an

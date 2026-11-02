@@ -119,6 +119,8 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "box-shadow": 1,
         "box-sizing": 1,
         "color": 2,
+        # Board layout trio lowers; Calendar gap remains explicit.
+        "gap": 1,
         # UI21 §2.2: flex-grow on a direct Row/Column child now lowers to
         # Layout.fillWidth / fillHeight, so task-name and content-scroll
         # left the report. What remains grows from inside an If branch or
@@ -130,9 +132,8 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "font": 1,
         "font-size": 2,
         # calendar-cell-drop's flex-grow is now consumed, which marks the
-        # part reached; its gap and width were always ignored by the Qt
-        # HostDropTarget and are now counted (UI21 §2.2).
-        "gap": 1,
+        # part reached; its width was always ignored by the Qt HostDropTarget
+        # and is now counted (UI21 §2.2). Its gap is counted above.
         "left": 6,
         "margin-bottom": 1,
         "margin-left": 1,

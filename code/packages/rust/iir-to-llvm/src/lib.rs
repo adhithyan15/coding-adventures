@@ -1268,10 +1268,36 @@ pub fn lower_iir_to_llvm(
     }
 
     // ── Function bodies ───────────────────────────────────────────────────
+    //
+    // Linkage (#18416). A module with an entry point is a whole program: the
+    // only function anything outside the module calls is the entry (`main`,
+    // which the C start-up code calls). Every other function is `internal`.
+    //
+    // External linkage made a program function a *global symbol*, and the
+    // linker resolves every reference to a global symbol in the executable to
+    // the one definition: the program's. So a program that defined a
+    // function named like a libc or runtime function replaced it for the
+    // linked C runtime and the collector too:
+    //
+    // | program defines   | what happened on LLVM (before)                                |
+    // |-------------------|---------------------------------------------------------------|
+    // | `abort`           | the runtime's fail-closed `abort()` returned into the program |
+    // | `malloc`          | gc-core-capi's allocations got 0: "memory allocation failed"  |
+    // | `calloc`          | `__dyn_pair_new`'s cell came back null                        |
+    //
+    // An `internal` function is visible only inside this module, so the C
+    // runtime's `abort` / `malloc` references resolve to libc again. Nothing
+    // in the runtime calls back into a program function by name (closures
+    // dispatch through the module's own `__dyn_call_closure`), so the entry
+    // is the one function that must stay external. A module *without* an
+    // entry point is a library someone else links against, and keeps
+    // external linkage for every function, as before.
     for func in &module.functions {
         out.push('\n');
+        let internal = module.entry_point.as_deref().is_some_and(|entry| entry != func.name);
         lower_function(
             func,
+            internal,
             &callee_sigs,
             &globals,
             &global_types,
@@ -1654,6 +1680,7 @@ impl FnState<'_> {
 /// Emit one LLVM `define` block for one IIR function.
 fn lower_function(
     func: &IIRFunction,
+    internal: bool,
     callee_sigs: &HashMap<String, FnSig>,
     globals: &HashMap<String, String>,
     global_types: &HashMap<String, &'static str>,
@@ -1662,7 +1689,8 @@ fn lower_function(
 ) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
     let ret_ty = llvm_type_for(&func.return_type, &func.name)?;
-    out.push_str(&format!("define {ret_ty} @{}(", llvm_fn_ident(&func.name)));
+    let linkage = if internal { "internal " } else { "" };
+    out.push_str(&format!("define {linkage}{ret_ty} @{}(", llvm_fn_ident(&func.name)));
     for (i, (pname, pty)) in func.params.iter().enumerate() {
         if i > 0 {
             out.push_str(", ");

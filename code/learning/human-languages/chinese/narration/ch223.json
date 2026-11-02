@@ -1,0 +1,853 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 223,
+  "title": "Animals",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:933d94f4021a3dea",
+  "lessons": [
+    {
+      "id": "ZH-C223-dongwu",
+      "sequence": 17250,
+      "title": "dòngwù — animal",
+      "headword": "dòngwù",
+      "romanization": "dòngwù",
+      "gloss": "animal",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:229d3669a10bb6a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to sneeze, then the Mandarin for miserable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dòngwù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dòngwù — \"animal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ xǐhuan shénme dòngwù — What animals do you like?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dòngwù is built from dòng 'to move' and wù 'thing', both inherited from Middle Chinese, duwngX and mjut (Guangyun, in Baxter's transcription), which glosses the first 'to shake' and the second 'the ten thousand things'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dòngwù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dòngwù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dòngwù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dòngwù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ xǐhuan shénme dòngwù — What animals do you like?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ xǐhuan shénme dòngwù* — What animals do you like?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to sneeze, then the Mandarin for miserable, then say dòngwù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to sneeze, then the Mandarin for miserable, then say *dòngwù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dòngwù mean? (\"Animal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C223-xiongmao",
+      "sequence": 17260,
+      "title": "xióngmāo — a panda; giant panda",
+      "headword": "xióngmāo",
+      "romanization": "xióngmāo",
+      "gloss": "a panda; giant panda",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f4f75e602ccf230",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for miserable, then the Mandarin for an animal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xióngmāo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xióngmāo — \"a panda; giant panda\"."
+            },
+            {
+              "kind": "speech",
+              "text": "xióngmāo hěn kě'ài — Pandas are so cute."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xióngmāo is built from xióng 'bear' and māo 'cat', both inherited from Middle Chinese, hjuwng and mjew (Guangyun, in Baxter's transcription), which lists the first as a beast like a pig and the second as the animal that catches mice; the level tone of māo is not the regular outcome of that form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xióngmāo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xióngmāo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xióngmāo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xióngmāo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xióngmāo hěn kě'ài — Pandas are so cute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xióngmāo hěn kě'ài* — Pandas are so cute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for miserable, then the Mandarin for an animal, then say xióngmāo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for miserable, then the Mandarin for an animal, then say *xióngmāo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xióngmāo mean? (\"A panda; giant panda\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C223-laohu",
+      "sequence": 17270,
+      "title": "lǎohǔ — tiger",
+      "headword": "lǎohǔ",
+      "romanization": "lǎohǔ",
+      "gloss": "tiger",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bf295cb91063361",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an animal, then the Mandarin for a panda."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lǎohǔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǎohǔ — \"tiger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ mèimei pà lǎohǔ — My little sister is scared of tigers."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Tone: lǎo and hǔ are both third tones, so the first rises and it sounds like láohǔ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǎohǔ is built from lǎo 'old' and hǔ 'tiger', both inherited from Middle Chinese, lawX and xuX (Guangyun, in Baxter's transcription), which calls the second, after an older book, the lord of the mountain beasts. Here the first is a prefix with no sense of age; how it came to sit there is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǎohǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǎohǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǎohǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǎohǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ mèimei pà lǎohǔ — My little sister is scared of tigers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ mèimei pà lǎohǔ* — My little sister is scared of tigers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an animal, then the Mandarin for a panda, then say lǎohǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an animal, then the Mandarin for a panda, then say *lǎohǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lǎohǔ mean? (\"Tiger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C223-houzi",
+      "sequence": 17280,
+      "title": "hóuzi — monkey",
+      "headword": "hóuzi",
+      "romanization": "hóuzi",
+      "gloss": "monkey",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a8980b7f40bf8fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a panda, then the Mandarin for a tiger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hóuzi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hóuzi — \"monkey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nà zhī hóuzi hěn cōngming — That monkey's very clever."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hóuzi is built from hóu 'monkey' and the noun ending 子, both inherited from Middle Chinese, huw and tsiX (Guangyun, in Baxter's transcription), which glosses the first with a word for the macaque."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hóuzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hóuzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hóuzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hóuzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nà zhī hóuzi hěn cōngming — That monkey's very clever.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nà zhī hóuzi hěn cōngming* — That monkey's very clever.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a panda, then the Mandarin for a tiger, then say hóuzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a panda, then the Mandarin for a tiger, then say *hóuzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hóuzi mean? (\"Monkey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C223-tuzi",
+      "sequence": 17290,
+      "title": "tùzi — rabbit; hare",
+      "headword": "tùzi",
+      "romanization": "tùzi",
+      "gloss": "rabbit; hare",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d570a5fed946fbd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a tiger, then the Mandarin for a monkey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tùzi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tùzi — \"rabbit; hare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ jiā yǒu liǎng zhī tùzi — We've got two rabbits at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tùzi is built from a word for the hare and the noun ending 子. The noun ending is inherited from Middle Chinese tsiX (Guangyun, in Baxter's transcription), and the dictionary lists the first as the name of a beast."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tùzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tùzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tùzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tùzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ jiā yǒu liǎng zhī tùzi — We've got two rabbits at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ jiā yǒu liǎng zhī tùzi* — We've got two rabbits at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a tiger, then the Mandarin for a monkey, then say tùzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a tiger, then the Mandarin for a monkey, then say *tùzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tùzi mean? (\"Rabbit; hare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R223-review-218-223",
+      "sequence": 17300,
+      "title": "Looking back: from Wind and Warm Days to Animals",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Wind and Warm Days to Animals",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5f6a4514d835192",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a windbreaker and pleasantly warm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a windbreaker, pleasantly warm, hot and stuffy, dry air, damp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a windbreaker, pleasantly warm, hot and stuffy, dry air, damp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cloud, cloudy, to turn colder, air temperature, to clear up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cloud, cloudy, to turn colder, air temperature, to clear up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to work out, to lose weight, to sweat, to skip with a rope, to do a fitness routine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to work out, to lose weight, to sweat, to skip with a rope, to do a fitness routine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a snowman, to ski, ice, below zero, gloves",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a snowman, to ski, ice, below zero, gloves]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to catch a chill, to cough, throat, to sneeze, miserable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to catch a chill, to cough, throat, to sneeze, miserable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an animal, a panda, a tiger, a monkey, a rabbit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an animal, a panda, a tiger, a monkey, a rabbit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "风 云 雪 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 风 云 雪 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A windbreaker? (风衣, fēngyī.) Pleasantly warm? (nuǎnhuo.) Hot and stuffy? (mēnrè.) Dry air? (gānzào.) Damp? (cháoshī.) A cloud? (云, yún.) Cloudy? (多云, duōyún.) To turn colder? (jiàngwēn.) Air temperature? (qìwēn.) To clear up? (fàngqíng.) To work out? (jiànshēn.) To lose weight? (jiǎnféi.) To sweat? (chūhàn.) To skip with a rope? (tiàoshéng.) To do a fitness routine? (zuòcāo.) A snowman? (雪人, xuěrén.) To ski? (huáxuě.) Ice? (bīng.) Below zero? (língxià.) Gloves? (shǒutào.) To catch a chill? (zháoliáng.) To cough? (késou.) Throat? (sǎngzi.) To sneeze? (dǎ pēntì.) Miserable? (nánshòu.) An animal? (dòngwù.) A panda? (xióngmāo.) A tiger? (lǎohǔ.) A monkey? (hóuzi.) A rabbit? (tùzi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

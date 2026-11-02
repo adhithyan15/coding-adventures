@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Jobs Around the House",
+  "label": "ch:zh-jobs-around-the-house",
+  "canDo": "I can hang things up, sort things out, lift them together, and talk about a ladder and a light bulb.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C174-dengpao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can hang things up, sort things out, lift them together, and talk about a ladder and a light bulb.",
+    "assesses": [
+      "ZH-LEX-C174-JOBS174-03",
+      "ZH-LEX-C174-JOBS174-04",
+      "ZH-LEX-C174-JOBS174-05"
+    ]
+  }
+}

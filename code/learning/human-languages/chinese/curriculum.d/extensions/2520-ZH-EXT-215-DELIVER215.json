@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-215-DELIVER215",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can have goods delivered, sign for a parcel, leave luggage in safekeeping and use the laundry.",
+  "prerequisites": []
+}

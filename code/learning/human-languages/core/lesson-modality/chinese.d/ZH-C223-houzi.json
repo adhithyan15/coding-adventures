@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C223-houzi",
+    "language": "chinese",
+    "chapter": 223,
+    "sequence": 17280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a8980b7f40bf8fa"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W159-fang-room",
+  "pathSegment": "ZH-PATH-159-ROOM159",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-159-ROOM159",
+      "order": 3
+    }
+  ]
+}

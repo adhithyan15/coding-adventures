@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C246-huachuan",
+  "pathSegment": "ZH-PATH-246-HILLS246",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-246-HILLS246",
+      "order": 4
+    }
+  ]
+}

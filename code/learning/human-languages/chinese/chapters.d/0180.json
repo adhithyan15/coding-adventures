@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Coming Over",
+  "label": "ch:zh-coming-over",
+  "canDo": "I can talk about visiting as a guest, the host, calling on someone, coming over and making a date.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C180-yue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can talk about visiting as a guest, the host, calling on someone, coming over and making a date.",
+    "assesses": [
+      "ZH-LEX-C180-VISIT180-03",
+      "ZH-LEX-C180-VISIT180-04",
+      "ZH-LEX-C180-VISIT180-05"
+    ]
+  }
+}

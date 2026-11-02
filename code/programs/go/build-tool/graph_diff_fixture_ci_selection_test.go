@@ -29,9 +29,11 @@ var graphDiffFixtureConsumers = []struct{ name, path, language string }{
 	{"ocaml/programs/build-tool", "code/programs/ocaml/build-tool", "ocaml"},
 	{"go/programs/build-tool", "code/programs/go/build-tool", "go"},
 	{"haskell/programs/build-tool", "code/programs/haskell/build-tool", "haskell"},
+	{"lua/programs/build-tool", "code/programs/lua/build-tool", "lua"},
 	{"perl/programs/build-tool", "code/programs/perl/build-tool", "perl"},
 	{"python/programs/build-tool", "code/programs/python/build-tool", "python"},
 	{"swift/programs/build-tool", "code/programs/swift/build-tool", "swift"},
+	{"typescript/programs/build-tool", "code/programs/typescript/build-tool", "typescript"},
 }
 
 func graphDiffPackages(root string) []discovery.Package {
@@ -271,9 +273,11 @@ func TestGraphDiffFixtureCheckedCorpusAndNativeReaders(t *testing.T) {
 		{"ocaml/build-tool/test/test_build_tool_core.ml", []string{"graph/empty", "diff_selection"}},
 		{"go/build-tool/internal/graphdiff/graphdiff_test.go", []string{"graph-empty.json", "diff-selection-"}},
 		{"haskell/build-tool/test/GraphDiffSpec.hs", []string{"graph-empty.json", "diff-selection-"}},
+		{"lua/build-tool/tests/test_graph_diff.lua", []string{"graph/empty", "diff-selection/"}},
 		{"perl/build-tool/t/15-graph-diff.t", []string{"graph-empty.json", "diff-selection-"}},
 		{"python/build-tool/tests/test_graph_diff.py", []string{"graph-empty.json", "diff-selection-"}},
 		{"swift/build-tool/Tests/BuildToolCoreTests/GraphDiffConformanceTests.swift", []string{"graph-empty.json", "diff-selection-"}},
+		{"typescript/build-tool/tests/graph-diff.test.ts", []string{"graph/empty", "diff-selection/"}},
 	}
 	if len(readers) != len(graphDiffFixtureConsumers) {
 		t.Fatalf("native reader roster %d differs from selected roots %d", len(readers), len(graphDiffFixtureConsumers))
@@ -309,7 +313,7 @@ func TestGraphDiffFixtureCheckedCorpusAndNativeReaders(t *testing.T) {
 			return nil
 		}
 		switch filepath.Ext(entry.Name()) {
-		case ".go", ".cs", ".fs", ".java", ".kt", ".dart", ".ml", ".hs", ".t", ".py", ".swift":
+		case ".go", ".cs", ".fs", ".java", ".kt", ".dart", ".ml", ".hs", ".lua", ".t", ".py", ".swift", ".ts":
 		default:
 			return nil
 		}

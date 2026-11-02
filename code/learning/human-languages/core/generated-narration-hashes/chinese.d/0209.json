@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:8d83ef695261a958",
+  "lessonIds": [
+    "ZH-C209-guiding",
+    "ZH-C209-anquan",
+    "ZH-C209-baochi",
+    "ZH-C209-darao",
+    "ZH-C209-yunxu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch209.txt",
+  "json": "chinese/narration/ch209.json",
+  "textHash": "fnv1a64:02777d0a136222f3",
+  "jsonHash": "fnv1a64:7e65c2826e46182c",
+  "findings": []
+}

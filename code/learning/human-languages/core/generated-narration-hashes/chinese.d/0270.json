@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:3e075e566f4c4817",
+  "lessonIds": [
+    "ZH-C270-tongyi",
+    "ZH-C270-fandui",
+    "ZH-C270-zancheng",
+    "ZH-C270-zhichi",
+    "ZH-C270-xiangxin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch270.txt",
+  "json": "chinese/narration/ch270.json",
+  "textHash": "fnv1a64:f4d51dcd30d02e6d",
+  "jsonHash": "fnv1a64:5a4fc0fe02ad928d",
+  "findings": []
+}

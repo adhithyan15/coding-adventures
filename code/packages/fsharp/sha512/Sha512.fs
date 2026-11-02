@@ -2,7 +2,6 @@ namespace CodingAdventures.Sha512.FSharp
 
 open System
 open System.Buffers.Binary
-open System.Collections.Generic
 open System.Numerics
 
 [<RequireQualifiedAccess>]
@@ -10,7 +9,7 @@ module Sha512 =
     [<Literal>]
     let DigestLength = 64
 
-    let private init =
+    let internal init =
         [|
             0x6a09e667f3bcc908UL; 0xbb67ae8584caa73bUL; 0x3c6ef372fe94f82bUL; 0xa54ff53a5f1d36f1UL
             0x510e527fade682d1UL; 0x9b05688c2b3e6c1fUL; 0x1f83d9abfb41bd6bUL; 0x5be0cd19137e2179UL
@@ -56,8 +55,18 @@ module Sha512 =
 
     let private maj (x: uint64) (y: uint64) (z: uint64) = (x &&& y) ^^^ (x &&& z) ^^^ (y &&& z)
 
+    let encodeBitLength (byteCountHigh: uint64) (byteCountLow: uint64) =
+        if byteCountHigh &&& 0xe000000000000000UL <> 0UL then
+            invalidArg "byteCountHigh" "SHA-512 message length must be less than 2^128 bits"
+
+        let result = Array.zeroCreate<byte> 16
+        let bitCountHigh = (byteCountHigh <<< 3) ||| (byteCountLow >>> 61)
+        let bitCountLow = byteCountLow <<< 3
+        BinaryPrimitives.WriteUInt64BigEndian(result.AsSpan(0, 8), bitCountHigh)
+        BinaryPrimitives.WriteUInt64BigEndian(result.AsSpan(8, 8), bitCountLow)
+        result
+
     let private pad (data: byte array) =
-        let bitLength = uint64 data.Length * 8UL
         let afterBit = (data.Length + 1) % 128
 
         let zeroCount =
@@ -69,10 +78,10 @@ module Sha512 =
         let result = Array.zeroCreate<byte> (data.Length + 1 + zeroCount + 16)
         Array.Copy(data, result, data.Length)
         result[data.Length] <- 0x80uy
-        BinaryPrimitives.WriteUInt64BigEndian(result.AsSpan(result.Length - 8), bitLength)
+        Array.Copy(encodeBitLength 0UL (uint64 data.Length), 0, result, result.Length - 16, 16)
         result
 
-    let private stateToBytes (state: uint64 array) =
+    let internal stateToBytes (state: uint64 array) =
         let digest = Array.zeroCreate<byte> DigestLength
 
         for index in 0 .. state.Length - 1 do
@@ -80,7 +89,7 @@ module Sha512 =
 
         digest
 
-    let private compress (state: uint64 array) (block: ReadOnlySpan<byte>) =
+    let internal compress (state: uint64 array) (block: ReadOnlySpan<byte>) =
         let w = Array.zeroCreate<uint64> 80
 
         for index in 0 .. 15 do
@@ -135,22 +144,57 @@ module Sha512 =
         hash data |> Convert.ToHexString |> fun value -> value.ToLowerInvariant()
 
 type Sha512Hasher() =
-    let data = List<byte>()
+    let mutable state = Array.copy Sha512.init
+    let buffer = Array.zeroCreate<byte> 128
+    let mutable bufferLength = 0
+    let mutable byteCountHigh = 0UL
+    let mutable byteCountLow = 0UL
 
     member this.Update(bytes: byte array) =
         if isNull bytes then
             nullArg "bytes"
 
-        data.AddRange(bytes)
+        let added = uint64 bytes.Length
+        let carry = if UInt64.MaxValue - byteCountLow < added then 1UL else 0UL
+        let nextLow = byteCountLow + added
+        let nextHigh = byteCountHigh + carry
+        Sha512.encodeBitLength nextHigh nextLow |> ignore
+        byteCountHigh <- nextHigh
+        byteCountLow <- nextLow
+
+        let mutable offset = 0
+        while offset < bytes.Length do
+            let copied = min (128 - bufferLength) (bytes.Length - offset)
+            Array.Copy(bytes, offset, buffer, bufferLength, copied)
+            offset <- offset + copied
+            bufferLength <- bufferLength + copied
+            if bufferLength = 128 then
+                Sha512.compress state (ReadOnlySpan<byte>(buffer))
+                bufferLength <- 0
         this
 
     member _.Digest() =
-        data.ToArray() |> Sha512.hash
+        let zeroCount = if bufferLength + 1 <= 112 then 112 - (bufferLength + 1) else 240 - (bufferLength + 1)
+        let tail = Array.zeroCreate<byte> (bufferLength + 1 + zeroCount + 16)
+        Array.Copy(buffer, tail, bufferLength)
+        tail[bufferLength] <- 0x80uy
+        Array.Copy(Sha512.encodeBitLength byteCountHigh byteCountLow, 0, tail, tail.Length - 16, 16)
+        let snapshot = Array.copy state
+        for offset in 0 .. 128 .. tail.Length - 128 do
+            Sha512.compress snapshot (ReadOnlySpan<byte>(tail, offset, 128))
+        Sha512.stateToBytes snapshot
 
     member this.HexDigest() =
         this.Digest() |> Convert.ToHexString |> fun value -> value.ToLowerInvariant()
 
     member _.Copy() =
         let copy = Sha512Hasher()
-        copy.Update(data.ToArray()) |> ignore
+        copy.Restore(state, buffer, bufferLength, byteCountHigh, byteCountLow)
         copy
+
+    member private _.Restore(sourceState: uint64 array, sourceBuffer: byte array, sourceBufferLength: int, sourceHigh: uint64, sourceLow: uint64) =
+        state <- Array.copy sourceState
+        Array.Copy(sourceBuffer, buffer, sourceBuffer.Length)
+        bufferLength <- sourceBufferLength
+        byteCountHigh <- sourceHigh
+        byteCountLow <- sourceLow

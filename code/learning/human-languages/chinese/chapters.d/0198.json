@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Phones and Messages",
+  "label": "ch:zh-phones-and-messages",
+  "canDo": "I can switch a phone off and on, leave a message, and say the line is engaged or there is no signal.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C198-xinhao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can switch a phone off and on, leave a message, and say the line is engaged or there is no signal.",
+    "assesses": [
+      "ZH-LEX-C198-PHONE198-03",
+      "ZH-LEX-C198-PHONE198-04",
+      "ZH-LEX-C198-PHONE198-05"
+    ]
+  }
+}

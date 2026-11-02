@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:e9fbc385d28552a0",
+  "lessonIds": [
+    "ZH-C180-zuoke",
+    "ZH-C180-zhuren",
+    "ZH-C180-kanwang",
+    "ZH-C180-guolai",
+    "ZH-C180-yue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch180.txt",
+  "json": "chinese/narration/ch180.json",
+  "textHash": "fnv1a64:b452e6b4f640b45a",
+  "jsonHash": "fnv1a64:930ea5c491a42a9d",
+  "findings": []
+}

@@ -290,8 +290,21 @@ fn walk(
             });
         }
 
+        // ------------------------------------------------------------------
+        // Application — the head is a reference, unless it is `and` / `or`
+        // ------------------------------------------------------------------
+        // `(and …)` / `(or …)` parse as applications, but their head is the
+        // special form, not a use of a name called `and` (#18453).  Walking
+        // it made every `and` / `or` inside a lambda a "free variable", so
+        //
+        //   (let ((f (lambda () (or "a" 1)))) (f))
+        //
+        // failed with `unbound name "or" captured by lambda`.  The
+        // arguments are ordinary expressions and are still walked, so an
+        // `or` written in *value* position — `(or #f or)`, where a local
+        // named `or` is in scope — is still found and captured.
         ExprKind::Apply(a) => {
-            if let Some(f) = a.fn_expr() {
+            if let Some(f) = a.fn_expr().filter(|_| !a.is_short_circuit_form()) {
                 walk(f, bound, globals, found, seen, depth);
             }
             for e in a.args().iter() {
@@ -437,6 +450,40 @@ mod tests {
         let l = lam_in(&t);
         let g = globals(&[]);
         assert_eq!(free_vars(l, &g), vec!["a".to_string(), "b".to_string()]);
+    }
+
+    #[test]
+    fn and_or_heads_are_syntax_not_free_names() {
+        // #18453: `(or a b)` is an application whose head is the name
+        // `or`, but that head is the special form — only `a` and `b` are
+        // references.
+        let g = globals(&[]);
+        for src in ["(lambda () (or a b))", "(lambda () (and a (or b)))"] {
+            let t = cst(src);
+            assert_eq!(free_vars(lam_in(&t), &g), vec!["a".to_string(), "b".to_string()], "{src}");
+        }
+        let t = cst("(lambda () (and))");
+        assert!(free_vars(lam_in(&t), &g).is_empty());
+    }
+
+    #[test]
+    fn and_or_in_value_position_are_names() {
+        // An argument spelled `and` / `or` is an ordinary reference — the
+        // user may have bound one (#18457) — so it is free like any other.
+        let t = cst("(lambda () (and and or))");
+        let g = globals(&[]);
+        assert_eq!(free_vars(lam_in(&t), &g), vec!["and".to_string(), "or".to_string()]);
+    }
+
+    #[test]
+    fn and_or_heads_do_not_mark_a_value_global_captured() {
+        // A program that defines a value named `or` and calls the special
+        // form inside a lambda does not capture that value.
+        let t = cst("(define or 5) (lambda () (or #f 1))");
+        let vg = globals(&["or"]);
+        assert!(lambda_captured_globals(ProgramView(&t), &vg).is_empty());
+        let t = cst("(define or 5) (lambda () (or #f or))");
+        assert_eq!(lambda_captured_globals(ProgramView(&t), &vg), vg);
     }
 
     #[test]

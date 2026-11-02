@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Full Already",
+  "label": "ch:zh-full-already",
+  "canDo": "I can ask what to order, ask for tofu, say I am full, and say whether food is fresh or tastes bad.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C177-nanchi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can ask what to order, ask for tofu, say I am full, and say whether food is fresh or tastes bad.",
+    "assesses": [
+      "ZH-LEX-C177-FULL177-03",
+      "ZH-LEX-C177-FULL177-04",
+      "ZH-LEX-C177-FULL177-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C207-hundaa-review",
+    "language": "punjabi",
+    "chapter": 207,
+    "sequence": 11250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bee2ef10db0a623c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C180-kanwang",
+    "language": "chinese",
+    "chapter": 180,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87932dd1e0816d3e"
+  },
+  "findings": []
+}

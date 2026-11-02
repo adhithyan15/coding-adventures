@@ -6,6 +6,12 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Dependency hashing now uses hashing-v1 frames over sorted canonical package
+  identities and decoded raw SHA-256 digests, with bounded identity counts,
+  stable fail-closed digest validation, and raw package/dependency combination.
+  Native tests dynamically consume the closed neutral adversarial dependency
+  roster, and both CLI paths compute every package digest before dependency
+  hashing so discovery order cannot create a missing-digest cache identity.
 - A process-free Ruby graph and diff-selection core now consumes the exact
   eight-graph and twelve-diff neutral fixture roster. It validates complete
   topology before returning canonical levels, closes changed packages through

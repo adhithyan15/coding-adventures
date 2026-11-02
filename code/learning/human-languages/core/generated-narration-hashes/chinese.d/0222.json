@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:d5dd2ffa82bce347",
+  "lessonIds": [
+    "ZH-C222-zhaoliang",
+    "ZH-C222-kesou",
+    "ZH-C222-sangzi",
+    "ZH-C222-dapenti",
+    "ZH-C222-nanshou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch222.txt",
+  "json": "chinese/narration/ch222.json",
+  "textHash": "fnv1a64:0684c6cacba1134a",
+  "jsonHash": "fnv1a64:a0cfb525950abafa",
+  "findings": []
+}

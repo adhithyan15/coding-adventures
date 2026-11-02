@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:72f79cfe2357a00b",
+  "lessonIds": [
+    "ZH-C197-wenlu",
+    "ZH-C197-zhaodao",
+    "ZH-W197-zhao-seek",
+    "ZH-C197-milu",
+    "ZH-C197-yizhi",
+    "ZH-C197-luxian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch197.txt",
+  "json": "chinese/narration/ch197.json",
+  "textHash": "fnv1a64:df58792dc33ae14b",
+  "jsonHash": "fnv1a64:bc772cbe9b74a8d6",
+  "findings": []
+}

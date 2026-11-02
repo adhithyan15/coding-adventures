@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W219-yun-cloud",
+  "pathSegment": "ZH-PATH-219-CLOUD219",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-219-CLOUD219",
+      "order": 1
+    }
+  ]
+}

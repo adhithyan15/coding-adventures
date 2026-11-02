@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:2485f0f08871b705",
+  "lessonIds": [
+    "ZH-C193-tejia",
+    "ZH-C193-jiangjia-cheaper",
+    "ZH-C193-zhangjia",
+    "ZH-C193-jiangjia-haggle",
+    "ZH-C193-zhiliang",
+    "ZH-R193-review-188-193"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch193.txt",
+  "json": "chinese/narration/ch193.json",
+  "textHash": "fnv1a64:89a42369cf750267",
+  "jsonHash": "fnv1a64:dc7672d6d1d08996",
+  "findings": []
+}

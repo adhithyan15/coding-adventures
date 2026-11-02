@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot } from "../../../src/loader.js";
+import { listMockAssessmentStatuses } from "../../../src/mock-assessment.js";
 
 const root = join(defaultCurriculumRoot(), "malayalam", "mocks", "a1");
 const read = (name: string) => readFileSync(join(root, name), "utf8");
@@ -12,6 +13,17 @@ const itemCount = (paper: string, heading: string, nextHeading?: string) => {
 };
 
 describe("Malayalam A1 timed mock pair", () => {
+  it("binds both timed mocks to every published task-shape part", () => {
+    expect(listMockAssessmentStatuses(defaultCurriculumRoot()).find(
+      (status) => status.language === "malayalam" && status.level === "A1",
+    )).toMatchObject({
+      requiredMocks: 2,
+      completeMocks: 2,
+      missingMocks: [],
+      blockedBy: [],
+    });
+  });
+
   it("owns two complete parallel forms, their keys, and a shared rubric", () => {
     for (const name of [
       "mock-1.md", "mock-2.md", "mock-1-answer-key.md", "mock-2-answer-key.md", "rubric.md",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C274-qiumi",
+    "language": "chinese",
+    "chapter": 274,
+    "sequence": 20380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8902760962df5d89"
+  },
+  "findings": []
+}

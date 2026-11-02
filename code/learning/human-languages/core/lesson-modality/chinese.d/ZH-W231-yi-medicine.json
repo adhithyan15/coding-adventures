@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W231-yi-medicine",
+    "language": "chinese",
+    "chapter": 231,
+    "sequence": 17675,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:74179223f1bb0aaf",
+    "detachableSegments": [
+      "Script — a box open on the right, with five strokes inside"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

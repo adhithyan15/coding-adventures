@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C186-lajitong",
+  "pathSegment": "ZH-PATH-186-THINGS186",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-186-THINGS186",
+      "order": 1
+    }
+  ]
+}

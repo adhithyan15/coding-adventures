@@ -1,5 +1,16 @@
 # mosaic-emit-qt
 
+Minimum-height HostDropTargets also preserve static `display: flex`,
+`flex-direction: column`, and finite nonnegative pixel `gap` through their
+inner ColumnLayout. State overrides and other flex shapes remain unsupported.
+
+HostDropTarget retains a finite nonnegative static `min-height` on its outer
+Item, which owns the DropArea bounds. State-dependent minima remain excluded.
+
+Host controls also retain a static scalar non-shrinking width floor, using the
+same conservative bridge as text and containers. Fill widths, conflicts, and
+state geometry remain excluded; general flex support is not claimed.
+
 Static scalar text widths paired with exact `flex-shrink: 0` also retain a
 minimum width. The conservative container exclusions and flex diagnostics apply.
 

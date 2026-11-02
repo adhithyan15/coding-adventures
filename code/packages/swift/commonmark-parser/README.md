@@ -33,7 +33,7 @@ BlockNode.document(DocumentNode(...))
 |---------|--------|
 | ATX Headings | `# H1` through `###### H6` |
 | Thematic Break | `---`, `***`, `___` |
-| Fenced Code Block | ` ```lang ` / ` ``` ` |
+| Fenced Code Block | ` ```lang ` / ` ``` `, preserving full info metadata |
 | Indented Code Block | 4-space indent |
 | Blockquote | `> text` |
 | Unordered List | `- item`, `* item`, `+ item` |
@@ -68,6 +68,11 @@ let doc = parse("# Hello\n\nWorld")
 //     .paragraph(ParagraphNode(children: [.text(TextNode(value: "World"))]))
 //   ]))
 ```
+
+Fenced input produces `FencedBlockNode`, preserving the normalized first info
+token, complete info string, and literal payload. Indented code continues to
+produce `CodeBlockNode`; the parser does not execute or interpret fence
+metadata.
 
 ## Role in the Stack
 

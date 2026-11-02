@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C202-saoma",
+    "language": "chinese",
+    "chapter": 202,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cb15d751ef87696"
+  },
+  "findings": []
+}

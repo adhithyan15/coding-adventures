@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C266-baobao",
+  "pathSegment": "ZH-PATH-266-AGE266",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-266-AGE266",
+      "order": 1
+    }
+  ]
+}

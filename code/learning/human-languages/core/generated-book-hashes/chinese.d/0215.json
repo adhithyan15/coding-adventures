@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:34f4fa179c2cfdcb",
+  "lessonIds": [
+    "ZH-C215-songhuo",
+    "ZH-C215-qianshou",
+    "ZH-C215-jicun",
+    "ZH-C215-xiyidian",
+    "ZH-C215-ganxi"
+  ],
+  "tex": "chinese/book/chapters/ch215-deliveries-and-the-laundry.tex"
+}

@@ -1,5 +1,83 @@
 # Changelog — twig-type-checker
 
+## Unreleased — #18438: a user definition shadows a builtin
+
+### Fixed
+
+- **`if`-guard narrowing trusted a comparison by its name.**
+  `extract_narrowing_facts` read `(< x 128)` as "x < 128" whatever `<` was.
+  After `(define (< a b) #t)`, or inside `(lambda (<) …)`, the guard calls
+  some other function, and narrowing on it "proved" refinements the program
+  breaks. `infer_if` now narrows through a comparison or `not` only when
+  the name is not lexically bound and `TypeEnv::resolves_to_builtin` says
+  it is still the builtin. The IR compiler uses the same rule.
+- **`and` / `or` are syntax.** `infer_apply` no longer looks up a user
+  `and` / `or` for a call: the IR compiler always lowers `(and …)` inline,
+  so a user `(define (and a b) …)` no longer makes `(and a b c)` an arity
+  error.
+- **A union's type name does not shadow a builtin.** Found in the
+  security review of the first version of this change. `register_union`
+  marked the union *type* name as a user definition, but the IR compiler
+  generates no function of that name. So after `(union not (A) (B))`, the
+  guard `(not (>= x 128))` stopped narrowing, and strict mode reported a
+  false refinement error, while the IR still runs the builtin `not`. The type name
+  now goes into `globals` and `unions` only. Variant constructors,
+  predicates and accessors still shadow. Test:
+  `union_type_name_does_not_shadow_a_builtin`. It failed before the fix.
+- **Imported definitions shadow builtins.** `check_program_with_globals`
+  used to skip an imported name that was also a builtin, so an imported `<`
+  kept the builtin's kind. It now binds every imported global. The IR
+  compiler `call`s that import, so its kind is the one that applies.
+  `extract_module_exports` leaves out a builtin that a module re-exports
+  without defining it.
+
+### Added
+
+- `TypeEnv::resolves_to_builtin(name)`. It needs a private `user_defined`
+  set that `bind_global` and record / union registration fill: a builtin
+  and a user value both have kind `Any`, so `globals` cannot tell them
+  apart. The builtin names are now the module constant `BUILTIN_NAMES`.
+- `narrowing::extract_narrowing_facts_where(guard, is_builtin)`.
+  `extract_narrowing_facts` keeps its signature and trusts every name.
+
+### Tests
+
+- New: `narrowing_ignores_a_user_defined_comparison`,
+  `narrowing_ignores_a_user_defined_not`,
+  `narrowing_ignores_a_lexically_bound_comparison`,
+  `imported_definition_named_like_a_builtin_shadows_it`,
+  `exports_leave_out_builtins_the_module_did_not_define` and
+  `and_or_stay_special_forms_when_defined` all failed before the fix.
+  `user_function_named_like_a_builtin_has_its_own_arity` passed before
+  too. `shadowed_comparison_or_not_produces_no_facts` is a unit test of
+  `extract_narrowing_facts_where`.
+- The TW05-C prelude `ascii_info_prelude` no longer defines stub
+  `<`, `<=`, `>`, `>=` and `and` functions. They dated from before builtins
+  were registered, and under this rule they would shadow the builtins the
+  narrowing tests rely on.
+
+## Unreleased — #18435: shadowed callees are not refinement-checked
+
+### Fixed
+
+- `infer_apply` looked up `env.fn_param_refinements` by the callee's name
+  alone. So in `(define (g ascii-info) (ascii-info 200))`, the *parameter*
+  `ascii-info` was checked against the global `ascii-info`'s `(Int 0 128)`
+  contract, which is a false refinement error in strict mode. The lookup now
+  runs only when the callee name is not bound in the local `ScopeStack`. The
+  arity check already resolved scope-first. A new test,
+  `arity_check_uses_the_shadowing_local`, guards that.
+- **Follow-up: an `if` guard no longer disables the check.** `infer_if`
+  narrows guard variables found in locals *or* globals, and binds them in a
+  scope frame. The first version of the fix asked `scope.lookup`, so a
+  narrowed global counted as a shadowing local. In
+  `(define (g) (if (and #f (< ascii-info 1)) 0 (ascii-info 200)))`, strict
+  mode then accepted the out-of-range call. `ScopeStack` now marks those
+  frames with the new `push_narrowing_frame`. The new
+  `is_lexically_bound` skips them, and the refinement guard uses it. The
+  new test is
+  `call_site_refinement_still_checks_a_global_narrowed_by_an_if_guard`.
+
 ## 0.10.0 - Unreleased - LANG84: type-check a parse tree
 
 ### Added

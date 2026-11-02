@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W248-xiao-school",
+    "language": "chinese",
+    "chapter": 248,
+    "sequence": 19025,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2735409c4fe1f70c",
+    "detachableSegments": [
+      "Script — the tree piece, then a lid and a cross"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

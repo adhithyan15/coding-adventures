@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:5fe81b92b89f787d",
+  "lessonIds": [
+    "ZH-C202-saoma",
+    "ZH-C202-shouju",
+    "ZH-C202-tuihuo",
+    "ZH-C202-guke",
+    "ZH-C202-shouyintai"
+  ],
+  "tex": "chinese/book/chapters/ch202-at-the-till.tex"
+}

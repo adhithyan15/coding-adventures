@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C221-bing",
+    "language": "chinese",
+    "chapter": 221,
+    "sequence": 17170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:918f3500f449b16f"
+  },
+  "findings": []
+}

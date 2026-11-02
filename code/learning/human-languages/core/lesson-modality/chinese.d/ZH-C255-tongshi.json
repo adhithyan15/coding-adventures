@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C255-tongshi",
+    "language": "chinese",
+    "chapter": 255,
+    "sequence": 19380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26e3c15885e5b463"
+  },
+  "findings": []
+}

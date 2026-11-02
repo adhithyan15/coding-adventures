@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C266-daren",
+    "language": "chinese",
+    "chapter": 266,
+    "sequence": 19930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3cb7a75ca2541ae"
+  },
+  "findings": []
+}

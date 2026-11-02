@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C196-qifei",
+    "language": "chinese",
+    "chapter": 196,
+    "sequence": 15440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38410581f36f674e"
+  },
+  "findings": []
+}

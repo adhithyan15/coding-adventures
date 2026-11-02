@@ -5,8 +5,9 @@
 **Basis:** project-defined CEFR ladder aligned to GF0025-2021 and the changing
 HSK 3.0 examination system
 
-**Status:** target specified; pre-A1 task shape and two project mock forms
-authored; later mocks, calibration, and human validation remain backlog
+**Status:** target specified; pre-A1 and A1 task shapes and two project mock
+forms at each rung authored; qualified A1 review, later mocks, calibration,
+and human validation remain backlog
 
 This specification names the assessment that the Mandarin Chinese book must
 eventually prepare a book-only learner to pass. It is deliberately dated because
@@ -15,9 +16,10 @@ advanced five-skill exam, while HSK 3.0 Levels 1–6 are still being globally
 trialled in 2026.
 
 The checked-in [assessment.json](assessment.json) is the machine-readable
-contract. The pre-A1 mock paths now resolve to project-authored papers,
-rubrics, keys, and manifests. Other future paths remain requirements, not
-evidence that their artifacts or any human validation study exist.
+contract. The pre-A1 and A1 mock paths now resolve to project-authored papers,
+rubrics, keys, and manifests. A1 forms remain unreviewed and cannot support a
+mock-ready claim yet. Other future paths remain requirements, not evidence
+that their artifacts or any human validation study exist.
 
 ## What is official, and what is not
 
@@ -50,11 +52,13 @@ and 8 remain substantial milestones on the road to C2. The table does not say
 that an HSK certificate is a CEFR certificate. Every target is labelled
 project-defined, and every future report must preserve that label.
 
-Sources checked 2026-08-21:
+Sources checked 2026-08-21 and 2026-10-28:
 
 - [Ministry of Education announcement for GF0025-2021](https://www.moe.gov.cn/jyb_xwfb/gzdt_gzdt/s5987/202103/t20210329_523304.html)
 - [Ministry of Education explanation of the nine-level standard and HSK transition](https://www.moe.gov.cn/jyb_xwfb/s271/202104/t20210402_524194.html)
 - [Official September 2026 HSK 3.0 trial notice](https://www.chinesetest.cn/notice)
+- [Chinese Test Service HSK Level 1 structure currently displayed](https://www.chinesetest.cn/HSK/1)
+- [Official announcement of the December 2026 HSK 3.0 launch](https://old.chinesetest.cn/gonewcontent.do?flag=kdnew&id=51336883)
 - [Official HSK Levels 7–9 structure](https://www.chinesetest.cn/HSK/7-9)
 
 ## Four-skill pass rule
@@ -142,6 +146,39 @@ notice does not pair Level 1 with a speaking paper, the complete target adds
 independently scored speaking and productive writing. The candidate handles
 high-frequency personal and survival exchanges, reads short signs/messages,
 writes a small form and short message, and completes a rehearsed role-play.
+
+Source boundary checked 2026-10-28: the Chinese Test Service's currently
+displayed Level 1 structure describes 20 listening and 20 reading items, with
+about 15 and 17 minutes respectively, a separate answer-transfer interval, and
+a combined 120/200 pass mark. The 2026 HSK 3.0 trial notice lists a roughly
+40-minute Level 1 paper but no paired speaking paper; the official worldwide
+launch is announced for December 2026. Those public pages do not establish a
+four-skill HSK 3.0 Level 1 form or publish its final stimulus/response lengths,
+audio speed, or independent skill thresholds. The project's A1 inventory must
+therefore label its four-paper timing, productive tasks, and 60/100-per-skill
+rule as **project-defined**, keep absent external measurements unknown, and
+never present its writing/speaking papers as CTI-administered HSK components.
+
+The project-defined A1 destination has 17 minutes of reading, 15 minutes of
+listening, 15 minutes of writing, and an eight-minute individual speaking
+paper after two minutes of preparation. Reading and listening use 20 scored
+items each; writing requires a small practical form and an independently
+composed short message; speaking requires a personal exchange and a rehearsed
+survival-role-play. Each paper carries 100 points and must independently reach
+60. The receptive timing and item counts use the currently displayed CTI
+Level 1 structure as an anchor, not as a claim about the final HSK 3.0 form.
+For this project's reading stimuli, `stimulusLength.unit: "items"` means Han
+characters **within one prompt**, not the number of scored questions: short
+signs or form fields use 2–10 characters and short messages use 12–30. These
+are project-selected bounds, not CTI measurements. The separate `items` field
+counts scored questions (10 per reading part). A reading-reach floor measures
+only a quoted comprehension passage somewhere in the current track; it does
+not by itself certify that an A1 learner has mastered that text. The A1-side
+`ZH-C97-reading` does contain a 57-Hanzi quoted passage, above both project
+minima, but mock-paper and human-validation evidence remain separate work.
+All productive timings, tasks, replay rules, response bounds, and analytic
+scoring are this project's decisions. Their teaching path decomposes into
+lessons of no more than 300 seconds, with no exam-length lesson or writing cliff.
 
 ### A2
 

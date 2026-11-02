@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:fba2b6434288f41c",
+  "lessonIds": [
+    "ZH-C250-aihao",
+    "ZH-C250-xingqu",
+    "ZH-C250-xiaoshuo",
+    "ZH-C250-gushi",
+    "ZH-C250-xiaqi"
+  ],
+  "tex": "chinese/book/chapters/ch250-hobbies.tex"
+}

@@ -1,0 +1,371 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "level": "B2",
+  "about": "A PROJECT-DEFINED TAMIL B2 CONTENT INVENTORY, NOT AN EXTERNAL TAMIL QUALIFICATION. It bounds the content needed to realise this project's committed B2 four-skill task shape while preserving contemporary standard written Tamil for reading and writing, standard spoken Tamil for listening and speaking, and credit for consistent documented regional forms. The sources support a useful first inventory, but none supplies a finite Tamil B2 grammar or word list. Every dimension therefore remains partial, uncovered points remain visible work, and coverage must never be reported as exam readiness.",
+  "source": "PROJECT-DEFINED synthesis of the Council of Europe CEFR Companion Volume (2020), Government of Tamil Nadu Tamil Virtual Academy certificate rules, Unicode 18.0 section 12.6, official LDC-IL Tamil text and speech corpus documentation, and the committed Coding Adventures Tamil B2 task shape. Each source is used only for the boundary it can support.",
+  "anchors": [
+    {
+      "id": "CEFR-CV-2020",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020)",
+      "url": "https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions",
+      "note": "Supplies B2 reception, production, interaction, mediation, linguistic, sociolinguistic, and pragmatic descriptors. It defines a proficiency boundary, not Tamil exponents, and the Council of Europe does not certify this project assessment."
+    },
+    {
+      "id": "TVA-CERTIFICATE-RULES",
+      "kind": "external-tamil-assessment",
+      "title": "Tamil Virtual Academy, Certificate Rules and Regulations",
+      "url": "https://www.tamilvu.org/en/coresite-html-cwsylcrl-342515",
+      "note": "Documents a Government of Tamil Nadu school-class ladder and its oral, online, and written assessment boundary. It is not CEFR-mapped and does not publish a finite Tamil B2 grammar, lexicon, four-skill paper, or content syllabus."
+    },
+    {
+      "id": "UNICODE-18-TAMIL",
+      "kind": "normative-orthography",
+      "title": "Unicode Standard 18.0, section 12.6 Tamil",
+      "url": "https://unicode.org/versions/Unicode18.0.0/core-spec/chapter-12/",
+      "note": "Closes the encoding model for Tamil characters, dependent vowel signs, pulli, named sequences, and Grantha use. It does not close spelling, punctuation, handwriting, pronunciation, processing speed, or B2 attainment."
+    },
+    {
+      "id": "LDCIL-TAMIL-TEXT",
+      "kind": "official-text-corpus",
+      "title": "LDC-IL, A Gold Standard Tamil Raw Text Corpus",
+      "url": "https://data.ldcil.org/a-gold-standard-tamil-raw-text-corpus",
+      "note": "Documents contemporary Tamil text across aesthetics, commerce, mass media, official documents, science and technology, and social sciences. Those are domain boundaries, not a B2 word list or frequency threshold."
+    },
+    {
+      "id": "LDCIL-TAMIL-RAW-SPEECH",
+      "kind": "official-speech-corpus",
+      "title": "LDC-IL, Tamil Raw Speech Corpus",
+      "url": "https://data.ldcil.org/tamil-raw-speech-corpus",
+      "note": "Documents Tamil speech collected across Kongu, Kumari, Madurai, Nellai, Salem, and Thanjai and several data types. Corpus collection is not a B2 pronunciation standard, listening-speed measure, regional-voice quota, or proof of lesson coverage."
+    },
+    {
+      "id": "LDCIL-TAMIL-SENTENCE-SPEECH",
+      "kind": "official-sentence-speech-corpus",
+      "title": "LDC-IL, Tamil Sentence Aligned Speech Corpus",
+      "url": "https://data.ldcil.org/tamil-sentence-aligned-corpus",
+      "note": "Documents read Tamil speech with contemporary text, creative text, sentences, dates, speaker metadata, and orthographic annotations. It supplies a corpus boundary, not a CEFR level mapping or evidence that this book teaches the sampled language."
+    },
+    {
+      "id": "CA-TAMIL-B2-TASK-SHAPE",
+      "kind": "project-owned",
+      "title": "Coding Adventures Tamil B2 four-skill task shape",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/tamil/task-shapes/b2.json",
+      "note": "Fixes the genres, input lengths, response modes, timing, interaction, variety boundary, and scoring demands that the content inventory must make executable. It defines how content is sampled, not which content has been taught."
+    }
+  ],
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "CEFR-CV-2020 and CA-TAMIL-B2-TASK-SHAPE",
+      "note": "CEFR provides a generic B2 functional boundary and the task shape names the performances this project samples. Neither selects the Tamil exponents, discourse markers, repair moves, mediation choices, or register choices that realise those functions, so the dimension is not closed."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "CEFR-CV-2020 and CA-TAMIL-B2-TASK-SHAPE",
+      "note": "CEFR describes generic B2 range and control and the project task shape names the performances to sample, but neither is a finite Tamil B2 grammar. The points below are a reviewable project selection, not a finite Tamil B2 grammar."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "UNICODE-18-TAMIL, LDCIL-TAMIL-RAW-SPEECH, LDCIL-TAMIL-SENTENCE-SPEECH, and CA-TAMIL-B2-TASK-SHAPE",
+      "note": "Unicode closes the character encoding model, while the LDC-IL and project anchors establish documented regional sampling, read-speech content, and assessed writing demands. They do not close spelling, punctuation, handwriting, pronunciation, listening speed, or extended-text processing."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "LDCIL-TAMIL-TEXT and CA-TAMIL-B2-TASK-SHAPE",
+      "note": "LDC-IL establishes contemporary domains and the project task shape establishes genre use, but a corpus domain list is not a B2 word list. No source here supplies a level-bounded lemma inventory, frequency threshold, productive collocation set, or regional-variant boundary."
+    }
+  },
+  "probeSemantics": "A point is covered only when every atom in its probe is introduced by a Tamil-track lesson. probe: null means the first source-bounded inventory has no exact lesson-atom mapping for that complete demand. A covered probe would be evidence of named lesson coverage only; it would never be evidence of task performance, mock readiness, B2 attainment, or external certification.",
+  "points": [
+    {
+      "id": "TA-B2-FUNC-01",
+      "category": "Communicative functions and discourse",
+      "label": "build a reasoned argument with an explicit position, linked reasons, evidence, and conclusion",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "The corpus has foundation atoms for position and cause-result linking, but they do not demonstrate evidence, conclusion, or a sustained B2 argument, so this complete demand remains unmapped."
+    },
+    {
+      "id": "TA-B2-FUNC-02",
+      "category": "Communicative functions and discourse",
+      "label": "follow and produce a reported feature that distinguishes source, fact, interpretation, and stance",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "The task shape requires reporting, but the current lesson atoms do not jointly name source attribution, fact-opinion distinction, and report organisation."
+    },
+    {
+      "id": "TA-B2-FUNC-03",
+      "category": "Communicative functions and discourse",
+      "label": "understand and give a detailed procedure with sequence, conditions, exceptions, and required actions",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "The corpus has sequencing and obligation foundations, but not an exact atom set for conditions, exceptions, required actions, and sustained procedural organisation."
+    },
+    {
+      "id": "TA-B2-FUNC-04",
+      "category": "Communicative functions and discourse",
+      "label": "interpret literary or cultural prose for voice, figurative effect, cultural inference, and textual support",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-TEXT", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Aesthetics, prose, and poetry are documented domains, but domain presence neither enumerates interpretive language nor proves literary inference."
+    },
+    {
+      "id": "TA-B2-FUNC-05",
+      "category": "Communicative functions and discourse",
+      "label": "track a multiparty discussion by speaker, proposal, stance, agreement, disagreement, and outcome",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-RAW-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "The current corpus has no exact atom set for sustained speaker tracking and implicit interpersonal alignment."
+    },
+    {
+      "id": "TA-B2-FUNC-06",
+      "category": "Communicative functions and discourse",
+      "label": "solve a collaborative problem by proposing, comparing, evaluating, negotiating, and deciding",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Comparison and condition foundations exist, but proposal, evaluation, turn management, tactful disagreement, repair, and negotiated closure do not have an exact complete probe."
+    },
+    {
+      "id": "TA-B2-FUNC-07",
+      "category": "Communicative functions and discourse",
+      "label": "write a formal interaction text that requests, responds, complains, proposes, or explains for a named audience",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "The project assessment requires audience and register control, but the inventory cannot yet map a complete formal interaction-text repertoire to lesson atoms."
+    },
+    {
+      "id": "TA-B2-FUNC-08",
+      "category": "Communicative functions and discourse",
+      "label": "present a position, defend it under follow-up questions, qualify a claim, and reformulate after challenge",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Opinion and reason atoms are foundations only; no exact probe demonstrates four-minute organisation, defence under challenge, qualification, or responsive reformulation."
+    },
+    {
+      "id": "TA-B2-FUNC-09",
+      "category": "Communicative functions and discourse",
+      "label": "mediate complex information by selecting, relating, clarifying, and adapting it for another person",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020"],
+      "note": "CEFR makes mediation explicit at B2, while the current Tamil atoms do not enumerate a dependable mediation repertoire."
+    },
+    {
+      "id": "TA-B2-GRAM-01",
+      "category": "Tamil grammar and register",
+      "label": "link claim, reason, result, and conclusion with a varied causal and consequential repertoire",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020"],
+      "note": "The corpus teaches an initial causal repertoire, but no exact atom set demonstrates varied linking through claim, reason, result, and conclusion with discourse-length accuracy and pragmatic choice."
+    },
+    {
+      "id": "TA-B2-GRAM-02",
+      "category": "Tamil grammar and register",
+      "label": "express real, negative, and contingency-framed conditions across practical and argumentative contexts",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020"],
+      "note": "Named conditional foundations do not demonstrate productive B2 range across practical and argumentative contexts or their register distribution."
+    },
+    {
+      "id": "TA-B2-GRAM-03",
+      "category": "Tamil grammar and register",
+      "label": "frame unreal situations, consequences, qualifications, and alternative outcomes",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020"],
+      "note": "No exact atom set demonstrates situations, consequences, qualifications, alternatives, and the wider Tamil B2 counterfactual system."
+    },
+    {
+      "id": "TA-B2-GRAM-04",
+      "category": "Tamil grammar and register",
+      "label": "express obligation, prohibition, recommendation, permission, and degrees of necessity",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020"],
+      "note": "Obligation and prohibition are taught foundations, but recommendation, permission, mitigation, degrees of necessity, and register-sensitive force lack an exact complete probe."
+    },
+    {
+      "id": "TA-B2-GRAM-05",
+      "category": "Tamil grammar and register",
+      "label": "organise extended time relations with sequence, anteriority, simultaneity, duration, and boundaries",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020"],
+      "note": "Several time relations are taught foundations, but simultaneity and the full extended-text tense-aspect and discourse-time boundary lack an exact complete probe."
+    },
+    {
+      "id": "TA-B2-GRAM-06",
+      "category": "Tamil grammar and register",
+      "label": "choose past, ongoing-past, and habitual-past framing in connected narrative and report",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020"],
+      "note": "Some forms are taught foundations, but no exact atom set establishes connected narrative and report control, aspectual nuance, or register distribution."
+    },
+    {
+      "id": "TA-B2-GRAM-07",
+      "category": "Tamil grammar and register",
+      "label": "compare entities, quantities, spans, and extremes while preserving the intended standard of comparison",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020"],
+      "note": "Comparison foundations do not demonstrate entity, quantity, span, extreme, standard-of-comparison, nuanced evaluation, and idiomatic selection together."
+    },
+    {
+      "id": "TA-B2-GRAM-08",
+      "category": "Tamil grammar and register",
+      "label": "report speech, thought, evidence, and attributed claims with source and stance kept clear",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "No exact lesson-atom set currently closes direct and indirect reporting, evidential distance, source attribution, and stance."
+    },
+    {
+      "id": "TA-B2-GRAM-09",
+      "category": "Tamil grammar and register",
+      "label": "control contemporary spoken, neutral written, and formal written Tamil without unmotivated register mixing",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-TEXT", "LDCIL-TAMIL-RAW-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "The sources establish register-sensitive use and varied domains, but no finite exponent list closes the spoken-written-formal boundary or proves consistent performance."
+    },
+    {
+      "id": "TA-B2-ORTH-01",
+      "category": "Tamil script, sound, and orthography",
+      "label": "read and write the Tamil character inventory with dependent vowel signs attached to the correct base",
+      "probe": null,
+      "anchorIds": ["UNICODE-18-TAMIL", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Script lessons establish foundations, but no exact atom set demonstrates the whole character inventory, accurate extended handwriting, or B2 reading fluency."
+    },
+    {
+      "id": "TA-B2-ORTH-02",
+      "category": "Tamil script, sound, and orthography",
+      "label": "resolve pulli, dead and live consonants, and Grantha letters in unfamiliar native and loan words",
+      "probe": null,
+      "anchorIds": ["UNICODE-18-TAMIL", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Unicode closes the structural model and the corpus has examples, but no exact probe demonstrates resolution and production across unfamiliar words."
+    },
+    {
+      "id": "TA-B2-ORTH-03",
+      "category": "Tamil script, sound, and orthography",
+      "label": "use full stop, comma, question mark, colon, quotation marks, parentheses, and dash to organise extended text",
+      "probe": null,
+      "anchorIds": ["UNICODE-18-TAMIL", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Recognition of punctuation cannot stand in for productive control across extended Tamil text."
+    },
+    {
+      "id": "TA-B2-ORTH-04",
+      "category": "Tamil script, sound, and orthography",
+      "label": "spell inflected and derived forms while preserving conventional sandhi, morpheme boundaries, and word division",
+      "probe": null,
+      "anchorIds": ["UNICODE-18-TAMIL"],
+      "note": "Unicode explains character composition, not Tamil spelling conventions across inflection, derivation, compounding, sandhi, or word division."
+    },
+    {
+      "id": "TA-B2-ORTH-05",
+      "category": "Tamil script, sound, and orthography",
+      "label": "read 1,800–2,300 words of multi-genre Tamil efficiently while retaining argument and detail",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Lesson completion does not measure the sustained processing rate, comprehension, or fatigue boundary required by the reading paper."
+    },
+    {
+      "id": "TA-B2-ORTH-06",
+      "category": "Tamil script, sound, and orthography",
+      "label": "understand connected Tamil at 150–170 words per minute after one orienting preview",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-SENTENCE-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "A written inventory cannot infer listening-speed control from vocabulary atoms; this project-defined demand needs recorded input and performance evidence."
+    },
+    {
+      "id": "TA-B2-ORTH-07",
+      "category": "Tamil script, sound, and orthography",
+      "label": "recognise documented regional Tamil voices without treating one accent as the only correct model",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-RAW-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "LDC-IL documents regional collection and the task shape requires regional voices, but neither supplies a B2 accent inventory or proves reviewed regional listening coverage."
+    },
+    {
+      "id": "TA-B2-ORTH-08",
+      "category": "Tamil script, sound, and orthography",
+      "label": "produce intelligible connected speech with stress, rhythm, phrasing, and repair that sustain extended interaction",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-SENTENCE-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Pronunciation and fluency are assessment criteria, but lesson-atom presence cannot demonstrate connected-speech performance."
+    },
+    {
+      "id": "TA-B2-ORTH-09",
+      "category": "Tamil script, sound, and orthography",
+      "label": "handwrite 220–280 words legibly with stable pulli, vowel-sign placement, letterforms, and word boundaries",
+      "probe": null,
+      "anchorIds": ["UNICODE-18-TAMIL", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "The encoding model cannot stand in for timed handwriting quality; a productive sample and trained scoring are required."
+    },
+    {
+      "id": "TA-B2-LEX-01",
+      "category": "Lexicon and genre domains",
+      "label": "public institutions, official documents, civic processes, rights, obligations, and public services",
+      "probe": null,
+      "anchorIds": ["LDCIL-TAMIL-TEXT"],
+      "note": "Official documents establish a contemporary domain, not a level-bounded lemma, collocation, or formula inventory."
+    },
+    {
+      "id": "TA-B2-LEX-02",
+      "category": "Lexicon and genre domains",
+      "label": "commerce, work, money, consumer decisions, proposals, complaints, and negotiated outcomes",
+      "probe": null,
+      "anchorIds": ["LDCIL-TAMIL-TEXT", "CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Commerce is a corpus domain and negotiation is a task demand; neither source supplies a closed Tamil lexical set."
+    },
+    {
+      "id": "TA-B2-LEX-03",
+      "category": "Lexicon and genre domains",
+      "label": "mass media, reporting, source attribution, public debate, evidence, and audience response",
+      "probe": null,
+      "anchorIds": ["LDCIL-TAMIL-TEXT", "LDCIL-TAMIL-SENTENCE-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Mass media and contemporary text are documented corpus domains, not a level-bounded reporting or evidence vocabulary."
+    },
+    {
+      "id": "TA-B2-LEX-04",
+      "category": "Lexicon and genre domains",
+      "label": "science, technology, process description, technical instructions, risk, and consequence",
+      "probe": null,
+      "anchorIds": ["LDCIL-TAMIL-TEXT", "CEFR-CV-2020", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Science and technology is a documented domain, but no anchor enumerates the Tamil lexis or collocations needed for a B2 technical text."
+    },
+    {
+      "id": "TA-B2-LEX-05",
+      "category": "Lexicon and genre domains",
+      "label": "social sciences, education, institutions, social change, policy, and competing interpretations",
+      "probe": null,
+      "anchorIds": ["LDCIL-TAMIL-TEXT", "CEFR-CV-2020"],
+      "note": "The sources establish social-science and education boundaries without supplying a finite B2 lexical repertoire."
+    },
+    {
+      "id": "TA-B2-LEX-06",
+      "category": "Lexicon and genre domains",
+      "label": "literature, aesthetics, cultural practice, narrative voice, figurative meaning, and critical response",
+      "probe": null,
+      "anchorIds": ["LDCIL-TAMIL-TEXT", "LDCIL-TAMIL-SENTENCE-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Aesthetics, creative text, prose, and poetry are documented boundaries, but they do not enumerate the language needed for B2 interpretation."
+    },
+    {
+      "id": "TA-B2-LEX-07",
+      "category": "Lexicon and genre domains",
+      "label": "health, environment, public safety, causes, effects, prevention, and competing priorities",
+      "probe": null,
+      "anchorIds": ["LDCIL-TAMIL-TEXT", "CEFR-CV-2020"],
+      "note": "These are plausible contemporary B2 domains, but the checked sources do not publish a finite Tamil lexical set or threshold for them."
+    },
+    {
+      "id": "TA-B2-LEX-08",
+      "category": "Lexicon and genre domains",
+      "label": "community, relationships, identity, regional practice, disagreement, repair, and negotiated decisions",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-RAW-SPEECH", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "Regional sampling and interaction demands establish a boundary, not a closed community or interpersonal repertoire."
+    },
+    {
+      "id": "TA-B2-LEX-09",
+      "category": "Lexicon and genre domains",
+      "label": "cross-domain academic and professional vocabulary for comparison, evidence, qualification, inference, and conclusion",
+      "probe": null,
+      "anchorIds": ["CEFR-CV-2020", "LDCIL-TAMIL-TEXT", "CA-TAMIL-B2-TASK-SHAPE"],
+      "note": "The proficiency and domain sources justify cross-domain work, but they publish no Tamil B2 frequency band, lemma list, or productive collocation inventory."
+    }
+  ]
+}

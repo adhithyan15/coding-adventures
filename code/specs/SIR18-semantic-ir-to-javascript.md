@@ -167,6 +167,18 @@ TS backend:
 - Empty → `_$empty`
 - SIR's synthesised `main` → stays as `main` (JS has no entry-point
   collision)
+- Names the emitter generates are reserved and escaped like a keyword
+  (issue #18466; SIR10 "Generated names"): `__sir…` in any case (`__Sir`,
+  loop temporaries — `__sir_block__` excepted), the closure wrapper's
+  argument array `_a` (its captured values are evaluated inside the
+  wrapper, so a captured `_a` read the array), `__l`, `__kw`, `__exc`, and
+  every JavaScript/Node global (`Map`, `Math`, `console`, …) — a user
+  function declaration is hoisted over the whole file and would replace
+  the global for the inlined runtime too.
+
+A strict closure's arity check raises `__Sir.raiseError("ArgumentError",
+"arity mismatch: …")` — SIR's `ArgumentError`, like every backend (SIR10
+"Strict closures"); it was a native `TypeError` until issue #18466.
 
 ## Tests
 

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:534249d20605fb8b",
+  "lessonIds": [
+    "ZH-C185-haojiu",
+    "ZH-C185-zhiqian",
+    "ZH-C185-zhihou",
+    "ZH-C185-zaowan",
+    "ZH-C185-wangwang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch185.txt",
+  "json": "chinese/narration/ch185.json",
+  "textHash": "fnv1a64:46c1a07da2350010",
+  "jsonHash": "fnv1a64:4c6710ec777755c5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:2e79f8baba8a7ee5",
+  "lessonIds": [
+    "ZH-C214-wenti",
+    "ZH-C214-gaosu",
+    "ZH-C214-mingbai",
+    "ZH-C214-banfa",
+    "ZH-C214-zenmeban"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch214.txt",
+  "json": "chinese/narration/ch214.json",
+  "textHash": "fnv1a64:43d7ec09348e1575",
+  "jsonHash": "fnv1a64:58fa24824db14cdd",
+  "findings": []
+}

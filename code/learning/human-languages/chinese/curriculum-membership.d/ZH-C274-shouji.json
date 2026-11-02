@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C274-shouji",
+  "pathSegment": "ZH-PATH-274-FREE274",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-274-FREE274",
+      "order": 1
+    }
+  ]
+}

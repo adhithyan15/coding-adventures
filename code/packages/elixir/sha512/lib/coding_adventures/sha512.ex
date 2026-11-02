@@ -151,12 +151,21 @@ defmodule CodingAdventures.Sha512 do
   # Why 112? We need 16 bytes for the 128-bit length field: 112 + 16 = 128.
 
   defp pad(data) do
-    bit_len = byte_size(data) * 8
     # How many zero bytes after 0x80? Solve: (n + 1 + z) mod 128 = 112
     z = rem(rem(112 - rem(byte_size(data) + 1, 128), 128) + 128, 128)
     # 128-bit big-endian length field
-    padding = <<0x80, 0::size(z * 8), bit_len::big-128>>
+    padding = <<0x80, 0::size(z * 8)>> <> encode_bit_length(byte_size(data))
     data <> padding
+  end
+
+  @doc false
+  def encode_bit_length(byte_count)
+      when is_integer(byte_count) and byte_count >= 0 and byte_count < 1 <<< 125 do
+    <<byte_count * 8::big-128>>
+  end
+
+  def encode_bit_length(_byte_count) do
+    raise ArgumentError, "sha512: message length must be less than 2^128 bits"
   end
 
   # ─── Message Schedule ────────────────────────────────────────────────────

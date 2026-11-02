@@ -1,0 +1,11 @@
+{
+  "id": "ZH-R193-review-188-193",
+  "pathSegment": "ZH-PATH-193-PRICE193",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-193-PRICE193",
+      "order": 5
+    }
+  ]
+}

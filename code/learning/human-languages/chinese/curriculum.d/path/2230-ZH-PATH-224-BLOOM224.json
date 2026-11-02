@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-224-BLOOM224",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "ZH-EXT-224-BLOOM224"
+  ],
+  "after": []
+}

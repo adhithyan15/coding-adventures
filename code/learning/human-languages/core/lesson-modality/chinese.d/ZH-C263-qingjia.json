@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C263-qingjia",
+    "language": "chinese",
+    "chapter": 263,
+    "sequence": 19790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5fb5045d6ee521d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C256-renwei",
+    "language": "chinese",
+    "chapter": 256,
+    "sequence": 19410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d6a2e86400206a0"
+  },
+  "findings": []
+}

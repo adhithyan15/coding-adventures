@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Post and Parcels",
+  "label": "ch:zh-post-and-parcels",
+  "canDo": "I can buy stamps, send things by courier, send an email and say I have got it.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C201-shoudao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can buy stamps, send things by courier, send an email and say I have got it.",
+    "assesses": [
+      "ZH-LEX-C201-POST201-03",
+      "ZH-LEX-C201-POST201-04",
+      "ZH-LEX-C201-POST201-05"
+    ]
+  }
+}

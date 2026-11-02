@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C276-cizhi",
+  "pathSegment": "ZH-PATH-276-NEWJOB276",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-276-NEWJOB276",
+      "order": 1
+    }
+  ]
+}

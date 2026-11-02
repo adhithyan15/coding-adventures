@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:6fab28f025b7827a",
+  "lessonIds": [
+    "ZH-C244-taifeng",
+    "ZH-C244-zhenyu",
+    "ZH-C244-shuobuding",
+    "ZH-C244-wanyi",
+    "ZH-C244-jixu"
+  ],
+  "tex": "chinese/book/chapters/ch244-a-storm-coming.tex"
+}

@@ -1,1 +1,1 @@
-if command -v cabal >/dev/null 2>&1; then cabal test all; else echo 'cabal not found -- skipping'; fi
+if command -v cabal >/dev/null 2>&1; then if [ "$(uname -s)" = Darwin ]; then DEVELOPER_DIR=/Library/Developer/CommandLineTools cabal test all; else cabal test all; fi; else echo 'cabal not found -- skipping'; fi

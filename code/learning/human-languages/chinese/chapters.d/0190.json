@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Shops in Town",
+  "label": "ch:zh-shops-in-town",
+  "canDo": "I can name the bookshop, the chemist's, the shopping centre, the cinema and the museum.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C190-bowuguan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can name the bookshop, the chemist's, the shopping centre, the cinema and the museum.",
+    "assesses": [
+      "ZH-LEX-C190-TOWN190-03",
+      "ZH-LEX-C190-TOWN190-04",
+      "ZH-LEX-C190-TOWN190-05"
+    ]
+  }
+}

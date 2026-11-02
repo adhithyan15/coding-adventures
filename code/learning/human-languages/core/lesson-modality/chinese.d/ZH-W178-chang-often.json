@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W178-chang-often",
+    "language": "chinese",
+    "chapter": 178,
+    "sequence": 14035,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b427cb24ee1cee4e",
+    "detachableSegments": [
+      "Script — three strokes, a cover, 口 and a cloth"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

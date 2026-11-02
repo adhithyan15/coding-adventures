@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:4815901de6d28e33",
+  "lessonIds": [
+    "ZH-C196-chepiao",
+    "ZH-W196-piao-ticket",
+    "ZH-C196-jipiao",
+    "ZH-C196-hangban",
+    "ZH-C196-qifei",
+    "ZH-C196-daoda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch196.txt",
+  "json": "chinese/narration/ch196.json",
+  "textHash": "fnv1a64:60ca9f3a20b3458e",
+  "jsonHash": "fnv1a64:ac0a460c5a8ecc1d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C160-zhaogu",
+    "language": "chinese",
+    "chapter": 160,
+    "sequence": 13140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36e2a0868d275745"
+  },
+  "findings": []
+}

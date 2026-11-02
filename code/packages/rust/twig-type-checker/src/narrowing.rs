@@ -70,10 +70,32 @@ use crate::kinds::TwigKind;
 ///
 /// We only handle `(op VarRef IntLit)`.  `(op IntLit VarRef)` is left to the
 /// TW05-D follow-up.  All comparisons are strict-left: `(< x k)` narrows `x`.
+///
+/// Every comparison and `not` here is assumed to be the builtin.  The checker
+/// itself calls [`extract_narrowing_facts_where`], which is told which names
+/// a user definition or a local binding has shadowed.
 pub fn extract_narrowing_facts(guard: &Expr) -> Vec<(String, Predicate)> {
+    extract_narrowing_facts_where(guard, &|_| true)
+}
+
+/// [`extract_narrowing_facts`], trusting a comparison or `not` only when
+/// `is_builtin(op)` says the name still means the builtin (#18438).
+///
+/// `(< x 128)` says something about `x` only if `<` is the builtin.  After
+/// `(define (< a b) #t)` — or inside `(lambda (<) …)` — the call runs some
+/// other function, which may return true for `x = 500`; narrowing on it
+/// would "prove" a refinement the program breaks.  Such a guard yields no
+/// facts, like any other unrecognised call.
+///
+/// `and` is a special form, not a binding (the IR compiler lowers `(and …)`
+/// inline whatever is defined), so it is always trusted.
+pub fn extract_narrowing_facts_where(
+    guard: &Expr,
+    is_builtin: &dyn Fn(&str) -> bool,
+) -> Vec<(String, Predicate)> {
     match guard {
         // `(op arg1 arg2)` — look at the head name and operands.
-        Expr::Apply(app) => extract_from_apply(app),
+        Expr::Apply(app) => extract_from_apply(app, is_builtin),
 
         // Any other expression form: no narrowing.
         _ => vec![],
@@ -81,7 +103,7 @@ pub fn extract_narrowing_facts(guard: &Expr) -> Vec<(String, Predicate)> {
 }
 
 /// Helper — dispatch on the application head to extract facts.
-fn extract_from_apply(app: &Apply) -> Vec<(String, Predicate)> {
+fn extract_from_apply(app: &Apply, is_builtin: &dyn Fn(&str) -> bool) -> Vec<(String, Predicate)> {
     // The function position must be a VarRef to a builtin comparison operator.
     let op_name = match app.fn_expr.as_ref() {
         Expr::VarRef(v) => v.name.as_str(),
@@ -89,6 +111,11 @@ fn extract_from_apply(app: &Apply) -> Vec<(String, Predicate)> {
     };
 
     match op_name {
+        // A comparison or `not` that a definition or binding has shadowed is
+        // an ordinary call: no facts (#18438).  `and` is syntax — never
+        // shadowed.
+        "<" | "<=" | ">" | ">=" | "=" | "not" if !is_builtin(op_name) => vec![],
+
         // ── Binary comparison operators ─────────────────────────────────────
         "<" | "<=" | ">" | ">=" | "=" => {
             if app.args.len() != 2 {
@@ -103,7 +130,7 @@ fn extract_from_apply(app: &Apply) -> Vec<(String, Predicate)> {
             // more than one child, combine their predicates with `Predicate::and`.
             let mut facts: Vec<(String, Predicate)> = vec![];
             for child in &app.args {
-                let child_facts = extract_narrowing_facts(child);
+                let child_facts = extract_narrowing_facts_where(child, is_builtin);
                 for (var, pred) in child_facts {
                     merge_fact_into(&mut facts, var, pred);
                 }
@@ -117,7 +144,7 @@ fn extract_from_apply(app: &Apply) -> Vec<(String, Predicate)> {
                 return vec![];
             }
             // Negate each fact from the child.
-            extract_narrowing_facts(&app.args[0])
+            extract_narrowing_facts_where(&app.args[0], is_builtin)
                 .into_iter()
                 .map(|(var, pred)| (var, Predicate::not(pred)))
                 .collect()
@@ -295,6 +322,29 @@ mod tests {
             line: 1,
             column: 1,
         })
+    }
+
+    #[test]
+    fn shadowed_comparison_or_not_produces_no_facts() {
+        // #18438: when `<` / `not` is a user definition, the guard is an
+        // ordinary call and says nothing about `x`.
+        let not_lt = |name: &str| name != "<";
+        assert!(extract_narrowing_facts_where(&make_cmp("<", "x", 128), &not_lt).is_empty());
+        assert!(
+            extract_narrowing_facts_where(&make_not(make_cmp("<", "x", 128)), &not_lt).is_empty()
+        );
+        // `and` is syntax: its other, unshadowed child still narrows.
+        let facts = extract_narrowing_facts_where(
+            &make_and(make_cmp("<", "x", 128), make_cmp(">=", "x", 0)),
+            &not_lt,
+        );
+        assert_eq!(facts.len(), 1, "{facts:?}");
+        // A shadowed `not` hides the facts of its builtin child.
+        let not_not = |name: &str| name != "not";
+        assert!(
+            extract_narrowing_facts_where(&make_not(make_cmp("<", "x", 128)), &not_not).is_empty()
+        );
+        assert_eq!(extract_narrowing_facts_where(&make_cmp("<", "x", 128), &not_not).len(), 1);
     }
 
     #[test]

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C247-jinianpin",
+  "pathSegment": "ZH-PATH-247-TRIP247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-247-TRIP247",
+      "order": 3
+    }
+  ]
+}

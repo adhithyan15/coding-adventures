@@ -47,7 +47,8 @@
 //! that any sub-call can append to.
 
 use lang_refinement_protocol::{
-    check_call_site_refinements, compute_if_narrowing, RefinementMode,
+    check_call_site_refinements, compute_if_narrowing, Evidence, Predicate, RefinementBridge,
+    RefinementMode,
 };
 use twig_parser::{
     Apply, Begin, Define, Expr, Form, If, Lambda, Let,
@@ -62,6 +63,7 @@ use crate::bridge::TwigRefinementBridge;
 use crate::env::{ScopeStack, TypeEnv};
 use crate::exhaustiveness::check_exhaustiveness;
 use crate::kinds::{annotation_to_refined_type, type_annotation_to_kind, TwigKind};
+use crate::narrowing::extract_narrowing_facts_where;
 
 // ---------------------------------------------------------------------------
 // Pass 1 — declaration collection
@@ -337,6 +339,20 @@ fn infer_apply(
     mode: &TypedMode,
     errors: &mut Vec<TypeErrorDiagnostic>,
 ) -> TwigKind {
+    // `(and …)` / `(or …)` are special forms: the IR compiler lowers them
+    // inline before any name lookup, so neither a local nor a top-level
+    // `define` named `and` changes what the call means (TW00 "Name
+    // resolution").  Check the operands only — a user `and`'s arity or
+    // refinements describe a function this call never reaches.
+    if let Expr::VarRef(v) = app.fn_expr.as_ref() {
+        if v.name == "and" || v.name == "or" {
+            for arg in &app.args {
+                infer_expr(arg, env, scope, mode, errors);
+            }
+            return TwigKind::Any;
+        }
+    }
+
     // Infer the function-position expression first.
     let fn_kind = infer_expr(&app.fn_expr, env, scope, mode, errors);
 
@@ -359,7 +375,17 @@ fn infer_apply(
 
     // TW05-C / LANG54: call-site refinement checking via the generic protocol.
     // Only runs when the callee is a VarRef with registered param refinements.
-    if let Some(callee_name) = fn_name {
+    //
+    // Lexical scope wins (#18435): `env.fn_param_refinements` is keyed by
+    // *top-level* function name, so it only describes the callee when that
+    // name is not rebound by an enclosing parameter / `let` / lambda.  In
+    // `(define (g ascii-info) (ascii-info 200))` the callee is g's
+    // parameter, and the global `ascii-info`'s `(Int 0 128)` contract says
+    // nothing about it.  (`fn_kind` above already resolved scope-first, so
+    // the arity check needs no such guard.)  `is_lexically_bound`, not
+    // `lookup`: an `if` guard such as `(< ascii-info 1)` *narrows* the global
+    // into a scope frame, and that must not count as a shadowing binding.
+    if let Some(callee_name) = fn_name.filter(|name| !scope.is_lexically_bound(name)) {
         if let Some(param_refinements) = env.fn_param_refinements.get(callee_name) {
             // Map TypedMode → RefinementMode for the protocol.
             let ref_mode = match mode {
@@ -444,8 +470,13 @@ fn infer_if(
     // LANG54: delegate narrowing computation to the generic protocol.
     // `compute_if_narrowing` calls TwigRefinementBridge::narrowing_facts and
     // TwigRefinementBridge::narrow_kind internally — no Twig-specific logic here.
+    //
+    // A guard narrows only through names that still mean the builtin
+    // (#18438): not a top-level definition named `<` / `not` …, and not a
+    // parameter or `let` binding of that name (#18435).
+    let is_builtin = |name: &str| !scope.is_lexically_bound(name) && env.resolves_to_builtin(name);
     let narrowed = compute_if_narrowing(
-        &TwigRefinementBridge,
+        &ScopedBridge { is_builtin: &is_builtin },
         &if_expr.cond,
         // Scope lookup: local scope first, then module globals.
         // Globals are typically not refined kinds (module-level names are always
@@ -455,7 +486,9 @@ fn infer_if(
     );
 
     // ── True branch ──────────────────────────────────────────────────────────
-    scope.push_frame();
+    // Narrowing frames, not lexical ones: a narrowed global is still the
+    // global (see `ScopeStack::is_lexically_bound`).
+    scope.push_narrowing_frame();
     for (var, kind) in narrowed.true_branch {
         scope.bind(&var, kind);
     }
@@ -463,7 +496,7 @@ fn infer_if(
     scope.pop_frame();
 
     // ── False branch ─────────────────────────────────────────────────────────
-    scope.push_frame();
+    scope.push_narrowing_frame();
     for (var, kind) in narrowed.false_branch {
         scope.bind(&var, kind);
     }
@@ -471,6 +504,33 @@ fn infer_if(
     scope.pop_frame();
 
     TwigKind::unify(then_kind, else_kind)
+}
+
+/// [`TwigRefinementBridge`] for one `if` guard, told which names still mean
+/// the builtin there (#18438).
+///
+/// The public bridge has no scope to ask, so it trusts every `<` / `not`;
+/// this wrapper passes the checker's answer to
+/// [`extract_narrowing_facts_where`] and delegates the rest unchanged.
+struct ScopedBridge<'a> {
+    is_builtin: &'a dyn Fn(&str) -> bool,
+}
+
+impl RefinementBridge for ScopedBridge<'_> {
+    type Expr = Expr;
+    type Kind = TwigKind;
+
+    fn evidence_for(&self, expr: &Expr, inferred_kind: Option<&TwigKind>) -> Evidence {
+        TwigRefinementBridge.evidence_for(expr, inferred_kind)
+    }
+
+    fn narrowing_facts(&self, guard: &Expr) -> Vec<(String, Predicate)> {
+        extract_narrowing_facts_where(guard, self.is_builtin)
+    }
+
+    fn narrow_kind(&self, kind: &TwigKind, pred: Predicate) -> TwigKind {
+        TwigRefinementBridge.narrow_kind(kind, pred)
+    }
 }
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:e6632526f72405ac",
+  "lessonIds": [
+    "ZH-C230-shenshang",
+    "ZH-W230-shen-body",
+    "ZH-C230-tizhong",
+    "ZH-W230-ti-body",
+    "ZH-C230-duzi",
+    "ZH-C230-bizi",
+    "ZH-C230-tui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch230.txt",
+  "json": "chinese/narration/ch230.json",
+  "textHash": "fnv1a64:89e78dc130002174",
+  "jsonHash": "fnv1a64:04aceefba6c2b758",
+  "findings": []
+}

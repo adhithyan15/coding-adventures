@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C159-chuanghu",
+  "pathSegment": "ZH-PATH-159-ROOM159",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-159-ROOM159",
+      "order": 5
+    }
+  ]
+}

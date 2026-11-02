@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-256-THINK256",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "ZH-EXT-256-THINK256"
+  ],
+  "after": []
+}

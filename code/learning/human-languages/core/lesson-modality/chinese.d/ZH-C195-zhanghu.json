@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C195-zhanghu",
+    "language": "chinese",
+    "chapter": 195,
+    "sequence": 15400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72b88c2ab1c258ac"
+  },
+  "findings": []
+}

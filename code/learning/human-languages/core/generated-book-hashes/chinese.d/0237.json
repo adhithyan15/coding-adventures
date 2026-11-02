@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:6720a1b9a856f6c1",
+  "lessonIds": [
+    "ZH-C237-zhiwu",
+    "ZH-C237-huasheng",
+    "ZH-C237-yezi",
+    "ZH-C237-faya",
+    "ZH-C237-xigua"
+  ],
+  "tex": "chinese/book/chapters/ch237-plants.tex"
+}

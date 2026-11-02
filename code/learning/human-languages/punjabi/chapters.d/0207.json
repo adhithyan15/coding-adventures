@@ -1,0 +1,18 @@
+{
+  "chapter": 207,
+  "title": "This Happens Every Day",
+  "label": "ch:pa-a2-hunda",
+  "canDo": "I can recognise and use one bounded masculine singular habitual form for happens.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C207-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce one bounded this-happens-every-day frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-FORM-HUNDA-207"
+    ],
+    "note": "This thirtieth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

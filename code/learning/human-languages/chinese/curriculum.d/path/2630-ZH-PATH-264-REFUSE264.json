@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-264-REFUSE264",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "ZH-EXT-264-REFUSE264"
+  ],
+  "after": []
+}

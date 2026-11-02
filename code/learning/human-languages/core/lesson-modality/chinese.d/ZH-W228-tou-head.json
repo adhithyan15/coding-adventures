@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W228-tou-head",
+    "language": "chinese",
+    "chapter": 228,
+    "sequence": 17513,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6855cea68c557337",
+    "detachableSegments": [
+      "Script — two dots over a shape like 大"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

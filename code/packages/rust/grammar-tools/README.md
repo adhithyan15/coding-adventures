@@ -67,8 +67,24 @@ The six predicates are `@space_before`, `@no_space_before`,
 `GrammarElement::AdjacencyPredicate`, compile to a fully qualified
 `AdjacencyPredicate::…` path (so grammars without predicates regenerate
 byte-identically), and validation rejects a repetition built only from
-zero-width elements. Unknown names and `@asi(...)` (not yet implemented) are
-parse errors. See `code/specs/F11-grammar-token-adjacency-predicates.md`.
+zero-width elements. Unknown names are parse errors. See
+`code/specs/F11-grammar-token-adjacency-predicates.md`.
+
+### Automatic insertion: `@asi` (F11, LANG84 E6)
+
+`@asi(T, C…)` writes ECMAScript's Automatic Semicolon Insertion as a grammar
+element:
+
+```text
+statement_end = SEMICOLON | @asi(SEMICOLON, RBRACE) ;
+```
+
+It parses to `GrammarElement::AutoInsert { token, closers }`. When it parses
+input, it inserts a zero-width `T` before a line break, before a closer, or
+at the end of the input. `T` and the closers must be UPPERCASE token names on
+one line. `T` cannot be `NEWLINE` or `EOF`. Closers cannot repeat or include
+`T`. Each malformed spelling has its own error. Validation counts the names
+as token references and treats the element as nullable.
 
 ### Line-start guards and refusal transitions (LANG84 E1, E8)
 

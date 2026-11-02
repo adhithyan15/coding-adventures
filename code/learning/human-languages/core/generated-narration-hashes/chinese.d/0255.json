@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:8729b292ab72bd4b",
+  "lessonIds": [
+    "ZH-C255-dagong",
+    "ZH-W255-gong-work",
+    "ZH-C255-gongzi",
+    "ZH-C255-tongshi",
+    "ZH-C255-jiaban",
+    "ZH-C255-laoban"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch255.txt",
+  "json": "chinese/narration/ch255.json",
+  "textHash": "fnv1a64:9b0e70675417b2fa",
+  "jsonHash": "fnv1a64:7aa0ad3c07724cea",
+  "findings": []
+}

@@ -124,3 +124,22 @@ describe("CubicBezier", () => {
     }
   });
 });
+
+describe("bounding-box interior x extrema", () => {
+  it("includes the quadratic x extremum", () => {
+    const curve = new QuadraticBezier(
+      new Point(0, 0), new Point(10, 0), new Point(0, 1),
+    );
+    const bounds = curve.boundingBox();
+    expect(bounds.x + bounds.width).toBeGreaterThan(4.9);
+  });
+
+  it("includes both cubic x extrema", () => {
+    const curve = new CubicBezier(
+      new Point(0, 0), new Point(10, 0), new Point(-10, 0), new Point(0, 1),
+    );
+    const bounds = curve.boundingBox();
+    expect(bounds.x).toBeLessThan(-2.8);
+    expect(bounds.x + bounds.width).toBeGreaterThan(2.8);
+  });
+});

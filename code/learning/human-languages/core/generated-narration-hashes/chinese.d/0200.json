@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:c879dd5019142a72",
+  "lessonIds": [
+    "ZH-C200-binguan",
+    "ZH-C200-yuding",
+    "ZH-C200-danrenjian",
+    "ZH-C200-ruzhu",
+    "ZH-C200-tuifang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch200.txt",
+  "json": "chinese/narration/ch200.json",
+  "textHash": "fnv1a64:335d4eb7cafebce5",
+  "jsonHash": "fnv1a64:c20cb800f94d00ed",
+  "findings": []
+}

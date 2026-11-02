@@ -1,8 +1,9 @@
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { VERSION } from "../src/index.js";
 
 describe("wasm-types", () => {
   it("has a version", () => {
-    expect(VERSION).toBe("0.1.0");
+    assert.equal(VERSION, "0.1.0");
   });
 });

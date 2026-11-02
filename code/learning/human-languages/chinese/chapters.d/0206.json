@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Upstairs",
+  "label": "ch:zh-upstairs",
+  "canDo": "I can talk about buildings and floors, go upstairs, and find the office and the front desk.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C206-qiantai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can talk about buildings and floors, go upstairs, and find the office and the front desk.",
+    "assesses": [
+      "ZH-LEX-C206-FLOOR206-03",
+      "ZH-LEX-C206-FLOOR206-04",
+      "ZH-LEX-C206-FLOOR206-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C240-tu",
+  "pathSegment": "ZH-PATH-240-SICK240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-240-SICK240",
+      "order": 3
+    }
+  ]
+}

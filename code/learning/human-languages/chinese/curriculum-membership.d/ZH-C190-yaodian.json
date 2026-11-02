@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C190-yaodian",
+  "pathSegment": "ZH-PATH-190-TOWN190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-190-TOWN190",
+      "order": 2
+    }
+  ]
+}

@@ -24,6 +24,17 @@ repeats its id. Four-digit ordinals preserve source order while leaving gaps
 for later insertion. Folding removes `pointIds`, restores `points` in manifest
 order, and produces the historical public object byte-for-byte.
 
+Metadata provenance may name the canonical lesson corpus and describe how its
+evidence was inspected, but must not assert unversioned lesson, chapter, or
+introduced-atom totals. Those totals change as the course grows. A historical
+count is acceptable only when tied to an exact source revision; current counts
+belong in reports derived from the canonical loader, not copied into prose.
+An inventory-owned regression must reject bare mutable totals in source and
+anchor metadata without weakening the inventory's proxy and readiness caveats.
+When a track gains a project-authored assessment envelope, its inventory
+provenance must acknowledge that contract while distinguishing it from an
+external awarding-body syllabus or learner-validation evidence.
+
 The identity manifest is stable inventory scope, not a generated aggregate.
 Changing a probe, note, label, anchor, or derivation edits only that point's
 owner. Adding or removing the externally/editorially enumerated target itself

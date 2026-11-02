@@ -1,0 +1,15 @@
+[package]
+name = "rsa-pss-sha384-signature"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded repository-owned SHA-384 RSASSA-PSS signature verification"
+
+[dependencies]
+rsa-pss-sha384 = { path = "../rsa-pss-sha384" }
+rsa-public-operation = { path = "../rsa-public-operation" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+rsa-pss-encoded-message-layout = { path = "../rsa-pss-encoded-message-layout" }
+x509-subject-public-key-info = { path = "../x509-subject-public-key-info" }

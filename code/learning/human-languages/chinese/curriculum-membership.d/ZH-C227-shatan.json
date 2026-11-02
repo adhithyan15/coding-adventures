@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C227-shatan",
+  "pathSegment": "ZH-PATH-227-SEA227",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-227-SEA227",
+      "order": 3
+    }
+  ]
+}

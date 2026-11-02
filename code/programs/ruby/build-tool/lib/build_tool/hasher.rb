@@ -47,6 +47,8 @@ module BuildTool
     UNIVERSAL_INPUTS = SOURCE_INPUT_REGISTRY.fetch("universal_inputs").freeze
     BUILD_FILENAMES = UNIVERSAL_INPUTS.fetch("build_filenames").freeze
     GENERATED_DIRECTORY_COMPONENTS = UNIVERSAL_INPUTS.fetch("generated_directory_components").freeze
+    MAX_HASHING_IDENTITIES = 4_096
+    MAX_PACKAGE_IDENTITY_BYTES = 240
 
     module_function
 
@@ -438,16 +440,82 @@ module BuildTool
         return Digest::SHA256.hexdigest("")
       end
 
-      transitive_deps = graph.transitive_dependents(package_name)
+      transitive_deps = bounded_transitive_dependencies(package_name, graph)
 
       if transitive_deps.empty?
         return Digest::SHA256.hexdigest("")
       end
 
-      # Sort dependency names for determinism, concatenate their hashes.
-      sorted_deps = transitive_deps.to_a.sort
-      combined = sorted_deps.map { |dep| package_hashes.fetch(dep, "") }.join
-      Digest::SHA256.hexdigest(combined)
+      # Snapshot and validate every identity and digest before starting the
+      # SHA-256 stream. Hashing v1 sorts exact package-identity bytes, then
+      # frames that name and the decoded 32-byte digest independently. This
+      # prevents both presentation-specific hex hashing and boundary aliases
+      # such as ["a", "bc"] versus ["ab", "c"].
+      dependencies = transitive_deps.map do |dependency|
+        identity = canonical_package_identity(dependency)
+        unless package_hashes.key?(dependency)
+          raise ArgumentError, "missing SHA-256 dependency digest"
+        end
+        digest = decode_sha256_digest(package_hashes.fetch(dependency), "dependency")
+        [identity.b.freeze, digest.freeze].freeze
+      end
+      dependencies.sort_by!(&:first)
+
+      dependency_hash = Digest::SHA256.new
+      dependencies.each do |identity, digest|
+        dependency_hash.update([identity.bytesize].pack("Q>"))
+        dependency_hash.update(identity)
+        dependency_hash.update([digest.bytesize].pack("Q>"))
+        dependency_hash.update(digest)
+      end
+      dependency_hash.hexdigest
+    end
+
+    # Combine the two independently computed hashing-v1 digests as raw bytes.
+    # The stable validation errors name only the role, never hostile input.
+    def combine_hashes(package_digest, dependencies_digest)
+      package_bytes = decode_sha256_digest(package_digest, "package")
+      dependency_bytes = decode_sha256_digest(dependencies_digest, "dependency")
+      Digest::SHA256.hexdigest(package_bytes + dependency_bytes)
+    end
+
+    def canonical_package_identity(name)
+      valid = name.is_a?(String) && name.bytesize <= MAX_PACKAGE_IDENTITY_BYTES &&
+        name.b.match?(
+          %r{\A[a-z0-9][a-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*\z}n
+        )
+      raise ArgumentError, "invalid package identity" unless valid
+
+      name.dup.freeze
+    end
+
+    def bounded_transitive_dependencies(package_name, graph)
+      visited = {}
+      stack = []
+      enqueue = lambda do |dependency|
+        next if visited.key?(dependency)
+
+        visited[dependency] = true
+        if visited.size > MAX_HASHING_IDENTITIES
+          raise ArgumentError, "dependency identity limit exceeded"
+        end
+        stack << dependency
+      end
+
+      graph.each_predecessor(package_name) { |dependency| enqueue.call(dependency) }
+      until stack.empty?
+        dependency = stack.pop
+        graph.each_predecessor(dependency) { |parent| enqueue.call(parent) }
+      end
+      visited.keys
+    end
+
+    def decode_sha256_digest(value, role)
+      valid = value.is_a?(String) && value.bytesize == 64 &&
+        value.b.match?(/\A[0-9a-f]{64}\z/n)
+      raise ArgumentError, "invalid SHA-256 #{role} digest" unless valid
+
+      [value].pack("H64")
     end
   end
 end

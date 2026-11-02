@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Roads and Crossings",
+  "label": "ch:zh-roads-and-crossings",
+  "canDo": "I can talk about roads, going on foot, zebra crossings, squares and traffic lights.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C194-hongludeng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can talk about roads, going on foot, zebra crossings, squares and traffic lights.",
+    "assesses": [
+      "ZH-LEX-C194-ROAD194-03",
+      "ZH-LEX-C194-ROAD194-04",
+      "ZH-LEX-C194-ROAD194-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Signs in a Building",
+  "label": "ch:zh-signs-in-a-building",
+  "canDo": "I can ask for the toilets, the lift and the car park, queue, and say when a place is open.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C192-kaifang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can ask for the toilets, the lift and the car park, queue, and say when a place is open.",
+    "assesses": [
+      "ZH-LEX-C192-SIGN192-03",
+      "ZH-LEX-C192-SIGN192-04",
+      "ZH-LEX-C192-SIGN192-05"
+    ]
+  }
+}

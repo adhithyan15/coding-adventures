@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-207-A2-HUNDA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-207-A2-HUNDA"
+  ],
+  "after": []
+}

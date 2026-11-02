@@ -14,6 +14,8 @@ HTML renderer for the Document AST.
 - `rawBlock` / `rawInline` nodes with an unknown format are silently skipped.
 - Tight lists suppress `<p>` wrappers around single-paragraph list items.
 - `codeBlock` content is HTML-escaped.
+- `fencedBlock` uses only the escaped `name` as an optional language-class
+  hint, escapes the literal payload, and never interpolates the full metadata.
 
 ## HTML Escaping
 

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:5a181dbd07472ac1",
+  "lessonIds": [
+    "ZH-C182-fanguan",
+    "ZH-C182-lengcai",
+    "ZH-W182-leng-cold",
+    "ZH-C182-xiaochi",
+    "ZH-C182-jiachangcai",
+    "ZH-C182-hefan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch182.txt",
+  "json": "chinese/narration/ch182.json",
+  "textHash": "fnv1a64:4449c4301843c849",
+  "jsonHash": "fnv1a64:0266c18b89f89027",
+  "findings": []
+}

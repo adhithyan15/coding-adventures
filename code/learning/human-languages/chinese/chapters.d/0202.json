@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "At the Till",
+  "label": "ch:zh-at-the-till",
+  "canDo": "I can pay by scanning a code, ask for a receipt, take something back and find the checkout.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C202-shouyintai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can pay by scanning a code, ask for a receipt, take something back and find the checkout.",
+    "assesses": [
+      "ZH-LEX-C202-TILL202-03",
+      "ZH-LEX-C202-TILL202-04",
+      "ZH-LEX-C202-TILL202-05"
+    ]
+  }
+}

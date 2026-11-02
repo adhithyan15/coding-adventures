@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:ec6ee70fa659743e",
+  "lessonIds": [
+    "ZH-C230-shenshang",
+    "ZH-W230-shen-body",
+    "ZH-C230-tizhong",
+    "ZH-W230-ti-body",
+    "ZH-C230-duzi",
+    "ZH-C230-bizi",
+    "ZH-C230-tui"
+  ],
+  "tex": "chinese/book/chapters/ch230-head-to-toe.tex"
+}

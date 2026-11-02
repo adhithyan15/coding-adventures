@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-271-MOOD271",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am worked up, moved, taken aback or bored, or that something is on my mind.",
+  "prerequisites": []
+}

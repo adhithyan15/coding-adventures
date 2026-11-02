@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:b018e84a55972d58",
+  "lessonIds": [
+    "ZH-C195-cunqian",
+    "ZH-C195-quqian",
+    "ZH-C195-xinyongka",
+    "ZH-C195-mima",
+    "ZH-C195-zhanghu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch195.txt",
+  "json": "chinese/narration/ch195.json",
+  "textHash": "fnv1a64:18e020d87e401049",
+  "jsonHash": "fnv1a64:853e61d4be11e648",
+  "findings": []
+}

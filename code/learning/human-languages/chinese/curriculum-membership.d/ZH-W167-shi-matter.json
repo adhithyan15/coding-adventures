@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W167-shi-matter",
+  "pathSegment": "ZH-PATH-167-PAST167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-167-PAST167",
+      "order": 3
+    }
+  ]
+}

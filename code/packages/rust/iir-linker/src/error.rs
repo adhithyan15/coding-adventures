@@ -17,9 +17,11 @@
 //!    anything keyed by module name (exports, imports) would mix them up.
 //! 6. **UnresolvedEntryPoint** — the entry module's `entry_point` names a
 //!    function that module neither defines nor imports.
-//! 7. **UndeclaredCall** — a `call` instruction targets a name that is neither
-//!    a local function nor a declared import.  This catches compiler bugs where
-//!    the frontend forgot to add an `IIRImport` entry.
+//! 7. **UndeclaredCall** — a function reference (`call` callee,
+//!    `alloc_closure` body, spawn target) names something that is neither a
+//!    function of its module nor a declared import — for example another
+//!    module's *private* function (issue #18432), or a frontend that forgot
+//!    an `IIRImport`.
 //!
 //! Every variant carries enough context to produce an actionable error message
 //! without requiring access to the original `IIRModule`s.
@@ -41,6 +43,11 @@
 //!   module app: entry_point = "start", no start ─► binds to some other
 //!                                                  module's private start
 //! ```
+//!
+//! **UndeclaredCall** (7) is the same failure for ordinary references: the
+//! variant existed from the start but nothing raised it until #18432, so a
+//! call to a name the module neither defined nor imported bound to another
+//! module's private function of that name.
 //!
 //! A linker that guesses is worse than one that refuses: the error is cheap
 //! to fix at build time and very expensive to find at run time.
@@ -151,11 +158,25 @@ pub enum LinkError {
         entry_point: String,
     },
 
-    /// A `call` instruction targets a name that is neither a local function
-    /// nor a declared import.
+    /// A function reference names something that is neither a function of
+    /// its module nor the local name of one of its imports.
     ///
-    /// This is a compiler bug — the frontend generated a `call("foo", …)`
-    /// without declaring `"foo"` in `IIRModule::imports`.
+    /// Function references are the operands the merge pass renames: the
+    /// `call` callee, the `alloc_closure` body name, and the `task_spawn` /
+    /// `group_spawn` target.  Left alone, such a name would stay bare and
+    /// bind to whichever function owns it after merging — possibly another
+    /// module's *private* function (issue #18432):
+    ///
+    /// ```text
+    ///   lib_a: private helper ─┐
+    ///   lib_b: private helper ─┼─► merged `helper` is lib_a's; app's call
+    ///   app:   call helper    ─┘   would run it without importing anything
+    /// ```
+    ///
+    /// Either the module really meant another module's function (then it
+    /// must import it, and that module must export it), or the frontend
+    /// forgot to declare an `IIRImport`.  Each `(module, function, callee)`
+    /// is reported once.
     UndeclaredCall {
         /// The module containing the bad call instruction.
         in_module: String,
