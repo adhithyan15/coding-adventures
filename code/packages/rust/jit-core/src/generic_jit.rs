@@ -182,14 +182,32 @@ pub(crate) mod opcode {
     /// `F64_TO_I64_FLOOR <dst> <a>` — LANG83 `real_to_int_floor`: like
     /// `F64_TO_I64_TRUNC`, rounding toward −∞ (ALGOL `entier`).
     pub const F64_TO_I64_FLOOR: u8 = 0x5B;
-    /// `PARAM_I64 <reg>` — the prologue entry for a parameter that is NOT
-    /// typed `f64`, the integer twin of `PARAM_F64`: argument `reg`, if
-    /// present, must be `Int` or `Bool` (as 0/1) and is stored in
-    /// `regs[reg]`; any other value fails the call closed. A missing argument
-    /// leaves the register 0, as it always has. Arguments beyond the declared
-    /// parameters are ignored, as the interpreter's `handle_call` ignores
-    /// them.
+    /// `PARAM_I64 <reg>` — the prologue entry for an integer-typed parameter,
+    /// the integer twin of `PARAM_F64`: argument `reg`, if present, must be an
+    /// `Int` and is stored in `regs[reg]`; any other value fails the call
+    /// closed. A missing argument leaves the register 0, as it always has.
+    /// Arguments beyond the declared parameters are ignored, as the
+    /// interpreter's `handle_call` ignores them.
+    ///
+    /// Until #18470 it also took a `Bool`, as 0 / 1. That folded `#f` into
+    /// the integer 0, which is harmless only while every language on the VM
+    /// calls 0 false; Twig does not (TW00), so a promoted `(define (id x) x)`
+    /// returned `Int(0)` for `#f` and flipped the branch after it. A `Bool`
+    /// now enters only through `PARAM_BOOL`.
     pub const PARAM_I64: u8 = 0x5C;
+    /// `CALL_BUILTIN_KINDS <idx:u16> <dst> <n> (<reg> <kind>)×n` — a
+    /// `CALL_BUILTIN` whose arguments include a boolean register (#18470
+    /// review). Each argument carries a kind byte: `0` passes the register as
+    /// `Value::Int`, `1` as `Value::Bool` (non-zero is `true`). The
+    /// interpreter hands a builtin the `Bool` a comparison produced; passing
+    /// its 0 / 1 as an `Int` instead made `(equal? b 0)` true for `b = #f` on
+    /// this tier only. A call with no boolean argument keeps the plain
+    /// `CALL_BUILTIN` encoding.
+    pub const CALL_BUILTIN_KINDS: u8 = 0x65;
+    /// `PARAM_BOOL <reg>` — the prologue entry for a `bool`-typed parameter:
+    /// a `Bool` is stored as 0 / 1, an `Int` as itself (a typed frontend's
+    /// 0 / 1 flag); anything else fails the call closed (#18470).
+    pub const PARAM_BOOL: u8 = 0x64;
     /// `CLASS_F64 <dst> <a>` — LANG83 PR7b `f64_class`: `0` for `±0`, `1` for
     /// a finite non-zero value, `2` for `±Infinity`, `3` for NaN. Like
     /// `SIGNBIT_F64`, a float register in and an INTEGER register out.
@@ -484,6 +502,17 @@ impl Backend for GenericCirJit {
     }
 
     fn compile_function(&self, ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Option<Vec<u8>> {
+        // #18470: a register holds an `i64` (or a float's bits); it cannot
+        // say whether that word was an integer, `#f`, nil or a symbol. A
+        // function whose signature admits such values — a parameter or
+        // result declared `any`, `str`, … — would drop the kind at the
+        // boundary, so it stays on the interpreter tier
+        // (`register_param_type`).
+        if !ctx.params.iter().all(|(_, ty)| register_param_type(ty))
+            || !register_return_type(ctx.return_type)
+        {
+            return None;
+        }
         // Same as `compile`, but the function's parameters are pre-bound to
         // registers `0..params.len()` in declaration order.  At `run` time
         // the incoming call arguments are seeded into exactly those
@@ -913,8 +942,10 @@ impl Backend for GenericCirJit {
                     }
                     tape[addr as usize] = (v & 0xFF) as u8;
                 }
-                opcode::CALL_BUILTIN => {
-                    // [builtin_idx:u16_le, dst:u8 (255 = no dest), n_args:u8, arg_regs:n_args bytes]
+                opcode::CALL_BUILTIN | opcode::CALL_BUILTIN_KINDS => {
+                    // [builtin_idx:u16_le, dst:u8 (255 = no dest), n_args:u8, args]
+                    // where each arg is `reg` (CALL_BUILTIN) or `reg kind`
+                    // (CALL_BUILTIN_KINDS: kind 0 = Int, 1 = Bool).
                     if pc + 4 > code.len() {
                         self.set_error("malformed bytecode: truncated CALL_BUILTIN header");
                         return Value::Null;
@@ -923,15 +954,27 @@ impl Backend for GenericCirJit {
                     let dst = code[pc + 2];
                     let n_args = code[pc + 3] as usize;
                     pc += 4;
-                    if pc + n_args > code.len() {
+                    let stride = if op == opcode::CALL_BUILTIN_KINDS { 2 } else { 1 };
+                    if pc + n_args * stride > code.len() {
                         self.set_error("malformed bytecode: truncated CALL_BUILTIN args");
                         return Value::Null;
                     }
                     let mut args: Vec<Value> = Vec::with_capacity(n_args);
                     for i in 0..n_args {
-                        args.push(Value::Int(regs[code[pc + i] as usize]));
+                        let reg = regs[code[pc + i * stride] as usize];
+                        let kind = if stride == 2 { code[pc + i * stride + 1] } else { ARG_INT };
+                        args.push(match kind {
+                            ARG_INT => Value::Int(reg),
+                            ARG_BOOL => Value::Bool(reg != 0),
+                            other => {
+                                self.set_error(format!(
+                                    "malformed bytecode: CALL_BUILTIN argument kind {other}"
+                                ));
+                                return Value::Null;
+                            }
+                        });
                     }
-                    pc += n_args;
+                    pc += n_args * stride;
                     let Some(cb) = builtin_table.get(idx) else {
                         self.set_error(format!(
                             "GenericCirJit: builtin index {idx} out of range"
@@ -980,15 +1023,34 @@ impl Backend for GenericCirJit {
                     pc += 1;
                     match args.get(reg) {
                         None => {}
-                        Some(a) => match a.as_i64() {
-                            Some(n) => regs[reg] = n,
-                            None => {
-                                self.set_error(format!(
-                                    "GenericCirJit: integer parameter {reg} received {a:?}, not an integer"
-                                ));
-                                return Value::Null;
-                            }
-                        },
+                        Some(Value::Int(n)) => regs[reg] = *n,
+                        Some(a) => {
+                            self.set_error(format!(
+                                "GenericCirJit: integer parameter {reg} received {}, not an integer",
+                                a.iir_type_name()
+                            ));
+                            return Value::Null;
+                        }
+                    }
+                }
+                opcode::PARAM_BOOL => {
+                    if pc + 1 > code.len() {
+                        self.set_error("malformed bytecode: truncated PARAM_BOOL");
+                        return Value::Null;
+                    }
+                    let reg = code[pc] as usize;
+                    pc += 1;
+                    match args.get(reg) {
+                        None => {}
+                        Some(Value::Bool(b)) => regs[reg] = i64::from(*b),
+                        Some(Value::Int(n)) => regs[reg] = *n,
+                        Some(a) => {
+                            self.set_error(format!(
+                                "GenericCirJit: bool parameter {reg} received {}, not a boolean",
+                                a.iir_type_name()
+                            ));
+                            return Value::Null;
+                        }
                     }
                 }
                 opcode::PARAM_F64 => {
@@ -1169,6 +1231,58 @@ fn f64_unary(op: &str) -> Option<u8> {
     }
 }
 
+/// Can a parameter declared `ty` live in one of this JIT's registers without
+/// losing what kind of value it is?
+///
+/// | declared type | register | why |
+/// |---------------|----------|-----|
+/// | `u8` … `u64`, `i8` … `i64` | the integer | an integer is all it can be |
+/// | `bool` | 0 / 1 (`PARAM_BOOL`) | a boolean is all it can be |
+/// | `f64` | the float's bits (`PARAM_F64`) | a float is all it can be |
+/// | `ref<…>` | the word (`PARAM_I64`) | on the tagged-word pipelines (McCarthy on the JIT) a reference *is* an `i64` word that carries its own tag; a structural `HeapRef` or `Null` is not an `Int`, so `PARAM_I64` fails the call closed rather than guess |
+/// | `any`, `str`, `symbol`, `closure`, `f32`, … | — | the value's kind would be lost (`#f` would become 0, nil and a symbol have no integer at all), so the function is refused |
+///
+/// Before #18470 every non-`f64` parameter was seeded as an integer, which
+/// read a dynamically-typed `#f` as 0 — true under TW00 — and refused nil.
+fn register_param_type(ty: &str) -> bool {
+    matches!(
+        ty,
+        "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "bool" | "f64"
+    ) || ty.starts_with("ref<")
+}
+
+/// [`register_param_type`] for a function's result, which may also be
+/// `void`. A result declared `any` is refused for the same reason: `RET_I64`
+/// would hand a `#f` the function computed back to the interpreter as
+/// `Int(0)`.
+fn register_return_type(ty: &str) -> bool {
+    ty == "void" || register_param_type(ty)
+}
+
+/// `CALL_BUILTIN_KINDS` argument kinds.
+const ARG_INT: u8 = 0;
+const ARG_BOOL: u8 = 1;
+
+/// The registers of a function that always hold a boolean: `bool`-typed
+/// parameters, plus every register whose writes are all booleans (a `cmp_*`,
+/// a `const_bool`, or an instruction typed `bool`). One non-boolean write —
+/// a join with an integer — takes the register out.
+fn boolean_registers<'a>(ir: &'a [CIRInstr], params: &'a [(String, String)]) -> HashSet<&'a str> {
+    let mut yes: HashSet<&str> = params.iter().filter(|(_, t)| t == "bool").map(|(n, _)| n.as_str()).collect();
+    let mut no: HashSet<&str> = params.iter().filter(|(_, t)| t != "bool").map(|(n, _)| n.as_str()).collect();
+    for i in ir {
+        if let Some(d) = i.dest.as_deref() {
+            if i.ty == "bool" || i.op.starts_with("cmp_") || i.op == "const_bool" {
+                yes.insert(d);
+            } else {
+                no.insert(d);
+            }
+        }
+    }
+    yes.retain(|r| !no.contains(r));
+    yes
+}
+
 fn compile_to_bytecode(
     ir: &[CIRInstr],
     builtin_snapshot: &[(String, BuiltinFn)],
@@ -1192,12 +1306,24 @@ fn compile_to_bytecode(
         }
         let reg = lookup_or_alloc_var(name, &mut reg_map, &mut next_reg)?;
         // LANG83 PR6a: an `f64` parameter is loaded as its bits by
-        // `PARAM_F64`; every other parameter as an integer by `PARAM_I64`.
-        // Every parameter gets a checked prologue entry, so `run` never
-        // reads an argument any other way (see `opcode::PARAM_I64`).
-        code.push(if ty == "f64" { opcode::PARAM_F64 } else { opcode::PARAM_I64 });
+        // `PARAM_F64`, a `bool` one by `PARAM_BOOL`, every other parameter as
+        // an integer by `PARAM_I64`. Every parameter gets a checked prologue
+        // entry, so `run` never reads an argument any other way (see
+        // `opcode::PARAM_I64`). A parameter whose type no register can carry
+        // never gets here: `compile_function` refuses the function first.
+        code.push(match ty.as_str() {
+            "f64" => opcode::PARAM_F64,
+            "bool" => opcode::PARAM_BOOL,
+            _ => opcode::PARAM_I64,
+        });
         code.push(reg);
     }
+
+    // The registers that hold a boolean (#18470 review): a `bool` parameter,
+    // and a register every write of which is a comparison, a `const_bool` or
+    // an instruction typed `bool`. The interpreter holds those as
+    // `Value::Bool`, so a builtin given one here must see a `Bool` too.
+    let bool_vars = boolean_registers(ir, params);
 
     // Track which builtin names this function actually uses; we'll emit
     // only those in the bytecode prefix.  Maps name → local index.
@@ -1608,11 +1734,20 @@ fn compile_to_bytecode(
                 i
             };
 
-            // Encode args (everything after srcs[0] = name).
+            // Encode args (everything after srcs[0] = name), noting which
+            // are booleans: those reach the builtin as `Value::Bool`, as the
+            // interpreter would pass them (`CALL_BUILTIN_KINDS`).
             let mut arg_regs: Vec<u8> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
+            let mut arg_kinds: Vec<u8> = Vec::with_capacity(arg_regs.capacity());
             for arg in instr.srcs.iter().skip(1) {
                 let r = resolve_operand(arg, &mut reg_map, &mut next_reg, &mut code)?;
                 arg_regs.push(r);
+                let is_bool = match arg {
+                    CIROperand::Bool(_) => true,
+                    CIROperand::Var(v) => bool_vars.contains(v.as_str()),
+                    _ => false,
+                };
+                arg_kinds.push(if is_bool { ARG_BOOL } else { ARG_INT });
             }
             let dst_byte = match instr.dest.as_deref() {
                 Some(d) => lookup_or_alloc_var(d, &mut reg_map, &mut next_reg)?,
@@ -1621,11 +1756,22 @@ fn compile_to_bytecode(
             if arg_regs.len() > 255 {
                 return None;
             }
-            code.push(opcode::CALL_BUILTIN);
-            code.extend_from_slice(&idx.to_le_bytes());
-            code.push(dst_byte);
-            code.push(arg_regs.len() as u8);
-            code.extend_from_slice(&arg_regs);
+            if arg_kinds.contains(&ARG_BOOL) {
+                code.push(opcode::CALL_BUILTIN_KINDS);
+                code.extend_from_slice(&idx.to_le_bytes());
+                code.push(dst_byte);
+                code.push(arg_regs.len() as u8);
+                for (r, k) in arg_regs.iter().zip(&arg_kinds) {
+                    code.push(*r);
+                    code.push(*k);
+                }
+            } else {
+                code.push(opcode::CALL_BUILTIN);
+                code.extend_from_slice(&idx.to_le_bytes());
+                code.push(dst_byte);
+                code.push(arg_regs.len() as u8);
+                code.extend_from_slice(&arg_regs);
+            }
             continue;
         }
 
@@ -2243,18 +2389,18 @@ mod tests {
             assert!(j.take_error().is_some(), "{bad:?} for an f64 parameter must fail closed");
         }
         // An integer parameter given a non-integer fails closed (it used to
-        // read as 0); `Int` and `Bool` still seed it.
+        // read as 0); only an `Int` seeds it. A `Bool` used to read as 0 / 1,
+        // which turned a dynamically-typed `#f` into a *true* 0 (#18470).
         let ret = vec![CIRInstr::new("ret_i64", None::<&str>, vec![var("n")], "i64")];
         let params = [("n".to_string(), "i64".to_string())];
         let ctx = FunctionContext { name: "g", params: &params, return_type: "i64" };
         let bin = j.compile_function(&ctx, &ret).unwrap();
-        for bad in [Value::Float(1.5), Value::Null, Value::Str("x".into())] {
+        for bad in [Value::Float(1.5), Value::Null, Value::Str("x".into()), Value::Bool(false), Value::Symbol(0)] {
             assert_eq!(j.run(&bin, std::slice::from_ref(&bad)), Value::Null, "{bad:?}");
             let err = j.take_error().unwrap_or_else(|| panic!("{bad:?} must fail closed"));
             assert!(format!("{err:?}").contains("integer parameter 0"), "{err:?}");
         }
         assert_eq!(j.run(&bin, &[Value::Int(7)]), Value::Int(7));
-        assert_eq!(j.run(&bin, &[Value::Bool(true)]), Value::Int(1));
         assert!(j.take_error().is_none());
         // Arguments beyond the declared parameters are ignored, as the
         // interpreter ignores them; a missing one leaves the register 0.
@@ -2264,6 +2410,112 @@ mod tests {
         // A truncated PARAM_I64 in a hostile binary fails closed.
         j.run(&[0, 0, opcode::PARAM_I64], &[]);
         assert!(format!("{:?}", j.take_error()).contains("truncated PARAM_I64"));
+    }
+
+    /// #18470 review: a builtin given a boolean register sees a `Bool`, as it
+    /// does on the interpreter tier. `(equal? b 0)` with `b = #f` is `#f` in
+    /// the interpreter (`Bool(false) != Int(0)`); before `CALL_BUILTIN_KINDS`
+    /// the JIT passed `b` as `Int(0)` and answered `#t`. A comparison's result
+    /// and a `bool` literal are booleans too; an integer stays an `Int`.
+    #[test]
+    fn a_boolean_register_reaches_a_builtin_as_a_bool() {
+        let j = GenericCirJit::new();
+        j.register_builtin("equal?", |args: &[Value]| Value::Bool(args.len() == 2 && args[0] == args[1]));
+        let seen: Arc<Mutex<Vec<Value>>> = Arc::default();
+        let sink = Arc::clone(&seen);
+        j.register_builtin("record", move |args: &[Value]| {
+            sink.lock().unwrap().extend_from_slice(args);
+            Value::Null
+        });
+        let cir = vec![
+            CIRInstr::new("call_builtin", Some("r"), vec![var("equal?"), var("b"), CIROperand::Int(0)], "bool"),
+            CIRInstr::new("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+            CIRInstr::new("cmp_lt_i64", Some("c"), vec![var("one"), CIROperand::Int(2)], "bool"),
+            CIRInstr::new(
+                "call_builtin",
+                None::<&str>,
+                vec![var("record"), var("c"), var("one"), CIROperand::Bool(false)],
+                "void",
+            ),
+            CIRInstr::new("ret_bool", None::<&str>, vec![var("r")], "bool"),
+        ];
+        let params = [("b".to_string(), "bool".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "bool" };
+        let bin = j.compile_function(&ctx, &cir).unwrap();
+        assert!(bin.contains(&opcode::CALL_BUILTIN_KINDS));
+        assert_eq!(j.run(&bin, &[Value::Bool(false)]), Value::Bool(false), "(equal? #f 0) is #f");
+        assert_eq!(j.run(&bin, &[Value::Int(0)]), Value::Bool(false), "a bool parameter is passed as a Bool");
+        assert!(j.take_error().is_none());
+        assert_eq!(
+            seen.lock().unwrap()[..3],
+            [Value::Bool(true), Value::Int(1), Value::Bool(false)],
+            "comparison → Bool, integer → Int, bool literal → Bool"
+        );
+        // A hostile kind byte, or a truncated argument list, fails closed:
+        // [no builtin table] CALL_BUILTIN_KINDS idx=0 dst=none n=1 (reg 0, kind 9)
+        j.run(&[0, 0, opcode::CALL_BUILTIN_KINDS, 0, 0, 0xFF, 1, 0, 9], &[]);
+        assert!(format!("{:?}", j.take_error()).contains("argument kind"));
+        j.run(&[0, 0, opcode::CALL_BUILTIN_KINDS, 0, 0, 0xFF, 1, 0], &[]);
+        assert!(format!("{:?}", j.take_error()).contains("truncated CALL_BUILTIN args"));
+    }
+
+    /// #18470: a `bool` parameter is seeded by `PARAM_BOOL` — a `Bool` as
+    /// 0 / 1, an `Int` as itself — and anything else fails closed.
+    #[test]
+    fn bool_parameter_has_its_own_checked_prologue() {
+        let j = GenericCirJit::new();
+        let ret = vec![CIRInstr::new("ret_bool", None::<&str>, vec![var("b")], "bool")];
+        let params = [("b".to_string(), "bool".to_string())];
+        let ctx = FunctionContext { name: "g", params: &params, return_type: "bool" };
+        let bin = j.compile_function(&ctx, &ret).unwrap();
+        assert_eq!(bin.iter().filter(|&&b| b == opcode::PARAM_BOOL).count(), 1);
+        assert_eq!(j.run(&bin, &[Value::Bool(false)]), Value::Bool(false));
+        assert_eq!(j.run(&bin, &[Value::Bool(true)]), Value::Bool(true));
+        assert_eq!(j.run(&bin, &[Value::Int(1)]), Value::Bool(true));
+        assert!(j.take_error().is_none());
+        for bad in [Value::Null, Value::Symbol(0), Value::Str("x".into())] {
+            assert_eq!(j.run(&bin, std::slice::from_ref(&bad)), Value::Null, "{bad:?}");
+            let err = j.take_error().unwrap_or_else(|| panic!("{bad:?} must fail closed"));
+            assert!(format!("{err:?}").contains("bool parameter 0"), "{err:?}");
+        }
+        j.run(&[0, 0, opcode::PARAM_BOOL], &[]);
+        assert!(format!("{:?}", j.take_error()).contains("truncated PARAM_BOOL"));
+    }
+
+    /// #18470: a function whose signature admits a value a register cannot
+    /// carry — `any`, a string — is refused, so it stays on the interpreter
+    /// tier instead of losing the value's kind at the boundary. A `ref<…>` is
+    /// a word (the tagged-word pipelines' values) and still compiles; a
+    /// structural reference that is not an `Int` fails its prologue closed.
+    #[test]
+    fn a_signature_a_register_cannot_carry_is_refused() {
+        let j = GenericCirJit::new();
+        let ret = vec![CIRInstr::new("ret_i64", None::<&str>, vec![var("x")], "i64")];
+        for (param_ty, ret_ty, compiles) in [
+            ("i64", "i64", true),
+            ("u8", "void", true),
+            ("bool", "i64", true),
+            ("any", "i64", false),
+            ("i64", "any", false),
+            // A tagged word: the McCarthy-on-JIT pipeline's values.
+            ("ref<any>", "ref<any>", true),
+            ("str", "i64", false),
+            ("i64", "str", false),
+        ] {
+            let params = [("x".to_string(), param_ty.to_string())];
+            let ctx = FunctionContext { name: "f", params: &params, return_type: ret_ty };
+            assert_eq!(j.compile_function(&ctx, &ret).is_some(), compiles, "({param_ty}) -> {ret_ty}");
+        }
+        // A `ref<…>` parameter takes a tagged word (an `Int`); a structural
+        // nil, symbol or boolean is not one, and fails the call closed.
+        let params = [("x".to_string(), "ref<any>".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "ref<any>" };
+        let bin = j.compile_function(&ctx, &ret).unwrap();
+        assert_eq!(j.run(&bin, &[Value::Int(0b101)]), Value::Int(0b101));
+        for bad in [Value::Null, Value::Symbol(1), Value::Bool(false)] {
+            assert_eq!(j.run(&bin, std::slice::from_ref(&bad)), Value::Null, "{bad:?}");
+            assert!(j.take_error().is_some(), "{bad:?} must fail closed");
+        }
     }
 
     /// A builtin result stored in a register must have an integer view:

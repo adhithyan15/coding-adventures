@@ -1,5 +1,58 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — #18470 re-review — typed division is guarded too
+
+- `vm_lisp` now also guards a **typed** `div` / `mod` in a Lisp-family module
+  with the zero and overflow checks: `Trap.DivZero` for a zero divisor,
+  `Trap.Overflow` for `i64::MIN / -1`. Twig emits a typed `div` for `(/ a b)`
+  when both operands are known integers (`typed_arith_op_for`), which the pass
+  used to miss: `(/ 7 0)` was an untyped division-by-zero error and
+  `MIN / -1` wrapped. No kind check is needed, the operands being typed
+  integers. The guard ends with a `__vm{n}_fits` label, which a second run
+  recognises, so lowering stays idempotent.
+- Why not change vm-core's `div` / `mod` for every language: LANG83 registers
+  them with only a `Trap.DivZero` edge and documents that their `MIN / -1`
+  answer differs by backend on purpose ("Legacy edge behaviour"; programs
+  depend on it). Defined edges are a language's to write, as here; the
+  defined-edge op `i64_div_trunc` is still `Later` in the registry.
+- Tests: `a_typed_division_gets_the_zero_and_overflow_checks_once` (shape,
+  no kind check, idempotent) and `a_typed_division_traps_like_the_dynamic_one`
+  (run on vm-core).
+
+## Unreleased — #18470 / #18493 — `vm_lisp`: Lisp's value rules for the generic VM
+
+- New module `vm_lisp` and `lower_lisp_for_vm(module)`: what `lisp_semantics`
+  does for the tagged-word pipelines, for `vm-core`, whose values carry their
+  own kind. It writes, over the five `dyn_*` primitives `vm-core` now lowers:
+  TW00 truthiness before every branch on a non-`bool` (`(dyn_tag c | 2) ≠ 3`,
+  so `(if 0 1 2)` is 1 and `(if "" 1 2)` is 1), `not` (`= 3`), `number?`,
+  `symbol?`, `boolean?`, an inline `list?` walk, and `null?` / `pair?` as
+  `dyn_is_nil` / `dyn_is_pair`. Nil literals become `dyn_nil` and symbol
+  literals `dyn_symbol "name"`, so neither is an integer on the VM. The dynamic
+  division names become registry ops with twig-vm's rounding: `/` and
+  `quotient` → `div`, `remainder` → `mod`, `modulo` → `i64_mod_floor`, behind
+  the checks twig-vm's `dynval-runtime` makes first: each operand must be an
+  integer (`dyn_tag = 0`, else a `type_assert` that fails with a `TypeError` —
+  LANG83 has no trap kind for a type error, LANG85 §11.2 Q1); a zero divisor
+  traps `Trap.DivZero` for all four (the bare ops gave an untyped
+  division-by-zero error); `i64::MIN` by −1 traps `Trap.Overflow` for all four
+  (`div` wrapped). A branch on an immediate integer, string or float gets the
+  truthiness rule too, so the rule is total (an immediate `#t` / `#f` does
+  not need it).
+  Expansions keep `source_map` in lockstep, invent `__vm{n}_*` names that skip
+  every name the function already uses, and are idempotent. Call it only on a
+  Lisp-family module (it rewrites every branch).
+- Tests: twelve unit tests on the rewrites' shape (including immediate branch
+  conditions, the division guards, source-map
+  lockstep, name collisions and a second run changing nothing), and
+  `tests/vm_lisp_on_vm.rs`, which lowers frontend-shaped IIR and **runs it on
+  `vm-core`** (new dev-dependency): truthiness, `not` and every predicate over
+  every kind of value against TW00 stated independently, `list?` on proper and
+  improper lists, symbol identity (`'a` ≠ 2^29, `(= 0 #f)` and `(= 0 '())` are
+  `#f`), the four division names' signs, and their edges (zero divisor and
+  `MIN / -1` trap kinds; a non-integer dividend or divisor of every kind is a
+  `TypeError`).
+
 ## Unreleased — security review: fail-closed helper allowlist, every impostor refused, collision-proof closure temporaries
 
 - New `PASS_GENERATED_DYN_HELPERS`: the six `__dyn_` functions the passes add (the five `list_ops` helpers and the closure dispatcher), exported so a link step can refuse every other `__dyn_*` module function instead of listing the runtime's (`twig-aot` uses it). Test `every_pass_generated_dyn_helper_is_listed` runs both passes over a module that triggers every helper and compares.

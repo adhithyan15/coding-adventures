@@ -70,8 +70,7 @@ here unchanged — the matrix's six scalar languages all share this one interpre
 
 The default dynamic builtin registry includes arithmetic (`+`, `-`, `*`),
 ordering (`<`, `<=`, `>`, `>=`), equality (`=`), the lisp-family equality
-spelling (`equal?`), and the pair test (`pair?`). Symbol literals interned to
-stable integer IDs therefore compare directly on the VM.
+spelling (`equal?`), and the pair test (`pair?`).
 
 These are what a dynamically-typed frontend leaves in the IIR when it cannot
 prove an operand's type. Twig's `(define (f x) (if (< x 0) 42 7))` has an
@@ -95,6 +94,41 @@ let reg = BuiltinRegistry::new();
 assert_eq!(reg.call("<", &[Value::Int(-5), Value::Int(0)]).unwrap(), Value::Bool(true));
 assert!(reg.call("<", &[Value::Str("a".into()), Value::Int(1)]).is_err());
 assert_eq!(reg.call("pair?", &[Value::Int(42)]).unwrap(), Value::Bool(false));
+```
+
+### Dynamic values: nil, booleans and symbols (#18470, #18493)
+
+A dynamically-typed program needs every value to say what *kind* it is.
+Until #18470 two kinds borrowed `Int`'s spelling here: nil was `Int(0)` (so
+`(null? 0)` was `#t`) and a symbol was `Int(2^29 + id)` (so `'a` equalled
+536870912). Now nil is `Value::Null` and a symbol is the new
+`Value::Symbol(id)`, which has no numeric view.
+
+The VM lowers five of the LANG83 PR7f `Dynamic` primitives over those kinds:
+
+| Builtin | Result |
+|---------|--------|
+| `dyn_tag x` | `Int`: 0 integer, 1 nil, 2 symbol, 3 `#f`, 5 `#t`, 7 pair (non-null `HeapRef`); −1 for a `Float` or `Str` |
+| `dyn_is_nil x` | `Bool`: `Null` or a null `HeapRef` — never `Int(0)` |
+| `dyn_is_pair x` | `Bool`: the `pair?` answer |
+| `dyn_nil` | `Null` |
+| `dyn_symbol "name"` | `Symbol(id)`, one id per name for the registry's life (at most 2^20 names, 4 KiB per name, 16 MiB in all; past a cap it fails closed) |
+
+No language's *rule* is a builtin. Twig's truthiness (only `#f` and nil are
+false, so `0` is true), `not`, `number?`, `symbol?`, `boolean?` and `list?`
+are written by its compiler as IIR over these five
+(`iir-builtin-lowering::vm_lisp`), as LANG83 PR7 requires; `Value::is_truthy`
+stays the machine's branch rule.
+
+```rust
+use vm_core::builtins::BuiltinRegistry;
+use vm_core::value::Value;
+
+let reg = BuiltinRegistry::new();
+let a = reg.call("dyn_symbol", &[Value::Str("a".into())]).unwrap();
+assert_eq!(reg.call("dyn_tag", &[a]).unwrap(), Value::Int(2));
+assert_eq!(reg.call("dyn_tag", &[Value::Int(0)]).unwrap(), Value::Int(0)); // 0 is not nil
+assert_eq!(reg.call("dyn_is_nil", &[Value::Null]).unwrap(), Value::Bool(true));
 ```
 
 Integer arithmetic, bitwise, and shift results are **masked to the width named by
@@ -200,9 +234,9 @@ strings directly, e.g. for hand-built test IIR):
 | Op | Effect |
 |----|--------|
 | `alloc` / `gc_alloc [<size_bytes>] -> dest` | Allocate on `FlatHeap` (kind 0), returning a `Value::HeapRef`. No operand defaults to 16 bytes (a 2-word cons cell). Capped both by `max_memory_entries` live objects (an O(1)-tracked count, bounding `gc_field_load`/`gc_field_store`'s O(live-count) size check) and by `max_gc_heap_bytes` aggregate live bytes (a single huge allocation can't clear the count cap outright) |
-| `field_load` / `gc_field_load dest <- obj, idx` | Read the `idx`-th 8-byte word. Decoded from a 3-bit tag in the word itself (low bits `111` → `HeapRef`, else → `Int`) — **not** from `type_hint`, which can't disambiguate a dynamically-typed field (a cons cell's car/cdr can hold either a nested pair or a plain integer at the same position) |
-| `field_store` / `gc_field_store obj, idx, val` | Write the `idx`-th 8-byte word, tagging it (`HeapRef` → low bits `111`, address masked; `Int` → low bits `000`, value shifted left 3 — rejected if outside `[i64::MIN >> 3, i64::MAX >> 3]`, not truncated). Runs the write barrier for a `HeapRef` value. `Float`/`Bool`/`Str` are rejected — none fits the tag scheme |
-| `is_null` | `true` for the top-level nil sentinel (`Int(0)`) — nil also round-trips through a field as `Int(0)`, never a `HeapRef`, under the tag-based decode. A `HeapRef` whose address is null is treated as null too, defensively, though nothing here currently produces one |
+| `field_load` / `gc_field_load dest <- obj, idx` | Read the `idx`-th 8-byte word. Decoded from a 3-bit tag in the word itself (low bits `111` → `HeapRef`, `000` → `Int`, the words `1` / `3` / `5` → `Null` / `#f` / `#t`, low 32 bits `010` → `Symbol`; anything else is refused) — **not** from `type_hint`, which can't disambiguate a dynamically-typed field (a cons cell's car/cdr can hold either a nested pair or a plain integer at the same position) |
+| `field_store` / `gc_field_store obj, idx, val` | Write the `idx`-th 8-byte word, tagging it (`HeapRef` → low bits `111`, address masked; `Int` → low bits `000`, value shifted left 3 — rejected if outside `[i64::MIN >> 3, i64::MAX >> 3]`, not truncated; `Null` → `1`, `Bool` → `3` / `5`, `Symbol(id)` → `(id << 32) \| 010`, the tagged-word spellings, #18470). Runs the write barrier for a `HeapRef` value. `Float`/`Str` are rejected — neither fits the tag scheme |
+| `is_null` | `true` for `Null`, for the `Int(0)` nil sentinel some frontends still emit (`const 0 : ref<LispyPair>`), and, defensively, a null `HeapRef`. A Lisp module run through `vm_lisp` asks `dyn_is_nil` instead, which is `#f` for the integer 0 |
 | `safepoint` | Collect only if `FlatHeap` is over its adaptive threshold (**paced**); also runs a **minor** (young-only) cycle when `FlatHeap::should_collect_minor` recommends it, or **compacts** (relocates objects) when `FlatHeap::should_compact` says fragmentation warrants it — the same shared policy `gc-core-capi`'s `__gc_safepoint` consults, checked in the same priority order (minor, then compacting). `VMCore::new()` attests `set_auto_minor(true)` once at construction: `gc_field_store` calls the generational write barrier on every store, so vm-core is barrier-correct and safe to opt in (see `gc-core`'s AOT00-T8 spec for why this attestation gate exists) |
 | `gc_collect` | Collect unconditionally, non-moving |
 
