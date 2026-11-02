@@ -257,7 +257,7 @@ fn depth_limit_guard_panics_instead_of_crashing_the_go_stack() {
     }
     let source = compile(&m).expect("go emit").source;
     let dir = std::env::temp_dir();
-    let path = dir.join(format!("sir_go_symbolic_depth_{}.go", std::process::id()));
+    let path = dir.join(format!("sir_go_symbolic_depth_{}.go", unique_suffix()));
     std::fs::write(&path, &source).expect("write temp source");
     let out = std::process::Command::new("go")
         .arg("run")
@@ -275,4 +275,15 @@ fn depth_limit_guard_panics_instead_of_crashing_the_go_stack() {
         stderr.contains("sir-runtime-symbolic: depth-limit"),
         "expected a depth-limit panic message, got:\n{stderr}"
     );
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

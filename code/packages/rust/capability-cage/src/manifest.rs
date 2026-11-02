@@ -42,6 +42,9 @@ pub struct CapabilitySurfaceSummary {
     pub ffi_capabilities: usize,
     pub time_capabilities: usize,
     pub stdio_capabilities: usize,
+    pub rand_capabilities: usize,
+    pub thread_capabilities: usize,
+    pub ui_capabilities: usize,
     pub read_like_capabilities: usize,
     pub write_like_capabilities: usize,
     pub external_effect_capabilities: usize,
@@ -81,6 +84,9 @@ impl CapabilitySurfaceSummary {
                 Category::Ffi => summary.ffi_capabilities += 1,
                 Category::Time => summary.time_capabilities += 1,
                 Category::Stdin | Category::Stdout => summary.stdio_capabilities += 1,
+                Category::Rand => summary.rand_capabilities += 1,
+                Category::Thread => summary.thread_capabilities += 1,
+                Category::Ui => summary.ui_capabilities += 1,
             }
             if is_read_like_action(capability.action) {
                 summary.read_like_capabilities += 1;
@@ -391,8 +397,12 @@ fn validate_read_write_separation(capabilities: &[Capability]) -> Result<(), Man
     read_write_separation::validate_manifest(&rws_capabilities).map_err(ManifestError::from)
 }
 
+/// Receiving a UI event is a read: input flows into the package.
 fn is_read_like_action(action: Action) -> bool {
-    matches!(action, Action::Read | Action::List | Action::Dns)
+    matches!(
+        action,
+        Action::Read | Action::List | Action::Dns | Action::Event
+    )
 }
 
 fn is_write_like_action(action: Action) -> bool {
@@ -409,6 +419,8 @@ fn is_write_like_action(action: Action) -> bool {
             | Action::Call
             | Action::Load
             | Action::Sleep
+            | Action::Spawn
+            | Action::Message
     )
 }
 
@@ -533,6 +545,9 @@ mod tests {
                 ffi_capabilities: 0,
                 time_capabilities: 0,
                 stdio_capabilities: 1,
+                rand_capabilities: 0,
+                thread_capabilities: 0,
+                ui_capabilities: 0,
                 read_like_capabilities: 2,
                 write_like_capabilities: 2,
                 external_effect_capabilities: 2,
@@ -549,6 +564,71 @@ mod tests {
         assert!(!summary.has_network_access());
         assert!(!summary.has_process_access());
         assert!(!summary.fully_annotated());
+    }
+
+    #[test]
+    fn capability_surface_summary_counts_nondeterminism_categories() {
+        let manifest = Manifest::new(vec![
+            Capability::new(Category::Rand, Action::Read, "*", "session keys").unwrap(),
+            Capability::new(Category::Thread, Action::Spawn, "decode-pool", "decode").unwrap(),
+            Capability::new(Category::Thread, Action::Message, "decode-pool", "jobs").unwrap(),
+            Capability::new(Category::Ui, Action::Event, "#editor", "keystrokes").unwrap(),
+            Capability::new(Category::Ui, Action::Write, "#editor", "render").unwrap(),
+        ]);
+
+        let summary = manifest.capability_surface_summary();
+
+        assert_eq!(summary.total_capabilities, 5);
+        assert_eq!(summary.rand_capabilities, 1);
+        assert_eq!(summary.thread_capabilities, 2);
+        assert_eq!(summary.ui_capabilities, 2);
+        // rand:read and ui:event bring data in; spawn, message and ui:write
+        // have effects.
+        assert_eq!(summary.read_like_capabilities, 2);
+        assert_eq!(summary.write_like_capabilities, 3);
+        assert!(!summary.has_network_access());
+        assert!(!summary.has_process_access());
+    }
+
+    #[test]
+    fn manifest_json_with_nondeterminism_categories_loads() {
+        let manifest = Manifest::load_from_str(
+            r##"{
+                "version": 1,
+                "package": "rust/editor",
+                "capabilities": [
+                    {"category": "rand", "action": "read", "target": "*",
+                     "justification": "Generates document identifiers."},
+                    {"category": "thread", "action": "spawn", "target": "spellcheck",
+                     "justification": "Spell checks off the input thread."},
+                    {"category": "ui", "action": "event", "target": "#editor",
+                     "justification": "Receives keystrokes from the editor view."}
+                ],
+                "justification": "An editor view with a background spell checker."
+            }"##,
+        )
+        .unwrap();
+        assert!(manifest.has(Category::Rand, Action::Read, "*"));
+        assert!(manifest.has(Category::Thread, Action::Spawn, "spellcheck"));
+        assert!(!manifest.has(Category::Thread, Action::Spawn, "network-poller"));
+        assert!(manifest.has(Category::Ui, Action::Event, "#editor"));
+        assert!(!manifest.has(Category::Ui, Action::Write, "#editor"));
+    }
+
+    #[test]
+    fn manifest_json_rejects_nondeterminism_cross_pairs() {
+        for (category, action) in [("proc", "spawn"), ("ui", "message"), ("rand", "write")] {
+            let json = format!(
+                r#"{{"version": 1, "package": "rust/x", "capabilities": [
+                    {{"category": "{category}", "action": "{action}", "target": "*",
+                      "justification": "cross-pair fixture"}}],
+                    "justification": "cross-pair fixture"}}"#
+            );
+            assert!(
+                Manifest::load_from_str(&json).is_err(),
+                "{category}:{action} must be rejected"
+            );
+        }
     }
 
     #[test]

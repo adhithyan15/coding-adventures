@@ -76,6 +76,7 @@ main.go:7: [CAP002] banned construct: import "C" (CGo)
 | `"net"` | `net:*:*` |
 | `"net/http"` | `net:*:*` |
 | `"os/exec"` | `proc:exec:*` |
+| `"crypto/rand"` | `rand:read:*` |
 
 ### Call-level rules
 
@@ -88,6 +89,14 @@ main.go:7: [CAP002] banned construct: import "C" (CGo)
 | `"os"` | `Getenv`, `Environ`, `LookupEnv` | `env:read:*` |
 | `"time"` | `Now`, `Sleep` | `time:read:*` |
 | `"fmt"` | `Print`, `Println`, `Printf` | `stdout:write:*` |
+| `"math/rand"` | top-level `Int`, `Intn`, `Int31[n]`, `Int63[n]`, `Uint32`, `Uint64`, `Float32`, `Float64`, `ExpFloat64`, `NormFloat64`, `Perm`, `Shuffle`, `Read` | `rand:read:*` |
+| `"math/rand/v2"` | top-level `Int`, `IntN`, `Int32[N]`, `Int64[N]`, `Uint`, `UintN`, `Uint32[N]`, `Uint64[N]`, `N`, `Float32`, `Float64`, `ExpFloat64`, `NormFloat64`, `Perm`, `Shuffle` | `rand:read:*` |
+
+The `math/rand` rules cover only the auto-seeded global source. A generator
+built from a seed you pass in, `rand.New(rand.NewSource(42))`, is
+deterministic, and its methods are never reported. An unaliased
+`math/rand/v2` import binds `rand`, not `v2`: major-version suffixes are
+skipped when deriving an import's name.
 
 ### Special patterns
 
@@ -98,6 +107,11 @@ main.go:7: [CAP002] banned construct: import "C" (CGo)
 | `os.Stdin.Read(...)` | `stdin:read:*` |
 | `fmt.Fprintf(os.Stdout, ...)` | `stdout:write:*` |
 | `fmt.Fprintf(os.Stderr, ...)` | `stdout:write:*` |
+| `go f()`, `go func() { ... }()` | `thread:spawn:*` |
+
+Every `go` statement starts a goroutine, which is D21's `thread:spawn`. Start
+one through `cage.Spawn` or a generated `op.Thread.Spawn` to keep it inside
+the cage; their own `go` statements carry `//nolint:cap`.
 
 ## Banned Constructs
 

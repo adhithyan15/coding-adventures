@@ -45,6 +45,11 @@ capture temporaries `__cap_…`, `__args`, `__it`, `__l`, `__r`, `__payload`,
 `__exc`, the prelude's `Some`/`None`/`Ok`/`Err` and the wildcard `_` — into
 `__sir_esc_v<name>`, so a user variable can never be shadowed by one (SIR10
 "Generated names", issue #18466).
+A *variable* whose SIR name is also the name of one of the module's
+functions is emitted as `__sir_esc_l<sanitize_ident(name)>` (`var_ident`),
+so it cannot shadow the function: SIR keeps the two namespaces apart, and
+Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485). Functions keep
+their names.
 
 Accepts (SIR16 / v1 — **all six** features, full v1 parity): `Floats`,
 `ShortCircuit`, `MutableBindings`, `Loops`, `Sequences`, `Maps`.

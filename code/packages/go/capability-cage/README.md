@@ -58,11 +58,34 @@ if err != nil {
 | `time`    | read, sleep                          | Time operations               |
 | `stdin`   | read                                 | Standard input                |
 | `stdout`  | write                                | Standard output               |
+| `rand`    | read                                 | Ambient entropy               |
+| `thread`  | spawn, message                       | Goroutines, workers, actors   |
+| `ui`      | read, write, event                   | DOM and native views          |
 
-These are 19 valid pairs, not two independently combinable enums.
+These are 25 valid pairs, not two independently combinable enums.
 `NewManifest` panics on an unknown or invalid cross-pair before constructing a
 manifest. The table is exhaustively checked against the language-neutral Spec
 13 fixture.
+
+### Nondeterminism wrappers
+
+`rand`, `thread` and `ui` exist so a unit test can run against a simulated
+host (D21, VER00 §6.3). Two of their pairs have wrappers here:
+
+```go
+n, err := cage.ReadRandom(Manifest, key)                // rand:read:*
+err = cage.Spawn(Manifest, "decode-pool", decodeLoop)  // thread:spawn:decode-pool
+```
+
+A test backend installed with `WithBackend` can return a fixed byte stream
+from `ReadRandom` and run `Spawn` bodies on its own schedule, so the run
+replays. A generator you seed yourself (`rand.New(rand.NewSource(42))`) is
+pure computation and needs neither.
+
+`thread:message` and the `ui` actions are valid in a manifest but have no
+wrapper: a Go channel or a view is not something a generic `Backend` method
+can carry. The capability-cage generator refuses those pairs with an
+explicit unsupported-pair error rather than emit an unchecked method.
 
 ## Target Matching
 

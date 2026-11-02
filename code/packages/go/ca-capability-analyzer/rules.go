@@ -26,6 +26,16 @@ package main
 //     pure constants with no OS access. Only time.Now and time.Sleep are tracked.
 //   - "fmt": flagged only for Print/Println/Printf because they write to stdout.
 //     fmt.Sprintf and fmt.Errorf are pure string operations.
+//   - "crypto/rand": any import implies rand:read:* — every function in it
+//     draws from the operating system's entropy source.
+//   - "math/rand" and "math/rand/v2": NOT at import level. Only the top-level
+//     functions (rand.Intn, rand.Float64, ...) draw from the auto-seeded global
+//     source. A generator the caller seeds, rand.New(rand.NewSource(42)), is a
+//     deterministic function of its seed: pure computation, no capability.
+//     Its methods are calls on a local value, so the pkg.Func rules below never
+//     match them.
+//   - The go statement is not a call, so it has no rule here; the analyzer
+//     reports every go statement as thread:spawn:* directly (D21).
 
 // importCapabilityRule maps a bare import path to a capability that is implied
 // by the mere presence of that import.
@@ -76,6 +86,11 @@ var ImportRules = []importCapabilityRule{
 	// "os/exec" is the only stdlib package for spawning subprocesses. Any
 	// import implies proc:exec:*.
 	{ImportPath: "os/exec", Capability: "proc:exec:*", Evidence: `import "os/exec"`},
+
+	// ── Ambient randomness ───────────────────────────────────────────────
+	// "crypto/rand" reads the operating system's entropy source (getrandom,
+	// /dev/urandom, BCryptGenRandom). Every use is rand:read:* (D21).
+	{ImportPath: "crypto/rand", Capability: "rand:read:*", Evidence: `import "crypto/rand"`},
 }
 
 // CallRules is the table of call-level rules. Exported so tests can inspect it.
@@ -163,4 +178,44 @@ var CallRules = []callCapabilityRule{
 
 	// fmt.Printf writes a formatted string to os.Stdout.
 	{ImportPath: "fmt", FunctionName: "Printf", Capability: "stdout:write:*", Evidence: "fmt.Printf call"},
+}
+
+// unseededRandFunctions lists the top-level functions of math/rand and
+// math/rand/v2 that draw from the package's global source. Since Go 1.20 that
+// source is seeded from ambient entropy at startup, so each call is a
+// rand:read:* use: the result differs from run to run.
+//
+//	math/rand     Int Intn Int31 Int31n Int63 Int63n Uint32 Uint64
+//	              Float32 Float64 ExpFloat64 NormFloat64 Perm Shuffle Read
+//	math/rand/v2  Int IntN Int32 Int32N Int64 Int64N Uint UintN Uint32 Uint32N
+//	              Uint64 Uint64N N Float32 Float64 ExpFloat64 NormFloat64
+//	              Perm Shuffle
+//
+// Constructors (New, NewSource, NewPCG, NewChaCha8, NewZipf) are absent on
+// purpose: building a generator from a caller-supplied seed is deterministic.
+var unseededRandFunctions = map[string][]string{
+	"math/rand": {
+		"Int", "Intn", "Int31", "Int31n", "Int63", "Int63n", "Uint32", "Uint64",
+		"Float32", "Float64", "ExpFloat64", "NormFloat64", "Perm", "Shuffle", "Read",
+	},
+	"math/rand/v2": {
+		"Int", "IntN", "Int32", "Int32N", "Int64", "Int64N", "Uint", "UintN",
+		"Uint32", "Uint32N", "Uint64", "Uint64N", "N", "Float32", "Float64",
+		"ExpFloat64", "NormFloat64", "Perm", "Shuffle",
+	},
+}
+
+// init appends one rand:read:* call rule per unseeded top-level function, so
+// the table above stays the single readable list.
+func init() {
+	for _, importPath := range []string{"math/rand", "math/rand/v2"} {
+		for _, name := range unseededRandFunctions[importPath] {
+			CallRules = append(CallRules, callCapabilityRule{
+				ImportPath:   importPath,
+				FunctionName: name,
+				Capability:   "rand:read:*",
+				Evidence:     "rand." + name + " call (auto-seeded global source)",
+			})
+		}
+	}
 }

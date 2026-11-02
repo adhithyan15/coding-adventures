@@ -80,7 +80,7 @@ fn run(module: &Module, name: &str) -> (String, String) {
     let artifact = compile(module).expect("module should compile to Go source");
 
     let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_syswrite_{name}_{nonce}.go"));
     std::fs::write(&src_path, &artifact.source).expect("write temp source");
 
@@ -180,4 +180,15 @@ fn terminator_per_value_with_zero_values_writes_a_single_blank_line() {
     let m = sys_write_module("stdout", "per_value", false, vec![]);
     let (out, _) = run(&m, "empty_puts");
     assert_eq!(out, "\n");
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

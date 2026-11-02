@@ -35,6 +35,11 @@ so `sanitize_ident` escapes every name the file declares — the runtime's
 `math`, …, `main`, `init`, `_` and the predeclared `any`/`min`/`max`/… —
 into `sir_esc_v<name>`, and a `rescue` binds the recovered panic as
 `__sir_r` (SIR10 "Generated names", issue #18466).
+A *variable* whose SIR name is also the name of one of the module's
+functions is emitted as `sir_esc_l<sanitize_ident(name)>` (`var_ident`), so
+it cannot shadow the function: SIR keeps the two namespaces apart, and
+Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485). Functions keep
+their names.
 
 ### SIR16 (v1) — complete
 

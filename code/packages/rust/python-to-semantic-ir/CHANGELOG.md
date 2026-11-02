@@ -4,6 +4,36 @@ All notable changes to `python-to-semantic-ir` are documented here.
 
 ## Unreleased
 
+## Unreleased — Every invented name comes from one pool (#18771)
+
+The lowerer invents names of four kinds: parameter copies
+(`__param_<p>_<N>`), other temporaries (`__chain_<N>`, `__for_<N>`), lambda
+functions (`__lambda_<N>`) and hoisted methods (`<Class>__<method>`).
+Temporaries skipped only source names, and synthesised functions skipped
+source names and other functions, so a temporary and a function could get
+the same name.  In
+
+```python
+def f(a__b):
+    a__b += 1
+    class __param_a:
+        def b_0(self):
+            return 40
+    return a__b + __param_a().b_0()
+```
+
+the copy of `a__b` and the hoisted `b_0` were both `__param_a__b_0`; the
+copy shadowed the method inside `f`, and JavaScript failed with
+`TypeError: __param_a__b_0 is not a function` (CPython and C print 42).
+
+`source_names` is now `used_names`: seeded with the source's names, and
+every invented name joins it the moment it is made, through the one helper
+`try_claim_name`.  `hoisted_method_name` claims its name before the method
+body is lowered, so no temporary inside the body can take it either.  New
+unit tests `a_parameter_copy_never_takes_a_hoisted_method_s_name`, its
+reverse-order twin, and
+`every_invented_name_is_distinct_from_every_other_and_from_the_source`.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
