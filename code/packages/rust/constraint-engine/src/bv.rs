@@ -38,17 +38,27 @@
 //! | `(bvadd a b)` | `Apply { f: "bvadd", args: [a, b] }` |
 //! | `(= a b)` / `(distinct a b)` | `Eq(a, b)` / `NEq(a, b)` |
 //!
-//! A declared name can never begin with `#` (SMT-LIB symbols cannot), so
-//! reading `#b…` and `#x…` as literals is unambiguous.
+//! SMT-LIB symbols cannot begin with `#`, so reading `#b…` and `#x…` as
+//! literals is unambiguous. That is enforced, not assumed: a *declared*
+//! variable whose name begins with `#` is refused (`Unknown`), because
+//! otherwise `(declare-const #b1 (_ BitVec 1))` would be silently read as
+//! the constant 1 and could produce a false, certified `Unsat`.
 //!
 //! ## Hostile input
 //!
 //! Predicates may come from user-written annotations or `.smt2` files, so
-//! the work is bounded: widths at most [`MAX_BV_WIDTH`], circuits at most
-//! [`MAX_AIG_NODES`] (checked after every operation), the solver at most
-//! [`BV_CONFLICT_BUDGET`] conflicts, and the kernel at its default work
-//! budget. Anything outside the supported fragment is `Unknown` with a
-//! reason, never a guess.
+//! every kind of work is bounded, and running out answers `Unknown`:
+//!
+//! | Work | Bound |
+//! |---|---|
+//! | bit-vector width | [`MAX_BV_WIDTH`] |
+//! | circuit size (memory) | [`MAX_AIG_NODES`], checked after every operation |
+//! | circuit construction (time; repeated subterms cost work even when structural hashing makes them free in size) | [`MAX_GATE_CALLS`] |
+//! | search | [`BV_CONFLICT_BUDGET`] conflicts and [`BV_WORK_BUDGET`] propagation steps |
+//! | certificate check | `drat-check`'s default limits |
+//!
+//! Anything outside the supported fragment is `Unknown` with a reason, never
+//! a guess.
 
 use std::collections::HashMap;
 
@@ -63,12 +73,23 @@ use crate::{Model, SolverResult, SortEnv, Value};
 /// The widest bit-vector the tactic accepts.
 pub const MAX_BV_WIDTH: usize = 512;
 
-/// The most AIG nodes one query may build. A 512-bit multiplier is about
-/// 1.8 million AND gates, so this admits one, not dozens.
-pub const MAX_AIG_NODES: usize = 4_000_000;
+/// The most AIG nodes one query may build. Each node costs a few hundred
+/// bytes once encoded and solved (about 150 MB at this cap). A 128-bit
+/// multiplier (about 115 000 gates) fits; a 256-bit one does not.
+pub const MAX_AIG_NODES: usize = 250_000;
+
+/// The most gate constructions ([`Aig::and_calls`]) one query may make.
+/// Structural hashing makes a repeated subterm free in size but not in
+/// time, so time is bounded separately.
+pub const MAX_GATE_CALLS: u64 = 2_000_000;
 
 /// Conflicts the CDCL search may spend on one query.
 pub const BV_CONFLICT_BUDGET: u64 = 1_000_000;
+
+/// Propagation steps (watch-list visits) the search may spend on one query:
+/// seconds of work. A conflict budget alone does not bound time on large
+/// formulas.
+pub const BV_WORK_BUDGET: u64 = 1 << 30;
 
 /// The bit-vector tactic.
 pub struct BvTactic;
@@ -108,6 +129,11 @@ impl Lowering {
         names.sort();
         let mut l = Lowering { aig: Aig::new(), vars: Vec::new(), index: HashMap::new() };
         for name in names {
+            if name.starts_with('#') {
+                return Err(format!(
+                    "variable `{name}` begins with `#`, which is reserved for bit-vector literals"
+                ));
+            }
             let term = match &sort_env[name] {
                 Sort::Bool => Term::Bool(l.aig.input()),
                 Sort::BitVec(w) => {
@@ -139,6 +165,9 @@ impl Lowering {
         if self.aig.num_nodes() > MAX_AIG_NODES {
             return Err(format!("bit-blasted circuit exceeds MAX_AIG_NODES ({MAX_AIG_NODES})"));
         }
+        if self.aig.and_calls() > MAX_GATE_CALLS {
+            return Err(format!("bit-blasting work exceeds MAX_GATE_CALLS ({MAX_GATE_CALLS})"));
+        }
         Ok(())
     }
 
@@ -149,8 +178,19 @@ impl Lowering {
         for &e in asserted {
             t.assert_true(&self.aig, e, &mut cnf);
         }
+        // The node cap keeps the CNF inside the kernel's variable limit, so
+        // every UNSAT can be checked. Should the caps ever drift apart, refuse
+        // before spending a solve whose UNSAT could never be certified.
+        if cnf.num_vars > drat_check::DEFAULT_MAX_VARS {
+            return SolverResult::Unknown(format!(
+                "CNF has {} variables, above drat-check's limit of {}",
+                cnf.num_vars,
+                drat_check::DEFAULT_MAX_VARS
+            ));
+        }
         let mut solver = Solver::from_cnf_with_proof(&cnf);
         solver.set_conflict_budget(Some(BV_CONFLICT_BUDGET));
+        solver.set_work_budget(Some(BV_WORK_BUDGET));
         match solver.solve() {
             SolveResult::Sat => {
                 let model = solver.model();
@@ -180,7 +220,7 @@ impl Lowering {
                 }
             }
             SolveResult::Unknown => SolverResult::Unknown(format!(
-                "BV conflict budget ({BV_CONFLICT_BUDGET}) exhausted before an answer"
+                "BV search budget exhausted ({BV_CONFLICT_BUDGET} conflicts / {BV_WORK_BUDGET} propagation steps)"
             )),
         }
     }
@@ -432,6 +472,29 @@ mod tests {
         assert!(unknown(&e, deep).contains("deeper"));
         assert!(unknown(&e, var("x")).contains("bit-vector where a Boolean"));
         assert!(unknown(&e, Predicate::Le(Box::new(Predicate::Int(1)), Box::new(Predicate::Int(2)))).contains("not supported"));
+        // A declared name that looks like a literal would be misread: refuse.
+        let tricky = env(&[("#b1", Sort::BitVec(1))]);
+        let p = Predicate::Eq(Box::new(var("#b1")), Box::new(var("#b0")));
+        assert!(unknown(&tricky, p).contains("reserved for bit-vector literals"));
+    }
+
+    #[test]
+    fn size_and_work_caps() {
+        let unknown = |e: &SortEnv, p: Predicate| match BvTactic::solve(&[p], e) {
+            SolverResult::Unknown(why) => why,
+            other => panic!("expected Unknown, got {other:?}"),
+        };
+        // One 512-bit multiplier is far beyond the node cap.
+        let e = env(&[("x", Sort::BitVec(512)), ("y", Sort::BitVec(512))]);
+        let mul = app("bvmul", vec![var("x"), var("y")]);
+        assert!(unknown(&e, Predicate::Eq(Box::new(mul.clone()), Box::new(var("x")))).contains("MAX_AIG_NODES"));
+        // A 64-bit multiplier repeated many times: free in size (structural
+        // hashing), not in work.
+        let e = env(&[("x", Sort::BitVec(64)), ("y", Sort::BitVec(64))]);
+        let mul = app("bvmul", vec![var("x"), var("y")]);
+        let same = Predicate::Eq(Box::new(mul.clone()), Box::new(mul));
+        let many = Predicate::And(vec![same; 200]);
+        assert!(unknown(&e, many).contains("MAX_GATE_CALLS"));
     }
 
     #[test]

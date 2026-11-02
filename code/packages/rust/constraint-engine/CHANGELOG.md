@@ -20,10 +20,36 @@ VER10: a QF_BV tactic.
 - `Value::BitVec(Vec<bool>)` (least significant bit first), with
   `Value::as_bv_u128` and `#b…` display.
 
+### Security
+
+Findings from the VER10 security review, all fixed and covered by
+regression tests in `constraint-vm/tests/qfbv.rs`:
+
+- **A certified false `Unsat` from a `#`-named variable.** For example,
+  `(declare-const #b1 (_ BitVec 1))` was read as the literal 1. The BV tactic
+  now refuses declared names that begin with `#`.
+- **Bit-vector syntax reaching the LIA tactic, with wrong answers both
+  ways.** `(declare-const n Int) (assert (= #b01 #b01))` answered `Unsat`.
+  Dispatch now also scans the assertions for bit-vector syntax (iteratively,
+  so any depth is safe). Bit-vectors mixed with `Int` answer `Unknown`.
+- **The LIA tactic misreading what it cannot evaluate.** This flaw predates
+  VER10: its evaluator turns anything unknown into `false`, and `not` of
+  that into `true`, so `(declare-const n Int) (assert (= m m))` answered
+  `Unsat`. Every assertion must now sort-check as `Bool` under the declared
+  sorts (`infer_sort`) and stay inside the evaluator's fragment before LIA
+  runs; otherwise the answer is `Unknown`.
+- **DoS through the BV tactic.** Every kind of work is now bounded:
+  - circuit size: `MAX_AIG_NODES` cut from 4M to 250k, about 150 MB;
+  - construction work: `MAX_GATE_CALLS`, 2M, since repeated subterms are
+    free in size but not in time;
+  - search: `BV_WORK_BUDGET`, 2^30 propagation steps, on top of the
+    conflict budget;
+  - a CNF that `drat-check` could never certify is refused before solving.
+
 ### Changed
 
-- `Engine::check_sat` routes problems with any `BitVec` variable, or with
-  logic `QF_BV`, to the BV tactic. `QF_BV` and `BitVec(1..=512)` are now
+- `Engine::check_sat` routes problems with any `BitVec` variable, any
+  bit-vector syntax, or logic `QF_BV`, to the BV tactic. `QF_BV` and `BitVec(1..=512)` are now
   supported; `BitVec` mixed with `Int` answers `Unknown`.
 - The trivial model of an assertion-free problem gives `BitVec` variables
   all-zero values. Widths above the limit get none, so a huge unused

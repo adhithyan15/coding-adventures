@@ -10,6 +10,9 @@ Initial release: VER10 part 1, encodings and bit-blasting.
   simplifies and structurally hashes; `or`, `xor`, `xnor`, `implies`,
   `mux`, `and_all` and `or_all` are derived from it; `simulate` evaluates
   64 patterns at once.
+- `Aig::and_calls`: counts every gate construction, including ones that
+  structural hashing or simplification absorb, so callers can bound the
+  *work* of building a circuit separately from its size.
 - `tseitin`: incremental, stack-based Tseitin encoding of an edge's cone
   into any `ClauseSink` (`cdcl_sat::Solver`, `cdcl_sat::Cnf`), with model
   read-back per input.

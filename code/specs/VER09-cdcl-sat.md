@@ -363,6 +363,9 @@ Recorded while implementing:
    to 2^20 and limits are clamped to 2^31. The adapter gained the NNF size
    guard of §7, which bounds an exponential case that predates this spec.
    `add_clause` documents that variable indices are the caller's to bound.
+6. **A work budget** (`Solver::set_work_budget`, added with VER10). It
+   counts watch-list visits, because a conflict budget alone does not bound
+   time on formulas with millions of clauses.
 4. **The distributive CNF conversion keeps its clause cap** (10 000 clauses).
    Formulas past the cap still answer `Unknown`, as before. The Tseitin
    encoding of VER10 removes the cap; re-pointing `SatTactic` at it is a

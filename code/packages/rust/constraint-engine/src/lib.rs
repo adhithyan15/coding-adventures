@@ -56,7 +56,7 @@
 
 use std::collections::HashMap;
 
-use constraint_core::{Logic, Predicate, Sort};
+use constraint_core::{depth_of, infer_sort, Logic, Predicate, Sort, MAX_PREDICATE_DEPTH};
 
 pub mod bv;
 pub mod lia;
@@ -369,7 +369,10 @@ impl Engine {
         // Classify the formula by sorts present.
         let has_int = self.sort_env.values().any(|s| matches!(s, Sort::Int));
         let has_bool = self.sort_env.values().any(|s| matches!(s, Sort::Bool));
-        let has_bv = self.sort_env.values().any(|s| matches!(s, Sort::BitVec(_)));
+        // Bit-vector *syntax* counts too: `(= #b01 #b01)` mentions no
+        // BitVec variable but must never reach the LIA tactic.
+        let has_bv = self.sort_env.values().any(|s| matches!(s, Sort::BitVec(_)))
+            || self.assertions.iter().any(mentions_bv_syntax);
 
         if has_bv && has_int {
             return SolverResult::Unknown(
@@ -381,6 +384,13 @@ impl Engine {
             // tactic, which also handles pure-Bool QF_BV problems.
             bv::BvTactic::solve(&self.assertions, &self.sort_env)
         } else if has_int {
+            // LIA reads anything it cannot evaluate as `false`, so anything
+            // outside its fragment must be refused before it gets there.
+            for p in &self.assertions {
+                if let Some(why) = lia_fragment_violation(p, &self.sort_env) {
+                    return SolverResult::Unknown(format!("outside the LIA fragment: {why}"));
+                }
+            }
             // LIA path.  Booleans are handled via substitution in the LIA
             // tactic — we ground Bool variables to {0, 1} and let Cooper
             // reduce them.
@@ -484,6 +494,95 @@ impl Default for Engine {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/// The direct sub-predicates of `p`. A variant added to the
+/// non-exhaustive `Predicate` later reports none.
+fn children(p: &Predicate) -> Vec<&Predicate> {
+    match p {
+        Predicate::Bool(_) | Predicate::Var(_) | Predicate::Int(_) | Predicate::Real(_) => vec![],
+        Predicate::Apply { args, .. } => args.iter().collect(),
+        Predicate::And(ps) | Predicate::Or(ps) | Predicate::Add(ps) => ps.iter().collect(),
+        Predicate::Not(a) | Predicate::Mul { term: a, .. } => vec![a],
+        Predicate::Forall { body, .. } | Predicate::Exists { body, .. } => vec![body],
+        Predicate::Implies(a, b)
+        | Predicate::Iff(a, b)
+        | Predicate::Eq(a, b)
+        | Predicate::NEq(a, b)
+        | Predicate::Sub(a, b)
+        | Predicate::Le(a, b)
+        | Predicate::Lt(a, b)
+        | Predicate::Ge(a, b)
+        | Predicate::Gt(a, b)
+        | Predicate::Select { arr: a, idx: b } => vec![a, b],
+        Predicate::Ite(a, b, c) | Predicate::Store { arr: a, idx: b, val: c } => vec![a, b, c],
+        _ => vec![],
+    }
+}
+
+/// Does `p` contain bit-vector syntax: a `#b`/`#x` literal, an indexed
+/// `(_ …)` term, or a `bv…` operator? Walks with an explicit stack, so it is
+/// safe on predicates of any depth.
+fn mentions_bv_syntax(p: &Predicate) -> bool {
+    let mut stack = vec![p];
+    while let Some(q) = stack.pop() {
+        match q {
+            Predicate::Var(name) if name.starts_with('#') => return true,
+            Predicate::Apply { f, .. } if f == "_" || f.starts_with("bv") => return true,
+            _ => stack.extend(children(q)),
+        }
+    }
+    false
+}
+
+/// Why `p` is outside what the LIA tactic can evaluate, if it is.
+///
+/// The LIA tactic's evaluator turns anything it cannot evaluate into
+/// `false`, and `false` under a `not` into `true`. An unsupported construct
+/// therefore does not fail loudly; it gives a wrong `Unsat` or a wrong
+/// `Sat`. So, before LIA runs, every assertion must:
+///
+/// - sort-check as `Bool` under the declared sorts (no undeclared names, no
+///   `Int` compared with `Bool`);
+/// - use only the constructs the evaluator handles: Booleans, integers,
+///   declared variables, the connectives, `+ - *`, comparisons and `ite`.
+fn lia_fragment_violation(p: &Predicate, env: &SortEnv) -> Option<String> {
+    if depth_of(p) > MAX_PREDICATE_DEPTH {
+        return Some(format!("deeper than MAX_PREDICATE_DEPTH ({MAX_PREDICATE_DEPTH})"));
+    }
+    let mut stack = vec![p];
+    while let Some(q) = stack.pop() {
+        let ok = matches!(
+            q,
+            Predicate::Bool(_)
+                | Predicate::Int(_)
+                | Predicate::Var(_)
+                | Predicate::And(_)
+                | Predicate::Or(_)
+                | Predicate::Not(_)
+                | Predicate::Implies(..)
+                | Predicate::Iff(..)
+                | Predicate::Eq(..)
+                | Predicate::NEq(..)
+                | Predicate::Add(_)
+                | Predicate::Sub(..)
+                | Predicate::Mul { .. }
+                | Predicate::Le(..)
+                | Predicate::Lt(..)
+                | Predicate::Ge(..)
+                | Predicate::Gt(..)
+                | Predicate::Ite(..)
+        );
+        if !ok {
+            return Some(format!("unsupported term {q:?}"));
+        }
+        stack.extend(children(q));
+    }
+    match infer_sort(p, env) {
+        Ok(Sort::Bool) => None,
+        Ok(other) => Some(format!("assertion has sort {other}, not Bool")),
+        Err(e) => Some(e.to_string()),
+    }
+}
 
 fn is_supported_logic(logic: Logic) -> bool {
     matches!(logic, Logic::QF_Bool | Logic::QF_LIA | Logic::QF_BV)

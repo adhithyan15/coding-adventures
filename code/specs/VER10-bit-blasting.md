@@ -141,7 +141,9 @@ each `check-sat`. QF_BV joins that stack as a **third tactic** beside SAT
 `Predicate` to circuit lives in `constraint-engine::bv`.
 
 **Engine dispatch.** The BV tactic handles a check when any declared
-variable is a `BitVec`, or when the logic is `QF_BV`. It also handles Bool
+variable is a `BitVec`, when any assertion contains bit-vector syntax
+(`#b`/`#x` literals, `(_ …)` terms or `bv…` operators), or when the logic
+is `QF_BV`. It also handles Bool
 variables declared alongside. A `BitVec` mixed with `Int` answers
 `Unknown`, because there is no BV–LIA combination yet. `QF_BV` joins the
 supported logics, and `BitVec(w)` joins the supported sorts for
@@ -170,12 +172,20 @@ proof logging and runs `drat-check` on the proof. Only an accepted proof
 becomes `SolverResult::Unsat`. A rejected one becomes `Unknown`. A solver
 bug can therefore surface as `Unknown`, never as a false `Unsat`.
 
+**Declared names may not begin with `#`.** SMT-LIB symbols cannot, and the
+tactic reads `#`-names as literals. If a declared `#b1` were allowed, it
+would silently mean the constant 1, so it is refused instead.
+
 **Limits:**
 
 - widths up to 512 bits;
-- circuits up to 4 million AIG nodes, checked after every operation;
-- 1 000 000 conflicts;
-- the kernel's default work budget;
+- circuits up to 250 000 AIG nodes (about 150 MB once encoded and solved),
+  checked after every operation;
+- 2 000 000 gate constructions (`Aig::and_calls`), because structural
+  hashing makes a repeated subterm free in size but not in time;
+- 1 000 000 conflicts and 2³⁰ propagation steps (`Solver::set_work_budget`);
+- the kernel's default limits, with a CNF that exceeds them refused before
+  solving;
 - predicates no deeper than `MAX_PREDICATE_DEPTH`.
 
 On top of these, `constraint-vm`'s own instruction, scope and assertion
@@ -216,7 +226,15 @@ lists no capabilities.
    `drat-check` inside the tactic instead, before `Unsat` is reported,
    which is a stronger guarantee for every caller of `Engine` and
    `constraint-vm`.
-2. **A conflict budget.** The tactic caps the solver at 1 000 000
-   conflicts, as `SatTactic` does, so a small but hard problem (for example
-   factoring through `bvmul`) answers `Unknown` instead of running without
-   bound.
+2. **Budgets on every kind of work** (security review). A conflict budget
+   alone did not bound time: a 155-byte 512-bit multiplication miter ran
+   for more than 300 s. `cdcl-sat` gained a work budget, `bit-blaster` a
+   gate-construction counter, and the node cap fell from 4 million to
+   250 000.
+3. **The LIA tactic is guarded** (security review). Bit-vector literals
+   next to `Int` variables reached the LIA tactic, whose evaluator reads
+   anything it cannot evaluate as `false`, and answered `Unsat` for true
+   formulas. Dispatch now detects bit-vector syntax as well as sorts.
+   Separately, every LIA assertion must sort-check and stay inside the
+   evaluator's fragment, which also closes the older case of an
+   undeclared name.

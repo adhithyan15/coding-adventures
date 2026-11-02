@@ -112,6 +112,11 @@ pub struct Aig {
     input_nodes: Vec<usize>,
     /// Structural hash: operands → existing AND node.
     strash: HashMap<(Edge, Edge), usize>,
+    /// How many times [`Aig::and`] has been called, including calls that
+    /// simplified away or hit the structural hash. Node count measures the
+    /// circuit; this measures the *work* of building it, which a caller
+    /// facing hostile input can bound.
+    and_calls: u64,
 }
 
 impl Default for Aig {
@@ -123,7 +128,7 @@ impl Default for Aig {
 impl Aig {
     /// An AIG holding only the constant node.
     pub fn new() -> Aig {
-        Aig { nodes: vec![Node::False], input_nodes: Vec::new(), strash: HashMap::new() }
+        Aig { nodes: vec![Node::False], input_nodes: Vec::new(), strash: HashMap::new(), and_calls: 0 }
     }
 
     /// A fresh input. Inputs are numbered `0, 1, 2, …` in creation order.
@@ -154,6 +159,11 @@ impl Aig {
         self.nodes.len() - 1 - self.input_nodes.len()
     }
 
+    /// Number of [`Aig::and`] calls so far (the work of construction).
+    pub fn and_calls(&self) -> u64 {
+        self.and_calls
+    }
+
     /// What node `index` is.
     pub fn node(&self, index: usize) -> Node {
         self.nodes[index]
@@ -161,6 +171,7 @@ impl Aig {
 
     /// `a ∧ b`, simplified and structurally hashed (VER10 §2.2).
     pub fn and(&mut self, a: Edge, b: Edge) -> Edge {
+        self.and_calls += 1;
         let (a, b) = if a <= b { (a, b) } else { (b, a) };
         // Smallest edge first, so constants (node 0) come first.
         if a == Edge::FALSE {
@@ -301,6 +312,7 @@ mod tests {
         let ab = g.and(a, b);
         assert_eq!(g.and(b, a), ab); // structural hashing, either order
         assert_eq!(g.num_ands(), 1);
+        assert_eq!(g.and_calls(), 6, "every call counts, hashed or simplified");
         assert_eq!(g.node(ab.node()), Node::And(a, b));
         assert_eq!(g.num_nodes(), 4);
         assert_eq!(g.num_inputs(), 2);

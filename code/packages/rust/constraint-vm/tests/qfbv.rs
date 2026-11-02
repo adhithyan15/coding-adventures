@@ -398,3 +398,25 @@ fn reset_and_redeclaration() {
     assert_eq!(Value::BitVec(vec![true; 129]).as_bv_u128(), None);
     assert_eq!(value(2, "y").to_string(), "#b101");
 }
+
+/// Security review (VER10, round 1) wrong-answer inputs. Each was once
+/// answered wrongly: some with a certified false UNSAT, some with a false
+/// SAT. All must now be refused.
+#[test]
+fn review_regressions_are_refused() {
+    // A declared variable named like a literal was read as the literal.
+    refuse("(declare-const #b1 (_ BitVec 1))(assert (= #b1 #b0))", "reserved for bit-vector literals");
+    // Bit-vector syntax with only Int variables declared reached the LIA
+    // tactic, which reads what it cannot evaluate as false.
+    refuse("(declare-const n Int)(assert (= n 1))(assert (= (bvadd #b01 #b01) #b10))", "BitVec mixed with Int");
+    refuse("(declare-const n Int)(assert (= #b01 #b01))", "BitVec mixed with Int");
+    refuse("(declare-const n Int)(assert (= n 1))(assert (not (= #b0001 #x1)))", "BitVec mixed with Int");
+    // The same LIA flaw without any bit-vectors: an undeclared name.
+    refuse("(declare-const n Int)(assert (= m m))", "outside the LIA fragment");
+    refuse("(declare-const n Int)(assert (not (f n)))", "outside the LIA fragment");
+    refuse("(declare-const n Int)(declare-const p Bool)(assert (= n p))", "outside the LIA fragment");
+    // Bit-vector syntax with nothing declared goes to the BV tactic and is
+    // decided, not misread.
+    let program = smt_lib_format::read("(assert (= (bvadd #b01 #b01) #b10))(check-sat)").unwrap();
+    assert_eq!(run_and_verify("ground BV", &program), vec!["sat"]);
+}
