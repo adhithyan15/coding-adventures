@@ -14299,6 +14299,29 @@ fn comparison_stdout(lang: Language, stdout: &str) -> std::borrow::Cow<'_, str> 
     }
 }
 
+/// The exit status a POSIX parent would observe for `code`.
+///
+/// A program's exit value is one byte on POSIX: `exit(-3)` is seen as `253`
+/// because the kernel keeps only the low eight bits. Windows keeps all 32, so the
+/// same program run there reports `-3`. The matrix declares the POSIX byte, so on
+/// Windows we narrow a *sign-extended byte* the same way the kernel would elsewhere.
+///
+/// | raw Windows code       | meaning                   | compared as |
+/// |------------------------|---------------------------|-------------|
+/// | `0..=255`              | ordinary exit             | unchanged   |
+/// | `-255..=-1`            | a negative result byte    | `code & 0xFF` (−3 → 253) |
+/// | e.g. `0xC0000005`      | NTSTATUS crash (−1073741819) | unchanged — never folded |
+///
+/// The last row is why this is not a blanket `& 0xFF`: an access violation
+/// masked to its low byte would read as "exit 5" and could pass a row that
+/// expects 5. Only values a byte-returning program can produce are narrowed.
+fn posix_exit_status(code: Option<i32>) -> Option<i32> {
+    match code {
+        Some(c) if cfg!(windows) && (-255..=-1).contains(&c) => Some(c & 0xFF),
+        other => other,
+    }
+}
+
 /// Assert a single matrix cell agrees with the program's known result.
 fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
     // Every message names the *source*, not just the language and index. A bare
@@ -14307,7 +14330,7 @@ fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
     // 9000-line array by hand is how a diagnosis turns into an afternoon.
     match (&p.expect, result) {
         (Expect::Exit(n), RunResult::Completed { code, stdout }) => assert_eq!(
-            code,
+            posix_exit_status(code),
             Some(*n),
             "{backend:?} {:?}: expected exit {n}, got {code:?} (stdout {stdout:?})\nsource: {:?}",
             p.lang,
@@ -31203,4 +31226,17 @@ fn javascript_reference_errors_trap_after_output_on_every_available_backend() {
 #[test]
 fn javascript_rows_run_their_corpus_case() {
     lang84_rows_run_their_corpus_case(&javascript_rows(), "ecmascript", "es-number-log", "js", "es2020");
+}
+
+/// The Windows exit-status narrowing folds only sign-extended bytes; ordinary
+/// codes and NTSTATUS crash codes compare unchanged on every host.
+#[test]
+fn posix_exit_status_folds_only_negative_bytes() {
+    assert_eq!(posix_exit_status(None), None);
+    assert_eq!(posix_exit_status(Some(0)), Some(0));
+    assert_eq!(posix_exit_status(Some(253)), Some(253));
+    // STATUS_ACCESS_VIOLATION must never read as "exit 5".
+    assert_eq!(posix_exit_status(Some(0xC000_0005_u32 as i32)), Some(0xC000_0005_u32 as i32));
+    let expect_neg3 = if cfg!(windows) { 253 } else { -3 };
+    assert_eq!(posix_exit_status(Some(-3)), Some(expect_neg3));
 }

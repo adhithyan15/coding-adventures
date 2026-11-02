@@ -62,3 +62,9 @@ signature on the interpreter tier.
 No Twig function changes JIT tier in the corpus: `execute_with_jit` compiled none of the
 Twig rows' functions before this change and compiles none after (every one
 has an `any`- or `void`-typed instruction).
+
+- Matrix: `assert_cell` compares a Windows exit code as the byte POSIX would
+  report (`posix_exit_status`). A Windows process keeps all 32 bits, so the new
+  `(quotient -17 5)` row exited `-3` there instead of `253`. Only `-255..=-1` is
+  narrowed; NTSTATUS crash codes such as `0xC0000005` are never folded into a
+  small exit value.
