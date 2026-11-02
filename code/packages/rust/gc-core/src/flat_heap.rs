@@ -618,15 +618,34 @@ impl FlatHeap {
         unsafe {
             (*block).next = self.all;
             (*block).size = n;
-            // **Alloc-black during an incremental mark** (AOT00-T4 §5): an object born
-            // *while* a mark is in progress is marked (black), so the running cycle — whose
-            // reachable snapshot was fixed at `incremental_start` — never sweeps it. It is
-            // reclaimed next cycle if it dies. Outside a mark this is the usual `false`.
+            // **Alloc-grey during an incremental mark** (AOT00-T4 §5): an object born
+            // *while* a mark is in progress is marked, so the running cycle never sweeps
+            // it (it is reclaimed next cycle if it dies). Outside a mark this is `false`.
             (*block).marked = self.mark_in_progress;
             (*block).kind = kind;
             (*block).generation = GEN_YOUNG; // new objects are born young
         }
         self.all = block;
+        // ...and, while marking (not yet sweeping), it is also queued for scanning:
+        // born GREY, not black. A constructor writes its initial fields straight into
+        // the fresh block with no write barrier (`__dyn_pair_new`'s car/cdr, a record
+        // or closure cell built in C), and a black object is never scanned again. So a
+        // field could hide a white object from the mark:
+        //
+        //   W reachable only via R.f ; N = pair_new(W, nil)  (born black, W not shaded)
+        //   R.f = other              ; the barrier shades `other`, not W
+        //   N published to a root    ; the finish re-scan stops at the black N
+        //   → W swept while N.car still names it
+        //
+        // Queuing every newborn covers every constructor at once, whatever runtime it
+        // lives in: its fields are traced when the worklist reaches it, i.e. after the
+        // constructor has written them (steps and the re-scan run between mutator
+        // slices, never inside an allocation). The cost is one scan per object born
+        // mid-mark. During a stepped sweep the mark is over and the newborn stays black
+        // (it is threaded ahead of the sweep cursor, so the sweep never visits it).
+        if self.mark_in_progress && self.sweep_state.is_none() {
+            self.mark_worklist.push(block);
+        }
         self.live_bytes += n;
         self.profile.record_allocation(n);
         // Payload is the byte just past the 32-byte header.
@@ -1842,6 +1861,15 @@ impl FlatHeap {
     /// Called only after [`Self::incremental_start`] with marking complete.
     pub unsafe fn incremental_finish(&mut self) -> GcCycleStats {
         debug_assert!(self.mark_in_progress, "incremental_finish outside a mark phase");
+        // Objects born since the last step are grey (queued by `alloc`): drain them, and
+        // anything they reach, before sweeping. Once a stepped sweep has started nothing
+        // is queued, so the worklist is already empty there.
+        if self.sweep_state.is_none() {
+            let mut work = core::mem::take(&mut self.mark_worklist);
+            while let Some(h) = work.pop() {
+                self.scan_payload(h, &mut work, false);
+            }
+        }
         debug_assert!(self.mark_worklist.is_empty(), "marking not complete — step to done first");
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
 
@@ -7485,6 +7513,72 @@ mod tests {
     /// **An object born during a mark survives the cycle** (alloc-black). Allocated *between*
     /// two steps, unrooted, it must not be swept by the cycle that was already running — its
     /// reachable snapshot was fixed at `start`, so it is coloured black on birth.
+    /// **A constructor's initial fields bypass the barrier** (review of #18789). The exact
+    /// sequence that lost a value while newborns were black:
+    ///
+    /// 1. `W` is reachable only through `R.f`.
+    /// 2. `N = pair_new(W, nil)` is allocated mid-mark; its car is written with no barrier.
+    /// 3. `R.f = other`; the barrier shades `other`, not `W`.
+    /// 4. `N` is published to a root.
+    /// 5. The finish re-scan reaches `N`. Black, it was never scanned, so `W` stayed white.
+    /// 6. `W` swept, `N.car` dangling.
+    ///
+    /// Born grey, `N` is scanned after its fields are written, so `W` survives.
+    #[test]
+    fn incremental_newborn_fields_are_traced() {
+        let mut heap = FlatHeap::new();
+        let pair = heap.register_kind(&[0, 8]);
+        let r = heap.alloc(16, pair) as usize;
+        let w = heap.alloc(16, pair) as usize;
+        let other = heap.alloc(16, pair) as usize;
+        unsafe { *(r as *mut usize) = w }; // 1. R.f = W
+        let root_r = r;
+        unsafe { heap.incremental_start(&[&root_r as *const usize as usize], &[]) };
+
+        // 2. N = pair_new(W, nil): a fresh block, fields written directly.
+        let n = heap.alloc(16, pair) as usize;
+        unsafe { *(n as *mut usize) = w };
+        // 3. R.f = other, through the barrier (shades `other`).
+        unsafe {
+            *(r as *mut usize) = other;
+            heap.write_barrier(r, other);
+        }
+        // 4. N published to a root that is not in the start snapshot.
+        let global = n;
+        while !unsafe { heap.incremental_step(8) } {}
+        // 5. the finish re-scan over the current roots.
+        unsafe {
+            heap.incremental_rescan_roots(
+                &[&root_r as *const usize as usize, &global as *const usize as usize],
+                &[],
+            )
+        };
+        let stats = unsafe { heap.incremental_finish() };
+        // 6. nothing is garbage: R, W (via N.car), other, N.
+        assert_eq!(stats.freed, 0, "W is still reachable through N.car");
+        assert_eq!(heap.kind_of(w), pair, "W is a live block");
+    }
+
+    /// The newborn's fields are traced even when the driver calls `finish` with no
+    /// re-scan and no further step after the allocation: `finish` drains the newborns.
+    #[test]
+    fn incremental_finish_traces_newborns_born_after_the_last_step() {
+        let mut heap = FlatHeap::new();
+        let pair = heap.register_kind(&[0, 8]);
+        let r = heap.alloc(16, pair) as usize;
+        let w = heap.alloc(16, pair) as usize;
+        unsafe { *(r as *mut usize) = w };
+        let root_r = r;
+        unsafe { heap.incremental_start(&[&root_r as *const usize as usize], &[]) };
+        while !unsafe { heap.incremental_step(8) } {} // R and W black
+        let n = heap.alloc(16, pair) as usize; // born after marking finished
+        let x = heap.alloc(16, pair) as usize;
+        unsafe { *(n as *mut usize) = x };
+        let stats = unsafe { heap.incremental_finish() };
+        assert_eq!(stats.freed, 0, "both newborns survive the cycle they were born in");
+        assert_eq!(heap.object_count(), 4);
+    }
+
     #[test]
     fn incremental_new_object_during_mark_is_retained() {
         let mut heap = FlatHeap::new();
