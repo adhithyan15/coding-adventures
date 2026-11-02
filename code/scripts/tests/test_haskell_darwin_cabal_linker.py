@@ -225,6 +225,28 @@ class HaskellDarwinCabalLinkerTests(unittest.TestCase):
             f"DEVELOPER_DIR={CLT} on Darwin",
         )
 
+    def test_windows_fronts_are_cmd_not_posix_shell(self) -> None:
+        # The build tool runs a package's BUILD_windows (or, without one, its
+        # BUILD) through `cmd /C`. The Darwin guard is POSIX `sh`, so every
+        # guarded BUILD needs a BUILD_windows, and no BUILD_windows may use
+        # `sh`-only syntax (`command -v`, `/dev/null`, `$(`, `[ ... ]`).
+        posix_only = re.compile(r"command -v|/dev/null|\$\(|^\s*if \[", re.MULTILINE)
+        missing, posix = [], []
+        for front in self.fronts:
+            if front.name != "BUILD":
+                continue
+            windows = front.with_name("BUILD_windows")
+            if not windows.exists():
+                missing.append(self.label(front))
+            elif posix_only.search(windows.read_text(encoding="utf-8")):
+                posix.append(self.label(windows))
+        self.assertEqual(
+            missing, [], "guarded Haskell BUILDs need a cmd.exe BUILD_windows"
+        )
+        self.assertEqual(
+            posix, [], "these BUILD_windows use POSIX sh syntax cmd.exe rejects"
+        )
+
     def test_darwin_routes_every_cabal_call_through_the_clt(self) -> None:
         for front in self.fronts:
             with self.subTest(front=self.label(front)):
