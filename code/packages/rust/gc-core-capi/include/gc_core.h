@@ -305,6 +305,27 @@ int64_t __gc_stackmap_count(void);
  * so this is NOT run by __gc_reset; it is for test isolation / teardown. */
 void __gc_stackmap_reset(void);
 
+/* ── Global roots (#18765) ──────────────────────────────────────────────────
+ * Register `count` 8-byte slots starting at `base` -- a program's globals, which
+ * live in a data section that no stack map names and no stack scan reaches -- as
+ * PRECISE roots of every collection (conservative, precise, compacting, minor,
+ * incremental). Each slot is treated like a stack-map slot: its word is marked,
+ * and a compacting collection writes a moved object's new address back into it.
+ * Call once at image start-up (twig-aot's __gc_init_stackmaps does, passing
+ * &_twig_globals and the global count). Returns `count` on success (registering
+ * the same block again is a no-op that also returns `count`), or 0 if rejected:
+ * NULL base, count <= 0 or > 2^24, base not 8-byte aligned, a wrapping range, or
+ * one overlapping a different registered block. The range must stay readable AND
+ * writable while registered. */
+int64_t __gc_register_global_roots(int64_t *base, int64_t count);
+
+/* Number of global root slots registered. */
+int64_t __gc_global_root_count(void);
+
+/* Drop all registered global roots. Like the stack maps, NOT run by __gc_reset;
+ * for test isolation / teardown. */
+void __gc_global_roots_reset(void);
+
 /* ── twig-compat aliases ────────────────────────────────────────────────────
  * The native-AOT code generators and dynval_runtime.c reference the symbol
  * names the retired twig_gc.c exported. These forward to the __gc_* ABI above
