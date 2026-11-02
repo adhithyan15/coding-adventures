@@ -55,6 +55,43 @@ function Resolver.is_metadata_encoding_error(value)
     return getmetatable(value) == MetadataEncodingError
 end
 
+-- A package whose own manifest resolves the package itself as a dependency.
+-- The conformance contract rejects this as DEPENDENCY_SELF_EDGE: a self-edge
+-- is neither dropped nor drawn (a drawn self-loop would surface later as a
+-- cycle, far from its cause). A Cargo manifest can do it with nothing more
+-- than a path entry named after its own directory or [package] name. The
+-- manifest is repository-relative, so the message never discloses the
+-- checkout root.
+local DependencySelfEdgeError = {}
+DependencySelfEdgeError.__index = DependencySelfEdgeError
+
+function DependencySelfEdgeError.new(pkg, manifest)
+    return setmetatable({
+        code = "DEPENDENCY_SELF_EDGE",
+        package = pkg.name,
+        manifest = manifest,
+        dependency = pkg.name,
+    }, DependencySelfEdgeError)
+end
+
+function DependencySelfEdgeError:__tostring()
+    return string.format(
+        "%s: package=%s manifest=%s dependency=%s",
+        self.code,
+        self.package,
+        self.manifest,
+        self.dependency
+    )
+end
+
+--- Return whether a caught error is the stable dependency self-edge error.
+---
+--- @param value any A value returned by pcall.
+--- @return boolean True when value is a DependencySelfEdgeError.
+function Resolver.is_dependency_self_edge_error(value)
+    return getmetatable(value) == DependencySelfEdgeError
+end
+
 -- =========================================================================
 -- Helper: read a file's contents as a string.
 -- =========================================================================
@@ -499,9 +536,25 @@ local CARGO_LINK_TABLE_NAMES = {
 local QUOTE_DOUBLE, QUOTE_SINGLE, BACKSLASH = 34, 39, 92
 
 --- Trim only spaces and tabs (%s would also eat \f, \v, \r ...).
+--
+-- An index scan from each end, not gsub("[ \t]+$", ""): an unanchored
+-- pattern is retried from every byte of an interior run of spaces and fails
+-- at each one, which is quadratic in a long run between two other bytes.
 local function trim_spaces_and_tabs(text)
-    return (text:gsub("^[ \t]+", ""):gsub("[ \t]+$", ""))
+    local first, last = 1, #text
+    while first <= last do
+        local byte = text:byte(first)
+        if byte ~= 32 and byte ~= 9 then break end
+        first = first + 1
+    end
+    while last >= first do
+        local byte = text:byte(last)
+        if byte ~= 32 and byte ~= 9 then break end
+        last = last - 1
+    end
+    return text:sub(first, last)
 end
+Resolver.trim_spaces_and_tabs = trim_spaces_and_tabs
 
 --- Lower-case only A-Z (string.lower may follow the C locale).
 local function ascii_lower(text)
@@ -570,29 +623,48 @@ local function index_toml_outside_strings(text, target)
     return nil
 end
 
---- How many `{` and `[` outside strings stay unclosed. Zero (or less)
--- means an inline value is complete:
+--- Count the `{` and `[` outside strings left unclosed, over text fed in
+-- pieces. `state` is a table {depth, quote, escape}. Feeding "ab" and then
+-- "cd" leaves exactly the state feeding "abcd" would, because the state keeps
+-- what a rescan of the joined text would have to rediscover: whether it is
+-- inside a string (and which delimiter byte closes it), and whether the
+-- previous byte was a backslash escaping the next one in a basic string. So
+-- a string still open at the end of one line continues after the joining
+-- space, as it does in the joined value:
+--
+--   feed '{ x = "q\\'   depth 1, inside "...", escape pending
+--   feed ' '            the space is escaped: still inside the string
+--   feed '", p = 1 }'   the string closes, `}` closes the table: depth 0
+--
+-- Depth zero (or less) means an inline value is complete:
 --
 --   { path = "../a", features = [   -> 2
 --   { path = "../a" }               -> 0
-local function toml_open_bracket_depth(text)
-    local depth = 0
-    local index = 1
-    while index <= #text do
+--
+-- Carrying this state is what keeps the continuation join linear: the
+-- reader used to rescan the whole growing value for every appended line,
+-- which is quadratic in a long entry.
+local function toml_bracket_scan(state, text)
+    local depth, quote, escape = state.depth, state.quote, state.escape
+    for index = 1, #text do
         local byte = text:byte(index)
-        if is_quote(byte) then
-            index = toml_string_end(text, index)
-            if not index then return depth end
-        else
-            if byte == 123 or byte == 91 then -- { [
-                depth = depth + 1
-            elseif byte == 125 or byte == 93 then -- } ]
-                depth = depth - 1
+        if escape then
+            escape = false
+        elseif quote then
+            if quote == QUOTE_DOUBLE and byte == BACKSLASH then
+                escape = true
+            elseif byte == quote then
+                quote = nil
             end
-            index = index + 1
+        elseif is_quote(byte) then
+            quote = byte
+        elseif byte == 123 or byte == 91 then -- { [
+            depth = depth + 1
+        elseif byte == 125 or byte == 93 then -- } ]
+            depth = depth - 1
         end
     end
-    return depth
+    state.depth, state.quote, state.escape = depth, quote, escape
 end
 
 --- Split at every separator outside strings. With `nested`, a separator
@@ -697,8 +769,16 @@ end
 --
 -- Fields are split at commas outside strings AND outside nested `[...]` or
 -- `{...}`, so a `features` array cannot leak a fake field and a nested
--- table's `path` is not the entry's. Field keys must be exactly `path` and
--- `package` (Cargo ignores `Package`). The first usable field of each wins.
+-- table's `path` is not the entry's. A field key is decoded like an entry
+-- key, so `"path"` and `'path'` are the key `path` (TOML, and so Cargo, read
+-- them that way); the decoded key must then be exactly `path` or `package`
+-- (Cargo ignores `Package`; escapes are not decoded). The first usable field
+-- of each wins:
+--
+--   a = { "path" = "../a" }                 -> a
+--   x = { 'package' = "a", path = "../a" }  -> a
+--   a = { "Path" = "../a" }                 -> nil (keys are case-sensitive)
+--   a = { path.x = "../a" }                 -> nil (dotted field key)
 local function cargo_path_dependency_name(key, raw_value)
     local crate_name = toml_key_segment(key)
     if not crate_name then return nil end
@@ -712,7 +792,8 @@ local function cargo_path_dependency_name(key, raw_value)
         if equals then
             local field_value = toml_single_string(field:sub(equals + 1))
             if field_value then
-                local field_key = trim_spaces_and_tabs(field:sub(1, equals - 1))
+                -- A dotted or malformed field key is no key at all (nil).
+                local field_key = toml_key_segment(field:sub(1, equals - 1))
                 if field_key == "path" and not path then
                     path = field_value
                 elseif field_key == "package" and not package_name then
@@ -748,7 +829,12 @@ end
 --
 -- So while the value still has an unclosed `{` or `[`, the next lines are
 -- joined onto it with one space (and are not looked at as headers or
--- entries). If the file ends first, the entry contributes nothing.
+-- entries). If the file ends first, the entry contributes nothing. The
+-- brackets are counted over the joined value as one text -- a string left
+-- open at the end of one line continues after the joining space -- but the
+-- joined value is never rescanned: toml_bracket_scan carries its state from
+-- line to line and the pieces are joined once (table.concat), so the join
+-- is linear in the entry's length.
 --
 -- @param text string The Cargo.toml contents.
 -- @return table List of crate names.
@@ -796,23 +882,37 @@ function Resolver.cargo_link_dependency_names(text)
             local equals = index_toml_outside_strings(line, "=")
             if equals and kind == "inline" then
                 -- Step 3: inline entries, continued while a bracket is open.
+                -- The pieces are collected and joined once, and the scanner
+                -- state carries from piece to piece, so the join is linear.
                 local value = trim_spaces_and_tabs(line:sub(equals + 1))
-                while value and value:sub(1, 1) == "{" and toml_open_bracket_depth(value) > 0 do
-                    if index > #lines then
-                        value = nil -- the file ended inside the value: no entry
-                        break
+                if value:sub(1, 1) == "{" then
+                    local state = {depth = 0, quote = nil, escape = false}
+                    toml_bracket_scan(state, value)
+                    if state.depth > 0 then
+                        local pieces = {value}
+                        local closed = false
+                        while not closed and index <= #lines do
+                            local piece = clean(lines[index])
+                            index = index + 1
+                            toml_bracket_scan(state, " ")
+                            toml_bracket_scan(state, piece)
+                            pieces[#pieces + 1] = piece
+                            closed = state.depth <= 0
+                        end
+                        -- If the file ended inside the value, there is no entry.
+                        value = closed and table.concat(pieces, " ") or nil
                     end
-                    value = value .. " " .. clean(lines[index])
-                    index = index + 1
                 end
                 local crate_name = value and cargo_path_dependency_name(line:sub(1, equals - 1), value)
                 if crate_name then names[#names + 1] = crate_name end
             elseif equals and kind == "sub" then
-                -- Step 4: only the two bare, lower-case keys matter; first
-                -- wins. `version`, `features`, `optional` ... are ignored.
+                -- Step 4: only the keys `path` and `package` matter, bare or
+                -- quoted (`"path" = ...` is the same key); first wins.
+                -- `version`, `features`, `optional` ... are ignored, and so
+                -- is `Path`: TOML keys are case-sensitive.
                 local field_value = toml_single_string(line:sub(equals + 1))
                 if field_value then
-                    local field_key = trim_spaces_and_tabs(line:sub(1, equals - 1))
+                    local field_key = toml_key_segment(line:sub(1, equals - 1))
                     if field_key == "path" and not sub_path then
                         sub_path = field_value
                     elseif field_key == "package" and not sub_package then
@@ -1191,6 +1291,17 @@ function Resolver.resolve_dependencies(packages)
         if parser then
             local known_names = known_names_by_scope[dependency_scope(pkg.language)] or {}
             local deps = parser(pkg, known_names)
+            -- Step 5 of the Rust contract: a Cargo candidate resolving to
+            -- the crate itself (by directory alias or [package] name) is
+            -- rejected, neither dropped nor drawn.
+            if parser == parse_rust_deps then
+                for _, dep_name in ipairs(deps) do
+                    if dep_name == pkg.name then
+                        error(DependencySelfEdgeError.new(
+                            pkg, repository_relative_manifest(pkg.path .. "/Cargo.toml")), 0)
+                    end
+                end
+            end
             for _, dep_name in ipairs(deps) do
                 -- Edge direction: dep → pkg means "dep must be built before pkg".
                 graph:add_edge(dep_name, pkg.name)

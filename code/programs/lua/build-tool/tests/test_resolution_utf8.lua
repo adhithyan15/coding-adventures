@@ -382,4 +382,85 @@ describe("Rust link-table resolution contract", function()
         end)
         assert.are.same(expected, graph_edges(graph))
     end)
+
+    it("reads a [package] name after 100,000 blank lines", function()
+        local root = new_temporary_root()
+        ensure_directory(root .. "/app")
+        ensure_directory(root .. "/late-dir")
+        write_file(root .. "/app/Cargo.toml",
+            "[dependencies]\nx = { package = \"late-crate\", path = \"../late-dir\" }\n")
+        write_file(root .. "/late-dir/Cargo.toml",
+            string.rep("\n", 100000) .. "[package]\nname = \"Late-Crate\"\n")
+        local started = os.clock()
+        local graph = Resolver.resolve_dependencies({
+            {name = "rust/app", path = root .. "/app", language = "rust"},
+            {name = "rust/late-dir", path = root .. "/late-dir", language = "rust"},
+        })
+        assert.is_true(os.clock() - started < 5)
+        assert.are.same({{"rust/late-dir", "rust/app"}}, graph_edges(graph))
+    end)
+
+    -- Step 5: a candidate resolving to the crate itself -- by its directory
+    -- alias, by its [package] name through a renamed sub-table, or from a
+    -- target table -- is DEPENDENCY_SELF_EDGE, neither dropped nor drawn.
+    local self_edges = {
+        {"directory alias", "[dependencies]\napp-dir = { path = \".\" }\n"},
+        {"cargo name via a renamed sub-table",
+            "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n"},
+        {"target table", "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n"},
+    }
+    for _, case in ipairs(self_edges) do
+        it("rejects a self-edge by " .. case[1], function()
+            local root = new_temporary_root()
+            local app = root .. "/code/packages/rust/app-dir"
+            ensure_directory(app)
+            write_file(app .. "/Cargo.toml", "[package]\nname = \"app-crate\"\n\n" .. case[2])
+            local ok, resolution_error = pcall(Resolver.resolve_dependencies, {
+                {name = "rust/app-dir", path = app, language = "rust"},
+            })
+            assert.is_false(ok)
+            assert.is_true(Resolver.is_dependency_self_edge_error(resolution_error))
+            assert.are.equal("DEPENDENCY_SELF_EDGE", resolution_error.code)
+            assert.are.equal("rust/app-dir", resolution_error.package)
+            assert.are.equal("code/packages/rust/app-dir/Cargo.toml", resolution_error.manifest)
+            assert.are.equal("rust/app-dir", resolution_error.dependency)
+            assert.are.equal(
+                "DEPENDENCY_SELF_EDGE: package=rust/app-dir " ..
+                    "manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir",
+                tostring(resolution_error)
+            )
+            assert.is_nil(tostring(resolution_error):find(root, 1, true))
+        end)
+    end
+
+    it("returns exit 2 for a Cargo self-edge from the real CLI", function()
+        local root = new_temporary_root()
+        local app = root .. "/code/packages/rust/app"
+        ensure_directory(app)
+        write_file(app .. "/BUILD", "echo build app\n")
+        write_file(app .. "/Cargo.toml",
+            "[package]\nname = \"app\"\n\n[dependencies]\napp = { path = \".\" }\n")
+        local stdout_path = root .. "/stdout.txt"
+        local stderr_path = root .. "/stderr.txt"
+        local parts = active_lua_command_parts(arg, is_windows)
+        parts[#parts + 1] = shell_quote("../build.lua", is_windows)
+        parts[#parts + 1] = "--root"
+        parts[#parts + 1] = shell_quote(root, is_windows)
+        parts[#parts + 1] = "--force"
+        parts[#parts + 1] = "--dry-run"
+        parts[#parts + 1] = "1>" .. shell_quote(stdout_path, is_windows)
+        parts[#parts + 1] = "2>" .. shell_quote(stderr_path, is_windows)
+
+        local success, _, exit_code = os.execute(shell_command(parts, is_windows))
+        if success then exit_code = 0 end
+
+        assert.are.equal(2, exit_code)
+        local stderr = read_file(stderr_path):gsub("\r\n", "\n")
+        assert.are.equal(
+            "DEPENDENCY_SELF_EDGE: package=rust/app " ..
+                "manifest=code/packages/rust/app/Cargo.toml dependency=rust/app\n",
+            stderr
+        )
+        assert.is_nil(stderr:find(root, 1, true))
+    end)
 end)

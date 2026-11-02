@@ -42,6 +42,23 @@
 
 ### Fixed
 
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: `toml_bracket_scan` carries the bracket depth,
+  the open string's delimiter and a pending escape from line to line (so a
+  string left open at a line end still continues after the joining space),
+  and the pieces are joined once with `table.concat`, instead of rescanning
+  the growing value for every appended line, which was quadratic. Quoted
+  field and sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`)
+  are read as the bare key, compared verbatim and case-sensitively, per the
+  amended contract. A Cargo path entry that resolves to the crate itself is
+  now a `DependencySelfEdgeError` (`DEPENDENCY_SELF_EDGE`, repository-relative
+  manifest, `Resolver.is_dependency_self_edge_error`; `build.lua` exits 2)
+  instead of a silently drawn self-loop. `trim_spaces_and_tabs` is an index
+  scan: its `gsub("[ \t]+$", "")` took 12.6 s on a 40 KB interior run of
+  spaces. Tests: the 11 new one-shape cases (57, now with a row-count
+  assert), a 20,000-line continuation, a 100 KB run of spaces, 100,000 blank
+  lines before the `[package]` name, self-edges by alias, by name and from a
+  target table, and a real CLI exit-2 test.
 - Rust resolution now reads path dependencies from `[build-dependencies]`,
   `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
   tables, not just the top-level `[dependencies]`, and reads the

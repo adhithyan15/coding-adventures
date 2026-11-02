@@ -539,6 +539,75 @@ describe("Cargo link-table reader", function()
             "a = { path = \"../a\" }\n",
             {"a", "a"},
         },
+        {
+            "quoted inline path key",
+            "[dependencies]\n" ..
+            "a = { \"path\" = \"../a\" }\n",
+            {"a"},
+        },
+        {
+            "literal-quoted inline path key",
+            "[dependencies]\n" ..
+            "a = { 'path' = \"../a\" }\n",
+            {"a"},
+        },
+        {
+            "quoted inline package key renames",
+            "[dependencies]\n" ..
+            "x = { \"package\" = \"a\", path = \"../a\" }\n",
+            {"a"},
+        },
+        {
+            "quoted capitalised inline Path key",
+            "[dependencies]\n" ..
+            "a = { \"Path\" = \"../a\" }\n",
+            {},
+        },
+        {
+            "escaped inline path key is compared verbatim",
+            "[dependencies]\n" ..
+            "a = { \"pa\\u0074h\" = \"../a\" }\n",
+            {},
+        },
+        {
+            "dotted inline field key",
+            "[dependencies]\n" ..
+            "a = { path.x = \"../a\" }\n",
+            {},
+        },
+        {
+            "quoted sub-table path key",
+            "[dependencies.a]\n" ..
+            "\"path\" = \"../a\"\n",
+            {"a"},
+        },
+        {
+            "quoted sub-table package key",
+            "[dependencies.x]\n" ..
+            "'package' = \"a\"\n" ..
+            "path = \"../a\"\n",
+            {"a"},
+        },
+        {
+            "quoted capitalised sub-table Path key",
+            "[dependencies.a]\n" ..
+            "\"Path\" = \"../a\"\n",
+            {},
+        },
+        {
+            "open string continues across the join",
+            "[dependencies]\n" ..
+            "a = { path = \"../a\", x = \"q [\n" ..
+            "\" }\n",
+            {"a"},
+        },
+        {
+            "line-final backslash escapes the joining space",
+            "[dependencies]\n" ..
+            "a = { x = \"q\\\n" ..
+            "\", path = \"../a\" }\n",
+            {"a"},
+        },
     }
 
     for _, case in ipairs(cases) do
@@ -547,6 +616,34 @@ describe("Cargo link-table reader", function()
             assert.are.same(expected, Resolver.cargo_link_dependency_names(manifest))
         end)
     end
+
+    -- The table is the Go reference's, row for row: a row added there and
+    -- not here (or the reverse) must fail loudly.
+    it("has the Go reference's 57 rows", function()
+        assert.are.equal(57, #cases)
+    end)
+
+    -- Rescanning the whole joined value for every appended line is
+    -- quadratic: a 20,000-line continuation (about 500 KB) took tens of
+    -- seconds. Carrying the scanner state makes it one pass; the bound is
+    -- generous so a loaded CI machine cannot flake it.
+    it("joins a 20,000-line continuation in linear time", function()
+        local manifest = "[dependencies]\na = { path = \"../a\", features = [\n" ..
+            string.rep("  \"feature-name-padding\",\n", 20000) .. "] }\n"
+        local started = os.clock()
+        assert.are.same({"a"}, Resolver.cargo_link_dependency_names(manifest))
+        assert.is_true(os.clock() - started < 10)
+    end)
+
+    -- gsub("[ \t]+$", "") is retried from every byte of an interior run of
+    -- spaces: quadratic in a long run between two other bytes.
+    it("trims a line with a 100 KB interior run of spaces in linear time", function()
+        local line = "a" .. string.rep(" ", 100000) .. "b"
+        local started = os.clock()
+        assert.are.equal(line, Resolver.trim_spaces_and_tabs(" \t" .. line .. "\t "))
+        assert.are.same({}, Resolver.cargo_link_dependency_names("[dependencies]\n" .. line .. "\n"))
+        assert.is_true(os.clock() - started < 5)
+    end)
 
     it("ignores the raw UTF-8 byte-order mark bytes", function()
         assert.are.same({"a"}, Resolver.cargo_link_dependency_names(
