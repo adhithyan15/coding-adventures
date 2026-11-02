@@ -5,6 +5,9 @@ gate](task-app-local-data-operations-v1.md#automated-upgrade-and-recovery-gate)
 
 Implementation: `code/scripts/mosaic_release_state_gate.py` (standard library
 only), tested by `code/scripts/tests/test_mosaic_release_state_gate.py`.
+Payloads are launched through `code/scripts/mosaic-release-launch.sh` (macOS)
+and `code/scripts/mosaic-release-launch.ps1` (Windows); see
+[Launching a payload](#launching-a-payload).
 
 ## Why this exists
 
@@ -211,6 +214,115 @@ failure. It never evaluates fixture content as code.
    write invalid bytes, copy them to a probe, relaunch, `verify-quarantine`.
 4. Run `test_mosaic_release_state_gate.py` in that workflow and add
    `code/scripts/mosaic_release_state_gate.py` and its test to its `paths:`.
+
+## Launching a payload
+
+Step 3 launches what a user downloads: the archive the release lane just
+wrote, extracted to a fresh directory, never the build tree. Every launch
+unsets `MOSAIC_APP_LIBRARY` (so only the runtime inside the payload can load)
+and `MOSAIC_APP_STATE_PATH` (so the host resolves the path a user's machine
+would resolve). A launch passes only if the app is **still running** when its
+time is up. An app that exits early has crashed, or refused to start without
+its runtime, and the step fails with its log.
+
+One launcher per runner OS, shared by every app's release lane, so the rule
+above cannot drift between apps:
+
+| Runner | Launcher | Why this one |
+| --- | --- | --- |
+| Linux | `code/scripts/run-under-xvfb.sh timeout <N>s <exe>`, run from `/`; exit `124` required | Needs a virtual display. `timeout` killing a live app is the pass. |
+| macOS | `code/scripts/mosaic-release-launch.sh <N> <log> <exe-or-.app>` | macOS runners have no GNU `timeout`. |
+| Windows | `code/scripts/mosaic-release-launch.ps1 -ExePath <exe> -Seconds <N> -Label <name>` | A WinUI or Flutter GUI exe has no console. `Start-Process` with a hidden window is what TaskApp's WinUI gate proved on `windows-latest`. |
+
+`mosaic-release-launch.sh` runs the target from `/` with its output in
+`<log>`. It checks once a second that the process is still alive, then stops it
+with `TERM` (then `KILL` after 10 s) and prints the log. A target ending in
+`.app` is resolved through `Contents/Info.plist`'s `CFBundleExecutable`, which
+must be a bare file name.
+
+| Exit | Meaning |
+| --- | --- |
+| `0` | alive for the whole window, stopped, and the log has no `Mosaic Rust runtime unavailable` |
+| `1` | usage error, an unresolvable target, or a log reporting `Mosaic Rust runtime unavailable` |
+| `2` | the app exited before its time was up |
+
+The separate `2` lets a caller run crash diagnostics only for a crash, as
+TaskApp's SwiftUI gate does with `lldb`.
+
+`mosaic-release-launch.ps1` starts the exe with `Start-Process -WindowStyle
+Hidden -PassThru`, with its working directory set to the drive root. It checks
+`HasExited` once a second, throws (exit `1`) naming the exit code if the app
+quit early, and stops the app with `Stop-Process -Force` in a `finally`. It
+cannot read a GUI exe's output, so the runtime-unavailable report is checked
+the other way: Compose's `Main.kt` exits when the runtime does not load, which
+fails the liveness check.
+
+TaskApp's macOS and Windows gates and Engram's use these two scripts.
+`code/scripts/tests/test_mosaic_release_launch.py` pins their behaviour (the
+bash one against stub executables) and pins that both workflows call them.
+
+## Engram's release lane
+
+`release-engram.yml` gates every payload it builds whose host persists the
+envelope above, with fixture
+`code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json`. Each
+gate is one step that runs after the archive step and before the upload. That
+way a payload that fails is never uploaded, so the publish job's
+payload-set check fails too.
+
+The live path is where the shipped host really looks. The application id is
+the package name, `engram-app`. On Linux, `XDG_DATA_HOME` moves only the root,
+to a scratch directory. On macOS and Windows the gate uses the runner's real
+per-user directory, and clears the state and every quarantine name before and
+after.
+
+| Payload | Job (leg) | Launcher, window | Live state file |
+| --- | --- | --- | --- |
+| Compose, Linux | `build-compose` (linux) | xvfb + `timeout 15s`, `*/bin/engram_app` | `$XDG_DATA_HOME/engram-app/mosaic-state.v1.json` |
+| Compose, macOS | `build-compose` (macos) | `mosaic-release-launch.sh 15`, the `.app` | `~/Library/Application Support/engram-app/mosaic-state.v1.json` |
+| Compose, Windows | `build-compose` (windows) | `mosaic-release-launch.ps1 -Seconds 15`, `engram_app.exe` | `%LOCALAPPDATA%\engram-app\mosaic-state.v1.json` |
+| SwiftUI, macOS | `build-swiftui` | `mosaic-release-launch.sh 10`, the `.app` | `~/Library/Application Support/engram-app/mosaic-state.v1.json` |
+| Flutter, Linux | `build-flutter` (linux) | xvfb + `timeout 15s`, the one executable in the bundle root | `$XDG_DATA_HOME/engram-app/mosaic-state.v1.json` |
+| Flutter, macOS | `build-flutter` (macos) | `mosaic-release-launch.sh 15`, the `.app` | `~/Library/Containers/<CFBundleIdentifier>/Data/Library/Application Support/engram-app/mosaic-state.v1.json` when the app is sandboxed; otherwise as SwiftUI |
+| Flutter, Windows | `build-flutter` (windows) | `mosaic-release-launch.ps1 -Seconds 15`, the one `.exe` in the bundle root | `%LOCALAPPDATA%\engram-app\mosaic-state.v1.json` |
+| Qt, macOS | `build-qt` | `mosaic-release-launch.sh 10`, the `.app` | `~/Library/Application Support/Engram/engram-app/mosaic-state.v1.json` |
+
+Each runs both halves: `materialize` → launch → `verify`, then invalid bytes
+→ probe → relaunch → `verify-quarantine --app engram`. The recovery half also
+proves the host reads that path at all. A host that looks elsewhere leaves the
+v1 file untouched, which `verify` alone would accept, but then nothing is
+quarantined and `verify-quarantine` fails. So a wrong path in this table fails
+the step loudly rather than passing it.
+
+Three of these paths are not the obvious one:
+
+- **Flutter on macOS is sandboxed.** `flutter create` writes
+  `macos/Runner/Release.entitlements` with `com.apple.security.app-sandbox`,
+  and `build-native.sh` keeps it. A sandboxed process gets its container as
+  `HOME`, and the generated Flutter host roots its state at `HOME`. The gate
+  reads the bundle id from the extracted `Info.plist` and the entitlement from
+  `codesign -d --entitlements -`. If the app is sandboxed, the gate first
+  launches it once with no state, so that macOS creates the container. A
+  directory created by hand has no container metadata. The gate then seeds the
+  container.
+- **Qt appends the application name.** The generated Qt host roots its state
+  at `QStandardPaths::AppDataLocation`. On macOS that is `~/Library/Application
+  Support/<organization>/<application>`. Nothing sets an organization, and the
+  application name is the bundle's `CFBundleName`, `Engram`.
+- **Compose and Flutter on Windows** use `%LOCALAPPDATA%`, not `%APPDATA%`.
+
+### Gaps (not gated, by name)
+
+| Payload | What is missing | Why |
+| --- | --- | --- |
+| XAML, Windows (`build-xaml`, not published) | **upgrade half** | Engram's XAML build still ships a hand-written host (`host/xaml/MosaicHost.cs`, a `[host_assets]` override). It persists engram-capi's own snapshot JSON at `%USERPROFILE%\.engram\mosaic-snapshot.v1.json`, not the envelope this gate materializes. No XAML payload has ever been published, so there is no previous release's XAML state to upgrade from. This closes when XAML moves onto the standard runtime, or when a release publishes it and a fixture of that format is captured. |
+| XAML, Windows | (recovery half **is** gated) | `mosaic-release-launch.ps1` launches the archived publish output's apphost (the exe named by the root's `*.runtimeconfig.json`). `verify-quarantine` then runs against `%USERPROFILE%\.engram\mosaic-snapshot.v1.json`. The host copies the bad file to `.corrupt` and then saves the demo deck over it, so the live file differs from the probe, as the gate requires. The job is `continue-on-error`, so this step informs and does not block, like the rest of the job. |
+| Electron desktop, all three (`build-desktop`) | **both halves** | `host/electron/host.js` persists the same engram-capi format at `~/.engram/mosaic-snapshot.v1.json`, so the upgrade half needs a fixture captured in that format from v0.4.0's Electron build, and a gate mode that writes it. The recovery half would need its own launch work: the Linux AppImage needs FUSE or `--appimage-extract-and-run` and Chromium's sandbox settled, and the Windows portable exe unpacks itself and starts a second process, so the PID it returns is not the app's. |
+| Web (`build-web`) | both halves | The browser build persists to `localStorage`, not a file. The gate's file checks do not apply. |
+
+The XAML recovery gate runs on `windows-latest`, and none of the launches can
+run anywhere else. Their first real evidence is a run of this workflow, which
+runs on every pull request that touches it.
 
 ## TaskApp's legacy fixture
 
