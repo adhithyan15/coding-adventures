@@ -3,8 +3,9 @@
 ## 2026-11-01
 
 - Rewrote `resolution/rust-field-aware` for the corrected Cargo contract.
-  Seven edges now each prove one rule: an inline `package` rename, an inline
-  version-plus-path entry with a trailing comment, `[build-dependencies]`,
+  Eight edges now each prove one rule: an inline `package` rename, an inline
+  version-plus-path entry with a trailing comment, an inline entry whose
+  `features` array continues onto later lines (TOML 1.0), `[build-dependencies]`,
   `[target.'cfg(any(unix, windows))'.dependencies]` (dots, commas and
   parentheses inside the quoted cfg), a bare-triple
   `[target.x86_64-unknown-linux-gnu.build-dependencies]`, a
