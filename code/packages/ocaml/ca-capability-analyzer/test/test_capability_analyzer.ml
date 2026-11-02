@@ -478,9 +478,7 @@ let test_evaluate_nondeterminism () =
   let detections, banned =
     unwrap
       (analyze_source ~filename:"workers.ml" Implementation
-         "let () = Random.self_init ()
-let start f = Domain.spawn f
-")
+         "let () = Random.self_init ()\nlet start f = Domain.spawn f\n")
   in
   let empty = unwrap (parse_manifest pure_manifest) in
   let denied = evaluate ~dir:"." ~manifest:empty ~detections ~banned in

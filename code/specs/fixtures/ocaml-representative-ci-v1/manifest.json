@@ -124,7 +124,7 @@
     "code/packages/ocaml/graph": "83e2b6f93e2aeb03cc6ad513dfdbb2cde02be5637a776a93c6423cc5bbee8eb1",
     "code/packages/ocaml/directed-graph": "7112a53a488e8b58797c2a8618ae255cc6279f46e768132e6493912ea6793c06",
     "code/packages/ocaml/state-machine": "a0cbeb9713a9cd497306ddcb61de5dec646acbf2314c1ac9319cb898bafa6a3c",
-    "code/packages/ocaml/ca-capability-analyzer": "953587fefc1fb6a6fa2c714b86304d3b7d76bca237dcabaa955775ba3cb5efe8",
+    "code/packages/ocaml/ca-capability-analyzer": "00a375c99904152d8c1a534564d880a29174b0df9012407ae8cf7e5ec711e880",
     "code/specs/fixtures/ocaml-representative-downstream-v1": "9fca51a47cacd9dc92f41e117eb1282b182b707472d9ef8f4fe58b188b550a40"
   },
   "workflow_sha256": "f6167bf933ee2ca7809595594ce15ab087cdc77f6bb8ffbf3f42d4ed9bdbed34"
