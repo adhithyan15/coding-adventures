@@ -453,6 +453,19 @@ pub enum AotError {
         /// Arguments the call passes.
         got: usize,
     },
+    /// A direct `call` names a runtime symbol (`__twig_*`, `__gc_*`, or a
+    /// `__dyn_*` that no lowering pass generated) that is not a function of
+    /// the module. The backends would emit a plain call to the symbol and the
+    /// system linker would bind it to the runtime, so the module could call a
+    /// runtime helper with arguments of its own choosing — e.g.
+    /// `__twig_str_concat(a, b, max)` with a `max` above the module's string
+    /// ceiling (LANG83 PR5a security review).
+    RuntimeSymbolCall {
+        /// Function containing the call.
+        caller: String,
+        /// The runtime symbol it names.
+        callee: String,
+    },
 }
 
 impl std::fmt::Display for AotError {
@@ -469,6 +482,11 @@ impl std::fmt::Display for AotError {
             AotError::CallArityMismatch { caller, callee, expected, got } => write!(
                 f,
                 "'{caller}' calls '{callee}' with {got} argument(s); it declares {expected}"
+            ),
+            AotError::RuntimeSymbolCall { caller, callee } => write!(
+                f,
+                "'{caller}' calls the runtime symbol '{callee}' directly; runtime helpers are \
+                 reached only through the operations and builtins the compiler lowers"
             ),
             AotError::RefinementViolations(errs) => {
                 write!(f, "{} refinement violation(s):", errs.len())?;
@@ -1567,6 +1585,54 @@ fn check_no_aot_registers(module: &IIRModule) -> Result<(), AotError> {
     Ok(())
 }
 
+/// Refuse any direct `call` to a runtime symbol that is not a function of the
+/// module, before any native code is generated (LANG83 PR5a security review).
+///
+/// The backends lower `call f, args…` to a `call`/`bl` of the symbol `f`.
+/// When `f` is not a module function, the link step leaves the call to the
+/// system linker, which binds it to whatever defines `f`, the runtime
+/// included. [`check_program_function_names`] stops a module from *defining*
+/// a runtime name, but not from *calling* one, so without this check a module
+/// could reach any runtime helper with arguments of its own choosing:
+///
+/// ```text
+/// call __twig_str_concat, a, b, 9223372036854775807
+///   ⇒ the string ceiling the lowering passes as `max` is the program's
+/// call __gc_register_stackmap, …  /  call __twig_trap, 99
+///   ⇒ collector and runtime internals with forged arguments
+/// ```
+///
+/// Every runtime helper a program may use is reached through an operation or
+/// a `call_builtin` row the compiler lowers, which fixes its arguments (the
+/// string lowering supplies `max` itself). So the rule is the whole
+/// [`is_runtime_symbol`] namespace, not only the string helpers.
+///
+/// Where it runs: in the compile step, after `prepare_module_for_aot`, so it
+/// also sees what the lowering passes added. That is safe because no pass
+/// emits a direct call to a runtime symbol: the passes call only functions
+/// they add to the module (`__dyn_list_*`, `__dyn_call_closure`, the
+/// `__lisp_*` rules), which are module functions here, and
+/// `PASS_GENERATED_DYN_HELPERS` keeps those names out of `is_runtime_symbol`
+/// anyway. The frontends reserve all of these prefixes in source (Twig's
+/// `reserved_names`), so only hand-built or foreign IIR can trip it.
+///
+/// # Errors
+///
+/// [`AotError::RuntimeSymbolCall`] naming the caller and the symbol.
+fn check_no_direct_runtime_calls(module: &IIRModule) -> Result<(), AotError> {
+    let defined: std::collections::HashSet<&str> = module.functions.iter().map(|f| f.name.as_str()).collect();
+    for caller in &module.functions {
+        for instr in caller.instructions.iter().filter(|i| i.op == "call") {
+            if let Some(Operand::Var(callee)) = instr.srcs.first() {
+                if is_runtime_symbol(callee) && !defined.contains(callee.as_str()) {
+                    return Err(AotError::RuntimeSymbolCall { caller: caller.name.clone(), callee: callee.clone() });
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 /// Refuse any direct `call` whose argument count differs from the callee's
 /// declared parameter count, before any native code is generated.
 ///
@@ -1815,6 +1881,7 @@ fn compile_module_x86_64_to_text(
     abi: X86_64Abi,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<X86RelocRecord>), AotError> {
     check_program_function_names(module)?;
+    check_no_direct_runtime_calls(module)?;
     check_direct_call_arities(module)?;
     let global_slots = collect_global_slots(module);
 
@@ -4176,6 +4243,7 @@ fn compile_module_to_text_raw(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
     check_program_function_names(module)?;
+    check_no_direct_runtime_calls(module)?;
     check_direct_call_arities(module)?;
     // ── Collect global names (LANG39) ─────────────────────────────────────────
     let global_slots = collect_global_slots(module);
@@ -5384,44 +5452,160 @@ mod tests {
         assert_eq!((max.op.as_str(), &max.srcs), ("const", &vec![Operand::Int(16)]));
     }
 
+    /// `main` with literals `a`, `b`, a `their_max` const, then
+    /// `call_builtin <srcs…> -> c`, `str_len c`, `ret`.
+    fn concat_call_builtin(srcs: Vec<Operand>) -> IIRFunction {
+        IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+                IIRInstr::new("const", Some("their_max".into()), vec![Operand::Int(i64::MAX)], "i64"),
+                IIRInstr::new("call_builtin", Some("c".into()), srcs, "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        )
+    }
+
+    fn concat_srcs(extra: &[Operand]) -> Vec<Operand> {
+        let mut srcs = vec![Operand::Var("str_concat".into()), Operand::Var("a".into()), Operand::Var("b".into())];
+        srcs.extend_from_slice(extra);
+        srcs
+    }
+
+    /// The ceiling `call_builtin "str_concat" … -> c` received in `f`, after
+    /// checking the shape: the call stays a run-time call, its first three
+    /// operands are untouched, and its fourth is a register defined exactly
+    /// once, by a `const`, before the call.
+    fn ceiling_passed_to_c(f: &IIRFunction) -> i64 {
+        let at = f
+            .instructions
+            .iter()
+            .position(|i| i.op == "call_builtin" && i.dest.as_deref() == Some("c"))
+            .unwrap_or_else(|| panic!("the call stays a run-time call: {:?}", f.instructions));
+        let call = &f.instructions[at];
+        assert_eq!(call.srcs.len(), 4, "name, a, b, ceiling: {call:?}");
+        assert_eq!(&call.srcs[..3], &concat_srcs(&[])[..], "the name and both strings are unchanged");
+        let Operand::Var(max_var) = &call.srcs[3] else { panic!("the ceiling is a register: {call:?}") };
+        let defs: Vec<usize> = f
+            .instructions
+            .iter()
+            .enumerate()
+            .filter(|(_, i)| i.dest.as_deref() == Some(max_var.as_str()))
+            .map(|(k, _)| k)
+            .collect();
+        assert_eq!(defs.len(), 1, "{max_var} is defined exactly once: {:?}", f.instructions);
+        assert!(defs[0] < at, "{max_var} is defined before the call");
+        let def = &f.instructions[defs[0]];
+        assert_eq!(def.op, "const");
+        let [Operand::Int(max)] = def.srcs.as_slice() else { panic!("{def:?}") };
+        *max
+    }
+
     /// LANG83 PR5a: the hand-written runtime-call form `call_builtin
     /// "str_concat", a, b` gets the module's ceiling as its third argument
-    /// (before, it reached the 3-argument builtin with 2 and the backend
-    /// refused the function), and a ceiling a caller supplied is replaced
-    /// by the module's, never trusted. It is not folded: it still allocates.
+    /// (before, it reached the 3-argument builtin row with 2 and the backend
+    /// refused the function). A third operand a caller supplied, a register
+    /// or an immediate, is replaced by the module's ceiling and never
+    /// trusted. Any other arity passes through untouched, for the backend's
+    /// arity check to refuse. Not folded: it still allocates.
     #[test]
     fn a_call_builtin_str_concat_gets_the_module_ceiling() {
-        for caller_args in [vec![], vec![Operand::Var("their_max".into())]] {
-            let mut srcs = vec![
-                Operand::Var("str_concat".into()),
-                Operand::Var("a".into()),
-                Operand::Var("b".into()),
-            ];
-            srcs.extend(caller_args.clone());
-            let mut f = IIRFunction::new(
-                "main",
-                vec![],
-                "i64",
-                vec![
-                    IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
-                    IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
-                    IIRInstr::new("const", Some("their_max".into()), vec![Operand::Int(i64::MAX)], "i64"),
-                    IIRInstr::new("call_builtin", Some("c".into()), srcs, "str"),
-                    IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
-                    IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
-                ],
-            );
+        for extra in [vec![], vec![Operand::Var("their_max".into())], vec![Operand::Int(i64::MAX)]] {
+            let mut f = concat_call_builtin(concat_srcs(&extra));
             lower_string_literals_for_aot(&mut f, 16);
-            let call = f
-                .instructions
-                .iter()
-                .find(|i| i.op == "call_builtin" && i.dest.as_deref() == Some("c"))
-                .unwrap_or_else(|| panic!("the call stays a run-time call: {:?}", f.instructions));
-            assert_eq!(call.srcs.len(), 4, "name, a, b, ceiling: {call:?}");
-            let Operand::Var(max_var) = &call.srcs[3] else { panic!("{call:?}") };
-            assert_ne!(max_var, "their_max", "a caller's ceiling is never used");
-            let max = f.instructions.iter().find(|i| i.dest.as_deref() == Some(max_var.as_str())).expect("ceiling const");
-            assert_eq!(max.srcs, vec![Operand::Int(16)], "{caller_args:?}");
+            assert_eq!(ceiling_passed_to_c(&f), 16, "{extra:?}");
+        }
+        // One string operand, or more than three: untouched (no ceiling const
+        // is added, and the operands are as written).
+        for srcs in [
+            vec![Operand::Var("str_concat".into()), Operand::Var("a".into())],
+            concat_srcs(&[Operand::Int(1), Operand::Int(2)]),
+            concat_srcs(&[Operand::Int(1), Operand::Int(2), Operand::Int(3)]),
+        ] {
+            let mut f = concat_call_builtin(srcs.clone());
+            lower_string_literals_for_aot(&mut f, 16);
+            let call = f.instructions.iter().find(|i| i.dest.as_deref() == Some("c")).unwrap();
+            assert_eq!((call.op.as_str(), &call.srcs), ("call_builtin", &srcs), "passes through");
+            assert!(
+                f.instructions.iter().all(|i| !i.dest.as_deref().is_some_and(|d| d.starts_with("__aot_strmax"))),
+                "no ceiling is added for {srcs:?}"
+            );
+        }
+    }
+
+    /// The ceiling comes from the module through `prepare_module_for_aot`:
+    /// a lowered `str_max_bytes` is passed as is, and one above
+    /// `STR_MAX_BYTES` (malformed IR) is clamped by `str_ceiling()`.
+    #[test]
+    fn a_call_builtin_str_concat_gets_the_clamped_module_ceiling() {
+        for (set, want) in [
+            (Some(5), 5),
+            (None, i64::from(interpreter_ir::STR_MAX_BYTES)),
+            (Some(u32::MAX), i64::from(interpreter_ir::STR_MAX_BYTES)),
+        ] {
+            let mut module = IIRModule::new("m", "iir");
+            module.add_or_replace(concat_call_builtin(concat_srcs(&[Operand::Int(i64::MAX)])));
+            module.str_max_bytes = set;
+            prepare_module_for_aot(&mut module).unwrap();
+            assert_eq!(ceiling_passed_to_c(&module.functions[0]), want, "{set:?}");
+        }
+    }
+
+    /// LANG83 PR5a security review: a direct `call` of a runtime symbol is
+    /// refused on both native backends, so a module cannot reach
+    /// `__twig_str_concat` with a ceiling of its own (nor any other runtime
+    /// helper with forged arguments). Before the fix both compiled the call
+    /// and left it to the system linker.
+    #[test]
+    fn a_direct_call_of_a_runtime_symbol_is_refused_on_both_native_backends() {
+        let mut module = IIRModule::new("m", "iir");
+        module.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+                IIRInstr::new("const", Some("huge".into()), vec![Operand::Int(i64::MAX)], "i64"),
+                IIRInstr::new(
+                    "call",
+                    Some("c".into()),
+                    vec![
+                        Operand::Var("__twig_str_concat".into()),
+                        Operand::Var("a".into()),
+                        Operand::Var("a".into()),
+                        Operand::Var("huge".into()),
+                    ],
+                    "str",
+                ),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+            ],
+        ));
+        module.entry_point = Some("main".into());
+        let refused = |r: Result<(), AotError>, backend: &str| match r {
+            Err(AotError::RuntimeSymbolCall { caller, callee }) => {
+                assert_eq!((caller.as_str(), callee.as_str()), ("main", "__twig_str_concat"), "{backend}");
+            }
+            other => panic!("{backend}: expected RuntimeSymbolCall, got {other:?}"),
+        };
+        refused(compile_module_linux_x86_64_object(&module).map(drop), "x86-64 (SysV)");
+        refused(compile_module_windows_x86_64_object(&module).map(drop), "x86-64 (MsX64)");
+        refused(compile_module_to_arm64_bytes(&module).map(drop), "AArch64");
+        for symbol in ["__twig_trap", "__gc_register_stackmap", "__dyn_pair_first"] {
+            let mut m = module.clone();
+            for i in &mut m.functions[0].instructions {
+                if i.op == "call" {
+                    i.srcs[0] = Operand::Var(symbol.into());
+                }
+            }
+            assert!(
+                matches!(compile_module_linux_x86_64_object(&m), Err(AotError::RuntimeSymbolCall { .. })),
+                "{symbol}"
+            );
         }
     }
 
