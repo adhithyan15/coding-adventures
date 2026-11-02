@@ -1668,6 +1668,89 @@ impl FlatHeap {
         done
     }
 
+    /// **Re-mark from the current roots** before the sweep — the root half of a Dijkstra
+    /// (incremental-update) collector.
+    ///
+    /// [`Self::incremental_start`] snapshots the roots once, and the insertion barrier
+    /// ([`Self::write_barrier`]) shades only what the mutator stores into a **heap** object.
+    /// Stores into **roots** — a stack slot, a register, a program global — have no barrier.
+    /// So a white object the mutator moves out of the heap and into a root during the phase
+    /// (load it from a field, overwrite the field, keep it only in a local or a global) is
+    /// reachable but never shaded, and the sweep would free it:
+    ///
+    /// ```text
+    ///   start:   root → P (grey) → C (white)
+    ///   mutator: g = P.f ; P.f = 0          ; C now reachable only from the global g
+    ///   step:    P scanned (black), P.f is 0 ; C stays white
+    ///   finish:  C swept while g still names it   ← use-after-free
+    /// ```
+    ///
+    /// The standard fix for an insertion barrier is to re-scan the roots when marking is
+    /// otherwise done. Call this with the roots **as they are now** (`root_slots` / `regions`,
+    /// same meaning as for [`Self::incremental_start`]); it greys every white object they
+    /// reach and drains the worklist completely (this is the one unbounded step of the cycle,
+    /// proportional to what the mutator moved into roots, not to the heap). Objects allocated
+    /// during the phase are already black. The replacement root snapshot is kept for
+    /// introspection only.
+    ///
+    /// Must run **before any sweeping**: a stepped sweep that has started may already have
+    /// freed a block the rescan would reach. Panics if one has.
+    ///
+    /// # Safety
+    /// Same contract as [`Self::incremental_start`]: every `root_slots` address and every
+    /// `regions` span must be readable.
+    pub unsafe fn incremental_rescan_roots(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) {
+        assert!(self.mark_in_progress, "incremental_rescan_roots outside a mark phase");
+        assert!(
+            self.sweep_state.is_none(),
+            "incremental_rescan_roots after the sweep started: a swept block cannot be re-marked"
+        );
+        let mut work = core::mem::take(&mut self.mark_worklist);
+        for &slot in root_slots {
+            let word = ptr::read_unaligned(slot as *const usize);
+            self.mark_word(word, &mut work, false);
+        }
+        for &(base, len) in regions {
+            self.mark_region(base, len, &mut work, false);
+        }
+        while let Some(h) = work.pop() {
+            self.scan_payload(h, &mut work, false);
+        }
+        self.mark_worklist = work;
+        self.mark_roots = root_slots.to_vec();
+        self.mark_regions = regions.to_vec();
+    }
+
+    /// **Abandon** an in-progress incremental cycle without freeing anything: end the phase,
+    /// leave every block in place, and clear the marks. For a driver that reaches `finish`
+    /// but cannot enumerate the current roots (an untrustworthy stack): sweeping on the stale
+    /// start-of-cycle snapshot alone could free an object the mutator moved into a root, so
+    /// bias to leaking this cycle instead. Counts no collection. A no-op outside a phase.
+    pub fn incremental_abandon(&mut self) {
+        if !self.mark_in_progress {
+            return;
+        }
+        // A started stepped sweep has already freed only white (unreachable-at-the-time)
+        // blocks and re-threaded the list; the remaining blocks are simply kept.
+        let mut h = self.all;
+        while !h.is_null() {
+            // SAFETY: walking blocks this heap owns, ending at the null terminator.
+            unsafe {
+                (*h).marked = false;
+                h = (*h).next;
+            }
+        }
+        self.mark_in_progress = false;
+        self.mark_roots.clear();
+        self.mark_regions.clear();
+        self.mark_worklist.clear();
+        self.sweep_state = None;
+    }
+
     /// **Advance the sweep** by up to `budget` blocks (AOT00-T4 §4) — the sweep-phase analogue
     /// of [`Self::incremental_step`], so the *sweep* pause is bounded just like the mark. Frees
     /// each unreachable (white) block and ages each survivor, resuming from a persistent cursor
@@ -7615,6 +7698,48 @@ mod tests {
         let stats = unsafe { heap.incremental_finish() };
         assert_eq!(stats.freed, 1, "without the barrier, the stranded white C is swept");
         assert_eq!(heap.object_count(), 2, "only P and Q survive — C was lost");
+    }
+
+    /// **Root stores need the rescan.** The barrier covers heap stores only. Here the mutator
+    /// moves the white `C` out of the heap into a root (`P.field0 = 0`, `C` kept only in an
+    /// outside word) after the start snapshot: without a rescan the sweep frees `C`; with
+    /// [`FlatHeap::incremental_rescan_roots`] over the current root, `C` survives.
+    #[test]
+    fn incremental_rescan_keeps_an_object_moved_into_a_root() {
+        for rescan in [false, true] {
+            let (mut heap, p, c) = unsafe { incremental_barrier_setup() };
+            // The mutator's "global": a word outside the heap and outside the start snapshot.
+            let global: usize = c;
+            // Unlink C from the heap (a heap store of null — nothing to shade).
+            unsafe { *(p as *mut usize) = 0 };
+            while !unsafe { heap.incremental_step(8) } {}
+            if rescan {
+                unsafe {
+                    heap.incremental_rescan_roots(&[&global as *const usize as usize], &[])
+                };
+            }
+            let stats = unsafe { heap.incremental_finish() };
+            if rescan {
+                assert_eq!(stats.freed, 0, "the rescanned root keeps C");
+                assert_eq!(heap.kind_of(global), heap.kind_of(p), "C is still a live block");
+            } else {
+                assert_eq!(stats.freed, 1, "without the rescan the stranded C is swept");
+            }
+        }
+    }
+
+    /// `incremental_abandon` ends a phase without freeing anything, and a later full
+    /// collection works normally.
+    #[test]
+    fn incremental_abandon_frees_nothing() {
+        let (mut heap, _p, _c) = unsafe { incremental_barrier_setup() };
+        let before = heap.object_count();
+        heap.incremental_abandon();
+        assert!(!heap.incremental_in_progress());
+        assert_eq!(heap.object_count(), before, "nothing freed");
+        heap.incremental_abandon(); // no-op outside a phase
+        let stats = unsafe { heap.collect_mixed(&[], &[]) };
+        assert_eq!(stats.freed, before, "a later full collection still works");
     }
 
     /// The incremental half of the barrier is inert when no mark is in progress: a store

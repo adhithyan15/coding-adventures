@@ -2,6 +2,13 @@
 
 All notable changes to this crate are documented here.
 
+## Unreleased — review follow-ups to the global roots (#18785)
+
+- **`__gc_collect_incremental_finish` re-scans the roots.** It is now a frame-building trampoline like `start`, and so is its `__twig_gc_collect_incremental_finish` alias. It walks the stack again, adds the spilled registers and the registered global slots, and calls `FlatHeap::incremental_rescan_roots` before the sweep. The barrier covers only heap stores, and `global_store` and stack writes have none. So before this, an object the mutator moved into a root during the phase was swept while the root still named it. If the stack cannot be trusted at `finish`, the cycle is abandoned and nothing is freed. Test: `incremental_finish_rescans_roots_stored_during_the_phase` moves 64 children from a traced parent into registered globals mid-phase; without the re-scan all 64 were freed.
+- **`__gc_collect_roots` and `__gc_collect_region` root the registered globals**, as `gc_core.h` says every collection does: the former adds each slot's current word to the caller's roots, the latter passes the slots as precise roots beside the region. A null region now frees everything *except* what the globals reach. Test: `collect_roots_and_collect_region_root_the_globals`.
+- **New `pub const MAX_GLOBAL_ROOT_SLOTS`** (2²⁴), so a code generator can refuse a module with more globals than `__gc_register_global_roots` accepts.
+- Tests: a `ResetOnDrop` guard clears the global-root registry when a test that registered a block ends, even by a failed assertion, so no later test collects through a dangling registration.
+
 ## Unreleased — global roots: `__gc_register_global_roots` (#18765)
 
 - **New `__gc_register_global_roots(base, count)`**, plus `__gc_global_root_count()` and `__gc_global_roots_reset()`, in a new `global_roots` module. A native image registers its globals block (a data section no stack map names and no stack scan reaches) once at start-up; every collection entry then appends each registered slot's address to the precise root slots it hands the heap. So a global's object is marked by every collector and, under compaction, moved with the global rewritten in place — exactly how a stack-map slot is treated. Before this, an object only a global referred to was freed by a precise or conservative collection, and a compacting one left the global naming the freed from-space copy (twig-aot #18765).

@@ -203,23 +203,79 @@ local function valid_package_name(value)
     return segments >= 2
 end
 
+-- ASCII fast paths
+-- ================
+--
+-- Almost every repository path is plain ASCII, and the generated Unicode
+-- module normalizes and maps one scalar at a time in Lua. For ASCII those
+-- steps reduce to something provably simpler, so they can be skipped
+-- without changing a single result:
+--
+--   * NFC of an ASCII string is the string itself. No ASCII scalar
+--     decomposes, has a non-zero combining class, or composes with another.
+--   * Unicode case folding of an ASCII string maps exactly A..Z to a..z
+--     (CaseFolding.txt has no other entry below U+0080).
+--   * Full Unicode uppercasing of an ASCII string maps exactly a..z to A..Z
+--     (no ASCII letter has a multi-scalar SpecialCasing expansion).
+--
+-- The case mapping uses explicit byte classes and tables, never string.lower
+-- or string.upper: those follow the C locale, and a host that has called
+-- os.setlocale could map bytes the Unicode tables do not.
+local ASCII_LOWER, ASCII_UPPER = {}, {}
+for byte = 65, 90 do
+    ASCII_LOWER[string.char(byte)] = string.char(byte + 32)
+    ASCII_UPPER[string.char(byte + 32)] = string.char(byte)
+end
+
+local function is_ascii(value)
+    return not value:find("[\128-\255]")
+end
+
+local function full_uppercase(value)
+    if is_ascii(value) then return (value:gsub("[a-z]", ASCII_UPPER)) end
+    return Unicode.full_uppercase(value)
+end
+
 local function reserved(segment)
     local stem = segment:match("^([^.]+)") or segment
-    return RESERVED[Unicode.full_uppercase(stem)] == true
+    return RESERVED[full_uppercase(stem)] == true
+end
+
+local function nfc(value)
+    if is_ascii(value) then return value end
+    return Unicode.nfc(value)
+end
+
+local function casefold(value)
+    if is_ascii(value) then return (value:gsub("[A-Z]", ASCII_LOWER)) end
+    return Unicode.casefold(value)
+end
+
+-- A control scalar (below U+0020) is a single byte below 32 in UTF-8, and no
+-- byte of a multi-byte sequence is below 128. Every forbidden character is
+-- ASCII too. So one byte-class search over an already-validated UTF-8 string
+-- finds exactly the scalars the old per-scalar loop rejected. Each class is
+-- built once per forbidden set; every member is %-escaped so `]`, `^`, `-`
+-- and friends can never change the class's meaning.
+local REJECTED_BYTE_CLASS = {}
+
+local function rejected_byte_class(forbidden)
+    local class = REJECTED_BYTE_CLASS[forbidden]
+    if class == nil then
+        class = "[\0-\31" .. forbidden:gsub("%W", "%%%0") .. "]"
+        REJECTED_BYTE_CLASS[forbidden] = class
+    end
+    return class
 end
 
 local function valid_portable_prefix(value, forbidden)
     if not valid_utf8(value) or value == "" or scalar_length(value) > MAX_PATH_SCALARS
-        or Unicode.nfc(value) ~= value or value:sub(1, 1) == "/"
+        or nfc(value) ~= value or value:sub(1, 1) == "/"
         or value:match("^[A-Za-z]:") or value:find("\\", 1, true)
         or value:find("//", 1, true) then
         return false
     end
-    for _, scalar in utf8.codes(value) do
-        local character = utf8.char(scalar)
-        if scalar < 32 or forbidden:find(character, 1, true) then return false end
-    end
-    return true
+    return not value:find(rejected_byte_class(forbidden))
 end
 
 local function valid_path_segment(segment)
@@ -535,27 +591,42 @@ local function root_prefix(left, right)
     return true
 end
 
-local function root_less(left, right)
-    local shared = math.min(#left, #right)
-    for index = 1, shared do
-        local left_byte, right_byte = left:byte(index), right:byte(index)
-        if left_byte ~= right_byte then
-            -- Order the path separator before every segment byte.  Then an
-            -- ancestor and its descendants remain adjacent even when a valid
-            -- sibling such as "a!" would sort between "a" and "a/x" under
-            -- ordinary byte ordering.
-            if left_byte == 47 then return true end
-            if right_byte == 47 then return false end
-            return left_byte < right_byte
+-- The length of the longest common prefix of left and right, by binary search
+-- over prefix equality. Each probe compares two substrings in C, so a pair
+-- of paths sharing a 500-byte prefix costs about nine probes instead of 500
+-- Lua-level byte reads. Sorting 4096 such roots calls the comparator about
+-- 50,000 times, which is where this matters.
+local function common_prefix_length(left, right)
+    local low, high = 0, math.min(#left, #right)
+    while low < high do
+        local middle = (low + high + 1) // 2
+        if left:sub(1, middle) == right:sub(1, middle) then
+            low = middle
+        else
+            high = middle - 1
         end
     end
-    return #left < #right
+    return low
+end
+
+-- Byte order, except that the path separator sorts before every segment
+-- byte. Then an ancestor and its descendants remain adjacent even when a
+-- valid sibling such as "a!" would sort between "a" and "a/x" under ordinary
+-- byte ordering. The comparison stays byte-wise on purpose: Lua's string `<`
+-- goes through strcoll and would follow the host locale.
+local function root_less(left, right)
+    local shared = common_prefix_length(left, right)
+    if shared == #left or shared == #right then return #left < #right end
+    local left_byte, right_byte = left:byte(shared + 1), right:byte(shared + 1)
+    if left_byte == 47 then return true end
+    if right_byte == 47 then return false end
+    return left_byte < right_byte
 end
 
 local function validate_root_identities(packages)
     local identities = {}
     for _, package in ipairs(packages) do
-        identities[#identities + 1] = Unicode.casefold(Unicode.nfc(package.rel_path))
+        identities[#identities + 1] = casefold(nfc(package.rel_path))
     end
     table.sort(identities, root_less)
     for index = 2, #identities do
@@ -860,12 +931,14 @@ local function prefix_materialization_work(path, total)
     require_contract(path_work <= MAX_ROOT_CLASSIFICATION_WORK - total,
         "DIFF_MATCH_LIMIT_EXCEEDED")
     total = total + path_work
-    for position = 1, #path do
-        if path:byte(position) == 47 then
-            require_contract(position <= MAX_ROOT_CLASSIFICATION_WORK - total,
-                "DIFF_MATCH_LIMIT_EXCEEDED")
-            total = total + position
-        end
+    -- Visit each "/" in order with a plain find (done in C) rather than
+    -- reading every byte in Lua; the work charged per separator is unchanged.
+    local position = path:find("/", 1, true)
+    while position do
+        require_contract(position <= MAX_ROOT_CLASSIFICATION_WORK - total,
+            "DIFF_MATCH_LIMIT_EXCEEDED")
+        total = total + position
+        position = path:find("/", position + 1, true)
     end
     return total
 end

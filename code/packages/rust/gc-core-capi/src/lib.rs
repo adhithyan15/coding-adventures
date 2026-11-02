@@ -245,15 +245,24 @@ pub unsafe extern "C" fn __gc_write_barrier(parent: i64, child: i64) {
 /// `roots` must point to `count` readable `int64` words (or be null with
 /// `count <= 0`).  This is the standard C-array contract; the generated caller
 /// (or a test) upholds it.
+///
+/// The registered **global** slots ([`__gc_register_global_roots`]) are roots too, as for
+/// every collection: their current words are added to `roots` (this collection does not
+/// move anything, so reading the words is enough).
 #[no_mangle]
 pub unsafe extern "C" fn __gc_collect_roots(roots: *const i64, count: i64) -> i64 {
-    let root_words: Vec<usize> = if roots.is_null() || count <= 0 {
+    let mut root_words: Vec<usize> = if roots.is_null() || count <= 0 {
         Vec::new()
     } else {
         // SAFETY: caller guarantees `roots` covers `count` readable i64 words.
         let slice = std::slice::from_raw_parts(roots, count as usize);
         slice.iter().map(|&w| w as usize).collect()
     };
+    for slot in global_roots::slots() {
+        // SAFETY: a registered global slot stays readable while registered (the
+        // `__gc_register_global_roots` contract).
+        root_words.push(std::ptr::read_unaligned(slot as *const usize));
+    }
     with_heap(|h| h.collect(&root_words).freed as i64)
 }
 
@@ -270,14 +279,22 @@ pub unsafe extern "C" fn __gc_collect_roots(roots: *const i64, count: i64) -> i6
 ///
 /// `base` must point to `len` readable bytes (or be null with `len == 0`). The
 /// generated caller (or a test) upholds this.
+///
+/// The registered **global** slots ([`__gc_register_global_roots`]) are precise roots of
+/// this collection too, as of every other.
 #[no_mangle]
 pub unsafe extern "C" fn __gc_collect_region(base: *const u8, len: i64) -> i64 {
+    let globals = global_roots::slots();
     if base.is_null() || len <= 0 {
-        // No region → no roots → free everything (matches `collect(&[])`).
-        return with_heap(|h| h.collect(&[]).freed as i64);
+        // No region → only the global roots (with none registered, this frees everything,
+        // matching `collect(&[])`).
+        // SAFETY: registered global slots are readable while registered.
+        return with_heap(|h| unsafe { h.collect_mixed(&globals, &[]) }.freed as i64);
     }
-    // SAFETY: caller guarantees `[base, base+len)` is readable for `len` bytes.
-    with_heap(|h| unsafe { h.collect_region(base, len as usize) }.freed as i64)
+    // SAFETY: caller guarantees `[base, base+len)` is readable for `len` bytes; registered
+    // global slots are readable while registered.
+    let region = [(base, len as usize)];
+    with_heap(|h| unsafe { h.collect_mixed(&globals, &region) }.freed as i64)
 }
 
 /// Current live payload bytes.
@@ -510,6 +527,11 @@ pub unsafe extern "C" fn __gc_register_global_roots(base: *mut i64, count: i64) 
     // SAFETY: the caller's range contract is forwarded verbatim.
     global_roots::register(base, count)
 }
+
+/// The most slots one [`__gc_register_global_roots`] call accepts (2²⁴ words): a larger
+/// `count` is rejected (the call returns `0`). Public so a code generator can refuse,
+/// at compile time, a module with more globals than the runtime would root.
+pub const MAX_GLOBAL_ROOT_SLOTS: i64 = global_roots::MAX_GLOBAL_ROOT_SLOTS;
 
 /// Number of global root slots currently registered via
 /// [`__gc_register_global_roots`]. Introspection for diagnostics and tests.

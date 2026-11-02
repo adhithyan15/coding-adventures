@@ -56,7 +56,7 @@ channel so a growing file cannot force an unbounded allocation.
 
 `required_capabilities.json` is loaded only from the package root. An absent
 manifest is the Spec 13 zero-capability profile. A present manifest must be a
-schema-v1 object with the closed 19 category/action pairs. Unknown fields,
+schema-v1 object with the closed 25 category/action pairs. Unknown fields,
 missing fields, duplicate capabilities, invalid pairs, empty targets, short
 justifications, non-OCaml banned exceptions, and malformed JSON are errors.
 
@@ -108,8 +108,16 @@ supported opens:
 | `Unix.sleep`, `Unix.sleepf` | `time:sleep:*` |
 | `read_line`, `read_int`, `read_float`, or `input*` whose channel is `stdin`/`In_channel.stdin` | `stdin:read:*` |
 | `print_*`, `prerr_*`, `Printf.printf`, `Printf.eprintf`, `Format.printf`, `Format.eprintf`, or `output*` to `stdout`/`stderr` | `stdout:write:*` |
+| `Random.self_init`, `Random.State.make_self_init` | `rand:read:*` |
+| `Thread.create`, `Domain.spawn` | `thread:spawn:*` |
 | any OCaml `external` declaration | `ffi:call:*` |
 | `Dynlink.loadfile`, `Dynlink.loadfile_private` | `ffi:load:*` |
+
+OCaml 5's default `Random` state starts from a fixed seed, so `Random.int` and
+the other default-state draws are deterministic unless `Random.self_init` ran.
+They are therefore not capability uses on their own; `self_init` is.
+`Random.full_init` and `Random.State.make` take their seed from the caller and
+are pure computation.
 
 Matching is syntactic and deliberately conservative. When flags or targets
 cannot be resolved statically, the broad action-level capability is emitted.

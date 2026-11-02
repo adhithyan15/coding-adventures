@@ -659,13 +659,14 @@ int64_t __twig_alloc_bytes(int64_t n) {
  * corruption of the scalar array's contents, not harmless over-retention --
  * so unconditional application across every backend was reverted.
  *
- * The native backends (aarch64/x86_64) do NOT get this precise fix in this
- * round: the AOT specialiser collapses `array<T>` to `any` before native
- * codegen sees `alloc_array`, so the element type is genuinely unavailable
- * there, and they keep calling the plain `__twig_alloc_bytes` unconditionally
- * -- safe under compaction, but leaving the narrower, pre-existing
- * dangling-reference gap on those two backends as a tracked follow-up
- * (needs element-type plumbing through the specialiser). See
+ * The native backends (aarch64/x86_64) use it too since the #18785 follow-up.
+ * The AOT specialiser erases `array<T>` to `any` before native codegen sees
+ * `alloc_array`, so twig-aot picks the allocator while the element type is still
+ * in the IIR: an `alloc_array` of reference elements (`str` for BASIC `DIM A$(n)`,
+ * and the same set iir-to-llvm uses) becomes `alloc_ref_array`, which both native
+ * backends lower to this function. Before that, a string reachable only through
+ * such an array was freed by any collection while the array still held its handle.
+ * Scalar arrays keep `__twig_alloc_bytes`, for the compaction reason above. See
  * `AOT00-T7-array-reference-tracing.md` for the full writeup.
  */
 int64_t __twig_alloc_ref_array_bytes(int64_t n) {

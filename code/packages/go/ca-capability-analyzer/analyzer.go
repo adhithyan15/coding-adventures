@@ -157,6 +157,48 @@ func detectInFile(fset *token.FileSet, f *ast.File, filename string) []DetectedC
 	// Handles os.Stdout.Write, os.Stdin.Read, and fmt.Fprintf(os.Stdout, ...).
 	detected = append(detected, detectSpecialCalls(fset, f, filename, imports, commentsByLine)...)
 
+	// ── Phase 4: go statements ────────────────────────────────────────────
+	detected = append(detected, detectGoStatements(fset, f, filename, commentsByLine)...)
+
+	return detected
+}
+
+// detectGoStatements reports every go statement as thread:spawn:*.
+//
+// A goroutine is a concurrent unit of execution inside the process, which is
+// exactly what D21's thread:spawn names. A unit test can only replay a run if
+// it decides when each goroutine runs, so starting one is a capability use,
+// like reading the clock. The way to start a goroutine without a finding is
+// through the cage (cage.Spawn or a generated op.Thread.Spawn), whose own
+// go statement carries //nolint:cap.
+//
+//	go worker()          → thread:spawn:*
+//	go func() { ... }()  → thread:spawn:*
+//	go body() //nolint:cap  → exempt
+func detectGoStatements(
+	fset *token.FileSet,
+	f *ast.File,
+	filename string,
+	commentsByLine map[int][]*ast.CommentGroup,
+) []DetectedCapability {
+	var detected []DetectedCapability
+	ast.Inspect(f, func(n ast.Node) bool {
+		stmt, ok := n.(*ast.GoStmt)
+		if !ok {
+			return true
+		}
+		line := fset.Position(stmt.Pos()).Line
+		if isNolintLine(commentsByLine, line) {
+			return true
+		}
+		detected = append(detected, DetectedCapability{
+			File:       filename,
+			Line:       line,
+			Capability: "thread:spawn:*",
+			Evidence:   "go statement",
+		})
+		return true
+	})
 	return detected
 }
 
@@ -443,12 +485,39 @@ func activeImports(f *ast.File) map[string]string {
 				result[path] = spec.Name.Name
 			}
 		} else {
-			// Default: last segment of the import path.
-			parts := strings.Split(path, "/")
-			result[path] = parts[len(parts)-1]
+			result[path] = defaultImportName(path)
 		}
 	}
 	return result
+}
+
+// defaultImportName is the identifier an unaliased import binds: the last
+// segment of the path, except that a major-version suffix ("v2", "v3", ...)
+// is skipped, as Go modules do.
+//
+//	"os"           → "os"
+//	"net/http"     → "http"
+//	"math/rand/v2" → "rand"   (not "v2")
+func defaultImportName(path string) string {
+	parts := strings.Split(path, "/")
+	last := parts[len(parts)-1]
+	if len(parts) > 1 && isMajorVersionSuffix(last) {
+		return parts[len(parts)-2]
+	}
+	return last
+}
+
+// isMajorVersionSuffix reports whether segment is "v" followed by digits.
+func isMajorVersionSuffix(segment string) bool {
+	if len(segment) < 2 || segment[0] != 'v' {
+		return false
+	}
+	for _, r := range segment[1:] {
+		if r < '0' || r > '9' {
+			return false
+		}
+	}
+	return true
 }
 
 // buildCommentIndex returns a map from 1-based line number to the comment
