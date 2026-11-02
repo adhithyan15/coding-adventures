@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C157-samajhno",
+    "language": "marwadi",
+    "chapter": 157,
+    "sequence": 9730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62ef7b2b794b7711"
+  },
+  "findings": []
+}

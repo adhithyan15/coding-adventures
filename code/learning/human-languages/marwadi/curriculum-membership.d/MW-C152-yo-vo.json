@@ -1,0 +1,11 @@
+{
+  "id": "MW-C152-yo-vo",
+  "pathSegment": "MW-PATH-152-HE-THAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-152-HE-THAT",
+      "order": 1
+    }
+  ]
+}

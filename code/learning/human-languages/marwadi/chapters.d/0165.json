@@ -1,0 +1,18 @@
+{
+  "chapter": 165,
+  "title": "A Note About a Repair",
+  "label": "ch:mw-a2-a-note-about-a-repair",
+  "canDo": "I can read a neighbour's short note about a repair visit and decide when to be at home.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-R165-second-pass-the-whole-core",
+    "kind": "task",
+    "summary": "Complete MW-R165-second-pass-the-whole-core: read the repair note for when to be home, then sweep the whole A2 core once more.",
+    "assesses": [
+      "MW-LEX-C165-NOTE165-01",
+      "MW-SKILL-C165-READ-NOTE-01"
+    ]
+  }
+}

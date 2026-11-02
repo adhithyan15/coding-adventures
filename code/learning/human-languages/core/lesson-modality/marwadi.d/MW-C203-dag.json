@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C203-dag",
+    "language": "marwadi",
+    "chapter": 203,
+    "sequence": 13620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e180b6ea0283b402"
+  },
+  "findings": []
+}

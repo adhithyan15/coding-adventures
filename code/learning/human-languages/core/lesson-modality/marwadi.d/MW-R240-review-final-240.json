@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R240-review-final-240",
+    "language": "marwadi",
+    "chapter": 240,
+    "sequence": 16290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dec8478cb6a817fe"
+  },
+  "findings": []
+}

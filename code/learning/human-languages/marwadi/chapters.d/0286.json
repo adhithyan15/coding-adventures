@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Test Day",
+  "label": "ch:mw-test-day",
+  "canDo": "I can talk about a test, my class and my result.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C286-akno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can talk about a test, my class and my result.",
+    "assesses": [
+      "MW-LEX-C286-IMTIHAN286-03",
+      "MW-LEX-C286-IMTIHAN286-04",
+      "MW-LEX-C286-IMTIHAN286-05"
+    ]
+  }
+}

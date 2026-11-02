@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C210-chunno",
+    "language": "marwadi",
+    "chapter": 210,
+    "sequence": 14020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31c2e264cdba99a6"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:85a0d9a5ec9d9be0",
+  "lessonIds": [
+    "MW-C169-povno",
+    "MW-C169-belno",
+    "MW-C169-ukalno",
+    "MW-C169-talno",
+    "MW-C169-chakhno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch169.txt",
+  "json": "marwadi/narration/ch169.json",
+  "textHash": "fnv1a64:c3e8d5c22d0d5dda",
+  "jsonHash": "fnv1a64:0aab9f93055997ec",
+  "findings": []
+}

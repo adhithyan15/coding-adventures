@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:8eba38a4564920c8",
+  "lessonIds": [
+    "MW-C192-khatro",
+    "MW-C192-dhire",
+    "MW-C192-kharo",
+    "MW-C192-chhapno",
+    "MW-C192-sudharno"
+  ],
+  "tex": "marwadi/book/chapters/ch192-danger-on-the-road.tex"
+}

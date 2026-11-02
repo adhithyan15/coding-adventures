@@ -211,6 +211,29 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "def g():\n    __lambda_0 = 5\n    f = lambda: 1\n    return f() + __lambda_0\n\nprint(g())\n",
         "6",
     ),
+    // Two names the *frontend* invents must not coincide either (#18771).
+    // The assigned parameter `a__b` is copied into the temporary
+    // `__param_a__b_0`, and the method `b_0` of class `__param_a` is hoisted
+    // to the function `__param_a__b_0`: the same spelling.  Each generator
+    // skipped source names, and the method skipped other functions, but
+    // neither skipped the other's inventions.  The method's closure is built
+    // inside `f`, where the copy shadowed it, and JavaScript failed with
+    // `TypeError: __param_a__b_0 is not a function`.  2 + 40 = 42.
+    (
+        "py_param_copy_spelled_like_a_hoisted_method",
+        "def f(a__b):\n    a__b += 1\n    class __param_a:\n        def b_0(self):\n            return 40\n    return a__b + __param_a().b_0()\nprint(f(1))\n",
+        "42",
+    ),
+    // The other order: the hoisted method's name is invented *first* (the
+    // class is lowered at top level), and a later function's parameter copy
+    // must not take it.  `g`'s copy of `a__b` lives in `g` only, so this
+    // program never failed, but it pins that the two generators share one
+    // set of used names in both directions.  2 + 40 = 42.
+    (
+        "py_hoisted_method_then_param_copy",
+        "class __param_a:\n    def b_0(self):\n        return 40\ndef g(a__b):\n    a__b += 1\n    return a__b + __param_a().b_0()\nprint(g(1))\n",
+        "42",
+    ),
     // ── `pass` ────────────────────────────────────────────────────────
     (
         "py_pass_everywhere",
@@ -267,6 +290,28 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "py_variable_spelled_like_escaped_main",
         "def main():\n    return 1\n\ndef g():\n    __py_main = 5\n    return main() * 10 + __py_main\n\nprint(g())\n",
         "15",
+    ),
+];
+
+/// `(program, backend, why)`: cells that fail for a reason outside what
+/// this file tests, each tracked separately.  Such a cell must still
+/// *fail*: once its bug is fixed, the run test reports the entry as stale,
+/// so it cannot outlive the bug and hide a later regression.
+const KNOWN_GAPS: &[(&str, Target, &str)] = &[
+    // The #18771 programs need a class named `__param_a` (the parameter
+    // copies are `__param_<name>_<N>`, so only such a class can collide).
+    // The Ruby backend emits a class as `Object.const_set(:<name>, …)`,
+    // and a Ruby constant must start with an upper-case letter:
+    // `wrong constant name __param_a (NameError)`.
+    (
+        "py_param_copy_spelled_like_a_hoisted_method",
+        Target::Ruby,
+        "the Ruby backend cannot define a class whose name is not a Ruby constant",
+    ),
+    (
+        "py_hoisted_method_then_param_copy",
+        Target::Ruby,
+        "the Ruby backend cannot define a class whose name is not a Ruby constant",
     ),
 ];
 
@@ -335,6 +380,19 @@ fn programs_print_cpythons_output_on_every_backend() {
             assert_eq!(actual, *expected, "`{name}`: CPython prints {actual:?}");
         }
         for &target in Target::all() {
+            let gap = KNOWN_GAPS
+                .iter()
+                .find(|(program, t, _)| program == name && *t == target);
+            if let Some((_, _, why)) = gap {
+                match run_source_via(name, source, Frontend::Python, target) {
+                    RunOutcome::Ran(stdout) if stdout == *expected => wrong.push(format!(
+                        "`{name}` on {} now passes: remove its KNOWN_GAPS entry ({why})",
+                        target.tag()
+                    )),
+                    _ => eprintln!("known gap {name}/{}: {why}", target.tag()),
+                }
+                continue;
+            }
             match run_source_via(name, source, Frontend::Python, target) {
                 RunOutcome::Ran(stdout) => {
                     if stdout != *expected {

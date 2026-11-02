@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:0d3d23e8caf9a321",
+  "lessonIds": [
+    "MW-C210-parakhno",
+    "MW-C210-bhat",
+    "MW-C210-namuno",
+    "MW-C210-nakli",
+    "MW-C210-chunno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch210.txt",
+  "json": "marwadi/narration/ch210.json",
+  "textHash": "fnv1a64:3bf0869bb9a381cf",
+  "jsonHash": "fnv1a64:64a6047a5f46dc46",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-R159-went-home",
+  "pathSegment": "MW-PATH-159-WENT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-159-WENT",
+      "order": 2
+    }
+  ]
+}

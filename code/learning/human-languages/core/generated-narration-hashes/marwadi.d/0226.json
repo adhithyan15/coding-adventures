@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:6f00d7f5e7d0c9ec",
+  "lessonIds": [
+    "MW-C226-tibo",
+    "MW-C226-ucho",
+    "MW-C226-suno",
+    "MW-C226-thal",
+    "MW-C226-ujar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch226.txt",
+  "json": "marwadi/narration/ch226.json",
+  "textHash": "fnv1a64:2629ec16b8b5e26e",
+  "jsonHash": "fnv1a64:101e8e13df2d0e5e",
+  "findings": []
+}

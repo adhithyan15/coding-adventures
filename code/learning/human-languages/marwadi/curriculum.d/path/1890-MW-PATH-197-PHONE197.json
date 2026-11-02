@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-197-PHONE197",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "MW-EXT-197-PHONE197"
+  ],
+  "after": []
+}

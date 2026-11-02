@@ -1,0 +1,11 @@
+{
+  "id": "MW-C179-kutno",
+  "pathSegment": "MW-PATH-179-PISO179",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-179-PISO179",
+      "order": 1
+    }
+  ]
+}

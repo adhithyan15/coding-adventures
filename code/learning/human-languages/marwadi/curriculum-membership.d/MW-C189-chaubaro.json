@@ -1,0 +1,11 @@
+{
+  "id": "MW-C189-chaubaro",
+  "pathSegment": "MW-PATH-189-THANBHO189",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-189-THANBHO189",
+      "order": 4
+    }
+  ]
+}

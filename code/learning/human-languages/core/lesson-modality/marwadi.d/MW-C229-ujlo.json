@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C229-ujlo",
+    "language": "marwadi",
+    "chapter": 229,
+    "sequence": 15680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:411cc2e4d43fa1dd"
+  },
+  "findings": []
+}

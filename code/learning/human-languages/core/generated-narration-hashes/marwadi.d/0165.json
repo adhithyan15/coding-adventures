@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:2955407b433f2b4e",
+  "lessonIds": [
+    "MW-C165-mistri",
+    "MW-C165-repair-note",
+    "MW-R165-first-pass-plans-and-notices",
+    "MW-R165-second-pass-the-whole-core"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch165.txt",
+  "json": "marwadi/narration/ch165.json",
+  "textHash": "fnv1a64:a0a30b6c79d26ca0",
+  "jsonHash": "fnv1a64:d2877e7959252e03",
+  "findings": []
+}

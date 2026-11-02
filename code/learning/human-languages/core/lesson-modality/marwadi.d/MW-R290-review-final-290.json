@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R290-review-final-290",
+    "language": "marwadi",
+    "chapter": 290,
+    "sequence": 20290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c803ebc4b345e83"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:7b8d241542d3d162",
+  "lessonIds": [
+    "MW-C200-taraju",
+    "MW-C200-ser",
+    "MW-C200-kilo",
+    "MW-C200-pav",
+    "MW-C200-litar"
+  ],
+  "tex": "marwadi/book/chapters/ch200-scales-and-weights.tex"
+}

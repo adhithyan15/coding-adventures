@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:3883181cb79d1a86",
+  "lessonIds": [
+    "MW-C185-dhaniyo",
+    "MW-C185-rai",
+    "MW-C185-methi",
+    "MW-C185-hig",
+    "MW-C185-saumph"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch185.txt",
+  "json": "marwadi/narration/ch185.json",
+  "textHash": "fnv1a64:68e3e4d4f03a5f0f",
+  "jsonHash": "fnv1a64:eff1f01d78d614a1",
+  "findings": []
+}

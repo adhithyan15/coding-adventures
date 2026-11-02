@@ -1,0 +1,21 @@
+{
+  "chapter": 203,
+  "title": "How Far Is It?",
+  "label": "ch:mw-how-far-is-it",
+  "canDo": "I can say how far away a place is.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-R203-review-198-203",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say how far away a place is.",
+    "assesses": [
+      "MW-LEX-C203-STEPS203-01",
+      "MW-LEX-C203-STEPS203-02",
+      "MW-LEX-C203-STEPS203-03",
+      "MW-LEX-C203-STEPS203-04",
+      "MW-LEX-C203-STEPS203-05"
+    ]
+  }
+}

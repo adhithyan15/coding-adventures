@@ -1,0 +1,11 @@
+{
+  "id": "MW-C187-maliyo",
+  "pathSegment": "MW-PATH-187-KOTHO187",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-187-KOTHO187",
+      "order": 4
+    }
+  ]
+}

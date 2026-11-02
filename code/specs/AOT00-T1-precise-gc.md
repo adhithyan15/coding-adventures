@@ -117,6 +117,12 @@ The contract has three obligations, one per producer/consumer:
    frame by frame; for each frame look up the stack map keyed by its return address
    / safepoint id; read exactly those slots as the roots; trace object graphs using
    field maps; if moving, rewrite each traced location to the object's new address.
+   Roots that live **outside the stack** — a program's globals, in a data section
+   no frame walk reaches — are registered once at start-up as precise root slots
+   and read (and rewritten) by every collection alongside the frames'
+   (`__gc_register_global_roots`; see `AOT00-T1-stackmap-emission.md` §4.2,
+   #18765). A global is not covered by the conservative fallback below: no stack
+   region contains it, so an unregistered global is simply no root.
 3. **Mutator (generated code) — honor barriers & spills.** Between safepoints the
    generated code may hold references in registers the map doesn't mention; that is
    fine because **no collection happens between safepoints**. At each safepoint the

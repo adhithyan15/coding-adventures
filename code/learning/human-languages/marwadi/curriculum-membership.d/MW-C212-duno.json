@@ -1,0 +1,11 @@
+{
+  "id": "MW-C212-duno",
+  "pathSegment": "MW-PATH-212-AMOUNT212",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-212-AMOUNT212",
+      "order": 3
+    }
+  ]
+}

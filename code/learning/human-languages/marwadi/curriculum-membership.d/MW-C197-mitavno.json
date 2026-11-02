@@ -1,0 +1,11 @@
+{
+  "id": "MW-C197-mitavno",
+  "pathSegment": "MW-PATH-197-PHONE197",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-197-PHONE197",
+      "order": 4
+    }
+  ]
+}

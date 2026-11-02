@@ -582,12 +582,25 @@ int64_t __twig_str_eq(int64_t a, int64_t b) {
  * references — so it is allocated under a registered no-ref HeapKind (an empty
  * field map).  The collector therefore scans none of its bytes: a byte pattern
  * that merely looks like a pointer can never falsely pin another object
- * (precise tracing), and the block is a movable leaf.  Movability is safe under
- * the compacting collector by pin-when-unsure: a string reached only via a raw
- * `int64` handle in a non-reference slot is reached conservatively and is
- * PINNED (never moved, so the raw handle never dangles); a string reached via a
- * tagged heap-reference slot is moved and its slot fixed up.  Either way no
- * handle is left dangling.
+ * (precise tracing), and the block is a movable leaf.
+ *
+ * ROOTING (#18766).  A handle is only safe while some ROOT names the block, and
+ * the precise / compacting collectors find stack roots through the frame's
+ * STACK MAP — in a stack-mapped frame (every twig-aot function has one) the
+ * walker trusts the map and scans nothing else.  A raw `int64` handle in a slot
+ * the map does not name is therefore NOT reached conservatively and NOT pinned:
+ * it is invisible, the block is freed, and the handle dangles.  (An earlier
+ * version of this comment claimed such a handle was "reached conservatively and
+ * PINNED"; that is only true in a frame with no stack map, or under the
+ * allocation-triggered conservative collector.)  twig-aot therefore types every
+ * result of this function — the `alloc_bytes` op, and the `str_concat` /
+ * `str_slice` / `input_str` helpers built on it — and every copy of that result
+ * as a GC root in the CIR (`root_heap_word_copies` in twig-aot/src/lib.rs), so
+ * the slot is named, the block is marked, and a compacting collection moves it
+ * and rewrites the slot.  A derived pointer (`s + 8`) kept in a slot across a
+ * collection would still dangle after a move; the native lowering forms one only
+ * for `print_str`, immediately before passing it to __twig_print_string, which
+ * never allocates and so never collects.
  *
  * The kind is registered lazily on first use.  The runtime is single-threaded,
  * so the `static` init needs no synchronisation.  Negative or zero `n` returns

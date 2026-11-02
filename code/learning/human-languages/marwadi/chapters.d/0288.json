@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Hard Work",
+  "label": "ch:mw-hard-work",
+  "canDo": "I can say what work I do and how hard I work.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C288-majur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say what work I do and how hard I work.",
+    "assesses": [
+      "MW-LEX-C288-KAM288-03",
+      "MW-LEX-C288-KAM288-04",
+      "MW-LEX-C288-KAM288-05"
+    ]
+  }
+}

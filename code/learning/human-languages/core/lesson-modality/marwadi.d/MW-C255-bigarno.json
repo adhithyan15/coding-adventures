@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C255-bigarno",
+    "language": "marwadi",
+    "chapter": 255,
+    "sequence": 17730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f33e828cf4c608cc"
+  },
+  "findings": []
+}

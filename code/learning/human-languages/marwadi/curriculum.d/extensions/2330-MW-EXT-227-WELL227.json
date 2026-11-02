@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-227-WELL227",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the well, a thirsty camel and a dry year.",
+  "prerequisites": []
+}

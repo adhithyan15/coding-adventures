@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:3e3f6d70c9ebf2e8",
+  "lessonIds": [
+    "MW-C208-aspatal",
+    "MW-C208-tahsil",
+    "MW-C208-karkhano",
+    "MW-C208-adalat",
+    "MW-C208-khulno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch208.txt",
+  "json": "marwadi/narration/ch208.json",
+  "textHash": "fnv1a64:736cbda45cfd0bee",
+  "jsonHash": "fnv1a64:3d44f4eaa69f098c",
+  "findings": []
+}

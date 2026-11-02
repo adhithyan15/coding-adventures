@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:52aad6b65f9a0c31",
+  "lessonIds": [
+    "MW-C226-tibo",
+    "MW-C226-ucho",
+    "MW-C226-suno",
+    "MW-C226-thal",
+    "MW-C226-ujar"
+  ],
+  "tex": "marwadi/book/chapters/ch226-sand-hills.tex"
+}

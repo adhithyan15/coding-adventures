@@ -1,0 +1,11 @@
+{
+  "id": "MW-C266-madad",
+  "pathSegment": "MW-PATH-266-HAJAR266",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-266-HAJAR266",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C188-chhapro",
+    "language": "marwadi",
+    "chapter": 188,
+    "sequence": 12170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:499ff60aff26003c"
+  },
+  "findings": []
+}

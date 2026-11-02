@@ -1,0 +1,21 @@
+{
+  "chapter": 259,
+  "title": "My Husband's Family",
+  "label": "ch:mw-my-husband-s-family",
+  "canDo": "I can name my husband's parents, brother and sister.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-R259-review-254-259",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can name my husband's parents, brother and sister.",
+    "assesses": [
+      "MW-LEX-C259-SASU259-01",
+      "MW-LEX-C259-SASU259-02",
+      "MW-LEX-C259-SASU259-03",
+      "MW-LEX-C259-SASU259-04",
+      "MW-LEX-C259-SASU259-05"
+    ]
+  }
+}

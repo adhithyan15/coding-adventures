@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C261-dohito",
+    "language": "marwadi",
+    "chapter": 261,
+    "sequence": 18070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:674c3bd350f912c0"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C276-tali",
+  "pathSegment": "MW-PATH-276-BANSLI276",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-276-BANSLI276",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C190-rumal",
+  "pathSegment": "MW-PATH-190-DHOTI190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-190-DHOTI190",
+      "order": 3
+    }
+  ]
+}

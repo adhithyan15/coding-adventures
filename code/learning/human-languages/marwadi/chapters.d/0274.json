@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Help in Trouble",
+  "label": "ch:mw-help-in-trouble",
+  "canDo": "I can say that someone is in trouble and needs help.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-C274-bhikh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say that someone is in trouble and needs help.",
+    "assesses": [
+      "MW-LEX-C274-SAHARO274-03",
+      "MW-LEX-C274-SAHARO274-04",
+      "MW-LEX-C274-SAHARO274-05"
+    ]
+  }
+}

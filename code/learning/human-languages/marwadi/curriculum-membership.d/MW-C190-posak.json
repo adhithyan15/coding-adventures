@@ -1,0 +1,11 @@
+{
+  "id": "MW-C190-posak",
+  "pathSegment": "MW-PATH-190-DHOTI190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-190-DHOTI190",
+      "order": 2
+    }
+  ]
+}

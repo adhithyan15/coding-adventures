@@ -1,0 +1,11 @@
+{
+  "id": "MW-C218-savari",
+  "pathSegment": "MW-PATH-218-RAIL218",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-218-RAIL218",
+      "order": 1
+    }
+  ]
+}

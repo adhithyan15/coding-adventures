@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "The Priest, the Gardener and the Goldsmith",
+  "label": "ch:mw-the-priest-the-gardener-and-the-goldsmith",
+  "canDo": "I can say what the village's tradesmen do.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-C263-sunar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say what the village's tradesmen do.",
+    "assesses": [
+      "MW-LEX-C263-TELI263-03",
+      "MW-LEX-C263-TELI263-04",
+      "MW-LEX-C263-TELI263-05"
+    ]
+  }
+}

@@ -84,9 +84,13 @@ inline std::vector<std::uint8_t> ct_select_bytes(
         throw std::invalid_argument(
             "ct_select_bytes requires equal-length inputs");
     }
-    // mask = 0xFF when choice is true, else 0x00 — with no branch.
+    // mask = 0xFF when choice is true, else 0x00 — with no branch. A bool
+    // converts to exactly 0 or 1 as a *value* conversion, so no `?:` on the
+    // secret is needed (an earlier `choice ? 1u : 0u` was a source-level
+    // branch, which CT01 forbids). 0u - 1u wraps to all ones; the cast keeps
+    // the low byte.
     const std::uint8_t mask =
-        static_cast<std::uint8_t>(0u - static_cast<unsigned>(choice ? 1u : 0u));
+        static_cast<std::uint8_t>(0u - static_cast<unsigned>(choice));
     std::vector<std::uint8_t> out(a.size());
     for (std::size_t i = 0; i < a.size(); ++i) {
         // b ^ ((a ^ b) & mask): a when mask=0xFF, b when mask=0x00.

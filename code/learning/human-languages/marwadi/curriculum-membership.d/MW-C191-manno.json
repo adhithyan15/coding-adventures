@@ -1,0 +1,11 @@
+{
+  "id": "MW-C191-manno",
+  "pathSegment": "MW-PATH-191-NOTICE191",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-191-NOTICE191",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Tools and Machines",
+  "label": "ch:mw-tools-and-machines",
+  "canDo": "I can say what tools and machines I can use.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C289-chitarno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say what tools and machines I can use.",
+    "assesses": [
+      "MW-LEX-C289-MASIN289-03",
+      "MW-LEX-C289-MASIN289-04",
+      "MW-LEX-C289-MASIN289-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C245-achambho",
+  "pathSegment": "MW-PATH-245-TEDNO245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-245-TEDNO245",
+      "order": 3
+    }
+  ]
+}

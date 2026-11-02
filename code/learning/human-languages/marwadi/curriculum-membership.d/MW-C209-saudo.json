@@ -1,0 +1,11 @@
+{
+  "id": "MW-C209-saudo",
+  "pathSegment": "MW-PATH-209-SHOP209",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-209-SHOP209",
+      "order": 3
+    }
+  ]
+}

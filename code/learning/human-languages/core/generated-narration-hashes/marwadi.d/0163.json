@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:8e82f96cd6059959",
+  "lessonIds": [
+    "MW-C163-plan",
+    "MW-C163-sayad",
+    "MW-C163-pher",
+    "MW-W50-pha",
+    "MW-R163-plans"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch163.txt",
+  "json": "marwadi/narration/ch163.json",
+  "textHash": "fnv1a64:b0b327c5d2029106",
+  "jsonHash": "fnv1a64:0f2958c6e3949742",
+  "findings": []
+}

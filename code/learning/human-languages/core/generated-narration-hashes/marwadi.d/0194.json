@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:8e64db91e0cbdb29",
+  "lessonIds": [
+    "MW-C194-kamavno",
+    "MW-C194-kharchno",
+    "MW-C194-tankha",
+    "MW-C194-napho",
+    "MW-C194-udhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch194.txt",
+  "json": "marwadi/narration/ch194.json",
+  "textHash": "fnv1a64:1ad660fe616ab5e9",
+  "jsonHash": "fnv1a64:ccc0a65873c96494",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C206-algo",
+    "language": "marwadi",
+    "chapter": 206,
+    "sequence": 13810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a0d82200b025738"
+  },
+  "findings": []
+}

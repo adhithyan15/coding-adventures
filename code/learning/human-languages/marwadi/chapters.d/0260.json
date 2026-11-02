@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Married Into the Family",
+  "label": "ch:mw-married-into-the-family",
+  "canDo": "I can name the in-laws who married into my family.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-C260-salo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can name the in-laws who married into my family.",
+    "assesses": [
+      "MW-LEX-C260-BAHU260-03",
+      "MW-LEX-C260-BAHU260-04",
+      "MW-LEX-C260-BAHU260-05"
+    ]
+  }
+}

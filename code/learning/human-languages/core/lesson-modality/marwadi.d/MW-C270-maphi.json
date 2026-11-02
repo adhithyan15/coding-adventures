@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C270-maphi",
+    "language": "marwadi",
+    "chapter": 270,
+    "sequence": 19200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b6f0c8645efc6ce"
+  },
+  "findings": []
+}

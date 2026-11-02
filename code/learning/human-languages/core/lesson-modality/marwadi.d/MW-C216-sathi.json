@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C216-sathi",
+    "language": "marwadi",
+    "chapter": 216,
+    "sequence": 15010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab824222ec9e1e63"
+  },
+  "findings": []
+}

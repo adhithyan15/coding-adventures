@@ -1,0 +1,11 @@
+{
+  "language": "marwadi",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:34b76753d66f6a11",
+  "lessonIds": [
+    "MW-C159-gharai",
+    "MW-C159-gayo",
+    "MW-R159-went-home"
+  ],
+  "tex": "marwadi/book/chapters/ch159-went-home.tex"
+}

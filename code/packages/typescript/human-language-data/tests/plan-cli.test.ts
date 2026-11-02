@@ -223,7 +223,9 @@ describe("the plan CLI", () => {
     // pre-A1 -> A1: Marwadi attained pre-A1 (chapters 44-89), so the queue's
     // human-validation item for it moved up to the rung it is now working on.
     // A1 -> A2: chapters 90-149 took Marwadi to A1, and the item moved up again.
-    expect(out).toMatch(/human-validate 2 of 2 A2 full mock\(s\) for marwadi/);
+    // A2 -> B1: the A2 core and vocabulary, chapters 152-290, took Marwadi to
+    // A2, and the item moved up a third time.
+    expect(out).toMatch(/human-validate 2 of 2 B1 full mock\(s\) for marwadi/);
     // Marathi joins with an A1 inventory of its own, so this is the first
     // exam-point item on a track with no external syllabus behind it.
     expect(out).toMatch(/exam-point — marathi/);

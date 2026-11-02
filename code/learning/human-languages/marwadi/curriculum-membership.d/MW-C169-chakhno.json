@@ -1,0 +1,11 @@
+{
+  "id": "MW-C169-chakhno",
+  "pathSegment": "MW-PATH-169-ROTI169",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-169-ROTI169",
+      "order": 4
+    }
+  ]
+}

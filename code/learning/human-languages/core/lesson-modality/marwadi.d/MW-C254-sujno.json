@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C254-sujno",
+    "language": "marwadi",
+    "chapter": 254,
+    "sequence": 17690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf1b4cfb256d7d2a"
+  },
+  "findings": []
+}

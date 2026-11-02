@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Over the River",
+  "label": "ch:mw-over-the-river",
+  "canDo": "I can say I will cross the river, load the camel and climb on.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C217-thairno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say I will cross the river, load the camel and climb on.",
+    "assesses": [
+      "MW-LEX-C217-CROSS217-03",
+      "MW-LEX-C217-CROSS217-04",
+      "MW-LEX-C217-CROSS217-05"
+    ]
+  }
+}

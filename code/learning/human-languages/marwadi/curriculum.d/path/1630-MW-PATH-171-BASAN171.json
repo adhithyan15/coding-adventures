@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-171-BASAN171",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-171-BASAN171"
+  ],
+  "after": []
+}

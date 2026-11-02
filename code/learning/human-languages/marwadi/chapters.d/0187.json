@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Rooms and Corners",
+  "label": "ch:mw-rooms-and-corners",
+  "canDo": "I can name the rooms and corners of a house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C187-maliyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can name the rooms and corners of a house.",
+    "assesses": [
+      "MW-LEX-C187-KOTHO187-03",
+      "MW-LEX-C187-KOTHO187-04",
+      "MW-LEX-C187-KOTHO187-05"
+    ]
+  }
+}

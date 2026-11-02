@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-167-KAM167",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-167-KAM167"
+  ],
+  "after": []
+}

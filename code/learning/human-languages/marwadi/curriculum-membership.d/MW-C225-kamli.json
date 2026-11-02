@@ -1,0 +1,11 @@
+{
+  "id": "MW-C225-kamli",
+  "pathSegment": "MW-PATH-225-PACK225",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-225-PACK225",
+      "order": 4
+    }
+  ]
+}

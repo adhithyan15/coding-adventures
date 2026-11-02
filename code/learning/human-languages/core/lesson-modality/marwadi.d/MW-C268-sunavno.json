@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C268-sunavno",
+    "language": "marwadi",
+    "chapter": 268,
+    "sequence": 19110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cf5cc1c04902def"
+  },
+  "findings": []
+}

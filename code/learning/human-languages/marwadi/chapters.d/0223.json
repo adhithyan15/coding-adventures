@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Off to the Fair",
+  "label": "ch:mw-off-to-the-fair",
+  "canDo": "I can say I will go to the fair, ride the swings and hear the drum.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C223-tamaso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say I will go to the fair, ride the swings and hear the drum.",
+    "assesses": [
+      "MW-LEX-C223-FAIR223-03",
+      "MW-LEX-C223-FAIR223-04",
+      "MW-LEX-C223-FAIR223-05"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-163-PLAN",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say a plan with its day, say perhaps and again, and write the letter फ from फेर.",
+  "prerequisites": [
+    "MW-EXT-162-FUTURE"
+  ]
+}

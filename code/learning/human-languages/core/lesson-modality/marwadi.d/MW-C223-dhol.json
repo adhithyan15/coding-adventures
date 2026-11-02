@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C223-dhol",
+    "language": "marwadi",
+    "chapter": 223,
+    "sequence": 15380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:201d0748be31d698"
+  },
+  "findings": []
+}

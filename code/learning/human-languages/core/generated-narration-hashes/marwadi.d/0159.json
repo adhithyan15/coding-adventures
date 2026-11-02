@@ -1,0 +1,17 @@
+{
+  "language": "marwadi",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:ab93e4ec7cb4aabb",
+  "lessonIds": [
+    "MW-C159-gharai",
+    "MW-C159-gayo",
+    "MW-R159-went-home"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch159.txt",
+  "json": "marwadi/narration/ch159.json",
+  "textHash": "fnv1a64:5d0685bb1fa8df7b",
+  "jsonHash": "fnv1a64:6aa934b182d3c0e2",
+  "findings": []
+}

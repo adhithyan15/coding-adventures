@@ -1,0 +1,11 @@
+{
+  "id": "MW-C201-saray",
+  "pathSegment": "MW-PATH-201-TOWN201",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-201-TOWN201",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R160-came-and-got-up",
+    "language": "marwadi",
+    "chapter": 160,
+    "sequence": 9870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:826b1ac2a184ea68"
+  },
+  "findings": []
+}

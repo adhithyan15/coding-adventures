@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:e2bc4b0ba73b55cb",
+  "lessonIds": [
+    "MW-C284-basto",
+    "MW-C284-pati",
+    "MW-C284-syahi",
+    "MW-C284-davat",
+    "MW-C284-bhanno",
+    "MW-R284-review-279-284"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch284.txt",
+  "json": "marwadi/narration/ch284.json",
+  "textHash": "fnv1a64:32ca11ee77b7a798",
+  "jsonHash": "fnv1a64:1965751e46a32edf",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:618d6b5e20f6d3cd",
+  "lessonIds": [
+    "MW-C204-ghumno",
+    "MW-C204-bhir",
+    "MW-C204-maidan",
+    "MW-C204-kinaro",
+    "MW-C204-nakso"
+  ],
+  "tex": "marwadi/book/chapters/ch204-out-and-about.tex"
+}

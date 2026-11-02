@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 188,
+  "title": "Around the Courtyard",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8d464498018271a0",
+  "lessons": [
+    {
+      "id": "MW-C188-phul",
+      "sequence": 12130,
+      "title": "फूल (phūl) — a flower",
+      "headword": "फूल",
+      "romanization": "phūl",
+      "gloss": "a flower",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36cd845af51e76bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a corner, then the Marwadi for a loft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फूल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फूल — phūl — \"a flower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ये फूल लाल है। ye phūl lāl hai. This flower is red."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फूल (phūl) is inherited from Sanskrit phulla, \"blown (of a flower)\"; CDIAL lists Old Marwari phūla (CDIAL 9092)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ye phūl lāl hai. — This flower is red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ye phūl lāl hai.* — This flower is red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a corner, then the Marwadi for a loft, then say phūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a corner, then the Marwadi for a loft, then say *phūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फूल (phūl) mean? (\"A flower\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C188-phul-type",
+              "prompt": "Say the Marwadi for 'a flower'.",
+              "assesses": [
+                "MW-LEX-C188-PHUL188-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फूल",
+                "phūl"
+              ],
+              "feedback": {
+                "correct": "Right: फूल (phūl) is 'a flower'.",
+                "incorrect": "'a flower' is फूल (phūl)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C188-phal",
+      "sequence": 12140,
+      "title": "फळ (phaḷ) — a fruit",
+      "headword": "फळ",
+      "romanization": "phaḷ",
+      "gloss": "a fruit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2be9543900f309c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a loft, then the Marwadi for a flower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फळ — phaḷ — \"a fruit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ये फळ मीठो है। ye phaḷ mīṭho hai. This fruit is sweet."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फळ (phaḷ) is inherited from Sanskrit phala, \"fruit\"; CDIAL lists Gujarati phaḷ and Hindi phal (CDIAL 9051). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ye phaḷ mīṭho hai. — This fruit is sweet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ye phaḷ mīṭho hai.* — This fruit is sweet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a loft, then the Marwadi for a flower, then say phaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a loft, then the Marwadi for a flower, then say *phaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फळ (phaḷ) mean? (\"A fruit\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C188-phal-type",
+              "prompt": "Say the Marwadi for 'a fruit'.",
+              "assesses": [
+                "MW-LEX-C188-PHUL188-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फळ",
+                "phaḷ"
+              ],
+              "feedback": {
+                "correct": "Right: फळ (phaḷ) is 'a fruit'.",
+                "incorrect": "'a fruit' is फळ (phaḷ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C188-nim",
+      "sequence": 12150,
+      "title": "नीम (nīm) — a neem tree",
+      "headword": "नीम",
+      "romanization": "nīm",
+      "gloss": "a neem tree",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c570f874593e16e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a flower, then the Marwadi for a fruit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नीम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नीम — nīm — \"a neem tree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो नीम घणो बड़ो है। mhāro nīm ghaṇo baṛo hai. My neem tree is very big."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नीम (nīm) is inherited from Sanskrit nimba, \"the neem tree\"; CDIAL lists Hindi nīm (CDIAL 7245). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro nīm ghaṇo baṛo hai. — My neem tree is very big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro nīm ghaṇo baṛo hai.* — My neem tree is very big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a flower, then the Marwadi for a fruit, then say nīm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a flower, then the Marwadi for a fruit, then say *nīm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नीम (nīm) mean? (\"A neem tree\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C188-nim-type",
+              "prompt": "Say the Marwadi for 'a neem tree'.",
+              "assesses": [
+                "MW-LEX-C188-PHUL188-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नीम",
+                "nīm"
+              ],
+              "feedback": {
+                "correct": "Right: नीम (nīm) is 'a neem tree'.",
+                "incorrect": "'a neem tree' is नीम (nīm)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C188-jhupri",
+      "sequence": 12160,
+      "title": "झूंपड़ी (jhū̃pṛī) — a hut",
+      "headword": "झूंपड़ी",
+      "romanization": "jhū̃pṛī",
+      "gloss": "a hut",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68ab01b3ddc19265",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a fruit, then the Marwadi for a neem tree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झूंपड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झूंपड़ी — jhū̃pṛī — \"a hut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खेत मांय एक छोटी झूंपड़ी है। khet mā̃y ek chhoṭī jhū̃pṛī hai. There's a small hut in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झूंपड़ी (jhū̃pṛī) comes from a reconstructed jhuppa, \"a hut\"; CDIAL lists Gujarati jhũpṛī and Hindi jhopṛī (CDIAL 5403). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhū̃pṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhū̃pṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhū̃pṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhū̃pṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khet mā̃y ek chhoṭī jhū̃pṛī hai. — There's a small hut in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khet mā̃y ek chhoṭī jhū̃pṛī hai.* — There's a small hut in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a fruit, then the Marwadi for a neem tree, then say jhū̃pṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a fruit, then the Marwadi for a neem tree, then say *jhū̃pṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झूंपड़ी (jhū̃pṛī) mean? (\"A hut\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C188-jhupri-type",
+              "prompt": "Say the Marwadi for 'a hut'.",
+              "assesses": [
+                "MW-LEX-C188-PHUL188-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "झूंपड़ी",
+                "jhū̃pṛī"
+              ],
+              "feedback": {
+                "correct": "Right: झूंपड़ी (jhū̃pṛī) is 'a hut'.",
+                "incorrect": "'a hut' is झूंपड़ी (jhū̃pṛī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C188-chhapro",
+      "sequence": 12170,
+      "title": "छपरो (chhapro) — a thatched shelter",
+      "headword": "छपरो",
+      "romanization": "chhapro",
+      "gloss": "a thatched shelter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:499ff60aff26003c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a neem tree, then the Marwadi for a hut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छपरो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छपरो — chhapro — \"a thatched shelter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छपरो जूनो है। chhapro jūno hai. The thatched shelter is old."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छपरो (chhapro) is inherited from Sanskrit chattvara, \"a house, a bower\"; CDIAL lists Hindi chaprā, \"a sloping thatch, a hut\" (CDIAL 4976). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhapro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhapro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhapro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhapro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhapro jūno hai. — The thatched shelter is old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhapro jūno hai.* — The thatched shelter is old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a neem tree, then the Marwadi for a hut, then say chhapro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a neem tree, then the Marwadi for a hut, then say *chhapro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छपरो (chhapro) mean? (\"A thatched shelter\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C188-chhapro-type",
+              "prompt": "Say the Marwadi for 'a thatched shelter'.",
+              "assesses": [
+                "MW-LEX-C188-PHUL188-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "छपरो",
+                "chhapro"
+              ],
+              "feedback": {
+                "correct": "Right: छपरो (chhapro) is 'a thatched shelter'.",
+                "incorrect": "'a thatched shelter' is छपरो (chhapro)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

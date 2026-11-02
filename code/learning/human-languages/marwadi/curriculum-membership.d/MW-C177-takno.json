@@ -1,0 +1,11 @@
+{
+  "id": "MW-C177-takno",
+  "pathSegment": "MW-PATH-177-PHAD177",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-177-PHAD177",
+      "order": 2
+    }
+  ]
+}

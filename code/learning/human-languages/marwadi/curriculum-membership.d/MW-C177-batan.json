@@ -1,0 +1,11 @@
+{
+  "id": "MW-C177-batan",
+  "pathSegment": "MW-PATH-177-PHAD177",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-177-PHAD177",
+      "order": 1
+    }
+  ]
+}

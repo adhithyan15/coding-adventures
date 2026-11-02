@@ -1,0 +1,21 @@
+{
+  "chapter": 178,
+  "title": "Small Jobs",
+  "label": "ch:mw-small-jobs",
+  "canDo": "I can name small jobs around the house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-R178-review-173-178",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can name small jobs around the house.",
+    "assesses": [
+      "MW-LEX-C178-UNGH178-01",
+      "MW-LEX-C178-UNGH178-02",
+      "MW-LEX-C178-UNGH178-03",
+      "MW-LEX-C178-UNGH178-04",
+      "MW-LEX-C178-UNGH178-05"
+    ]
+  }
+}

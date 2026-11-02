@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-243-CHOR243",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "MW-EXT-243-CHOR243"
+  ],
+  "after": []
+}

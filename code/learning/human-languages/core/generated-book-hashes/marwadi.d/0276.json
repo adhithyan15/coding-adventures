@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:b18a319667448fa3",
+  "lessonIds": [
+    "MW-C276-basli",
+    "MW-C276-bajavno",
+    "MW-C276-sur",
+    "MW-C276-tali",
+    "MW-C276-gujno"
+  ],
+  "tex": "marwadi/book/chapters/ch276-flute-and-clapping.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C164-dairy-notice",
+  "pathSegment": "MW-PATH-164-NOTICE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-164-NOTICE",
+      "order": 3
+    }
+  ]
+}

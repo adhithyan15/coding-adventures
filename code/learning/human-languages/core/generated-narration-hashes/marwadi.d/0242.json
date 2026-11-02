@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:f15226b66a6271c1",
+  "lessonIds": [
+    "MW-C242-jalno",
+    "MW-C242-bujhno",
+    "MW-C242-phutno",
+    "MW-C242-thikro",
+    "MW-C242-dubno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch242.txt",
+  "json": "marwadi/narration/ch242.json",
+  "textHash": "fnv1a64:3f5db7520d9c1376",
+  "jsonHash": "fnv1a64:7ff64b1a428d2717",
+  "findings": []
+}

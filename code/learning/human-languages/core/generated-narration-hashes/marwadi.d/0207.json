@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:93cd37a2de757b0c",
+  "lessonIds": [
+    "MW-C207-bagicho",
+    "MW-C207-kund",
+    "MW-C207-nako",
+    "MW-C207-phatak",
+    "MW-C207-buraj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch207.txt",
+  "json": "marwadi/narration/ch207.json",
+  "textHash": "fnv1a64:974a1f63ab5682b2",
+  "jsonHash": "fnv1a64:2944428f1ffe4d5d",
+  "findings": []
+}

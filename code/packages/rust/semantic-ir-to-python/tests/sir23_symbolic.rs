@@ -298,7 +298,7 @@ fn depth_limit_guard_raises_a_clean_error_instead_of_crashing() {
     };
     let pythonpath = symbolic_pythonpath();
     let file = std::env::temp_dir()
-        .join(format!("sir_py_symbolic_depth_{}.py", std::process::id()));
+        .join(format!("sir_py_symbolic_depth_{}.py", unique_suffix()));
     std::fs::write(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
@@ -380,7 +380,7 @@ fn deep_rule_rhs_reports_depth_limit_error_not_a_crash_even_with_a_shallow_targe
     };
     let pythonpath = symbolic_pythonpath();
     let file = std::env::temp_dir()
-        .join(format!("sir_py_symbolic_rule_depth_{}.py", std::process::id()));
+        .join(format!("sir_py_symbolic_rule_depth_{}.py", unique_suffix()));
     std::fs::write(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
@@ -424,4 +424,15 @@ fn rule_delayed_and_rule_currently_produce_identical_rewrites() {
         }
         None => eprintln!("skip: no python on PATH"),
     }
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

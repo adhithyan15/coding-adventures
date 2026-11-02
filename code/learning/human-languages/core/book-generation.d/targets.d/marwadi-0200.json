@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 200,
+  "output": "marwadi/book/chapters/ch200-scales-and-weights.tex",
+  "scriptSet": "marwadi-main"
+}

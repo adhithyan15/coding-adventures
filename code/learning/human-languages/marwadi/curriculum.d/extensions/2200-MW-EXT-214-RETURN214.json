@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-214-RETURN214",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take back what I bought and find my receipt.",
+  "prerequisites": []
+}

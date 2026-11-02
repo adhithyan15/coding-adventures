@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C220-taalno",
+    "language": "marwadi",
+    "chapter": 220,
+    "sequence": 15220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48c28dbb7fc8a1f0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Putting Things Away",
+  "label": "ch:mw-putting-things-away",
+  "canDo": "I can say where I put things and what I throw out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C180-chhabri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say where I put things and what I throw out.",
+    "assesses": [
+      "MW-LEX-C180-DHARO180-03",
+      "MW-LEX-C180-DHARO180-04",
+      "MW-LEX-C180-DHARO180-05"
+    ]
+  }
+}

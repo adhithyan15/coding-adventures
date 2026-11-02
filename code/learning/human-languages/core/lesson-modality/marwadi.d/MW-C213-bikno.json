@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C213-bikno",
+    "language": "marwadi",
+    "chapter": 213,
+    "sequence": 14170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61bd443035c28afa"
+  },
+  "findings": []
+}

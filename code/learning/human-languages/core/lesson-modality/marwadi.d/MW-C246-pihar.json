@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C246-pihar",
+    "language": "marwadi",
+    "chapter": 246,
+    "sequence": 17250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:514fa63dea13314c"
+  },
+  "findings": []
+}

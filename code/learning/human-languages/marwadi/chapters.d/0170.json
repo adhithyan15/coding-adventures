@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Wash Day",
+  "label": "ch:mw-wash-day",
+  "canDo": "I can say how I wash, wring and dry the clothes.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C170-sametno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say how I wash, wring and dry the clothes.",
+    "assesses": [
+      "MW-LEX-C170-DHOVO170-03",
+      "MW-LEX-C170-DHOVO170-04",
+      "MW-LEX-C170-DHOVO170-05"
+    ]
+  }
+}

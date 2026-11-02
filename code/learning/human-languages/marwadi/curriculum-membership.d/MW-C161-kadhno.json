@@ -1,0 +1,11 @@
+{
+  "id": "MW-C161-kadhno",
+  "pathSegment": "MW-PATH-161-DID",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-161-DID",
+      "order": 2
+    }
+  ]
+}

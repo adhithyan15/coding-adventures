@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:19b604bd25e94c61",
+  "lessonIds": [
+    "MW-C269-bahano",
+    "MW-C269-inkar",
+    "MW-C269-arno",
+    "MW-C269-jid",
+    "MW-C269-tokno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch269.txt",
+  "json": "marwadi/narration/ch269.json",
+  "textHash": "fnv1a64:cd9909637ae73563",
+  "jsonHash": "fnv1a64:3595a6572291fc3e",
+  "findings": []
+}

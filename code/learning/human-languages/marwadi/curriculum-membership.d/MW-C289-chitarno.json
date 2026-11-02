@@ -1,0 +1,11 @@
+{
+  "id": "MW-C289-chitarno",
+  "pathSegment": "MW-PATH-289-MASIN289",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-289-MASIN289",
+      "order": 4
+    }
+  ]
+}

@@ -723,6 +723,45 @@ a C function shares the C library's symbol namespace and a top-level Ruby
 > JavaScript's `Map` for the inlined runtime.  The full list of reserved
 > names is in each backend's `sanitize_ident` documentation.
 
+### Functions and variables are separate namespaces
+
+A SIR function is named only by `DirectCall`, `MakeClosure` and
+`Function::name`; a variable only by `VarRef`, `Assign`, the binding
+statements, parameters, captures, loop variables and `rescue` bindings.  The
+two namespaces are **separate**: one module may hold a function `f` and a
+variable `f`, and `DirectCall f` inside the variable's scope still calls the
+function.  A frontend may rely on this.  Ruby does:
+
+```ruby
+def f; 40; end
+f = 2
+puts f() + f      # 42
+```
+
+Most targets have one namespace, so every backend must keep the emitted
+spellings apart.  C and Ruby already do: every user function is
+`sir_fn_<name>`, which no variable can spell.  The JavaScript, TypeScript,
+Go, Rust and Python backends keep their functions' names (callers append
+code that calls a JavaScript or Python artifact's functions by name) and
+rename the function-scoped **variable** (local, parameter, capture, loop
+variable, `rescue` binding) instead, only when it collides: `var_ident(name)` is
+`<marker>l<sanitize_ident(name)>` when a module function is named `name`, and
+`sanitize_ident(name)` otherwise.  The `l` tag is distinct from the `v` and
+`e` tags `sanitize_ident` uses, so the renamed form equals no other emitted
+identifier, and it depends only on the name, so every binding and use of one
+variable agree.  A keyword argument's name is renamed with the parameter it
+names where the target matches the two by spelling (Python).  Module
+globals are not renamed: Go, Rust and Python keep them in a runtime store
+keyed by name, and JavaScript and TypeScript reach a function's handle
+through a `Global` reference.
+
+> **Revision (issue #18485).** Python, JavaScript, TypeScript, Go and Rust
+> emitted a variable under its own name next to a same-named function, so
+> the variable shadowed it: `TypeError: f is not a function` (JavaScript,
+> TypeScript), `'int' object is not callable` (Python), and a compile error
+> (Go, Rust).  `sir-conformance`'s `tests/local_shadows_function.rs` runs
+> the cases on every backend.
+
 ## Versioning
 
 The SIR is versioned at the spec level.  v0 (this spec) is the

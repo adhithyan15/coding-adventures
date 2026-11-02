@@ -487,10 +487,13 @@ fn end_to_end_gc_stress_live_bytes_differential() {
 /// when unreachable.
 ///
 /// ```text
-///   main() -> i64:
+///   mk() -> str:
 ///       a = str_const "AB"
 ///       b = str_const "CDE"
 ///       c = str_concat(a, b)     ; a FRESH gc-managed [len][bytes] block
+///       ret c
+///   main() -> i64:
+///       c = mk()
 ///       [gc_collect_precise]     ; optional
 ///       lb = gc_live_bytes()
 ///       ret lb
@@ -502,18 +505,24 @@ fn end_to_end_gc_stress_live_bytes_differential() {
 ///
 /// - **No collect:** `live_bytes == 34` — all three string blocks are counted by the collector,
 ///   proving strings go through gc-core at all (leaking `calloc` blocks would report `0`).
-/// - **Precise collect:** `live_bytes == 13` — the two literals `a`/`b`, **dead** after the
-///   concatenation, are reclaimed (34 → 13, freeing "AB" + "CDE" = 21 B), while the still-live
+/// - **Precise collect:** `live_bytes == 13` — the two literals `a`/`b`, **dead** once `mk`
+///   has returned, are reclaimed (34 → 13, freeing "AB" + "CDE" = 21 B), while the still-live
 ///   concatenation `c` is kept (its `str` handle is a reference the precise walk roots). So a
-///   Twig string is genuinely **reclaimed when it dies**, not leaked — the headline of the
-///   gc-core convergence, proven end-to-end through the native path.
+///   Twig string is genuinely **reclaimed when it dies**, not leaked.
+///
+/// The literals are built in `mk`, not in `main`, since #18766: a literal's buffer and its
+/// string variable are now stack-map roots (they used to be typed `i64` and named by no map,
+/// which let a precise collection free a *live* buffer). Rule R1 names every root slot at every
+/// safepoint, so a dead literal in `main`'s own frame would be retained until `main` returns;
+/// built in `mk`, it dies with `mk`'s frame. (The Linux twin of this test is
+/// `dead_string_buffers_are_reclaimed_once_their_frame_is_gone` in `gc_global_and_buffer_roots.rs`.)
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 #[test]
 fn end_to_end_gc_manages_runtime_strings() {
     use interpreter_ir::instr::{IIRInstr, Operand};
 
     fn build(collect: Option<&str>) -> IIRModule {
-        let mut body = vec![
+        let mk = vec![
             IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
             IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
             // The string ceiling `__twig_str_concat` takes since LANG83 PR5a.
@@ -530,7 +539,10 @@ fn end_to_end_gc_manages_runtime_strings() {
                 ],
                 "str",
             ),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "str"),
         ];
+        let mut body =
+            vec![IIRInstr::new("call", Some("c".into()), vec![Operand::Var("mk".into())], "str")];
         if let Some(collect) = collect {
             body.push(IIRInstr::new(
                 "call_builtin",
@@ -548,6 +560,7 @@ fn end_to_end_gc_manages_runtime_strings() {
         body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
 
         let mut m = IIRModule::new("gc_strings", "twig");
+        m.add_or_replace(IIRFunction::new("mk", vec![], "str", mk));
         m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
         m.entry_point = Some("main".into());
         m
@@ -574,9 +587,9 @@ fn end_to_end_gc_manages_runtime_strings() {
     );
     assert_eq!(
         after_precise, 13,
-        "a precise collect must reclaim the two literals dead after the concat (freeing 21 B) and \
-         keep the live concatenation \"ABCDE\"(13); a Twig string is reclaimed when it dies, not \
-         leaked. got live_bytes={after_precise}",
+        "a precise collect must reclaim the two literals dead after mk returned (freeing 21 B) \
+         and keep the live concatenation \"ABCDE\"(13); a Twig string is reclaimed when it dies, \
+         not leaked. got live_bytes={after_precise}",
     );
 }
 

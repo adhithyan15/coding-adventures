@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C190-rumal",
+    "language": "marwadi",
+    "chapter": 190,
+    "sequence": 12260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:edc11eeab12ece82"
+  },
+  "findings": []
+}

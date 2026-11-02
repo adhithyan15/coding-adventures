@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:494d6b82b8a5a436",
+  "lessonIds": [
+    "MW-C235-guvaro",
+    "MW-C235-charo",
+    "MW-C235-gobar",
+    "MW-C235-palno",
+    "MW-C235-bhuso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch235.txt",
+  "json": "marwadi/narration/ch235.json",
+  "textHash": "fnv1a64:aeba6481fd1287a4",
+  "jsonHash": "fnv1a64:4e9b876b180992b9",
+  "findings": []
+}

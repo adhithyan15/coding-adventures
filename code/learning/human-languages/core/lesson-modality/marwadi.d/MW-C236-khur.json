@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C236-khur",
+    "language": "marwadi",
+    "chapter": 236,
+    "sequence": 16070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fde84bad7a5d0567"
+  },
+  "findings": []
+}
