@@ -1,7 +1,7 @@
 # VER00 — The Verified Shipping Program
 
 **Status:** Draft umbrella spec. Nothing here is implemented. Child specs
-(VER01–VER19, listed in §11) are written one at a time before their code.
+(VER01–VER21, listed in §11) are written one at a time before their code.
 
 **Layer:** Repository-wide policy and tooling.
 
@@ -1065,11 +1065,12 @@ have one. What is missing is the audit:
      mutable git tag or from the external registry.
    - **A first release has no baseline**, so every capability in it counts as
      new and needs approval.
-   - **Approval comes from someone other than the author**, through a
-     protected review: a CODEOWNERS approval or a protected deployment
-     environment. It is recorded alongside the assurance report, not in
-     release notes the releaser writes. §9.1 ties each approval to the
-     exact change it approves.
+   - **Approval is a physical-presence signature** by a named approver
+     (§9.1, §9.5). It is not a CODEOWNERS click or an environment approval,
+     because an agent holding an account's API token can perform either.
+     It is recorded alongside the assurance report, not in release notes
+     the releaser writes. §9.1 ties each approval to the exact change it
+     approves.
 
 ### 8.2 The weakness registry — VER15
 
@@ -1225,22 +1226,34 @@ change or an exemption is bound to a hash of the package, the version, the
 exemption set. Re-tagging the same version on different code therefore
 invalidates the approval. It is invalid for any other
 release, and a merge-time CODEOWNERS approval of unrelated code does not
-count. "Someone other than the author" excludes everyone who authored a
-change to the shipped closure since the baseline, and also whoever triggers
-the release. The protected environment enforces it with "prevent self-review".
+count.
 
 **Approvers are named, and an approval is a human act.** The eligible
 approvers are listed in the gate's protected policy data, and admin bypass
 is disabled on every protected environment and branch the gate relies on.
-This repository has one human maintainer, and coding agents act under
-that maintainer's account, so "a different GitHub account" cannot be what
-separates approver from author. An approval is therefore a **signature
-made with a key that requires physical presence**, such as a hardware
-security key or a touch-confirmed SSH key. The protected policy data names
-those keys. An agent holding the account's API token cannot produce such a
-signature, so agent-authored changes always reach a human. If the project
-gains a second maintainer, "someone other than the author" then also means
-a different person.
+What separates approver from author is a **signature made with a key that
+requires physical presence**, not a GitHub account. Precisely:
+
+- The key is a FIDO2 security-key type, such as OpenSSH's `ed25519-sk`.
+  Software prompts like `ssh-add -c` do not count, because local
+  automation can click them.
+- The signature must have the **user-presence** flag set (a touch), and
+  must have the **user-verification** flag set (the key's PIN) where the
+  key was created with `verify-required`. A key created with
+  `no-touch-required` is rejected.
+- What is signed is exactly the approval hash defined above.
+- The protected policy data names the approved public keys.
+
+An agent holding an account's API token cannot produce such a signature.
+
+**Who may approve what.** While this repository has one human maintainer,
+that human is the approver for every change an agent authored, which, in
+practice, is most of them. "Someone other than the author" means *not an
+agent*: the agent identities of §9.4 can never approve. A change the human
+authored personally also needs that human's physical-presence signature at
+release. Requiring a *different* person would block every release, so that
+requirement applies only once the project has a second maintainer, who is
+then listed as an eligible approver.
 
 ### 9.2 One gate, every release path
 
@@ -1299,7 +1312,8 @@ analyzer or a BUILD file. So:
   cannot enforce this, because every job in a run, including untrusted
   ones, holds the token that writes it. So the rung-result cache is a
   **separate store**: the trusted job signs every entry, and the signature
-  is verified on every read. The cache key is a content hash
+  is verified on every read against the trusted job's full signer identity
+  (the publisher rule below). The cache key is a content hash
   of everything the result depends on: the whole shipped closure, every
   tool and solver binary, the Warrant files, the bindings, the assumption
   catalogue and the gate's policy data. Change any one, and the result is
@@ -1322,9 +1336,14 @@ analyzer or a BUILD file. So:
   - the repository and the protected release-tag ref, taken from the OIDC
     `repository` and `ref` claims;
   - the commit, which must be reachable from `main`;
-  - the package name, version and registry target.
+  - the package name, version and registry target;
+  - a hash of the gate's policy data at judging time, and an expiry.
 
-  A failing or unreviewed build never yields a signature.
+  A failing or unreviewed build never yields a signature. The publisher
+  rejects a verdict that has expired, or whose policy-data hash is no
+  longer current. A passing verdict for a release that was cancelled
+  therefore cannot be replayed weeks later, after the weakness registry has
+  grown.
 - **Only the current gate can publish.** A workflow that calls the gate is
   read from the release commit, so an old commit could call an old gate,
   and a workflow *name* says nothing about *which version* ran. So
@@ -1334,9 +1353,24 @@ analyzer or a BUILD file. So:
   The trigger's payload can be influenced by an attacker, so the publisher
   trusts nothing in it. It rejects triggers from any other repository or
   from forks. Before doing anything else, it verifies that:
-  - the verdict attestation came from the gate at exactly the SHA in the
-    protected configuration (the OIDC `job_workflow_sha` claim), at or
-    above the minimum gate version;
+  - the verdict attestation was signed by **exactly the gate's trusted
+    job**. A commit SHA alone does not identify that job. Every workflow
+    file at a commit shares the commit's SHA, and so does a branch anyone
+    with write access pushes at that commit. So the publisher checks the
+    full signer identity from the signing certificate, never from the
+    predicate:
+    - the OIDC issuer;
+    - `repository_id` and `repository_owner_id`;
+    - `job_workflow_ref`, which must be the exact path of the gate's
+      trusted-job workflow;
+    - `job_workflow_sha`, which must equal the pin in the protected
+      configuration and be at or above the minimum gate version;
+    - the source ref, which must be a protected release tag;
+    - the runner, which must be GitHub-hosted.
+
+    The same identity check applies to cache-entry signatures. No other
+    workflow may give a job that runs judged code the `id-token: write`
+    permission, and the trust-root rules (§9.4) enforce that;
   - the signed predicate is a **passing** verdict, for this repository, a
     protected release-tag ref, and a commit reachable from `main`;
   - the package name, version, registry target and artifact digest in the
@@ -1380,8 +1414,10 @@ analyzer or a BUILD file. So:
     runs as the same OS user as anything else in its job. It could replace
     the analyzer binary or rewrite a results file, and hiding an undeclared
     `net` capability is exactly what a malicious package would want. So
-    every static judgment runs in the trusted job, or in a fresh job where
-    no judged code has executed, over the artifact bytes and source:
+    every static judgment runs **inside the trusted job itself**, over the
+    artifact bytes and source it has digested. It does not run in a
+    separate job of the same run, because results handed between jobs of
+    one run can be swapped (see the trusted-job rule below):
     - closure and export resolution;
     - capability and subset analysis;
     - weakness exclusions;
@@ -1397,10 +1433,24 @@ analyzer or a BUILD file. So:
     operating-system sandbox, so it cannot provide this boundary. The test
     job receives only the built artifact, and no build hooks run alongside
     the harness.
-  - A separate trusted job, running only protected-ref code, receives the
-    artifact digest, its own static results and the dynamic results. It
-    re-derives the verdict, signs it only on a pass, writes the cache and
-    hands off to publishing. Cache writes and signatures happen only there.
+  - A separate trusted job, running only protected-ref code, re-derives the
+    verdict, signs it only on a pass, writes the cache and hands off to
+    publishing. Cache writes and signatures happen only there.
+  - **Nothing passed between jobs is trusted on arrival.** Every job in a
+    run holds a token that can replace that run's artifacts. A malicious
+    build hook can steal it, send it off the runner, and swap results or
+    bytes after the fact. So:
+    - The trusted job **computes the artifact digest itself**, from the
+      bytes it judges, and never takes a digest from the build job.
+    - Every other job reports the digest of the artifact it consumed, and
+      the trusted job rejects any mismatch. Static analysis and tests
+      therefore cannot have seen different bytes.
+    - Dynamic results are accepted only if the harness signed them with its
+      own job identity, from the host side outside the VM boundary, where
+      the code under test cannot reach the key.
+    - Building runs in a **separate workflow run** from judging, so the
+      build never holds the judging run's token at all. The build job has
+      no network egress beyond fetching what the lockfile pins.
   - **Runners are ephemeral.** Trusted jobs never share a self-hosted or
     persistent runner with untrusted jobs, or with jobs defined by the
     caller in the same run.
@@ -1423,6 +1473,112 @@ Haskell, Lua, Perl, C/C++) get a reporter as part of TF00's lanes. BUILD
 files that skip their tests when a tool is missing, as the Haskell ones do
 today, fail instead.
 
+Coverage counters are collected inside the process under test, so code
+under test could inflate them. Coverage is therefore a **quality floor,
+not a security property**, and the report says so. Where the platform
+allows, the harness collects coverage from outside the process, through
+the instrumentation hooks of §7.3, rather than trusting in-process
+counters. No security conclusion rests on a coverage number.
+
+### 9.4 The trust root, and the agents that work on it
+
+The gate is only as strong as whoever can change it. Most changes to this
+repository are made by coding agents. If those agents act with the
+maintainer's own GitHub account and token, they hold every power the
+maintainer holds. An agent could then:
+
+- add its own software key to the approver list;
+- lower a label floor or a coverage floor;
+- edit the gate or the publisher workflow while keeping its filename, so
+  registry trusted publishing still accepts it;
+- turn admin bypass back on, or relax a ruleset.
+
+It could then release, and the physical-presence requirement would be
+defeated without ever being met. So:
+
+1. **Agents use their own identity.** Coding agents act through a
+   separate bot account or GitHub App, never through the maintainer's
+   personal token. That identity has:
+   - no admin or Administration permission;
+   - no permission to create release tags;
+   - no permission to change rulesets, environments or repository
+     settings.
+2. **Trust-root paths need a human.** These paths are the trust root:
+   - the gate and publisher workflows;
+   - the gate's toolchain: the build tool, analyzers, Warrant compiler,
+     solver and kernel;
+   - all policy data: weakness registry, assumption catalogue, floors,
+     liveness, approver keys and the gate pin;
+   - CODEOWNERS itself.
+
+   A change to any of them needs a review the agent identity cannot
+   give: a ruleset that requires CODEOWNERS review by the human account,
+   with no bypass. The repository's auto-merge practice continues for
+   everything else and stops at this boundary.
+3. **Policy data is signed by a root key.** The gate's policy data,
+   including the approver key list and the pin, is signed with a
+   physical-presence **root key** held by the maintainer, and the gate
+   verifies that signature. Root keys are rotated in the style of TUF (The
+   Update Framework): a new root is signed by the old one. Even an
+   identity that slipped past rule 2 could not silently swap the approver
+   list, because it cannot produce the root signature.
+4. **No `id-token: write` outside the gate.** No workflow other than the
+   gate's trusted job and the publisher may request `id-token: write`. The
+   gate's static checks enforce this over `.github/workflows/`, and any
+   change to it is a trust-root change.
+
+### 9.5 Release approval with a hardware key — VER21
+
+GitHub has no "approve this release with your security key" button, and
+none is needed, because git can sign tags with a hardware-backed key.
+**The release tag is the approval.**
+
+1. The maintainer runs the repository's own `release-approve` tool. It
+   shows exactly what is being approved:
+   - the package and version;
+   - the closure content hash;
+   - new capabilities, with their justifications;
+   - exemptions, with their reasons;
+   - the weakness matrix;
+   - the proof labels.
+2. On confirmation, the tool creates the release tag. The tag's message
+   is the approval hash of §9.1 plus that summary, and the tag is signed
+   with the maintainer's FIDO2 key through git's SSH signing. The key asks
+   for a touch, and for its PIN when created with `verify-required`. **The
+   touch is the consent**: touch only when you started the signing
+   yourself.
+3. The gate verifies the tag signature itself (§9.1). It does not rely on
+   GitHub's "Verified" badge. It checks:
+   - the key is a named approver key;
+   - the user-presence and user-verification flags are set;
+   - the signed approval hash equals the one it computes for the bytes
+     about to ship.
+4. GitHub's own controls are a backstop, not the authority. Tag rulesets
+   restrict who may create release tags, and uploading the key as a
+   signing key gives the "Verified" badge.
+
+One touch per release covers every capability change and exemption in
+it. Nothing extra is needed per pull request.
+
+**Building the hardware-key stack in-house.** In keeping with B06, VER21
+builds the stack this needs in the repository, sharing it with the Vault
+work in VLT-PM51:
+
+| Piece | Status |
+|---|---|
+| Ed25519, SHA-256/512, HMAC, HKDF, canonical CBOR, base64, DER/ASN.1 | Exist, across many languages |
+| SSHSIG verification for `-sk` keys: OpenSSH's signed-data layout, with application hash, flags and counter | New. Pure code on top of Ed25519 and SHA-256, and the first thing the gate needs |
+| P-256 ECDSA | New. Most WebAuthn and passkey credentials use it, and it unblocks VLT-PM51's `WebAuthnPrfAuthenticator`, which currently always refuses |
+| USB HID transport: IOKit on macOS, hidraw on Linux, HID APIs on Windows | New. Replaces the `hidapi` dependency of `vault-webauthn-ctap2-hid` |
+| CTAPHID framing and CTAP2 commands (`MakeCredential`, `GetAssertion`) | New. Replaces `ctap-hid-fido2` |
+| `release-approve` CLI | New. Shows the approval, then requests the signature |
+| PIV and OpenPGP smart cards (CCID/APDU); Secure Enclave; TPM | Later |
+
+Until VER21 lands, the maintainer can sign with OpenSSH's own FIDO
+support. The stock OpenSSH that ships with macOS may lack it, in which case
+a separately installed OpenSSH is needed. The gate's verifier is the
+first in-house piece, because it is the one the gate needs.
+
 ## 10. Phasing
 
 Phases follow the "switch rungs on one at a time" decision. Each phase
@@ -1431,6 +1587,8 @@ ends with its rung **live and blocking**.
 | Phase | Delivers | Rung live | Child specs |
 |---|---|---|---|
 | 0 | Gate skeleton, assurance report, central coverage, fail-loud BUILDs, TF01 (TypeScript off Vitest and Jest) | E1 + coverage | VER01, TF01–TF02 |
+| 0b | Trust-root rules (agent identity, human review of trust-root paths, signed policy data); SSHSIG `-sk` verifier; signed-tag release approval | Approvals | VER01, VER21 |
+| — | P-256, in-house USB HID and CTAP2, `release-approve` CLI | — | VER21 |
 | 1 | Capability analyzers for all languages, capability diff, weakness registry v1 (exclusions) | E0 | VER08, VER15 |
 | 2 | Test tiers, purity and speed enforcement, simulated host, taxonomy extension, chaos injection | E1 purity, E2 | VER02, VER03, VER17 |
 | 2b | Checked allocator, checked C interpreter, native attack corpora | E0 for native code | VER16 |
@@ -1482,6 +1640,7 @@ S4 for S1.
 | VER18 | Hardware equivalence checking, synthesis translation validation, k-induction |
 | VER19 | SIR symbolic execution and bit-precise proofs |
 | VER20 | Resource-bound and timing proofs: cost semantics, ranking functions, constant time, gate-level WCET |
+| VER21 | Hardware-key release approval: SSHSIG `-sk` verification, P-256, in-house USB HID and CTAP2, `release-approve` (shared with VLT-PM51) |
 
 ## 12. Open decisions
 
