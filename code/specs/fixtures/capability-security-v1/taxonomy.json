@@ -9,7 +9,10 @@
     "ffi": ["call", "load"],
     "time": ["read", "sleep"],
     "stdin": ["read"],
-    "stdout": ["write"]
+    "stdout": ["write"],
+    "rand": ["read"],
+    "thread": ["spawn", "message"],
+    "ui": ["read", "write", "event"]
   },
   "all_actions": [
     "read",
@@ -25,8 +28,11 @@
     "signal",
     "call",
     "load",
-    "sleep"
+    "sleep",
+    "spawn",
+    "message",
+    "event"
   ],
-  "expected_valid_pair_count": 19,
-  "expected_invalid_cross_pair_count": 93
+  "expected_valid_pair_count": 25,
+  "expected_invalid_cross_pair_count": 162
 }

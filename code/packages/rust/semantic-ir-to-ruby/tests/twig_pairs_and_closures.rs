@@ -40,11 +40,12 @@ fn run(src: &str, tag: &str) -> Option<Output> {
         return None;
     }
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
-    let path = std::env::temp_dir().join(format!(
+    let scratch = sir_test_scratch::Scratch::new("sir_ruby_test_");
+    let path = scratch.path().join(format!(
         "sir_rb_twig_pc_{tag}_{}_{n}.rb",
         std::process::id()
     ));
-    std::fs::write(&path, &artifact.source).expect("write temp ruby");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp ruby");
     let out = Command::new("ruby")
         .arg(&path)
         .output()

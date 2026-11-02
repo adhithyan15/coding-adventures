@@ -24,7 +24,6 @@
 //! Gated on `go version`: a missing toolchain logs a skip rather than
 //! reddening the build (mirrors `compile_and_run_coll_methods.rs`).
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
@@ -285,7 +284,7 @@ fn send_zero_arg_method_raises_argument_error_not_native_panic() {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -293,11 +292,12 @@ fn go_available() -> bool {
 }
 
 fn run_go(source: &str, tag: &str) -> std::process::Output {
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_m6_{tag}_{nonce}.go"));
-    std::fs::write(&src_path, source).expect("write temp source");
-    let out = Command::new("go")
+    sir_test_scratch::write_new(&src_path, source).expect("write temp source");
+    let out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&src_path)
         .output()

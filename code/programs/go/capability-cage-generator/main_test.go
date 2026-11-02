@@ -13,8 +13,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"go/ast"
+	"go/format"
+	"go/importer"
+	"go/parser"
+	"go/token"
+	"go/types"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -85,7 +92,7 @@ func TestCapabilityTaxonomyMatchesSharedFixture(t *testing.T) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 func TestScopeableCategory_Scopeable(t *testing.T) {
-	cases := []string{"fs", "net", "proc", "env", "ffi"}
+	cases := []string{"fs", "net", "proc", "env", "ffi", "thread", "ui"}
 	for _, cat := range cases {
 		if !scopeableCategory(cat) {
 			t.Errorf("scopeableCategory(%q) = false, want true", cat)
@@ -94,7 +101,7 @@ func TestScopeableCategory_Scopeable(t *testing.T) {
 }
 
 func TestScopeableCategory_NonScopeable(t *testing.T) {
-	cases := []string{"time", "stdin", "stdout"}
+	cases := []string{"time", "stdin", "stdout", "rand"}
 	for _, cat := range cases {
 		if scopeableCategory(cat) {
 			t.Errorf("scopeableCategory(%q) = true, want false", cat)
@@ -743,6 +750,163 @@ func TestGenerateSource_RecognizedUnsupportedCapabilityRejected(t *testing.T) {
 	if src != "" || strings.Contains(src, "TODO") {
 		t.Errorf("unsupported pair must not emit source or TODO: %q", src)
 	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// D21 nondeterminism categories: rand, thread, ui
+// ─────────────────────────────────────────────────────────────────────────────
+
+// typecheckGenerated parses src and type-checks it against the standard
+// library, so a test proves the emitted file compiles, not merely that it
+// contains the expected text.
+func typecheckGenerated(t *testing.T, src string) {
+	t.Helper()
+	if _, err := format.Source([]byte(src)); err != nil {
+		t.Fatalf("generated source does not parse: %v\n%s", err, src)
+	}
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "gen_capabilities.go", src, 0)
+	if err != nil {
+		t.Fatalf("parse: %v", err)
+	}
+	conf := types.Config{Importer: importer.ForCompiler(fset, "source", nil)}
+	if _, err := conf.Check(file.Name.Name, fset, []*ast.File{file}, nil); err != nil {
+		t.Fatalf("generated source does not type-check: %v\n%s", err, src)
+	}
+}
+
+func TestGenerateSource_WithRandRead(t *testing.T) {
+	mf := &manifestJSON{
+		Package: "go/key-maker",
+		Capabilities: []capabilityJSON{
+			{Category: "rand", Action: "read", Target: "*"},
+		},
+	}
+	src, err := generateSource(filepath.Join(t.TempDir(), "required_capabilities.json"), mf)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !strings.Contains(src, "func (c *_RandCapabilities) Read(p []byte) (int, error)") {
+		t.Error("expected Read method on _RandCapabilities")
+	}
+	if !regexp.MustCompile(`\bRand\s+\*_RandCapabilities\b`).MatchString(src) {
+		t.Error("expected op.Rand field")
+	}
+	if !strings.Contains(src, `_cryptorand "crypto/rand"`) {
+		t.Error("expected aliased crypto/rand import")
+	}
+	typecheckGenerated(t, src)
+}
+
+func TestGenerateSource_WithThreadSpawnScopedToRole(t *testing.T) {
+	mf := &manifestJSON{
+		Package: "go/decoder",
+		Capabilities: []capabilityJSON{
+			{Category: "thread", Action: "spawn", Target: "decode-pool"},
+		},
+	}
+	src, err := generateSource(filepath.Join(t.TempDir(), "required_capabilities.json"), mf)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !strings.Contains(src, "func (c *_ThreadCapabilities) Spawn(role string, body func()) error") {
+		t.Error("expected Spawn method on _ThreadCapabilities")
+	}
+	if !strings.Contains(src, `if role != "decode-pool" {`) {
+		t.Error("expected a check that the role is the declared one")
+	}
+	if !strings.Contains(src, `category: "thread", action: "spawn", requested: role`) {
+		t.Error("expected a thread:spawn violation for an undeclared role")
+	}
+	typecheckGenerated(t, src)
+}
+
+func TestGenerateSource_WithThreadSpawnMultipleRoles(t *testing.T) {
+	mf := &manifestJSON{
+		Package: "go/server",
+		Capabilities: []capabilityJSON{
+			{Category: "thread", Action: "spawn", Target: "accept-loop"},
+			{Category: "thread", Action: "spawn", Target: "reaper"},
+			{Category: "rand", Action: "read", Target: "*"},
+		},
+	}
+	src, err := generateSource(filepath.Join(t.TempDir(), "required_capabilities.json"), mf)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	for _, role := range []string{"accept-loop", "reaper"} {
+		if !strings.Contains(src, fmt.Sprintf(`if role == %q {`, role)) {
+			t.Errorf("expected role %q in the allow list", role)
+		}
+	}
+	typecheckGenerated(t, src)
+}
+
+func TestGenerateSource_UnwrappableNondeterminismPairsFailClosed(t *testing.T) {
+	// Valid pairs with no generic Go method must fail generation: never an
+	// empty namespace, a TODO, or a method that performs them unchecked.
+	for _, pair := range [][2]string{
+		{"thread", "message"},
+		{"ui", "read"},
+		{"ui", "write"},
+		{"ui", "event"},
+	} {
+		mf := &manifestJSON{
+			Package: "go/widget",
+			Capabilities: []capabilityJSON{
+				{Category: pair[0], Action: pair[1], Target: "#editor"},
+			},
+		}
+		src, err := generateSource(filepath.Join(t.TempDir(), "required_capabilities.json"), mf)
+		if err == nil || !strings.Contains(err.Error(), "recognized but unsupported") {
+			t.Errorf("%s:%s: expected an unsupported-pair error, got %v", pair[0], pair[1], err)
+		}
+		if src != "" {
+			t.Errorf("%s:%s: unsupported pair emitted source", pair[0], pair[1])
+		}
+	}
+}
+
+func TestGenerateSource_NewCategoryCrossPairsRejected(t *testing.T) {
+	for _, pair := range [][2]string{
+		{"proc", "spawn"}, {"rand", "write"}, {"ui", "message"}, {"thread", "all"},
+	} {
+		mf := &manifestJSON{
+			Package:      "go/widget",
+			Capabilities: []capabilityJSON{{Category: pair[0], Action: pair[1], Target: "*"}},
+		}
+		_, err := generateSource(filepath.Join(t.TempDir(), "required_capabilities.json"), mf)
+		if err == nil || !strings.Contains(err.Error(), "invalid category/action pair") {
+			t.Errorf("%s:%s: expected an invalid-pair error, got %v", pair[0], pair[1], err)
+		}
+	}
+}
+
+func TestGenerateSource_ExistingCapabilitiesStillTypecheck(t *testing.T) {
+	// The import sort changed to honour aliases; every supported method,
+	// old and new, must still produce a file that compiles. env:read with an
+	// exact target is here on purpose: it used to emit `return nil, ...`
+	// from a method returning a string.
+	mf := &manifestJSON{
+		Package: "go/everything",
+		Capabilities: []capabilityJSON{
+			{Category: "fs", Action: "read", Target: "../../grammars/x.tokens"},
+			{Category: "fs", Action: "write", Target: "/tmp/out"},
+			{Category: "net", Action: "connect", Target: "example.com:443"},
+			{Category: "proc", Action: "exec", Target: "git"},
+			{Category: "env", Action: "read", Target: "HOME"},
+			{Category: "time", Action: "read", Target: "*"},
+			{Category: "stdin", Action: "read", Target: "*"},
+			{Category: "stdout", Action: "write", Target: "*"},
+			{Category: "rand", Action: "read", Target: "*"},
+			{Category: "thread", Action: "spawn", Target: "*"},
+		},
+	}
+	src, err := generateSource(filepath.Join(t.TempDir(), "required_capabilities.json"), mf)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	typecheckGenerated(t, src)
 }
 
 func TestGenerateSource_MultipleTargetsSingleReturn(t *testing.T) {

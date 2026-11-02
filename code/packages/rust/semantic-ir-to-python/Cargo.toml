@@ -8,5 +8,8 @@ description = "Semantic IR → self-contained Python 3 source code (SIR14). Task
 semantic-ir = { path = "../semantic-ir" }
 
 [dev-dependencies]
+# Private scratch directories and an isolated Go build cache for the
+# execution tests (see sir-test-scratch's README).
+sir-test-scratch = { path = "../sir-test-scratch" }
 twig-to-semantic-ir = { path = "../twig-to-semantic-ir" }
 ruby-to-semantic-ir = { path = "../ruby-to-semantic-ir" }

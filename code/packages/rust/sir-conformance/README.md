@@ -109,10 +109,19 @@ invented names never coincide (#18771).  Its `KNOWN_GAPS` table lists the
 Each listed cell must still fail: once its bug is fixed, the test reports the
 entry as stale.
 
-Every run writes its source and binary under a name ending in the process id
-and a process-wide counter, so tests running on parallel threads of one test
-binary never share a file (#18485).  The files are held by a `TempFile`
-guard, so every return path, skips included, deletes them.
+Every run writes its source and binary into a private scratch directory of
+its own (`sir-test-scratch`: random name, created atomically, mode `0700` on
+Unix, removed when the run ends), never into the shared system temp
+directory, and creates them with `create_new`.  The names inside still end in
+the process id and a process-wide counter (#18485), and the files are held by
+a `TempFile` guard, so every return path, skips included, deletes them.  Go
+runs use `sir_test_scratch::go_command()`, whose build cache lives under the
+cargo target directory, so a `go clean -cache` elsewhere cannot delete what a
+running `go run` is compiling against.
+
+`tests/local_shadows_function.rs` also covers SIR's other namespaces: a
+module global named like a function, a local named like a global, and Ruby
+constants named like methods (`F = 2; F() + F`).
 
 Adding a program is one `Program { name, frontend, source, expected }` entry
 in `tests/conformance.rs`. `frontend` defaults nothing — pick the `Frontend`

@@ -42,6 +42,7 @@
 //!   into a misleading "0 ms".
 
 use semantic_ir::Module;
+use sir_test_scratch::{write_new, Scratch};
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
@@ -193,22 +194,25 @@ fn normalise(s: &str) -> String {
     s.replace("\r\n", "\n").trim_end_matches('\n').to_string()
 }
 
-/// A temp path for one measurement's source or binary, unique to this call:
-/// `sir_bench_<program>_<target>_<pid>_<n><ext>`.  The process id keeps two
-/// processes apart and the atomic counter two calls in one process (parallel
-/// test threads share the process id) -- the same scheme as
-/// `sir-conformance`'s `temp_path` (#18485).
-fn temp_path(name: &str, target: Target, ext: &str) -> PathBuf {
+/// A path in `scratch` -- the measurement's private directory -- for its
+/// source or binary: `sir_bench_<program>_<target>_<pid>_<n><ext>`.
+///
+/// The directory is what keeps other processes out: it is created fresh,
+/// with a random name and mode `0700`, and removed with its contents when
+/// the measurement ends (see [`Scratch`]).  Names in the shared temp
+/// directory, unique only by process id and counter, could be created or
+/// symlinked by anything else on the host before the benchmark wrote them.
+/// The name stays unique within the process all the same -- the same scheme
+/// as `sir-conformance`'s `temp_path` (#18485).
+fn temp_path(scratch: &Scratch, name: &str, target: Target, ext: &str) -> PathBuf {
     static NEXT: AtomicU64 = AtomicU64::new(0);
     let n = NEXT.fetch_add(1, Ordering::Relaxed);
-    let mut p = std::env::temp_dir();
-    p.push(format!(
+    scratch.join(&format!(
         "sir_bench_{}_{}_{}_{n}{ext}",
         name,
         target.tag(),
         std::process::id()
-    ));
-    p
+    ))
 }
 
 /// A temp file deleted when the guard drops, so every early return of
@@ -388,14 +392,16 @@ pub fn measure(bench: &Bench, module: &Module, target: Target) -> Sample {
     };
     let emit = emit_start.elapsed();
 
-    let source_file = TempFile(temp_path(bench.name, target, &ext));
+    let scratch = Scratch::new("sir_bench_");
+    let source_file = TempFile(temp_path(&scratch, bench.name, target, &ext));
     let bin_file = TempFile(temp_path(
+        &scratch,
         bench.name,
         target,
         if cfg!(windows) { ".exe" } else { ".bin" },
     ));
     let (source_path, bin_path) = (&source_file.0, &bin_file.0);
-    if fs::write(source_path, &source).is_err() {
+    if write_new(source_path, &source).is_err() {
         return Sample::Failed(format!("could not write temp {ext}"));
     }
 

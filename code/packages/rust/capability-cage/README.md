@@ -8,8 +8,13 @@ See `code/specs/capability-cage-rust.md` for the full design and
 `code/specs/13-capability-security.md` for the cross-language
 taxonomy.
 
-The eight categories and 14-action union form exactly 19 valid pairs rather
-than two independently combinable enums. Manifest ingestion rejects unknown
+The eleven categories and 17-action union form exactly 25 valid pairs rather
+than two independently combinable enums. `rand`, `thread` and `ui` (with the
+actions `spawn`, `message` and `event`) are D21's nondeterminism categories,
+added for VER00 §6.3 so a unit test can control ambient entropy, in-process
+concurrency and views. This crate validates and summarises them
+(`CapabilitySurfaceSummary` gains `rand_capabilities`, `thread_capabilities`
+and `ui_capabilities`); it has no secure wrappers for them yet. Manifest ingestion rejects unknown
 vocabulary and all other cross-pairs, and the embedded table is exhaustively
 checked against
 `code/specs/fixtures/capability-security-v1/taxonomy.json`.

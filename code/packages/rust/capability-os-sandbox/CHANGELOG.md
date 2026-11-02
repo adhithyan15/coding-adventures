@@ -4,6 +4,15 @@
 
 ### Added
 
+- **D21's nondeterminism categories** (VER00 §6.3). `rand:read` lowers to
+  `<os>.host_broker.entropy`, Brokered on every OS, the same shape as the
+  clock: no primitive scopes `getrandom` or `/dev/urandom`, and a broker
+  that serves entropy is also what lets a simulated host seed it.
+  `thread:*` and `ui:*` lower to `<os>.thread.unenforceable` and
+  `<os>.ui.unenforceable`, Unsupported on every OS including portable. A
+  plan holding one fails `launch_preconditions` with `UnsupportedRule`,
+  never a silent downgrade (S-P3).
+
 - **The base-deny plan model** (D18S S-I1a, S-P2, S-P3; #13980 P2.1).
   - `SandboxPlan.base` is a `BasePolicy` built from the OS alone, never from
     the manifest. It holds the deny-all primitives in install order, plus

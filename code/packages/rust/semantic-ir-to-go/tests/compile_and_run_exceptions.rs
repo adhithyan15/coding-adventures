@@ -21,7 +21,6 @@
 //! A missing `go` toolchain logs a skip rather than reddening the build
 //! (mirrors `compile_and_run_cyclic.rs`).
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, RescueClause,
@@ -104,7 +103,7 @@ fn module_from(stmts: Vec<Stmt>, extra_features: &[Feature]) -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -114,11 +113,12 @@ fn go_available() -> bool {
 /// Emit `m` to Go, run it, and return `(success, stdout)`.
 fn emit_and_run(m: &Module, nonce: &str) -> (bool, String) {
     let artifact = compile(m).expect("module should compile to Go source");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let pid = unique_suffix();
     let src_path = dir.join(format!("sir_go_exc_{pid}_{nonce}.go"));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
-    let run_out = Command::new("go")
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
+    let run_out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&src_path)
         .output()

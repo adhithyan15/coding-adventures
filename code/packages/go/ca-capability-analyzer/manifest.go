@@ -122,6 +122,12 @@ func validCapabilityPair(category, action string) bool {
 		return action == "read"
 	case "stdout":
 		return action == "write"
+	case "rand":
+		return action == "read"
+	case "thread":
+		return action == "spawn" || action == "message"
+	case "ui":
+		return action == "read" || action == "write" || action == "event"
 	default:
 		return false
 	}

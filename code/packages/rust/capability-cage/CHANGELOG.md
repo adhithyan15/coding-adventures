@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- D21's nondeterminism categories (VER00 §6.3): `Category::{Rand, Thread,
+  Ui}` and `Action::{Spawn, Message, Event}`. The valid-pair table grows
+  from 19 to 25 (`rand:read`, `thread:spawn`, `thread:message`, `ui:read`,
+  `ui:write`, `ui:event`), still checked exhaustively against the shared
+  fixture. **Breaking** for exhaustive matches on `Category` or `Action`
+  outside this crate; every in-repo dependent still compiles.
+- `CapabilitySurfaceSummary` counts the new categories in
+  `rand_capabilities`, `thread_capabilities` and `ui_capabilities`.
+  `ui:event` counts as read-like (input flows in); `thread:spawn` and
+  `thread:message` count as write-like.
 - Added exhaustive conformance between the embedded 19-pair category/action
   table and the shared language-neutral Spec 13 taxonomy fixture.
 - Added `CapabilitySurfaceSummary` and `Manifest::capability_surface_summary()`

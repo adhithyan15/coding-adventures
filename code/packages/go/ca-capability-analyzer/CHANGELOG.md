@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+### Added
+
+- D21's nondeterminism categories (VER00 §6.3). Manifests accept the
+  25-pair taxonomy (`rand:read`, `thread:spawn`, `thread:message`,
+  `ui:read`, `ui:write`, `ui:event` are new) and still reject cross-pairs.
+- Unseeded randomness is detected as `rand:read:*`: any `crypto/rand`
+  import, and the top-level functions of `math/rand` and `math/rand/v2`,
+  which draw from the auto-seeded global source. Seeded generators are not
+  reported.
+- Every `go` statement is detected as `thread:spawn:*`, unless its line
+  carries `//nolint:cap`.
+
+### Fixed
+
+- An unaliased import with a major-version suffix (`math/rand/v2`) was
+  recorded under the name `v2`, so calls through its real name `rand` were
+  never matched. The suffix is now skipped, as the Go toolchain does.
+
 ### Security
 
 - Reject unknown and invalid cross-category capability pairs while loading a

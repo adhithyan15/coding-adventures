@@ -138,9 +138,10 @@ fn run_array_program(m: &Module) -> Option<String> {
     .expect("join PYTHONPATH");
 
     let nonce = SEQ.fetch_add(1, Ordering::Relaxed);
+    let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
     let file =
-        std::env::temp_dir().join(format!("sir_py_array_{}_{}.py", std::process::id(), nonce));
-    std::fs::write(&file, &source).expect("write temp python");
+        scratch.path().join(format!("sir_py_array_{}_{}.py", std::process::id(), nonce));
+    sir_test_scratch::write_new(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
         .env("PYTHONPATH", &pythonpath)
@@ -369,8 +370,9 @@ fn run_array_program_expecting_failure(m: &Module, tag: &str, expected_stderr_su
         py_root.join("sir-runtime-array/src"),
     ])
     .expect("join PYTHONPATH");
-    let file = std::env::temp_dir().join(format!("sir_py_array_fail_{}_{}.py", unique_suffix(), tag));
-    std::fs::write(&file, &source).expect("write temp python");
+    let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
+    let file = scratch.path().join(format!("sir_py_array_fail_{}_{}.py", unique_suffix(), tag));
+    sir_test_scratch::write_new(&file, &source).expect("write temp python");
     let out = std::process::Command::new(exe)
         .arg(&file)
         .env("PYTHONPATH", &pythonpath)
