@@ -88,6 +88,18 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isMosaicRepositorySource,
 	},
 	{
+		name:     "python/rng",
+		language: "python",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "rust/rng",
+		language: "rust",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",
@@ -113,6 +125,16 @@ func isTestBootstrapInput(changed string) bool {
 		return true
 	}
 	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
+}
+
+// isRngCorpus reports whether a changed path is in the shared rng corpus,
+// which every rng lane's tests read (Rust embeds it with include_str!).
+//
+//	code/specs/fixtures/rng-v1/cases.json     → true
+//	code/specs/fixtures/rng-v10/cases.json    → false
+//	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
+func isRngCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
 }
 
 // isMosaicRepositorySource reports whether a changed path is one the Mosaic

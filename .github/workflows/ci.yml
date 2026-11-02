@@ -619,7 +619,7 @@ jobs:
 
       - name: Set up Gradle for native build-tool contract consumers
         if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
-        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
 
       - name: Set up Dart for native build-tool contract consumers
         if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
@@ -752,6 +752,9 @@ jobs:
           # the build tool selects the crate; this keeps it always on.
           python3 code/scripts/bootstrap_harness_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_bootstrap_harness_conformance.py'
+          # rng spec v2: the shared corpus and its independent reference.
+          python3 code/scripts/rng_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_rng_conformance.py'
           python3 code/scripts/starlark_opcode_provider_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_starlark_opcode_provider_conformance.py'
           python3 code/scripts/compiler_ir_conformance.py
@@ -1009,7 +1012,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1041,7 +1044,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1069,7 +1072,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1101,7 +1104,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1129,7 +1132,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1161,7 +1164,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1196,7 +1199,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1228,7 +1231,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1261,7 +1264,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -2129,7 +2132,7 @@ jobs:
 
       - name: Install Qt for the Mosaic Qt runtime
         if: needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
-        uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+        uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06 # v4.5.0
         with:
           version: '6.8.3'
           cache: true
@@ -2174,7 +2177,7 @@ jobs:
 
       - name: Set up Gradle
         if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
 
       - name: Set up Android SDK
         if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
@@ -3626,6 +3629,17 @@ jobs:
     defaults:
       run:
         shell: bash
+    # Line tables only, not full debuginfo, for every Cargo build in this job.
+    # Panics and backtraces still name file and line; what goes is the
+    # variable and type information only a debugger reads, and that is most of
+    # a debug binary's size. Some ubuntu-latest runners have a 72G root disk
+    # with ~20G free after the reclaim step, and building lang-aot's ~50
+    # statically linked test binaries with full debuginfo needs 20-26G of
+    # target/, so PR #18787 died with "No space left on device" and then an
+    # `ld` Bus error. Nothing here reads a Rust binary's own debuginfo:
+    # native-debug-info and aot-debug write DWARF for generated code.
+    env:
+      CARGO_PROFILE_DEV_DEBUG: line-tables-only
 
     steps:
       - name: Checkout
@@ -3664,7 +3678,7 @@ jobs:
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -3838,7 +3852,7 @@ jobs:
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
         id: setup-ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -4061,7 +4075,7 @@ jobs:
 
       - name: Install Venture Qt acceptance dependencies
         if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
-        uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+        uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06 # v4.5.0
         with:
           version: '6.8.3'
           cache: true
@@ -4259,7 +4273,7 @@ jobs:
 
       - name: Set up Gradle
         if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
-        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
 
       - name: Disable long-lived Gradle services on Windows CI
         if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
@@ -4523,6 +4537,14 @@ jobs:
           sudo rm -rf /opt/hostedtoolcache/CodeQL || true
           echo "Disk after cleanup:"
           df -h /
+          # Most ubuntu-latest runners have a 145G root disk; some have 72G
+          # (/dev/mapper/cow-root) and keep only ~20G free here, which a
+          # large Rust affected set can fill (#18787). Flag them so a later
+          # ENOSPC is read as a runner-size problem, not a code one.
+          free_kb="$(df -Pk / | awk 'NR == 2 { print $4 }')"
+          if [ "${free_kb:-0}" -lt $((40 * 1024 * 1024)) ]; then
+            echo "::warning title=Small Linux runner disk::Only $((free_kb / 1024 / 1024))G free on / after cleanup: $(df -h / | awk 'NR == 2 { print $1 ", " $2 " total" }')"
+          fi
           # What the image still carries, largest first, so the next reclaim
           # can be chosen from evidence rather than guessed (#17652).
           sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
@@ -5644,6 +5666,16 @@ jobs:
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
+          # The same disk-watch as the full build below, so a PR build that
+          # runs out of disk says what filled it while it still can (#18787).
+          # Windows is left out: its PR builds have not run out of disk, and
+          # this step runs there for only a few languages.
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            code/scripts/ci/disk-watch.sh report "before PR build"
+            code/scripts/ci/disk-watch.sh watch 300 &
+            disk_watch_pid=$!
+            trap 'kill "$disk_watch_pid" 2>/dev/null || true; code/scripts/ci/disk-watch.sh report "after PR build"' EXIT
+          fi
           # No worker-count override: the executor serializes OCaml packages on its
           # global:opam-switch lock and runs everything else in parallel.
           PLAN_FLAG=""

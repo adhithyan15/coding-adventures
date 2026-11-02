@@ -98,7 +98,7 @@ so it compiles unchanged as either language — with no external test dependency
 | `ISO_CHECK_EQ_INT(a, b)` / `ISO_CHECK_EQ_UINT(a, b)` | signed / unsigned integer equality |
 | `ISO_CHECK_STR_EQ(a, b)` | NUL-terminated C-string equality (accepts `std::string::c_str()`) |
 | `ISO_CHECK_MEM_EQ(a, b, n)` | byte-wise equality of two buffers (hashes, cipher output) |
-| `ISO_CHECK_EQ_DBL(a, b, eps)` | floating-point equality within a tolerance |
+| `ISO_CHECK_EQ_DBL(a, b, eps)` | floating-point equality within a tolerance; passes only for `a == b`, both NaN, or `\|a - b\| <= eps`, so a NaN result never passes |
 | `ISO_TEST_RESULT()` | prints a summary; returns 0 (all passed) or 1 |
 
 Each failed check prints file, line, and the offending values, then keeps going
