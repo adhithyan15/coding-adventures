@@ -2130,8 +2130,9 @@ func _sir_hash_responds(name string) bool {
 // ── Array (*Seq) catalog ───────────────────────────────────────
 
 // The largest index `a[i] = v` grows an array to (shared by every backend's
-// runtime): past it Ruby's own `IndexError: index N too big`, so a program
-// cannot ask for an allocation that exhausts memory.
+// runtime): past it Ruby's own `IndexError: index N too big`.  It bounds one
+// write's padding loop and keeps its size within an int; it is not a memory
+// budget — 2^28 slots is still gigabytes.
 const _sir_array_max_index = int64(1) << 28
 
 // The position a Ruby integer index names in `recv`: a negative index counts

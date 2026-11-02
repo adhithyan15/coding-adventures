@@ -2,6 +2,13 @@
 
 ## Unreleased — `nil` inside an array; Ruby's `[]=` (#18798)
 
+- Security review: the comment on `_sir_array_bracket_set` now says why the
+  old buffer is not freed when the array grows (a block helper may be
+  iterating a snapshot of it; the arena never frees, which is what makes that
+  safe), what that costs (as `push`: O(n^2) bytes to append one slot at a
+  time), and that the 2^28 limit keeps the byte size from overflowing rather
+  than bounding memory (2^28 slots is 4 GiB).
+
 - 28 execution tests that lower real Ruby expected the Lisp display (`#t`,
   `#f`, `nil` for `puts nil`), because the Ruby frontend never said its
   module was Ruby; they now expect what ruby 3.3.6 prints.

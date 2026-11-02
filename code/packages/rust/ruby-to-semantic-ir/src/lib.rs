@@ -2636,6 +2636,69 @@ mod tests {
         assert!(matches!(&then_branch.value, Expr::VarRef { name, .. } if name.starts_with("__rescue_value_")));
     }
 
+    /// #18798 security review — a method of thousands of jumps lowers, in
+    /// linear time, to a tree no deeper than one with a single jump.  The
+    /// guards used to nest one inside the next, built by recursing on (and
+    /// copying) the rest of the list once per jump: 5000 lines of
+    /// `return 1` overflowed the stack and aborted the process, and 20 000
+    /// guard clauses took seconds.  The guards now sit side by side.
+    #[test]
+    fn thousands_of_jumps_lower_flat_and_in_linear_time() {
+        let src = format!("def f\n{}end\nputs f\n", "  return 1\n".repeat(5000));
+        let m = lower(&src);
+        assert_valid(&m);
+        assert_no_jump_marker(&m);
+        // `let __ret`, `let __jump`, the first return's two stores, then one
+        // guard per later return and one for the method's own (nil) value,
+        // all at the method's top level.
+        assert_eq!(func(&m, "f").body.stmts.len(), 4 + 4999 + 1);
+
+        // 20 000 guard clauses, and a local bound after the first one,
+        // which is hoisted out of its guard so the next guard can read it.
+        // Only the lowering is timed; parsing that much source is slow on
+        // its own in a debug build.
+        let src = format!(
+            "def f(x)\n  return 0 if x == 0\n  y = x * 2\n{}  y\nend\nputs f(3)\n",
+            "  return 1 if x == 1\n".repeat(20_000)
+        );
+        let ast = coding_adventures_ruby_parser::try_create_ruby_parser(&src)
+            .expect("lexes")
+            .parse()
+            .expect("parses");
+        let start = std::time::Instant::now();
+        let m = compile(&ast, "test").expect("lowers");
+        assert!(start.elapsed() < std::time::Duration::from_secs(2), "{:?}", start.elapsed());
+        assert_valid(&m);
+        let f = func(&m, "f");
+        assert!(
+            f.body.stmts.iter().any(|s| matches!(s, Stmt::LetBinding { name, value: Expr::NilLit { .. }, .. } if name == "y")),
+            "`y` is hoisted: {:?}",
+            &f.body.stmts[..6]
+        );
+    }
+
+    /// #18798 security review — a `for` over a range that can `break` or
+    /// `return` becomes a `while` that tests the jump flag, so it ends when
+    /// it is left.  It ran its remaining trips with the body disabled:
+    /// `for i in 0...2**62 do break end` never finished.
+    #[test]
+    fn a_for_over_a_range_that_can_break_is_a_while_that_stops() {
+        let m = lower("for i in 0...1000000000000\n  break if i == 3\nend\nputs i\n");
+        assert_valid(&m);
+        assert_no_jump_marker(&m);
+        let dbg = format!("{:?}", main_body(&m));
+        assert!(!dbg.contains("ForRange"), "{dbg}");
+        assert!(dbg.contains("While"), "{dbg}");
+        // A `for` that only uses `next` keeps its `ForRange`.
+        let m = lower("for i in 0...3\n  next if i == 1\n  puts i\nend\n");
+        assert_valid(&m);
+        assert!(format!("{:?}", main_body(&m)).contains("ForRange"));
+        // A `return` out of a `for` in a method, inclusive range.
+        let m = lower("def f\n  for i in 1..5\n    return i if i == 2\n  end\n  0\nend\nputs f\n");
+        assert_valid(&m);
+        assert!(!format!("{:?}", func(&m, "f").body).contains("ForRange"));
+    }
+
     /// #18798 (item 14) — `return x if c` is an `if` around the jump's two
     /// stores, and the rest of the method is guarded by the flag.  It was
     /// refused ("direct call to unknown function `if_modifier`").

@@ -6,6 +6,10 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ### Added (#18798, items 11–15 and 19)
 
+- Security review follow-up: `rb_for_over_a_huge_range_stops_at_break_and_locals_between_guards`
+  — a `for` over 10^12 that `break`s (and one that `return`s) ends at once,
+  and a local bound between two guard clauses is read after the second.
+
 - 8 programs in `ruby_sir_gaps`, each checked against ruby 3.3.6 and run on
   all six backends: booleans and `nil` shown by `puts`/`print`/`#{}`,
   keyword literals inside `#{}`, a lone `#{x}` as a String, Array and Hash indexing, `size` and index

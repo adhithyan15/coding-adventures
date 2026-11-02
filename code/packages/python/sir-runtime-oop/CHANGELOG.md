@@ -11,7 +11,8 @@ The Ruby frontend lowers `z[1]` and `z[0] = 5` to the method calls `[]` and
 - `Array#[]`: a negative index counts from the end; out of range is `nil`.
 - `Array#[]=`: a negative index counts from the end; past the end the array
   is padded with `nil`; before the start is `IndexError`, and so is an index
-  past `_ARRAY_MAX_INDEX` (2^28), the limit every SIR backend shares.
+  past `_ARRAY_MAX_INDEX` (2^28), the limit every SIR backend shares.  It
+  bounds one write's padding; it is not a memory budget.
 - A non-integer index (a `bool` included) is `TypeError`.
 - `Hash#[]`: the value, or `nil` for a missing key.
 - `respond_to?` reports all three.

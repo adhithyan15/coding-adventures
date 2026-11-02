@@ -2,6 +2,12 @@
 
 ## Unreleased — interpolation, `[]`/`[]=`/`size` (#18798)
 
+- **Security review: `a[1.0e9] = 1` padded the array to about 8 GB.** The
+  2^28 limit applied only to an Integer index, so a Float (or anything with
+  `to_int`) reached Ruby's own `Array#[]=`.  `sir_index_set` now takes an
+  Integer index only, as the other five backends do, and raises `TypeError`
+  otherwise.  Test `e2e_index_assignment_refuses_a_non_integer_or_huge_index`.
+
 - **`StrConcat` (string interpolation) is accepted**, as
   `sir_str_concat(parts…)`, which joins each part's `sir_fmt`.
 - **`z[1]`, `z[1] = v`, `z.size` / `z.length`** compile.  Every built-in

@@ -1012,8 +1012,9 @@ def _bool_method(recv: bool, name: str, args: list[Val]) -> Val:
 
 # The largest index ``a[i] = v`` grows an array to.  Ruby refuses an index past
 # its own (far larger) limit with ``IndexError: index N too big``; this one is
-# shared by every backend's runtime, so a program cannot ask any of them for an
-# allocation big enough to exhaust memory or overflow a size computation.
+# shared by every backend's runtime.  It bounds one write's padding and keeps
+# the C and Rust runtimes' size computations from overflowing; it is not a
+# memory budget — 2^28 slots is still gigabytes.
 _ARRAY_MAX_INDEX = 1 << 28
 
 

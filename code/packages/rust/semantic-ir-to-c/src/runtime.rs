@@ -2056,11 +2056,20 @@ static void _sir_array_push_one(SirSeq *s, SirValue v) {
  * | `a[3] = 7`   | pads with `nil` up to index 3, then stores  |
  * | `a[-9] = 7`  | `IndexError` (before the start)             |
  *
- * Growing allocates a fresh buffer, never reallocating in place, for the
- * reason `_sir_array_push_one` does (a block helper may hold a snapshot
- * pointer into the old one).  An index past `SIR_ARRAY_MAX_INDEX` is refused
- * as Ruby refuses one past its own limit ("index N too big"), so a program
- * cannot ask for an allocation whose byte size overflows `size_t`. */
+ * Growing allocates a fresh buffer and leaves the old one allocated, for the
+ * reason `_sir_array_push_one` does: a block helper running right now may hold
+ * a snapshot of the old `items` pointer (see the SECURITY note above
+ * `_sir_array_each`), and this runtime's arena never frees, which is what
+ * makes that snapshot safe.  Freeing or `realloc`ing the old buffer here would
+ * turn `a.each { |x| a[a.size] = x }` into a use-after-free.  The cost is the
+ * same as `push`'s: one buffer of the new length per growth, so appending one
+ * slot at a time costs O(n^2) bytes in all (an amortised capacity would need a
+ * `cap` field in `SirSeq`, a runtime-wide change for `push` and this alike).
+ *
+ * An index past `SIR_ARRAY_MAX_INDEX` is refused as Ruby refuses one past its
+ * own limit ("index N too big").  That keeps the byte size `(i + 1) *
+ * sizeof(SirValue)` from overflowing `size_t` and bounds one write's padding;
+ * it is not a memory budget — 2^28 slots is 4 GiB. */
 #define SIR_ARRAY_MAX_INDEX ((int64_t)1 << 28)
 static SirValue _sir_array_bracket_set(SirSeq *s, SirValue idx, SirValue val) {
     char msg[96];

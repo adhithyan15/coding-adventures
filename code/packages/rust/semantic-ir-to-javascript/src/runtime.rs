@@ -2032,8 +2032,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // caller decides what that means.  A non-integer index is Ruby's
   // `TypeError` — and is never used to index the JS array.
   // The largest index `a[i] = v` grows an array to (shared by every
-  // backend's runtime): past it Ruby's own `IndexError: index N too big`,
-  // so a program cannot make the padding loop run for ever.
+  // backend's runtime): past it Ruby's own `IndexError: index N too big`.
+  // It bounds one write's padding loop (2^28 steps) and keeps it within
+  // what a JS array can hold; it is not a memory budget — 2^28 slots is
+  // still gigabytes.
   const ARRAY_MAX_INDEX = 2 ** 28;
   function arrayIndex(recv, raw) {
     if (typeof raw !== "number" || !Number.isInteger(raw)) {

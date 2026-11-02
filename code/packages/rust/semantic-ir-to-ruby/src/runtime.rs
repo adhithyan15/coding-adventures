@@ -157,9 +157,15 @@ end
 # `NoMethodError`, as Ruby would.  The method is always one of these fixed
 # names, never one a program spells, so no reflection is reachable.
 #
-# `a[i] = v` past `SIR_ARRAY_MAX_INDEX` raises Ruby's own `IndexError: index N
-# too big` — the same limit every other backend's runtime has, so all six
-# agree on a program that asks for an absurd padding.
+# `a[i] = v` on an Array takes an Integer index only, as the other five
+# backends' runtimes do: anything else is `TypeError` ("no implicit conversion
+# of Float into Integer"), so a Float, a Range or a `to_int` object can never
+# reach Ruby's own `Array#[]=` and its padding (#18798 security review:
+# `a[1.0e9] = 1` padded to about 8 GB).  An index past `SIR_ARRAY_MAX_INDEX`
+# raises `IndexError: index N too big`, the same limit as the other five.  The
+# limit keeps one write's padding bounded (2^28 slots), and its byte size from
+# overflowing on the backends that compute one; it is not a memory budget:
+# 2^28 slots is still gigabytes.
 SIR_ARRAY_MAX_INDEX = 1 << 28
 
 def sir_index(recv, key)
@@ -176,7 +182,8 @@ def sir_index_set(recv, key, val)
 
   case recv
   when Array
-    raise IndexError, "index #{key} too big" if key.is_a?(Integer) && key >= SIR_ARRAY_MAX_INDEX
+    raise TypeError, "no implicit conversion of #{key.class} into Integer" unless key.is_a?(Integer)
+    raise IndexError, "index #{key} too big" if key >= SIR_ARRAY_MAX_INDEX
 
     recv[key] = val
   when Hash then recv[key] = val

@@ -3115,8 +3115,10 @@ pub const RUNTIME: &str = r##"mod __sir {
     // vector in place through the `Rc<RefCell<…>>`, so the caller's handle
     // observes the change — exactly like the Python list reference.
     // The largest index `a[i] = v` grows an array to (shared by every
-    // backend's runtime): past it Ruby's own `IndexError: index N too big`,
-    // so a program cannot ask for an allocation that exhausts memory.
+    // backend's runtime): past it Ruby's own `IndexError: index N too big`.
+    // It bounds one write's padding and keeps `idx as usize + 1` and the
+    // allocation's byte size from overflowing; it is not a memory budget —
+    // 2^28 slots is still gigabytes.
     const ARRAY_MAX_INDEX: i64 = 1 << 28;
 
     // The position a Ruby integer index names in `items`: a negative index

@@ -62,10 +62,20 @@
 //!
 //! Loops add two rules.  A loop whose body can `break` or `return` also
 //! tests the flag before each trip (`while` becomes `while (__jump == 0 ?
-//! cond : false)`), and a `for` over a range or an array, which has no
+//! cond : false)`).  A `for` over a range (`ForRange`) that can leave early
+//! becomes such a `while` too, counting in a local of its own, so a
+//! `break` ends it at once — `for i in 0...2**62 do break end` must not
+//! count to 2**62.  A `for` over a collection (`ForEach`), which has no
 //! condition to test, runs its remaining trips with the whole body behind
-//! the guard.  And the flag is put back to `0` where the jump ends: after
-//! the loop for a `break`, at the end of the iteration for a `next`.
+//! the guard: they do nothing, and there are only as many as the
+//! collection, which already exists, has elements.  And the flag is put
+//! back to `0` where the jump ends: after the loop for a `break`, at the
+//! end of the iteration for a `next`.
+//!
+//! The guards sit side by side, one per stretch of statements between two
+//! jumps, never one inside the next, so the lowered tree is no deeper for a
+//! method of a thousand guard clauses than for one of a single clause, and
+//! the lowering is one pass over each list (see [`Ctx::lower_list`]).
 //!
 //! Everything this produces is ordinary SIR — locals, stores, `if`, `==` —
 //! that every backend already runs, so one lowering fixes all six.  A
@@ -89,6 +99,9 @@
 //! `next` in a block (outside a loop in that block) ends the block's call
 //! with its value, which is exactly a `return` from the hoisted function,
 //! so it is lowered as one.  `redo` and `retry` are left alone.
+
+use std::cell::RefCell;
+use std::collections::HashSet;
 
 use semantic_ir::walker::{walk_expr_default, walk_stmt_default, Visitor};
 use semantic_ir::{Block, Effect, EffectSet, Expr, Scope, Span, Stmt, MAX_IR_DEPTH};
@@ -132,6 +145,10 @@ const RETURNING: i64 = 1;
 const BREAKING: i64 = 2;
 const NEXTING: i64 = 3;
 
+/// How many SIR levels one guard adds around the statements after it: the
+/// `ExprStmt`, its `If`, and the `If`'s branch `Block`.
+const GUARD_LEVELS: usize = 3;
+
 /// A jump that cannot be lowered, with where it is.
 #[derive(Debug)]
 pub(crate) struct JumpError {
@@ -164,6 +181,15 @@ fn as_jump(expr: &Expr) -> Option<(Jump, &Expr, &Span)> {
         _ => return None,
     };
     Some((jump, &args[0], span))
+}
+
+/// The jump a statement *is*: an `ExprStmt` of a marker (see [`as_jump`]),
+/// with the statement's span.
+fn stmt_jump(stmt: &Stmt) -> Option<(Jump, &Expr, &Span)> {
+    match stmt {
+        Stmt::ExprStmt { expr, span } => as_jump(expr).map(|(jump, value, _)| (jump, value, span)),
+        _ => None,
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -287,11 +313,13 @@ pub(crate) fn lower_jumps(
     let span = body.span.clone();
     let jump = fresh("__jump_");
     let ret = fresh("__ret_");
+    let fresh = RefCell::new(fresh);
     let ctx = Ctx {
         kind,
         in_loop: false,
         jump: &jump,
         ret: &ret,
+        fresh: &fresh,
     };
 
     // The body's own last value is the method's value when no `return`
@@ -299,7 +327,7 @@ pub(crate) fn lower_jumps(
     // like any other.
     let value = std::mem::replace(&mut body.value, nil(&span));
     let mut list = std::mem::take(&mut body.stmts);
-    list.extend(ctx.value_into(value, Some(&ret), &span));
+    list.extend(ctx.value_into(value, Some(&ret), &span, 0)?);
     let lowered = ctx.lower_list(list, 0)?;
 
     body.stmts = vec![
@@ -336,58 +364,165 @@ pub(crate) fn lower_jumps(
     Ok(true)
 }
 
+/// The lowerer's name minter, shared by every [`Ctx`] of one function.
+type Fresh<'f> = RefCell<&'f mut dyn FnMut(&str) -> String>;
+
 /// Where a list of statements sits: the function kind, whether a loop of
-/// this function is around it, and the two locals.
-struct Ctx<'a> {
+/// this function is around it, the two locals, and where to get a fresh
+/// name (a `for` that becomes a `while` needs a counter and an end).
+struct Ctx<'a, 'f> {
     kind: Body,
     in_loop: bool,
     jump: &'a str,
     ret: &'a str,
+    fresh: &'a Fresh<'f>,
 }
 
-impl Ctx<'_> {
+impl<'f> Ctx<'_, 'f> {
     /// The same context, inside a loop.
-    fn in_a_loop(&self) -> Ctx<'_> {
+    fn in_a_loop(&self) -> Ctx<'_, 'f> {
         Ctx {
             kind: self.kind,
             in_loop: true,
             jump: self.jump,
             ret: self.ret,
+            fresh: self.fresh,
+        }
+    }
+
+    fn fresh(&self, prefix: &str) -> String {
+        (self.fresh.borrow_mut())(prefix)
+    }
+
+    fn too_deep(span: &Span) -> JumpError {
+        JumpError {
+            message: format!(
+                "unsupported: `return`/`break`/`next` nested more than {MAX_IR_DEPTH} \
+                 statements deep"
+            ),
+            span: span.clone(),
         }
     }
 
     /// Lower a statement list.
     ///
-    /// A statement that jumps, or *may* jump, is lowered, and everything
-    /// after it moves inside `if __jump == 0`.  After a jump statement that
-    /// guard is never true — those statements could not run in Ruby
-    /// either — but they are kept, not dropped, so the lowered program
-    /// still holds every statement the source wrote.
+    /// The list is cut into segments, each ending at a statement that jumps
+    /// or may jump.  The first segment runs as it is; every later one goes
+    /// behind its own `if __jump == 0`, side by side, not one inside the
+    /// next — the flag only ever leaves `0` for the rest of the list, so a
+    /// guard per segment skips exactly what a nested chain would:
+    ///
+    /// ```text
+    /// s1; s2 (may jump)        s1; s2
+    /// s3; s4 (may jump)   →    if __jump == 0 then s3; s4 end
+    /// s5                       if __jump == 0 then s5 end
+    /// ```
+    ///
+    /// So the depth of the result does not grow with the number of jumps
+    /// (#18798 security review: a nested chain, built by recursing on the
+    /// rest of the list and copying it once per jump, overflowed the stack
+    /// on 5000 lines of `return 1`, and took seconds on 20 000 guard
+    /// clauses).  This is one linear pass.
+    ///
+    /// A local first bound inside a guarded segment would be scoped to that
+    /// guard's block, out of sight of the next one, so its `let` is hoisted:
+    /// `let x = nil` before the first guard, and the original `let` becomes
+    /// a store.  Ruby's locals are sequential, and nothing before the `let`
+    /// could read the new local, so this changes no value.
+    ///
+    /// After a jump statement the guards are never true — those statements
+    /// could not run in Ruby either — but they are kept, not dropped, so the
+    /// lowered program still holds every statement the source wrote.
     fn lower_list(&self, stmts: Vec<Stmt>, depth: usize) -> Result<Vec<Stmt>, JumpError> {
-        let mut out = Vec::new();
-        let mut rest = stmts.into_iter();
-        while let Some(stmt) = rest.next() {
-            let jump = match &stmt {
-                Stmt::ExprStmt { expr, span } => {
-                    as_jump(expr).map(|(jump, value, _)| (jump, value.clone(), span.clone()))
-                }
-                _ => None,
-            };
-            let leaves = jump.is_some() || scan_stmt(&stmt).leaves();
-            let span = stmt.span().clone();
-            match jump {
-                Some((jump, value, span)) => out.extend(self.lower_jump(jump, value, &span)?),
-                None => out.extend(self.lower_stmt(stmt, depth + 1)?),
+        if depth >= MAX_IR_DEPTH {
+            let span = stmts
+                .first()
+                .map_or_else(Span::synthetic, |s| s.span().clone());
+            return Err(Self::too_deep(&span));
+        }
+        let mut out: Vec<Stmt> = Vec::new();
+        let mut hoisted: Vec<Stmt> = Vec::new();
+        let mut hoisted_names: HashSet<String> = HashSet::new();
+        let mut guards: Vec<Stmt> = Vec::new();
+        let mut current: Vec<Stmt> = Vec::new();
+        let mut current_span: Option<Span> = None;
+        let mut guarded = false;
+        // Close the segment in `current`: the first one is emitted as it
+        // is, every later one behind its own guard, its `let`s hoisted.
+        let mut close = |current: &mut Vec<Stmt>,
+                         span: Option<Span>,
+                         guarded: bool,
+                         out: &mut Vec<Stmt>,
+                         guards: &mut Vec<Stmt>| {
+            let segment = std::mem::take(current);
+            if segment.is_empty() {
+                return;
             }
-            if leaves {
-                let tail: Vec<Stmt> = rest.collect();
-                if !tail.is_empty() {
-                    let tail = self.lower_list(tail, depth + 1)?;
-                    out.push(self.when_jump_is(RUNNING, tail, &span));
+            if !guarded {
+                out.extend(segment);
+                return;
+            }
+            let span = span.unwrap_or_else(Span::synthetic);
+            let segment = segment
+                .into_iter()
+                .map(|stmt| match stmt {
+                    Stmt::LetBinding {
+                        name, value, span, ..
+                    }
+                    | Stmt::LetStarBinding {
+                        name, value, span, ..
+                    } => {
+                        if hoisted_names.insert(name.clone()) {
+                            hoisted.push(Stmt::LetBinding {
+                                name: name.clone(),
+                                sir_type: None,
+                                value: nil(&span),
+                                span: span.clone(),
+                            });
+                        }
+                        self.store(&name, value, &span)
+                    }
+                    other => other,
+                })
+                .collect();
+            guards.push(self.when_jump_is(RUNNING, segment, &span));
+        };
+        for stmt in stmts {
+            let span = stmt.span().clone();
+            let leaves = match stmt_jump(&stmt) {
+                Some((jump, value, jump_span)) => {
+                    let (value, jump_span) = (value.clone(), jump_span.clone());
+                    current.extend(self.lower_jump(jump, value, &jump_span)?);
+                    true
                 }
-                return Ok(out);
+                None => {
+                    let leaves = scan_stmt(&stmt).leaves();
+                    let level = depth + 1 + if guarded { GUARD_LEVELS } else { 0 };
+                    current.extend(self.lower_stmt(stmt, level)?);
+                    leaves
+                }
+            };
+            current_span.get_or_insert(span);
+            if leaves {
+                close(
+                    &mut current,
+                    current_span.take(),
+                    guarded,
+                    &mut out,
+                    &mut guards,
+                );
+                guarded = true;
             }
         }
+        close(
+            &mut current,
+            current_span.take(),
+            guarded,
+            &mut out,
+            &mut guards,
+        );
+        out.append(&mut hoisted);
+        out.append(&mut guards);
         Ok(out)
     }
 
@@ -444,10 +579,7 @@ impl Ctx<'_> {
     /// [`lower_jumps`]'s final scan).
     fn lower_stmt(&self, stmt: Stmt, depth: usize) -> Result<Vec<Stmt>, JumpError> {
         if depth >= MAX_IR_DEPTH {
-            return Err(JumpError {
-                message: format!("statements nested more than {MAX_IR_DEPTH} deep"),
-                span: stmt.span().clone(),
-            });
+            return Err(Self::too_deep(stmt.span()));
         }
         if !scan_stmt(&stmt).any {
             return Ok(vec![stmt]);
@@ -482,23 +614,7 @@ impl Ctx<'_> {
                 // A `break` or `return` must stop the loop: test the flag
                 // before the condition, which then is not evaluated.
                 let cond = if exits.breaks || exits.returns {
-                    Expr::If {
-                        cond: Box::new(self.jump_is(RUNNING, &span)),
-                        then_branch: Box::new(Block {
-                            stmts: Vec::new(),
-                            value: cond,
-                            span: span.clone(),
-                        }),
-                        else_branch: Box::new(Block {
-                            stmts: Vec::new(),
-                            value: Expr::BoolLit {
-                                value: false,
-                                span: span.clone(),
-                            },
-                            span: span.clone(),
-                        }),
-                        span: span.clone(),
-                    }
+                    self.while_running(cond, &span)
                 } else {
                     cond
                 };
@@ -540,19 +656,18 @@ impl Ctx<'_> {
                 span,
             } if !(scan_expr(&start).any || scan_expr(&stop).any || scan_expr(&step).any) => {
                 let exits = scan_block(&body);
+                if exits.breaks || exits.returns {
+                    return self.lower_range_as_while(var, start, stop, step, body, span, depth);
+                }
                 let body = self.lower_counted_body(body, exits, depth)?;
-                let mut out = vec![Stmt::ForRange {
+                Ok(vec![Stmt::ForRange {
                     var,
                     start,
                     stop,
                     step,
                     body,
-                    span: span.clone(),
-                }];
-                if exits.breaks {
-                    out.push(self.reset_after(BREAKING, &span));
-                }
-                Ok(out)
+                    span,
+                }])
             }
             // A jump inside `begin` leaves through it like any statement:
             // it is no exception, so no `rescue` sees it, and the `ensure`
@@ -591,7 +706,7 @@ impl Ctx<'_> {
         let Block { stmts, value, span } = branch;
         let mut list = stmts;
         let value = if scan_expr(&value).any || list.iter().any(|s| scan_stmt(s).leaves()) {
-            list.extend(self.value_into(value, None, &span));
+            list.extend(self.value_into(value, None, &span, depth)?);
             nil(&span)
         } else {
             value
@@ -608,7 +723,7 @@ impl Ctx<'_> {
     fn lower_loop_body(&self, body: Block, depth: usize) -> Result<Block, JumpError> {
         let Block { stmts, value, span } = body;
         let mut list = stmts;
-        list.extend(self.value_into(value, None, &span));
+        list.extend(self.value_into(value, None, &span, depth)?);
         Ok(Block {
             stmts: self.in_a_loop().lower_list(list, depth)?,
             value: nil(&span),
@@ -616,10 +731,11 @@ impl Ctx<'_> {
         })
     }
 
-    /// A `for` body (`ForEach`/`ForRange`).  These loops have no condition
-    /// to test, so after a `break` or `return` the remaining trips still
-    /// happen — with the whole body, the store into the loop variable
-    /// included, behind `if __jump == 0`, so they do nothing.
+    /// A `for` body (`ForEach`, or a `ForRange` that only uses `next`).
+    /// A `ForEach` has no condition to test, so after a `break` or `return`
+    /// its remaining trips still happen — with the whole body, the store
+    /// into the loop variable included, behind `if __jump == 0`, so they do
+    /// nothing; there are only as many as its collection has elements.
     fn lower_counted_body(
         &self,
         body: Block,
@@ -638,6 +754,119 @@ impl Ctx<'_> {
         Ok(body)
     }
 
+    /// A `ForRange` that can `break` or `return`, as a `while` that tests
+    /// the flag, so the loop ends when it is left — a `ForRange` has no
+    /// condition to test, and running out its remaining trips with the body
+    /// disabled could take for ever (`for i in 0...2**62 do break end`):
+    ///
+    /// ```text
+    /// let <ctr>  = start          // evaluated once, in this order, as
+    /// let <stop> = stop           //   the ForRange evaluates them
+    /// let <step> = step           // (only when `step` is not a literal)
+    /// while (__jump == 0 ? <ctr> < <stop> : false)   // `>` for a negative step
+    ///   let var = <ctr>
+    ///   <ctr> = <ctr> + step      // before the body, so `next` cannot skip it
+    ///   …body…
+    /// ```
+    #[allow(clippy::too_many_arguments)]
+    fn lower_range_as_while(
+        &self,
+        var: String,
+        start: Expr,
+        stop: Expr,
+        step: Expr,
+        body: Block,
+        span: Span,
+        depth: usize,
+    ) -> Result<Vec<Stmt>, JumpError> {
+        let exits = scan_block(&body);
+        let ctr = self.fresh("__for_counter_");
+        let end = self.fresh("__for_end_");
+        let let_ = |name: &str, value: Expr| Stmt::LetBinding {
+            name: name.to_string(),
+            sir_type: None,
+            value,
+            span: span.clone(),
+        };
+        let call = |name: &str, a: Expr, b: Expr| Expr::BuiltinCall {
+            name: name.to_string(),
+            args: vec![a, b],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+        let mut out = vec![let_(&ctr, start), let_(&end, stop)];
+        let (step, compare) = match step {
+            Expr::IntLit { value, .. } => {
+                let op = if value < 0 { ">" } else { "<" };
+                (
+                    int(value, &span),
+                    call(op, local(&ctr, &span), local(&end, &span)),
+                )
+            }
+            other => {
+                let step_local = self.fresh("__for_step_");
+                out.push(let_(&step_local, other));
+                let ascending = call(">", local(&step_local, &span), int(0, &span));
+                let compare = Expr::If {
+                    cond: Box::new(ascending),
+                    then_branch: Box::new(Block {
+                        stmts: Vec::new(),
+                        value: call("<", local(&ctr, &span), local(&end, &span)),
+                        span: span.clone(),
+                    }),
+                    else_branch: Box::new(Block {
+                        stmts: Vec::new(),
+                        value: call(">", local(&ctr, &span), local(&end, &span)),
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                };
+                (local(&step_local, &span), compare)
+            }
+        };
+        let mut new_body = self.lower_loop_body(body, depth)?;
+        let mut stmts = vec![
+            let_(&var, local(&ctr, &span)),
+            self.store(&ctr, call("+", local(&ctr, &span), step), &span),
+        ];
+        stmts.append(&mut new_body.stmts);
+        if exits.nexts {
+            stmts.push(self.reset_after(NEXTING, &span));
+        }
+        new_body.stmts = stmts;
+        out.push(Stmt::While {
+            cond: self.while_running(compare, &span),
+            body: new_body,
+            span: span.clone(),
+        });
+        if exits.breaks {
+            out.push(self.reset_after(BREAKING, &span));
+        }
+        Ok(out)
+    }
+
+    /// `__jump == 0 ? cond : false` — a loop condition that is false once
+    /// the loop has been left.
+    fn while_running(&self, cond: Expr, span: &Span) -> Expr {
+        Expr::If {
+            cond: Box::new(self.jump_is(RUNNING, span)),
+            then_branch: Box::new(Block {
+                stmts: Vec::new(),
+                value: cond,
+                span: span.clone(),
+            }),
+            else_branch: Box::new(Block {
+                stmts: Vec::new(),
+                value: Expr::BoolLit {
+                    value: false,
+                    span: span.clone(),
+                },
+                span: span.clone(),
+            }),
+            span: span.clone(),
+        }
+    }
+
     /// Statements that put `value` into `target` (or, with no target, run
     /// it for its effect), with a jump in tail position kept as a jump
     /// statement so [`Self::lower_list`] lowers it.
@@ -648,7 +877,16 @@ impl Ctx<'_> {
     /// | a jump                          | the jump                                  |
     /// | `if c then a else b end`        | `if c then (a into target) else (b into target) end` |
     /// | anything else holding a jump    | `target = value`, left for the final scan to refuse |
-    fn value_into(&self, value: Expr, target: Option<&str>, span: &Span) -> Vec<Stmt> {
+    fn value_into(
+        &self,
+        value: Expr,
+        target: Option<&str>,
+        span: &Span,
+        depth: usize,
+    ) -> Result<Vec<Stmt>, JumpError> {
+        if depth >= MAX_IR_DEPTH {
+            return Err(Self::too_deep(span));
+        }
         let plain = |value: Expr| match target {
             Some(t) => vec![self.store(t, value, span)],
             None if is_inert(&value) => Vec::new(),
@@ -658,13 +896,13 @@ impl Ctx<'_> {
             }],
         };
         if !scan_expr(&value).any {
-            return plain(value);
+            return Ok(plain(value));
         }
         if as_jump(&value).is_some() {
-            return vec![Stmt::ExprStmt {
+            return Ok(vec![Stmt::ExprStmt {
                 expr: value,
                 span: span.clone(),
-            }];
+            }]);
         }
         match value {
             Expr::If {
@@ -673,27 +911,27 @@ impl Ctx<'_> {
                 else_branch,
                 span: if_span,
             } if !scan_expr(&cond).any => {
-                let into = |b: Block| {
+                let into = |b: Block| -> Result<Block, JumpError> {
                     let Block { stmts, value, span } = b;
                     let mut stmts = stmts;
-                    stmts.extend(self.value_into(value, target, &span));
-                    Block {
+                    stmts.extend(self.value_into(value, target, &span, depth + GUARD_LEVELS)?);
+                    Ok(Block {
                         stmts,
                         value: nil(&span),
                         span,
-                    }
+                    })
                 };
-                vec![Stmt::ExprStmt {
+                Ok(vec![Stmt::ExprStmt {
                     expr: Expr::If {
                         cond,
-                        then_branch: Box::new(into(*then_branch)),
-                        else_branch: Box::new(into(*else_branch)),
+                        then_branch: Box::new(into(*then_branch)?),
+                        else_branch: Box::new(into(*else_branch)?),
                         span: if_span,
                     },
                     span: span.clone(),
-                }]
+                }])
             }
-            other => plain(other),
+            other => Ok(plain(other)),
         }
     }
 
@@ -858,13 +1096,17 @@ mod tests {
             ensure_body: None,
             span: span(),
         };
+        let mut mint = fresh();
+        let mint: &mut dyn FnMut(&str) -> String = &mut mint;
+        let cell = RefCell::new(mint);
         let ctx = Ctx {
             kind: Body::Method,
             in_loop: false,
             jump: "j",
             ret: "r",
+            fresh: &cell,
         };
         let err = ctx.lower_stmt(stmt, MAX_IR_DEPTH).unwrap_err();
-        assert!(err.message.contains("nested more than"), "{}", err.message);
+        assert!(err.message.contains("more than"), "{}", err.message);
     }
 }

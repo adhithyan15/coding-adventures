@@ -401,6 +401,16 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "def first_big(xs)\n  for v in xs\n    return v if v > 3\n  end\n  0\nend\nputs first_big([1, 5, 9])\nputs first_big([1])\ndef count_to(n)\n  i = 0\n  while true\n    i += 1\n    return i if i == n\n  end\nend\nputs count_to(4)\ni = 0\nwhile i < 10\n  i += 1\n  next if i == 2 || i == 4\n  break if i > 5\n  puts i\nend\nputs i\nt = 0\nfor x in [1, 2, 3, 4]\n  next if x == 2\n  break if x == 4\n  t += x\nend\nputs t\nputs x\nn = 0\nuntil n == 5\n  n += 1\n  next unless n > 3\n  puts n * 10\nend\n[1, 2, 3].each do |v|\n  next if v == 2\n  puts v * 100\nend\n",
         "5\n0\n4\n1\n3\n5\n6\n4\n4\n40\n50\n100\n300",
     ),
+    // #18798 security review — a `for` over a huge range that `break`s or
+    // `return`s ends at once (it ran out its remaining trips with the body
+    // disabled: 10^12 of them), and a local bound between two guard clauses
+    // is visible after the second (the guards sit side by side now, with
+    // the local's `let` hoisted out of the first).
+    (
+        "rb_for_over_a_huge_range_stops_at_break_and_locals_between_guards",
+        "for i in 0...1000000000000\n  break if i == 3\nend\nputs i\ndef f(x)\n  return 0 if x == 0\n  y = x * 2\n  return 1 if x == 1\n  y + 1\nend\nputs f(0)\nputs f(1)\nputs f(5)\ndef g\n  for k in 1..1000000000000\n    return k if k == 4\n  end\nend\nputs g\n",
+        "3\n0\n1\n11\n4",
+    ),
     // #18798 item 15 — a `begin … rescue … end` that ends a method, or an `if`
     // branch, is its value: the body's last value, or the catching clause's.
     // It was nil everywhere.

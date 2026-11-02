@@ -6,6 +6,26 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Fixed
 
+- **Security review: a method of thousands of jumps aborted the process.**
+  `jumps::lower_list` nested the statements after each jump one guard
+  deeper, recursing on (and copying) the rest of the list once per jump: 5000
+  lines of `return 1` overflowed the stack, and 20 000 guard clauses took
+  seconds before a refusal.  The guards now sit side by side, one per stretch
+  of statements between two jumps, built in one linear pass, so the tree is
+  no deeper for a thousand guard clauses than for one; a local first bound
+  inside a guarded stretch has its `let` hoisted before the first guard (it
+  becomes a store) so the next stretch can read it.  `lower_list` and
+  `value_into` check `MAX_IR_DEPTH` and refuse, with a message, past it.
+  Test `thousands_of_jumps_lower_flat_and_in_linear_time` (5000 bare
+  returns lower; 20 000 guard clauses lower in under 2 s).
+- **Security review: `for i in 0...2**62 do break end` never finished.** A
+  `for` over a range that can `break` or `return` ran out its remaining trips
+  with the body disabled.  It is now a `while` counting in a local of its
+  own, which tests the jump flag, so it ends when it is left.  (A `for` over
+  a collection keeps the disabled trips: there are only as many as the
+  collection, which already exists, has elements.)  Test
+  `a_for_over_a_range_that_can_break_is_a_while_that_stops`.
+
 - **`puts true` printed `#t`, `puts nil` printed `nil`, on every backend
   (item 11).**  The module now carries `source_language = "ruby"`; every
   backend already chose its display convention by it
