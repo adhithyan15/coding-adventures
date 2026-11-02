@@ -1091,7 +1091,7 @@ refuses every string op (`INTERPRETER_TIER_ONLY`) until PR5d.
 
 | Column | Out-of-range `str_index` / `str_slice` | `str_concat` past the ceiling | Checked before narrowing |
 | --- | --- | --- | --- |
-| native x86-64 / AArch64 | runtime helpers call `__twig_trap(1)`; a folded read compiles to `trap "Trap.Bounds"` (was an argument-less `type_assert`, a bare `ud2`) | `__twig_str_concat(a, b, max)` calls `__twig_trap(5)` before allocating; a literal fold stops at the ceiling | — (64-bit throughout) |
+| native x86-64 / AArch64 | runtime helpers call `__twig_trap(1)`; a folded read compiles to `trap "Trap.Bounds"` (was an argument-less `type_assert`, a bare `ud2`) | `__twig_str_concat(a, b, max)` calls `__twig_trap(5)` before allocating; a literal fold stops at the ceiling; a hand-written `call_builtin "str_concat", a, b` gets the module's ceiling appended (a caller's own third operand is replaced) | — (64-bit throughout) |
 | LLVM | folded read calls `@__iir_trap(@__iir_trap_msg.1, …)` (was `@llvm.trap`); the runtime path inherits the native helpers | `@__twig_str_concat` takes the ceiling as its third argument | — |
 | WASM | `i32.const 1; call $env.__trap; unreachable` on the literal and the runtime path (was a bare `unreachable`) | `u64(la) + u64(lb) >u ceiling` → `env.__trap(5)`; a folded literal past it compiles to the same trap | `str_slice` already checked each `i64` offset before `i32.wrap_i64` (below) |
 | JVM | `lcmp` guards on the `long` operands, then the shared flush-and-throw sequence | `long(la) + long(lb)` `lcmp` an `ldc2_w` ceiling | **yes**, now: the guards precede the `l2i` |
@@ -1155,6 +1155,12 @@ LLVM column now links `twig_runtime.c` whenever a module calls
    frames conservatively, and a stale copy of the handle there kept the block
    alive. The regression test is therefore the CIR-level check
    (`twig-aot`'s `a_literal_strings_handle_registers_are_gc_roots_after_specialisation`).
+   #18785 (#18766), which landed on main while PR5a was in review, fixed the
+   same gap from the other side: `root_heap_word_copies` now gives every GC
+   allocation (`alloc_bytes`, `str_concat`, …) a root type. The two fixes
+   agree, so the stack maps are the same either way; the merged tree pins
+   that the raw CIR already roots both literal buffers and that rooting adds
+   only the string variable.
 2. *Does WASM `str_slice` narrow first?* No. For an `i64` offset slot the
    lowering already compared the full value with the length (`i64.gt_u`)
    before `i32.wrap_i64`, so `[2³², 2³² + 3)` was rejected, not read as

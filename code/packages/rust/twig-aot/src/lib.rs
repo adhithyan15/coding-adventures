@@ -3396,6 +3396,32 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
                 strings.remove(dest);
             }
         }
+        // LANG83 PR5a: a hand-written `call_builtin "str_concat", a, b` (the
+        // runtime-call form, which `twig-aot`'s own tests and embedders build
+        // directly, and which this pass also emits for the `str_concat` op)
+        // reaches `__twig_str_concat(a, b, max)`, so it gets the module's
+        // ceiling as its third argument here. It stays a run-time call: no
+        // fold, so it still allocates its own block. A third operand a caller
+        // supplied is replaced, never trusted, so no module can raise its own
+        // ceiling. Any other arity is left for the backend to refuse.
+        if instr.op == "call_builtin"
+            && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "str_concat")
+            && matches!(instr.srcs.len(), 3 | 4)
+        {
+            let max_var = format!("__aot_strmax{next}");
+            next += 1;
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(max_var.clone()),
+                vec![Operand::Int(i64::from(ceiling))],
+                "i64",
+            ));
+            let mut call = instr;
+            call.srcs.truncate(3);
+            call.srcs.push(Operand::Var(max_var));
+            lowered.push(call);
+            continue;
+        }
         if instr.op == "const" {
             if let (Some(dest), Some(Operand::Int(value))) =
                 (instr.dest.as_ref(), instr.srcs.first())
@@ -5358,6 +5384,47 @@ mod tests {
         assert_eq!((max.op.as_str(), &max.srcs), ("const", &vec![Operand::Int(16)]));
     }
 
+    /// LANG83 PR5a: the hand-written runtime-call form `call_builtin
+    /// "str_concat", a, b` gets the module's ceiling as its third argument
+    /// (before, it reached the 3-argument builtin with 2 and the backend
+    /// refused the function), and a ceiling a caller supplied is replaced
+    /// by the module's, never trusted. It is not folded: it still allocates.
+    #[test]
+    fn a_call_builtin_str_concat_gets_the_module_ceiling() {
+        for caller_args in [vec![], vec![Operand::Var("their_max".into())]] {
+            let mut srcs = vec![
+                Operand::Var("str_concat".into()),
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ];
+            srcs.extend(caller_args.clone());
+            let mut f = IIRFunction::new(
+                "main",
+                vec![],
+                "i64",
+                vec![
+                    IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+                    IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+                    IIRInstr::new("const", Some("their_max".into()), vec![Operand::Int(i64::MAX)], "i64"),
+                    IIRInstr::new("call_builtin", Some("c".into()), srcs, "str"),
+                    IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
+                    IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+                ],
+            );
+            lower_string_literals_for_aot(&mut f, 16);
+            let call = f
+                .instructions
+                .iter()
+                .find(|i| i.op == "call_builtin" && i.dest.as_deref() == Some("c"))
+                .unwrap_or_else(|| panic!("the call stays a run-time call: {:?}", f.instructions));
+            assert_eq!(call.srcs.len(), 4, "name, a, b, ceiling: {call:?}");
+            let Operand::Var(max_var) = &call.srcs[3] else { panic!("{call:?}") };
+            assert_ne!(max_var, "their_max", "a caller's ceiling is never used");
+            let max = f.instructions.iter().find(|i| i.dest.as_deref() == Some(max_var.as_str())).expect("ceiling const");
+            assert_eq!(max.srcs, vec![Operand::Int(16)], "{caller_args:?}");
+        }
+    }
+
     #[test]
     fn string_literal_index_out_of_bounds_lowers_to_trap() {
         let mut f = IIRFunction::new(
@@ -6314,7 +6381,7 @@ mod tests {
                 IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
             ],
         );
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         assert!(
             reads_length_at_runtime(&f, "s"),
             "the join's length must be read at run time: {:?}",
@@ -6351,7 +6418,7 @@ mod tests {
                 IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
             ],
         );
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         assert!(reads_length_at_runtime(&f, "s"), "{:?}", f.instructions);
     }
 
@@ -6371,7 +6438,7 @@ mod tests {
                 IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
             ],
         );
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         assert!(reads_length_at_runtime(&f, "s"), "{:?}", f.instructions);
     }
 
@@ -7124,8 +7191,16 @@ mod gc_global_and_buffer_root_tests {
         let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
         assert_eq!(bytes, old_bytes, "x86-64 code unchanged");
         let added: Vec<i32> = slots(&records).difference(&slots(&old)).copied().collect();
-        // Two buffers (one per arm) and the string variable `s`.
-        assert_eq!(added.len(), 3, "x86-64: both buffers and s newly rooted, got {added:?}");
+        // Two buffers (one per arm) and the string variable `s` must all be
+        // roots. Since LANG83 PR5a the string lowering types a literal's
+        // `alloc_bytes` buffer `str`, so in the *raw* CIR the root slots are
+        // already the param `c`, the call result `w` and both buffers (4);
+        // `root_heap_word_copies` adds exactly one, `s` (whose `mov`s are
+        // `i64`). Before PR5a the raw CIR rooted only `c` and `w`, and this
+        // step added all three.
+        assert_eq!(slots(&old).len(), 4, "x86-64: raw CIR roots c, w and both buffers, got {:?}", slots(&old));
+        assert_eq!(added.len(), 1, "x86-64: exactly s is newly rooted, got {added:?}");
+        assert_eq!(slots(&records).len(), 5, "x86-64: c, w, both buffers and s, got {:?}", slots(&records));
         for (pc, s) in &records {
             assert!(added.iter().all(|a| s.contains(a)), "x86-64 pc {pc}");
         }
@@ -7136,7 +7211,9 @@ mod gc_global_and_buffer_root_tests {
         let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
         assert_eq!(bytes, old_bytes, "aarch64 code unchanged");
         let added: Vec<i32> = slots(&records).difference(&slots(&old)).copied().collect();
-        assert_eq!(added.len(), 3, "aarch64: both buffers and s newly rooted, got {added:?}");
+        assert_eq!(slots(&old).len(), 4, "aarch64: raw CIR roots c, w and both buffers, got {:?}", slots(&old));
+        assert_eq!(added.len(), 1, "aarch64: exactly s is newly rooted, got {added:?}");
+        assert_eq!(slots(&records).len(), 5, "aarch64: c, w, both buffers and s, got {:?}", slots(&records));
     }
 
     fn one_map() -> Vec<FnStackMap> {

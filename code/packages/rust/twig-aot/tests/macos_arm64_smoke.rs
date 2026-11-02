@@ -525,18 +525,13 @@ fn end_to_end_gc_manages_runtime_strings() {
         let mk = vec![
             IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
             IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
-            // The string ceiling `__twig_str_concat` takes since LANG83 PR5a.
-            IIRInstr::new("const", Some("max".into()), vec![Operand::Int(i64::from(interpreter_ir::STR_MAX_BYTES))], "i64"),
             // A fresh runtime string → __twig_str_concat → __twig_alloc_bytes → __gc_alloc_kind.
+            // (The string lowering appends the module's ceiling, the helper's
+            // third argument since LANG83 PR5a.)
             IIRInstr::new(
                 "call_builtin",
                 Some("c".into()),
-                vec![
-                    Operand::Var("str_concat".into()),
-                    Operand::Var("a".into()),
-                    Operand::Var("b".into()),
-                    Operand::Var("max".into()),
-                ],
+                vec![Operand::Var("str_concat".into()), Operand::Var("a".into()), Operand::Var("b".into())],
                 "str",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "str"),
