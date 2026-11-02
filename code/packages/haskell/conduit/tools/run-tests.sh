@@ -22,7 +22,17 @@ export LD_LIBRARY_PATH="$LIB_DIR:$LIB_DIR/deps:${LD_LIBRARY_PATH:-}"
 export DYLD_LIBRARY_PATH="$LIB_DIR:$LIB_DIR/deps:${DYLD_LIBRARY_PATH:-}"
 
 echo "==> Running cabal test"
-cabal test \
-  --extra-lib-dirs="$LIB_DIR" \
-  --extra-include-dirs="$INCLUDE_DIR" \
-  --test-show-details=always
+# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker,
+# scoped to this Cabal process (lesson: ghc-must-select-the-linker-matching-
+# its-hardcoded-macos-sdk). Other hosts keep their inherited environment.
+if [ "$(uname -s)" = Darwin ]; then
+  DEVELOPER_DIR=/Library/Developer/CommandLineTools cabal test \
+    --extra-lib-dirs="$LIB_DIR" \
+    --extra-include-dirs="$INCLUDE_DIR" \
+    --test-show-details=always
+else
+  cabal test \
+    --extra-lib-dirs="$LIB_DIR" \
+    --extra-include-dirs="$INCLUDE_DIR" \
+    --test-show-details=always
+fi

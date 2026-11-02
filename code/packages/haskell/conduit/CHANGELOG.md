@@ -1,5 +1,10 @@
 # Changelog — conduit (Haskell)
 
+## Unreleased
+
+### Fixed
+- `tools/run-tests.sh` runs `cabal test` with `DEVELOPER_DIR=/Library/Developer/CommandLineTools` on Darwin, so GHC 9.4.8 links against the CLT 27 SDK stubs with the matching linker; other hosts are unchanged.
+
 ## 0.1.0 — 2026-06-14
 
 Initial release (WEB18).

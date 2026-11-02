@@ -202,6 +202,29 @@ class HaskellDarwinCabalLinkerTests(unittest.TestCase):
             "code/packages/haskell/trig/BUILD",
         )
 
+    def test_helper_scripts_that_run_cabal_name_the_command_line_tools(self) -> None:
+        # Some fronts delegate to `sh tools/*.sh` (conduit, conduit-hello), so
+        # the cabal call lives in the script, not the BUILD. Those scripts
+        # need the same Darwin selection.
+        scripts = [
+            script
+            for root in HASKELL_ROOTS
+            for script in sorted(root.glob("*/tools/*.sh"))
+            if invokes_cabal(script.read_text(encoding="utf-8"))
+        ]
+        self.assertGreater(len(scripts), 0, "expected conduit's helper scripts")
+        missing = [
+            self.label(script)
+            for script in scripts
+            if f"DEVELOPER_DIR={CLT}" not in script.read_text(encoding="utf-8")
+        ]
+        self.assertEqual(
+            missing,
+            [],
+            "these Haskell helper scripts run cabal without selecting "
+            f"DEVELOPER_DIR={CLT} on Darwin",
+        )
+
     def test_darwin_routes_every_cabal_call_through_the_clt(self) -> None:
         for front in self.fronts:
             with self.subTest(front=self.label(front)):
