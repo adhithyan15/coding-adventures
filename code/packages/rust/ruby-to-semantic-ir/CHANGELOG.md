@@ -17,6 +17,13 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
   keywords take the full parse; and a bare method name is a call, by the
   same rule as anywhere else (`bare_name_call`).  Test
   `interpolated_keyword_literals_are_values`.
+- **A lone `#{x}` was not a String.**  `"#{x}"` lowered to `x` itself, so
+  `"#{1}" + "a"` was `1 + "a"` — a TypeError on most backends and a pointer
+  sum printed as a number on C.  It is `StrConcat["", x]` now (every
+  backend accepts `StrConcat` since this change); a regex `/#{b}/` too.
+  Tests `interpolated_string_that_is_only_interp_is_still_a_string` and the
+  updated `regex_interpolation_single_marker_is_bare_varref` /
+  `interpolated_string_with_binary_var_expr_lowers_recursively`.
 - **Early `return`, `break` and `next` ran nowhere (items 14 and 19).**
   SIR has no return statement, and the lowerer's
   `BuiltinCall("return" | "break" | "next")` markers reached the backends,

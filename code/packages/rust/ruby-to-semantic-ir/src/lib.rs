@@ -3837,15 +3837,17 @@ mod tests {
 
     #[test]
     fn regex_interpolation_single_marker_is_bare_varref() {
-        // `def r(b) (/#{b}/) end` — a lone `#{b}` pattern lowers to a
-        // single `VarRef` (no StrConcat wrapper), mirroring `"#{b}"`.
+        // `def r(b) (/#{b}/) end` — a lone `#{b}` pattern is still a
+        // String (#18798): `StrConcat["", b]`, mirroring `"#{b}"`.
         let m = lower("def r(b)\n  (/#{b}/)\nend\n");
         let f = m.functions.iter().find(|f| f.name == "r").unwrap();
         match &f.body.value {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 assert!(
-                    matches!(&args[0], Expr::VarRef { name, .. } if name == "b"),
-                    "expected bare VarRef pattern; got {:?}", args[0]
+                    matches!(&args[0], Expr::StrConcat { parts, .. }
+                        if matches!(&parts[..], [Expr::StrLit { value, .. }, Expr::VarRef { name, .. }]
+                            if value.is_empty() && name == "b")),
+                    "expected the pattern to be StrConcat[\"\", b]; got {:?}", args[0]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -6926,9 +6928,10 @@ mod tests {
     }
 
     #[test]
-    fn interpolated_string_that_is_only_interp_unwraps_to_a_single_segment() {
-        // `"#{name}"` has no literal text — the lowerer should hand back
-        // the single segment directly (no `StrConcat` wrapper).
+    fn interpolated_string_that_is_only_interp_is_still_a_string() {
+        // `"#{name}"` has no literal text.  It used to hand the segment back
+        // as it was, so `"#{1}" + "a"` was `1 + "a"`; since #18798 it is
+        // `StrConcat["", name]`, a String on every backend.
         // Trailing-value position so the VarRef sees the LetBinding.
         let m = lower(r##"name = "world"
 "#{name}"
@@ -6937,8 +6940,10 @@ mod tests {
         assert_eq!(b.stmts.len(), 1);
         assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "name"));
         assert!(
-            matches!(&b.value, Expr::VarRef { name, .. } if name == "name"),
-            "expected bare VarRef without concat wrapper, got {:?}",
+            matches!(&b.value, Expr::StrConcat { parts, .. }
+                if matches!(&parts[..], [Expr::StrLit { value, .. }, Expr::VarRef { name, .. }]
+                    if value.is_empty() && name == "name")),
+            "expected StrConcat[\"\", name], got {:?}",
             b.value
         );
     }
@@ -7060,19 +7065,23 @@ b = "y"
     #[test]
     fn interpolated_string_with_binary_var_expr_lowers_recursively() {
         // Phase 20a (FC) — `"#{a + b}"` is a sole interpolation whose body is
-        // a binary expression over two names.  It unwraps to the lowered
-        // `+` call directly (single-segment unwrap), with both operands as
-        // `VarRef`s — proving the recursive lowerer threads the current
-        // scope through, not a `__interp__` marker.
+        // a binary expression over two names.  Its one part is the lowered
+        // `+` call (after the empty literal that keeps it a String, #18798),
+        // with both operands as `VarRef`s — proving the recursive lowerer
+        // threads the current scope through, not a `__interp__` marker.
         let m = lower(r##"x = "#{a + b}""##);
         let b = main_body(&m);
         let value = match &b.stmts[0] {
             Stmt::LetBinding { value, .. } => value,
             other => panic!("expected LetBinding, got {:?}", other),
         };
+        let value = match value {
+            Expr::StrConcat { parts, .. } if parts.len() == 2 => &parts[1],
+            other => panic!("expected StrConcat[\"\", a + b], got {:?}", other),
+        };
         match value {
             Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "+", "single interp body unwraps to the real + call");
+                assert_eq!(name, "+", "single interp body lowers to the real + call");
                 assert_eq!(args.len(), 2);
                 assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
                 assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "b"));

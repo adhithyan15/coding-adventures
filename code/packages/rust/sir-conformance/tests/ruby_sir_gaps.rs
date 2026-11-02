@@ -357,6 +357,14 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "puts \"#{true}\"\nputs \"#{nil}|\"\nputs \"[#{false}]\"\ndef g\n  7\nend\nputs \"g=#{g}\"\n",
         "true\n|\n[false]\ng=7",
     ),
+    // A lone `#{x}` is a String: it was the value itself, so `"#{1}" + "a"`
+    // was `1 + "a"` — a TypeError on most backends, and on C a pointer sum
+    // printed as a number.
+    (
+        "rb_a_lone_interpolation_is_a_string",
+        "x = \"#{1}\" + \"a\"\nputs x\nputs \"#{nil}\" == \"\"\nputs \"#{true}\" + \"!\"\nn = 4\nputs \"#{n}\" + \"#{n}\"\n",
+        "1a\ntrue\ntrue!\n44",
+    ),
     // #18798 item 13 — `z[i]` (a negative index counts from the end, one out
     // of range is nil), `size`/`length`, and `z[i] = v` (a negative index, and
     // padding with nil past the end).  Python, JavaScript and Go raised

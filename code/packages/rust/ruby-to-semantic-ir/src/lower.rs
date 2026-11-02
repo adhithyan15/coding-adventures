@@ -10277,8 +10277,9 @@ impl Lowerer {
 
         // Result-shape selection:
         // - Empty string literal (`""`): emit a single empty `StrLit`.
-        // - Exactly one segment: hand it back directly (no concat
-        //   wrapper needed — keeps `"plain"` and `"#{x}"` lean).
+        // - Exactly one literal segment: hand it back directly (no concat
+        //   wrapper needed — keeps `"plain"` lean).  A lone `#{x}` gets an
+        //   empty literal in front (see below), so it is still a String.
         // - Two or more segments: wrap in a first-class `StrConcat`
         //   node (Phase 20b).  This replaces the v0
         //   `BuiltinCall("string_concat", …)` marker so backends can
@@ -10294,8 +10295,23 @@ impl Lowerer {
             });
         }
         self.features_used.insert(Feature::Strings);
-        if segments.len() == 1 {
+        if segments.len() == 1 && matches!(segments[0], Expr::StrLit { .. }) {
             return Ok(segments.into_iter().next().unwrap());
+        }
+        // #18798 — a lone `#{x}` is still a String: `"#{1}" + "a"` is
+        // `"1a"`, and `"#{nil}"` is `""`.  The value used to be handed back
+        // as it was, so that sum was `1 + "a"` — a TypeError on most
+        // backends, and a pointer sum printed as a number on C.  An empty
+        // literal in front makes it a two-part `StrConcat`, which every
+        // backend renders with Ruby's `to_s`.
+        if segments.len() == 1 {
+            segments.insert(
+                0,
+                Expr::StrLit {
+                    value: String::new(),
+                    span: span.clone(),
+                },
+            );
         }
         // 2+ segments → first-class concatenation node.  Declare the
         // new feature so the manifest matches what the validator

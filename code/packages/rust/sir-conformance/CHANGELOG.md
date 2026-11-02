@@ -6,9 +6,9 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ### Added (#18798, items 11–15 and 19)
 
-- 7 programs in `ruby_sir_gaps`, each checked against ruby 3.3.6 and run on
+- 8 programs in `ruby_sir_gaps`, each checked against ruby 3.3.6 and run on
   all six backends: booleans and `nil` shown by `puts`/`print`/`#{}`,
-  keyword literals inside `#{}`, Array and Hash indexing, `size` and index
+  keyword literals inside `#{}`, a lone `#{x}` as a String, Array and Hash indexing, `size` and index
   assignment, early `return` (inside `rescue`, as a guard clause, through
   `ensure`), `return`/`break`/`next` in loops and `next` in a block, and a
   `begin … rescue … end` as a method's value.
