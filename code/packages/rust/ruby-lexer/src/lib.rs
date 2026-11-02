@@ -222,6 +222,12 @@ pub struct RubyLexer {
     /// #18814 — source bytes accepted by [`RubyLexer::push`] so far, held
     /// against [`MAX_SOURCE_BYTES`] across every call.
     bytes_pushed: usize,
+    /// #18814 — engine steps the trace may hold before
+    /// [`RubyLexer::forget_engine_trace`] drops it.  Always
+    /// [`ENGINE_TRACE_LIMIT`] in production; the tests lower it to 1 (drop
+    /// after every step) and raise it to `usize::MAX` (never drop) to prove
+    /// dropping it never changes a token.
+    engine_trace_limit: usize,
 }
 
 /// Phase 3c — a heredoc opener whose body we still owe.
@@ -306,6 +312,7 @@ impl RubyLexer {
             whitespace_pending: false,
             suppress_regex_open: false,
             bytes_pushed: 0,
+            engine_trace_limit: ENGINE_TRACE_LIMIT,
         })
     }
 
@@ -367,12 +374,36 @@ impl RubyLexer {
             self.suppress_regex_open = ch == '/' && chars.get(i + 1) == Some(&'=');
             self.step_char(ch)?;
             self.suppress_regex_open = false;
+            self.forget_engine_trace()?;
             i += 1;
             if ch == '\n' && !self.pending_heredocs.is_empty() {
                 i = self.capture_heredoc_bodies(&chars, i)?;
             }
         }
         Ok(())
+    }
+
+    /// #18814 — keep the engine's step trace from growing with the input.
+    ///
+    /// `EffectfulStateMachine::process` appends a copy of every step it
+    /// takes (state names, input, effects) to a trace that only `reset`
+    /// clears.  This lexer never reads it, but it grew by one entry per
+    /// character: lexing the 1 MiB [`MAX_SOURCE_BYTES`] budget peaked near
+    /// 600 MB, almost all of it trace.  So every [`ENGINE_TRACE_LIMIT`]
+    /// steps the trace is dropped: `reset` clears it (and rewinds the
+    /// engine to its initial state), and `set_current_state` puts the
+    /// engine straight back where it was.  The engine keeps no other state
+    /// between steps, so lexing is unchanged; the cost is one state-name
+    /// copy per few thousand characters.
+    fn forget_engine_trace(&mut self) -> Result<(), String> {
+        if self.machine.trace().len() < self.engine_trace_limit {
+            return Ok(());
+        }
+        let current = self.machine.current_state().to_string();
+        self.machine.reset();
+        self.machine
+            .set_current_state(current)
+            .map_err(|e| format!("ruby lexer: failed to restore the engine state after dropping its trace: {e}"))
     }
 
     /// Phase FC — true iff `chars[i..]` is exactly the program-terminator
@@ -2263,8 +2294,21 @@ pub const NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 0;
 /// parser can reject them.
 pub const ENDLESS_RANGE_FLAG: u32 = 1 << 1;
 
+/// #18814 — how many engine steps [`RubyLexer::push`] lets the state
+/// machine's trace hold before dropping it (see
+/// `RubyLexer::forget_engine_trace`).  Small enough that the trace stays a
+/// few hundred KB, large enough that dropping it costs nothing measurable.
+const ENGINE_TRACE_LIMIT: usize = 4096;
+
 /// #18814 — what a fusion pass does after folding tokens into the one
 /// before them; see [`RubyLexer::fuse_adjacent`].
+///
+/// No pass's fused token can be the left half of its own pattern again
+/// (`2r` is not a `Number` followed by a lone `r`, `..` is not a `Dot`,
+/// `1.5` is not an integer lexeme, `>>` is not `>`), so the two variants
+/// produce the same stream for every pass today.  Each pass still names
+/// the one its old loop used, so the equivalence with the old code does
+/// not rest on that argument.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum AfterFusion {
     /// The fused token is tried again as the left half of the next match

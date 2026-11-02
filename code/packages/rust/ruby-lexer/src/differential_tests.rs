@@ -442,3 +442,37 @@ fn linear_passes_match_reference_on_fragment_soups() {
         );
     }
 }
+
+// ---------------------------------------------------------------------------
+// Dropping the engine's step trace (`forget_engine_trace`).
+// ---------------------------------------------------------------------------
+
+/// Lex `source` to completion with the engine trace dropped after every
+/// `limit` steps; return the tokens and diagnostics.
+fn lex_with_trace_limit(source: &str, limit: usize) -> (Result<Vec<Token>, String>, Vec<super::Diagnostic>) {
+    let mut lexer = RubyLexer::new("3.3").unwrap();
+    lexer.engine_trace_limit = limit;
+    let result = lexer
+        .push(source)
+        .map_err(|e| e.to_string())
+        .and_then(|()| lexer.finish())
+        .map(|()| lexer.drain_tokens());
+    (result, lexer.diagnostics.clone())
+}
+
+/// Dropping the trace after EVERY step — so in every engine state, inside
+/// strings, interpolations, heredoc openers, regexes and comments — lexes
+/// exactly what never dropping it does.
+#[test]
+fn dropping_the_engine_trace_never_changes_the_stream() {
+    let mut inputs: Vec<String> = lib_rs_literals();
+    inputs.extend(corpus_files().into_iter().map(|(_, src)| src));
+    inputs.extend((0..100).map(soup));
+    for src in &inputs {
+        assert_eq!(
+            lex_with_trace_limit(src, 1),
+            lex_with_trace_limit(src, usize::MAX),
+            "dropping the engine trace changed the lexing of {src:?}"
+        );
+    }
+}
