@@ -1060,6 +1060,204 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // ── #18493: TW00 truthiness on the VM and JIT ─────────────────────────
+    // Only `#f` and nil are false (TW00; LANG85 §11.1 decision 4), so the
+    // integer 0 and the empty string are true. vm-core's own branch rule is
+    // C's (0 is false), so before #18493 these took the else branch (2) on
+    // Vm / Jit; `iir-builtin-lowering::vm_lisp` now writes Twig's rule before
+    // every branch. NativeAot, LLVM and WASM also answer 2 for the first two
+    // (a raw machine 0 reaches their branch untagged) — a separate bug, so
+    // those columns are not declared here.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if 0 1 2)",
+        expect: Expect::Exit(1),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // The same through an un-annotated parameter, where the VM sees `any`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if x 1 2)) (f 0)",
+        expect: Expect::Exit(1),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // The empty string: vm-core's rule (Python's) called it false.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if \"\" 1 2)",
+        expect: Expect::Exit(1),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `(null? 0)` is `#f`: on the VM nil was `Int(0)`, so the integer 0 was nil
+    // (1 before #18493/#18470). Now nil is `dyn_nil` and `null?` asks
+    // `dyn_is_nil`, which never says yes to an integer.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (null? x) 1 2)) (f 0)",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `(= 0 #f)` is `#f` (LANG85 §11.1 decision 4: `=` is word equality, and
+    // 0 and `#f` are different words). The VM already answered this; the row
+    // pins it now that the VM's booleans and nil changed shape. NativeAot,
+    // LLVM and WASM answer 1 through parameters (both arrive as a raw 0) and
+    // are not declared.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x y) (if (= x y) 1 2)) (f 0 #f)",
+        expect: Expect::Exit(2),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `#f` stored in a cell and read back is still `#f`. Before #18470 a VM
+    // cell could not hold a boolean at all ("unsupported value kind"). NativeAot,
+    // LLVM and WASM answer 1 (the stored `#f` reads back truthy) and are not
+    // declared.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (car (cons #f (list))) 1 2)",
+        expect: Expect::Exit(2),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A closure that captures `#f`: its environment is a chain of cells, which
+    // could not hold a boolean on the VM before #18470.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k b) (lambda () (if b 1 2))) ((k #f))",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Wasm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A symbol is not an integer. On the VM a symbol was the integer
+    // 2^29 + id (`intern_symbols_structural`), so `'a` equalled 536870912 and
+    // this answered 1. It is now `Value::Symbol` (`dyn_symbol`).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (= x (quote a)) 1 2)) (f 536870912)",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ── #18470: the predicates and dynamic division on the VM and JIT ─────
+    // Each was `UnknownOpcode("builtin \"…\"")` on Vm / Jit. Each row weighs
+    // one probe per bit, so every wrong answer has its own exit code. No other
+    // compiled column lowers `number?` / `symbol?` / `boolean?` / `list?` (only
+    // twig-vm does), and LLVM / WASM refuse `not` on a parameter.
+    //
+    // `not`: 0 is true, so (not 0) is #f (bit 0 clear); #f and nil give #t.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (not x) 1 0)) (+ (f 0) (* 2 (f #f)) (* 4 (f (list))))",
+        expect: Expect::Exit(6),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `number?`: only the integer. A symbol answered #t when it was an Int.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (number? x) 1 0)) (+ (f 5) (* 2 (f (quote a))) (* 4 (f #t)) (* 8 (f (list))))",
+        expect: Expect::Exit(1),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `symbol?`: only the symbol.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (symbol? x) 1 0)) (+ (f (quote a)) (* 2 (f 5)) (* 4 (f #f)) (* 8 (f (list))))",
+        expect: Expect::Exit(1),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `boolean?`: #t and #f, not 0 or nil.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (boolean? x) 1 0)) (+ (f #t) (* 2 (f #f)) (* 4 (f 0)) (* 8 (f (list))))",
+        expect: Expect::Exit(3),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `list?`: a proper list and nil; not a dotted pair or an atom.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (list? x) 1 0)) (+ (f (list 1 2)) (* 2 (f (list))) (* 4 (f (cons 1 2))) (* 8 (f 5)))",
+        expect: Expect::Exit(3),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Dynamic division on parameters: truncating `/` and `quotient`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x y) (/ x y)) (f 17 5)",
+        expect: Expect::Exit(3),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // -17 quotient 5 = -3 (exit 253): truncation, not floor (-4).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x y) (quotient x y)) (f -17 5)",
+        expect: Expect::Exit(253),
+        backends: &[NativeAot, Llvm, Wasm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // remainder takes the dividend's sign: -2 (exit 254). NativeAot and LLVM
+    // exit 240 (-16, the tagged word of -2) and are not declared.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x y) (remainder x y)) (f -17 5)",
+        expect: Expect::Exit(254),
+        backends: &[Wasm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // modulo takes the divisor's sign: 16·3 + (-3) = 45. Truncating gives
+    // 16·(-2) + 2 = -30. WASM lowers `modulo` to the truncating `mod` (wrong
+    // answer), NativeAot / LLVM exit 128; neither is declared.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x y) (modulo x y)) (+ (* 16 (f -17 5)) (f 17 -5))",
+        expect: Expect::Exit(45),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
     // Twig — E4 string ops inside a direct top-level function. The function body
     // lowers `(string-length "HELLO")` to typed `str_const` + `str_len`, and the
     // direct `(strlen)` call now carries the function's `i64` return type instead
@@ -13634,15 +13832,40 @@ fn assert_harness_builtins_name_no_language<'a>(column: &str, names: impl IntoIt
 /// The passes are no-ops on programs without those constructs (every non-Twig /
 /// non-dynamic cell), matching how the code-gen pipelines already run them for
 /// every language.
+///
+/// **A Twig module also gets its language's value rules** (#18470, #18493):
+/// `vm_lisp::lower_lisp_for_vm` writes TW00 truthiness (only `#f` and nil are
+/// false, so `(if 0 1 2)` is 1), `not`, `number?` / `symbol?` / `boolean?` /
+/// `list?`, `null?` that is `#f` for 0, and the dynamic division names, as IIR
+/// over the `dyn_*` primitives vm-core lowers. nil becomes `dyn_nil` and a
+/// symbol `dyn_symbol "name"`, so neither is an integer on the VM any more. It
+/// runs only for Twig: it rewrites *every* branch, and a C-like frontend's
+/// `jmp_if_false` on 0 must stay a jump.
 fn lower_dynamic_for_generic_engine(module: &mut interpreter_ir::IIRModule) {
     iir_builtin_lowering::lower_global_io(module);
     iir_builtin_lowering::lower_closures_to_heap(module).expect("closure lowering");
     iir_builtin_lowering::lower_heap_builtins(module).expect("heap lowering");
+    if module.language == "twig" {
+        iir_builtin_lowering::lower_lisp_for_vm(module);
+    }
     // A symbol literal is still encoded as `const Var(name) : symbol` after the
-    // structural heap pass. The code-generation pipelines intern that form before
-    // execution; do the same here so VM/JIT receive stable integer identities rather
-    // than treating the name as a register reference.
+    // structural heap pass in a non-Twig module. The code-generation pipelines
+    // intern that form before execution; do the same here so VM/JIT receive
+    // stable integer identities rather than treating the name as a register
+    // reference. (A Twig module has none left: `lower_lisp_for_vm` made each
+    // a `dyn_symbol`.)
     iir_builtin_lowering::intern_symbols_structural(module);
+}
+
+/// The exit code of a VM / JIT result, the other columns' convention
+/// (`& 0xFF`). An integer exits with its value and a boolean with 0 / 1
+/// (`Value::as_i64`); `Null` — a void `main`, or Twig's nil since #18470 —
+/// exits 0, as nil does on the tagged-word columns (`__lisp_exit_code`).
+fn vm_exit_code(result: Option<vm_core::value::Value>) -> Option<i32> {
+    match result {
+        Some(vm_core::value::Value::Null) => Some(0),
+        other => other.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF),
+    }
 }
 
 fn run_vm(p: &Prog) -> Option<RunResult> {
@@ -13762,7 +13985,7 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     };
 
     // The exit code: an expression language's `main` returns an `Int`.
-    let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
+    let code = vm_exit_code(result);
     // stdout: the one ordered stream, `.trim()`med to match the subprocess columns
     // (`print_i64` and BA2 BASIC `PRINT` both end a line with `\n`).
     let byte_buf = printed_bytes.lock().expect("lang-matrix VM output buffer poisoned");
@@ -13957,7 +14180,7 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
 
     // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
     // equivalent to the interpreter, which is the whole point of a JIT.
-    let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
+    let code = vm_exit_code(result);
     let byte_buf = printed_bytes.lock().expect("lang-matrix JIT output buffer poisoned");
     let stdout = String::from_utf8_lossy(&byte_buf).trim().to_string();
     Some(RunResult::Completed { code, stdout })
@@ -14076,6 +14299,29 @@ fn comparison_stdout(lang: Language, stdout: &str) -> std::borrow::Cow<'_, str> 
     }
 }
 
+/// The exit status a POSIX parent would observe for `code`.
+///
+/// A program's exit value is one byte on POSIX: `exit(-3)` is seen as `253`
+/// because the kernel keeps only the low eight bits. Windows keeps all 32, so the
+/// same program run there reports `-3`. The matrix declares the POSIX byte, so on
+/// Windows we narrow a *sign-extended byte* the same way the kernel would elsewhere.
+///
+/// | raw Windows code       | meaning                   | compared as |
+/// |------------------------|---------------------------|-------------|
+/// | `0..=255`              | ordinary exit             | unchanged   |
+/// | `-255..=-1`            | a negative result byte    | `code & 0xFF` (−3 → 253) |
+/// | e.g. `0xC0000005`      | NTSTATUS crash (−1073741819) | unchanged — never folded |
+///
+/// The last row is why this is not a blanket `& 0xFF`: an access violation
+/// masked to its low byte would read as "exit 5" and could pass a row that
+/// expects 5. Only values a byte-returning program can produce are narrowed.
+fn posix_exit_status(code: Option<i32>) -> Option<i32> {
+    match code {
+        Some(c) if cfg!(windows) && (-255..=-1).contains(&c) => Some(c & 0xFF),
+        other => other,
+    }
+}
+
 /// Assert a single matrix cell agrees with the program's known result.
 fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
     // Every message names the *source*, not just the language and index. A bare
@@ -14084,7 +14330,7 @@ fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
     // 9000-line array by hand is how a diagnosis turns into an afternoon.
     match (&p.expect, result) {
         (Expect::Exit(n), RunResult::Completed { code, stdout }) => assert_eq!(
-            code,
+            posix_exit_status(code),
             Some(*n),
             "{backend:?} {:?}: expected exit {n}, got {code:?} (stdout {stdout:?})\nsource: {:?}",
             p.lang,
@@ -14362,12 +14608,14 @@ fn non_algol_matrix_every_proven_cell_agrees() {
 /// The expected exits are the pre-PR7f-2 ones, and the VM — whose
 /// truthiness never moved — agrees. `11` (`#f`'s tag) and `17` / `19` are
 /// the same shape; the literal `9` is boxed before `cons` (word 72), true as
-/// every integer. (A raw `0` is left out: the word 0 is the boxed integer 0,
-/// true on the tagged-word columns, while the VM reads its unboxed `0` as
-/// false — the boxing gap itself, not truthiness.)
+/// every integer. A raw `0` is the word of the boxed integer 0, true on the
+/// tagged-word columns; the VM read its unboxed `0` as false until #18493,
+/// when TW00's rule (only `#f` and nil are false) reached the VM's branches
+/// too, so it is in the table now.
 #[test]
 fn twig_truthiness_of_a_raw_word_matches_the_runtime_rule_it_replaced() {
-    const PROGRAMS: [(&str, i32); 5] = [
+    const PROGRAMS: [(&str, i32); 6] = [
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 0)", 1),
         ("(define (f n) (if (car (cons n (list))) 1 2)) (f 9)", 1),
         ("(define (f n) (if (car (cons n (list))) 1 2)) (f 11)", 1),
         ("(define (f n) (if (car (cons n (list))) 1 2)) (f 17)", 1),
@@ -14398,6 +14646,46 @@ fn twig_truthiness_of_a_raw_word_matches_the_runtime_rule_it_replaced() {
     }
     if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
         assert!(ran.contains(&NativeAot), "the native column must run on an x86-64 Linux host");
+    }
+}
+
+/// A function the JIT promotes must give the same answer as the interpreter,
+/// for every kind of Twig value (#18470 / #18493 security review, M1).
+///
+/// `GenericCirJit` keeps every value in an `i64` register. Once a Twig `#f`
+/// stopped being "the integer 0 the VM also calls false" — TW00 truthiness
+/// made `0` *true* — a promoted `(define (id x) x)` turned `#f` into `Int(0)`
+/// and flipped the branch after it: the reviewer saw the interpreter answer
+/// one way and the second run, with `id` compiled, the other. nil and a
+/// symbol could not enter the compiled function at all ("integer parameter 0
+/// received Null"). A register cannot carry a dynamic value's kind, so the
+/// JIT now refuses a function whose declared parameter or return type is not
+/// a scalar it can represent, and the parameter prologue accepts only an
+/// `Int` (or a `Bool` for a `bool` parameter).
+///
+/// Each program runs on one `JITCore` three times with promotion thresholds
+/// of 1, so `id` is past its threshold from the second run on, and every run
+/// must return exactly what the plain VM returns.
+#[test]
+fn twig_dynamic_values_agree_between_the_vm_and_a_promoted_jit() {
+    use jit_core::core::JITCore;
+    use jit_core::GenericCirJit;
+    use vm_core::core::VMCore;
+    for value in ["#f", "#t", "(list)", "(quote a)", "0", "\"\""] {
+        for shape in ["(define (id x) x) (if (id {v}) 1 2)", "(define (id x) x) (id {v})"] {
+            let src = shape.replace("{v}", value);
+            let mut module = lang_aot::compile_source_to_iir(Language::Twig, &src, "main").unwrap();
+            lower_dynamic_for_generic_engine(&mut module);
+            let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
+            let want = VMCore::new().execute(&mut module.clone(), &entry, &[]).expect("the VM runs it");
+
+            let mut vm = VMCore::new();
+            let mut jit = JITCore::with_config(Box::new(GenericCirJit::new()), 0, 1, 1, 1);
+            for run in 1..=3 {
+                let got = jit.execute_with_jit(&mut vm, &mut module, &entry, &[]);
+                assert_eq!(got.as_ref().ok(), Some(&want), "{src}: run {run}: JIT {got:?}, VM {want:?}");
+            }
+        }
     }
 }
 
@@ -15561,8 +15849,11 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // comparison rows (three on all eight and one on NativeAot / Llvm /
         // Wasm / Jvm / Vm / Jit), #18463's two extra dynamic compare / `pair?`
         // rows on Vm and Jit only, then #18483's five negative-operand
-        // comparison rows on six columns (all but Clr / Beam).
-        (Language::Twig, 60, 456),
+        // comparison rows on six columns (all but Clr / Beam), then
+        // #18493 / #18470's seventeen truthiness, value-kind, predicate and
+        // dynamic-division rows (51 cells: Vm and Jit on every row, plus the
+        // NativeAot / Llvm / Wasm / Jvm cells each row was run on).
+        (Language::Twig, 77, 507),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),
@@ -30935,4 +31226,17 @@ fn javascript_reference_errors_trap_after_output_on_every_available_backend() {
 #[test]
 fn javascript_rows_run_their_corpus_case() {
     lang84_rows_run_their_corpus_case(&javascript_rows(), "ecmascript", "es-number-log", "js", "es2020");
+}
+
+/// The Windows exit-status narrowing folds only sign-extended bytes; ordinary
+/// codes and NTSTATUS crash codes compare unchanged on every host.
+#[test]
+fn posix_exit_status_folds_only_negative_bytes() {
+    assert_eq!(posix_exit_status(None), None);
+    assert_eq!(posix_exit_status(Some(0)), Some(0));
+    assert_eq!(posix_exit_status(Some(253)), Some(253));
+    // STATUS_ACCESS_VIOLATION must never read as "exit 5".
+    assert_eq!(posix_exit_status(Some(0xC000_0005_u32 as i32)), Some(0xC000_0005_u32 as i32));
+    let expect_neg3 = if cfg!(windows) { 253 } else { -3 };
+    assert_eq!(posix_exit_status(Some(-3)), Some(expect_neg3));
 }

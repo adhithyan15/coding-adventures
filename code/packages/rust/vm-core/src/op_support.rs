@@ -82,17 +82,40 @@ mod tests {
         // Pins today's answer so a regression (a handler removed from the
         // dispatch table, a default builtin dropped) is loud. Since LANG83
         // PR1b this includes write_i64, i64_div_floor, i64_mod_floor and trap,
-        // and since PR4 the four i64_*_ovf ops. The PR7f dynamic-value
-        // primitives are the one family the VM refuses: they call the
-        // tagged-word runtime, and the VM's dynamic values are structural.
+        // and since PR4 the four i64_*_ovf ops. Of the PR7f dynamic-value
+        // primitives the VM lowers the five that read or make a value's kind
+        // (#18470, `VM_DYNAMIC_PRIMITIVES`); it refuses the five that build or
+        // take apart a tagged word or a cell, because its cells are made with
+        // the structural `alloc` / `field_*` ops.
         for spec in STANDARD_OPS {
-            let want = if spec.family == OpFamily::Dynamic {
+            let want = if spec.family == OpFamily::Dynamic
+                && !VM_DYNAMIC_PRIMITIVES.contains(&spec.name)
+            {
                 OpSupport::Refused(NO_TAGGED_WORD_RUNTIME)
             } else {
                 OpSupport::Lowered
             };
             assert_eq!(op_support(spec.name), want, "{}", spec.name);
         }
+    }
+
+    /// The five `Dynamic` primitives the VM lowers over its own `Value` kinds
+    /// (#18470).
+    const VM_DYNAMIC_PRIMITIVES: &[&str] =
+        &["dyn_tag", "dyn_is_nil", "dyn_is_pair", "dyn_nil", "dyn_symbol"];
+
+    /// Before #18470 the VM refused all ten `Dynamic` primitives.
+    #[test]
+    fn the_vm_lowers_exactly_five_dynamic_primitives() {
+        let mut got: Vec<&str> = STANDARD_OPS
+            .iter()
+            .filter(|s| s.family == OpFamily::Dynamic && op_support(s.name).is_lowered())
+            .map(|s| s.name)
+            .collect();
+        got.sort_unstable();
+        let mut want = VM_DYNAMIC_PRIMITIVES.to_vec();
+        want.sort_unstable();
+        assert_eq!(got, want);
     }
 
     #[test]
