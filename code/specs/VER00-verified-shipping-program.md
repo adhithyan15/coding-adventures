@@ -2012,7 +2012,16 @@ of code runs without any API call:
 - Go `init()`;
 - `.init_array` and `#[ctor]` functions;
 - exit hooks, finalizers, `__del__` and `Drop`;
-- handlers registered with the runtime.
+- handlers registered with the runtime;
+- start-up hooks that are not modules: Python `.pth` files and
+  `sitecustomize`, Java `ServiceLoader` entries and agent manifests,
+  and plugins discovered through entry points.
+
+Further implicit calls that VER24 must account for include JavaScript
+Proxy traps and `then` on objects awaited as promises; Python
+descriptors, `__getattribute__`, a metaclass's `__call__`,
+`__init_subclass__` and `__set_name__`; and closures called through
+mutable state, which have no name to over-approximate by.
 
 A `sum` package that reads a wallet when it is imported must not receive
 a valid "no effects" certificate. So the claim is about the whole package,
@@ -2027,6 +2036,10 @@ false *rejection*, never a false "no effects".** What remains trusted:
 - the language-runtime assumptions of §7.5.1;
 - the reviewed allowlists;
 - the small checker;
+- **type facts used to narrow dispatch** must be sound against runtime
+  types. A TypeScript `as any` or a Python annotation can lie, and a lie
+  there would yield a false "no effects". Where the type facts are not
+  sound, the checker falls back to the name-based over-approximation;
 - **the front end that produces the expanded form the checker reads**:
   the parser, the macro expander, the lowering to HIR, MIR or SIR, and
   the type inference used for taming. Like every SIR front end (§7.5.5),
@@ -2051,8 +2064,18 @@ two kinds:
   an error message".
 - **Integrity**: "nothing derived from the request body reaches
   `proc.exec` arguments" (CWE-78 and CWE-88). Here the approved exception
-  is *sanitization*, not declassification, and it obeys the same rules
-  as declassification below.
+  is *sanitization*, not declassification. Its rules mirror those for
+  releases below, adapted for integrity:
+  - the sanitized value must equal the approved sanitizer applied to the
+    original input;
+  - the sanitizer is approved **per sink context and argument position**.
+    `shlex.quote` approved for `proc.exec` arguments does not stop option
+    injection through a leading `-` (CWE-88);
+  - no data the attacker controls may make the program skip the
+    sanitizer.
+
+  There is no release bound for sanitization, because sanitization
+  happens once per request.
 
 **What an attacker observes.** A flow claim compares what an attacker can
 see, so "what can be seen" is defined precisely. It is the full trace of
@@ -2062,7 +2085,8 @@ every sink the attacker can observe:
 - each call's targets (address, port, DNS name) and arguments;
 - exceptions and exit status;
 - values returned to untrusted callers;
-- whether, and when, the program stops making progress.
+- whether the program stops making progress, and at which point in the
+  trace.
 
 Concurrent code must also be **observationally deterministic**, so the
 scheduler cannot act as a second, hidden input.
@@ -2078,13 +2102,20 @@ scheduler cannot act as a second, hidden input.
   lets a loop leak the whole secret one bit at a time, by hanging or not.
   So proofs are **progress-sensitive**. Alternatively, a
   noninterference proof is combined with `terminates` and step-bound
-  proofs (§7.4.1) for every loop whose control depends on the secret.
+  proofs (§7.4.1) for every loop, recursion, panic or abort whose control
+  depends on the secret.
 - **Relational proofs by default.** Proving self-composition naively
   needs full functional loop invariants, which is impractical. The
-  default is a sound **security type system** (in the style of Volpano
-  and Smith) or a **product program** that runs the two copies in
-  lockstep with relational invariants. Full self-composition is kept for
-  refining cases the type system rejects.
+  default is a sound **security type system** or a **product program**
+  that composes the two copies with relational invariants. The type
+  system must be the termination-sensitive variant (Volpano and Smith,
+  1997, in which loop guards must not depend on the secret). The original
+  1996 system, product programs and self-composition are all
+  termination-*insensitive*, so they are acceptable only together with
+  the termination proofs above. A product program runs the copies in
+  lockstep where it can, and out of step under secret-dependent branches
+  (Barthe, Crespo and Kunz). Full self-composition is kept for refining
+  cases the type system rejects.
 - **`bounded(k)` never discharges a flow claim.** A proof that unrolls a
   loop `k` times says nothing about iteration `k + 1`, and loops that run
   once per byte of input are the normal case.
@@ -2111,9 +2142,18 @@ So each approved release is an **expression**, in the style known as
 
 - the released value *equals* the approved expression applied to the
   original, unmodified secret;
-- the number of releases is bounded;
+- the number of releases is bounded **per principal and per time
+  window**. A bound per run is impossible for a long-running server, and
+  a bound per request leaves an online guessing oracle open across
+  requests;
 - the decision to release does not depend on data the attacker
-  controls (*robust* declassification).
+  controls. This is closest to *qualified robustness* (Myers, Sabelfeld
+  and Zdancewic). It is weaker than full robustness, which also forbids
+  attacker influence on *what* is released.
+
+A source can carry a **principal label**, so data that flows back to the
+principal it came from, such as a peer's own input echoed to that same
+peer, is not a confidentiality flow. It remains an integrity flow.
 
 Approving one is an exemption (§9.1). Two examples:
 
@@ -2128,7 +2168,8 @@ the required claim impossible to dodge:
 
 - **Every read capability is a source, and every write, send, exec or log
   capability is a sink.** Classification is deny-by-default, exactly as
-  §7.4.1 does for secrets: sinks are found, not listed. That includes
+  §7.4.1 does for secrets: sources and sinks are both found, not
+  listed. That includes
   `fs.write` to shared or synced paths, IPC, exit status, error text and
   DNS lookups.
 - **Every (source, sink) pair in the effective closure needs a proved,
@@ -2139,12 +2180,32 @@ the required claim impossible to dodge:
   target than the grant, a `not-yet-provable` claim, or a package in a
   language with no SIR front end yet (§7.5.5).
 
+**Libraries that receive capabilities are covered too.** An
+object-capability library (§8.6.4) holds no capabilities of its own: it
+receives handles as arguments. Its *own* capability set is empty, so a
+rule stated only over held capabilities would demand no claim at all,
+and the library could copy a `ReadHandle`'s data into a `NetHandle`
+freely. Libraries are also published on their own (§1), where no whole
+program exists to check. So:
+
+- a package's effective closure includes the **capability types it
+  accepts** and the **values it returns** to callers;
+- each library carries a **flow signature**, polymorphic over labels in
+  the same way its effects are. For each accepted source parameter and
+  each accepted sink parameter or return value, the signature states
+  noninterference or an approved release;
+- the signature is proved in the library's certificate, and is
+  instantiated and checked again whenever packages are composed.
+
 The weakness registry (§8.2) carries these as their own classes:
 
 - exfiltration (CWE-201, under the CWE-200 family);
 - sensitive data in log files (CWE-532);
 - cleartext storage or exposure of sensitive data (CWE-312, CWE-359);
-- error messages that disclose information (CWE-209);
+- error messages that disclose information (CWE-209), and observable
+  discrepancies that act as oracles (CWE-204, CWE-208);
+- cleartext transmission (CWE-319);
+- weak password hashing (CWE-916, CWE-759);
 - command and argument injection (CWE-78, CWE-88).
 
 **What remains trusted.** A SAT certificate (§7.6.6) shows that a formula
