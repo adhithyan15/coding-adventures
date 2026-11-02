@@ -1,0 +1,9 @@
+[package]
+name = "drat-check"
+version = "0.1.0"
+edition = "2021"
+description = "VER11 — the trusted kernel for SAT proofs: a small, dependency-free forward DRAT checker (RUP + RAT) with its own strict DIMACS reader."
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
