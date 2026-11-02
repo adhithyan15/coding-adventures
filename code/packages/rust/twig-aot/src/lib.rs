@@ -3793,9 +3793,11 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
             }
             // E4-dyn runtime path: at least one operand is a runtime string handle (an
             // `INPUT` result, a call result, a branch-selected string) with no compile-
-            // time literal — or the joined literal isn't printable ASCII. Delegate to
-            // `__twig_str_concat(a, b)`, which reads both `[i64 len][bytes]` headers and
-            // returns a fresh block handle. `dest` is deliberately NOT recorded in
+            // time literal — or the joined literal isn't printable ASCII, or is longer than
+            // the module's string ceiling. Delegate to `__twig_str_concat(a, b, max)`,
+            // which reads both `[i64 len][bytes]` headers, raises `Trap.Overflow` when the
+            // join would exceed `max` (LANG83 PR5a: the ceiling, appended below), and
+            // otherwise returns a fresh block handle. `dest` is deliberately NOT recorded in
             // `strings` — but NOT recording it is not enough when `dest` was
             // already in there. ALGOL's `s := pick(1)` lowers to `str_const s =
             // ""` (the declaration) and then `str_concat s = _t3 ++ ""`, so a
@@ -6527,7 +6529,8 @@ mod tests {
     fn runtime_str_concat_lowers_to_call_builtin_str_concat() {
         // `str_concat` where at least one operand is a runtime string (a function
         // parameter here — not in the `strings` literal map) must lower to
-        // `call_builtin "str_concat" a b → dest`, delegating to `__twig_str_concat`.
+        // `call_builtin "str_concat" a b max → dest` (LANG83 PR5a: `max` is the
+        // module's string ceiling), delegating to `__twig_str_concat(a, b, max)`.
         let mut f = IIRFunction::new(
             "join",
             vec![("a".into(), "str".into()), ("b".into(), "str".into())],

@@ -6,6 +6,7 @@
 - Test `a_literal_past_the_module_ceiling_is_refused_at_compile_time` (fails without the check).
 - **The literal pre-pass stops at the ceiling** (item 4). `collect_string_literals` interned every join of two known literals, so the 17-byte value `lower_str_concat` refused to fold under a ceiling of 16 was still emitted as a `[17 x i8]` constant, and a chain of `d = d ++ d` doubled in the compiler (twenty doublings of 8 bytes: about 16 MiB of constants). It now applies `lower_str_concat`'s own condition, `len a + len b <= str_ceiling()`, and forgets the destination's value past it.
 - Test `a_literal_join_past_the_ceiling_is_not_interned` (fails without the fix).
+- Comments (item 5): the `@__twig_str_concat` declaration's comment and `runtime_str_concat_lowers_to_twig_str_concat_call`'s doc name the third argument, the module's string ceiling (they still described two). Comment only.
 
 ## Unreleased — LANG83 PR5a — strings fail closed
 

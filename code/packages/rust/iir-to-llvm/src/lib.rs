@@ -1216,9 +1216,11 @@ pub fn lower_iir_to_llvm(
             out.push_str("declare i64 @__twig_str_slice(i64, i64, i64)\n");
         }
         if used_str_concat {
-            // `@__twig_str_concat` (E4-dyn) is provided by `twig_runtime.c`: reads both
-            // operands' `[i64 len][bytes]` headers and returns an i64 handle to a fresh
-            // joined block. Used when `str_concat` has a non-literal (runtime) operand.
+            // `@__twig_str_concat(a, b, max)` (E4-dyn) is provided by `twig_runtime.c`:
+            // reads both operands' `[i64 len][bytes]` headers and returns an i64 handle to
+            // a fresh joined block, or raises `Trap.Overflow` when the join would exceed
+            // `max`, the module's string ceiling (LANG83 PR5a). Used when `str_concat`
+            // has a non-literal (runtime) operand, or its literal join is past the ceiling.
             out.push_str("declare i64 @__twig_str_concat(i64, i64, i64)\n");
         }
         if used_str_eq {

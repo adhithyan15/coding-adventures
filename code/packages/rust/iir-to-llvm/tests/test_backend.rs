@@ -2916,7 +2916,8 @@ fn input_str_lowers_to_twig_input_str_call() {
 
 /// E4-dyn: `str_concat` over two RUNTIME string operands (here two `input_str`
 /// handles — neither is a compile-time literal) lowers to a call to the AOT helper
-/// `@__twig_str_concat(i64, i64)`, which reads both `[i64 len][bytes]` headers and
+/// `@__twig_str_concat(i64, i64, i64)` (the third argument is the module's string
+/// ceiling, LANG83 PR5a), which reads both `[i64 len][bytes]` headers and
 /// returns a handle to a fresh joined block. The extern must be declared, and the
 /// runtime result must feed a runtime `str_len` (header read) without folding.
 #[test]
