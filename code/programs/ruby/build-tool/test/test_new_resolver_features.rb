@@ -207,6 +207,363 @@ class TestParseRustDeps < Minitest::Test
   end
 end
 
+# TestCargoLinkDependencyNames pins each line rule of the Cargo contract in
+# code/specs/build-tool-conformance.md, one manifest shape per case. The table
+# is the Go reference tool's TestCargoLinkDependencyNames, case for case, so a
+# divergence between fronts shows up as the same named case failing.
+class TestCargoLinkDependencyNames < Minitest::Test
+  include TestHelper
+
+  CASES = [
+    [
+      "top-level inline",
+      "[dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "build-dependencies",
+      "[build-dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "legacy build_dependencies",
+      "[build_dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "quoted cfg target",
+      "[target.'cfg(any(target_os = \"linux\", windows))'.dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "bare triple target build",
+      "[target.x86_64-pc-windows-msvc.build-dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "legacy target build",
+      "[target.'cfg(unix)'.build_dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "spaced header segments",
+      "[ target . 'cfg(unix)' . dependencies ]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "quoted table segment",
+      "[\"dependencies\"]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "sub-table",
+      "[dependencies.a]\n" \
+      "version = \"1\"\n" \
+      "path = \"../a\"\n",
+      ["a"]
+    ],
+    [
+      "sub-table rename before path",
+      "[build-dependencies.x]\n" \
+      "package = \"A\"\n" \
+      "path = '../a'\n",
+      ["a"]
+    ],
+    [
+      "target sub-table, dotted quoted triple",
+      "[target.\"thumbv8m.main-none-eabihf\".dependencies.a]\n" \
+      "path = \"../a\"\n",
+      ["a"]
+    ],
+    [
+      "quoted sub-table key",
+      "[dependencies.\"a\"]\n" \
+      "path = \"../a\"\n",
+      ["a"]
+    ],
+    [
+      "sub-table without path",
+      "[dependencies.a]\n" \
+      "version = \"1\"\n",
+      []
+    ],
+    [
+      "sub-table first path wins, ended by header",
+      "[dependencies.a]\n" \
+      "path = \"../a\"\n" \
+      "path = \"../b\"\n" \
+      "[package]\n" \
+      "name = \"z\"\n",
+      ["a"]
+    ],
+    [
+      "sub-table non-string path",
+      "[dependencies.a]\n" \
+      "path = 1\n",
+      []
+    ],
+    [
+      "sub-table empty path",
+      "[dependencies.a]\n" \
+      "path = \"\"\n",
+      []
+    ],
+    [
+      "sub-table capitalised Path key",
+      "[dependencies.a]\n" \
+      "Path = \"../a\"\n",
+      []
+    ],
+    [
+      "rename",
+      "[dependencies]\n" \
+      "x = { package = \"Logic-Gates\", path = \"../g\" }\n",
+      ["logic-gates"]
+    ],
+    [
+      "capitalised Package is not a rename",
+      "[dependencies]\n" \
+      "x = { Package = \"y\", path = \"../g\" }\n",
+      ["x"]
+    ],
+    [
+      "capitalised Path is not a path",
+      "[dependencies]\n" \
+      "x = { Path = \"../g\" }\n",
+      []
+    ],
+    [
+      "version plus path with trailing comment",
+      "[dependencies]\n" \
+      "a = { version = \"1\", path = \"../a\" } # b = { path = \"../b\" }\n",
+      ["a"]
+    ],
+    [
+      "hash inside a string is not a comment",
+      "[dependencies]\n" \
+      "a = { path = \"../a#1\" }\n",
+      ["a"]
+    ],
+    [
+      "quoted entry key",
+      "[dependencies]\n" \
+      "\"a\" = { path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "registry entry with path feature",
+      "[dependencies]\n" \
+      "a = { version = \"1\", features = [\"path\", \"x\"] }\n" \
+      "b = \"1\"\n",
+      []
+    ],
+    [
+      "nested table path is not the entry's",
+      "[dependencies]\n" \
+      "a = { x = { path = \"../a\" } }\n",
+      []
+    ],
+    [
+      "features array commas do not split fields",
+      "[dependencies]\n" \
+      "a = { features = [\"p\", \"q\"], path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "empty path",
+      "[dependencies]\n" \
+      "a = { path = \"\" }\n",
+      []
+    ],
+    [
+      "array continued onto later lines",
+      "[dependencies]\n" \
+      "a = { path = \"../a\", features = [\n" \
+      "    \"x\", # [not-a-header]\n" \
+      "] }\n" \
+      "b = { path = \"../b\" }\n",
+      ["a", "b"]
+    ],
+    [
+      "continuation lines are not headers",
+      "[dependencies]\n" \
+      "a = { path = \"../a\", features = [\n" \
+      "[\"x\"]\n" \
+      "] }\n" \
+      "b = { path = \"../b\" }\n",
+      ["a", "b"]
+    ],
+    [
+      "braces continued onto later lines",
+      "[dependencies]\n" \
+      "a = { version = \"1\",\n" \
+      "  path = \"../a\" }\n",
+      ["a"]
+    ],
+    [
+      "file ends inside the value",
+      "[dependencies]\n" \
+      "a = { path = \"../a\", features = [\n" \
+      "  \"x\",\n",
+      []
+    ],
+    [
+      "continued value must end with a brace",
+      "[dependencies]\n" \
+      "a = { path = \"../a\", features = [\n" \
+      "] } x\n",
+      []
+    ],
+    [
+      "dotted key is out of scope",
+      "[dependencies]\n" \
+      "a.path = \"../a\"\n",
+      []
+    ],
+    [
+      "commented-out entry",
+      "[dependencies]\n" \
+      "# a = { path = \"../a\" }\n",
+      []
+    ],
+    [
+      "dev-dependencies",
+      "[dev-dependencies]\n" \
+      "a = { path = \"../a\" }\n" \
+      "[dev_dependencies]\n" \
+      "b = { path = \"../b\" }\n",
+      []
+    ],
+    [
+      "target dev-dependencies",
+      "[target.'cfg(unix)'.dev-dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      []
+    ],
+    [
+      "dev-dependencies sub-table",
+      "[dev-dependencies.a]\n" \
+      "path = \"../a\"\n",
+      []
+    ],
+    [
+      "patch, replace, workspace",
+      "[patch.crates-io]\n" \
+      "a = { path = \"../a\" }\n" \
+      "[workspace.dependencies]\n" \
+      "b = { path = \"../b\" }\n" \
+      "[replace]\n" \
+      "\"c:1.0.0\" = { path = \"../c\" }\n",
+      []
+    ],
+    [
+      "capitalised table name",
+      "[Dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      []
+    ],
+    [
+      "features sub-table of a dependency",
+      "[dependencies.a.features]\n" \
+      "path = \"../a\"\n",
+      []
+    ],
+    [
+      "target table itself",
+      "[target.'cfg(unix)']\n" \
+      "a = { path = \"../a\" }\n",
+      []
+    ],
+    [
+      "array of tables ends the table",
+      "[dependencies]\n" \
+      "[[bin]]\n" \
+      "a = { path = \"../a\" }\n",
+      []
+    ],
+    [
+      "malformed header ends the table",
+      "[dependencies]\n" \
+      "[a b]\n" \
+      "c = { path = \"../c\" }\n",
+      []
+    ],
+    [
+      "unterminated quoted header ends the table",
+      "[dependencies]\n" \
+      "[target.'cfg(unix).dependencies]\n" \
+      "c = { path = \"../c\" }\n",
+      []
+    ],
+    [
+      "CRLF and BOM",
+      "\ufeff[dependencies]\r\n" \
+      "a = { path = \"../a\" }\r\n",
+      ["a"]
+    ],
+    [
+      "union across tables keeps duplicates for the caller",
+      "[dependencies]\n" \
+      "a = { path = \"../a\" }\n" \
+      "[build-dependencies]\n" \
+      "a = { path = \"../a\" }\n",
+      ["a", "a"]
+    ]
+  ].freeze
+
+  CASES.each_with_index do |(name, manifest, expected), index|
+    define_method("test_cargo_shape_%02d_%s" % [index, name.gsub(/[^a-z0-9]+/i, "_")]) do
+      assert_equal expected, BuildTool::Resolver.cargo_link_dependency_names(manifest), name
+    end
+  end
+
+  def test_duplicate_links_collapse_and_unknown_names_drop
+    dir = create_temp_dir
+    write_file(dir / "app" / "Cargo.toml", <<~TOML)
+      [package]
+      name = "app"
+
+      [dependencies]
+      lib = { path = "../lib" }
+      serde = { path = "../vendored-serde" }
+
+      [build-dependencies]
+      lib = { path = "../lib" }
+
+      [target.'cfg(windows)'.dependencies.lib]
+      path = "../lib"
+    TOML
+    write_file(dir / "lib" / "Cargo.toml", "[package]\nname = \"lib\"\n")
+    packages = %w[app lib].map do |name|
+      BuildTool::Package.new(name: "rust/#{name}", path: dir / name, build_commands: [], language: "rust")
+    end
+
+    deps = BuildTool::Resolver.parse_rust_deps(packages.first, BuildTool::Resolver.build_known_names(packages))
+
+    assert_equal ["rust/lib"], deps
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_manifest_is_read_as_bytes
+    dir = create_temp_dir
+    File.binwrite(dir / "Cargo.toml", "\xEF\xBB\xBF[dependencies]\r\nb = { path = \"../\xC3\xA9\" }\r\n".b)
+    pkg = BuildTool::Package.new(name: "rust/a", path: dir, build_commands: [], language: "rust")
+
+    assert_equal ["rust/b"], BuildTool::Resolver.parse_rust_deps(pkg, {"b" => "rust/b"})
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+end
+
 class TestParseSwiftDeps < Minitest::Test
   include TestHelper
 
