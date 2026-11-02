@@ -518,7 +518,6 @@ jobs:
             echo "::endgroup::"
             if [[ "$status" -ne 124 ]]; then
               echo "::error::the $name launch exited with $status before the timeout"
-              cat "$log" >&2
               exit 1
             fi
             if grep -F "Mosaic Rust runtime unavailable" "$log"; then
