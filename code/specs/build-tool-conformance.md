@@ -740,17 +740,24 @@ below; anything it does not describe contributes nothing.
    trimmed text before the first such `=`, and must be a bare key or exactly
    one complete string (taken as its value, as in headers); a dotted key such
    as `foo.path = "../foo"`, or any other key shape, contributes nothing. Its
-   value is the trimmed text after that `=`, and must begin with `{` and end
-   with `}` on the same line; any other value (a version string such as
-   `serde = "1"`, an array, or an inline table continued onto later lines)
-   contributes nothing. The text between the outer braces is split into
+   value is the trimmed text after that `=`, and must begin with `{`; any
+   other value (a version string such as `serde = "1"`, or an array)
+   contributes nothing. If a `{` or `[` outside strings in the value is still
+   unclosed at the end of the line, the following lines are appended to it,
+   each comment-stripped and trimmed as in step 1 and joined with one space,
+   until every `{` and `[` the value opened is closed; lines consumed this way
+   are never examined as headers or entries. TOML 1.0 allows exactly this for
+   an array inside an inline table, and the repository writes
+   `name = { path = "...", features = [` with the array on later lines. If
+   the file ends first, the entry contributes nothing. The completed value
+   must end with `}`. The text between the outer braces is split into
    fields at each `,` that is outside strings and not nested inside `[...]`
    or `{...}`, and each field's key is the trimmed text before its first `=`
    outside strings. The entry is a candidate only if a field has the key
    `path` (exactly: bare and lowercase) and its trimmed value is exactly one
-   non-empty string. The candidate's name is the value of a field with the
-   key `package` (exactly) whose trimmed value is exactly one non-empty
-   string, if there is such a field, and the entry key otherwise. Fields
+   non-empty string. The candidate's name is the value of the first field
+   with the key `package` (exactly) whose trimmed value is exactly one
+   non-empty string, if there is such a field, and the entry key otherwise. Fields
    inside a nested table, such as `x = { path = "..." }` as the value of a
    field, are not fields of the entry.
 4. *Sub-table entries.* In a dependency sub-table, a line `K = V` whose key
@@ -771,13 +778,18 @@ below; anything it does not describe contributes nothing.
 
 These shapes are out of scope: a conforming reader need not handle them, the
 shared fixtures do not use them, and the repository's manifests avoid them.
-They are multi-line strings (`"""` or `'''`) and everything inside them; an
-inline table continued onto later lines (TOML 1.1); dotted keys that spell a
-dependency or a dependency table (`foo.path = "..."` in a read table, or
-`dependencies.foo = { ... }` and `target = { ... }` elsewhere); a multi-line
+They are multi-line strings (`"""` or `'''`) and everything inside them;
+dotted keys that spell a dependency or a dependency table (`foo.path =
+"..."` in a read table, or `dependencies.foo = { ... }` and `target = { ...
+}` elsewhere); a multi-line
 array value with a continuation line that begins with `[` and ends with `]`
-(which this procedure reads as a header); and escape sequences in keys and
-header segments, which are compared verbatim.
+(which this procedure reads as a header) when that array is not the
+continuation of an inline dependency entry; and escape sequences in keys
+and header segments, which are compared verbatim. Shared fixtures also avoid
+`[dev-dependencies.<name>]` and `[target.<cfg>.dev-dependencies.<name>]`
+sub-tables: they contribute no edge under this contract, but the Go reference
+tool's separate fail-closed test-trigger reader refuses them, so such a case
+would fail there instead of proving an absent edge.
 
 For Ruby `.gemspec` manifests, dependency candidates come only from the first
 quoted gem-name argument of `add_dependency` and `add_runtime_dependency`

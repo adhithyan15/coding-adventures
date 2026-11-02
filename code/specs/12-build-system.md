@@ -151,9 +151,10 @@ A Rust (or, in the Go tool, WASM) package's edges come from `path` entries in
 every Cargo table that links into or builds the crate: `[dependencies]`,
 `[build-dependencies]` (and the legacy `build_dependencies`), and the same
 tables under `[target.<cfg>.…]` for every cfg, as a union over all targets
-because CI builds on several hosts. Entries are read both as one-line inline
-tables (`name = { path = "..." }`) and as `[<table>.<name>]` sub-tables with a
-`path = "..."` key; a quoted `package` field renames the dependency. Before
+because CI builds on several hosts. Entries are read both as inline tables
+(`name = { path = "..." }`, whose arrays may continue onto later lines) and as
+`[<table>.<name>]` sub-tables with a `path = "..."` key; a quoted `package`
+field renames the dependency. Before
 2026-11-01 only the top-level `[dependencies]` table was read, so a change to
 a build or target-specific dependency rebuilt and re-tested none of its
 dependents: `paint-metal`, `paint-vm-cairo` and `paint-vm-direct2d` under the
