@@ -49,16 +49,49 @@ fn compile_and_run(driver_src: &str) -> std::process::ExitStatus {
     Command::new(&exe).status().expect("failed to run driver")
 }
 
+/// Like [`compile_and_run`], but capture stdout and stderr, so a test can
+/// check that a trap flushed earlier output and named its LANG83 kind.
+fn compile_and_capture(driver_src: &str) -> std::process::Output {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("driver.c");
+    let exe = dir.path().join("driver");
+    std::fs::write(&src, driver_src).expect("write driver.c");
+    let status = Command::new(cc())
+        .arg(&src)
+        .arg(runtime_c())
+        .arg("-o")
+        .arg(&exe)
+        .status()
+        .expect("failed to spawn C compiler");
+    assert!(status.success(), "C driver failed to compile");
+    Command::new(&exe).output().expect("failed to run driver")
+}
+
+/// LANG83 PR5a: the process failed, `stdout` is exactly what the driver
+/// printed before the failing call (so `__twig_trap` flushed it), and stderr
+/// names `kind`. Before PR5a the helpers called `abort()` directly: the
+/// buffered `before` was lost and stderr was empty.
+fn assert_trapped_after(out: &std::process::Output, before: &str, kind: &str) {
+    assert!(!out.status.success(), "the call must trap, but the process exited 0");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), before, "stdout before the trap");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(stderr.contains(&format!("trap: {kind}")), "stderr must name {kind}: {stderr:?}");
+}
+
 /// Shared C prelude: the runtime externs + a `mk` block builder + a `CHECK`
 /// macro that returns a distinct non-zero code for each failed assertion (so a
 /// failing test names the exact check).
 const PRELUDE: &str = r#"
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/* The registry ceiling, STR_MAX_BYTES = 2^30 - 64 (LANG83 PR5a). */
+#define MAX ((int64_t)1073741760)
+
 int64_t __twig_str_len(int64_t);
-int64_t __twig_str_concat(int64_t, int64_t);
+int64_t __twig_str_concat(int64_t, int64_t, int64_t);
 int64_t __twig_str_slice(int64_t, int64_t, int64_t);
 int64_t __twig_str_index(int64_t, int64_t);
 int64_t __twig_str_cmp(int64_t, int64_t);
@@ -108,7 +141,7 @@ int main(void) {{
     int64_t llo = mk(\"LLO\", 3);
 
     /* concat → \"HELLO\" */
-    int64_t hello = __twig_str_concat(he, llo);
+    int64_t hello = __twig_str_concat(he, llo, MAX);
     CHECK(__twig_str_len(hello) == 5, 1);
     CHECK(__twig_str_index(hello, 0) == 'H', 2);
     CHECK(__twig_str_index(hello, 4) == 'O', 3);
@@ -121,9 +154,9 @@ int main(void) {{
 
     /* concat with an empty operand is identity (by bytes) */
     int64_t empty = mk(\"\", 0);
-    int64_t he2 = __twig_str_concat(he, empty);
+    int64_t he2 = __twig_str_concat(he, empty, MAX);
     CHECK(__twig_str_eq(he2, he) == 1, 7);
-    int64_t he3 = __twig_str_concat(empty, he);
+    int64_t he3 = __twig_str_concat(empty, he, MAX);
     CHECK(__twig_str_eq(he3, he) == 1, 8);
 
     /* cmp: byte order, then length breaks ties (shorter is less) */
@@ -156,60 +189,73 @@ int main(void) {{
     );
 }
 
-/// An out-of-range `__twig_str_index` traps (abort), so the process does NOT
-/// exit 0.  This proves the E4 bounds contract is enforced in the runtime.
+/// An out-of-range `__twig_str_index` is the registered `Trap.Bounds`
+/// (LANG83 PR5a): the helper flushes stdout, names the kind and stops.
 #[test]
 fn runtime_str_index_out_of_range_traps() {
-    let driver = format!(
-        "{PRELUDE}
+    for i in ["5", "2", "-1", "INT64_MAX", "INT64_MIN", "4294967297LL"] {
+        let driver = format!(
+            "{PRELUDE}
 int main(void) {{
     int64_t s = mk(\"AB\", 2);
-    __twig_str_index(s, 5);   /* out of range → abort() */
-    return 0;                 /* not reached */
+    printf(\"before\");          /* buffered: only the trap's flush delivers it */
+    __twig_str_index(s, {i});   /* out of range → Trap.Bounds */
+    return 0;                    /* not reached */
 }}
 "
-    );
-    let status = compile_and_run(&driver);
-    assert!(
-        !status.success(),
-        "out-of-range str_index must trap, but the process exited 0"
-    );
+        );
+        assert_trapped_after(&compile_and_capture(&driver), "before", "Trap.Bounds");
+    }
 }
 
-/// An out-of-range `__twig_str_slice` (`end > len`) traps.
+/// An out-of-range `__twig_str_slice` (`end > len`) is `Trap.Bounds`.
 #[test]
 fn runtime_str_slice_out_of_range_traps() {
-    let driver = format!(
-        "{PRELUDE}
+    for (a, b) in [("0", "99"), ("-1", "1"), ("4294967296LL", "4294967298LL"), ("0", "INT64_MAX")] {
+        let driver = format!(
+            "{PRELUDE}
 int main(void) {{
     int64_t s = mk(\"AB\", 2);
-    __twig_str_slice(s, 0, 99);   /* end > len → abort() */
-    return 0;                     /* not reached */
+    printf(\"before\");
+    __twig_str_slice(s, {a}, {b});   /* out of range → Trap.Bounds */
+    return 0;                        /* not reached */
 }}
 "
-    );
-    let status = compile_and_run(&driver);
-    assert!(
-        !status.success(),
-        "out-of-range str_slice must trap, but the process exited 0"
-    );
+        );
+        assert_trapped_after(&compile_and_capture(&driver), "before", "Trap.Bounds");
+    }
 }
 
-/// A backwards range (`start > end`) also traps.
+/// A backwards range (`start > end`) is `Trap.Bounds` too.
 #[test]
 fn runtime_str_slice_backwards_range_traps() {
     let driver = format!(
         "{PRELUDE}
 int main(void) {{
     int64_t s = mk(\"ABCD\", 4);
-    __twig_str_slice(s, 3, 1);   /* start > end → abort() */
+    printf(\"before\");
+    __twig_str_slice(s, 3, 1);   /* start > end → Trap.Bounds */
     return 0;
 }}
 "
     );
-    let status = compile_and_run(&driver);
-    assert!(
-        !status.success(),
-        "backwards str_slice range must trap, but the process exited 0"
+    assert_trapped_after(&compile_and_capture(&driver), "before", "Trap.Bounds");
+}
+
+/// LANG83 PR5a: `__twig_str_concat` takes the module's string ceiling and
+/// raises `Trap.Overflow` past it. Exactly at the ceiling it succeeds.
+#[test]
+fn runtime_str_concat_past_the_ceiling_traps_overflow() {
+    let driver = format!(
+        "{PRELUDE}
+int main(void) {{
+    int64_t a = mk(\"01234567\", 8);
+    int64_t b = __twig_str_concat(a, a, 16);       /* exactly 16: fits */
+    printf(\"%lld\", (long long)__twig_str_len(b));
+    __twig_str_concat(b, mk(\"x\", 1), 16);        /* 17 > 16 → Trap.Overflow */
+    return 0;                                      /* not reached */
+}}
+"
     );
+    assert_trapped_after(&compile_and_capture(&driver), "16", "Trap.Overflow");
 }

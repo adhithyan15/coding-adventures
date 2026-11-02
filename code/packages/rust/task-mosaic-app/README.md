@@ -48,3 +48,11 @@ The crate also consumes TaskApp's shared
 real-WASM test assert the same canonical task/project state and user-visible core
 slots after each lifecycle step; intentional theme-storage and locale-copy
 differences are documented in `code/specs/task-app-presentation-contract-v1.md`.
+
+It also runs TaskApp's shared `fixtures/task-name-matching-v1.json`, the cases
+for how a note's *Attach to task* name finds its task: Unicode lowercasing of
+both names (`str::to_lowercase`), the typed name trimmed of `White_Space`, the
+first task by id winning a tie, and no Unicode normalization. The web host's
+`notes.test.ts` runs the same file, so the two hosts attach a note to the same
+task for the same typed name (`code/specs/task-app-notes-ui-v1.md`, addendum
+v1.4).

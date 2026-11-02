@@ -2112,6 +2112,89 @@ pub fn lower_iir_to_beam(
                         }),
                     };
                     let cur_idx = instr_idx - 1;
+
+                    // ── LANG83 PR5a: the module's string ceiling ──────────────
+                    //
+                    //   gc_bif1 Live=live     length/1 left  -> s_la
+                    //   gc_bif1 Live=s_la+1   length/1 right -> s_lb
+                    //   gc_bif2 '+'/2 s_la s_lb -> s_la      ; an Erlang integer: no wrap
+                    //   is_lt {f,OK} Ceiling s_la            ; fall through iff sum > ceiling
+                    //   <erlang:error('Trap.Overflow')>
+                    // OK:
+                    //
+                    // Checked before `++` builds anything. Both scratch registers
+                    // sit above every variable register (`live`), so they clobber
+                    // no variable.
+                    //
+                    // ### Why the second `length` has a bigger `Live`
+                    //
+                    // `length/1` is not an ordinary guard BIF on a real VM. A
+                    // list can be a million cells long, so since OTP 22 the
+                    // loader rewrites every `gc_bif1 ... erlang:length/1` into a
+                    // pair that can yield half-way and resume later:
+                    //
+                    //   i_length_setup Live Src      ; x[Live]   = Src   (cursor)
+                    //                                ; x[Live+1] = 0     (count)
+                    //                                ; x[Live+2] = Src   (original)
+                    //   i_length Fail Live Dst       ; walk, maybe trap, then Dst
+                    //
+                    // The three registers starting at x[Live] are its private
+                    // save area, written BEFORE the result lands in Dst. So the
+                    // `Live` operand is not just a hint for the garbage
+                    // collector here: every register at or above it, up to
+                    // Live+2, is overwritten.
+                    //
+                    // The first `length` writes s_la = x[live]. If the second
+                    // one also said Live=live, its setup would store `right`
+                    // (the string itself) straight over s_la, and the `'+'`
+                    // below would compute `right + length(right)` -- exactly the
+                    // `badarith` `erlang:'+'("K", 1)` real `erl` raised on
+                    // every `str_concat` (CI, PR #18799). Declaring s_la live
+                    // (Live = s_la+1) is the honest statement anyway -- it IS
+                    // live -- and moves the save area to s_la+1..s_la+3, where
+                    // only s_lb (written last, by `i_length` itself) lives.
+                    //
+                    // The save area therefore reaches next_reg+3, so the guard
+                    // below reserves four registers, not two, the same budget
+                    // `str_slice`/`str_index` already keep for their `length`.
+                    let top = meta.next_reg.checked_add(3).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "str_concat: needs 4 scratch registers but only {} remain below x255",
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let (s_la, s_lb) = (meta.next_reg, meta.next_reg + 1);
+                    let ok_lbl = alloc_synth_label!("str_concat ceiling checks");
+                    let overflow_atom = atoms.intern(interpreter_ir::exception_kind::TRAP_OVERFLOW);
+                    for (from, to, live_here) in [(left, s_la, live), (right, s_lb, u64::from(s_la) + 1)] {
+                        instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                            BEAMOperand::f(0), BEAMOperand::u(live_here),
+                            BEAMOperand::u(import_length as u64),
+                            BEAMOperand::x(from), BEAMOperand::x(to),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(live),
+                        BEAMOperand::u(import_add as u64),
+                        BEAMOperand::x(s_la), BEAMOperand::x(s_lb), BEAMOperand::x(s_la),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                        BEAMOperand::f(ok_lbl),
+                        BEAMOperand::i(u64::from(module.str_ceiling())),
+                        BEAMOperand::x(s_la),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(overflow_atom), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(ok_lbl as u64)]));
+
                     save_live_across_imported_call!(cur_idx);
 
                     // Move the two values into x0/x1 without destroying an
@@ -2246,6 +2329,15 @@ pub fn lower_iir_to_beam(
                         }
                     })?;
                     let ok_lbl = label_counter;
+                    // LANG83 PR5a: integers first. Erlang orders numbers across
+                    // types, so a float such as 1.5 would pass the range compares
+                    // below (lesson: "BEAM array indexes need an integer guard
+                    // before numeric bounds checks").
+                    for reg in [start_reg, end_reg] {
+                        instrs.push(BEAMInstruction::new(OP_IS_INTEGER, vec![
+                            BEAMOperand::f(trap_lbl), BEAMOperand::x(reg),
+                        ]));
+                    }
                     // Fall through when start >= 0.
                     instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
                         BEAMOperand::f(trap_lbl), BEAMOperand::x(start_reg), BEAMOperand::i(0),
@@ -2262,10 +2354,12 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(
                         OP_LABEL, vec![BEAMOperand::u(trap_lbl as u64)],
                     ));
-                    // erlang:error(badarg) unconditionally raises — the runtime
-                    // fail-closed trap every other backend's str_slice already proves.
+                    // LANG83 PR5a: erlang:error('Trap.Bounds') — the registered
+                    // kind, as an atom, the reason every other BEAM trap uses
+                    // (it was `badarg`, which named no kind).
+                    let bounds_atom = atoms.intern(interpreter_ir::exception_kind::TRAP_BOUNDS);
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::a(atom_badarg), BEAMOperand::x(0),
+                        BEAMOperand::a(bounds_atom), BEAMOperand::x(0),
                     ]));
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
@@ -2350,10 +2444,10 @@ pub fn lower_iir_to_beam(
                 // `idx >= length(source)` (see `vm-core::dispatch::
                 // handle_str_index`). `lists:nth/2` is 1-indexed like
                 // `sublist`/`atomics` above, so `idx + 1` is computed first —
-                // but unlike `str_slice`'s `sublist` gap (VM-D032), `nth`'s own
-                // clause structure already traps on BOTH out-of-range
-                // directions (see `import_nth`'s doc comment), so no separate
-                // explicit guard is needed here.
+                // `nth`'s own clauses do fail in both out-of-range directions
+                // (see `import_nth`'s doc comment), but with `function_clause`,
+                // which names no LANG83 kind, so since PR5a an explicit guard
+                // raises `Trap.Bounds` first (below).
                 "str_index" => {
                     let rd = match &instr.dest {
                         Some(name) => var_reg!(name),
@@ -2371,12 +2465,12 @@ pub fn lower_iir_to_beam(
                     };
                     // Scratch registers are u8 and the bank tops out at 255;
                     // guard the same way store_byte/array_set/str_slice do.
-                    let top = meta.next_reg.checked_add(2).filter(|t| *t < 255);
+                    let top = meta.next_reg.checked_add(3).filter(|t| *t < 255);
                     let Some(_) = top else {
                         return Err(IIRBeamError::UnsupportedOp {
                             function: fn_name.clone(),
                             op: format!(
-                                "str_index: needs 3 scratch registers but only {} remain below x255",
+                                "str_index: needs 4 scratch registers but only {} remain below x255",
                                 255u16 - meta.next_reg as u16
                             ),
                         });
@@ -2384,7 +2478,47 @@ pub fn lower_iir_to_beam(
                     let t_one = meta.next_reg;
                     let s_src = meta.next_reg + 1;
                     let s_idx = meta.next_reg + 2;
+                    let s_width = meta.next_reg + 3;
                     let cur_idx = instr_idx - 1;
+
+                    // ── LANG83 PR5a: Trap.Bounds unless 0 <= idx < length(src) ──
+                    //
+                    //   gc_bif1 length/1 src -> s_width
+                    //   is_integer {f,TRAP} idx            ; a float would pass the
+                    //   is_ge      {f,TRAP} idx 0          ;   compares (Erlang orders
+                    //   is_lt      {f,TRAP} idx s_width    ;   numbers across types)
+                    //   jump {f,OK}
+                    // TRAP: <erlang:error('Trap.Bounds')>
+                    // OK:
+                    //
+                    // `lists:nth` would fail too, but with `function_clause`,
+                    // which names no kind.
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(live),
+                        BEAMOperand::u(import_length as u64),
+                        BEAMOperand::x(src_reg), BEAMOperand::x(s_width),
+                    ]));
+                    let trap_lbl = alloc_synth_label!("str_index bounds checks");
+                    let ok_lbl = alloc_synth_label!("str_index bounds checks");
+                    instrs.push(BEAMInstruction::new(OP_IS_INTEGER, vec![
+                        BEAMOperand::f(trap_lbl), BEAMOperand::x(idx_reg),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
+                        BEAMOperand::f(trap_lbl), BEAMOperand::x(idx_reg), BEAMOperand::i(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                        BEAMOperand::f(trap_lbl), BEAMOperand::x(idx_reg), BEAMOperand::x(s_width),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(ok_lbl)]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(trap_lbl as u64)]));
+                    let bounds_atom = atoms.intern(interpreter_ir::exception_kind::TRAP_BOUNDS);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(bounds_atom), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(ok_lbl as u64)]));
 
                     // Stage before the GC-capable `add`, same discipline as
                     // load_byte/array_get above.
@@ -6165,6 +6299,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -6230,6 +6365,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let beam = lower_iir_to_beam(&m, &default_cfg())
             .expect("module with `mov` must lower without errors");

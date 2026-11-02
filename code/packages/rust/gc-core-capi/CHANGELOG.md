@@ -2,6 +2,13 @@
 
 All notable changes to this crate are documented here.
 
+## Unreleased — test: cells built mid-incremental-cycle keep their fields alive
+
+- New `incremental_cycle_traces_fields_of_cells_built_mid_phase` exercises the fix through the C ABI. The fix itself is in gc-core: objects allocated during an incremental mark are born grey, so their barrier-free initial fields are traced.
+  - Mid-phase, each of 64 children (reachable at `start` only through a traced parent) is wrapped in a fresh pair cell. The cell's car is written without a barrier, exactly as `__dyn_pair_new` does.
+  - The parent's slot is cleared and the cell is published to a registered global.
+  - With newborns born black, all 64 children were freed; now none are.
+
 ## Unreleased — review follow-ups to the global roots (#18785)
 
 - **`__gc_collect_incremental_finish` re-scans the roots.** It is now a frame-building trampoline like `start`, and so is its `__twig_gc_collect_incremental_finish` alias. It walks the stack again, adds the spilled registers and the registered global slots, and calls `FlatHeap::incremental_rescan_roots` before the sweep. The barrier covers only heap stores, and `global_store` and stack writes have none. So before this, an object the mutator moved into a root during the phase was swept while the root still named it. If the stack cannot be trusted at `finish`, the cycle is abandoned and nothing is freed. Test: `incremental_finish_rescans_roots_stored_during_the_phase` moves 64 children from a traced parent into registered globals mid-phase; without the re-scan all 64 were freed.

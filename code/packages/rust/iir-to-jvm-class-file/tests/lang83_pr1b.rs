@@ -34,6 +34,7 @@ fn lower(body: Vec<IIRInstr>, params: Vec<(String, String)>) -> JvmClassFile {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     assert!(validate_for_jvm(&module).is_empty(), "{:?}", validate_for_jvm(&module));
     lower_iir_to_jvm(&module, &IIRJvmConfig::new("Main")).expect("lowers")
@@ -206,6 +207,7 @@ fn unregistered_trap_kind_is_refused() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     assert!(lower_iir_to_jvm(&module, &IIRJvmConfig::new("Main")).is_err());
 }
@@ -313,6 +315,7 @@ fn checked_ops_refuse_int_operands() {
         release: None,
         exports: vec![],
         imports: vec![],
+        str_max_bytes: None,
     };
     assert!(lower_iir_to_jvm(&module, &IIRJvmConfig::new("Main")).is_err(), "defined on i64 only");
 }

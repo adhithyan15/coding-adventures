@@ -35,6 +35,7 @@
 //!     exports: vec![],
 //!     imports: vec![],
 //!     release: None,
+//!     str_max_bytes: None,
 //! };
 //!
 //! // Create a generator with a custom class name.
@@ -182,6 +183,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -208,6 +210,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -247,6 +250,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let errors = gen.validate(&empty);
         assert!(!errors.is_empty());
