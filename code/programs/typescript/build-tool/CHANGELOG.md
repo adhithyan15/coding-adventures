@@ -57,6 +57,24 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: a `TomlBracketScanner` carries the bracket
+  depth, the open string's delimiter and a pending escape from line to line
+  (so a string left open at a line end still continues after the joining
+  space), and the pieces are joined once, instead of rescanning the growing
+  value for every appended line, which was quadratic. Quoted field and
+  sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`) are read as
+  the bare key, compared verbatim and case-sensitively, per the amended
+  contract. A Cargo path entry that resolves to the crate itself is now
+  `DependencySelfEdgeError` (`DEPENDENCY_SELF_EDGE`, repository-relative
+  manifest; the CLI exits 2) instead of a silently drawn self-loop.
+  `trimSpacesAndTabs` is an index scan (its `/[ \t]+$/` took 50 s on a 100 KB
+  interior run of spaces) and the `[package]` `name` reader uses `[ \t]*`
+  instead of a multi-line `\s*` (32 s on 100,000 blank lines). Tests: the 11
+  new one-shape cases (57, now with a row-count assert), a 20,000-line
+  continuation, a 100 KB run of spaces, 100,000 blank lines before the name,
+  self-edges by alias, by name and from a target table, and a real CLI exit-2
+  test.
 - Rust resolution now reads path dependencies from `[build-dependencies]`,
   `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
   tables, not just the top-level `[dependencies]`, and reads the

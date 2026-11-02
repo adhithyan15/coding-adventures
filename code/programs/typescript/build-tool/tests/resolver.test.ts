@@ -18,11 +18,13 @@ import * as os from "node:os";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
+  DependencySelfEdgeError,
   DirectedGraph,
   MetadataEncodingError,
   resolveDependencies,
   buildKnownNames,
   cargoLinkDependencyNames,
+  trimSpacesAndTabs,
 } from "../src/resolver.js";
 import { discoverPackages, type Package } from "../src/discovery.js";
 
@@ -1015,10 +1017,107 @@ describe("cargoLinkDependencyNames", () => {
       "a = { path = \"../a\" }\n",
       ["a", "a"],
     ],
+    [
+      "quoted inline path key",
+      "[dependencies]\n" +
+      "a = { \"path\" = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "literal-quoted inline path key",
+      "[dependencies]\n" +
+      "a = { 'path' = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "quoted inline package key renames",
+      "[dependencies]\n" +
+      "x = { \"package\" = \"a\", path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "quoted capitalised inline Path key",
+      "[dependencies]\n" +
+      "a = { \"Path\" = \"../a\" }\n",
+      [],
+    ],
+    [
+      "escaped inline path key is compared verbatim",
+      "[dependencies]\n" +
+      "a = { \"pa\\u0074h\" = \"../a\" }\n",
+      [],
+    ],
+    [
+      "dotted inline field key",
+      "[dependencies]\n" +
+      "a = { path.x = \"../a\" }\n",
+      [],
+    ],
+    [
+      "quoted sub-table path key",
+      "[dependencies.a]\n" +
+      "\"path\" = \"../a\"\n",
+      ["a"],
+    ],
+    [
+      "quoted sub-table package key",
+      "[dependencies.x]\n" +
+      "'package' = \"a\"\n" +
+      "path = \"../a\"\n",
+      ["a"],
+    ],
+    [
+      "quoted capitalised sub-table Path key",
+      "[dependencies.a]\n" +
+      "\"Path\" = \"../a\"\n",
+      [],
+    ],
+    [
+      "open string continues across the join",
+      "[dependencies]\n" +
+      "a = { path = \"../a\", x = \"q [\n" +
+      "\" }\n",
+      ["a"],
+    ],
+    [
+      "line-final backslash escapes the joining space",
+      "[dependencies]\n" +
+      "a = { x = \"q\\\n" +
+      "\", path = \"../a\" }\n",
+      ["a"],
+    ],
   ];
 
   it.each(cases)("%s", (_name, manifest, expected) => {
     expect(cargoLinkDependencyNames(manifest)).toEqual(expected);
+  });
+
+  // The table is the Go reference's, row for row: a row added there and not
+  // here (or the reverse) must fail loudly.
+  it("has the Go reference's 57 rows", () => {
+    expect(cases).toHaveLength(57);
+  });
+
+  // Rescanning the whole joined value for every appended line is quadratic:
+  // a 20,000-line continuation (about 500 KB) took tens of seconds. Carrying
+  // the scanner state makes it one pass; the bound is generous so a loaded
+  // CI machine cannot flake it.
+  it("joins a 20,000-line continuation in linear time", () => {
+    const manifest = "[dependencies]\na = { path = \"../a\", features = [\n" +
+      "  \"feature-name-padding\",\n".repeat(20_000) + "] }\n";
+    const started = performance.now();
+    expect(cargoLinkDependencyNames(manifest)).toEqual(["a"]);
+    expect(performance.now() - started).toBeLessThan(10_000);
+  });
+
+  // `replace(/[ \t]+$/, "")` retries from every character of an interior run
+  // of spaces: quadratic in a long run between two other characters.
+  it("trims a line with a 100 KB interior run of spaces in linear time", () => {
+    const line = "a" + " ".repeat(100_000) + "b";
+    const started = performance.now();
+    expect(trimSpacesAndTabs(" \t" + line + "\t ")).toBe(line);
+    expect(cargoLinkDependencyNames("[dependencies]\n" + line + "\n")).toEqual([]);
+    expect(performance.now() - started).toBeLessThan(5_000);
   });
 });
 
@@ -1049,6 +1148,106 @@ describe("Rust link-table resolution", () => {
       makePkg("rust/lib", libDir, "rust"),
     ]);
     expect(graphEdges(graph)).toEqual([["rust/lib", "rust/app"]]);
+  });
+
+  // `^\s*name` with the `m` flag runs `\s*` across every following blank
+  // line from each line start and backtracks when the match then fails,
+  // which is quadratic in a run of them (32 s at 100,000 blank lines).
+  it("reads the [package] name after 100,000 blank lines in linear time", () => {
+    const appDir = path.join(tmpDir, "app");
+    const lateDir = path.join(tmpDir, "late-dir");
+    const otherDir = path.join(tmpDir, "other-dir");
+    writeFile(
+      path.join(appDir, "Cargo.toml"),
+      "[dependencies]\nx = { package = \"late-crate\", path = \"../late-dir\" }\n" +
+        "other-dir = { path = \"../other-dir\" }\n",
+    );
+    writeFile(
+      path.join(lateDir, "Cargo.toml"),
+      "\n".repeat(100_000) + "[package]\nname = \"Late-Crate\"\n",
+    );
+    writeFile(path.join(otherDir, "Cargo.toml"), "\n".repeat(100_000) + "name =\n");
+    const started = performance.now();
+    const graph = resolveDependencies([
+      makePkg("rust/app", appDir, "rust"),
+      makePkg("rust/late-dir", lateDir, "rust"),
+      makePkg("rust/other-dir", otherDir, "rust"),
+    ]);
+    expect(performance.now() - started).toBeLessThan(5_000);
+    expect(graphEdges(graph)).toEqual([
+      ["rust/late-dir", "rust/app"],
+      ["rust/other-dir", "rust/app"],
+    ]);
+  });
+
+  it("does not read a [package] name that spans lines", () => {
+    const appDir = path.join(tmpDir, "app");
+    const libDir = path.join(tmpDir, "lib-dir");
+    writeFile(
+      path.join(appDir, "Cargo.toml"),
+      "[dependencies]\nx = { package = \"split\", path = \"../lib-dir\" }\n",
+    );
+    writeFile(path.join(libDir, "Cargo.toml"), "[package]\nname =\n\"split\"\n");
+    const graph = resolveDependencies([
+      makePkg("rust/app", appDir, "rust"),
+      makePkg("rust/lib-dir", libDir, "rust"),
+    ]);
+    expect(graphEdges(graph)).toEqual([]);
+  });
+
+  // Step 5: a candidate resolving to the crate itself -- by its directory
+  // alias, by its [package] name through a renamed sub-table, or from a
+  // target table -- is DEPENDENCY_SELF_EDGE, neither dropped nor drawn.
+  it.each([
+    ["directory alias", "[dependencies]\napp-dir = { path = \".\" }\n"],
+    [
+      "cargo name via a renamed sub-table",
+      "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n",
+    ],
+    ["target table", "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n"],
+  ])("rejects a self-edge by %s", (_label, entry) => {
+    const appDir = path.join(tmpDir, "code", "packages", "rust", "app-dir");
+    writeFile(path.join(appDir, "Cargo.toml"), "[package]\nname = \"app-crate\"\n\n" + entry);
+    let caught: unknown;
+    try {
+      resolveDependencies([makePkg("rust/app-dir", appDir, "rust")]);
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBeInstanceOf(DependencySelfEdgeError);
+    const selfEdge = caught as DependencySelfEdgeError;
+    expect(selfEdge.code).toBe("DEPENDENCY_SELF_EDGE");
+    expect(selfEdge.package).toBe("rust/app-dir");
+    expect(selfEdge.manifest).toBe("code/packages/rust/app-dir/Cargo.toml");
+    expect(selfEdge.dependency).toBe("rust/app-dir");
+    expect(selfEdge.message).toBe(
+      "DEPENDENCY_SELF_EDGE: package=rust/app-dir " +
+        "manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir",
+    );
+    expect(selfEdge.message).not.toContain(tmpDir);
+  });
+
+  it("real CLI returns exit 2 for a Cargo self-edge", () => {
+    const appDir = path.join(tmpDir, "code", "packages", "rust", "app");
+    writeFile(path.join(appDir, "BUILD"), "echo build app\n");
+    writeFile(
+      path.join(appDir, "Cargo.toml"),
+      "[package]\nname = \"app\"\n\n[dependencies]\napp = { path = \".\" }\n",
+    );
+    const tsxCli = path.join(packageRoot, "node_modules", "tsx", "dist", "cli.mjs");
+    const entrypoint = path.join(packageRoot, "src", "index.ts");
+    const result = spawnSync(
+      process.execPath,
+      [tsxCli, entrypoint, "--root", tmpDir, "--force", "--dry-run"],
+      { encoding: "utf-8", timeout: 30_000 },
+    );
+    expect(result.error).toBeUndefined();
+    expect(result.status).toBe(2);
+    expect(result.stderr).toBe(
+      "DEPENDENCY_SELF_EDGE: package=rust/app " +
+        "manifest=code/packages/rust/app/Cargo.toml dependency=rust/app\n",
+    );
+    expect(result.stderr).not.toContain(tmpDir);
   });
 
   // Inline and sub-table entries in [dependencies], [build-dependencies] and

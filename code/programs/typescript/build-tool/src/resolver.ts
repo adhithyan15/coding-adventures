@@ -84,6 +84,33 @@ export class MetadataEncodingError extends Error {
   }
 }
 
+/**
+ * A package whose own manifest resolves the package itself as a dependency.
+ *
+ * The conformance contract rejects this as `DEPENDENCY_SELF_EDGE`: a
+ * self-edge is neither dropped nor drawn (a drawn self-loop would surface
+ * later as a cycle, far from its cause). A Cargo manifest can do it with
+ * nothing more than a path entry named after its own directory or its
+ * `[package]` name. `manifest` is repository-relative, so the message never
+ * discloses the checkout root.
+ */
+export class DependencySelfEdgeError extends Error {
+  readonly code = "DEPENDENCY_SELF_EDGE";
+  readonly package: string;
+  readonly manifest: string;
+  readonly dependency: string;
+
+  constructor(packageName: string, manifest: string, dependency: string) {
+    super(
+      `DEPENDENCY_SELF_EDGE: package=${packageName} manifest=${manifest} dependency=${dependency}`,
+    );
+    this.name = "DependencySelfEdgeError";
+    this.package = packageName;
+    this.manifest = manifest;
+    this.dependency = dependency;
+  }
+}
+
 // ===========================================================================
 // DirectedGraph -- Inline Minimal Implementation
 // ===========================================================================
@@ -653,9 +680,25 @@ type CargoLinkTable =
   | { kind: "inline" }
   | { kind: "sub"; key: string };
 
-/** Trim only spaces and tabs (`String.prototype.trim` also eats NBSP, ...). */
-function trimSpacesAndTabs(text: string): string {
-  return text.replace(/^[ \t]+/, "").replace(/[ \t]+$/, "");
+/**
+ * Trim only spaces and tabs (`String.prototype.trim` also eats NBSP, ...).
+ *
+ * An index scan from each end, not `replace(/[ \t]+$/, "")`: that regex
+ * retries from every character of an interior run of spaces and fails at
+ * each one, which is quadratic in a long run between two other characters.
+ */
+export function trimSpacesAndTabs(text: string): string {
+  const isBlank = (character: string): boolean =>
+    character === " " || character === "\t";
+  let start = 0;
+  let end = text.length;
+  while (start < end && isBlank(text[start])) {
+    start++;
+  }
+  while (end > start && isBlank(text[end - 1])) {
+    end--;
+  }
+  return text.slice(start, end);
 }
 
 /** Lower-case only A-Z, as the contract's matching step says. */
@@ -721,29 +764,53 @@ function indexTomlOutsideStrings(text: string, target: string): number {
 }
 
 /**
- * How many `{` and `[` outside strings the text leaves unclosed. Zero (or
- * less) means an inline value is complete:
+ * Counts the `{` and `[` outside strings that are not closed again, over
+ * text fed to it in pieces. Feeding "ab" and then "cd" leaves exactly the
+ * state feeding "abcd" would, because the scanner keeps what a rescan of the
+ * joined text would have to rediscover: whether it is inside a string (and
+ * which delimiter closes it), and whether the previous character was a
+ * backslash escaping the next one in a basic string. So a string still open
+ * at the end of one line continues after the joining space, as it does in
+ * the joined value:
+ *
+ *     feed('{ x = "q\\')   depth 1, inside "...", escape pending
+ *     feed(" ")             the space is escaped: still inside the string
+ *     feed('", p = 1 }')    the string closes, `}` closes the table: 0
+ *
+ * Zero (or less) means an inline value is complete:
  *
  *     { path = "../a", features = [   -> 2
  *     { path = "../a" }               -> 0
+ *
+ * Carrying this state is what keeps the continuation join linear: the
+ * reader used to rescan the whole growing value for every appended line,
+ * which is quadratic in a long entry.
  */
-function tomlOpenBracketDepth(text: string): number {
-  let depth = 0;
-  for (let index = 0; index < text.length; index++) {
-    const character = text[index];
-    if (isTomlQuote(character)) {
-      const end = tomlStringEnd(text, index);
-      if (end < 0) {
-        return depth;
+class TomlBracketScanner {
+  depth = 0;
+  private quote = ""; // the delimiter of the string being scanned, or ""
+  private escape = false; // the previous character was a backslash in "..."
+
+  feed(text: string): void {
+    for (let index = 0; index < text.length; index++) {
+      const character = text[index];
+      if (this.escape) {
+        this.escape = false;
+      } else if (this.quote !== "") {
+        if (this.quote === '"' && character === "\\") {
+          this.escape = true;
+        } else if (character === this.quote) {
+          this.quote = "";
+        }
+      } else if (isTomlQuote(character)) {
+        this.quote = character;
+      } else if (character === "{" || character === "[") {
+        this.depth++;
+      } else if (character === "}" || character === "]") {
+        this.depth--;
       }
-      index = end - 1;
-    } else if (character === "{" || character === "[") {
-      depth++;
-    } else if (character === "}" || character === "]") {
-      depth--;
     }
   }
-  return depth;
 }
 
 /**
@@ -868,8 +935,16 @@ function classifyCargoLinkHeader(line: string): CargoLinkTable {
  *
  * Fields are split at commas outside strings AND outside nested `[...]` or
  * `{...}`, so a `features` array cannot leak a fake field and a nested
- * table's `path` is not the entry's. Field keys must be exactly `path` and
- * `package` (Cargo ignores `Package`). The first usable field of each wins.
+ * table's `path` is not the entry's. A field key is decoded like an entry
+ * key, so `"path"` and `'path'` are the key `path` (TOML, and so Cargo, read
+ * them that way); the decoded key must then be exactly `path` or `package`
+ * (Cargo ignores `Package`; escapes are not decoded). The first usable field
+ * of each wins:
+ *
+ *     a = { "path" = "../a" }                 -> a
+ *     x = { 'package' = "a", path = "../a" }  -> a
+ *     a = { "Path" = "../a" }                 -> null (keys are case-sensitive)
+ *     a = { path.x = "../a" }                 -> null (dotted field key)
  */
 function cargoPathDependencyName(key: string, rawValue: string): string | null {
   const crateName = tomlKeySegment(key);
@@ -891,7 +966,8 @@ function cargoPathDependencyName(key: string, rawValue: string): string | null {
     if (fieldValue === null) {
       continue;
     }
-    const fieldKey = trimSpacesAndTabs(field.slice(0, equals));
+    // A dotted or malformed field key is no key at all (null).
+    const fieldKey = tomlKeySegment(field.slice(0, equals));
     if (fieldKey === "path" && dependencyPath === null) {
       dependencyPath = fieldValue;
     } else if (fieldKey === "package" && packageName === null) {
@@ -923,7 +999,12 @@ function cargoPathDependencyName(key: string, rawValue: string): string | null {
  *
  * So while the value still has an unclosed `{` or `[`, the next lines are
  * joined onto it with one space (and are not looked at as headers or
- * entries). If the file ends first, the entry contributes nothing.
+ * entries). If the file ends first, the entry contributes nothing. The
+ * brackets are counted over the joined value as one text -- a string left
+ * open at the end of one line continues after the joining space -- but the
+ * joined value is never rescanned: a TomlBracketScanner carries its state
+ * from line to line and the pieces are joined once, so the join is linear
+ * in the entry's length.
  */
 export function cargoLinkDependencyNames(manifest: string): string[] {
   // Step 1: lines. Split at LF, drop one trailing CR, ignore a leading BOM.
@@ -962,14 +1043,26 @@ export function cargoLinkDependencyNames(manifest: string): string[] {
     }
     if (table.kind === "inline") {
       // Step 3: inline entries, continued while a bracket is open.
+      // The pieces are collected and joined once, and the scanner carries
+      // its state from piece to piece, so the join is linear.
       let value: string | null = trimSpacesAndTabs(line.slice(equals + 1));
-      while (value.startsWith("{") && tomlOpenBracketDepth(value) > 0) {
-        index++;
-        if (index >= lines.length) {
-          value = null; // the file ended inside the value: no entry
-          break;
+      if (value.startsWith("{")) {
+        const scanner = new TomlBracketScanner();
+        scanner.feed(value);
+        if (scanner.depth > 0) {
+          const pieces = [value];
+          let closed = false;
+          while (!closed && index + 1 < lines.length) {
+            index++;
+            const piece = clean(lines[index]);
+            scanner.feed(" ");
+            scanner.feed(piece);
+            pieces.push(piece);
+            closed = scanner.depth <= 0;
+          }
+          // If the file ended inside the value, there is no entry.
+          value = closed ? pieces.join(" ") : null;
         }
-        value += " " + clean(lines[index]);
       }
       const crateName = value === null
         ? null
@@ -978,13 +1071,15 @@ export function cargoLinkDependencyNames(manifest: string): string[] {
         names.push(crateName);
       }
     } else if (table.kind === "sub") {
-      // Step 4: only the two bare, lower-case keys matter; first wins.
-      // `version`, `features`, `optional` ... are ignored.
+      // Step 4: only the keys `path` and `package` matter, bare or quoted
+      // (`"path" = ...` is the same key); first wins. `version`,
+      // `features`, `optional` ... are ignored, and so is `Path`: TOML keys
+      // are case-sensitive.
       const fieldValue = tomlSingleString(line.slice(equals + 1));
       if (fieldValue === null) {
         continue;
       }
-      const fieldKey = trimSpacesAndTabs(line.slice(0, equals));
+      const fieldKey = tomlKeySegment(line.slice(0, equals));
       if (fieldKey === "path" && subPath === null) {
         subPath = fieldValue;
       } else if (fieldKey === "package" && subPackage === null) {
@@ -1318,7 +1413,12 @@ function readCargoPackageName(pkgPath: string): string | null {
     return null;
   }
 
-  const match = fs.readFileSync(cargoTomlPath, "utf-8").match(/^\s*name\s*=\s*"([^"]+)"/m);
+  // `[ \t]*`, not `\s*`: with the `m` flag a `\s*` after `^` runs across
+  // every following blank line from each line start and backtracks, which
+  // is quadratic in a run of blank lines. Names never span lines either.
+  const match = fs
+    .readFileSync(cargoTomlPath, "utf-8")
+    .match(/^[ \t]*name[ \t]*=[ \t]*"([^"\n]+)"/m);
   return match ? match[1].trim().toLowerCase() : null;
 }
 
@@ -1549,6 +1649,8 @@ function parseDotnetDeps(
  *
  * @param packages - List of discovered packages.
  * @returns A DirectedGraph with dependency edges.
+ * @throws MetadataEncodingError if a rockspec is not valid UTF-8.
+ * @throws DependencySelfEdgeError if a Cargo manifest resolves its own crate.
  */
 export function resolveDependencies(packages: Package[]): DirectedGraph {
   const graph = new DirectedGraph();
@@ -1591,6 +1693,16 @@ export function resolveDependencies(packages: Package[]): DirectedGraph {
       case "rust":
       case "wasm":
         deps = parseRustDeps(pkg, knownNames);
+        // Step 5 of the Rust contract: a candidate resolving to the crate
+        // itself (by directory alias or [package] name) is rejected,
+        // neither dropped nor drawn.
+        if (deps.includes(pkg.name)) {
+          throw new DependencySelfEdgeError(
+            pkg.name,
+            repositoryManifestPath(nodePath.join(pkg.path, "Cargo.toml")),
+            pkg.name,
+          );
+        }
         break;
       case "elixir":
         deps = parseElixirDeps(pkg, knownNames);
