@@ -1336,6 +1336,8 @@ pub fn lower_iir_to_llvm(
 fn collect_string_literals(
     module: &IIRModule,
 ) -> (Vec<LlvmStringLiteralDef>, HashMap<String, LlvmStringLiteralRef>) {
+    // LANG83 PR5a: the most bytes a folded `str_concat` may produce (#18800).
+    let str_ceiling = module.str_ceiling();
     let mut defs = Vec::new();
     let mut map = HashMap::new();
     fn intern_string_literal(
@@ -1425,6 +1427,19 @@ fn collect_string_literals(
                     else {
                         continue;
                     };
+                    // LANG83 PR5a (#18800): the same ceiling `lower_str_concat`
+                    // folds under. A longer join is a run-time
+                    // `@__twig_str_concat` call that traps `Trap.Overflow`, so
+                    // there is nothing to intern — and interning it anyway (as
+                    // this pre-pass did) emitted the over-long bytes as a module
+                    // constant and let a chain of `d = d ++ d` double in the
+                    // compiler without bound (40 doublings of 8 bytes: 8 TiB).
+                    // `dest` then holds a run-time string, so its value is
+                    // forgotten too: a later join that reads it cannot fold.
+                    if left.len().saturating_add(right.len()) > str_ceiling as usize {
+                        fn_values.remove(dest);
+                        continue;
+                    }
                     let value = format!("{left}{right}");
                     intern_string_literal(&value, &mut defs, &mut map);
                     fn_values.insert(dest.clone(), value);

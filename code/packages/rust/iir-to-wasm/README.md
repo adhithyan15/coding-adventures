@@ -39,7 +39,7 @@ Every string failure is a registered LANG83 trap, raised through the
 | failure | sequence |
 |---------|----------|
 | `str_index` / `str_slice` out of range (literal or runtime path) | `i32.const 1; call $env.__trap; unreachable` (`Trap.Bounds`) |
-| `str_concat` whose result would exceed the module's string ceiling (`IIRModule::str_ceiling`) | `i32.const 5; call $env.__trap; unreachable` (`Trap.Overflow`), checked as `u64(len a) + u64(len b) >u ceiling` before anything is allocated; a literal fold past the ceiling compiles to the same trap. `validate_for_wasm` refuses a `str_const` longer than the ceiling (`StrTooLong`, #18800) |
+| `str_concat` whose result would exceed the module's string ceiling (`IIRModule::str_ceiling`) | `i32.const 5; call $env.__trap; unreachable` (`Trap.Overflow`), checked as `u64(len a) + u64(len b) >u ceiling` before anything is allocated; a literal join past the ceiling is not folded, so the same run-time check raises it (#18800). `validate_for_wasm` refuses a `str_const` longer than the ceiling (`StrTooLong`) |
 
 So a module that uses any of the three ops imports `env.__trap`, and every
 host that runs one must provide it (this crate's string tests share one in

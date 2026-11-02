@@ -1,9 +1,11 @@
 # Changelog — iir-to-wasm
 
-## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused at compile time
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused, a join past it is not folded
 
 - `validate_for_wasm` (and so `lower_iir_to_wasm` and the codegen registry) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
 - Test `a_literal_past_the_module_ceiling_is_refused_at_compile_time` (fails without the check).
+- **No literal fold past the ceiling** (item 4). `collect_module_features` joined any two folded literals, so a chain of `d = d ++ d` doubled in the compiler: twenty doublings of 8 bytes put about 16 MiB into the data segment (forty would have asked for 8 TiB), for a program that traps at the second concat. A join longer than `str_ceiling()` is now not folded: its destination is a run-time string and the run-time path's inline length check raises `Trap.Overflow`, as twig-aot's and iir-to-llvm's folds stop at the ceiling. The fold-site trap that the lowering emitted for such a join is gone (a `debug_assert!` records the invariant). The program's output and trap are unchanged.
+- Test `a_literal_join_past_the_ceiling_is_left_to_the_runtime_check` (fails without the fix: the module was megabytes, and the 17-byte join was in its data).
 
 ## Unreleased — LANG83 PR5a — strings fail closed
 

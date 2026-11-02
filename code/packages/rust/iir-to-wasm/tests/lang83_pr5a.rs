@@ -232,3 +232,45 @@ fn a_literal_past_the_module_ceiling_is_refused_at_compile_time() {
         .any(|e| e.starts_with("StrTooLong")));
 }
 
+// ── #18800 item 4: no literal fold past the ceiling ─────────────────────────
+
+/// `s` is an 8-byte literal; `d1 = s ++ s` (16 bytes), then `d{k+1} = dk ++
+/// dk`, `doublings` times in all, and `main` returns `str_len` of the last.
+fn doubling_chain(doublings: usize, ceiling: Option<u32>) -> IIRModule {
+    let mut body = vec![text("d0", "01234567")];
+    for k in 0..doublings {
+        let (src, dst) = (format!("d{k}"), format!("d{}", k + 1));
+        body.push(IIRInstr::new("str_concat", Some(dst), vec![v(&src), v(&src)], "str"));
+    }
+    body.push(IIRInstr::new("str_len", Some("n".into()), vec![v(&format!("d{doublings}"))], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![v("n")], "i64"));
+    module(vec![IIRFunction::new("main", vec![], "i64", body)], ceiling)
+}
+
+/// The fold pre-pass used to join any two literals, with no ceiling: a chain
+/// of `d = d ++ d` doubled in the *compiler*. Twenty doublings of 8 bytes put
+/// about 16 MiB of joined literals into the data segment (forty would have
+/// asked for 8 TiB), although the program traps `Trap.Overflow` at the second
+/// concat. The pre-pass now stops at the ceiling, like twig-aot's fold: the
+/// join past it is a run-time concat, and the run-time check traps.
+#[test]
+fn a_literal_join_past_the_ceiling_is_left_to_the_runtime_check() {
+    let m = doubling_chain(20, Some(16));
+    let bytes = encode_module(&lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering"))
+        .expect("encoding");
+    assert!(bytes.len() < 64 * 1024, "the module is {} bytes", bytes.len());
+    assert_eq!(run(&m), Err(Some(OVERFLOW)));
+
+    // The 17-byte join of the ceiling-16 case is not in the data segment:
+    // it is built at run time, if at all (here it is not: the trap comes first).
+    let bytes = encode_module(&lower_iir_to_wasm(&concat_literal(Some(16)), &IIRWasmConfig::default()).unwrap())
+        .unwrap();
+    let joined = b"0123456701234567x";
+    assert!(!bytes.windows(joined.len()).any(|w| w == joined), "the 17-byte join was folded");
+    // Under the registry ceiling the same join still folds into the data.
+    let bytes = encode_module(&lower_iir_to_wasm(&concat_literal(None), &IIRWasmConfig::default()).unwrap())
+        .unwrap();
+    assert!(bytes.windows(joined.len()).any(|w| w == joined), "the fold fast path is gone");
+    // And a chain within the ceiling still folds all the way (8 → 16 → 32).
+    assert_eq!(run(&doubling_chain(2, None)), Ok(32));
+}

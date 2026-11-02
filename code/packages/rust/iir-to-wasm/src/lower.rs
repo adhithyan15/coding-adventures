@@ -1550,14 +1550,15 @@ fn emit_instr(
             })?;
             let rd = get_reg(dest)?;
             if let Some(lit) = string_literals.get(dest) {
-                // LANG83 PR5a: a fold may not turn a failing op into a value. A
-                // literal join longer than the module's string ceiling raises
-                // `Trap.Overflow` here, at run time, exactly where the runtime
-                // path would; the local is still set below, on a path that the
-                // trap makes unreachable.
-                if lit.bytes.len() > lang83.str_ceiling as usize {
-                    emit_str_trap(code, lang83, TRAP_OVERFLOW, fn_name)?;
-                }
+                // LANG83 PR5a: a fold may not turn a failing op into a value.
+                // `collect_module_features` folds a join only when it fits the
+                // module's string ceiling (#18800); a longer one has no literal
+                // entry and takes the runtime path below, whose length check
+                // raises `Trap.Overflow`. (Until #18800 the join was folded and
+                // this site emitted the trap, with the over-long bytes already in
+                // the data segment.) And `str_const`s past the ceiling never get
+                // here: validation refuses them.
+                debug_assert!(lit.bytes.len() <= lang83.str_ceiling as usize, "a fold past the ceiling");
                 // Both operands are literals — the joined bytes are a compile-time
                 // constant.  Normally the handle is that constant's raw data-segment
                 // offset.  But when this folded result crosses a call boundary
@@ -5369,6 +5370,8 @@ fn build_str_cmp_helper() -> FunctionBody {
 }
 
 fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
+    // LANG83 PR5a: the most bytes a folded `str_concat` may produce (#18800).
+    let str_ceiling = module.str_ceiling();
     // Use a HashSet for O(1) deduplication checks, preserving first-seen order
     // in the Vec.  Without the set, deduplication would be O(M × N) where M is
     // the number of global accesses and N the number of distinct names —
@@ -5516,6 +5519,23 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         // happen to fold, so the variable has exactly one
                         // representation (a `[i32 len][bytes]` handle) everywhere.
                         let foldable = !fn_runtime_valued.contains(dest);
+                        // LANG83 PR5a (#18800): a fold may not build a string the
+                        // program could not. A join longer than the module's ceiling
+                        // is NOT folded — it takes the runtime path below, whose
+                        // inline length check raises `Trap.Overflow` at run time,
+                        // exactly as twig-aot's and iir-to-llvm's folds stop at the
+                        // ceiling. Folding it anyway (as this pass did) put the
+                        // over-long bytes in the data segment and let a chain of
+                        // `d = d ++ d` double in the compiler without bound:
+                        //
+                        //   doublings of an 8-byte literal │ 10     │ 20     │ 40
+                        //   data segment before the fix    │ 16 KiB │ 16 MiB │ 8 TiB
+                        //
+                        // With the check every folded literal is at most
+                        // `str_ceiling()` bytes, and the chain stops folding at the
+                        // first join past it (whose operands are then promoted to
+                        // runtime blocks below, like any other runtime concat's).
+                        let ceiling = str_ceiling as usize;
                         let Some((left_lit, right_lit)) = string_literals
                             .get(&fn_.name)
                             .filter(|_| foldable)
@@ -5525,6 +5545,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                     fn_strings.get(right)?.clone(),
                                 ))
                             })
+                            .filter(|(l, r)| l.bytes.len().saturating_add(r.bytes.len()) <= ceiling)
                         else {
                             // A non-foldable concatenation allocates a runtime
                             // `[len][bytes]` block in linear memory. It may be

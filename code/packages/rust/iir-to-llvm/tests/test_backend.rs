@@ -1498,6 +1498,35 @@ fn a_literal_concat_past_the_ceiling_is_a_runtime_call_with_the_ceiling() {
     assert!(ll.contains(", i64 16)\n"), "the ceiling is the third argument:\n{ll}");
 }
 
+/// #18800 item 4: the literal pre-pass (`collect_string_literals`) stops at
+/// the ceiling too. It used to intern every join, so the 17-byte value the
+/// lowering refused to fold was still emitted as a `[17 x i8]` constant, and a
+/// chain of `d = d ++ d` doubled in the compiler: twenty doublings of 8 bytes
+/// emitted about 16 MiB of constants for a program that traps at the second
+/// concat.
+#[test]
+fn a_literal_join_past_the_ceiling_is_not_interned() {
+    let ll = lower(&concat_to_17(Some(16)));
+    assert!(ll.contains("[16 x i8]"), "the 16-byte join still folds:\n{ll}");
+    assert!(!ll.contains("[17 x i8]"), "the 17-byte join was interned:\n{ll}");
+    // Under the registry ceiling it is folded and interned, as before.
+    assert!(lower(&concat_to_17(None)).contains("[17 x i8]"));
+
+    let mut body = vec![IIRInstr::new("str_const", Some("d0".into()), vec![Operand::Str("01234567".into())], "str")];
+    for k in 0..20 {
+        let (src, dst) = (format!("d{k}"), format!("d{}", k + 1));
+        body.push(IIRInstr::new("str_concat", Some(dst), vec![Operand::Var(src.clone()), Operand::Var(src)], "str"));
+    }
+    body.push(IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("d20".into())], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"));
+    let mut m = module_with(IIRFunction::new("main", vec![], "i64", body));
+    m.str_max_bytes = Some(16);
+    let ll = lower(&m);
+    assert!(ll.len() < 64 * 1024, "{} bytes of LLVM IR", ll.len());
+    // d1 folds; d2..d20 are run-time concats, each passed the ceiling.
+    assert_eq!(ll.matches("call i64 @__twig_str_concat(").count(), 19, "{ll}");
+}
+
 /// #18800 item 1: `validate_for_llvm` (and so `lower_iir_to_llvm`) refuses a
 /// literal longer than the module's ceiling, and a ceiling above the
 /// registry's. Before, both lowered.
