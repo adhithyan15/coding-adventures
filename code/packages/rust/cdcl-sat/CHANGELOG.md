@@ -1,5 +1,26 @@
 # Changelog — `cdcl-sat`
 
+## 0.2.0 — 2026-11-02
+
+VER11: DRAT proof logging.
+
+### Added
+
+- `Solver::enable_proof` (before the first clause), `proof`, `take_proof`,
+  and `Solver::from_cnf_with_proof`. The proof is recorded in memory as a
+  `DratProof` of `ProofStep`s; `DratProof::to_drat_text` renders DRAT text.
+- Logged events (VER11 §4): clauses shortened or emptied by level-0
+  simplification in `add_clause`, every learned clause, every deletion made
+  by database reduction, and the empty clause on a level-0 conflict.
+  Original clauses are not logged; they are the formula.
+- `drat-check` as a dev-dependency only. `tests/drat.rs` certifies every
+  UNSAT answer of the differential corpus (600 random formulas and
+  pigeonhole up to PHP(8,7)). A negative corpus is rejected in full:
+  truncated, reordered and tampered proofs, deletions of absent clauses,
+  and proofs replayed against satisfiable weakenings of their formulas.
+- `tests/common/` shares the generator, brute force and pigeonhole helpers
+  between the integration tests.
+
 ## 0.1.0 — 2026-11-02
 
 Initial release: the VER09 CDCL SAT solver.
