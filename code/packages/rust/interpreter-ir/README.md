@@ -88,8 +88,8 @@ reports a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`) and a
 `str_const` longer than the ceiling (`StrTooLong`); `validate()` includes
 those errors, and every column calls `str_ceiling_errors()` itself before it
 compiles or runs a module (#18800), so an over-long literal is refused
-everywhere, never run. Like `release`, the field is not part of the
-binary wire format.
+everywhere, never run. Unlike `release`, the field is part of the binary
+wire format (format 1.2, written only when it is `Some`, #18800).
 
 ## The standard operation registry (LANG83)
 
@@ -199,8 +199,13 @@ let bytes = serialise(&module);
 let module2 = deserialise(&bytes).unwrap();
 ```
 
-Format: `b"IIR\0"` magic, `u16` version `1.0`, little-endian.  Profiling fields
-are **not** serialised (they are runtime-only state).
+Format: `b"IIR\0"` magic, then a major and a minor version byte, little-endian.
+The writer uses the oldest version that can hold the module: **1.1** (functions,
+exports, imports) unless the module lowers its string ceiling, and **1.2** (1.1
+plus a `0x12` section holding `str_max_bytes`) when it does (#18800). So a module
+without a ceiling serialises byte for byte as before. The reader accepts 1.0,
+1.1 and 1.2. Profiling fields and `release` are **not** serialised (they are
+runtime-only state and provenance).
 
 ---
 

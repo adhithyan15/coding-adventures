@@ -66,6 +66,11 @@ rename map (its own renamed functions plus its imports):
 | `task_spawn` | `srcs[0]` — spawned function name |
 | `group_spawn` | `srcs[1]` — spawned function name |
 
+The merged module's string ceiling (`str_max_bytes`, LANG83 PR5a) is the
+smallest of its inputs', and `None` (the registry ceiling) only when no input
+sets one: a program never runs under a looser ceiling than one of its modules
+was compiled for (#18800).
+
 The merged `entry_point` is mapped the same way.  Data operands such as
 `const(Str(..))`, `global_load`/`global_store` names and `catch` kinds are
 left alone.  This matters for Twig in particular: every module numbers its

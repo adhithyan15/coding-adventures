@@ -134,9 +134,11 @@ pub struct IIRModule {
     /// [`IIRModule::validate`]. Every backend reads the effective value through
     /// [`IIRModule::str_ceiling`], never this field directly.
     ///
-    /// Like `release`, the field is not part of the binary wire format
-    /// (`serialise`): a deserialised module has `None`, which means the
-    /// registry ceiling.
+    /// Unlike `release`, the field is part of the binary wire format: since
+    /// #18800 `serialise` writes it (format 1.2, only when it is `Some`), and
+    /// `iir-linker` gives a linked program the smallest ceiling of its
+    /// modules. Before, both silently reset it to `None`, the registry
+    /// ceiling, which is looser than any `Some`.
     pub str_max_bytes: Option<u32>,
 }
 
