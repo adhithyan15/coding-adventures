@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- `BUILD` runs Cabal with `DEVELOPER_DIR=/Library/Developer/CommandLineTools` on Darwin so GHC 9.4.8 links with the Command Line Tools linker that accepts the CLT SDK's `arm64e.x1` stubs; other platforms are unchanged.
 - Diagonal `line` rendering no longer hangs for some slopes (issue #12093).
   The Bresenham recursion seeded its error term with `0` instead of the
   standard `deltaCol - deltaRow` ("err = dx - dy"), so for ratios such as

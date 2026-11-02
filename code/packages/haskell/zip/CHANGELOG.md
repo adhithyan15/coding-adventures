@@ -35,6 +35,7 @@
 
 ### Fixed
 
+- `BUILD` runs Cabal with `DEVELOPER_DIR=/Library/Developer/CommandLineTools` on Darwin so GHC 9.4.8 links with the Command Line Tools linker that accepts the CLT SDK's `arm64e.x1` stubs; other platforms are unchanged.
 - Rescued this package from a stale, never-PR'd branch
   (`worktree-feat+zstd-and-catchups`) and verified it against current `main`
   and toolchain (GHC 9.14.1 / cabal-install 3.16.1.0 via `mise`).
