@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Plants",
+  "label": "ch:zh-plants",
+  "canDo": "I can talk about plants, peanuts, leaves, things sprouting and watermelons.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C237-xigua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can talk about plants, peanuts, leaves, things sprouting and watermelons.",
+    "assesses": [
+      "ZH-LEX-C237-PLANT237-03",
+      "ZH-LEX-C237-PLANT237-04",
+      "ZH-LEX-C237-PLANT237-05"
+    ]
+  }
+}

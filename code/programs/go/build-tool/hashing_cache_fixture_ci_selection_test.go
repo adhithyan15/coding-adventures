@@ -23,9 +23,9 @@ import (
 // the complete cache-decision oracle: several native suites assert digests.
 var hashingCacheExpectedReaders = map[string]string{
 	"corrupt":                           "CFLYT",
-	"dependency-change-after":           "CFL",
-	"dependency-order-before":           "CFL",
-	"failed-prior-record":               "CFL",
+	"dependency-change-after":           "CFLB",
+	"dependency-order-before":           "CFLB",
+	"failed-prior-record":               "CFLB",
 	"hit":                               "CFLY",
 	"local-boundary-union":              "CFL",
 	"missing":                           "CFLGPYBS",
@@ -189,7 +189,8 @@ func TestHashingCacheFixtureCheckedCorpus(t *testing.T) {
 func TestHashingCacheFixtureNativeSourceReferenceDrift(t *testing.T) {
 	root := toolchainFixtureRepoRoot(t)
 	// C#/F# enumerate the complete glob, Python constructs exactly three
-	// names, and Lua lists the complete roster. The other fronts use literals.
+	// names, Lua lists the complete roster, and Ruby filters its glob by an
+	// exact three-ID dependency roster. The other fronts use literals.
 	readerSources := map[rune]string{
 		'C': "dotnet/build-tool-csharp/tests/BuildTool.CSharp.Tests/HasherConformanceTests.cs",
 		'F': "dotnet/build-tool-fsharp/tests/BuildTool.FSharp.Tests/HasherConformanceTests.fs",
@@ -215,9 +216,15 @@ func TestHashingCacheFixtureNativeSourceReferenceDrift(t *testing.T) {
 			!bytes.Contains(data, []byte(`for state in ("missing", "hit", "corrupt")`))) {
 			t.Error("Python hashing-cache dynamic case roster drifted")
 		}
+		if code == 'B' && !bytes.Contains(data, []byte(`glob("hashing-cache-*.json")`)) {
+			t.Error("Ruby hashing-cache dynamic case glob drifted")
+		}
 		for stem, codes := range hashingCacheExpectedReaders {
 			found := bytes.Contains(data, []byte("hashing-cache-"+stem+".json"))
 			if code == 'C' || code == 'F' || code == 'Y' && (stem == "missing" || stem == "hit" || stem == "corrupt") {
+				found = true
+			}
+			if code == 'B' && bytes.Contains(data, []byte("hashing-cache/"+stem)) {
 				found = true
 			}
 			want := strings.ContainsRune(codes, code)
@@ -257,7 +264,8 @@ func TestHashingCacheFixtureNativeSourceReferenceDrift(t *testing.T) {
 				return err
 			}
 			for stem := range hashingCacheExpectedReaders {
-				if bytes.Contains(data, []byte("hashing-cache-"+stem+".json")) {
+				if bytes.Contains(data, []byte("hashing-cache-"+stem+".json")) ||
+					code == 'B' && bytes.Contains(data, []byte("hashing-cache/"+stem)) {
 					found[stem] = true
 				}
 			}

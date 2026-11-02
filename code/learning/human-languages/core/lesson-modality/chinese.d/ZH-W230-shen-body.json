@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W230-shen-body",
+    "language": "chinese",
+    "chapter": 230,
+    "sequence": 17625,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bb171feeb8821b98",
+    "detachableSegments": [
+      "Script — a frame with two bars, crossed by two long strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

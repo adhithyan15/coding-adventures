@@ -257,6 +257,12 @@ rows in all. Chinese attains A1: 641 headwords and 172 verbs at or below A1. Nex
 the A2 rung, whose two missing spine nodes are talking about the future and reading
 practical texts.
 
+Two original A1 four-skill timed mock forms are authored as separate papers,
+examiner keys, rubrics, and manifests. They assess a small, taught-word A1
+sample rather than adding lesson time. The mocks remain project-defined and
+pending qualified independent Chinese-language review; no official HSK
+equivalence or readiness is claimed.
+
 ## The A2 core (delivered, chapters 147-157)
 
 Eleven hand-authored chapters, 78 lessons. `SPINE-TALK-ABOUT-FUTURE` (chapters
@@ -271,6 +277,16 @@ in all. ZH-W157-reply proves connected composition, a reply of four to six lines
 a named reader. A2 headwords 645 -> 690, verbs 173 -> 185; all five A2 nodes
 realized, no A2 writing stage missing. A2 is not attained: the A2 vocabulary
 (about 510 more headwords, with 48 more characters planned) comes next.
+
+## The A2 vocabulary (delivered, chapters 158-277)
+
+600 words (218 verbs) in four reviewed tranches on the A2 nodes, and 48 more characters
+written (房 米 衣 茶 事 觉 杯 候 面 常 间 冷 钱 号 店 回 路 票 找 关 东 离 公 地 风 云 雪 花 草 头 疼 身
+体 医 西 现 校 高 读 作 写 孩 工 热 假 笑 先 老), 211 inventory rows in all. 126 words are
+headed in written characters and 474 are taught by ear with pinyin headwords. Chinese
+attains A2: 1,290 headwords and 403 verbs at or below A2. Next: the B1 rung, whose
+five spine nodes (narrating, giving reasons, travel, describing experience and
+conditions) are all still unrealized.
 
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 

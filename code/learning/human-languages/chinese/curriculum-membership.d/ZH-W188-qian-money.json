@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W188-qian-money",
+  "pathSegment": "ZH-PATH-188-MONEY188",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-188-MONEY188",
+      "order": 1
+    }
+  ]
+}

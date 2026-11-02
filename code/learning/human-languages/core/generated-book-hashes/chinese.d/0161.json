@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:31e0cfc1d041e7db",
+  "lessonIds": [
+    "ZH-C161-dami",
+    "ZH-W161-mi-rice",
+    "ZH-C161-fen",
+    "ZH-C161-chaofan",
+    "ZH-C161-niurou",
+    "ZH-C161-jirou"
+  ],
+  "tex": "chinese/book/chapters/ch161-rice-and-meat.tex"
+}

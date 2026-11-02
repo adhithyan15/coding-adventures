@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:d424d37fc519b4f5",
+  "lessonIds": [
+    "ZH-C192-cesuo",
+    "ZH-C192-dianti",
+    "ZH-C192-tingchechang",
+    "ZH-C192-paidui",
+    "ZH-C192-kaifang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch192.txt",
+  "json": "chinese/narration/ch192.json",
+  "textHash": "fnv1a64:e7210dab5e2cb405",
+  "jsonHash": "fnv1a64:446ae31db2a1bf99",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C184-canguan",
+  "pathSegment": "ZH-PATH-184-HOLIDAY184",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-184-HOLIDAY184",
+      "order": 2
+    }
+  ]
+}

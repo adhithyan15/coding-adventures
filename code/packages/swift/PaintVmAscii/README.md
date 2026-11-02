@@ -84,6 +84,15 @@ arithmetic in `Double` (which saturates rather than trapping) instead.
 - Swift 5.9+
 - `PaintInstructions` (local package dependency)
 
+## Capability boundary
+
+`PaintVmAscii` is a pure library. Rendering consumes an in-memory
+`PaintScene` and returns a `String`; the package does not read input, write
+to a terminal, inspect the environment, access files or the network, start
+processes, read the clock, or call native code. The example above prints only
+in its caller. This empty authority boundary is declared explicitly in
+`required_capabilities.json`.
+
 ## Building
 
 ```sh

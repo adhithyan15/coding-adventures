@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C268-baoming",
+    "language": "chinese",
+    "chapter": 268,
+    "sequence": 20030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0c5c1e1bf5f3aec"
+  },
+  "findings": []
+}

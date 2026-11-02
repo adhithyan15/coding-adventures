@@ -1,0 +1,21 @@
+{
+  "chapter": 229,
+  "title": "Keeping a Pet",
+  "label": "ch:zh-keeping-a-pet",
+  "canDo": "I can talk about pets: keeping one, walking the dog, being scratched and stroking them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-R229-review-224-229",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can talk about pets: keeping one, walking the dog, being scratched and stroking them.",
+    "assesses": [
+      "ZH-LEX-C229-PET229-01",
+      "ZH-LEX-C229-PET229-02",
+      "ZH-LEX-C229-PET229-03",
+      "ZH-LEX-C229-PET229-04",
+      "ZH-LEX-C229-PET229-05"
+    ]
+  }
+}

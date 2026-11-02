@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "c4-directed-relationships-11.16.1-corpus.json",
+  "fixtures": [
+    "short-up-relationship",
+    "short-down-relationship",
+    "short-left-relationship",
+    "short-right-relationship",
+    "long-up-relationship",
+    "long-down-relationship",
+    "long-left-relationship",
+    "long-right-relationship"
+  ]
+}

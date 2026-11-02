@@ -44,9 +44,11 @@
 //!    | TokenReference| Match if current token has the right type   |
 //!    | Literal       | Match if current token has the right value  |
 //!    | AdjacencyPredicate | Test the gap before the next token (F11) |
+//!    | AutoInsert    | Insert a zero-width token at a line break, closer or end (F11 `@asi`) |
 
 use lexer::token::{
     Token, TokenType, string_to_token_type, TOKEN_PRECEDED_BY_NEWLINE, TOKEN_PRECEDED_BY_SPACE,
+    TOKEN_SYNTHETIC,
 };
 use grammar_tools::parser_grammar::{AdjacencyPredicate, GrammarElement, ParserGrammar};
 use std::collections::HashMap;
@@ -244,6 +246,11 @@ pub struct GrammarParser {
 
     /// Whether newlines are significant in this grammar.
     newlines_significant: bool,
+
+    /// Whether any rule contains `@asi`. Only such a grammar can produce
+    /// synthetic tokens, so only it pays for the insertion-budget walk
+    /// after a successful parse.
+    uses_auto_insert: bool,
 
     /// Packrat memoization cache: `(rule_idx, pos)` -> `MemoEntry`.
     ///
@@ -484,6 +491,7 @@ impl GrammarParser {
         }
 
         let newlines_significant = grammar_references_newline(&grammar);
+        let uses_auto_insert = grammar_uses_auto_insert(&grammar);
 
         GrammarParser {
             tokens,
@@ -491,6 +499,7 @@ impl GrammarParser {
             pos: 0,
             rules,
             newlines_significant,
+            uses_auto_insert,
             memo: HashMap::new(),
             furthest_pos: 0,
             furthest_expected: Vec::new(),
@@ -678,6 +687,7 @@ impl GrammarParser {
                     });
                 }
 
+                self.check_insertion_budget(&node)?;
                 // Refuse a tree whose owned copy would be out of proportion
                 // to the input before copying it (see
                 // `MAX_TREE_NODES_PER_TOKEN`).
@@ -1092,6 +1102,17 @@ impl GrammarParser {
             }
 
             // ---------------------------------------------------------------
+            // Extension: automatic insertion, `@asi(T, C…)` (F11)
+            // ---------------------------------------------------------------
+
+            GrammarElement::AutoInsert { token, closers } => {
+                // Zero-width like a predicate, and like one it records no
+                // expectation on failure: in `SEMICOLON | @asi(SEMICOLON, …)`
+                // the written alternative has already said what was wanted.
+                self.auto_insert(token, closers).map(|tok| vec![Built::Token(tok)])
+            }
+
+            // ---------------------------------------------------------------
             // Extension: One-or-more repetition
             // ---------------------------------------------------------------
 
@@ -1248,6 +1269,91 @@ impl GrammarParser {
     }
 
     // =========================================================================
+    // Automatic insertion (F11 `@asi`)
+    // =========================================================================
+
+    /// Evaluate `@asi(token, closers…)` at the cursor, without moving it.
+    /// Returns the synthetic token to add to the tree, or `None`.
+    ///
+    /// The three conditions, checked on the token the next element would
+    /// see (found exactly as [`Self::adjacency_holds`] finds it):
+    ///
+    /// ```text
+    ///   condition                         example (closers = RBRACE)
+    ///   ---------                         -------
+    ///   a line break before it            a = 1 ⏎ b = 2       insert before `b`
+    ///   it is one of the closers          { a = 1 }           insert before `}`
+    ///   the input has ended               a = 1               insert before EOF
+    ///   none of these                     a = 1 b = 2         no insertion
+    /// ```
+    ///
+    /// Like the predicates, this reads only the token stream at the cursor,
+    /// so the packrat key `(rule, position)` still determines the result.
+    fn auto_insert(&self, token: &str, closers: &[String]) -> Option<Token> {
+        let (next, bits) = self.next_token_gap(self.pos);
+        let next_token = self.tokens.get(next.min(self.tokens.len().saturating_sub(1)));
+        let at_end = next >= self.tokens.len() || next_token.is_some_and(|t| t.type_ == TokenType::Eof);
+        // In a newline-significant grammar the NEWLINE token is not stepped
+        // over, so a NEWLINE *as* the next token is the line break.
+        let line_break = bits & TOKEN_PRECEDED_BY_NEWLINE != 0
+            || next_token.is_some_and(|t| t.type_ == TokenType::Newline);
+        let closer = next_token
+            .is_some_and(|t| closers.iter().any(|name| token_has_type(t, name)));
+        if !(line_break || closer || at_end) {
+            return None;
+        }
+        // The type fields a `GrammarLexer` gives a `token` token: a built-in
+        // `TokenType` when the name has one, else `Name` plus the name.
+        let type_ = string_to_token_type(token);
+        let type_name = (type_ == TokenType::Name && token != "NAME").then(|| token.to_string());
+        let (line, column) = next_token.map_or((1, 1), |t| (t.line, t.column));
+        Some(Token {
+            type_,
+            value: String::new(),
+            line,
+            column,
+            type_name,
+            flags: Some(TOKEN_SYNTHETIC),
+            // No source bytes, so no correlation-vector origin.
+            cv: None,
+        })
+    }
+
+    /// The F11 budget: the finished tree may hold at most one synthetic
+    /// token per token of the input (EOF included). Counted on the shared
+    /// `BuiltNode` tree before it is copied out, with one count per node
+    /// (a memoized zero-width node can appear more than once), so the check
+    /// itself is linear in the number of distinct nodes.
+    fn check_insertion_budget(&self, root: &Rc<BuiltNode>) -> Result<(), GrammarParseError> {
+        if !self.uses_auto_insert {
+            return Ok(());
+        }
+        let synthetic = count_synthetic(root);
+        if synthetic > self.tokens.len() {
+            return Err(GrammarParseError {
+                message: format!(
+                    "automatic insertion budget exceeded: {} synthetic tokens for {} input tokens",
+                    synthetic,
+                    self.tokens.len()
+                ),
+                // Not `self.current()`: a hook may hand the parser an empty
+                // stream (no EOF), and an insertion at its end must still
+                // report an error rather than index past the end.
+                token: self.tokens.last().cloned().unwrap_or_else(|| Token {
+                    cv: None,
+                    type_: TokenType::Eof,
+                    value: String::new(),
+                    line: 1,
+                    column: 1,
+                    type_name: None,
+                    flags: None,
+                }),
+            });
+        }
+        Ok(())
+    }
+
+    // =========================================================================
     // Token reference matching
     // =========================================================================
 
@@ -1369,6 +1475,65 @@ impl GrammarParser {
             None
         }
     }
+}
+
+// ===========================================================================
+// Token type tests and synthetic-token counting (F11 `@asi`)
+// ===========================================================================
+
+/// Whether `token` would match the token reference `name`. The same
+/// decision [`GrammarParser::match_token_reference`] makes, without its side
+/// effects (no `>>` split, no recorded expectation): `type_name` first, then
+/// the built-in `TokenType`, where a bare `NAME` matches only a name token
+/// with no custom `type_name`.
+fn token_has_type(token: &Token, name: &str) -> bool {
+    if token.type_name.as_deref() == Some(name) {
+        return true;
+    }
+    match string_to_token_type(name) {
+        TokenType::Name => name == "NAME" && token.type_name.is_none() && token.type_ == TokenType::Name,
+        expected => token.type_ == expected,
+    }
+}
+
+/// Whether a token is one a `@asi` element inserted.
+fn is_synthetic(token: &Token) -> bool {
+    token.flags.unwrap_or(0) & TOKEN_SYNTHETIC != 0
+}
+
+/// The number of synthetic tokens in the tree under `root`, counting a node
+/// that appears several times once per appearance (as the copied-out tree
+/// will hold it). Each distinct node is visited once: its count is cached by
+/// address, and children are finished before their parent, on an explicit
+/// stack so a deep tree cannot overflow the call stack.
+fn count_synthetic(root: &Rc<BuiltNode>) -> usize {
+    let mut counts: HashMap<*const BuiltNode, usize> = HashMap::new();
+    let mut stack: Vec<(Rc<BuiltNode>, bool)> = vec![(Rc::clone(root), false)];
+    while let Some((node, children_done)) = stack.pop() {
+        let key = Rc::as_ptr(&node);
+        if counts.contains_key(&key) {
+            continue;
+        }
+        if !children_done {
+            stack.push((Rc::clone(&node), true));
+            for child in &node.children {
+                if let Built::Node(inner) = child {
+                    if !counts.contains_key(&Rc::as_ptr(inner)) {
+                        stack.push((Rc::clone(inner), false));
+                    }
+                }
+            }
+            continue;
+        }
+        let total = node.children.iter().fold(0usize, |sum, child| {
+            sum.saturating_add(match child {
+                Built::Token(token) => usize::from(is_synthetic(token)),
+                Built::Node(inner) => counts.get(&Rc::as_ptr(inner)).copied().unwrap_or(0),
+            })
+        });
+        counts.insert(key, total);
+    }
+    counts.get(&Rc::as_ptr(root)).copied().unwrap_or(0)
 }
 
 // ===========================================================================
@@ -1539,11 +1704,16 @@ fn to_grammar_node(node: &BuiltNode) -> GrammarASTNode {
             Built::Token(token) => ASTNodeOrToken::Token(token.clone()),
         })
         .collect();
+    // A synthetic (`@asi`) token stands at the *next* token's position, so
+    // it would stretch a statement's span into the following statement; it
+    // is skipped, and a node holding only synthetic tokens has no span.
     let start = children.iter().find_map(|child| match child {
+        ASTNodeOrToken::Token(token) if is_synthetic(token) => None,
         ASTNodeOrToken::Token(token) => Some((token.line, token.column)),
         ASTNodeOrToken::Node(inner) => inner.start_line.zip(inner.start_column),
     });
     let end = children.iter().rev().find_map(|child| match child {
+        ASTNodeOrToken::Token(token) if is_synthetic(token) => None,
         ASTNodeOrToken::Token(token) => Some((token.line, token.column)),
         ASTNodeOrToken::Node(inner) => inner.end_line.zip(inner.end_column),
     });
@@ -1787,6 +1957,33 @@ fn grammar_references_newline(grammar: &ParserGrammar) -> bool {
     grammar.rules.iter().any(|rule| element_references_newline(&rule.body))
 }
 
+/// Whether any rule of the grammar contains an `@asi` element.
+fn grammar_uses_auto_insert(grammar: &ParserGrammar) -> bool {
+    grammar.rules.iter().any(|rule| element_uses_auto_insert(&rule.body))
+}
+
+/// Recursively check if a grammar element is, or contains, `@asi`.
+fn element_uses_auto_insert(element: &GrammarElement) -> bool {
+    match element {
+        GrammarElement::AutoInsert { .. } => true,
+        GrammarElement::Sequence { elements } => elements.iter().any(element_uses_auto_insert),
+        GrammarElement::Alternation { choices } => choices.iter().any(element_uses_auto_insert),
+        GrammarElement::Repetition { element: inner }
+        | GrammarElement::Optional { element: inner }
+        | GrammarElement::Group { element: inner }
+        | GrammarElement::PositiveLookahead { element: inner }
+        | GrammarElement::NegativeLookahead { element: inner }
+        | GrammarElement::OneOrMore { element: inner } => element_uses_auto_insert(inner),
+        GrammarElement::SeparatedRepetition { element, separator, .. } => {
+            element_uses_auto_insert(element) || element_uses_auto_insert(separator)
+        }
+        GrammarElement::TokenReference { .. }
+        | GrammarElement::RuleReference { .. }
+        | GrammarElement::Literal { .. }
+        | GrammarElement::AdjacencyPredicate { .. } => false,
+    }
+}
+
 /// Recursively check if a grammar element references NEWLINE.
 fn element_references_newline(element: &GrammarElement) -> bool {
     match element {
@@ -1811,7 +2008,12 @@ fn element_references_newline(element: &GrammarElement) -> bool {
         }
         // `@newline_before` and friends read token flags; they do not make
         // newlines significant (that is their whole point).
-        GrammarElement::Literal { .. } | GrammarElement::AdjacencyPredicate { .. } => false,
+        // `@asi` cannot insert a NEWLINE, and a NEWLINE closer is already
+        // covered by its line-break condition, so it never needs newlines
+        // as tokens either.
+        GrammarElement::Literal { .. }
+        | GrammarElement::AdjacencyPredicate { .. }
+        | GrammarElement::AutoInsert { .. } => false,
     }
 }
 

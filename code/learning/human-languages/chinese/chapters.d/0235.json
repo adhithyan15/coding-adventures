@@ -1,0 +1,21 @@
+{
+  "chapter": 235,
+  "title": "For a Reason",
+  "label": "ch:zh-for-a-reason",
+  "canDo": "I can give reasons and purposes: what I do it for, what caused it, my grounds, what I had to do, and no wonder.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-R235-review-230-235",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can give reasons and purposes: what I do it for, what caused it, my grounds, what I had to do, and no wonder.",
+    "assesses": [
+      "ZH-LEX-C235-REASON235-01",
+      "ZH-LEX-C235-REASON235-02",
+      "ZH-LEX-C235-REASON235-03",
+      "ZH-LEX-C235-REASON235-04",
+      "ZH-LEX-C235-REASON235-05"
+    ]
+  }
+}

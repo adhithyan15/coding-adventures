@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:3986cdfdd4a224d2",
+  "lessonIds": [
+    "ZH-C256-renwei",
+    "ZH-C256-kanfa",
+    "ZH-C256-kanlai",
+    "ZH-C256-yexu",
+    "ZH-C256-butong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch256.txt",
+  "json": "chinese/narration/ch256.json",
+  "textHash": "fnv1a64:55d1d121bf509045",
+  "jsonHash": "fnv1a64:fd5111b277207e1a",
+  "findings": []
+}

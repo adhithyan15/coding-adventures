@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C270-tongyi",
+    "language": "chinese",
+    "chapter": 270,
+    "sequence": 20130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5db60c821cdb28e"
+  },
+  "findings": []
+}

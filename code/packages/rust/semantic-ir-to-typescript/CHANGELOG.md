@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.15.1 — `ForRange` counts with a hidden counter (#18482 review)
+## Unreleased — `ForRange` counts with a hidden counter (#18482 review)
 
 The loop used its own variable as the counter, so a body that assigned it
 changed the number of iterations (`for i in range(3): i += 10` ran once).
@@ -8,6 +8,46 @@ It now counts with `__sir_i_<id>` and binds the variable from it at the top
 of each iteration (`let i: __Sir.Val = __sir_i_<id>;`), as the JavaScript,
 C, Go, Rust and Ruby backends do.  The `lib.rs` ForRange test pins the new
 shape.
+
+## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds around user code**:
+  `__sir…` in any case (the `__Sir*` imports, `__sir_result`, loop
+  temporaries), `_a` (a closure wrapper's argument array), `__l`, `__kw`,
+  `__exc`, and the globals the emitted code calls inline (`Map`, `Object`,
+  `Error`).  The closure wrapper evaluates its captured values inside
+  `(..._a) => …`, so a captured `_a` read the argument array.
+  (`__sir_block__` keeps its spelling.)
+- **A strict closure's arity error is `ArgumentError`.**  When the module
+  imports the exception runtime it is raised with
+  `__SirExc.raiseError("ArgumentError", …)`, so `rescue ArgumentError`
+  catches it (a native `TypeError` was a plain `StandardError` to
+  `rescueMatches`); otherwise nothing can catch it, and an `Error` named
+  `ArgumentError` keeps the uncaught report the same without adding a
+  runtime import to every program with a lambda.
+- `tests/twig_generated_names.rs` runs the cross-backend table, with an
+  inline stub of `sir-runtime-exceptions` beside the existing ones.
+
+Security-review follow-up:
+
+- `await` and `implements` are reserved words.  Every emitted file is an
+  ES module in strict mode, where both are reserved.
+- **Non-finite float literals** are `1e999`, `(-1e999)` and `(0 / 0)`.
+  They were Rust's `{:?}` spelling — `inf` and `-inf` are not JavaScript,
+  and `NaN` is a global name a user declaration could shadow.
+
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) used to
+emit its inner closure unchanged, so a Ruby lambda or Twig closure called
+with the wrong number of arguments silently got `undefined` (or dropped the
+extra one) — the "strict-lambda enforcement" cut-line in
+`code/specs/sir-runtime.md`.  The closure now carries an inline check that
+throws `TypeError("arity mismatch: closure expects N argument(s), got M")`,
+identical to the JavaScript backend's.  It is inline rather than in
+`@coding-adventures/sir-runtime-core`, so it holds with any published
+runtime version.  `tests/twig_pairs_and_closures.rs` runs the #18460/#18461
+Twig programs under `node` against an inline runtime stub.
 
 ## 0.15.0 — Accept `Feature::LoopControl` (task #63)
 

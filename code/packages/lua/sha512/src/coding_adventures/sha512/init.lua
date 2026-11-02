@@ -251,7 +251,6 @@ local function pad_message(msg)
     end
 
     local orig_len = #msg
-    local bit_len = orig_len * 8
 
     -- Step 1: append 0x80
     bytes[#bytes + 1] = 0x80
@@ -261,18 +260,39 @@ local function pad_message(msg)
         bytes[#bytes + 1] = 0x00
     end
 
-    -- Step 3: append 128-bit big-endian length
-    -- For messages < 2^64 bits, the high 64 bits are zero.
-    -- High 64 bits (always 0 for messages we can handle)
-    for _ = 1, 8 do
-        bytes[#bytes + 1] = 0x00
-    end
-    -- Low 64 bits of bit_len
-    for shift = 56, 0, -8 do
-        bytes[#bytes + 1] = shr64(bit_len, shift) & 0xFF
+    local length_field = M._encode_bit_length_words(0, 0, shr64(orig_len, 32), orig_len & 0xFFFFFFFF)
+    for _, byte in ipairs(length_field) do
+        bytes[#bytes + 1] = byte
     end
 
     return bytes
+end
+
+-- Encode a 128-bit byte count (four big-endian 32-bit limbs) as the
+-- 128-bit bit-length field without allocating the represented message.
+function M._encode_bit_length_words(w3, w2, w1, w0)
+    for _, word in ipairs({w3, w2, w1, w0}) do
+        if math.type(word) ~= "integer" or word < 0 or word > 0xFFFFFFFF then
+            error("sha512: byte count words must be unsigned 32-bit integers")
+        end
+    end
+    if w3 >= 0x20000000 then
+        error("sha512: message length must be less than 2^128 bits")
+    end
+    local words = {
+        ((w3 << 3) | (w2 >> 29)) & 0xFFFFFFFF,
+        ((w2 << 3) | (w1 >> 29)) & 0xFFFFFFFF,
+        ((w1 << 3) | (w0 >> 29)) & 0xFFFFFFFF,
+        (w0 << 3) & 0xFFFFFFFF,
+    }
+    local result = {}
+    for _, word in ipairs(words) do
+        result[#result + 1] = (word >> 24) & 0xFF
+        result[#result + 1] = (word >> 16) & 0xFF
+        result[#result + 1] = (word >> 8) & 0xFF
+        result[#result + 1] = word & 0xFF
+    end
+    return result
 end
 
 -- ---------------------------------------------------------------------------

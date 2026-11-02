@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C228-dazhen",
+    "language": "chinese",
+    "chapter": 228,
+    "sequence": 17530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85fba4d89de62215"
+  },
+  "findings": []
+}

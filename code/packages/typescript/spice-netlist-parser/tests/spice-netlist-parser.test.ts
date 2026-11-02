@@ -15,6 +15,7 @@ import {
   parseNetlist,
   parseValue,
   runNetlist,
+  runNetlistJson,
 } from "../src/index.js";
 
 describe("parseNetlist", () => {
@@ -151,6 +152,68 @@ R2 out 0 1k
       .toEqual(testCase.expected.points);
   });
 
+  it("runs the shared LTspice .step v1 corpus", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/ltspice-step-v1-corpus.json", import.meta.url),
+      "utf8",
+    )) as { suite: string; cases: readonly { deck: string; expected: {
+      stepCards: readonly { parameter: string; values: readonly number[] }[];
+      stepValues: readonly Record<string, number>[];
+      out: readonly number[];
+    } }[] };
+    expect(corpus.suite).toBe("ltspice-step-v1");
+    for (const testCase of corpus.cases) {
+      const parsed = parseNetlist(testCase.deck);
+      expect(parsed.stepCards).toEqual(testCase.expected.stepCards);
+      const results = parsed.runAnalysisPlan();
+      expect(results.map((result) => Object.fromEntries(result.stepValues ?? []))).toEqual(
+        testCase.expected.stepValues,
+      );
+      for (const [index, result] of results.entries()) {
+        expect((result.result as { voltage(node: string): number | undefined }).voltage("out"))
+          .toBeCloseTo(testCase.expected.out[index]!, 12);
+      }
+      const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+        analyses: readonly { stepValues: Record<string, number> }[];
+      };
+      expect(payload.analyses.map((analysis) => analysis.stepValues)).toEqual(testCase.expected.stepValues);
+    }
+  });
+
+  it("runs the shared ngspice control parameter corpus", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/ngspice-control-parameter-v1-corpus.json", import.meta.url),
+      "utf8",
+    )) as { suite: string; cases: readonly { deck: string; expected: {
+      stepCards: readonly { parameter: string; values: readonly number[] }[];
+      stepValues: readonly Record<string, number>[];
+      out: readonly number[];
+    } }[] };
+    expect(corpus.suite).toBe("ngspice-control-parameter-v1");
+    for (const testCase of corpus.cases) {
+      const parsed = parseNetlist(testCase.deck);
+      expect(parsed.stepCards).toEqual(testCase.expected.stepCards);
+      const results = parsed.runAnalysisPlan();
+      expect(results.map((result) => Object.fromEntries(result.stepValues ?? []))).toEqual(
+        testCase.expected.stepValues,
+      );
+      for (const [index, result] of results.entries()) {
+        expect((result.result as { voltage(node: string): number | undefined }).voltage("out"))
+          .toBeCloseTo(testCase.expected.out[index]!, 12);
+      }
+      const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+        analyses: readonly { stepValues: Record<string, number> }[];
+      };
+      expect(payload.analyses.map((analysis) => analysis.stepValues)).toEqual(testCase.expected.stepValues);
+    }
+  });
+
+  it("requires ngspice control parameter runs to alter, reset, then run", () => {
+    expect(() => parseNetlist(
+      ".param RLOAD=1k\n.control\nforeach load 1k 3k\n  reset\n  alterparam RLOAD=$load\n  run\nend\n.endc\n.end\n",
+    )).toThrow("alterparam followed by reset and run");
+  });
+
   it("runs the shared Berkeley v1 core corpus", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-op-corpus.json", import.meta.url),
@@ -260,6 +323,47 @@ R2 out 0 1k
       expect(parsed.circuit.elements(), testCase.id).toHaveLength(expected.elementCount);
       expect(parsed.analysisPlan().map((step) => step.kind), testCase.id)
         .toEqual(expected.analysisKinds);
+    }
+  });
+
+  it("keeps an explicit cross-tool compatibility backlog", () => {
+    const register = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/tool-compatibility-v1.json", import.meta.url),
+      "utf8",
+    )) as {
+      schemaVersion: number;
+      suite: string;
+      compatibilityClaim: { dropInEligible: boolean };
+      profiles: readonly { id: string; inventoryStatus: string }[];
+      families: readonly string[];
+      features: readonly {
+        id: string;
+        family: string;
+        profiles: readonly string[];
+        state: string;
+        evidence: readonly string[];
+      }[];
+    };
+
+    expect(register.schemaVersion).toBe(1);
+    expect(register.suite).toBe("spice-tool-compatibility");
+    expect(register.compatibilityClaim.dropInEligible).toBe(false);
+    const profileIds = new Set(register.profiles.map((profile) => profile.id));
+    expect(profileIds).toEqual(new Set(["berkeley-spice3f3", "ngspice-47", "ltspice-24"]));
+    const inventoryStatuses = new Set(register.profiles.map((profile) => profile.inventoryStatus));
+    expect(inventoryStatuses.has("complete-core")).toBe(true);
+    expect(inventoryStatuses.has("in-progress")).toBe(true);
+
+    expect(register.features.length).toBeGreaterThanOrEqual(45);
+    expect(new Set(register.features.map((feature) => feature.family)))
+      .toEqual(new Set(register.families));
+    expect(new Set(register.features.map((feature) => feature.id)).size)
+      .toBe(register.features.length);
+    for (const feature of register.features) {
+      expect(feature.profiles.length).toBeGreaterThan(0);
+      expect(feature.profiles.every((profile) => profileIds.has(profile))).toBe(true);
+      expect(["supported", "partial", "planned", "out-of-scope"]).toContain(feature.state);
+      expect(feature.evidence.length).toBeGreaterThan(0);
     }
   });
 

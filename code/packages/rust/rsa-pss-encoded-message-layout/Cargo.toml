@@ -1,0 +1,7 @@
+[package]
+name = "rsa-pss-encoded-message-layout"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 8017 RSA-PSS encoded-message layout validation"
+
+[dependencies]

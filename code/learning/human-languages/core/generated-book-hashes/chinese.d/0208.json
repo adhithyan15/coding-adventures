@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:cecca2c9b68d09fc",
+  "lessonIds": [
+    "ZH-C208-shifu",
+    "ZH-C208-jiancha",
+    "ZH-C208-anzhuang",
+    "ZH-C208-gongju",
+    "ZH-C208-dianchi"
+  ],
+  "tex": "chinese/book/chapters/ch208-getting-things-fixed.tex"
+}

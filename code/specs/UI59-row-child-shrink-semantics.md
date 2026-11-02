@@ -356,3 +356,68 @@ authored `padding: 3`. `ButtonStyle(padding: ..)` sets padding and does *not*
 set `minimumSize` or `tapTargetSize`, which the emitter never overrides. Worth
 its own issue rather than folding in here, because shrinking a tap target
 below 48dp is an accessibility decision, not a layout one.
+
+## 12. Flutter: a Row child that holds a text field takes its share
+
+§11's unbounded measurement has a second, harder consequence. A Flutter
+`TextField` sizes itself to its incoming max width, so under an unbounded one
+it does not overflow: it asserts, `An InputDecorator, which is typically
+created by a TextField, cannot have an unbounded width`, and the subtree
+does not lay out.
+
+The emitter already gave a **direct** Row `HostInput` an `Expanded`. One
+container deeper there was nothing. NoteEditor authors
+
+```
+Row [ editor-body ] {
+  Column [ field-list-column ] { ... }
+  Box [ focused-field-column ] { Text, HostInput, Text, HostInput }
+}
+```
+
+and the `Box` passed the Row's unbounded width straight to both fields.
+Measured with a widget test that pumps the emitted widget: 27 exceptions on
+NoteEditor, and 23 / 23 / 24 on Engram's Add, Browse and Options screens, in
+both the default and `touch` layouts. CardBrowser, DeckOptionsPanel and
+NoteTypeEditor have the same shape.
+
+### The rule
+
+A non-flex child of a flex-accepting Row is wrapped in `Expanded` when its
+subtree holds a text field that nothing re-bounds:
+
+| in the subtree | needs the wrapper? |
+| --- | --- |
+| `HostInput` / `Input` without a fixed `width` | yes |
+| `HostNumberInput` | yes |
+| a container with a fixed `width` or a `max-width` | no; that container bounds what is below it |
+| a horizontally scrolling `HostScroll` | no; nothing above it can bound its content |
+| anything else | yes if any child does |
+
+The wrapper is exactly the one a direct Row `HostInput` already takes, moved
+up to the Row child. Every other backend draws this shape: a SwiftUI
+`TextField` is greedy in an `HStack`, so the stack that holds it is greedy
+too.
+
+- **Gated on the Row accepting flex.** A Row that is itself measured unbounded
+  cannot host `Expanded`; that throws a different assertion. Such a Row's
+  outer Row child is wrapped instead, which re-bounds it.
+- **A child that already has a wrapper keeps it.** `flex-grow` and a
+  percentage `width` are decided first; the rule only fills the gap they
+  leave.
+- **The wrapped child is bounded.** Its container computes `width_bounded`,
+  so a Row inside it accepts flex again and its own children follow the same
+  rules.
+- **No style is read or dropped.** The decision lowers no property, so no
+  package's style-drop pins move. Measured: every native gate is unchanged.
+
+The `mosaic-emit-flutter/fixtures/row-child-input` fixture pumps the three
+shapes (NoteEditor's, DeckOptionsPanel's, and a Row nested in a Row child) in
+the Flutter runtime lane and fails on any exception.
+
+### Not covered
+
+A conditional (`If`/`Else`) or a `For` spread directly in a Row decides its
+own wrapper in `emit_if_dart` and `emit_for_spread`, and neither applies this
+rule yet. The Engram probe above, which mounts six of the screens that
+hold fields, found no field in either position; other apps were not probed.

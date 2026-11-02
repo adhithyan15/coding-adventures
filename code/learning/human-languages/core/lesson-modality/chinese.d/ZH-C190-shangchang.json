@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C190-shangchang",
+    "language": "chinese",
+    "chapter": 190,
+    "sequence": 15120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2436e7c6e5f477c1"
+  },
+  "findings": []
+}

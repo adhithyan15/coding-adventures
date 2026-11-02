@@ -76,10 +76,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     //
     // alignment is not threaded onto the element yet.
     (Backend::Qt, "text-align"),
-    //
-    // Qt expresses this through the container chosen (RowLayout /
-    // ColumnLayout / Flow), not through a property on a built element.
-    (Backend::Qt, "flex-grow"),
+    // (`flex-grow` left this list when UI21 §2.2 taught the Qt emitter to
+    // lower it on a Row/Column child to `Layout.fillWidth` / `fillHeight`;
+    // `deck-option-button` is such a child.)
     // (`width` left this list when #17915 taught the Qt emitter to map a
     // percentage width to `Layout.fillWidth` and a px width to `width`.)
     // ---- Flutter (#12022) ----

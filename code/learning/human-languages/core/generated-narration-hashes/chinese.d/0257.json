@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:6d3b101cbc908c0d",
+  "lessonIds": [
+    "ZH-C257-yueqi",
+    "ZH-C257-dagu",
+    "ZH-C257-yanchu",
+    "ZH-C257-geshou",
+    "ZH-C257-guzhang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch257.txt",
+  "json": "chinese/narration/ch257.json",
+  "textHash": "fnv1a64:906d4d8242344e88",
+  "jsonHash": "fnv1a64:47deb2541cfda226",
+  "findings": []
+}

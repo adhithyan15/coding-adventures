@@ -1027,7 +1027,7 @@ mod tests {
             ret("r"),
         ]);
         // Pass 1: rename cons/car → dyn_pair_new/dyn_pair_first.
-        crate::heap::lower_heap_builtins_runtime(&mut m);
+        crate::heap::lower_heap_builtins_runtime(&mut m).unwrap();
         // Pass 2: box atoms + unbox result.
         lower_dyn_repr_marked(&mut m);
 

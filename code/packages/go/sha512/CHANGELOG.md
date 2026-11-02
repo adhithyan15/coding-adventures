@@ -2,6 +2,10 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - Unreleased
+
+- Consume the bounded HF04 corpus, preserve the full 128-bit streaming length, and avoid retaining complete update chunks.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

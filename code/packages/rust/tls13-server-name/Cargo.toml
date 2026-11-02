@@ -1,0 +1,7 @@
+[package]
+name = "tls13-server-name"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS server-name extension framing"
+
+[dependencies]

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.54.2 — `ForRange` counts with a hidden counter (#18482 review)
+## Unreleased — `ForRange` counts with a hidden counter (#18482 review)
 
 `ForRange` used its own variable as the counter (`i = i + step`), so a
 body that assigned the variable changed the iteration count:
@@ -12,6 +12,43 @@ binds `let var = __sir_i_<id>;` at the top of each iteration, matching the
 C, Go, Rust and Ruby backends.  The ForRange unit test pins the new shape,
 and `emit_for_range_counts_with_a_hidden_counter` checks the increment
 never reads the variable.
+
+## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds around user code**:
+  `__sir…` in any case (`__Sir`, loop temporaries), `_a` (a closure
+  wrapper's argument array), `__l`, `__kw`, `__exc`, and the JavaScript and
+  Node globals (`Map`, `Object`, `Math`, `console`, `process`, …;
+  `JS_GLOBALS`).  The closure wrapper evaluates its captured values inside
+  `(..._a) => …`, so `(define (f _a) (lambda (x) (* x _a)))` read the
+  argument array; and a user `function Map` is hoisted over the whole file,
+  replacing `Map` for the inlined runtime before it ran.  The unit test
+  `every_global_the_runtime_names_is_reserved` asks `node` for its real
+  global object and fails if the runtime names a global the list misses.
+  (`__sir_block__`, the frontends' shared block-parameter name, keeps its
+  spelling.)
+- **A strict closure's arity error is `ArgumentError`**, raised through
+  `__Sir.raiseError`, where it was a native `TypeError` that
+  `rescueMatches` classes as a plain `StandardError` — so a Ruby-frontend
+  `rescue ArgumentError` missed it on this backend.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) used to
+fall through to `__Sir.callBuiltin("lambda", …)`.  It now emits the closure
+with its arity check inline:
+
+```js
+new __Sir.Closure((..._a) => { if (_a.length !== 2) { throw new TypeError(
+  "arity mismatch: closure expects 2 argument(s), got " + _a.length); } return __lambda_0(..._a); })
+```
+
+JavaScript binds a missing argument to `undefined`, so Twig's
+`((lambda (x y) (+ x y)) 4)` printed `NaN`.  `tests/twig_pairs_and_closures.rs`
+runs the #18460/#18461 Twig programs under `node`, and
+`tests/twig_name_resolution.rs` no longer adds `Feature::Pairs` to the
+module by hand (#18460 fixed the frontend).
 
 ## Unreleased — tests: Twig name resolution runs end to end (#18456)
 

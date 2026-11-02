@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C237-yezi",
+    "language": "chinese",
+    "chapter": 237,
+    "sequence": 18000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d8e98f78ab5d7f7"
+  },
+  "findings": []
+}

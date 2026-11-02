@@ -56,6 +56,15 @@ def sir_eq(a, b) = a == b
 # Call a closure value (a Ruby lambda) with the given arguments.
 def sir_apply(target, *args) = target.call(*args)
 
+# A strict closure (SIR10: a Ruby lambda, every Twig closure) must be called
+# with exactly `n` arguments.  Checked first thing inside the closure, so the
+# error counts the closure's own parameters, not the captured values its body
+# method also takes.
+def sir_check_arity(args, n)
+  return if args.length == n
+  raise ArgumentError, "arity mismatch: closure expects #{n} argument(s), got #{args.length}"
+end
+
 # OOP slice 1 — `Foo.new(args…)` construction (the frontend's `__new__`).
 # A `def initialize` is registered like every method (slice 2) under the reserved
 # `sir_um_` prefix as `sir_um_initialize` — NOT Ruby's native `initialize`, which

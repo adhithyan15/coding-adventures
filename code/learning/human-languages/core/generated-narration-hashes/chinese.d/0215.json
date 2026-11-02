@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:376598c2202a1f1f",
+  "lessonIds": [
+    "ZH-C215-songhuo",
+    "ZH-C215-qianshou",
+    "ZH-C215-jicun",
+    "ZH-C215-xiyidian",
+    "ZH-C215-ganxi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch215.txt",
+  "json": "chinese/narration/ch215.json",
+  "textHash": "fnv1a64:068e31f242190c45",
+  "jsonHash": "fnv1a64:ce70db2dd7ee7600",
+  "findings": []
+}

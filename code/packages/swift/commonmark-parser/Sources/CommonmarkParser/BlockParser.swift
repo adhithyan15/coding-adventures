@@ -42,8 +42,10 @@ enum IntermediateBlock {
     case heading(level: Int, raw: String)
     /// Paragraph with raw inline content (may span multiple lines).
     case paragraph(raw: String)
-    /// Fenced or indented code block.
+    /// Indented code block.
     case codeBlock(language: String?, value: String)
+    /// Source-preserving fenced block.
+    case fencedBlock(name: String?, info: String?, value: String)
     /// Block quotation containing nested intermediate blocks.
     case blockquote(children: [IntermediateBlock])
     /// Ordered or unordered list.
@@ -124,7 +126,7 @@ enum BlockParser {
 
             // ── Fenced Code Block ─────────────────────────────────────────
             // Opening fence: 3+ backticks or tildes, optional info string.
-            if let (fence, lang, fenceIndent) = parseFenceOpening(line) {
+            if let (fence, info, fenceIndent) = parseFenceOpening(line) {
                 let (codeLines, consumed) = collectFencedCode(
                     lines: lines,
                     startIndex: i + 1,
@@ -132,7 +134,9 @@ enum BlockParser {
                     indent: fenceIndent
                 )
                 let value = codeLines.map { $0 + "\n" }.joined()
-                blocks.append(.codeBlock(language: lang.isEmpty ? nil : lang, value: value))
+                let normalizedInfo = info.isEmpty ? nil : info
+                let name = normalizedInfo?.components(separatedBy: .whitespaces).first
+                blocks.append(.fencedBlock(name: name, info: normalizedInfo, value: value))
                 i += consumed + 1
                 continue
             }
@@ -318,10 +322,10 @@ enum BlockParser {
 
     /// Parse the opening fence of a fenced code block.
     ///
-    /// Returns `(fenceChar, infoString, indent)` or `nil` if not a fence.
+    /// Returns `(fenceChar, normalizedInfoString, indent)` or `nil` if not a fence.
     ///
-    /// The fence is 3+ backtick or tilde characters. The info string (language)
-    /// follows on the same line. The indent is the number of leading spaces
+    /// The fence is 3+ backtick or tilde characters. The complete normalized
+    /// info string follows on the same line. The indent is the number of leading spaces
     /// (0–3) that must be stripped from subsequent lines.
     static func parseFenceOpening(_ line: String) -> (Character, String, Int)? {
         // Count leading spaces (0-3)
@@ -349,10 +353,7 @@ enum BlockParser {
         let info = String(line[fenceEnd...]).trimmingCharacters(in: .whitespaces)
         if fenceChar == "`" && info.contains("`") { return nil }
 
-        // Take first word of info string as the language
-        let lang = info.components(separatedBy: .whitespaces).first ?? ""
-
-        return (fenceChar, lang, indent)
+        return (fenceChar, info, indent)
     }
 
     /// Collect lines inside a fenced code block.

@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "What Do You Think?",
+  "label": "ch:zh-what-do-you-think",
+  "canDo": "I can ask what someone thinks, give my view, say how things look, say perhaps, and say we are different.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C256-butong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can ask what someone thinks, give my view, say how things look, say perhaps, and say we are different.",
+    "assesses": [
+      "ZH-LEX-C256-THINK256-03",
+      "ZH-LEX-C256-THINK256-04",
+      "ZH-LEX-C256-THINK256-05"
+    ]
+  }
+}

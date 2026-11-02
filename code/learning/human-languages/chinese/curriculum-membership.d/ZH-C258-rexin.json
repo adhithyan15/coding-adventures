@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C258-rexin",
+  "pathSegment": "ZH-PATH-258-KIND258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-258-KIND258",
+      "order": 1
+    }
+  ]
+}

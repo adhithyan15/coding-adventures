@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:7deabadbdb7acc17",
+  "lessonIds": [
+    "ZH-C169-yidazao",
+    "ZH-C169-wujiao",
+    "ZH-W169-jiao-sleep",
+    "ZH-C169-bangwan",
+    "ZH-C169-aoye",
+    "ZH-C169-shenye",
+    "ZH-R169-review-164-169"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch169.txt",
+  "json": "chinese/narration/ch169.json",
+  "textHash": "fnv1a64:46f4c036d12048ee",
+  "jsonHash": "fnv1a64:9b15becf3b1300fb",
+  "findings": []
+}

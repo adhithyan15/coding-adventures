@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C174-dengpao",
+  "pathSegment": "ZH-PATH-174-JOBS174",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-174-JOBS174",
+      "order": 4
+    }
+  ]
+}

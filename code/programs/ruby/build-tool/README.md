@@ -112,6 +112,27 @@ descriptor-relative primitives needed to claim an atomic adversarial TOCTOU
 boundary, so the implementation and documentation deliberately make no such
 claim.
 
+## Dependency Hashing
+
+Transitive dependency state uses the same language-neutral hashing-v1 framing
+as the package-source digest. The hasher sorts canonical package identities by
+their exact bytes, then appends an unsigned 64-bit big-endian identity length,
+the identity bytes, an unsigned 64-bit digest length, and the dependency's
+decoded 32-byte SHA-256 digest. Package identity therefore participates in the
+cache key, and textual hex presentation or ambiguous concatenation cannot alias
+two dependency sets. The combined digest hashes the decoded 32-byte package
+digest followed by the decoded 32-byte dependency digest.
+
+Dependency hashing is bounded to 4,096 canonical identities of at most 240
+ASCII bytes each. Missing, uppercase, truncated, extended, or non-hex digests
+fail closed with stable redacted errors rather than becoming an empty digest.
+The complete package digest map is built before dependency hashing, so results
+do not depend on discovery order. These operations consume only the existing
+in-memory graph and digest map; they add no filesystem, process, environment,
+clock, credential, or network authority. Native tests dynamically consume the
+closed three-case neutral adversarial roster, including reverse input order,
+dependency-only invalidation, and a matching failed prior record.
+
 ## Portable Glob Matching
 
 Declared Starlark source globs are compiled and validated as a complete list

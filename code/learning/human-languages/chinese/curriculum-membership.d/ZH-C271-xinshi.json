@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C271-xinshi",
+  "pathSegment": "ZH-PATH-271-MOOD271",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-271-MOOD271",
+      "order": 4
+    }
+  ]
+}

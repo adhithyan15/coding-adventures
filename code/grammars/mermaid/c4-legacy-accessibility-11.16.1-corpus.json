@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 legacy accDescription metadata vertical slice",
+  "fixtures": [
+    {
+      "name": "legacy-accessibility-description",
+      "source": "C4Context\naccDescription Customer banking landscape\nPerson(customer, \"Customer\")\nSystem(bank, \"Bank\")\nRel(customer, bank, \"Uses\")"
+    }
+  ]
+}

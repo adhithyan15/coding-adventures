@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:103e1fefe0699204",
+  "lessonIds": [
+    "ZH-C218-fengyi",
+    "ZH-W218-feng-wind",
+    "ZH-C218-nuanhuo",
+    "ZH-C218-menre",
+    "ZH-C218-ganzao",
+    "ZH-C218-chaoshi"
+  ],
+  "tex": "chinese/book/chapters/ch218-wind-and-warm-days.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W258-re-hot",
+  "pathSegment": "ZH-PATH-258-KIND258",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-258-KIND258",
+      "order": 2
+    }
+  ]
+}

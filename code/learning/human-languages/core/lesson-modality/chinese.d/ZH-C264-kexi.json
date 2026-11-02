@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C264-kexi",
+    "language": "chinese",
+    "chapter": 264,
+    "sequence": 19830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0400e36a4fd9f81"
+  },
+  "findings": []
+}

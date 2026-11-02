@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W182-leng-cold",
+    "language": "chinese",
+    "chapter": 182,
+    "sequence": 14255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5d5c798ca042d2fc",
+    "detachableSegments": [
+      "Script — the ice piece, then 今 and a dot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

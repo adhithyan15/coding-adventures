@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:556e94e62f5a77ad",
+  "lessonIds": [
+    "ZH-C219-yun",
+    "ZH-W219-yun-cloud",
+    "ZH-C219-duoyun",
+    "ZH-C219-jiangwen",
+    "ZH-C219-qiwen",
+    "ZH-C219-fangqing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch219.txt",
+  "json": "chinese/narration/ch219.json",
+  "textHash": "fnv1a64:c989c126e86aef91",
+  "jsonHash": "fnv1a64:d92e96f302a73066",
+  "findings": []
+}

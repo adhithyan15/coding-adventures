@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:023df525688f92d2",
+  "lessonIds": [
+    "ZH-C158-jiaoxing",
+    "ZH-C158-shuizhao",
+    "ZH-C158-zuomeng",
+    "ZH-C158-qilai",
+    "ZH-C158-xiguan"
+  ],
+  "tex": "chinese/book/chapters/ch158-waking-up.tex"
+}

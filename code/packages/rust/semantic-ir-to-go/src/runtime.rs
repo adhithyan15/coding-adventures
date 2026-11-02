@@ -137,6 +137,26 @@ func _sir_make_closure(fn func(args []Value) Value, captures []Value) Value {
 	}}
 }
 
+// _sir_strict_arity wraps a closure so it must be called with exactly `n`
+// arguments — SIR10's strict closure, emitted for the `lambda` marker (a Ruby
+// lambda, every Twig closure).  Any other count panics with a catchable
+// `ArgumentError` before the body's adapter can index past the end of its
+// argument slice (or silently ignore an extra argument).
+func _sir_strict_arity(c Value, n int) Value {
+	cl, ok := c.(*Closure)
+	if !ok {
+		return c
+	}
+	inner := cl.Fn
+	return &Closure{Fn: func(args []Value) Value {
+		if len(args) != n {
+			panic(_sir_new_error("ArgumentError", Value(fmt.Sprintf(
+				"arity mismatch: closure expects %d argument(s), got %d", n, len(args)))))
+		}
+		return inner(args)
+	}}
+}
+
 func _sir_global_set(name Value, value Value) Value {
 	key := _sir_value_to_key(name)
 	_sir_globals[key] = value

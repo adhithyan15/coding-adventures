@@ -1,0 +1,1143 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 205,
+  "title": "How Far Is It?",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:0bab2bd176a6decf",
+  "lessons": [
+    {
+      "id": "ZH-C205-li",
+      "sequence": 15870,
+      "title": "离 (lí) — from; away from (in distance)",
+      "headword": "离",
+      "romanization": "lí",
+      "gloss": "from; away from (in distance)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:981e3240095fb020",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for video, then the Mandarin for to type on a keyboard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 离",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "离 — lí — \"from; away from (in distance)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ jiā lí xuéxiào hěn jìn — My home is close to the school."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 离 (lí) — ten strokes in three pieces: the dot and the bar that cap 文; two short strokes crossing inside a box open at the top; then a frame that hooks, holding a turning stroke and a dot. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "离 (lí) is inherited from Middle Chinese lje (Guangyun, in Baxter's transcription), which says that being apart while near is lí, and being apart while far is another word; in another tone it is glossed 'to leave'. Its use for distance from a place is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ jiā lí xuéxiào hěn jìn — My home is close to the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ jiā lí xuéxiào hěn jìn* — My home is close to the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for video, then the Mandarin for to type on a keyboard, then say lí again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for video, then the Mandarin for to type on a keyboard, then say *lí* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 离 (lí) mean? (\"From; away from (in distance)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W205-li-apart",
+      "sequence": 15875,
+      "title": "离 (lí) — a cap, a box and a hooked frame",
+      "headword": "离",
+      "romanization": "lí",
+      "gloss": "离 — the cap of 文, a cross in an open box, then a hooked frame round a turn and a dot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:845fc22bba52da26",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a cap, a box and a hooked frame",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a cap, a box and a hooked frame and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lí — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lí* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "文 开."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — wén, kāi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *wén*, *kāi*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a cap, a box and a hooked frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "离 (lí)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, top to bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The top, two strokes: the dot and the bar that cap 文."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle, four strokes. A short stroke falling to the left and a dot falling to the right, crossing like a small x. Then a box open at the top round them: a vertical down the left that turns along the foot, and a short vertical on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom, four strokes. A vertical down the left. A bar that turns down the right side and hooks to the left at its foot. Inside, a stroke that falls to the left and turns right, then a dot."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 4 + 4 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "离 (lí), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 离, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 离 (lí)? (Ten.) What caps it? (The dot and the bar of 文.) Which stroke hooks? (The bar that turns down the right side.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 离 (lí), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C205-gongli",
+      "sequence": 15880,
+      "title": "公里 (gōnglǐ) — kilometre",
+      "headword": "公里",
+      "romanization": "gōnglǐ",
+      "gloss": "kilometre",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aced389b7479774e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to type on a keyboard, then the Mandarin for away from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 公里",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "公里 — gōnglǐ — \"kilometre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "书店在东边离这儿两公里 shūdiàn zài dōngbian lí zhèr liǎng gōnglǐ — The bookshop is to the east, two kilometres from here."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 公 (gōng) — four strokes: 八 on top, then a stroke that falls to the left and turns right, and a dot. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "公里 (gōnglǐ) is built from 公 (gōng) 'common, public' and 里 lǐ. The first is inherited from Middle Chinese kuwng (Guangyun, in Baxter's transcription), glossed 'common' and 'without bias'; the dictionary glosses 里 as a neighbourhood of twenty-five households. Its use as a measure of distance, and the pair's use for the kilometre, are not given there, so they are not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōnglǐ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōnglǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōnglǐ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōnglǐ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūdiàn zài dōngbian lí zhèr liǎng gōnglǐ — The bookshop is to the east, two kilometres from here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūdiàn zài dōngbian lí zhèr liǎng gōnglǐ* — The bookshop is to the east, two kilometres from here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to type on a keyboard, then the Mandarin for away from, then say gōnglǐ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to type on a keyboard, then the Mandarin for away from, then say *gōnglǐ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 公里 (gōnglǐ) mean? (\"Kilometre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W205-gong-public",
+      "sequence": 15885,
+      "title": "公 (gōng) — 八 over a turn and a dot",
+      "headword": "公",
+      "romanization": "gōng",
+      "gloss": "公 — 八, then a turning stroke and a dot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:28eacf4385028d8a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 八 over a turn and a dot",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 八 over a turn and a dot and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gōnglǐ — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gōnglǐ* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "八 里."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — bā, lǐ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *bā*, *lǐ*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 八 over a turn and a dot",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "公 (gōng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, top before bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The top piece, 八, two strokes: a stroke falling to the left, then a longer one falling to the right, spread wide apart."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom piece, two strokes. A stroke that falls to the left and turns to run right along the foot, then a dot at its right end. The same pair sits in the top left corner of 能."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 2 = four."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "公 (gōng), all four, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 公, all four, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 公 (gōng)? (Four.) What is the top piece? (八.) Where has your hand made the bottom piece before? (In the top left of 能.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 公 (gōng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C205-zuoyou",
+      "sequence": 15890,
+      "title": "zuǒyòu — about; or so (after a number)",
+      "headword": "zuǒyòu",
+      "romanization": "zuǒyòu",
+      "gloss": "about; or so (after a number)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a389be9bfcfe07f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for away from, then the Mandarin for kilometre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zuǒyòu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuǒyòu — \"about; or so (after a number)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zǒulù èrshí fēnzhōng zuǒyòu — It's about twenty minutes on foot."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuǒyòu is built from zuǒ 'left' and yòu 'right', both inherited from Middle Chinese, tsaX and hjuwX (Guangyun, in Baxter's transcription): a little to either side of the number."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuǒyòu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuǒyòu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuǒyòu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuǒyòu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǒulù èrshí fēnzhōng zuǒyòu — It's about twenty minutes on foot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǒulù èrshí fēnzhōng zuǒyòu* — It's about twenty minutes on foot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for away from, then the Mandarin for kilometre, then say zuǒyòu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for away from, then the Mandarin for kilometre, then say *zuǒyòu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zuǒyòu mean? (\"About; or so (after a number)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C205-chabuduo",
+      "sequence": 15900,
+      "title": "chàbuduō — about; almost",
+      "headword": "chàbuduō",
+      "romanization": "chàbuduō",
+      "gloss": "about; almost",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee442d002fd33712",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for kilometre, then the Mandarin for or so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chàbuduō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chàbuduō — \"about; almost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "cóng zhèr dào chēzhàn chàbuduō liǎng gōnglǐ — From here to the station is almost two kilometres."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "不 loses its tone in the middle of this word: chàbuduō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chàbuduō is built from chà 'short of', 不 'not' and duō 'much', all inherited from Middle Chinese, tsrhae, pjut and ta (Guangyun, in Baxter's transcription): not much short."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chàbuduō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chàbuduō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chàbuduō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chàbuduō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cóng zhèr dào chēzhàn chàbuduō liǎng gōnglǐ — From here to the station is almost two kilometres.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cóng zhèr dào chēzhàn chàbuduō liǎng gōnglǐ* — From here to the station is almost two kilometres.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for kilometre, then the Mandarin for or so, then say chàbuduō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for kilometre, then the Mandarin for or so, then say *chàbuduō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chàbuduō mean? (\"About; almost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C205-juli",
+      "sequence": 15910,
+      "title": "jùlí — distance",
+      "headword": "jùlí",
+      "romanization": "jùlí",
+      "gloss": "distance",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c0036c638498db7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for or so, then the Mandarin for almost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jùlí",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jùlí — \"distance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "liǎng ge chēzhàn de jùlí shì yì gōnglǐ — The two stations are a kilometre apart."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jùlí is built from jù and 离 (lí) 'away from', both inherited from Middle Chinese, gjoX and lje (Guangyun, in Baxter's transcription). The dictionary glosses the first as the spur on a cock's leg; how it came to mean being apart is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jùlí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jùlí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jùlí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jùlí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liǎng ge chēzhàn de jùlí shì yì gōnglǐ — The two stations are a kilometre apart.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liǎng ge chēzhàn de jùlí shì yì gōnglǐ* — The two stations are a kilometre apart.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for or so, then the Mandarin for almost, then say jùlí again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for or so, then the Mandarin for almost, then say *jùlí* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jùlí mean? (\"Distance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R205-review-200-205",
+      "sequence": 15920,
+      "title": "Looking back: from Booking a Room to How Far Is It?",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Booking a Room to How Far Is It?",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7b4b83822aaf683",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for hotel and to book ahead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hotel, to book ahead, single room, to check in, to check out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hotel, to book ahead, single room, to check in, to check out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "postage stamp, courier service, email, to send electronically, to get something sent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: postage stamp, courier service, email, to send electronically, to get something sent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to scan a code, receipt, to take goods back, customer, checkout",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to scan a code, receipt, to take goods back, customer, checkout]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to rent, landlord, rent for a home, a deposit paid in advance, contract",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to rent, landlord, rent for a home, a deposit paid in advance, contract]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "website, to log in, to click, video, to type on a keyboard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: website, to log in, to click, video, to type on a keyboard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "away from, kilometre, or so, almost, distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: away from, kilometre, or so, almost, distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "东 离 (lí) 公 (gōng) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 东 离 公 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hotel? (bīnguǎn.) To book ahead? (yùdìng.) Single room? (dānrénjiān.) To check in? (rùzhù.) To check out? (tuìfáng.) Postage stamp? (yóupiào.) Courier service? (kuàidì.) Email? (yóujiàn.) To send electronically? (fāsòng.) To get something sent? (shōudào.) To scan a code? (sǎomǎ.) Receipt? (shōujù.) To take goods back? (tuìhuò.) Customer? (gùkè.) Checkout? (shōuyíntái.) To rent? (zū.) Landlord? (房东, fángdōng.) Rent for a home? (fángzū.) A deposit paid in advance? (yājīn.) Contract? (hétong.) Website? (网站, wǎngzhàn.) To log in? (dēnglù.) To click? (diǎnjī.) Video? (shìpín.) To type on a keyboard? (打字, dǎzì.) Away from? (离, lí.) Kilometre? (公里, gōnglǐ.) Or so? (zuǒyòu.) Almost? (chàbuduō.) Distance? (jùlí.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

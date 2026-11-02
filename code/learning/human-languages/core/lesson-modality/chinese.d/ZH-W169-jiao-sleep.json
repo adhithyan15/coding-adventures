@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W169-jiao-sleep",
+    "language": "chinese",
+    "chapter": 169,
+    "sequence": 13575,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e36fd55f3bc167b9",
+    "detachableSegments": [
+      "Script — three strokes, a cover, then 见"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

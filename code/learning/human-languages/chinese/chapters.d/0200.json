@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Booking a Room",
+  "label": "ch:zh-booking-a-room",
+  "canDo": "I can book a hotel room, ask for a single room, and say when I will check in and check out.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C200-tuifang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can book a hotel room, ask for a single room, and say when I will check in and check out.",
+    "assesses": [
+      "ZH-LEX-C200-HOTEL200-03",
+      "ZH-LEX-C200-HOTEL200-04",
+      "ZH-LEX-C200-HOTEL200-05"
+    ]
+  }
+}

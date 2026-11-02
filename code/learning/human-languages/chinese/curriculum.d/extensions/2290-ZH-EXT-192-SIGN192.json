@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-192-SIGN192",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for the toilets, the lift and the car park, queue, and say when a place is open.",
+  "prerequisites": []
+}

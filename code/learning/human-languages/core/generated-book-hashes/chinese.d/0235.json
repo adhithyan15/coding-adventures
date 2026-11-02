@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:01deab7ab83a6229",
+  "lessonIds": [
+    "ZH-C235-weile",
+    "ZH-C235-youyu",
+    "ZH-C235-liyou",
+    "ZH-C235-zhihao",
+    "ZH-C235-guaibude",
+    "ZH-R235-review-230-235"
+  ],
+  "tex": "chinese/book/chapters/ch235-for-a-reason.tex"
+}

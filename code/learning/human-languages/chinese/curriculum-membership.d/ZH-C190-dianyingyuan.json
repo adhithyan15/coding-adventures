@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C190-dianyingyuan",
+  "pathSegment": "ZH-PATH-190-TOWN190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-190-TOWN190",
+      "order": 4
+    }
+  ]
+}

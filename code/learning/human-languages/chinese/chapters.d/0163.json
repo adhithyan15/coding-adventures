@@ -1,0 +1,21 @@
+{
+  "chapter": 163,
+  "title": "Free This Weekend",
+  "label": "ch:zh-free-this-weekend",
+  "canDo": "I can ask if someone is free, go with them, plan a picnic and put it off until next time.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R163-review-158-163",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can ask if someone is free, go with them, plan a picnic and put it off until next time.",
+    "assesses": [
+      "ZH-LEX-C163-WEEKEND163-01",
+      "ZH-LEX-C163-WEEKEND163-02",
+      "ZH-LEX-C163-WEEKEND163-03",
+      "ZH-LEX-C163-WEEKEND163-04",
+      "ZH-LEX-C163-WEEKEND163-05"
+    ]
+  }
+}

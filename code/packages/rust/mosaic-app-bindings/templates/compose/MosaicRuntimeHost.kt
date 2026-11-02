@@ -734,27 +734,55 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) :
      *
      * Named after the state file itself, so an explicit
      * `MOSAIC_APP_STATE_PATH` quarantines beside its own name as every other
-     * host does. A name is skipped when anything is there: with
-     * `NOFOLLOW_LINKS` that includes a symbolic link, even a dangling one.
-     * `Files.move` without `REPLACE_EXISTING` throws
-     * `FileAlreadyExistsException` rather than replace a target that is
-     * already there. That is atomic on Windows; on Linux and Android the JDK
-     * checks and then calls rename(2), so a file another process creates at
-     * the same name in that instant could still be replaced (by another
-     * rejected file, never truncated). The Qt and Flutter hosts close that
-     * window by claiming the name first; here the race needs a second
-     * instance quarantining at the same moment, and is accepted.
+     * host does.
+     *
+     * `Files.move` without `REPLACE_EXISTING` is NOT used for the move. It
+     * refuses an existing target atomically on Windows, but on Linux, macOS
+     * and Android the JDK checks and then calls rename(2), which replaces
+     * whatever another process put at the name in between. So, as the Qt and
+     * Flutter hosts do, the name is claimed first and the file is moved onto
+     * the claim:
+     *
+     *   1. skip a name if anything is there: with `NOFOLLOW_LINKS` that is a
+     *      file, a directory, or a symbolic link, even a dangling one. This
+     *      check is only advisory; step 2 is what refuses;
+     *   2. `Files.createFile` makes an empty file there and fails if anything
+     *      got there first (`O_CREAT | O_EXCL`, Windows `CREATE_NEW`). If it
+     *      fails and the name is now taken, move on. The exception alone
+     *      cannot say so: onto a directory, POSIX reports
+     *      `FileAlreadyExistsException` but Windows `AccessDeniedException`.
+     *      Any other failure stops here;
+     *   3. `ATOMIC_MOVE` renames the rejected file onto that placeholder:
+     *      rename(2), or `MoveFileEx` with `MOVEFILE_REPLACE_EXISTING`. Its
+     *      only victim is the empty file this host just made, and the
+     *      rejected bytes are never copied, so they cannot arrive truncated.
+     *      `REPLACE_EXISTING` without `ATOMIC_MOVE` would delete the
+     *      placeholder and then rename, leaving the name free in between.
+     *
+     * If step 3 fails the rejected file has not moved; the placeholder, still
+     * empty, is removed so it does not use up a name.
      */
     private fun moveStateAside(file: File): String? {
         for (index in 0 until MOSAIC_MAX_QUARANTINED_STATES) {
             val suffix = if (index == 0) ".corrupt" else ".corrupt.$index"
             val candidate = File(file.path + suffix).toPath()
             if (Files.exists(candidate, LinkOption.NOFOLLOW_LINKS)) continue
+            try {
+                Files.createFile(candidate)
+            } catch (error: Exception) {
+                if (Files.exists(candidate, LinkOption.NOFOLLOW_LINKS)) continue
+                // Named: an AccessDeniedException's message is only the paths.
+                return "Could not move it aside to $candidate: ${error.javaClass.simpleName}: ${error.message}"
+            }
             return try {
-                Files.move(file.toPath(), candidate)
+                Files.move(file.toPath(), candidate, StandardCopyOption.ATOMIC_MOVE)
                 null
             } catch (error: Exception) {
-                // Named: an AccessDeniedException's message is only the paths.
+                try {
+                    if (Files.size(candidate) == 0L) Files.delete(candidate)
+                } catch (_: Exception) {
+                    // Left behind: an empty file holds no one's data.
+                }
                 "Could not move it aside to $candidate: ${error.javaClass.simpleName}: ${error.message}"
             }
         }

@@ -1,0 +1,20 @@
+{
+  "chapter": 248,
+  "title": "A New Term",
+  "label": "ch:zh-a-new-term",
+  "canDo": "I can talk about the school term, my year group, the head teacher, senior high school and parents.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C248-jiazhang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can talk about the school term, my year group, the head teacher, senior high school and parents.",
+    "assesses": [
+      "ZH-LEX-C248-TERM248-03",
+      "ZH-LEX-C248-TERM248-04",
+      "ZH-LEX-C248-TERM248-05",
+      "ZH-SCRIPT-XIAO-SCHOOL-01"
+    ]
+  }
+}

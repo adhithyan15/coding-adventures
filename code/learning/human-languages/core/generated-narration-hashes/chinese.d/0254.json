@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:12bddd8c4ddc96d7",
+  "lessonIds": [
+    "ZH-C254-chusheng",
+    "ZH-C254-jiehun",
+    "ZH-C254-biye",
+    "ZH-C254-hunli",
+    "ZH-C254-shenghuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch254.txt",
+  "json": "chinese/narration/ch254.json",
+  "textHash": "fnv1a64:d8bac4bfbe9b0b30",
+  "jsonHash": "fnv1a64:08bf0754da5fdeec",
+  "findings": []
+}

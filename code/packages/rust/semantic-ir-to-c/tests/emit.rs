@@ -18,7 +18,7 @@ fn arithmetic_emits_variadic_helpers() {
     let m = lower_twig("(print (+ 2 (* 3 4)))");
     let src = compile(&m).unwrap().source;
     assert!(src.contains("int main(void)"), "has a C entry point");
-    assert!(src.contains("SirValue user_main(void)"), "renames SIR main");
+    assert!(src.contains("SirValue sir_user_main(void)"), "renames SIR main");
     // Variadic-shaped builtin calls carry an argument count.
     assert!(
         src.contains("_sir_times(2, _sir_int(3LL), _sir_int(4LL))"),
@@ -507,4 +507,26 @@ fn sanitize_ident_is_injective_across_the_underscore_delimiter_reuse_this_backen
     // both produce the identical escaped body. The fix (see
     // `escape_body`'s own doc comment) escapes every underscore too.
     assert_ne!(sanitize_ident("_u007e_~"), sanitize_ident("~~"));
+}
+
+/// Every user function lives in the `sir_fn_` namespace and every name the
+/// runtime or the C library may define is escaped (#18466).
+#[test]
+fn user_names_are_kept_apart_from_libc_and_the_runtime() {
+    let src = compile(&lower_twig("(define (free x) x) (print (free 3))")).unwrap().source;
+    assert!(src.contains("SirValue sir_fn_free(SirValue x)"), "\n{src}");
+    assert!(!src.contains("SirValue free("), "\n{src}");
+    for name in [
+        "_sir_apply", "SirValue", "SIR_INT", "sir_fn_free", "sir_user_main", "main", "EOF",
+        "NAN", "N", "__lambda_0", "_Bool2", "errno", "stdout", "math_errhandling",
+        // Header typedefs and `<setjmp.h>`/`<stdarg.h>` names (security
+        // review of #18466).
+        "int64_t", "size_t", "uint8_t", "setjmp", "longjmp", "jmp_buf", "va_list",
+    ] {
+        assert_eq!(sanitize_ident(name), format!("sir_esc_v{name}"), "{name}");
+    }
+    // `user_main` is no longer generated, so it is an ordinary name again.
+    for name in ["x", "free", "user_main", "eof", "Nx", "_x", "siblings", "is_sir"] {
+        assert_eq!(sanitize_ident(name), name, "{name}");
+    }
 }

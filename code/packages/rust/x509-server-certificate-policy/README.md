@@ -13,7 +13,15 @@ the reference DNS name or IP address, the time observation, the requested EKU
 OID, and the ASN.1 budget. Errors expose only stable categories and retain no
 certificate bytes, names, times, or purpose identifiers.
 
-This package does not authenticate an issuer, select or constrain a trust
+An explicit follow-up consumes complete server policy and re-decodes only the
+exact Subject Alternative Name extension index retained by its successful
+identity result under a fresh caller-owned ASN.1 budget. The non-copyable
+result retains the complete server policy beside the decoded DNS/IP collection
+for later NameConstraints composition; callers cannot substitute another
+certificate or extension.
+
+SAN retention does not itself evaluate NameConstraints. This package does not
+authenticate an issuer, select or constrain a trust
 anchor, construct or validate a certification path, check revocation, perform
 TLS or HTTP, authorize OAuth transport, or open a network connection.
 

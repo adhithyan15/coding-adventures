@@ -34,6 +34,11 @@ pub fn emit_module(m: &Module) -> String {
             t.insert(f.name.clone(), f.params.len());
         }
     });
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     // KW6: snapshot each function's *parameter shape* (name, is-keyword,
     // has-default) in declared order.  The `DirectCall` arm needs this to
     // resolve a `KeywordArg` (matched by NAME) back to the callee's declared
@@ -95,6 +100,7 @@ pub fn emit_module(m: &Module) -> String {
 
     FN_ARITY.with(|t| t.borrow_mut().clear());
     FN_PARAMS.with(|t| t.borrow_mut().clear());
+    STRICT_ARITY.with(|t| t.borrow_mut().clear());
 
     out
 }
@@ -543,9 +549,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         //   func() {
         //     defer func() { <ensure> }()          // only if ensure present
         //     defer func() {
-        //       if r := recover(); r != nil {
-        //         if _sir_rescue_matches(r, []string{...}) { e := _sir_exc_value(r); <body> } else
-        //         if _sir_rescue_matches(r, []string{...}) { <body> } else { panic(r) }
+        //       if __sir_r := recover(); __sir_r != nil {
+        //         if _sir_rescue_matches(__sir_r, []string{...}) { e := _sir_exc_value(__sir_r); <body> } else
+        //         if _sir_rescue_matches(__sir_r, []string{...}) { <body> } else { panic(__sir_r) }
         //       }
         //     }()
         //     <try body>
@@ -714,7 +720,11 @@ fn emit_try_catch(
     if !rescues.is_empty() {
         let _ = writeln!(out, "{}defer func() {{", ipad);
         let rpad = indent_str(inner + 1);
-        let _ = writeln!(out, "{}if r := recover(); r != nil {{", rpad);
+        // `__sir_r`, inside the reserved `__sir` namespace: the rescue
+        // clauses run inside this `if`, so a plain `r` (as it was until the
+        // security review of #18466) shadowed a user variable `r` in every
+        // rescue body — reads saw the panic payload and writes were lost.
+        let _ = writeln!(out, "{}if __sir_r := recover(); __sir_r != nil {{", rpad);
         let cpad = indent_str(inner + 2);
         for (i, r) in rescues.iter().enumerate() {
             // `[]string{"Foo", "Bar"}` — the clause's exception class names.
@@ -727,11 +737,11 @@ fn emit_try_catch(
             }
             types.push('}');
             if i == 0 {
-                let _ = writeln!(out, "{}if _sir_rescue_matches(r, {}) {{", cpad, types);
+                let _ = writeln!(out, "{}if _sir_rescue_matches(__sir_r, {}) {{", cpad, types);
             } else {
                 let _ = writeln!(
                     out,
-                    "{}}} else if _sir_rescue_matches(r, {}) {{",
+                    "{}}} else if _sir_rescue_matches(__sir_r, {}) {{",
                     cpad, types
                 );
             }
@@ -741,7 +751,7 @@ fn emit_try_catch(
                 let safe = sanitize_ident(bind);
                 let _ = writeln!(
                     out,
-                    "{}{} := _sir_exc_value(r)",
+                    "{}{} := _sir_exc_value(__sir_r)",
                     indent_str(inner + 3),
                     safe
                 );
@@ -752,7 +762,7 @@ fn emit_try_catch(
         // No clause matched → re-raise so the exception propagates (and
         // still unwinds through the ensure defer registered above).
         let _ = writeln!(out, "{}}} else {{", cpad);
-        let _ = writeln!(out, "{}panic(r)", indent_str(inner + 3));
+        let _ = writeln!(out, "{}panic(__sir_r)", indent_str(inner + 3));
         let _ = writeln!(out, "{}}}", cpad);
         let _ = writeln!(out, "{}}}", rpad);
         let _ = writeln!(out, "{}}}()", ipad);
@@ -1495,7 +1505,45 @@ fn try_emit_block_pass(out: &mut String, a: &Expr, indent: usize) -> bool {
     false
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* (a Ruby lambda, every Twig closure):
+///
+/// ```text
+/// (lambda (x y) (+ x y))  →  _sir_strict_arity(_sir_make_closure(…), 2)
+/// ```
+///
+/// `_sir_strict_arity` wraps the closure so a call with any other argument
+/// count panics with a catchable `ArgumentError` ("arity mismatch: …").  A
+/// plain closure's adapter indexes `__args[i]` directly, so a missing
+/// argument died with Go's own "index out of range" and an extra one was
+/// silently dropped (issue #18461).
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`semantic_ir::Function::exact_arity`] is `None`: defaults,
+/// `*rest`, …), the inner expression is emitted unchanged.
+fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
+    let arity = match inner {
+        Expr::MakeClosure { fn_name, .. } => {
+            STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+        }
+        _ => None,
+    };
+    match arity {
+        Some(n) => {
+            out.push_str("_sir_strict_arity(");
+            emit_expr(out, inner, indent);
+            let _ = write!(out, ", {n})");
+        }
+        None => emit_expr(out, inner, indent),
+    }
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // SIR10 strict closure — see `emit_strict_closure`.
+    if name == "lambda" && args.len() == 1 {
+        emit_strict_closure(out, &args[0], indent);
+        return;
+    }
     // ── Collection-method dispatch (C5) ────────────────────────────
     //
     // The Ruby→SIR frontend lowers every `recv.meth(args…)` /
@@ -2012,6 +2060,10 @@ struct ParamShape {
 
 thread_local! {
     static FN_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+    /// Function name → [`semantic_ir::Function::exact_arity`], for the
+    /// strict-closure marker (see `emit_strict_closure`).  Populated and
+    /// cleared by `emit_module` alongside `FN_ARITY`.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
     /// Per-module map from function name to its declared parameter shapes,
     /// in order.  Populated by `emit_module` before any body is walked, and
     /// consulted by the `DirectCall` arm to resolve keyword arguments to
@@ -2131,6 +2183,23 @@ const TAG_ESCAPED: &str = "e";
 /// a complete, fixed-width `_u{6-hex}_` token — see
 /// `semantic-ir-to-python::escape_body`'s own doc comment for the full
 /// argument.
+///
+/// # Generated names are reserved too (#18466)
+///
+/// The emitted file is one Go `package main`: the inlined runtime's types and
+/// functions, its imports, and the user's functions share one package
+/// scope, and a user's locals shadow all of them.  A user name spelled like
+/// any of them used to pass straight through — `(define (_sir_user_main)
+/// 42)` redeclared the renamed SIR `main`, `(define (fmt x) x)` collided
+/// with the `fmt` import, and a parameter named `_sir_plus` shadowed the
+/// runtime's `+`.  [`is_generated_name`] lists them; each now takes the
+/// marker branch exactly like a keyword:
+///
+/// ```text
+/// _sir_user_main  ->  sir_esc_v_sir_user_main
+/// fmt             ->  sir_esc_vfmt
+/// Value           ->  sir_esc_vValue
+/// ```
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
@@ -2138,7 +2207,7 @@ pub fn sanitize_ident(s: &str) -> String {
     if is_valid_go_ident(s)
         && !is_go_keyword(s)
         && !is_go_builtin(s)
-        && !s.starts_with(ESCAPE_MARKER)
+        && !is_generated_name(s)
     {
         return s.to_string();
     }
@@ -2155,6 +2224,56 @@ pub fn sanitize_ident(s: &str) -> String {
         }
     }
     out
+}
+
+/// Names the emitted Go file declares or binds that a user name must never
+/// spell (#18466).  [`sanitize_ident`] escapes every one of them.
+///
+/// | reserved                     | what the emitter or runtime declares               |
+/// |------------------------------|----------------------------------------------------|
+/// | `sir…`, `_sir…`, `__sir…` (any case) | every runtime function and helper type (`_sir_plus`, `SirError`, `sirCasKind`, …), `_sir_user_main` (SIR's `main`), loop temporaries `__sir_i_N`/`__sir_stop_N`/`__sir_step_N`, and [`ESCAPE_MARKER`] |
+/// | `Value`, `Symbol`, `Pair`, `Closure`, `Seq`, `Map`, `MapEntry`, `NDArray`, `_missingMarker` | the runtime's other package-level types |
+/// | `fmt`, `math`, `os`, `sort`, `strconv`, `strings` | the imported packages             |
+/// | `main`, `init`               | Go's process entry and package initialiser — a user `init` with parameters is a compile error |
+/// | `_`                          | the blank identifier, which cannot be read back    |
+/// | `__l`, `__args`, `__lam`     | the short-circuit operand, a closure adapter's argument slice, a hoisted lambda |
+///
+/// The unit test `every_runtime_declaration_is_reserved` scans the runtime
+/// source for package-level declarations, so a new runtime type that is not
+/// covered here fails the build rather than becoming spellable.
+/// `__sir_block__` is the one exception to the `__sir` family: it is not
+/// generated here but is the SIR-level name the Ruby frontend gives a
+/// method's block parameter, shared by every frontend and backend, so it
+/// keeps its spelling.
+fn is_generated_name(s: &str) -> bool {
+    let lower = s.to_ascii_lowercase();
+    lower.starts_with("sir")
+        || lower.starts_with("_sir")
+        || (lower.starts_with("__sir") && s != "__sir_block__")
+        || matches!(
+            s,
+            "Value"
+                | "Symbol"
+                | "Pair"
+                | "Closure"
+                | "Seq"
+                | "Map"
+                | "MapEntry"
+                | "NDArray"
+                | "_missingMarker"
+                | "fmt"
+                | "math"
+                | "os"
+                | "sort"
+                | "strconv"
+                | "strings"
+                | "main"
+                | "init"
+                | "_"
+                | "__l"
+                | "__args"
+                | "__lam"
+        )
 }
 
 fn is_valid_go_ident(s: &str) -> bool {
@@ -2249,6 +2368,14 @@ fn is_go_builtin(s: &str) -> bool {
             | "println"
             | "real"
             | "recover"
+            // Predeclared since Go 1.18 / 1.21.  The runtime declares
+            // `func _sir_exc_value(r any)`, so a user function named `any`
+            // broke the build (security review of #18466).
+            | "any"
+            | "comparable"
+            | "clear"
+            | "min"
+            | "max"
     )
 }
 
@@ -2363,6 +2490,64 @@ mod tests {
     fn quote_go_string_control_chars() {
         let q = quote_go_string("\u{0001}");
         assert!(q.contains(r"\x01"), "got: {}", q);
+    }
+
+    /// Every package-level name the inlined runtime declares — a `func`,
+    /// `type`, `var` or `const`, alone or inside a `( … )` group — must be
+    /// escaped, so no user name can redeclare or shadow it (#18466).
+    #[test]
+    fn every_runtime_declaration_is_reserved() {
+        let mut names = Vec::new();
+        let mut in_group = false;
+        for line in crate::runtime::RUNTIME.lines() {
+            if in_group {
+                if line.starts_with(')') {
+                    in_group = false;
+                } else if let Some(rest) = line.strip_prefix('\t') {
+                    if let Some(name) = rest.split(|c: char| !(c.is_ascii_alphanumeric() || c == '_')).next() {
+                        if !name.is_empty() && !rest.starts_with("//") {
+                            names.push(name.to_string());
+                        }
+                    }
+                }
+                continue;
+            }
+            if matches!(line, "const (" | "var (" | "type (") {
+                in_group = true;
+                continue;
+            }
+            for kw in ["func ", "type ", "var ", "const "] {
+                if let Some(rest) = line.strip_prefix(kw) {
+                    if rest.starts_with('(') {
+                        continue; // a method: `func (r *T) name`
+                    }
+                    let name: String = rest
+                        .chars()
+                        .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                        .collect();
+                    if !name.is_empty() {
+                        names.push(name);
+                    }
+                }
+            }
+        }
+        assert!(names.len() > 50, "scanned too few declarations: {names:?}");
+        let spellable: Vec<_> = names.iter().filter(|n| sanitize_ident(n) == **n).collect();
+        assert!(spellable.is_empty(), "runtime names a user could spell: {spellable:?}");
+    }
+
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in [
+            "_sir_user_main", "_sir_plus", "SirError", "fmt", "Value", "init", "_", "__l",
+            "__sir_r", "any", "comparable", "clear", "min", "max",
+        ] {
+            assert_eq!(sanitize_ident(name), format!("sir_esc_v{name}"), "{name}");
+        }
+        for name in ["x", "fact", "values", "format", "initial", "siren_x"] {
+            let want = if name.starts_with("sir") { format!("sir_esc_v{name}") } else { name.to_string() };
+            assert_eq!(sanitize_ident(name), want, "{name}");
+        }
     }
 
     #[test]
@@ -3759,16 +3944,16 @@ mod tests {
             "must register a deferred recover"
         );
         assert!(
-            out.contains("if r := recover(); r != nil {"),
+            out.contains("if __sir_r := recover(); __sir_r != nil {"),
             "must recover the panic"
         );
         assert!(
-            out.contains(r#"if _sir_rescue_matches(r, []string{"StandardError"}) {"#),
+            out.contains(r#"if _sir_rescue_matches(__sir_r, []string{"StandardError"}) {"#),
             "must ask the ancestry matcher; got:\n{out}"
         );
-        assert!(out.contains("e := _sir_exc_value(r)"), "must bind `=> e`");
+        assert!(out.contains("e := _sir_exc_value(__sir_r)"), "must bind `=> e`");
         assert!(
-            out.contains("} else {\n") && out.contains("panic(r)"),
+            out.contains("} else {\n") && out.contains("panic(__sir_r)"),
             "must re-raise unmatched"
         );
         assert!(out.trim_end().ends_with("}()"), "must invoke the IIFE");
@@ -3791,7 +3976,7 @@ mod tests {
         let mut out = String::new();
         emit_stmt(&mut out, &tc, 0);
         assert!(
-            out.contains("_sir_rescue_matches(r, []string{})"),
+            out.contains("_sir_rescue_matches(__sir_r, []string{})"),
             "empty list = catch-all"
         );
         // No binding was named → no `_sir_exc_value` call.

@@ -12,6 +12,85 @@ local trig = require("coding_adventures.trig")
 local p2d  = require("coding_adventures.point2d")
 
 local bezier2d = {}
+local MAX_FLATTENING_DEPTH = 32
+local MAX_FLATTENING_SUBDIVISIONS = 65535
+
+local function finite(value)
+    if value ~= value or math.abs(value) == math.huge then
+        error("Bezier subdivision produced nonfinite geometry", 0)
+    end
+    return value
+end
+
+local function scaled_distance(left, right)
+    local dx = finite(left.x - right.x)
+    local dy = finite(left.y - right.y)
+    local scale = math.max(math.abs(dx), math.abs(dy))
+    if scale == 0 then return 0 end
+    local nx, ny = dx / scale, dy / scale
+    return finite(scale * math.sqrt(finite(nx * nx + ny * ny)))
+end
+
+local function distance_to_segment(point, start_point, end_point)
+    local dx = finite(end_point.x - start_point.x)
+    local dy = finite(end_point.y - start_point.y)
+    local scale = math.max(math.abs(dx), math.abs(dy))
+    if scale == 0 then return scaled_distance(point, start_point) end
+    local nx, ny = dx / scale, dy / scale
+    local denominator = finite(nx * nx + ny * ny)
+    local nox = finite(finite(point.x - start_point.x) / scale)
+    local noy = finite(finite(point.y - start_point.y) / scale)
+    local projection = finite(finite(nox * nx + noy * ny) / denominator)
+    projection = math.max(0, math.min(1, projection))
+    local nearest = p2d.new_point(
+        finite(start_point.x + projection * dx),
+        finite(start_point.y + projection * dy))
+    return scaled_distance(point, nearest)
+end
+
+local function flatten(curve, tolerance, controls)
+    if type(tolerance) ~= "number" or tolerance ~= tolerance or math.abs(tolerance) == math.huge or tolerance <= 0 then
+        error("tolerance must be finite and positive", 0)
+    end
+    for _, point in ipairs(controls) do
+        if type(point.x) ~= "number" or type(point.y) ~= "number"
+            or point.x ~= point.x or point.y ~= point.y
+            or math.abs(point.x) == math.huge or math.abs(point.y) == math.huge then
+            error("control points must be finite", 0)
+        end
+    end
+
+    local points = {controls[1]}
+    local pending = {{curve=curve, depth=0}}
+    local subdivisions = 0
+    while #pending > 0 do
+        local item = table.remove(pending)
+        local current = item.curve
+        local endpoint = current.kind == "quad" and current.p2 or current.p3
+        local off_curve = current.kind == "quad" and {current.p1} or {current.p1, current.p2}
+        local flatness = 0
+        for _, point in ipairs(off_curve) do
+            flatness = math.max(flatness, distance_to_segment(point, current.p0, endpoint))
+        end
+        if flatness <= tolerance then
+            points[#points + 1] = endpoint
+        else
+            if item.depth >= MAX_FLATTENING_DEPTH or subdivisions >= MAX_FLATTENING_SUBDIVISIONS then
+                error("Bezier flattening exceeded the depth or subdivision budget", 0)
+            end
+            subdivisions = subdivisions + 1
+            local left, right
+            if current.kind == "quad" then
+                left, right = bezier2d.split_quad(current, 0.5)
+            else
+                left, right = bezier2d.split_cubic(current, 0.5)
+            end
+            pending[#pending + 1] = {curve=right, depth=item.depth + 1}
+            pending[#pending + 1] = {curve=left, depth=item.depth + 1}
+        end
+    end
+    return points
+end
 
 function bezier2d.new_quad(p0, p1, p2)
     return { kind="quad", p0=p0, p1=p1, p2=p2 }
@@ -49,18 +128,7 @@ end
 
 --- Adaptive polyline within tolerance. Returns a list of {x,y} points.
 function bezier2d.polyline_quad(q, tolerance)
-    local chord_mid = p2d.lerp(q.p0, q.p2, 0.5)
-    local curve_mid = bezier2d.eval_quad(q, 0.5)
-    if p2d.distance(chord_mid, curve_mid) <= tolerance then
-        return {q.p0, q.p2}
-    end
-    local left, right = bezier2d.split_quad(q, 0.5)
-    local lpts = bezier2d.polyline_quad(left, tolerance)
-    local rpts = bezier2d.polyline_quad(right, tolerance)
-    local result = {}
-    for _, v in ipairs(lpts) do result[#result+1] = v end
-    for i = 2, #rpts do result[#result+1] = rpts[i] end
-    return result
+    return flatten(q, tolerance, {q.p0, q.p1, q.p2})
 end
 
 --- Tight bounding box of a quadratic Bezier.
@@ -139,18 +207,7 @@ end
 
 --- Adaptive polyline.
 function bezier2d.polyline_cubic(c, tolerance)
-    local chord_mid = p2d.lerp(c.p0, c.p3, 0.5)
-    local curve_mid = bezier2d.eval_cubic(c, 0.5)
-    if p2d.distance(chord_mid, curve_mid) <= tolerance then
-        return {c.p0, c.p3}
-    end
-    local left, right = bezier2d.split_cubic(c, 0.5)
-    local lpts = bezier2d.polyline_cubic(left, tolerance)
-    local rpts = bezier2d.polyline_cubic(right, tolerance)
-    local result = {}
-    for _, v in ipairs(lpts) do result[#result+1] = v end
-    for i = 2, #rpts do result[#result+1] = rpts[i] end
-    return result
+    return flatten(c, tolerance, {c.p0, c.p1, c.p2, c.p3})
 end
 
 --- Tight bounding box.

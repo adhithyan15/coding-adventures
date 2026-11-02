@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C180-guolai",
+    "language": "chinese",
+    "chapter": 180,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3ff851005a34695"
+  },
+  "findings": []
+}

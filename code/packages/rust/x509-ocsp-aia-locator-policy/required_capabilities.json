@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-ocsp-aia-locator-policy",
   "capabilities": [],
-  "justification": "Pure allocation-free validation and unique selection of borrowed OCSP AIA discovery data under caller-supplied scheme, port, and length policy. It performs no filesystem, network, DNS, process, environment, clock, HTTP, TLS, credential, signing, verification, trust-root, certificate-path, or revocation-decision access."
+  "justification": "Pure allocation-free validation and unique selection of borrowed OCSP AIA discovery data under caller-supplied scheme, port, and length policy, including exact binding to already validated certificate-wide role evidence. It performs no filesystem, network, DNS, process, environment, clock, HTTP, TLS, credential, signing, verification, trust-root, certificate-path, or revocation-decision access."
 }

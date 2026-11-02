@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Doing the Chores",
+  "label": "ch:zh-doing-the-chores",
+  "canDo": "I can talk about sweeping, washing up, making the bed, doing jobs and looking after someone.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C160-zhaogu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can talk about sweeping, washing up, making the bed, doing jobs and looking after someone.",
+    "assesses": [
+      "ZH-LEX-C160-CHORE160-03",
+      "ZH-LEX-C160-CHORE160-04",
+      "ZH-LEX-C160-CHORE160-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C235-guaibude",
+  "pathSegment": "ZH-PATH-235-REASON235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-235-REASON235",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-201-POST201",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy stamps, send things by courier, send an email and say I have got it.",
+  "prerequisites": []
+}

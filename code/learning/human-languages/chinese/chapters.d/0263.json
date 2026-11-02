@@ -1,0 +1,20 @@
+{
+  "chapter": 263,
+  "title": "Time Off Work",
+  "label": "ch:zh-time-off-work",
+  "canDo": "I can talk about the manager, say who is in charge, and ask for time off, sick leave or annual leave.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C263-nianjia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can talk about the manager, say who is in charge, and ask for time off, sick leave or annual leave.",
+    "assesses": [
+      "ZH-LEX-C263-LEAVE263-03",
+      "ZH-LEX-C263-LEAVE263-04",
+      "ZH-LEX-C263-LEAVE263-05",
+      "ZH-SCRIPT-JIA-LEAVE-01"
+    ]
+  }
+}

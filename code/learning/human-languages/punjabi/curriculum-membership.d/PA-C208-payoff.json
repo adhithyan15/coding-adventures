@@ -1,0 +1,11 @@
+{
+  "id": "PA-C208-payoff",
+  "pathSegment": "PA-PATH-208-A2-PIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-208-A2-PIA",
+      "order": 4
+    }
+  ]
+}

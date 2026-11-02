@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 link metadata for elements, boundaries, deployment nodes, and relationships",
+  "fixtures": [
+    {
+      "name": "c4-custom-links",
+      "source": "C4Deployment\nPerson(user, \"User\", \"Uses platform\", \"\", \"actor\", \"https://example.com/user\")\nSystem(api, \"API\", \"Service\", $link=\"https://example.com/api\")\nBoundary(edge, \"Edge\", \"zone\", \"trusted\", \"https://example.com/edge\") {\nContainer(web, \"Web\", \"TypeScript\", \"Frontend\", \"\", \"ui\", \"https://example.com/web\")\n}\nNode(host, \"Host\", \"Linux\", \"Gateway\", \"\", \"runtime\", $link=\"https://example.com/host\") {\nComponent(worker, \"Worker\", \"Rust\", \"Jobs\", $link=\"https://example.com/worker\")\n}\nRel(user, api, \"Calls\", \"HTTPS\", \"Request\", \"\", \"critical\", \"https://example.com/calls\")\nRel(api, worker, \"Queues\", $link=\"https://example.com/queues\")"
+    }
+  ]
+}

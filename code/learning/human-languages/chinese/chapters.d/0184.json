@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Holiday Plans",
+  "label": "ch:zh-holiday-plans",
+  "canDo": "I can talk about going on holiday, deciding where, looking round places, my home town and relaxing.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C184-fangsong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can talk about going on holiday, deciding where, looking round places, my home town and relaxing.",
+    "assesses": [
+      "ZH-LEX-C184-HOLIDAY184-03",
+      "ZH-LEX-C184-HOLIDAY184-04",
+      "ZH-LEX-C184-HOLIDAY184-05"
+    ]
+  }
+}

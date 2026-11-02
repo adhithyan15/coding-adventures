@@ -1,0 +1,1003 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 248,
+  "title": "A New Term",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:1682780385a85d75",
+  "lessons": [
+    {
+      "id": "ZH-C248-xueqi",
+      "sequence": 19000,
+      "title": "学期 (xuéqī) — school term; semester",
+      "headword": "学期",
+      "romanization": "xuéqī",
+      "gloss": "school term; semester",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce55d619678511c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for souvenir, then the Mandarin for to recall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 学期",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "学期 — xuéqī — \"school term; semester\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这个学期很长 zhège xuéqī hěn cháng — This term is a long one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "学期 (xuéqī) is built from 学 'to study' and 期 'a set time', both inherited from Middle Chinese, haewk and gi (Guangyun, in Baxter's transcription), which glosses the second 'to meet' and 'a limit'. Middle Chinese gi would regularly give a rising tone, qí; the level tone of qī is irregular."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xuéqī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xuéqī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xuéqī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xuéqī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège xuéqī hěn cháng — This term is a long one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège xuéqī hěn cháng* — This term is a long one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for souvenir, then the Mandarin for to recall, then say xuéqī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for souvenir, then the Mandarin for to recall, then say *xuéqī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 学期 (xuéqī) mean? (\"School term; semester\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C248-nianji",
+      "sequence": 19010,
+      "title": "niánjí — year; grade (at school)",
+      "headword": "niánjí",
+      "romanization": "niánjí",
+      "gloss": "year; grade (at school)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce5a672229e2e435",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to recall, then the Mandarin for a school term."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: niánjí",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "niánjí — \"year; grade (at school)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen niánjí yǒu yìbǎi ge xuésheng — There are a hundred students in our year."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "niánjí is built from 年 'a year' and jí 'a rank', both inherited from Middle Chinese, nen and kip (Guangyun, in Baxter's transcription), which glosses the second 'rank' and quotes an older dictionary for it, 'the order of silk threads'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niánjí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niánjí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niánjí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niánjí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen niánjí yǒu yìbǎi ge xuésheng — There are a hundred students in our year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen niánjí yǒu yìbǎi ge xuésheng* — There are a hundred students in our year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to recall, then the Mandarin for a school term, then say niánjí again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to recall, then the Mandarin for a school term, then say *niánjí* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does niánjí mean? (\"Year; grade (at school)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C248-xiaozhang",
+      "sequence": 19020,
+      "title": "校长 (xiàozhǎng) — head teacher; principal",
+      "headword": "校长",
+      "romanization": "xiàozhǎng",
+      "gloss": "head teacher; principal",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edb9880e8c0cf070",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a school term, then the Mandarin for a year group at school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 校长",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "校长 — xiàozhǎng — \"head teacher; principal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他是我们学校的校长 tā shì wǒmen xuéxiào de xiàozhǎng — He's the head of our school."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 校 (xiào) — ten strokes in two pieces: on the left the tree piece, four strokes, as on the left of 机; on the right a dot and a bar, two short strokes under them, then a long stroke falling to the left crossed by a long stroke falling to the right. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "校长 (xiàozhǎng) is built from 校 (xiào) 'a school' and 长 'the head', both inherited from Middle Chinese, haewH and trjangX (Guangyun, in Baxter's transcription). The dictionary glosses the second 'big'; it lists the first in the title of an army officer, and the sense 'school' is not given there, so how it came is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàozhǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàozhǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàozhǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàozhǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shì wǒmen xuéxiào de xiàozhǎng — He's the head of our school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shì wǒmen xuéxiào de xiàozhǎng* — He's the head of our school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a school term, then the Mandarin for a year group at school, then say xiàozhǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a school term, then the Mandarin for a year group at school, then say *xiàozhǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 校长 (xiàozhǎng) mean? (\"Head teacher; principal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W248-xiao-school",
+      "sequence": 19025,
+      "title": "校 (xiào) — the tree piece, then a lid and a cross",
+      "headword": "校",
+      "romanization": "xiào",
+      "gloss": "校 — the tree piece of 机, then a dot, a bar and two pairs of strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2735409c4fe1f70c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the tree piece, then a lid and a cross",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the tree piece, then a lid and a cross and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiàozhǎng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiàozhǎng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "机 学."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — jī, xué",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *jī*, *xué*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the tree piece, then a lid and a cross",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "校 (xiào)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, the tree piece, four strokes. A short bar. A vertical down through it. A stroke falling to the left from the crossing. Then a short dot to the right: on the left of a character the last stroke is a dot, not a long sweep."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, six strokes. A dot on top and a bar under it. Two short strokes under the bar, the left one falling to the left, the right one a dot. Then a long stroke falling to the left and, across it, a long stroke falling to the right to the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 6 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "校 (xiào), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 校, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 校 (xiào)? (Ten.) What is the left piece? (The tree piece, four strokes, as in 机.) What are the last two strokes? (A long fall to the left, crossed by a long fall to the right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 校 (xiào), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C248-gaozhong",
+      "sequence": 19030,
+      "title": "高中 (gāozhōng) — senior high school",
+      "headword": "高中",
+      "romanization": "gāozhōng",
+      "gloss": "senior high school",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f7c421a46cf5e98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a year group at school, then the Mandarin for a head teacher."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 高中",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "高中 — gāozhōng — \"senior high school\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们学校有高中 wǒmen xuéxiào yǒu gāozhōng — Our school has a senior high section."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 高 (gāo) — ten strokes: a dot and a long bar, then 口; under them a frame open at the foot, with a small 口 inside it. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "高中 (gāozhōng) is built from 高 (gāo) 'high' and 中 'middle', both inherited from Middle Chinese, kaw and trjuwng (Guangyun, in Baxter's transcription), which glosses the first 'up' and 'lofty': the higher middle school, a short form of a longer name."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāozhōng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāozhōng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāozhōng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāozhōng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen xuéxiào yǒu gāozhōng — Our school has a senior high section.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen xuéxiào yǒu gāozhōng* — Our school has a senior high section.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a year group at school, then the Mandarin for a head teacher, then say gāozhōng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a year group at school, then the Mandarin for a head teacher, then say *gāozhōng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 高中 (gāozhōng) mean? (\"Senior high school\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W248-gao-tall",
+      "sequence": 19035,
+      "title": "高 (gāo) — a lid, 口, then a frame around a small 口",
+      "headword": "高",
+      "romanization": "gāo",
+      "gloss": "高 — a dot and a bar, 口, then a frame with a small 口 inside",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1446eaf5c0c11523",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a lid, 口, then a frame around a small 口",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a lid, 口, then a frame around a small 口 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gāozhōng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gāozhōng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "口 中."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — kǒu, zhōng",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *kǒu*, *zhōng*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a lid, 口, then a frame around a small 口",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "高 (gāo)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, top to bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The lid, two strokes. A dot, then a long bar across."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle piece, 口, three strokes. A short vertical, a stroke that runs right and turns down, then the bar that closes the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom piece, five strokes. A vertical down the left. A bar across the top that turns down the right side and hooks to the left at the foot. Then a small 口 inside the frame, three strokes as before."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 3 + 5 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "高 (gāo), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 高, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 高 (gāo)? (Ten.) How many 口 does it hold? (Two: one in the middle, a small one inside the frame.) Is the frame closed at the foot? (No, it is open.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 高 (gāo), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C248-jiazhang",
+      "sequence": 19040,
+      "title": "家长 (jiāzhǎng) — pupil's parent; parent of a schoolchild",
+      "headword": "家长",
+      "romanization": "jiāzhǎng",
+      "gloss": "pupil's parent; parent of a schoolchild",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d197ffcfeb03db3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a head teacher, then the Mandarin for senior high school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 家长",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "家长 — jiāzhǎng — \"pupil's parent; parent of a schoolchild\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今天家长来学校 jīntiān jiāzhǎng lái xuéxiào — The parents are coming to school today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "家长 (jiāzhǎng) is built from 家 'a home' and 长 'the head', both inherited from Middle Chinese, kae and trjangX (Guangyun, in Baxter's transcription): the head of a household, and at school a pupil's parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiāzhǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiāzhǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiāzhǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiāzhǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān jiāzhǎng lái xuéxiào — The parents are coming to school today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān jiāzhǎng lái xuéxiào* — The parents are coming to school today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a head teacher, then the Mandarin for senior high school, then say jiāzhǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a head teacher, then the Mandarin for senior high school, then say *jiāzhǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 家长 (jiāzhǎng) mean? (\"Pupil's parent; parent of a schoolchild\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

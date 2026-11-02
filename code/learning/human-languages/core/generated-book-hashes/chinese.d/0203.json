@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:9cad86c07d9e8f1b",
+  "lessonIds": [
+    "ZH-C203-zu",
+    "ZH-C203-fangdong",
+    "ZH-W203-dong-east",
+    "ZH-C203-fangzu",
+    "ZH-C203-yajin",
+    "ZH-C203-hetong"
+  ],
+  "tex": "chinese/book/chapters/ch203-renting-a-flat.tex"
+}

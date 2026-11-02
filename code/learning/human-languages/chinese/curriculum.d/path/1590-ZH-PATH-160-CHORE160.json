@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-160-CHORE160",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "ZH-EXT-160-CHORE160"
+  ],
+  "after": []
+}

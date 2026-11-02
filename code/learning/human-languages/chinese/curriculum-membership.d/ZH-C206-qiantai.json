@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C206-qiantai",
+  "pathSegment": "ZH-PATH-206-FLOOR206",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-206-FLOOR206",
+      "order": 4
+    }
+  ]
+}

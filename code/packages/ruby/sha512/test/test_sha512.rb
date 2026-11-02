@@ -7,8 +7,117 @@
 
 require "minitest/autorun"
 require "coding_adventures_sha512"
+require "tempfile"
 
 SHA512 = CodingAdventures::Sha512
+
+class TestPortableConformance < Minitest::Test
+  FIXTURE = File.expand_path("../../../../specs/fixtures/sha512-v1/cases.txt", __dir__)
+
+  def fixture_lines(path = FIXTURE)
+    raw = File.open(path, "rb") { |file| file.read(4097) || "".b }
+    lines = parse_fixture(raw)
+    assert_equal 9, lines.count { |line| line.start_with?("V|") }
+    assert_equal 6, lines.count { |line| line.start_with?("L|") }
+    lines
+  end
+
+  def parse_fixture(raw)
+    raise ArgumentError, "fixture byte size outside bounds" unless raw.bytesize.between?(1, 4096) && raw.ascii_only?
+    lines = raw.lines(chomp: true).map { |line| line.delete_suffix("\r") }.reject { |line| line.empty? || line.start_with?("#") }
+    raise ArgumentError, "fixture row count outside bounds" unless lines.length.between?(1, 64)
+    lines.each do |line|
+      fields = line.split("|", -1)
+      raise ArgumentError, "malformed fixture row" unless fields.length == 5 && fields[1].match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+      case fields[0]
+      when "V"
+        input_hex, chunks, digest = fields[2..4]
+        raise ArgumentError, "malformed vector row" unless input_hex.length <= 8192 && input_hex.match?(/\A(?:[0-9a-f]{2})*\z/) && digest.match?(/\A[0-9a-f]{128}\z/)
+        byte_count = input_hex.length / 2
+        raise ArgumentError, "malformed vector size" if byte_count > 4096 || (byte_count.zero? != chunks.empty?)
+        sizes = if chunks.empty?
+                  []
+                elsif chunks.match?(/\A[1-9][0-9]*(?:,[1-9][0-9]*)*\z/)
+                  chunks.split(",").map { |value| Integer(value, 10) }
+                else
+                  raise ArgumentError, "malformed chunks"
+                end
+        raise ArgumentError, "malformed chunks" if sizes.length > 64 || sizes.any? { |size| size > 4096 } || sizes.sum != byte_count
+      when "L"
+        raise ArgumentError, "malformed length row" unless fields[2].match?(/\A[0-9a-f]{16}\z/) && fields[3].match?(/\A[0-9a-f]{16}\z/) &&
+          (fields[4] == "ERROR" || fields[4].match?(/\A[0-9a-f]{32}\z/))
+      else
+        raise ArgumentError, "unknown fixture row tag"
+      end
+    end
+    lines
+  end
+
+  def test_fixture_reader_rejects_malformed_rows
+    digest = "0" * 128
+    ["X|id|||", "V|UPPER|00|1|#{digest}", "V|bad|0|1|#{digest}", "V|bad|00|2|#{digest}",
+     "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC"].each do |row|
+      assert_raises(ArgumentError) { parse_fixture(row) }
+    end
+  end
+
+  def test_fixture_reader_rejects_oversized_file
+    Tempfile.create("sha512-fixture") do |file|
+      file.binmode
+      file.write("x" * 4097)
+      file.flush
+      assert_raises(ArgumentError) { fixture_lines(file.path) }
+    end
+  end
+
+  def test_portable_digest_corpus
+    fixture_lines.grep(/^V\|/).each do |line|
+      _, id, input_hex, chunk_csv, expected = line.split("|", -1)
+      data = [input_hex].pack("H*")
+      assert_equal expected, SHA512.sha512_hex(data), id
+      hasher = SHA512::Digest.new
+      offset = 0
+      chunks = chunk_csv.empty? ? [] : chunk_csv.split(",").map(&:to_i)
+      assert_operator chunks.length, :<=, 64
+      chunks.each do |size|
+        assert_operator size, :>, 0
+        assert_operator offset + size, :<=, data.bytesize
+        hasher.update(data.byteslice(offset, size))
+        offset += size
+      end
+      assert_equal data.bytesize, offset
+      assert_equal expected, hasher.hexdigest, id
+    end
+  end
+
+  def test_portable_length_corpus
+    fixture_lines.grep(/^L\|/).each do |line|
+      _, id, high_hex, low_hex, expected = line.split("|", -1)
+      byte_count = (high_hex.to_i(16) << 64) | low_hex.to_i(16)
+      if expected == "ERROR"
+        error = assert_raises(RangeError) { SHA512.encode_bit_length(byte_count) }
+        assert_match(/less than 2\^128 bits/, error.message)
+      else
+        assert_equal expected, SHA512.encode_bit_length(byte_count).unpack1("H*"), id
+      end
+    end
+  end
+
+  def test_update_consumes_input_without_aliasing
+    input = "abc".b
+    hasher = SHA512::Digest.new.update(input)
+    input.setbyte(0, "z".ord)
+    assert_equal SHA512.sha512("abc"), hasher.digest
+  end
+
+  def test_invalid_update_is_atomic
+    assert_raises(TypeError) { SHA512.sha512(123) }
+    hasher = SHA512::Digest.new.update("ab")
+    error = assert_raises(TypeError) { hasher.update(123) }
+    assert_match(/expected binary String/, error.message)
+    assert_equal SHA512.sha512("abc"), hasher.update("c").digest
+  end
+end
 
 class TestVersion < Minitest::Test
   def test_version_exists

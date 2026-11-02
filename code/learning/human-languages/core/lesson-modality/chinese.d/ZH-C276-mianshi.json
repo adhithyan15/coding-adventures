@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C276-mianshi",
+    "language": "chinese",
+    "chapter": 276,
+    "sequence": 20440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a6a9b6dbbfa3893"
+  },
+  "findings": []
+}

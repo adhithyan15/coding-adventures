@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C266-zhongnian",
+    "language": "chinese",
+    "chapter": 266,
+    "sequence": 19970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32f5acc07cdd7c56"
+  },
+  "findings": []
+}

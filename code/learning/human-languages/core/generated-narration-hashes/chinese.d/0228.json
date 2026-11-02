@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:3397591b5de7b6ae",
+  "lessonIds": [
+    "ZH-C228-touteng",
+    "ZH-W228-tou-head",
+    "ZH-W228-teng-ache",
+    "ZH-C228-chiyao",
+    "ZH-C228-dazhen",
+    "ZH-C228-yanzhong",
+    "ZH-C228-diantou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch228.txt",
+  "json": "chinese/narration/ch228.json",
+  "textHash": "fnv1a64:dbb701bc9fa75896",
+  "jsonHash": "fnv1a64:3859ea4f40668c29",
+  "findings": []
+}

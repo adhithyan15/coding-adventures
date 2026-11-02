@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "An Ordinary Day",
+  "label": "ch:zh-an-ordinary-day",
+  "canDo": "I can say what is normal, talk about my days, then and lately, and the small hours.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C178-lingchen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say what is normal, talk about my days, then and lately, and the small hours.",
+    "assesses": [
+      "ZH-LEX-C178-DAY178-03",
+      "ZH-LEX-C178-DAY178-04",
+      "ZH-LEX-C178-DAY178-05"
+    ]
+  }
+}

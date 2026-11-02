@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:762c3656e5bb755c",
+  "lessonIds": [
+    "ZH-C246-cunzi",
+    "ZH-C246-qiao",
+    "ZH-C246-shitou",
+    "ZH-C246-chitang",
+    "ZH-C246-huachuan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch246.txt",
+  "json": "chinese/narration/ch246.json",
+  "textHash": "fnv1a64:cefab3e20762acb6",
+  "jsonHash": "fnv1a64:ddd16bdbda7a5f77",
+  "findings": []
+}

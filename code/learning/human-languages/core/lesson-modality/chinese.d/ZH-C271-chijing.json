@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C271-chijing",
+    "language": "chinese",
+    "chapter": 271,
+    "sequence": 20200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa5a6a8444f6888a"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:1cb7e690f3620c9a",
+  "lessonIds": [
+    "ZH-C265-haixiu",
+    "ZH-C265-yonggan",
+    "ZH-C265-dafang",
+    "ZH-C265-xiaoqi",
+    "ZH-C265-jinzhang",
+    "ZH-R265-review-260-265"
+  ],
+  "tex": "chinese/book/chapters/ch265-shy-or-brave.tex"
+}

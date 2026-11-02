@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:5ec191e9bb209958",
+  "lessonIds": [
+    "ZH-C237-zhiwu",
+    "ZH-C237-huasheng",
+    "ZH-C237-yezi",
+    "ZH-C237-faya",
+    "ZH-C237-xigua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch237.txt",
+  "json": "chinese/narration/ch237.json",
+  "textHash": "fnv1a64:9bb9c2c5175fbad4",
+  "jsonHash": "fnv1a64:ac9b0faaae5c34db",
+  "findings": []
+}

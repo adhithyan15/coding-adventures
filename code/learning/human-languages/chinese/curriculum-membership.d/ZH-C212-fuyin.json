@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C212-fuyin",
+  "pathSegment": "ZH-PATH-212-SERVICE212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-212-SERVICE212",
+      "order": 1
+    }
+  ]
+}

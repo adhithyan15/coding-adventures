@@ -1,0 +1,7 @@
+[package]
+name = "rsa-pss-data-block"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 8017 RSA-PSS unmasked data-block validation"
+
+[dependencies]

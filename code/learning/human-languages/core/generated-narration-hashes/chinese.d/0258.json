@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:87328679d9b807be",
+  "lessonIds": [
+    "ZH-C258-youhao",
+    "ZH-C258-rexin",
+    "ZH-W258-re-hot",
+    "ZH-C258-naixin",
+    "ZH-C258-youmo",
+    "ZH-C258-xingge"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch258.txt",
+  "json": "chinese/narration/ch258.json",
+  "textHash": "fnv1a64:478cbffc6b5ecf04",
+  "jsonHash": "fnv1a64:53345c3c188d94c3",
+  "findings": []
+}

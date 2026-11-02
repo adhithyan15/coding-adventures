@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C221-huaxue",
+  "pathSegment": "ZH-PATH-221-SNOW221",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-221-SNOW221",
+      "order": 2
+    }
+  ]
+}

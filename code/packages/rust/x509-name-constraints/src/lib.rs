@@ -1,30 +1,46 @@
-//! # DNS NameConstraints structure
+//! # DNS and IP NameConstraints structure
 //!
 //! This crate decodes a narrow, bounded RFC 5280 structure and evaluates its
-//! permitted and excluded DNS subtrees against caller-supplied DNS names. It
+//! permitted and excluded DNS or IP subtrees. Separate DNS-only and IP-only
+//! entry points fail closed on the other retained name form, while a combined
+//! policy evaluates both against caller-supplied typed names. The crate
 //! deliberately grants no certificate-evidence, path, trust-root, or TLS
 //! authority.
 
 #![deny(unsafe_code)]
 
-use der_asn1::{decode_implicit_ia5_string, Asn1Decoder, Asn1Element, Asn1Error, Asn1ErrorKind};
+use der_asn1::{
+    decode_implicit_ia5_string, decode_implicit_octet_string, Asn1Decoder, Asn1Element, Asn1Error,
+    Asn1ErrorKind,
+};
 use der_tlv::{DerTag, TagClass};
 use std::error::Error;
 use std::fmt;
+use std::net::IpAddr;
+use x509_ip_name_constraint_policy::{
+    evaluate_ip_name_constraints, IpNameConstraintError, IpNameConstraintErrorKind,
+};
+
+pub use x509_ip_name_constraint_policy::{
+    ConstrainedIpAddresses, IpConstraintSyntaxError, PresentedIpAddressSyntaxError,
+    MAX_PRESENTED_IP_ADDRESSES,
+};
 
 const SEQUENCE_TAG: u32 = 16;
 const PERMITTED_SUBTREES_TAG: u32 = 0;
 const EXCLUDED_SUBTREES_TAG: u32 = 1;
 const DNS_NAME_TAG: u32 = 2;
+const IP_ADDRESS_TAG: u32 = 7;
 
 /// RFC 5280 id-ce-nameConstraints (2.5.29.30).
 pub const NAME_CONSTRAINTS_OID: &[u64] = &[2, 5, 29, 30];
 
-/// Maximum DNS GeneralSubtree values retained from one constraints value.
+/// Maximum DNS GeneralSubtree values retained from one permitted or excluded field.
 pub const MAX_DNS_SUBTREES: usize = 256;
+/// Maximum total GeneralSubtree values retained from either top-level field.
+pub const MAX_GENERAL_SUBTREES: usize = MAX_DNS_SUBTREES;
 /// Maximum presented DNS names evaluated against one constraints value.
 pub const MAX_PRESENTED_DNS_NAMES: usize = 256;
-
 /// Stable syntax failures for DNS constraints and presented DNS names.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DnsNameSyntaxError {
@@ -43,7 +59,10 @@ pub enum DnsNameSyntaxError {
 /// Stable payload-free DNS constraint evaluation failures.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DnsConstraintErrorKind {
+    TooManyPermittedSubtrees,
+    TooManyExcludedSubtrees,
     TooManyPresentedDnsNames,
+    UnevaluatedIpSubtrees,
     InvalidPermittedSubtree(DnsNameSyntaxError),
     InvalidExcludedSubtree(DnsNameSyntaxError),
     InvalidPresentedDnsName(DnsNameSyntaxError),
@@ -100,6 +119,128 @@ impl ConstrainedDnsNames {
     }
 }
 
+/// Stable payload-free IP constraint evaluation failures.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum IpConstraintErrorKind {
+    TooManyPermittedSubtrees,
+    TooManyExcludedSubtrees,
+    TooManyPresentedIpAddresses,
+    UnevaluatedDnsSubtrees,
+    InvalidPermittedSubtree(IpConstraintSyntaxError),
+    InvalidExcludedSubtree(IpConstraintSyntaxError),
+    InvalidPresentedIpAddress(PresentedIpAddressSyntaxError),
+    PresentedIpAddressExcluded,
+    PresentedIpAddressNotPermitted,
+}
+
+/// One redacted IP evaluation failure and its relevant collection index.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct IpConstraintError {
+    kind: IpConstraintErrorKind,
+    item_index: usize,
+}
+
+impl IpConstraintError {
+    const fn new(kind: IpConstraintErrorKind, item_index: usize) -> Self {
+        Self { kind, item_index }
+    }
+
+    pub const fn kind(self) -> IpConstraintErrorKind {
+        self.kind
+    }
+
+    pub const fn item_index(self) -> usize {
+        self.item_index
+    }
+}
+
+impl fmt::Display for IpConstraintError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 IP constraint error {:?} at item {}",
+            self.kind, self.item_index
+        )
+    }
+}
+
+impl Error for IpConstraintError {}
+
+/// Stable payload-free failures from combined DNS and IP evaluation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum NameConstraintEvaluationErrorKind {
+    Dns(DnsConstraintErrorKind),
+    Ip(IpConstraintErrorKind),
+}
+
+/// One redacted combined evaluation failure and its relevant collection index.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct NameConstraintEvaluationError {
+    kind: NameConstraintEvaluationErrorKind,
+    item_index: usize,
+}
+
+impl NameConstraintEvaluationError {
+    const fn dns(error: DnsConstraintError) -> Self {
+        Self {
+            kind: NameConstraintEvaluationErrorKind::Dns(error.kind()),
+            item_index: error.item_index(),
+        }
+    }
+
+    const fn ip(error: IpConstraintError) -> Self {
+        Self {
+            kind: NameConstraintEvaluationErrorKind::Ip(error.kind()),
+            item_index: error.item_index(),
+        }
+    }
+
+    pub const fn kind(self) -> NameConstraintEvaluationErrorKind {
+        self.kind
+    }
+
+    pub const fn item_index(self) -> usize {
+        self.item_index
+    }
+}
+
+impl fmt::Display for NameConstraintEvaluationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 combined name constraint error {:?} at item {}",
+            self.kind, self.item_index
+        )
+    }
+}
+
+impl Error for NameConstraintEvaluationError {}
+
+/// Payload-free evidence that both supported name forms satisfied the constraints.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ConstrainedDnsAndIpNames {
+    dns_count: usize,
+    ip_count: usize,
+}
+
+impl ConstrainedDnsAndIpNames {
+    pub const fn dns_count(self) -> usize {
+        self.dns_count
+    }
+
+    pub const fn ip_count(self) -> usize {
+        self.ip_count
+    }
+
+    pub const fn total_count(self) -> usize {
+        self.dns_count + self.ip_count
+    }
+
+    pub const fn is_empty(self) -> bool {
+        self.dns_count == 0 && self.ip_count == 0
+    }
+}
+
 /// Stable payload-free failure categories.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NameConstraintsErrorKind {
@@ -114,6 +255,7 @@ pub enum NameConstraintsErrorKind {
     UnsupportedGeneralName,
     EmptyDnsSubtree,
     InvalidDnsSubtree(Asn1ErrorKind),
+    InvalidIpSubtreeLength,
     UnsupportedGeneralSubtreeField,
 }
 
@@ -178,13 +320,19 @@ impl fmt::Display for NameConstraintsError {
 
 impl Error for NameConstraintsError {}
 
-/// Borrowed DNS subtrees from one supported reviewed-anchor constraints value.
+/// Borrowed DNS and IP subtrees from one supported constraints value.
 #[derive(Clone)]
 pub struct NameConstraints<'a> {
     permitted_dns_subtrees: [&'a str; MAX_DNS_SUBTREES],
     permitted_len: usize,
+    permitted_ip_subtrees: [&'a [u8]; MAX_GENERAL_SUBTREES],
+    permitted_ip_len: usize,
+    permitted_total_len: usize,
     excluded_dns_subtrees: [&'a str; MAX_DNS_SUBTREES],
     excluded_len: usize,
+    excluded_ip_subtrees: [&'a [u8]; MAX_GENERAL_SUBTREES],
+    excluded_ip_len: usize,
+    excluded_total_len: usize,
 }
 
 impl fmt::Debug for NameConstraints<'_> {
@@ -192,7 +340,9 @@ impl fmt::Debug for NameConstraints<'_> {
         formatter
             .debug_struct("NameConstraints")
             .field("permitted_dns_subtrees", &self.permitted_len)
+            .field("permitted_ip_subtrees", &self.permitted_ip_len)
             .field("excluded_dns_subtrees", &self.excluded_len)
+            .field("excluded_ip_subtrees", &self.excluded_ip_len)
             .finish()
     }
 }
@@ -208,6 +358,18 @@ impl<'a> NameConstraints<'a> {
         &self.excluded_dns_subtrees[..self.excluded_len]
     }
 
+    /// Return permitted IP address-and-mask values in wire order relative to
+    /// other permitted IP subtrees.
+    pub fn permitted_ip_subtrees(&self) -> &[&'a [u8]] {
+        &self.permitted_ip_subtrees[..self.permitted_ip_len]
+    }
+
+    /// Return excluded IP address-and-mask values in wire order relative to
+    /// other excluded IP subtrees.
+    pub fn excluded_ip_subtrees(&self) -> &[&'a [u8]] {
+        &self.excluded_ip_subtrees[..self.excluded_ip_len]
+    }
+
     /// Return the number of retained permitted DNS subtrees.
     pub const fn permitted_len(&self) -> usize {
         self.permitted_len
@@ -218,17 +380,27 @@ impl<'a> NameConstraints<'a> {
         self.excluded_len
     }
 
-    /// Return the total number of retained DNS subtrees.
-    pub const fn len(&self) -> usize {
-        self.permitted_len + self.excluded_len
+    /// Return the number of retained permitted IP subtrees.
+    pub const fn permitted_ip_len(&self) -> usize {
+        self.permitted_ip_len
     }
 
-    /// Return whether no DNS subtree was retained.
+    /// Return the number of retained excluded IP subtrees.
+    pub const fn excluded_ip_len(&self) -> usize {
+        self.excluded_ip_len
+    }
+
+    /// Return the total number of retained DNS and IP subtrees.
+    pub const fn len(&self) -> usize {
+        self.permitted_total_len + self.excluded_total_len
+    }
+
+    /// Return whether no DNS or IP subtree was retained.
     ///
     /// Successful decoding is never empty; this method keeps collection use
     /// explicit for downstream policy code.
     pub const fn is_empty(&self) -> bool {
-        self.permitted_len == 0 && self.excluded_len == 0
+        self.permitted_total_len == 0 && self.excluded_total_len == 0
     }
 }
 
@@ -243,9 +415,52 @@ pub fn evaluate_dns_names(
             MAX_PRESENTED_DNS_NAMES,
         ));
     }
+    if constraints.permitted_ip_len() != 0 || constraints.excluded_ip_len() != 0 {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::UnevaluatedIpSubtrees,
+            0,
+        ));
+    }
+
+    evaluate_dns_name_subtrees(
+        constraints.permitted_dns_subtrees(),
+        constraints.excluded_dns_subtrees(),
+        presented_dns_names,
+    )
+}
+
+/// Evaluate one explicit DNS component of NameConstraints policy.
+///
+/// This entry point enables a caller to compose DNS evaluation with a separate
+/// IP-subtree evaluator. It proves only the supplied DNS component. Callers
+/// must not treat success as evidence that any IP or other name form was
+/// evaluated.
+pub fn evaluate_dns_name_subtrees(
+    permitted_dns_subtrees: &[&str],
+    excluded_dns_subtrees: &[&str],
+    presented_dns_names: &[&str],
+) -> Result<ConstrainedDnsNames, DnsConstraintError> {
+    if permitted_dns_subtrees.len() > MAX_DNS_SUBTREES {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::TooManyPermittedSubtrees,
+            MAX_DNS_SUBTREES,
+        ));
+    }
+    if excluded_dns_subtrees.len() > MAX_DNS_SUBTREES {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::TooManyExcludedSubtrees,
+            MAX_DNS_SUBTREES,
+        ));
+    }
+    if presented_dns_names.len() > MAX_PRESENTED_DNS_NAMES {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::TooManyPresentedDnsNames,
+            MAX_PRESENTED_DNS_NAMES,
+        ));
+    }
 
     let mut validated_permitted = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
-    for (index, subtree) in constraints.permitted_dns_subtrees().iter().enumerate() {
+    for (index, subtree) in permitted_dns_subtrees.iter().enumerate() {
         validated_permitted[index] = validate_constraint(subtree).map_err(|reason| {
             DnsConstraintError::new(
                 DnsConstraintErrorKind::InvalidPermittedSubtree(reason),
@@ -254,7 +469,7 @@ pub fn evaluate_dns_names(
         })?;
     }
     let mut validated_excluded = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
-    for (index, subtree) in constraints.excluded_dns_subtrees().iter().enumerate() {
+    for (index, subtree) in excluded_dns_subtrees.iter().enumerate() {
         validated_excluded[index] = validate_constraint(subtree).map_err(|reason| {
             DnsConstraintError::new(
                 DnsConstraintErrorKind::InvalidExcludedSubtree(reason),
@@ -271,7 +486,7 @@ pub fn evaluate_dns_names(
             )
         })?;
 
-        let excluded = validated_excluded[..constraints.excluded_len()]
+        let excluded = validated_excluded[..excluded_dns_subtrees.len()]
             .iter()
             .any(|constraint| overlaps_excluded_subtree(name, *constraint));
         if excluded {
@@ -281,8 +496,8 @@ pub fn evaluate_dns_names(
             ));
         }
 
-        let permitted = constraints.permitted_len() == 0
-            || validated_permitted[..constraints.permitted_len()]
+        let permitted = permitted_dns_subtrees.is_empty()
+            || validated_permitted[..permitted_dns_subtrees.len()]
                 .iter()
                 .any(|constraint| within_subtree(name, *constraint));
         if !permitted {
@@ -296,6 +511,145 @@ pub fn evaluate_dns_names(
     Ok(ConstrainedDnsNames {
         count: presented_dns_names.len(),
     })
+}
+
+/// Evaluate presented IP subjectAltName values against IP-only constraints.
+///
+/// This entry point refuses retained DNS subtrees so a caller cannot silently
+/// skip that name form. Use [`evaluate_dns_and_ip_names`] for mixed values.
+pub fn evaluate_ip_addresses(
+    constraints: &NameConstraints<'_>,
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedIpAddresses, IpConstraintError> {
+    if presented_ip_addresses.len() > MAX_PRESENTED_IP_ADDRESSES {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::TooManyPresentedIpAddresses,
+            MAX_PRESENTED_IP_ADDRESSES,
+        ));
+    }
+    if constraints.permitted_len() != 0 || constraints.excluded_len() != 0 {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::UnevaluatedDnsSubtrees,
+            0,
+        ));
+    }
+
+    evaluate_ip_addresses_inner(constraints, presented_ip_addresses)
+}
+
+/// Evaluate both supported GeneralName forms without silently dropping either.
+pub fn evaluate_dns_and_ip_names(
+    constraints: &NameConstraints<'_>,
+    presented_dns_names: &[&str],
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedDnsAndIpNames, NameConstraintEvaluationError> {
+    // Validate every retained constraint before examining either presented
+    // collection. The second calls below repeat that bounded validation while
+    // applying the names, keeping the internal evidence local and unforgeable.
+    evaluate_dns_names_inner(constraints, &[]).map_err(NameConstraintEvaluationError::dns)?;
+    evaluate_ip_addresses_inner(constraints, &[]).map_err(NameConstraintEvaluationError::ip)?;
+
+    let dns = evaluate_dns_names_inner(constraints, presented_dns_names)
+        .map_err(NameConstraintEvaluationError::dns)?;
+    let ip = evaluate_ip_addresses_inner(constraints, presented_ip_addresses)
+        .map_err(NameConstraintEvaluationError::ip)?;
+    Ok(ConstrainedDnsAndIpNames {
+        dns_count: dns.count(),
+        ip_count: ip.count(),
+    })
+}
+
+// Reuse the bounded public component evaluator introduced on main so the
+// combined policy and existing component consumers share one DNS rule set.
+fn evaluate_dns_names_inner(
+    constraints: &NameConstraints<'_>,
+    presented_dns_names: &[&str],
+) -> Result<ConstrainedDnsNames, DnsConstraintError> {
+    evaluate_dns_name_subtrees(
+        constraints.permitted_dns_subtrees(),
+        constraints.excluded_dns_subtrees(),
+        presented_dns_names,
+    )
+}
+
+fn evaluate_ip_addresses_inner(
+    constraints: &NameConstraints<'_>,
+    presented_ip_addresses: &[IpAddr],
+) -> Result<ConstrainedIpAddresses, IpConstraintError> {
+    if presented_ip_addresses.len() > MAX_PRESENTED_IP_ADDRESSES {
+        return Err(IpConstraintError::new(
+            IpConstraintErrorKind::TooManyPresentedIpAddresses,
+            MAX_PRESENTED_IP_ADDRESSES,
+        ));
+    }
+
+    // Preserve the shared primitive's constraint-first contract across the
+    // typed adapter: validate every retained subtree before reading even one
+    // caller-supplied address. The second call below repeats that bounded
+    // validation while applying the adapted addresses.
+    evaluate_ip_name_constraints(
+        constraints.permitted_ip_subtrees(),
+        constraints.excluded_ip_subtrees(),
+        &[],
+    )
+    .map_err(map_ip_constraint_error)?;
+
+    let mut address_octets = [[0u8; 16]; MAX_PRESENTED_IP_ADDRESSES];
+    let mut address_lengths = [0usize; MAX_PRESENTED_IP_ADDRESSES];
+    for (index, address) in presented_ip_addresses.iter().enumerate() {
+        match address {
+            IpAddr::V4(address) => {
+                address_octets[index][..4].copy_from_slice(&address.octets());
+                address_lengths[index] = 4;
+            }
+            IpAddr::V6(address) => {
+                address_octets[index].copy_from_slice(&address.octets());
+                address_lengths[index] = 16;
+            }
+        }
+    }
+    let mut encoded_addresses: [&[u8]; MAX_PRESENTED_IP_ADDRESSES] =
+        [&[]; MAX_PRESENTED_IP_ADDRESSES];
+    for index in 0..presented_ip_addresses.len() {
+        encoded_addresses[index] = &address_octets[index][..address_lengths[index]];
+    }
+
+    evaluate_ip_name_constraints(
+        constraints.permitted_ip_subtrees(),
+        constraints.excluded_ip_subtrees(),
+        &encoded_addresses[..presented_ip_addresses.len()],
+    )
+    .map_err(map_ip_constraint_error)
+}
+
+fn map_ip_constraint_error(error: IpNameConstraintError) -> IpConstraintError {
+    let kind = match error.kind() {
+        IpNameConstraintErrorKind::TooManyPermittedConstraints => {
+            IpConstraintErrorKind::TooManyPermittedSubtrees
+        }
+        IpNameConstraintErrorKind::TooManyExcludedConstraints => {
+            IpConstraintErrorKind::TooManyExcludedSubtrees
+        }
+        IpNameConstraintErrorKind::TooManyPresentedAddresses => {
+            IpConstraintErrorKind::TooManyPresentedIpAddresses
+        }
+        IpNameConstraintErrorKind::InvalidPermittedConstraint(reason) => {
+            IpConstraintErrorKind::InvalidPermittedSubtree(reason)
+        }
+        IpNameConstraintErrorKind::InvalidExcludedConstraint(reason) => {
+            IpConstraintErrorKind::InvalidExcludedSubtree(reason)
+        }
+        IpNameConstraintErrorKind::InvalidPresentedAddress(reason) => {
+            IpConstraintErrorKind::InvalidPresentedIpAddress(reason)
+        }
+        IpNameConstraintErrorKind::PresentedAddressExcluded => {
+            IpConstraintErrorKind::PresentedIpAddressExcluded
+        }
+        IpNameConstraintErrorKind::PresentedAddressNotPermitted => {
+            IpConstraintErrorKind::PresentedIpAddressNotPermitted
+        }
+    };
+    IpConstraintError::new(kind, error.item_index())
 }
 
 #[derive(Clone, Copy)]
@@ -431,18 +785,25 @@ pub fn decode_name_constraints_contents<'a>(
     let root = decoder
         .decode_exact(encoded_contents)
         .map_err(NameConstraintsError::structure)?;
-    let (permitted_dns_subtrees, permitted_len) = decode_subtrees_field(
+    let permitted = decode_subtrees_field(
         decoder,
         root,
         0,
         PERMITTED_SUBTREES_TAG,
         NameConstraintsErrorKind::EmptyPermittedSubtrees,
+        false,
     )?;
     Ok(NameConstraints {
-        permitted_dns_subtrees,
-        permitted_len,
+        permitted_dns_subtrees: permitted.dns_subtrees,
+        permitted_len: permitted.dns_len,
+        permitted_ip_subtrees: permitted.ip_subtrees,
+        permitted_ip_len: permitted.ip_len,
+        permitted_total_len: permitted.total_len,
         excluded_dns_subtrees: [""; MAX_DNS_SUBTREES],
         excluded_len: 0,
+        excluded_ip_subtrees: [&[]; MAX_GENERAL_SUBTREES],
+        excluded_ip_len: 0,
+        excluded_total_len: 0,
     })
 }
 
@@ -451,7 +812,8 @@ pub fn decode_name_constraints_contents<'a>(
 /// Certificate extension values contain this complete SEQUENCE rather than
 /// only the sequence contents retained by reviewed trust-anchor snapshots. The
 /// accepted subset contains a non-empty `[0]` permitted field, a non-empty
-/// `[1]` excluded field, or both in schema order, with dNSName subtrees only.
+/// `[1]` excluded field, or both in schema order, with dNSName and iPAddress
+/// subtrees only.
 pub fn decode_name_constraints<'a>(
     decoder: &mut Asn1Decoder,
     encoded: &'a [u8],
@@ -467,8 +829,14 @@ pub fn decode_name_constraints<'a>(
     let mut decoded = NameConstraints {
         permitted_dns_subtrees: [""; MAX_DNS_SUBTREES],
         permitted_len: 0,
+        permitted_ip_subtrees: [&[]; MAX_GENERAL_SUBTREES],
+        permitted_ip_len: 0,
+        permitted_total_len: 0,
         excluded_dns_subtrees: [""; MAX_DNS_SUBTREES],
         excluded_len: 0,
+        excluded_ip_subtrees: [&[]; MAX_GENERAL_SUBTREES],
+        excluded_ip_len: 0,
+        excluded_total_len: 0,
     };
     let mut seen_permitted = false;
     let mut seen_excluded = false;
@@ -499,15 +867,19 @@ pub fn decode_name_constraints<'a>(
                     field_offset,
                 ));
             }
-            let (subtrees, len) = decode_subtrees_field(
+            let subtrees = decode_subtrees_field(
                 decoder,
                 field,
                 field_offset,
                 PERMITTED_SUBTREES_TAG,
                 NameConstraintsErrorKind::EmptyPermittedSubtrees,
+                true,
             )?;
-            decoded.permitted_dns_subtrees = subtrees;
-            decoded.permitted_len = len;
+            decoded.permitted_dns_subtrees = subtrees.dns_subtrees;
+            decoded.permitted_len = subtrees.dns_len;
+            decoded.permitted_ip_subtrees = subtrees.ip_subtrees;
+            decoded.permitted_ip_len = subtrees.ip_len;
+            decoded.permitted_total_len = subtrees.total_len;
             seen_permitted = true;
         } else if is_exact_tag(
             field.tag(),
@@ -521,15 +893,19 @@ pub fn decode_name_constraints<'a>(
                     field_offset,
                 ));
             }
-            let (subtrees, len) = decode_subtrees_field(
+            let subtrees = decode_subtrees_field(
                 decoder,
                 field,
                 field_offset,
                 EXCLUDED_SUBTREES_TAG,
                 NameConstraintsErrorKind::EmptyExcludedSubtrees,
+                true,
             )?;
-            decoded.excluded_dns_subtrees = subtrees;
-            decoded.excluded_len = len;
+            decoded.excluded_dns_subtrees = subtrees.dns_subtrees;
+            decoded.excluded_len = subtrees.dns_len;
+            decoded.excluded_ip_subtrees = subtrees.ip_subtrees;
+            decoded.excluded_ip_len = subtrees.ip_len;
+            decoded.excluded_total_len = subtrees.total_len;
             seen_excluded = true;
         } else {
             return Err(NameConstraintsError::new(
@@ -548,13 +924,22 @@ pub fn decode_name_constraints<'a>(
     Ok(decoded)
 }
 
+struct DecodedSubtrees<'a> {
+    dns_subtrees: [&'a str; MAX_DNS_SUBTREES],
+    dns_len: usize,
+    ip_subtrees: [&'a [u8]; MAX_GENERAL_SUBTREES],
+    ip_len: usize,
+    total_len: usize,
+}
+
 fn decode_subtrees_field<'a>(
     decoder: &mut Asn1Decoder,
     root: Asn1Element<'a>,
     root_offset: usize,
     tag_number: u32,
     empty_kind: NameConstraintsErrorKind,
-) -> Result<([&'a str; MAX_DNS_SUBTREES], usize), NameConstraintsError> {
+    allow_ip: bool,
+) -> Result<DecodedSubtrees<'a>, NameConstraintsError> {
     if !is_exact_tag(root.tag(), TagClass::ContextSpecific, true, tag_number) {
         return Err(NameConstraintsError::new(
             NameConstraintsErrorKind::UnsupportedTopLevelField,
@@ -571,12 +956,17 @@ fn decode_subtrees_field<'a>(
         return Err(NameConstraintsError::new(empty_kind, value_offset));
     }
 
-    let mut decoded = [""; MAX_DNS_SUBTREES];
-    let mut len = 0;
+    let mut decoded = DecodedSubtrees {
+        dns_subtrees: [""; MAX_DNS_SUBTREES],
+        dns_len: 0,
+        ip_subtrees: [&[]; MAX_GENERAL_SUBTREES],
+        ip_len: 0,
+        total_len: 0,
+    };
 
     while !subtrees.remaining().is_empty() {
         let subtree_offset = child_offset(value_offset, value_length, subtrees.remaining().len());
-        if len == MAX_DNS_SUBTREES {
+        if decoded.total_len == MAX_GENERAL_SUBTREES {
             return Err(NameConstraintsError::new(
                 NameConstraintsErrorKind::TooManySubtrees,
                 subtree_offset,
@@ -596,20 +986,34 @@ fn decode_subtrees_field<'a>(
             ));
         }
 
-        let dns_name = decode_general_subtree(decoder, subtree, subtree_offset)?;
-        decoded[len] = dns_name;
-        len += 1;
+        match decode_general_subtree(decoder, subtree, subtree_offset, allow_ip)? {
+            GeneralSubtree::Dns(dns_name) => {
+                decoded.dns_subtrees[decoded.dns_len] = dns_name;
+                decoded.dns_len += 1;
+            }
+            GeneralSubtree::Ip(ip_address) => {
+                decoded.ip_subtrees[decoded.ip_len] = ip_address;
+                decoded.ip_len += 1;
+            }
+        }
+        decoded.total_len += 1;
     }
 
     subtrees.finish().map_err(NameConstraintsError::structure)?;
-    Ok((decoded, len))
+    Ok(decoded)
+}
+
+enum GeneralSubtree<'a> {
+    Dns(&'a str),
+    Ip(&'a [u8]),
 }
 
 fn decode_general_subtree<'a>(
     decoder: &mut Asn1Decoder,
     subtree: Asn1Element<'a>,
     subtree_offset: usize,
-) -> Result<&'a str, NameConstraintsError> {
+    allow_ip: bool,
+) -> Result<GeneralSubtree<'a>, NameConstraintsError> {
     let value_offset = subtree_offset + subtree.header().len();
     let value_length = subtree.value().len();
     let mut fields = decoder
@@ -627,21 +1031,33 @@ fn decode_general_subtree<'a>(
         ));
     };
 
-    if !is_exact_tag(base.tag(), TagClass::ContextSpecific, false, DNS_NAME_TAG) {
+    let decoded_base = if is_exact_tag(base.tag(), TagClass::ContextSpecific, false, DNS_NAME_TAG) {
+        if base.value().is_empty() {
+            return Err(NameConstraintsError::new(
+                NameConstraintsErrorKind::EmptyDnsSubtree,
+                base_offset + base.header().len(),
+            ));
+        }
+        let dns_name = decode_implicit_ia5_string(base, DNS_NAME_TAG)
+            .map_err(|error| NameConstraintsError::dns(error, base_offset))?;
+        GeneralSubtree::Dns(dns_name)
+    } else if allow_ip && is_exact_tag(base.tag(), TagClass::ContextSpecific, false, IP_ADDRESS_TAG)
+    {
+        let ip_address = decode_implicit_octet_string(base, IP_ADDRESS_TAG)
+            .map_err(|error| NameConstraintsError::element_structure(error, base_offset))?;
+        if !matches!(ip_address.len(), 8 | 32) {
+            return Err(NameConstraintsError::new(
+                NameConstraintsErrorKind::InvalidIpSubtreeLength,
+                base_offset + base.header().len(),
+            ));
+        }
+        GeneralSubtree::Ip(ip_address)
+    } else {
         return Err(NameConstraintsError::new(
             NameConstraintsErrorKind::UnsupportedGeneralName,
             base_offset,
         ));
-    }
-    if base.value().is_empty() {
-        return Err(NameConstraintsError::new(
-            NameConstraintsErrorKind::EmptyDnsSubtree,
-            base_offset + base.header().len(),
-        ));
-    }
-
-    let dns_name = decode_implicit_ia5_string(base, DNS_NAME_TAG)
-        .map_err(|error| NameConstraintsError::dns(error, base_offset))?;
+    };
 
     let trailing_offset = child_offset(value_offset, value_length, fields.remaining().len());
     if fields
@@ -659,7 +1075,7 @@ fn decode_general_subtree<'a>(
     fields
         .finish()
         .map_err(|error| NameConstraintsError::element_structure(error, subtree_offset))?;
-    Ok(dns_name)
+    Ok(decoded_base)
 }
 
 fn is_exact_tag(tag: DerTag, class: TagClass, constructed: bool, number: u32) -> bool {

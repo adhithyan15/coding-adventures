@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-206-FLOOR206",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-206-FLOOR206"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C260-jinbu",
+  "pathSegment": "ZH-PATH-260-SKILL260",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-260-SKILL260",
+      "order": 4
+    }
+  ]
+}

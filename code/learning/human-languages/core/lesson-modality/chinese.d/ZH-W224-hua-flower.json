@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W224-hua-flower",
+    "language": "chinese",
+    "chapter": 224,
+    "sequence": 17315,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:439b1f6692ef091d",
+    "detachableSegments": [
+      "Script — the grass piece over the person piece and two more strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

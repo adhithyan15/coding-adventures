@@ -1065,6 +1065,19 @@ impl Lowerer {
             if matches!(ty, "i64" | "u64") {
                 return self.lower_wide_comparison(instr, op, relation, is_signed(ty));
             }
+            // A `bool` suffix names the comparison's RESULT, not its operands
+            // (`aot-core`'s `spec_type` prefers the type hint, and Twig hints
+            // every `(< a b)` `bool`).  When an operand is an `i64` held as a
+            // register pair, the word lowering below would read only its low
+            // word (`var_src`): `3e9 < 1` compared 0xB2D0_5E00 with 1, and
+            // `2^32 == 0` compared two zero words (#18453 review, #18463).  So
+            // a `bool` comparison over a pair takes the full 64-bit path.
+            // Narrow suffixes (`cmp_lt_u8`, …) keep reading the low word: that
+            // is the documented contract for frontends such as Nib that widen
+            // signatures to `i64` but keep narrow body operations.
+            if ty == "bool" && self.has_pair_operand(instr, op)? {
+                return self.lower_wide_comparison(instr, op, relation, is_signed(ty));
+            }
             self.require_comparison_type(instr, ty, op)?;
             let rd = self.dest(instr, op)?;
             let lhs = self.var_src(instr, 0, op)?;
@@ -2246,6 +2259,20 @@ impl Lowerer {
                 });
             }
         }
+    }
+
+    /// Does either of `instr`'s first two operands live in a register pair
+    /// (or a pair spill) — i.e. hold a full 64-bit value?
+    fn has_pair_operand(&self, instr: &CIRInstr, op: &str) -> Result<bool, BackendError> {
+        for index in 0..2 {
+            if matches!(
+                self.var_location(instr, index, op)?,
+                ValueLocation::Pair { .. } | ValueLocation::PairSpill { .. }
+            ) {
+                return Ok(true);
+            }
+        }
+        Ok(false)
     }
 
     fn wide_var_location(
@@ -3497,8 +3524,26 @@ fn comparison_parts(op: &str) -> Option<(&str, &str)> {
     None
 }
 
+/// Is a CIR type suffix compared, divided, shifted and widened as a
+/// **signed** integer?
+///
+/// `i*` types are signed and `u*` types unsigned, as the names say.  `bool`
+/// is signed too.  A comparison's suffix is its *result* type when the
+/// frontend gave one (`aot-core`'s `spec_type` prefers the type hint), and
+/// Twig types every `(< a b)` / `string<?` result `bool` over signed
+/// operands — `string<?` compares `str_cmp`'s -1 / 0 / 1 against 0.  With
+/// `bool` unsigned, `cmp_lt_bool -1, 0` became `sltu` and returned 0, so
+/// `(< -5 0)` and `(string<? "a" "b")` were `#f` (#18453; the x86-64 and
+/// AArch64 backends had the same rule and the same fix).  A genuine 0 / 1
+/// boolean compares and sign-extends identically either way.
+///
+/// | suffix          | signed? | `cmp_lt -1, 0` |
+/// |-----------------|---------|----------------|
+/// | `i8` … `i64`    | yes     | 1 (`slt`)      |
+/// | `bool`          | yes     | 1 (`slt`)      |
+/// | `u4` … `u64`    | no      | 0 (`sltu`)     |
 fn is_signed(ty: &str) -> bool {
-    ty.starts_with('i')
+    ty.starts_with('i') || ty == "bool"
 }
 
 /// Is `ty` a floating-point CIR scalar type?

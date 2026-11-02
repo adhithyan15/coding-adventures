@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W161-mi-rice",
+    "language": "chinese",
+    "chapter": 161,
+    "sequence": 13155,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5f7019dcc6fde548",
+    "detachableSegments": [
+      "Script — a cross with two strokes above and two below"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

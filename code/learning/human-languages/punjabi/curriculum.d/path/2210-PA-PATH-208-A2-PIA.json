@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-208-A2-PIA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-208-A2-PIA"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C252-shangxin",
+    "language": "chinese",
+    "chapter": 252,
+    "sequence": 19220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d512ce5ec4ec2f7"
+  },
+  "findings": []
+}

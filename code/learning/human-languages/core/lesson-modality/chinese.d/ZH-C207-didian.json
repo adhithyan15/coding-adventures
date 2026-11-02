@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C207-didian",
+    "language": "chinese",
+    "chapter": 207,
+    "sequence": 15980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:526cee651001f840"
+  },
+  "findings": []
+}

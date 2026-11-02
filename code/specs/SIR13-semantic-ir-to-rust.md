@@ -228,6 +228,16 @@ and emits a real `main` that calls it (and `_init` first if
 present).  The same rule applies to any other SIR function name
 that is a Rust keyword — `sanitize_ident` handles this.
 
+`sanitize_ident` also escapes, into `__sir_esc_v<name>`, every name the
+emitter generates: `__sir…` (the runtime module, `__sir_user_main`, loop
+temporaries; `__sir_block__`, the frontends' block-parameter name, is
+exempt), the capture temporaries `__cap_…`, `__args`, `__it`, `__l`, `__r`,
+`__payload`, `__exc`, the prelude variants `Some`/`None`/`Ok`/`Err`, and
+the wildcard `_`.
+Until issue #18466 a user could spell them: `(define (f A __cap_A) (lambda
+() (+ A __cap_A)))` bound `__cap_A` for the capture `A` and then read it as
+the user's `__cap_A`, printing 2 instead of 11 (SIR10 "Generated names").
+
 ## Output formatting
 
 - Indentation: 4 spaces (matches `rustfmt` default; output can be

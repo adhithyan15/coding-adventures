@@ -1,0 +1,11 @@
+{
+  "id": "ZH-R247-review-242-247",
+  "pathSegment": "ZH-PATH-247-TRIP247",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-247-TRIP247",
+      "order": 5
+    }
+  ]
+}

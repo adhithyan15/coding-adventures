@@ -7,7 +7,7 @@
 //! |-----------------------|------------------------------|---------------------------------|
 //! | `UnknownRelease`      | release resolution           | the (escaped) request, ≤5 IDs   |
 //! | `ReleaseNotAvailable` | resolution / profile lookup  | release, why                    |
-//! | `Budget`              | parser or compiler budgets   | release, which budget, limit    |
+//! | `Budget`              | parser or compiler budgets   | release, which, limit (+ fn, start) |
 //! | `Lex`                 | `GrammarLexer`               | release, 1-based line/column    |
 //! | `Parse`               | `GrammarParser`              | release, furthest failure       |
 //! | `Unsupported`         | this crate                   | release, CST rule, start/end    |
@@ -16,6 +16,10 @@
 //! carried over field for field ([`From`] below); `Unsupported` is the
 //! compiler's own: the tree parsed, but it is outside what this compiler
 //! lowers (a callee other than `puts`, a value outside `i64`, and so on).
+//!
+//! A `Budget` for the per-function register limit (#18419) also names the
+//! function and the 1-based start of the statement that went over; the
+//! parser's budgets leave both `None`.
 
 use std::fmt;
 
@@ -48,6 +52,12 @@ pub enum FrontendError {
         which: &'static str,
         /// Its limit.
         limit: usize,
+        /// The lowered function that exceeded it, for a per-function budget
+        /// (`registers per function`); `None` for the others.
+        function: Option<String>,
+        /// The 1-based start `(line, column)` of the statement being lowered
+        /// when the budget ran out, when there is one.
+        start: Option<(usize, usize)>,
     },
     /// No token pattern of the release's `.tokens` matches at this position.
     Lex {
@@ -146,6 +156,8 @@ impl From<RubyFrontendError> for FrontendError {
                 release,
                 which,
                 limit,
+                function: None,
+                start: None,
             },
             RubyFrontendError::Lex {
                 release,
@@ -194,7 +206,18 @@ impl fmt::Display for FrontendError {
                 release,
                 which,
                 limit,
-            } => write!(f, "Ruby {release}: {which} exceeds the limit of {limit}"),
+                function,
+                start,
+            } => {
+                write!(f, "Ruby {release}: {which} exceeds the limit of {limit}")?;
+                if let Some(function) = function {
+                    write!(f, " in function `{function}`")?;
+                }
+                if let Some((line, column)) = start {
+                    write!(f, " at {line}:{column}")?;
+                }
+                Ok(())
+            }
             Self::Lex {
                 release,
                 line,

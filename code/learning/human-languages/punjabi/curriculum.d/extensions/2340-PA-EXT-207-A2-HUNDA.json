@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-207-A2-HUNDA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use one bounded masculine singular habitual form for happens.",
+  "prerequisites": [
+    "PA-EXT-206-A2-GAE"
+  ]
+}

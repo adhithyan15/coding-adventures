@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:e63501b8f85d7b80",
+  "lessonIds": [
+    "ZH-C248-xueqi",
+    "ZH-C248-nianji",
+    "ZH-C248-xiaozhang",
+    "ZH-W248-xiao-school",
+    "ZH-C248-gaozhong",
+    "ZH-W248-gao-tall",
+    "ZH-C248-jiazhang"
+  ],
+  "tex": "chinese/book/chapters/ch248-a-new-term.tex"
+}

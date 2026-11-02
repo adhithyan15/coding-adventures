@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C257-geshou",
+    "language": "chinese",
+    "chapter": 257,
+    "sequence": 19490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a5b6522eaac591e"
+  },
+  "findings": []
+}

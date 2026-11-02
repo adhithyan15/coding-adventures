@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-265-SHY265",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone is shy, brave, generous, stingy or nervous.",
+  "prerequisites": []
+}

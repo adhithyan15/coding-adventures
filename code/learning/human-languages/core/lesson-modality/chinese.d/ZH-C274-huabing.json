@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C274-huabing",
+    "language": "chinese",
+    "chapter": 274,
+    "sequence": 20340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47d1f644d8930db4"
+  },
+  "findings": []
+}

@@ -87,12 +87,12 @@ use iir_builtin_lowering::{lower_heap_builtins, lower_heap_builtins_runtime};
 
 // Managed backends (wasm/jvm/clr/beam): expand to host GC objects —
 // `cons` → `alloc` + 2×`field_store`, `car`/`cdr` → `field_load`.
-lower_heap_builtins(&mut module);
+lower_heap_builtins(&mut module)?;
 
 // Native backends (twig-aot → aarch64/x86_64): route to the linked C lisp
 // runtime — `cons`/`car`/`cdr` → `call_builtin "lispy_cons"/"lispy_car"/
 // "lispy_cdr"` → `__twig_lispy_*`, keeping the value NaN-box tagged.
-lower_heap_builtins_runtime(&mut module);
+lower_heap_builtins_runtime(&mut module)?;
 ```
 
 Both are driven by the *same* frontend IIR, so every lisp-family frontend
@@ -106,7 +106,7 @@ use-sites, not the language, so a non-lisp arithmetic program is untouched:
 
 ```rust
 use iir_builtin_lowering::{lower_heap_builtins_runtime, intern_symbols, lower_lisp_repr};
-lower_heap_builtins_runtime(&mut module); // cons/car/cdr + pair?/not/equal? → lispy_*
+lower_heap_builtins_runtime(&mut module)?; // cons/car/cdr + pair?/not/equal? → lispy_*
 intern_symbols(&mut module);              // const Var(name):symbol → (id<<32)|TAG_SYMBOL
 lower_lisp_repr(&mut module);             // box atoms, tag nil, COND truthiness, unbox result
 ```
@@ -194,6 +194,38 @@ names are left alone: the pass runs on Nib's and ALGOL's modules too.
 ```rust
 let mut module = /* IIR from a frontend */;
 iir_builtin_lowering::lower_dyn_repr(&mut module)?; // Err if the program spells `__lisp_equal`
+```
+
+### Helper names belong to the pass
+
+`lower_list_ops` (run at the head of both heap lowerings) and
+`lower_closures_to_heap` add functions of their own: `__dyn_list_length`,
+`__dyn_list_ref`, `__dyn_list_append`, `__dyn_list_reverse`, `__dyn_list_assoc`
+and the closure dispatcher `__dyn_call_closure`. They point the program's
+calls at those functions by name. Suppose the module already holds a
+different function under one of those names, and uses the operation. The
+pass then refuses the module with a `HelperNameError` before rewriting
+anything, instead of routing `length` or every closure call to that
+function. A function that *is* the pass's helper, instruction for
+instruction, is accepted, because the pass has run before. So
+`lower_list_ops`, `lower_heap_builtins`, `lower_heap_builtins_runtime` and
+`lower_closures_to_heap` all return `Result<(), HelperNameError>`.
+`lower_builtins` reports the refusal as `BuiltinLoweringError::HelperName`.
+*Every* function under the name must be the helper: a real helper followed
+by an impostor of the same name is refused too.
+
+`PASS_GENERATED_DYN_HELPERS` lists those six names. A link step that shares
+the `__dyn_` namespace with the C runtime (twig-aot, and lang-aot's LLVM
+path) refuses every other `__dyn_*` module function, failing closed rather
+than trying to list the runtime's symbols.
+
+`lower_closures_to_heap` names the registers it adds `__clo_{tag}{n}`,
+skipping any name the function already uses, so a program register from a
+frontend that can spell `__clo_argnil1` stays the program's.
+
+```rust
+iir_builtin_lowering::lower_closures_to_heap(&mut module)?; // Err if the module has its own __dyn_call_closure
+iir_builtin_lowering::lower_heap_builtins_runtime(&mut module)?;
 ```
 
 ## Relationship to the LANG31 spec

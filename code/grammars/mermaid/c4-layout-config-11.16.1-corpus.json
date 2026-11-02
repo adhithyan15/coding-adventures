@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 UpdateLayoutConfig vertical slice",
+  "fixtures": [
+    {
+      "name": "keyed-layout-config",
+      "source": "C4Context\nUpdateLayoutConfig($c4ShapeInRow=2, $c4BoundaryInRow=1)\nPerson(a, \"A\")\nPerson(b, \"B\")\nPerson(c, \"C\")"
+    },
+    {
+      "name": "positional-layout-config",
+      "source": "C4Context\nUpdateLayoutConfig(1, 2)\nPerson(a, \"A\")\nPerson(b, \"B\")"
+    }
+  ]
+}

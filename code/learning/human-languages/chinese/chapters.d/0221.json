@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Snow and Ice",
+  "label": "ch:zh-snow-and-ice",
+  "canDo": "I can talk about a snowman, skiing, ice, being below zero and gloves.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C221-shoutao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can talk about a snowman, skiing, ice, being below zero and gloves.",
+    "assesses": [
+      "ZH-LEX-C221-SNOW221-03",
+      "ZH-LEX-C221-SNOW221-04",
+      "ZH-LEX-C221-SNOW221-05"
+    ]
+  }
+}

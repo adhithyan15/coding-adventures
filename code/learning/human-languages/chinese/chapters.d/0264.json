@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Sorry, I Can't",
+  "label": "ch:zh-sorry-i-can-t",
+  "canDo": "I can turn something down politely, say it is a shame, say sorry, say I am afraid not, and say what is actually so.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C264-qishi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can turn something down politely, say it is a shame, say sorry, say I am afraid not, and say what is actually so.",
+    "assesses": [
+      "ZH-LEX-C264-REFUSE264-03",
+      "ZH-LEX-C264-REFUSE264-04",
+      "ZH-LEX-C264-REFUSE264-05"
+    ]
+  }
+}

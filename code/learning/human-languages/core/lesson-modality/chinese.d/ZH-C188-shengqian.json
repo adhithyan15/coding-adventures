@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C188-shengqian",
+    "language": "chinese",
+    "chapter": 188,
+    "sequence": 15030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c602bf7a6d392a3b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C202-shouyintai",
+    "language": "chinese",
+    "chapter": 202,
+    "sequence": 15760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42d0c72ab6a9dd4c"
+  },
+  "findings": []
+}

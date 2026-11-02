@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C163-yecan",
+  "pathSegment": "ZH-PATH-163-WEEKEND163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-163-WEEKEND163",
+      "order": 2
+    }
+  ]
+}

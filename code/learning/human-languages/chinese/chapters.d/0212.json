@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Services in Town",
+  "label": "ch:zh-services-in-town",
+  "canDo": "I can print and photocopy things, top up my phone, make an appointment and get a haircut.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C212-lifa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can print and photocopy things, top up my phone, make an appointment and get a haircut.",
+    "assesses": [
+      "ZH-LEX-C212-SERVICE212-03",
+      "ZH-LEX-C212-SERVICE212-04",
+      "ZH-LEX-C212-SERVICE212-05"
+    ]
+  }
+}

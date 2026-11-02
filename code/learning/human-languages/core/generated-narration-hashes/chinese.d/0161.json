@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:223ca0adb3d175dc",
+  "lessonIds": [
+    "ZH-C161-dami",
+    "ZH-W161-mi-rice",
+    "ZH-C161-fen",
+    "ZH-C161-chaofan",
+    "ZH-C161-niurou",
+    "ZH-C161-jirou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch161.txt",
+  "json": "chinese/narration/ch161.json",
+  "textHash": "fnv1a64:c1b575d66b6811c9",
+  "jsonHash": "fnv1a64:276d373d6ad89657",
+  "findings": []
+}

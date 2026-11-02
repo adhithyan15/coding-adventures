@@ -39,13 +39,25 @@ pub(crate) struct DffMemory {
 
 impl DffMemory {
     pub(crate) fn new(byte_len: usize) -> Self {
-        Self {
-            q: vec![0; byte_len],
-        }
+        Self::try_new(byte_len).expect("architectural memory allocation failed")
+    }
+
+    pub(crate) fn try_new(byte_len: usize) -> Result<Self, ()> {
+        let mut q = Vec::new();
+        q.try_reserve_exact(byte_len).map_err(|_| ())?;
+        q.resize(byte_len, 0);
+        Ok(Self { q })
     }
 
     pub(crate) fn snapshot(&self) -> Vec<u8> {
         self.q.clone()
+    }
+
+    pub(crate) fn try_snapshot(&self) -> Result<Vec<u8>, ()> {
+        let mut snapshot = Vec::new();
+        snapshot.try_reserve_exact(self.q.len()).map_err(|_| ())?;
+        snapshot.extend_from_slice(&self.q);
+        Ok(snapshot)
     }
 
     pub(crate) fn restore_snapshot(&mut self, bytes: &[u8]) {

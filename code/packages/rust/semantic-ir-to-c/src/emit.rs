@@ -35,6 +35,49 @@ thread_local! {
     /// so the deep `emit_expr` / `emit_assign` call tree can read it without
     /// threading a context.
     static SIGNATURES: RefCell<HashMap<String, Vec<String>>> = RefCell::new(HashMap::new());
+
+    /// Per-module map from a function's RAW name to its
+    /// [`Function::exact_arity`], for the strict-closure marker (see
+    /// [`strict_closure_arity`]).  Snapshotted at the top of [`emit_module`]
+    /// like `SIGNATURES`.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+}
+
+/// The argument count the `lambda` marker's closure must be called with, or
+/// `None` when the marker leaves the closure lenient.
+///
+/// SIR10's strict closure is `BuiltinCall("lambda", [MakeClosure …])`: the
+/// Ruby frontend's `lambda { … }` and every Twig closure.  The emitted C is
+///
+/// ```text
+/// _sir_strict_arity(_sir_make_closure(_sir_thunk_f, ncap, …), N)
+/// ```
+///
+/// which stamps `N` on the closure; `_sir_apply` then refuses a call with any
+/// other argument count ("sir: arity mismatch: …", exit 1).  Without the stamp
+/// a closure body's thunk pads a missing argument with `nil` and ignores an
+/// extra one — right for a Ruby block, wrong for a lambda: Twig's `(g 4)` on
+/// a two-parameter lambda printed `4` (issue #18461).
+///
+/// `args` is the marker's own argument list, so this works even where the
+/// compound-argument path has already hoisted the closure into a temp.
+fn strict_closure_arity(args: &[Expr]) -> Option<usize> {
+    match args {
+        [Expr::MakeClosure { fn_name, .. }] => {
+            STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+        }
+        _ => None,
+    }
+}
+
+/// Render the `lambda` marker around an already-rendered closure value.
+fn emit_strict_closure(out: &mut String, closure: &str, arity: Option<usize>) {
+    match arity {
+        Some(n) => {
+            let _ = write!(out, "_sir_strict_arity({closure}, {n})");
+        }
+        None => out.push_str(closure),
+    }
 }
 
 fn fresh_id() -> u64 {
@@ -90,6 +133,11 @@ pub fn emit_module(m: &Module) -> String {
                 f.params.iter().map(|p| p.name.clone()).collect(),
             );
         }
+    });
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
     });
 
     let mut out = String::new();
@@ -152,7 +200,7 @@ pub fn emit_module(m: &Module) -> String {
         out.push_str("    sir_user_init();\n");
     }
     if m.functions.iter().any(|f| f.name == "main") {
-        out.push_str("    user_main();\n");
+        out.push_str("    sir_user_main();\n");
     }
     out.push_str("    return 0;\n}\n");
 
@@ -184,12 +232,29 @@ fn emit_globals_comment(out: &mut String, globals: &[Global]) {
 // ---------------------------------------------------------------------------
 
 /// The C name for a SIR function.  `main` and `_init` are renamed so they
-/// never collide with C's process entry or a reserved platform symbol.
+/// never collide with C's process entry; every other function lives in the
+/// `sir_fn_` namespace (#18466).
+///
+/// A C function is an external symbol in the same namespace as the C
+/// library the program links against and the headers it includes.  A user
+/// function spelled like any of those clashed: `(define (free x) x)` is
+/// "conflicting types for 'free'", and `(define (SirValue x) x)` redeclared
+/// the runtime's own value type.  No list of reserved names can keep up with
+/// every libc and platform header, so instead every user function gets a
+/// prefix no library uses.  The prefix sits inside the `sir…` namespace that
+/// [`sanitize_ident`] reserves, so no user name — a local included — can
+/// spell one, and [`sanitize_ident`] being one-to-one keeps the map
+/// one-to-one:
+///
+/// ```text
+/// main   ->  sir_user_main        free      ->  sir_fn_free
+/// _init  ->  sir_user_init        SirValue  ->  sir_fn_sir_esc_vSirValue
+/// ```
 fn function_emit_name(name: &str) -> String {
     match name {
-        "main" => "user_main".to_string(),
+        "main" => "sir_user_main".to_string(),
         "_init" => "sir_user_init".to_string(),
-        other => sanitize_ident(other),
+        other => format!("sir_fn_{}", sanitize_ident(other)),
     }
 }
 
@@ -339,7 +404,6 @@ fn collect_closure_targets(m: &Module) -> Vec<String> {
             semantic_ir::walker::walk_expr_default(self, e, depth);
         }
     }
-
     let mut targets = Targets(std::collections::BTreeSet::new());
     targets.visit_module(m);
     targets.0.into_iter().collect()
@@ -1811,6 +1875,11 @@ fn emit_call_with_arg_names(out: &mut String, e: &Expr, names: &[String]) {
             }
             out.push(')');
         }
+        // The strict-closure marker's closure was hoisted into `names[0]`;
+        // its arity still comes from the original `MakeClosure` argument.
+        Expr::BuiltinCall { name, args, .. } if name == "lambda" && names.len() == 1 => {
+            emit_strict_closure(out, &names[0], strict_closure_arity(args));
+        }
         Expr::BuiltinCall { name, .. } => emit_builtin_with_names(out, name, names),
         _ => unreachable!("emit_call_with_arg_names on non-call"),
     }
@@ -2202,6 +2271,13 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
 
 /// A builtin call whose arguments are all simple.
 fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // SIR10 strict closure — see `strict_closure_arity`.
+    if name == "lambda" && args.len() == 1 {
+        let mut closure = String::new();
+        emit_expr(&mut closure, &args[0], indent);
+        emit_strict_closure(out, &closure, strict_closure_arity(args));
+        return;
+    }
     // SIR17 `raise`.  The FIRST argument decides the shape (mirroring the
     // Go/Rust/JS/Python backends for cross-backend parity):
     //   • no argument — re-raise the exception currently being handled.
@@ -2656,6 +2732,8 @@ fn is_supported_builtin(name: &str) -> bool {
         || matches!(
             name,
             "and" | "or"
+                // SIR10 strict closure (`emit_builtin_simple`).
+                | "lambda"
                 | "raise"
                 | "__new__"
                 | "__def_method__"
@@ -3011,6 +3089,16 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
         } => {
             if !is_supported_builtin(name) {
                 return Some((name.clone(), span.clone()));
+            }
+            // SIR10's strict-closure marker wraps exactly one closure.  Any
+            // other count used to compile to a runtime
+            // `_sir_unknown_builtin("lambda")` (#18466); only a hand-built or
+            // non-Twig module can carry one, and it is refused here instead.
+            if name == "lambda" && args.len() != 1 {
+                return Some((
+                    format!("`lambda` with {} argument(s) (it wraps exactly one closure)", args.len()),
+                    span.clone(),
+                ));
             }
             // `__new__` must start with `StrLit(class)` — a constant class name;
             // any further args are constructor arguments forwarded to
@@ -3485,16 +3573,51 @@ fn is_valid_c_ident(s: &str) -> bool {
 }
 
 /// Whether a syntactically-valid C identifier still needs the escape
-/// marker: a C keyword, a reserved platform macro (`min`/`max`), this
-/// backend's own reserved names, or already starting with the runtime's
-/// `_sir` namespace.
+/// marker: a C keyword, a reserved platform macro (`min`/`max`), a name this
+/// backend or its runtime generates, or a name the C library may define as
+/// a macro (#18466).
+///
+/// | reserved                                  | why                                    |
+/// |-------------------------------------------|----------------------------------------|
+/// | `sir…`, `_sir…` (any case)                | the runtime's functions (`_sir_apply`), types (`SirValue`), macros and enum constants (`SIR_INT`), the entry points `sir_user_main`/`sir_user_init`, every user function's `sir_fn_` prefix, and [`ESCAPE_MARKER`] |
+/// | `main`                                    | C's process entry                      |
+/// | no lowercase letter (`EOF`, `NAN`, `N`)   | the headers' object-like macros are upper case: `EOF`, `NAN`, `INFINITY`, `INT64_MAX`, `EXIT_SUCCESS`, … — a local of that name expands into garbage |
+/// | `__…`, `_` + upper case                   | reserved to the C implementation, which defines macros there (`__STDC__`, glibc's `__THROW`) |
+/// | `errno`, `math_errhandling`, `stdin`, `stdout`, `stderr`, `L_tmpnam` | the lower-case object-like macros of the included headers (MSVC's `stdin` is `(__acrt_iob_func(0))`) |
+/// | `…_t`                                     | the headers' typedefs — the emitted code declares `int64_t` loop counters inside user functions, so a local `int64_t` broke them; POSIX reserves the whole `_t` suffix |
+/// | `setjmp`, `longjmp`, `jmp_buf`, `va_list`, `va_start`, `va_arg`, `va_end`, `va_copy` | `<setjmp.h>`/`<stdarg.h>` names; the emitted `rescue` calls `setjmp(…)` inline, and on MSVC `setjmp` is a macro |
+///
+/// Function-like macros (`isnan`, `setjmp`) need no entry: they expand only
+/// before `(`, which a local never meets, and a user *function* is never
+/// spelled bare (see [`function_emit_name`]).
 fn needs_marker(s: &str) -> bool {
+    let lower = s.to_ascii_lowercase();
     is_c_keyword(s)
         || is_reserved_macro(s)
-        || s.starts_with("_sir")
+        || lower.starts_with("sir")
+        || lower.starts_with("_sir")
         || s == "main"
-        || s == "user_main"
-        || s == "sir_user_init"
+        || !s.chars().any(|c| c.is_ascii_lowercase())
+        || s.starts_with("__")
+        || (s.starts_with('_') && s.chars().nth(1).is_some_and(|c| c.is_ascii_uppercase()))
+        || s.ends_with("_t")
+        || matches!(
+            s,
+            "errno"
+                | "math_errhandling"
+                | "stdin"
+                | "stdout"
+                | "stderr"
+                | "L_tmpnam"
+                | "setjmp"
+                | "longjmp"
+                | "jmp_buf"
+                | "va_list"
+                | "va_start"
+                | "va_arg"
+                | "va_end"
+                | "va_copy"
+        )
 }
 
 /// Per-character encoding for a name containing at least one illegal

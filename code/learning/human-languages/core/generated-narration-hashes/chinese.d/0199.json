@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:7aa1a7933cfee4a9",
+  "lessonIds": [
+    "ZH-C199-chima",
+    "ZH-C199-bao",
+    "ZH-C199-fei",
+    "ZH-C199-jin",
+    "ZH-C199-tiao-pick",
+    "ZH-R199-review-194-199"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch199.txt",
+  "json": "chinese/narration/ch199.json",
+  "textHash": "fnv1a64:ff2b765a81a9665f",
+  "jsonHash": "fnv1a64:5ff80c7a24487378",
+  "findings": []
+}

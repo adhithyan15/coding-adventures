@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:dbd51e1a825ec35a",
+  "lessonIds": [
+    "ZH-C272-qizi",
+    "ZH-C272-laogong",
+    "ZH-W272-lao-old",
+    "ZH-C272-waigong",
+    "ZH-C272-shushu",
+    "ZH-C272-ayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch272.txt",
+  "json": "chinese/narration/ch272.json",
+  "textHash": "fnv1a64:b4ca59c7721ab8c1",
+  "jsonHash": "fnv1a64:58056849e658ebc5",
+  "findings": []
+}

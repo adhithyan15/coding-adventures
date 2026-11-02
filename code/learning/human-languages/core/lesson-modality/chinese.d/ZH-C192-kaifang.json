@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C192-kaifang",
+    "language": "chinese",
+    "chapter": 192,
+    "sequence": 15240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8df7e211bf765567"
+  },
+  "findings": []
+}
