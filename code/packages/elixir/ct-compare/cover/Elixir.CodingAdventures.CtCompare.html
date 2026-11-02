@@ -140,7 +140,7 @@ td.source {
 </head>
 <body>
 <h1><code>cover/Elixir.CodingAdventures.CtCompare.html</code></h1>
-<footer><p>File generated from <code>/Users/adhithya/Documents/coding-adventures/.claude/worktrees/testing-infrastructure-research-8926fc/.wt/ct-bits/code/packages/elixir/ct-compare/lib/coding_adventures/ct_compare.ex</code> by <a href="http://erlang.org/doc/man/cover.html">cover</a> at 2026-11-02 at 14:00:35</p></footer>
+<footer><p>File generated from <code>/Users/adhithya/Documents/coding-adventures/.claude/worktrees/testing-infrastructure-research-8926fc/code/packages/elixir/ct-compare/lib/coding_adventures/ct_compare.ex</code> by <a href="http://erlang.org/doc/man/cover.html">cover</a> at 2026-11-02 at 00:47:24</p></footer>
 <table>
 <tbody>
 <tr>
@@ -220,7 +220,7 @@ td.source {
 </tr>
 <tr class="hit">
 <td class="line" id="L16"><a href="#L16">16</a></td>
-<td class="hits">65799</td>
+<td class="hits">263</td>
 <td class="source"><code>    if byte_size(left) != byte_size(right) do</code></td>
 </tr>
 <tr>
@@ -255,7 +255,7 @@ td.source {
 </tr>
 <tr class="hit">
 <td class="line" id="L23"><a href="#L23">23</a></td>
-<td class="hits">73778</td>
+<td class="hits">8242</td>
 <td class="source"><code>        bor(acc, bxor(left_byte, right_byte))</code></td>
 </tr>
 <tr>
@@ -265,7 +265,7 @@ td.source {
 </tr>
 <tr class="hit">
 <td class="line" id="L25"><a href="#L25">25</a></td>
-<td class="hits">65798</td>
+<td class="hits">262</td>
 <td class="source"><code>      |&gt; Kernel.==(0)</code></td>
 </tr>
 <tr>
@@ -405,7 +405,7 @@ td.source {
 </tr>
 <tr class="hit">
 <td class="line" id="L53"><a href="#L53">53</a></td>
-<td class="hits">11</td>
+<td class="hits">8</td>
 <td class="source"><code>    if byte_size(left) != byte_size(right) do</code></td>
 </tr>
 <tr class="hit">
@@ -425,7 +425,7 @@ td.source {
 </tr>
 <tr class="hit">
 <td class="line" id="L57"><a href="#L57">57</a></td>
-<td class="hits">10</td>
+<td class="hits">7</td>
 <td class="source"><code>    if band(choice, bnot(1)) != 0 do</code></td>
 </tr>
 <tr class="hit">
@@ -445,7 +445,7 @@ td.source {
 </tr>
 <tr class="hit">
 <td class="line" id="L61"><a href="#L61">61</a></td>
-<td class="hits">6</td>
+<td class="hits">3</td>
 <td class="source"><code>    mask = band(-choice, 0xFF)</code></td>
 </tr>
 <tr>
@@ -475,7 +475,7 @@ td.source {
 </tr>
 <tr class="hit">
 <td class="line" id="L67"><a href="#L67">67</a></td>
-<td class="hits">524</td>
+<td class="hits">512</td>
 <td class="source"><code>      bxor(right_byte, band(bxor(left_byte, right_byte), mask))</code></td>
 </tr>
 <tr>
@@ -485,7 +485,7 @@ td.source {
 </tr>
 <tr class="hit">
 <td class="line" id="L69"><a href="#L69">69</a></td>
-<td class="hits">6</td>
+<td class="hits">3</td>
 <td class="source"><code>    |&gt; :binary.list_to_bin()</code></td>
 </tr>
 <tr>
@@ -576,275 +576,30 @@ td.source {
 <tr>
 <td class="line" id="L87"><a href="#L87">87</a></td>
 <td class="hits"></td>
-<td class="source"><code>  # -- Bit-returning equality (CT01, "How a lane receives the selection bit")</code></td>
+<td class="source"><code>  defp validate_u64!(value, name) do</code></td>
 </tr>
-<tr>
+<tr class="hit">
 <td class="line" id="L88"><a href="#L88">88</a></td>
-<td class="hits"></td>
-<td class="source"><code>  #</code></td>
+<td class="hits">137</td>
+<td class="source"><code>    if value &lt; 0 or value &gt; @u64_max do</code></td>
 </tr>
-<tr>
+<tr class="hit">
 <td class="line" id="L89"><a href="#L89">89</a></td>
-<td class="hits"></td>
-<td class="source"><code>  # ct_select_bytes takes its selection bit as an integer, because every way</code></td>
+<td class="hits">2</td>
+<td class="source"><code>      raise ArgumentError, "#{name} must be an unsigned 64-bit integer"</code></td>
 </tr>
 <tr>
 <td class="line" id="L90"><a href="#L90">90</a></td>
 <td class="hits"></td>
-<td class="source"><code>  # Elixir has of turning true/false into 1/0 is an `if`, a `case` or a</code></td>
+<td class="source"><code>    end</code></td>
 </tr>
 <tr>
 <td class="line" id="L91"><a href="#L91">91</a></td>
 <td class="hits"></td>
-<td class="source"><code>  # pattern match. A caller holding only ct_eq's boolean would need exactly</code></td>
+<td class="source"><code>  end</code></td>
 </tr>
 <tr>
 <td class="line" id="L92"><a href="#L92">92</a></td>
-<td class="hits"></td>
-<td class="source"><code>  # that branch, so each equality also returns the bit itself, computed from</code></td>
-</tr>
-<tr>
-<td class="line" id="L93"><a href="#L93">93</a></td>
-<td class="hits"></td>
-<td class="source"><code>  # the difference accumulator with arithmetic only. `bsr` on a negative</code></td>
-</tr>
-<tr>
-<td class="line" id="L94"><a href="#L94">94</a></td>
-<td class="hits"></td>
-<td class="source"><code>  # integer is an arithmetic shift, so for an accumulator in 0..255:</code></td>
-</tr>
-<tr>
-<td class="line" id="L95"><a href="#L95">95</a></td>
-<td class="hits"></td>
-<td class="source"><code>  #</code></td>
-</tr>
-<tr>
-<td class="line" id="L96"><a href="#L96">96</a></td>
-<td class="hits"></td>
-<td class="source"><code>  #     acc = 0          bsr(0 - 1, 8) = -1,  band(-1, 1) = 1   (equal)</code></td>
-</tr>
-<tr>
-<td class="line" id="L97"><a href="#L97">97</a></td>
-<td class="hits"></td>
-<td class="source"><code>  #     acc = 1 .. 255   bsr(acc - 1, 8) = 0, band(0, 1) = 0    (different)</code></td>
-</tr>
-<tr>
-<td class="line" id="L98"><a href="#L98">98</a></td>
-<td class="hits"></td>
-<td class="source"><code>  #</code></td>
-</tr>
-<tr>
-<td class="line" id="L99"><a href="#L99">99</a></td>
-<td class="hits"></td>
-<td class="source"><code>  # Use it as ct_select_bytes(a, b, ct_eq_bit(x, y)).</code></td>
-</tr>
-<tr>
-<td class="line" id="L100"><a href="#L100">100</a></td>
-<td class="hits"></td>
-<td class="source"><code></code></td>
-</tr>
-<tr>
-<td class="line" id="L101"><a href="#L101">101</a></td>
-<td class="hits"></td>
-<td class="source"><code>  @doc "1 when the binaries are equal, else 0. A length mismatch is 0."</code></td>
-</tr>
-<tr>
-<td class="line" id="L102"><a href="#L102">102</a></td>
-<td class="hits"></td>
-<td class="source"><code>  def ct_eq_bit(left, right) when is_binary(left) and is_binary(right) do</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L103"><a href="#L103">103</a></td>
-<td class="hits">131588</td>
-<td class="source"><code>    if byte_size(left) != byte_size(right) do</code></td>
-</tr>
-<tr>
-<td class="line" id="L104"><a href="#L104">104</a></td>
-<td class="hits"></td>
-<td class="source"><code>      0</code></td>
-</tr>
-<tr>
-<td class="line" id="L105"><a href="#L105">105</a></td>
-<td class="hits"></td>
-<td class="source"><code>    else</code></td>
-</tr>
-<tr>
-<td class="line" id="L106"><a href="#L106">106</a></td>
-<td class="hits"></td>
-<td class="source"><code>      left</code></td>
-</tr>
-<tr>
-<td class="line" id="L107"><a href="#L107">107</a></td>
-<td class="hits"></td>
-<td class="source"><code>      |&gt; :binary.bin_to_list()</code></td>
-</tr>
-<tr>
-<td class="line" id="L108"><a href="#L108">108</a></td>
-<td class="hits"></td>
-<td class="source"><code>      |&gt; Enum.zip(:binary.bin_to_list(right))</code></td>
-</tr>
-<tr>
-<td class="line" id="L109"><a href="#L109">109</a></td>
-<td class="hits"></td>
-<td class="source"><code>      |&gt; Enum.reduce(0, fn {left_byte, right_byte}, acc -&gt;</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L110"><a href="#L110">110</a></td>
-<td class="hits">163842</td>
-<td class="source"><code>        bor(acc, bxor(left_byte, right_byte))</code></td>
-</tr>
-<tr>
-<td class="line" id="L111"><a href="#L111">111</a></td>
-<td class="hits"></td>
-<td class="source"><code>      end)</code></td>
-</tr>
-<tr>
-<td class="line" id="L112"><a href="#L112">112</a></td>
-<td class="hits"></td>
-<td class="source"><code>      |&gt; Kernel.-(1)</code></td>
-</tr>
-<tr>
-<td class="line" id="L113"><a href="#L113">113</a></td>
-<td class="hits"></td>
-<td class="source"><code>      |&gt; bsr(8)</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L114"><a href="#L114">114</a></td>
-<td class="hits">131587</td>
-<td class="source"><code>      |&gt; band(1)</code></td>
-</tr>
-<tr>
-<td class="line" id="L115"><a href="#L115">115</a></td>
-<td class="hits"></td>
-<td class="source"><code>    end</code></td>
-</tr>
-<tr>
-<td class="line" id="L116"><a href="#L116">116</a></td>
-<td class="hits"></td>
-<td class="source"><code>  end</code></td>
-</tr>
-<tr>
-<td class="line" id="L117"><a href="#L117">117</a></td>
-<td class="hits"></td>
-<td class="source"><code></code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L118"><a href="#L118">118</a></td>
-<td class="hits">1</td>
-<td class="source"><code>  def ct_eq_bit(_left, _right), do: raise(ArgumentError, "ct_eq_bit requires two binaries")</code></td>
-</tr>
-<tr>
-<td class="line" id="L119"><a href="#L119">119</a></td>
-<td class="hits"></td>
-<td class="source"><code></code></td>
-</tr>
-<tr>
-<td class="line" id="L120"><a href="#L120">120</a></td>
-<td class="hits"></td>
-<td class="source"><code>  @doc "Fixed-size companion to `ct_eq_bit/2`."</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L121"><a href="#L121">121</a></td>
-<td class="hits">65536</td>
-<td class="source"><code>  def ct_eq_fixed_bit(left, right), do: ct_eq_bit(left, right)</code></td>
-</tr>
-<tr>
-<td class="line" id="L122"><a href="#L122">122</a></td>
-<td class="hits"></td>
-<td class="source"><code></code></td>
-</tr>
-<tr>
-<td class="line" id="L123"><a href="#L123">123</a></td>
-<td class="hits"></td>
-<td class="source"><code>  @doc """</code></td>
-</tr>
-<tr>
-<td class="line" id="L124"><a href="#L124">124</a></td>
-<td class="hits"></td>
-<td class="source"><code>  1 when the two unsigned 64-bit values are equal, else 0. The difference lies</code></td>
-</tr>
-<tr>
-<td class="line" id="L125"><a href="#L125">125</a></td>
-<td class="hits"></td>
-<td class="source"><code>  in 0..2^64-1, so subtracting 1 is negative exactly when it was 0.</code></td>
-</tr>
-<tr>
-<td class="line" id="L126"><a href="#L126">126</a></td>
-<td class="hits"></td>
-<td class="source"><code>  """</code></td>
-</tr>
-<tr>
-<td class="line" id="L127"><a href="#L127">127</a></td>
-<td class="hits"></td>
-<td class="source"><code>  def ct_eq_u64_bit(left, right) when is_integer(left) and is_integer(right) do</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L128"><a href="#L128">128</a></td>
-<td class="hits">500</td>
-<td class="source"><code>    validate_u64!(left, "left")</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L129"><a href="#L129">129</a></td>
-<td class="hits">499</td>
-<td class="source"><code>    validate_u64!(right, "right")</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L130"><a href="#L130">130</a></td>
-<td class="hits">498</td>
-<td class="source"><code>    band(bsr(band(bxor(left, right), @u64_max) - 1, 64), 1)</code></td>
-</tr>
-<tr>
-<td class="line" id="L131"><a href="#L131">131</a></td>
-<td class="hits"></td>
-<td class="source"><code>  end</code></td>
-</tr>
-<tr>
-<td class="line" id="L132"><a href="#L132">132</a></td>
-<td class="hits"></td>
-<td class="source"><code></code></td>
-</tr>
-<tr>
-<td class="line" id="L133"><a href="#L133">133</a></td>
-<td class="hits"></td>
-<td class="source"><code>  def ct_eq_u64_bit(_left, _right),</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L134"><a href="#L134">134</a></td>
-<td class="hits">1</td>
-<td class="source"><code>    do: raise(ArgumentError, "ct_eq_u64_bit requires two unsigned 64-bit integers")</code></td>
-</tr>
-<tr>
-<td class="line" id="L135"><a href="#L135">135</a></td>
-<td class="hits"></td>
-<td class="source"><code></code></td>
-</tr>
-<tr>
-<td class="line" id="L136"><a href="#L136">136</a></td>
-<td class="hits"></td>
-<td class="source"><code>  defp validate_u64!(value, name) do</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L137"><a href="#L137">137</a></td>
-<td class="hits">1136</td>
-<td class="source"><code>    if value &lt; 0 or value &gt; @u64_max do</code></td>
-</tr>
-<tr class="hit">
-<td class="line" id="L138"><a href="#L138">138</a></td>
-<td class="hits">4</td>
-<td class="source"><code>      raise ArgumentError, "#{name} must be an unsigned 64-bit integer"</code></td>
-</tr>
-<tr>
-<td class="line" id="L139"><a href="#L139">139</a></td>
-<td class="hits"></td>
-<td class="source"><code>    end</code></td>
-</tr>
-<tr>
-<td class="line" id="L140"><a href="#L140">140</a></td>
-<td class="hits"></td>
-<td class="source"><code>  end</code></td>
-</tr>
-<tr>
-<td class="line" id="L141"><a href="#L141">141</a></td>
 <td class="hits"></td>
 <td class="source"><code>end</code></td>
 </tr>
