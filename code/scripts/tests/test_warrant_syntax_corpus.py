@@ -6,14 +6,13 @@ must not ask the parser under test to invent those answers for itself.
 
 from __future__ import annotations
 
-import copy
 import io
 import json
-from pathlib import Path
 import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
+from pathlib import Path
 from unittest import mock
 
 SCRIPTS = Path(__file__).resolve().parents[1]
@@ -99,6 +98,17 @@ class CorpusTests(unittest.TestCase):
         for text in ('{"format":1,"format":2}', '{"x":NaN}', '{"x":Infinity}', '[' * 1500):
             with self.assertRaises(corpus.CorpusError):
                 corpus.loads_document(text)
+
+    def test_reader_and_aggregate_payload_budgets_fail_before_emission(self) -> None:
+        with self.assertRaises(corpus.CorpusError):
+            corpus.loads_document(" " * (corpus.MAX_JSON_BYTES + 1))
+        document = baseline()
+        for case in document["cases"]:
+            if case["accept"]:
+                case["witnesses"] = ["literal=" + "x" * 8180 + str(i) for i in range(32)]
+        self.assertTrue(any("byte budget" in p for p in corpus.validate_document(document)))
+        with self.assertRaises(corpus.CorpusError):
+            corpus.generate_tfv(document)
 
     def test_invalid_document_cannot_generate_transport(self) -> None:
         document = baseline()

@@ -1,0 +1,66 @@
+# VER04 pure-profile canonical token draft. Not yet a published artifact.
+mode: indentation
+
+skip:
+  COMMENT = /--[^\n]*/
+  WHITESPACE = /[ \t]+/
+
+ARROW = "->"
+IMPLIES = "=>"
+EQEQ = "=="
+NOTEQ = "!="
+LE = "<="
+GE = ">="
+BYTES_LITERAL = /b"(?:[0-9a-f]{2})*"/
+U64_LITERAL = /(?:0|[1-9][0-9]*)u64/
+U8_LITERAL = /(?:0|[1-9][0-9]*)u8/
+INT = /0|[1-9][0-9]*/
+QNAME = /[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+/
+NAME = /[A-Za-z_][A-Za-z0-9_]*/
+LPAREN = "("
+RPAREN = ")"
+LBRACKET = "["
+RBRACKET = "]"
+LT = "<"
+GT = ">"
+COLON = ":"
+COMMA = ","
+DOT = "."
+PIPE = "|"
+EQUALS = "="
+PLUS = "+"
+MINUS = "-"
+STAR = "*"
+
+keywords:
+  warrant
+  model
+  error
+  op
+  example
+  claim
+  assume
+  platform
+  environment
+  none
+  labels
+  public
+  secret
+  input
+  hostile
+  rejects
+  with
+  ensures
+  bound
+  fresh
+  if
+  then
+  else
+  match
+  forall
+  exists
+  not
+  and
+  or
+  true
+  false

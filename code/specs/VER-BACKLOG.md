@@ -42,7 +42,7 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | P2 / VER-CI001 | Retain diagnostics for intermittent macOS iPad UI failure | original job125811351687 failed; bounded same-head retry125843044183 and run41602352046 attempt2 passed; root cause and missing UI-state artifacts remain unresolved; no assertions weakened |
 | done / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | #18875 merged as 089fb8e7bf7 at expected d2b5ae4db2c; verified on fetched main; all 39 checks acceptable |
 | done / VER-P005 | Warrant v0 specification | #18890 merged as 655b99e5e27 at expected 5a60550f9d1; verified on fetched main; all 37 checks acceptable; no implemented compiler claimed |
-| P1 / VER-P006a | Canonical Warrant grammars, compiled Rust grammar data and syntax corpus | selected after P005 merge and 7-open-PR overlap audit; spec staging/transport committed before implementation; exact subtree witnesses, negative controls and regeneration |
+| P1 / VER-P006a | Canonical Warrant grammars, compiled Rust grammar data and syntax corpus | local implementation:57 authored cases +3 adapter controls,5 native unit checks,12 Python falsification tests; wrong-precedence and byte-drift mutations rejected; awaiting final review/publication/hosted CI; protected frontend remains P006b |
 | P1 / VER-P006b | Guarded Warrant source lexer/parser | after P006a; original-byte spans, admission/work quotas and measured multi-shape native-stack guard; no unguarded public parser in P006a |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
 | P1 / VER-P008 | Rust backend and ct-compare.warrant | waiting P007; generated tests through L0, checked regeneration |
@@ -83,6 +83,20 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+P006a local proof: both dynamic and compiled grammars agree on the authored
+syntax corpus, including exact precedence witnesses. Bool/Int mismatches,
+duplicate names and vacuous refinements deliberately parse; later checkers
+must reject them. Actual L0 sabotage exits1 with exactly three registered
+corpus-mismatch failures. The regeneration CLI rejects an added blank line in
+a generated Rust module, then passes after exact restoration. An always-valid
+Python validator mutant is detected by assertion failures, not loader errors.
+LLVM measured 880/880 executable artifact-constructor source lines; Python
+coverage measured 127/127 validator statements. These figures cover data
+construction/transport, not a protected public parser or semantic verification.
+Full Go tests and vet passed, including new raw-grammar/corpus/reference input
+selection and lookalike/missing-consumer controls. Publication and hosted CI
+are still separate evidence states.
 
 Post-P005 prioritization: expected head 5a60550f9d1 merged as 655b99e5e27,
 reachable on fetched main d81b3c5a977. No competing Warrant or parser-stack PR
