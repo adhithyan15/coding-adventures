@@ -121,8 +121,9 @@ def test_display_convention_ruby_booleans() -> None:
         sir.set_display_convention("ruby")
         assert sir.to_display(True) == "true"
         assert sir.to_display(False) == "false"
-        # Non-boolean forms are convention-independent.
-        assert sir.to_display(None) == "nil"
+        # Ruby's `nil.to_s` is empty (#18798): `puts nil` prints an empty
+        # line.  Other forms are convention-independent.
+        assert sir.to_display(None) == ""
         assert sir.to_display(sir.intern("sym")) == "sym"
         # An unrecognised convention falls back to the Lisp default.
         sir.set_display_convention("klingon")
@@ -130,6 +131,19 @@ def test_display_convention_ruby_booleans() -> None:
     finally:
         sir.set_display_convention("lisp")
     assert sir.to_display(True) == "#t"
+    assert sir.to_display(None) == "nil"
+
+
+def test_ruby_puts_and_print_of_nil(capsys: pytest.CaptureFixture[str]) -> None:
+    # #18798: `puts nil` is an empty line, `print nil` prints nothing, and a
+    # nil inside a `puts`ed array is an empty line too (`puts` flattens).
+    try:
+        sir.set_display_convention("ruby")
+        sir.sir_write("stdout", "per_value", True, None, [1, None], True)
+        sir.sir_write("stdout", "none", False, "a", None, "b")
+    finally:
+        sir.set_display_convention("lisp")
+    assert capsys.readouterr().out == "\n1\n\ntrue\nab"
 
 
 # --- sir_write (SIR28 §2.1: __sys_write__) ----------------------------------

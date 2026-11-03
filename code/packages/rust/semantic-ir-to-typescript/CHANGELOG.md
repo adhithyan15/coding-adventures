@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — test stubs know the display convention (#18798)
+
+A module lowered from Ruby now says so (`source_language = "ruby"`), so the
+emitted program starts with `__Sir.setDisplayConvention("ruby")`.  The
+`run_with_node` tests replace the runtime import with hand-written stubs,
+which had no such function, so 10 Ruby-sourced execution tests failed with
+a `TypeError`; each stub gains a no-op `setDisplayConvention`.  No change
+to the emitter.
+
 ## Unreleased — a `rescue` binding the clause reassigns (#18798)
 
 `rescue => e` ⏎ `e = 5` failed: the binding was always `const`

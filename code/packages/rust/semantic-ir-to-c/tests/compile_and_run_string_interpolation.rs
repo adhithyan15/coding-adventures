@@ -109,7 +109,7 @@ fn interpolates_a_nil_value() {
     // e.g. compile_and_run_index_bracket.rs) -- `_sir_display_str` and
     // `_sir_fmt` render SIR_NIL identically.
     match run_ruby("x = nil\nputs \"got [#{x}]\"\n") {
-        Some(out) => assert_eq!(out, "got [nil]\n"),
+        Some(out) => assert_eq!(out, "got []\n"),
         None => eprintln!("skip: no cc"),
     }
 }

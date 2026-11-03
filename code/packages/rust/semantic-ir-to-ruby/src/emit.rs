@@ -905,6 +905,7 @@ impl Scan {
                     // this backend runs (see `is_each_with_block`); a user
                     // class's own `each` still wins at run time.
                     Some(Expr::StrLit { .. }) if is_each_with_block(args) => {}
+                    Some(Expr::StrLit { .. }) if collection_access(args).is_some() => {}
                     Some(Expr::StrLit { value, span }) => {
                         if !self.registered_methods.contains(value) {
                             return Some(ScanHit::Unsupported(
@@ -1108,6 +1109,8 @@ impl Scan {
         } => self.expr(haystack).or_else(|| self.expr(needle)),
         Expr::Ravel { target, .. } => self.expr(target),
         Expr::Catenate { lhs, rhs, .. } => self.expr(lhs).or_else(|| self.expr(rhs)),
+        // SIR18 string interpolation: its parts are ordinary operands.
+        Expr::StrConcat { parts, .. } => parts.iter().find_map(|p| self.expr(p)),
         _ => None,
     }
     }
@@ -1879,6 +1882,14 @@ fn emit_expr(e: &Expr) -> String {
                 rules.iter().map(emit_sym_operand).collect::<Vec<_>>().join(", ")
             )
         }
+        // SIR18 string interpolation (`"a#{x}b"`, #18798): each part shown
+        // with `sir_fmt` (Ruby's `to_s` under the Ruby display convention),
+        // joined.  Ruby evaluates the call's arguments left to right, as it
+        // does the `#{}`s.
+        Expr::StrConcat { parts, .. } => {
+            let parts: Vec<String> = parts.iter().map(emit_expr).collect();
+            format!("sir_str_concat({})", parts.join(", "))
+        }
         other => unreachable!("Ruby backend reached unsupported expr: {other:?}"),
     }
 }
@@ -2195,6 +2206,16 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
             let arity = arity.map_or_else(|| "nil".to_string(), |n| n.to_string());
             format!("sir_each({}, {}, {arity})", a[0], a[2])
         }
+        // #18798 (item 13) — `recv[i]`, `recv[i] = v` and `recv.size` through
+        // the runtime's `sir_index` / `sir_index_set` / `sir_size`, which run
+        // a user class's own method when it has one and Ruby's native
+        // `Array`/`Hash`/`String` method otherwise (see `collection_access`).
+        "__method__" if collection_access(args).is_some() => {
+            let helper = collection_access(args).unwrap_or("sir_size");
+            let mut parts = vec![a[0].clone()];
+            parts.extend_from_slice(&a[2..]);
+            format!("{helper}({})", parts.join(", "))
+        }
         "__method__" => {
             let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
             let mut parts = vec![sym];
@@ -2276,6 +2297,33 @@ fn is_each_with_block(args: &[Expr]) -> bool {
     matches!(args.get(1), Some(Expr::StrLit { value, .. }) if value == "each")
         && args.len() == 3
         && matches!(args[2], Expr::MakeClosure { .. })
+}
+
+/// #18798 (item 13) — is this `__method__` call an element read, an element
+/// write or a size: `recv[i]`, `recv[i] = v`, `recv.size` / `recv.length`?
+/// The runtime helper that renders it, if so.
+///
+/// The Ruby frontend lowers `z[1]` to `__method__(z, "[]", 1)` (it cannot tell
+/// an Array from a Hash or a user object), and every built-in method was
+/// refused here, so the Ruby backend — of all six — refused `puts z[1]`.  Like
+/// `each` ([`is_each_with_block`]), the call goes to a fixed runtime helper,
+/// never to a `public_send` of a source-derived name, so dispatch stays closed:
+///
+/// | method              | arguments | helper          |
+/// |---------------------|-----------|-----------------|
+/// | `[]`                | 1         | `sir_index`     |
+/// | `[]=`               | 2         | `sir_index_set` |
+/// | `size` / `length`   | 0         | `sir_size`      |
+fn collection_access(args: &[Expr]) -> Option<&'static str> {
+    let Some(Expr::StrLit { value, .. }) = args.get(1) else {
+        return None;
+    };
+    match (value.as_str(), args.len()) {
+        ("[]", 3) => Some("sir_index"),
+        ("[]=", 4) => Some("sir_index_set"),
+        ("size" | "length", 2) => Some("sir_size"),
+        _ => None,
+    }
 }
 
 /// Join operands with a binary operator, or fall back to `empty` for 0 args.

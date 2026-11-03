@@ -75,11 +75,10 @@ fn array_count_first_last() {
 
 #[test]
 fn array_first_last_on_empty_is_nil() {
-    // Ruby's `[].first`/`[].last` return nil, not raise; this backend's `puts`
-    // prints nil as the literal text `nil` (see `compile_and_run_sequences.rs`'s
-    // own OOB-index case for the same convention).
+    // Ruby's `[].first`/`[].last` return nil, not raise, and `puts nil`
+    // prints an empty line (a Ruby module uses Ruby's `to_s` since #18798).
     match run_ruby("puts [].first\nputs [].last\n") {
-        Some(out) => assert_eq!(out, "nil\nnil\n"),
+        Some(out) => assert_eq!(out, "\n\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -123,7 +122,7 @@ fn array_min_max_sum() {
 #[test]
 fn array_min_max_on_empty_is_nil_sum_is_zero() {
     match run_ruby("puts [].min\nputs [].max\nputs [].sum\n") {
-        Some(out) => assert_eq!(out, "nil\nnil\n0\n"),
+        Some(out) => assert_eq!(out, "\n\n0\n"),
         None => eprintln!("skip: no cc"),
     }
 }

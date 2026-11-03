@@ -1189,7 +1189,18 @@ impl RubyLexer {
             // gates `x ; if y ... end` (semicolon is NOT
             // expression-ending) versus `puts 1 if y` (the `1` IS
             // expression-ending).
-            if !self.ends_expression(j) {
+            //
+            // #18798 — or a jump keyword with no argument: `return if c`,
+            // `next unless done`, `break if x > 3`.  Ruby reads an `if`
+            // right after `return`/`break`/`next` as a modifier (a jump's
+            // argument can never start with one), and the grammar's
+            // `modifier_statement` takes a jump on its left (see
+            // `ruby.grammar`).  Unretagged, the `if` opened an `if`
+            // statement as the jump's argument: `next if c` ⏎ `puts i` ⏎
+            // `end` read as `next (if c; puts i; end)`.
+            let after_bare_jump = self.tokens[j].type_ == TokenType::Keyword
+                && matches!(self.tokens[j].value.as_str(), "return" | "break" | "next");
+            if !after_bare_jump && !self.ends_expression(j) {
                 continue;
             }
             // Re-tag.  Mutating `value` only — `type_` stays Keyword.
@@ -5193,6 +5204,33 @@ mod tests {
         assert!(
             !has_token(&toks, TokenType::Keyword, "if_modifier"),
             "newline must block re-tag, got {toks:?}"
+        );
+    }
+
+    #[test]
+    fn modifier_after_a_bare_jump_keyword_is_retagged() {
+        // #18798 — `next if c`, `return unless c`, `break while c`: the
+        // keyword is not expression-ending, but Ruby still reads the `if`
+        // as a modifier.  It opened an `if` statement as the jump's argument.
+        for (src, expected) in [
+            ("next if c", "if_modifier"),
+            ("return unless c", "unless_modifier"),
+            ("break while c", "while_modifier"),
+            ("return 1 if c", "if_modifier"),
+        ] {
+            let toks = tokenize_ruby_for_version(src, "3.3").unwrap();
+            assert!(
+                has_token(&toks, TokenType::Keyword, expected),
+                "expected `{expected}` in {src:?}, got {toks:?}"
+            );
+        }
+        // A jump on one line and an `if` statement on the next stay apart.
+        let toks = tokenize_ruby_for_version("next
+if c
+end", "3.3").unwrap();
+        assert!(
+            !has_token(&toks, TokenType::Keyword, "if_modifier"),
+            "a line break ends the jump: {toks:?}"
         );
     }
 

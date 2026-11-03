@@ -10,10 +10,12 @@
 //! (`NoMethodError`) at runtime — `Array#[]` (read) and `Hash#[]`/`Hash#[]=`
 //! already worked; only `Array#[]=` was missing.
 //!
-//! The fix delegates to the pre-existing `seq_set` primitive (the same one
-//! `SeqSet` already lowers to), so the two paths share one strictness rule:
-//! `0 <= i < len`, panics outside — no auto-grow, matching the Go/C/Rust
-//! `SeqSet` reference.
+//! The fix delegated to the pre-existing `seq_set` primitive (the same one
+//! `SeqSet` already lowers to), so the two paths shared one strictness rule:
+//! `0 <= i < len`, panics outside.  #18798 made `[]=` follow Ruby instead
+//! (`SeqSet` stays strict): a negative index counts from the end, an index
+//! past the end pads with `nil`, and one before the start raises
+//! `IndexError`.
 
 use std::process::Command;
 
@@ -191,28 +193,59 @@ fn array_bracket_write_returns_the_assigned_value() {
 }
 
 #[test]
-fn array_bracket_write_out_of_range_panics_not_silently_no_ops() {
-    // Matches SeqSet's existing strictness (0 <= i < len, no auto-grow) --
-    // this test proves the OO-surface path shares that trap rather than
-    // silently doing nothing or corrupting memory.
-    let m = demo_module("bracket_write_out_of_range", vec![
+fn array_bracket_write_past_the_end_pads_with_nil() {
+    // #18798 — Ruby: `a = [1]; a[3] = 5` gives `[1, nil, nil, 5]`, and
+    // `a[-1] = 6` stores into the last element.  (It used to panic: the
+    // write shared `SeqSet`'s strict `0 <= i < len` rule.)
+    let a = || Expr::VarRef { name: "a".into(), scope: semantic_ir::Scope::Local, span: s() };
+    let m = demo_module("bracket_write_past_the_end", vec![
         Stmt::LetBinding {
             name: "a".into(),
             sir_type: None,
             value: seq(vec![ilit(1)]),
             span: s(),
         },
-        Stmt::ExprStmt {
-            expr: method(
-                Expr::VarRef { name: "a".into(), scope: semantic_ir::Scope::Local, span: s() },
-                "[]=",
-                vec![ilit(5), ilit(1)],
-            ),
-            span: s(),
-        },
+        Stmt::ExprStmt { expr: method(a(), "[]=", vec![ilit(3), ilit(5)]), span: s() },
+        print_stmt(method(a(), "size", vec![])),
+        print_stmt(method(a(), "[]", vec![ilit(1)])),
+        Stmt::ExprStmt { expr: method(a(), "[]=", vec![ilit(-1), ilit(6)]), span: s() },
+        print_stmt(method(a(), "[]", vec![ilit(3)])),
     ]);
     if let Some(out) = compile_and_run(&m) {
-        assert!(!out.status.success(), "expected a panic (non-zero exit) on out-of-range []=");
+        assert!(out.status.success(), "compiled binary exited non-zero:\n{}", String::from_utf8_lossy(&out.stderr));
+        assert_eq!(String::from_utf8_lossy(&out.stdout), "4\nnil\n6\n");
+    }
+}
+
+#[test]
+fn array_bracket_write_before_the_start_raises_index_error() {
+    // Ruby: `[1][-5] = 1` raises `IndexError` (index -5 too small for
+    // array); so does an index past the shared growth limit.
+    for (name, index) in [("bracket_write_before_start", -5), ("bracket_write_too_big", 1i64 << 40)] {
+        let m = demo_module(name, vec![
+            Stmt::LetBinding {
+                name: "a".into(),
+                sir_type: None,
+                value: seq(vec![ilit(1)]),
+                span: s(),
+            },
+            Stmt::ExprStmt {
+                expr: method(
+                    Expr::VarRef { name: "a".into(), scope: semantic_ir::Scope::Local, span: s() },
+                    "[]=",
+                    vec![ilit(index), ilit(1)],
+                ),
+                span: s(),
+            },
+        ]);
+        if let Some(out) = compile_and_run(&m) {
+            assert!(!out.status.success(), "{name}: expected an IndexError");
+            assert!(
+                String::from_utf8_lossy(&out.stderr).contains("IndexError"),
+                "{name}: {}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+        }
     }
 }
 

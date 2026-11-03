@@ -87,7 +87,7 @@ fn hash_dig_single_and_nested() {
     match run_ruby(
         "h = {1 => {2 => \"deep\"}}\nputs h.dig(1, 2)\nputs h.dig(1)\nputs h.dig(9, 2)\nputs h.dig(9)\n",
     ) {
-        Some(out) => assert_eq!(out, "deep\n{2: deep}\nnil\nnil\n"),
+        Some(out) => assert_eq!(out, "deep\n{2: deep}\n\n\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -105,7 +105,7 @@ fn hash_merge_prefers_other_and_does_not_mutate_receiver() {
 #[test]
 fn hash_delete_removes_and_returns_the_value() {
     match run_ruby("h = {1 => \"a\", 2 => \"b\", 3 => \"c\"}\nputs h.delete(2)\nputs h\nputs h.delete(9)\n") {
-        Some(out) => assert_eq!(out, "b\n{1: a, 3: c}\nnil\n"),
+        Some(out) => assert_eq!(out, "b\n{1: a, 3: c}\n\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -268,7 +268,7 @@ fn hash_clear_empties_and_returns_the_receiver() {
     // `h.clear.keys` is an EMPTY array, which `puts` prints as nothing at
     // all (real Ruby's rule), so only `h.empty?`'s line shows up.
     match run_ruby("h = {1 => \"a\", 2 => \"b\"}\nputs h.clear.keys\nputs h.empty?\n") {
-        Some(out) => assert_eq!(out, "#t\n"),
+        Some(out) => assert_eq!(out, "true\n"),
         None => eprintln!("skip: no cc"),
     }
 }

@@ -118,7 +118,7 @@ impl Default for JavaScriptBackend {
 /// fundamentally unsupported on V8; the latter has an empty whitelist).
 /// SIR17 exceptions (`Exceptions`), the class *ancestry* slice of
 /// `Classes`, and `Constants` are accepted (E1 / E2's JS half); the
-/// remaining SIR17/18 OOP-dispatch and string-interpolation features stay
+/// remaining SIR17/18 OOP-dispatch features stay
 /// excluded because their emit arms are deferred — a module that declares
 /// one is rejected here, never silently mis-compiled.
 const ACCEPTED_FEATURES: &[Feature] = &[
@@ -127,6 +127,9 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::Pairs,
     Feature::Symbols,
     Feature::Strings,
+    // SIR18 string interpolation (#18798): `StrConcat` joins its parts'
+    // Ruby `to_s` through the runtime's `strConcat`.
+    Feature::StringInterpolation,
     Feature::DynamicTyping,
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,

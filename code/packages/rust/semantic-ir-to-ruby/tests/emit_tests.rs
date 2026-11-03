@@ -2891,3 +2891,18 @@ fn each_over_a_hash_gives_a_one_parameter_block_the_pair() {
         None => eprintln!("skip: no ruby on PATH"),
     }
 }
+
+/// #18798 security review — `a[i] = v` takes an Integer index only, and
+/// never one past the shared 2^28 limit, as on the other five backends.  A
+/// Float (or a Range, which this backend does not lower yet) reached Ruby's
+/// own `Array#[]=` and padded the array: `a[1.0e9] = 1` asked for about 8 GB.
+#[test]
+fn e2e_index_assignment_refuses_a_non_integer_or_huge_index() {
+    let rb = ruby_to_ruby(
+        "a = [1]\nbegin\n  a[1.0e9] = 1\nrescue TypeError => e\n  puts \"float\"\nend\nbegin\n  a[\"1\"] = 1\nrescue TypeError => e\n  puts \"string\"\nend\nbegin\n  a[1099511627776] = 1\nrescue IndexError => e\n  puts \"too big\"\nend\na[2] = 5\nputs a.size\n",
+    );
+    assert!(rb.contains("sir_index_set("), "{rb}");
+    if let Some(out) = run_ruby(&rb) {
+        assert_eq!(out, "float\nstring\ntoo big\n3");
+    }
+}

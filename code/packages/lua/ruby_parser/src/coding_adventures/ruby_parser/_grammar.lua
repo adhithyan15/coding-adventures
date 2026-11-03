@@ -29,9 +29,27 @@ local function parser_grammar()
         { type="rule_reference", name="for_statement", is_token=false },
         { type="rule_reference", name="case_statement", is_token=false },
         { type="rule_reference", name="begin_statement", is_token=false },
-        { type="rule_reference", name="return_statement", is_token=false },
-        { type="rule_reference", name="break_statement", is_token=false },
-        { type="rule_reference", name="next_statement", is_token=false },
+        { type="sequence", elements={
+          { type="rule_reference", name="return_statement", is_token=false },
+          { type="negative_lookahead", element={ type="literal", value="if_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="unless_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="while_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="until_modifier" } },
+        } },
+        { type="sequence", elements={
+          { type="rule_reference", name="break_statement", is_token=false },
+          { type="negative_lookahead", element={ type="literal", value="if_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="unless_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="while_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="until_modifier" } },
+        } },
+        { type="sequence", elements={
+          { type="rule_reference", name="next_statement", is_token=false },
+          { type="negative_lookahead", element={ type="literal", value="if_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="unless_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="while_modifier" } },
+          { type="negative_lookahead", element={ type="literal", value="until_modifier" } },
+        } },
         { type="rule_reference", name="redo_statement", is_token=false },
         { type="rule_reference", name="retry_statement", is_token=false },
         { type="rule_reference", name="yield_statement", is_token=false },
@@ -101,6 +119,9 @@ local function parser_grammar()
       name="modifier_statement",
       body={ type="sequence", elements={
         { type="group", element={ type="alternation", choices={
+            { type="rule_reference", name="return_statement", is_token=false },
+            { type="rule_reference", name="break_statement", is_token=false },
+            { type="rule_reference", name="next_statement", is_token=false },
             { type="rule_reference", name="assignment", is_token=false },
             { type="rule_reference", name="method_call_no_paren", is_token=false },
             { type="sequence", elements={

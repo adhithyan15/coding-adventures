@@ -983,12 +983,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_expr(out, key, indent);
             out.push(')');
         }
-        // The only remaining unsupported expression is `StrConcat` (SIR18
-        // string interpolation).  Its feature is undeclared, so the
-        // capability check rejects such modules before emit; reaching this
-        // arm is an internal bug.
-        Expr::StrConcat { span, .. } => {
-            panic!("go backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
+        // SIR18 string interpolation (`"a#{x}b"`, #18798): each part shown
+        // with the runtime's `_sir_to_s` (Ruby's `to_s`), joined.  Go
+        // evaluates call arguments left to right, as Ruby does the `#{}`s.
+        Expr::StrConcat { parts, .. } => {
+            out.push_str("_sir_str_concat(");
+            for (i, part) in parts.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_expr(out, part, indent);
+            }
+            out.push(')');
         }
         // KW6: a `KeywordArg` is NOT a first-class value — it exists only
         // inside a call's `args` vec.  For a `DirectCall` (the only shape the
