@@ -16,16 +16,14 @@
       "external-approval"
     ]
   },
-  "active_pr": 18885,
-  "active_prs": [
-    18885
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-11-03T14:03:43Z",
-    "pr_number": 18879,
-    "head_revision": "2345376b08aae7354adf8ea28bf05aed69c7d8cf",
-    "action": "All 37 checks on exact independently reviewed head 2345376b08aae7354adf8ea28bf05aed69c7d8cf completed terminal acceptable: seven succeeded and 30 were expected skips. GitHub reported the PR clean and mergeable. The loop invoked guarded squash auto-merge with exact-head matching, and GitHub merged PR #18879 immediately at 2026-11-03T14:02:33Z as 38dba577c2f234d1b0bd8f1f150517e773b7e746. The receipt was origin/main when observed and remains an ancestor of the origin/main snapshot 14fb4342823b6ea37768f1ad7becb01fdc29d1dd used for successor publication; the clean completed worktree was queued for archival. Reprioritize to the already implemented duplicate-discovery fixture selector.",
-    "manual_merge": false
+    "observed_at": "2026-11-03T16:34:02Z",
+    "pr_number": 18885,
+    "head_revision": "4454d6d2ca83d8496dae8a0f51fd6ffb89be6bcb",
+    "action": "All 42 checks on exact independently reviewed head 4454d6d2ca83d8496dae8a0f51fd6ffb89be6bcb completed terminal acceptable: 30 succeeded, 11 were expected skips, and CodeQL reported one neutral aggregate verdict. GitHub merged PR #18885 manually at 2026-11-03T15:52:51Z as e98ddd9de5ee8812a8cd714122711b81351892cd. The squash receipt is an ancestor of the origin/main snapshot d4c427403c0bcbef769e966b78338b45990ef4ff used for successor selection; the clean completed worktree was queued for archival.",
+    "manual_merge": true
   },
   "last_inventory": {
     "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
@@ -2980,14 +2978,21 @@
     {
       "id": "build-tool-test-trigger-fixture-native-ci-selection-routing",
       "title": "Route test-trigger fixtures to native Go and Rust CI readers",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-ci-gate-fixture-native-ci-selection",
         "build-tool-rust-cargo-test-trigger-selection-parity"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-test-trigger-fixture-routing",
       "pr_number": null,
       "registered_at": "2026-11-03T07:15:26Z",
+      "selected_at": "2026-11-03T16:34:02Z",
+      "selection_revision": "e98ddd9de5ee8812a8cd714122711b81351892cd",
+      "selection_notes": "Selected after PR #18885 completed all 42 exact-head checks acceptably and was manually squash-merged, opening the parity publication slot. Both prerequisites are merged. This two-reader routing is the smallest ready operational follow-up in the same selector boundary and closes CI coverage for the newly merged authority-free Rust Cargo test-trigger core without changing that core, fixture data, workflows, or native reader behavior. The branch starts from origin/main d4c427403c0bcbef769e966b78338b45990ef4ff after four path-disjoint merges beyond the receipt.",
+      "rebase_revision": "d4c427403c0bcbef769e966b78338b45990ef4ff",
+      "implementation_revision": "bd5cf42f058b3af6269357bcdacbcfee30f4084c",
+      "validation_revision": "bd5cf42f058b3af6269357bcdacbcfee30f4084c",
+      "validation_notes": "The bounded implementation changes four product paths: the Go selector, a focused native-routing suite, Go README, and the CI-gate registry. Exact flat test-trigger-selection JSON cases seed only the Go and Rust readers; empty stems, nested paths, backslash spellings, case variants, extensionless names, and backups remain negative. Focused selection, language, missing-root, rename-old-source, union, prerequisite-closure, three-platform plan, toolchain, and direct-reader drift tests pass. Go vet and build pass. The full Go build-tool suite passes when the exact pre-existing PowerShell generator round-trip is skipped; the only unskipped failure requires unavailable pwsh. JSON state parsing, the 1,572-item unique dependency-complete acyclic graph, gofmt, and diff hygiene pass. No fixture, workflow, selection-core, native-reader, filesystem, process, environment, network, credential, or execution authority changed.",
       "notes": "Recorded after the Rust Cargo test-trigger core introduced six shared test-trigger-selection-*.json cases. Extend the native fixture-change selection map so exact flat changes in that family seed only go/programs/build-tool and rust/programs/build-tool. Reject empty stems, nested paths, backslash spellings, case variants, and backups; cover added, modified, deleted, and renamed paths; preserve ordinary package-root union and prerequisite closure; and prove Linux, macOS, Windows, and explicit language-plan behavior. This operational routing is separate from the authority-free selection core and grants no native or merge credit."
     },
     {
@@ -22796,7 +22801,7 @@
     {
       "id": "build-tool-duplicate-discovery-fixture-native-ci-selection",
       "title": "Select existing native duplicate-discovery readers for fixture-only CI changes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-shared-discovery-fixture-native-ci-selection",
         "build-tool-elixir-discovery-duplicate-identity-conformance"
@@ -22812,6 +22817,12 @@
       "lifecycle_review_notes": "Independent correctness and security publication reviews verified exact local, remote, and GitHub head parity, exact base, mergeability, clean ignored-inclusive status, zero overlap with every other live PR, unchanged product patch identity, a unique dependency-complete acyclic 1,572-item state graph, corrected GitHub-authoritative creation time, time-scoped predecessor ancestry, and correct active-PR lifecycle metadata. Both issued SHIP for marking PR #18885 ready.",
       "ready_at": "2026-11-03T14:16:20Z",
       "publication_notes": "Draft PR #18885 was opened from independently reviewed head a119e9b6f8ac4fe3a38f1495db775fb93bc0f6e4 over exact base 14fb4342823b6ea37768f1ad7becb01fdc29d1dd after a normal first push. The PR-number and active-lifecycle receipts were committed and pushed normally; two exact receipt defects were corrected and independent exact-head publication review then issued SHIP for 849e3c322e83f6f71dac7521e0e69d71b555d361. GitHub's ready-for-review event records 2026-11-03T14:16:20Z. Auto-merge remains disabled pending this ready receipt, final exact-head review, and terminal acceptable hosted qualification.",
+      "final_review_revision": "4454d6d2ca83d8496dae8a0f51fd6ffb89be6bcb",
+      "final_review_notes": "Independent correctness and security review issued SHIP for exact hosted head 4454d6d2ca83d8496dae8a0f51fd6ffb89be6bcb. Local, remote, and GitHub heads matched; no product, authority, or security drift remained; worktree and diff hygiene were clean; and merge was authorized only after every exact-head check completed terminal acceptable while GitHub reported the PR mergeable.",
+      "merged_head_revision": "4454d6d2ca83d8496dae8a0f51fd6ffb89be6bcb",
+      "merge_revision": "e98ddd9de5ee8812a8cd714122711b81351892cd",
+      "merged_at": "2026-11-03T15:52:51Z",
+      "merge_notes": "All 42 exact-head checks completed terminal acceptable: 30 successes, 11 expected skips, and one neutral CodeQL aggregate verdict. GitHub merged PR #18885 manually. The merge receipt was verified as an ancestor of the origin/main snapshot d4c427403c0bcbef769e966b78338b45990ef4ff used for successor selection, and the clean completed worktree was queued for archival.",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T14:47:18.946915-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",

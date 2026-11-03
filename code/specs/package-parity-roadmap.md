@@ -20541,3 +20541,37 @@ ancestry. Mark PR #18885 ready at GitHub's authoritative ready-for-review event
 time `2026-11-03T14:16:20Z`. Commit and push this ready receipt normally, then
 require fresh independent review and terminal acceptable hosted qualification
 on the resulting exact head before guarded squash auto-merge.
+
+#### Duplicate-discovery selector merge and test-trigger routing selection
+
+All 42 checks on exact independently reviewed head
+`4454d6d2ca83d8496dae8a0f51fd6ffb89be6bcb` completed terminal acceptable:
+30 succeeded, 11 were expected skips, and CodeQL reported one neutral aggregate
+verdict. GitHub manually squash-merged PR #18885 at
+`2026-11-03T15:52:51Z` as
+`e98ddd9de5ee8812a8cd714122711b81351892cd`. The receipt remains an ancestor
+of the successor-selection snapshot
+`d4c427403c0bcbef769e966b78338b45990ef4ff`; the clean completed worktree was
+queued for archival.
+
+Reprioritization selects the ready test-trigger fixture routing owner. Both
+prerequisites are merged. This bounded selector change maps exact flat
+`test-trigger-selection-*.json` changes only to the existing Go and Rust native
+readers, while preserving ordinary changed-root union, prerequisite closure,
+old rename/deletion sources, missing-root atomic failure, explicit language
+plans, and Linux, macOS, and Windows plans. It is the smallest operational
+follow-up to the merged authority-free Rust Cargo test-trigger core and does
+not change fixture data, workflows, the selection core, or native reader
+behavior. Complete local validation, reconcile live overlap, and require fresh
+independent exact-head review before first publication.
+
+The local implementation is complete at product revision
+`bd5cf42f058b3af6269357bcdacbcfee30f4084c`. Focused tests cover exact and
+lookalike paths, all three platforms, language filtering, ordinary-root union,
+rename-old-source retention, missing-reader atomic failure, prerequisite
+closure, emitted toolchains, and direct-reader drift. Go vet and build pass;
+the full package suite passes with only the pre-existing PowerShell generator
+round-trip skipped because `pwsh` is unavailable in this environment. The
+change adds no fixture, workflow, selection-core, native-reader, or host
+authority. Reconcile current main and live PR overlap, then require independent
+correctness and security review before publication.
