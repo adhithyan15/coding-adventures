@@ -1,5 +1,44 @@
 # Changelog — twig-parser
 
+## Unreleased — #18474 security review: name, token and generated-name budgets
+
+### Added
+
+- **`src/budgets.rs`**, budgets every Twig consumer inherits because they
+  all go through this crate:
+  - `MAX_NAME_BYTES` (256): every `NAME` token, checked in `parse_to_ast`
+    and `create_twig_parser` before the grammar parser runs, and exposed as
+    `check_name_token` for consumers of hand-built trees. The longest name
+    in the repo's Twig is 33 bytes.
+  - `MAX_TOKENS` (2²⁰): the lexer's output, checked before the grammar
+    parser builds a tree. That bounds the parser's peak memory for source
+    that skipped the compiler's 1 MiB source budget (an LSP buffer, a direct
+    `parse_to_ast` caller), and it matches the compiler's CST-items budget.
+  - `MAX_GENERATED_NAME_BYTES` (1 MiB): the predicate and accessor names
+    records and unions make the toolchain invent,
+    `(|name| + 1) + Σ (|name| + 1 + |field|)` (`generated_name_bytes`),
+    summed over the program by `extract_program` (`check_generated_names`)
+    and by each consumer that invents them (`GeneratedNameBudget`), before
+    one is formatted. The repo's most record-heavy file generates 467 bytes.
+
+### Fixed
+
+- **A long record name made every consumer allocate name length × field
+  count bytes.** With no name limit, a 512 KB record name and about 58,000
+  three-letter fields fit in about 1 MiB of source and made the IR
+  compiler's pre-pass and the type checker's `register_record` each format
+  about 30 GB of accessor names, before any instruction budget counted.
+  Both are now refused here, by arithmetic.
+
+### Tests
+
+- `tests/budgets.rs`: a 256-byte name parses and 257 is refused at the
+  name; the review's 512 KB record name; names in every position (quoted
+  symbols, fields, `let`) but not strings; exactly `MAX_TOKENS` passes the
+  check and one more is refused before parsing; generated names at exactly
+  1 MiB extract and one byte more is refused at the record; union variants
+  are charged the same way; the formula matches the names made.
+
 ## [0.7.0] — 2026-07-14
 
 ### Fixed — recursion-depth guard on the GrammarParser itself (second layer of defense)

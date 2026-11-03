@@ -78,8 +78,9 @@ Accepts (SIR16 / v1 — **all six** features, full v1 parity): `Floats`,
 
 With all six SIR16 features accepted, every SIR16 IR node has a real emit
 arm — no reachable `panic!` remains for v1.  The remaining emit panics
-cover SIR17/18 nodes (modules, string interpolation, instance/class vars,
-non-exception constant refs) whose features stay unaccepted; `try/catch`
+cover SIR17/18 nodes (modules, instance/class vars, non-exception constant
+refs) whose features stay unaccepted (string interpolation, `StrConcat`, is
+accepted since #18798: its parts are joined by Ruby's `to_s`); `try/catch`
 and exception-subclass `class` declarations are now accepted (see
 **Exceptions (E4)** below).
 
@@ -364,7 +365,7 @@ a rule refiring at one tree position costs O(1) stack frames. Both caps
 [SIR23](../../../specs/SIR23-symbolic-pattern-semantic-ir.md).
 
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
-(empty whitelist in v0), `StringInterpolation`, a stateful (non-empty
+(empty whitelist in v0), a stateful (non-empty
 body) `Class`/`Module` or a non-name-slot `Const` reference (rejected
 cleanly by the soundness gates).
 

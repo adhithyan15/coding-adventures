@@ -6,6 +6,9 @@ description = "Twig AOT compiler — produces native Mach-O / ELF executables fr
 
 [dependencies]
 twig-ir-compiler     = { path = "../twig-ir-compiler" }
+# #18474 review: read source files within the compiler's source budget,
+# regular files only, without blocking on a FIFO or tty.
+bounded-source-file  = { path = "../bounded-source-file" }
 interpreter-ir        = { path = "../interpreter-ir" }
 aot-core              = { path = "../aot-core" }
 aarch64-backend       = { path = "../aarch64-backend" }

@@ -66,7 +66,6 @@ EXCLUDED code/packages/typescript/directed-graph-native  # napi-rs cdylib with n
 
 # Needs a non-Windows host to verify
 PENDING code/packages/rust/jit-loader-macos  # macOS-only mmap/mprotect JIT loader; needs a BUILD gated on `[ "$(uname)" = Darwin ]` and a macOS host to verify — cannot be checked from here
-PENDING code/packages/rust/twig-module-driver  # 2 dependents (twig-vm, twigc); 7 deep-recursion self-compile tests reserve 768 MiB / 3 GiB thread stacks and fail on a Windows host — needs Linux verification before it can be watched
 PENDING code/packages/rust/sir-conformance  # cross-backend conformance harness; test suite is red on a Windows host — needs Linux triage before it can be watched
 
 # Paint VM backends that need a native library present at build time. Their

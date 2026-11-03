@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseLesson } from "../src/parse.js";
-import { loadEverything } from "../src/loader.js";
+import { defaultCurriculumRoot, forEachTrackLessons } from "../src/loader.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "../src/report.js";
 import {
   DEFAULT_LINEARISABLE_TABLE_COLUMNS,
@@ -21,6 +21,7 @@ import {
   orderChapterLessons,
   requiredChannels,
   strongerModality,
+  summarizeLessonModalities,
   summarizeModality,
   tableRowColumns,
   unionModalities,
@@ -996,6 +997,30 @@ describe("chapter and track rollups", () => {
       findings: [],
     });
   });
+
+  it("summarizes already-derived entries exactly as it summarizes the lessons", () => {
+    // What lets the corpus-regression block below read the corpus one track at
+    // a time: the summary is a function of the per-lesson entries alone, so
+    // entries derived track by track and concatenated summarize to the same
+    // value, findings and table width included.
+    const tracks = [
+      [
+        lesson({ id: "ES-C01-a", type: "writing" }),
+        lesson({ id: "ES-C01-b", modality: "pen" }),
+        lesson({ id: "ES-C02-a", chapter: 2, body: "## Warm-up\n\n| a | b |\n|---|---|\n| 1 | 2 |" }),
+      ],
+      [lesson({ id: "TE-C01-a", language: "telugu", body: "## Warm-up\n\nLook at the chart." })],
+    ];
+    const all = tracks.flat();
+    for (const options of [{}, { maxLinearisableTableColumns: 0 }]) {
+      const streamed = tracks.flatMap((track) => lessonModalities(track, options));
+      expect(summarizeLessonModalities(streamed, options)).toEqual(summarizeModality(all, options));
+    }
+    // Not vacuous: the two widths really do summarize differently here.
+    expect(summarizeModality(all, { maxLinearisableTableColumns: 0 }).voice).toBeLessThan(
+      summarizeModality(all).voice,
+    );
+  });
 });
 
 describe("text scanning helpers", () => {
@@ -1162,14 +1187,66 @@ describe("the gap report", () => {
   });
 });
 
-// The whole corpus, parsed ONCE at import, and its shipped modality summary.
+// The whole corpus, read ONCE at import, and everything the corpus-regression
+// tests below derive from it.
+//
 // Every "corpus regression" test used to call `loadEverything()` itself, and
 // under full-suite parallel load on CI one of them took 41.3s against the 30s
-// default. Import time carries no per-test budget (see
-// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md). The tests
-// below only read these values, so sharing them changes no assertion.
-const CORPUS_LESSONS = loadEverything().lessons;
-const CORPUS_SUMMARY = summarizeModality(CORPUS_LESSONS);
+// default. Hoisting one parse to import time fixed that (see
+// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md), and then
+// the corpus kept growing: at ~62,000 lessons the tests derived the modality of
+// every lesson four times between them (the shipped summary, the width-0
+// summary, and `lessonModalities` twice), all inside test bodies, and three
+// cases crossed 30s again.
+//
+// So the corpus is now read one track at a time and dropped, and only what an
+// assertion reads survives: each lesson's modality at the shipped width and at
+// width 0, and the handful of structural counts the partition test checks.
+// `summarizeModality(lessons)` is `summarizeLessonModalities(lessonModalities
+// (lessons))` by definition, so the summaries below are the same values the
+// tests used to compute from the parsed lessons, and no assertion changed.
+//
+//   per track:  lessons -> modality x2, counts -> lessons dropped
+//   at the end: summaries over all tracks' entries
+const CORPUS = (() => {
+  const shipped: ReturnType<typeof lessonModalities> = [];
+  const preLineariser: ReturnType<typeof lessonModalities> = [];
+  const structure = {
+    lessons: 0,
+    writing: 0,
+    scripted: 0,
+    remaining: 0,
+    remainingWithTables: 0,
+    withWritingBlocks: 0,
+  };
+  forEachTrackLessons(defaultCurriculumRoot(), (_language, lessons) => {
+    shipped.push(...lessonModalities(lessons));
+    preLineariser.push(...lessonModalities(lessons, { maxLinearisableTableColumns: 0 }));
+    for (const entry of lessons) {
+      structure.lessons += 1;
+      // The three groups are counted with three independent predicates, as
+      // they were filtered before, so a rename of `realization.type` or
+      // `block.type` still breaks their sum rather than being absorbed by an
+      // if/else that could only ever add up.
+      const isWriting = entry.realization.type === "writing";
+      const hasScript = entry.blocks.some((block) => block.type === "script");
+      if (isWriting) structure.writing += 1;
+      if (entry.realization.type !== "writing" && hasScript) structure.scripted += 1;
+      if (entry.realization.type !== "writing" && !hasScript) {
+        structure.remaining += 1;
+        if (widestTableColumns(lessonText(entry)) > 0) structure.remainingWithTables += 1;
+      }
+      if (entry.blocks.some((block) => block.type === "writing")) structure.withWritingBlocks += 1;
+    }
+  });
+  return {
+    entries: shipped,
+    summary: summarizeLessonModalities(shipped),
+    preLineariser: summarizeLessonModalities(preLineariser, { maxLinearisableTableColumns: 0 }),
+    structure,
+  };
+})();
+const CORPUS_SUMMARY = CORPUS.summary;
 
 describe("corpus regression", () => {
   // A pinned measurement, not a taste test. The parser, the table detector, and the
@@ -1209,12 +1286,11 @@ describe("corpus regression", () => {
   // So what stays here is what a generated snapshot CANNOT catch: the internal
   // consistency the derivation must always satisfy, whatever the corpus size.
   it("keeps the modality partition internally consistent", () => {
-    const lessons = CORPUS_LESSONS;
     const summary = CORPUS_SUMMARY;
 
     // Every lesson lands in exactly one channel, and nothing is lost or double-counted.
     expect(summary.voice + summary.sight + summary.pen).toBe(summary.totalLessons);
-    expect(summary.totalLessons).toBe(lessons.length);
+    expect(summary.totalLessons).toBe(CORPUS.structure.lessons);
 
     // The published percentage is honestly derived from the voice count, rather
     // than being a separately maintained number that could drift away from it.
@@ -1242,26 +1318,17 @@ describe("corpus regression", () => {
   });
 
   it("keeps the structural partition the derivation is built on", () => {
-    const lessons = CORPUS_LESSONS;
-    const writing = lessons.filter((entry) => entry.realization.type === "writing");
-    const nonWriting = lessons.filter((entry) => entry.realization.type !== "writing");
-    const scripted = nonWriting.filter((entry) =>
-      entry.blocks.some((block) => block.type === "script"),
-    );
-    const remaining = nonWriting.filter(
-      (entry) => !entry.blocks.some((block) => block.type === "script"),
-    );
+    // Counted while each track was in memory; see CORPUS above.
+    const { lessons, writing, scripted, remaining, remainingWithTables } = CORPUS.structure;
 
     // The three groups partition the corpus exactly -- this is what a rename of
     // `realization.type` or `block.type` would break, and it holds at any size.
-    expect(writing.length + scripted.length + remaining.length).toBe(lessons.length);
-    expect(writing.length).toBeGreaterThan(0);
-    expect(remaining.length).toBeGreaterThan(0);
+    expect(writing + scripted + remaining).toBe(lessons);
+    expect(writing).toBeGreaterThan(0);
+    expect(remaining).toBeGreaterThan(0);
 
     // Table detection still finds tables. A field rename would silently zero this.
-    expect(
-      remaining.filter((entry) => widestTableColumns(lessonText(entry)) > 0).length,
-    ).toBeGreaterThan(0);
+    expect(remainingWithTables).toBeGreaterThan(0);
   });
 
   // The block-level amendment is a no-op on the corpus AS IT STANDS, and that is the
@@ -1279,7 +1346,6 @@ describe("corpus regression", () => {
   // When the first interspersed lesson lands, `lessonsWithWritingSegments` rises and
   // this equality breaks — which is the point. Record which track did it; never loosen.
   it("pins the core as strictly better than the whole, now that writing segments exist", () => {
-    const lessons = CORPUS_LESSONS;
     const summary = CORPUS_SUMMARY;
     // This read 0 for the whole life of the corpus: HL-C41 built the block-level
     // modality machinery and nothing used it. Tamil's drizzled letter segments
@@ -1288,15 +1354,13 @@ describe("corpus regression", () => {
     //
     // Derive the count from the language-owned lesson corpus. A global literal
     // made every new writing microstep edit this shared algorithm suite.
-    expect(summary.lessonsWithWritingSegments).toBe(
-      lessons.filter((lesson) => lesson.blocks.some((block) => block.type === "writing")).length,
-    );
+    expect(summary.lessonsWithWritingSegments).toBe(CORPUS.structure.withWritingBlocks);
     expect(summary.lessonsWithWritingSegments).toBeGreaterThan(0);
     // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
     // inline-letters sections detach, so the core of those lessons is listenable even
     // though the lesson as printed needs eyes.
     expect(summary.coreVoice).toBeGreaterThan(summary.voice);
-    for (const entry of lessonModalities(lessons)) {
+    for (const entry of CORPUS.entries) {
       // The invariant a hands-free view relies on: the core never asks for more
       // than the whole lesson does.
       expect(modalityRank(entry.coreModality)).toBeLessThanOrEqual(modalityRank(entry.modality));
@@ -1317,9 +1381,8 @@ describe("corpus regression", () => {
   // strictly stronger: it holds at any corpus size, and it still fails loudly if the
   // lineariser stops linearising or starts swallowing lessons it should refuse.
   it("attributes the drivable gain to the lineariser, at any corpus size", () => {
-    const lessons = CORPUS_LESSONS;
     const shipped = CORPUS_SUMMARY;
-    const preLineariser = summarizeModality(lessons, { maxLinearisableTableColumns: 0 });
+    const preLineariser = CORPUS.preLineariser;
 
     // The shipped width is a configuration fact, not a corpus measurement, so it is
     // pinned absolutely. Three is where a table stops being labelled facts a listener
@@ -1340,8 +1403,7 @@ describe("corpus regression", () => {
   // HL08's migration step 4 names: reshaping just those tables would move exactly those
   // lessons into the car, because they have no other reason to need eyes.
   it("keeps every sight lesson attributable to a known cause", () => {
-    const lessons = CORPUS_LESSONS;
-    const sight = lessonModalities(lessons).filter((entry) => entry.modality === "sight");
+    const sight = CORPUS.entries.filter((entry) => entry.modality === "sight");
     // `reading-type` joined the list when reading lessons stopped being drivable: it is
     // a known cause, and the one a reading lesson carries even when nothing else fires.
     // `eyes-or-hands-step` joined when a step the narration says plainly ("Read
@@ -1373,12 +1435,10 @@ describe("corpus regression", () => {
   });
 
   it("keeps the corpus free of unexplained overrides", () => {
-    const lessons = CORPUS_LESSONS;
     expect(CORPUS_SUMMARY.findings).toEqual([]);
   });
 
   it("gives every lesson a modality and every chapter a prefix within its length", () => {
-    const lessons = CORPUS_LESSONS;
     const summary = CORPUS_SUMMARY;
     for (const track of summary.tracks) {
       for (const chapter of track.chapters) {

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.164.0";
+pub const VERSION: &str = "0.165.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14691,6 +14691,28 @@ fn upsert_c4_node(
     parent_group: Option<String>,
 ) -> usize {
     if let Some(index) = indices.get(&id).copied() {
+        let node = &mut nodes[index];
+        let style = node.style.take();
+        let style_overrides = match node.metadata.as_mut() {
+            Some(StructuralNodeMetadata::C4(metadata)) => {
+                std::mem::take(&mut metadata.style_overrides)
+            }
+            _ => Default::default(),
+        };
+        let mut metadata = metadata;
+        if let StructuralNodeMetadata::C4(c4_metadata) = &mut metadata {
+            c4_metadata.style_overrides = style_overrides;
+        }
+        *node = StructuralNode {
+            id,
+            label,
+            stereotype: Some(stereotype.clone()),
+            node_kind: c4_node_kind(&stereotype),
+            metadata: Some(metadata),
+            style,
+            compartments: Vec::new(),
+            parent_group,
+        };
         return index;
     }
     let index = nodes.len();
@@ -20132,7 +20154,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.164.0");
+        assert_eq!(crate::VERSION, "0.165.0");
     }
 
     #[test]

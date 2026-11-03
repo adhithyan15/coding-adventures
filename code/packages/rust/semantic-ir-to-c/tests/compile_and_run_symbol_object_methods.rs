@@ -59,7 +59,7 @@ fn run_ruby(src: &str) -> Option<String> {
 #[test]
 fn symbol_to_s_length_size_empty() {
     match run_ruby("puts :hello.to_s\nputs :hello.length\nputs :hello.size\nputs :\"\".empty?\n") {
-        Some(out) => assert_eq!(out, "hello\n5\n5\n#t\n"),
+        Some(out) => assert_eq!(out, "hello\n5\n5\ntrue\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -85,7 +85,7 @@ fn symbol_inspect_prefixes_a_colon() {
 #[test]
 fn symbol_to_sym_is_the_identity() {
     match run_ruby("x = :hello\nputs x.to_sym.equal?(x)\n") {
-        Some(out) => assert_eq!(out, "#t\n"),
+        Some(out) => assert_eq!(out, "true\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -93,7 +93,7 @@ fn symbol_to_sym_is_the_identity() {
 #[test]
 fn nil_p_across_receiver_types() {
     match run_ruby("puts nil.nil?\nputs 0.nil?\nputs \"\".nil?\nputs false.nil?\n") {
-        Some(out) => assert_eq!(out, "#t\n#f\n#f\n#f\n"),
+        Some(out) => assert_eq!(out, "true\nfalse\nfalse\nfalse\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -112,7 +112,7 @@ fn frozen_p_is_true_for_immutable_primitives_false_for_mutable_ones() {
         "puts nil.frozen?\nputs true.frozen?\nputs 5.frozen?\nputs 3.5.frozen?\nputs :sym.frozen?\n\
          puts \"str\".frozen?\nputs [1].frozen?\n",
     ) {
-        Some(out) => assert_eq!(out, "#t\n#t\n#t\n#t\n#t\n#f\n#f\n"),
+        Some(out) => assert_eq!(out, "true\ntrue\ntrue\ntrue\ntrue\nfalse\nfalse\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -125,7 +125,7 @@ fn equal_p_is_pointer_identity_not_structural_equality() {
     match run_ruby(
         "a = [1, 2]\nb = [1, 2]\nputs a.equal?(b)\nc = a\nputs a.equal?(c)\n",
     ) {
-        Some(out) => assert_eq!(out, "#f\n#t\n"),
+        Some(out) => assert_eq!(out, "false\ntrue\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -136,7 +136,7 @@ fn equal_p_on_scalars_and_symbols_is_value_identity() {
     // Symbols are interned, so this reduces to the same pointer-identity
     // check as the heap-boxed case above).
     match run_ruby("puts 5.equal?(5)\nputs :sym.equal?(:sym)\nputs nil.equal?(nil)\n") {
-        Some(out) => assert_eq!(out, "#t\n#t\n#t\n"),
+        Some(out) => assert_eq!(out, "true\ntrue\ntrue\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -144,7 +144,7 @@ fn equal_p_on_scalars_and_symbols_is_value_identity() {
 #[test]
 fn equal_p_returns_false_across_different_types() {
     match run_ruby("puts 5.equal?(\"5\")\nputs nil.equal?(false)\n") {
-        Some(out) => assert_eq!(out, "#f\n#f\n"),
+        Some(out) => assert_eq!(out, "false\nfalse\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -158,7 +158,7 @@ fn bool_and_or_xor_are_eager_and_ruby_truthiness_coercing() {
     match run_ruby(
         "puts(true.&(nil))\nputs(false.|(0))\nputs(true.^(true))\nputs(true.^(false))\n",
     ) {
-        Some(out) => assert_eq!(out, "#f\n#t\n#f\n#t\n"),
+        Some(out) => assert_eq!(out, "false\ntrue\nfalse\ntrue\n"),
         None => eprintln!("skip: no cc"),
     }
 }

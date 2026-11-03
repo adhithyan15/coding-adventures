@@ -42,6 +42,7 @@
 use std::collections::HashSet;
 
 use twig_parser::{MatchArm, MatchPat};
+use type_checker_protocol::bounded::{diagnostics_closed, name_list, push_bounded, MAX_LISTED_NAMES};
 use type_checker_protocol::TypeErrorDiagnostic;
 
 use crate::env::TypeEnv;
@@ -62,6 +63,12 @@ pub fn check_exhaustiveness(
     column: usize,
     errors: &mut Vec<TypeErrorDiagnostic>,
 ) {
+    // A diagnostic nobody will keep is not worth building (#18474 review:
+    // the diagnostics are capped, see `type_checker_protocol::bounded`).
+    if diagnostics_closed(errors) {
+        return;
+    }
+
     // Look up the complete variant set for this union.
     let all_variants = match env.unions.get(union_name) {
         Some(v) => v,
@@ -90,30 +97,31 @@ pub fn check_exhaustiveness(
         }
     }
 
-    // Find variants that were never covered.
-    let missing: Vec<&str> = all_variants
-        .iter()
-        .filter(|v| !covered.contains(v.as_str()))
-        .map(String::as_str)
-        .collect();
-
-    if missing.is_empty() {
+    // Find variants that were never covered, keeping only the few the
+    // message will name (#18474 security review).  The message used to list
+    // *every* missing variant, so each zero-arm `(match x)` on a 60,000-
+    // variant union formatted ~600 KB, and 50,000 of them ~33 GB.  Now one
+    // pass counts the missing variants and keeps the first
+    // `MAX_LISTED_NAMES`; the message says "… and K more".  The pass is
+    // O(variants) time and O(1) memory, and runs at most
+    // `MAX_DIAGNOSTICS` + 1 times per program (the `diagnostics_closed` check above).
+    let mut missing = all_variants.iter().filter(|v| !covered.contains(v.as_str()));
+    let listed: Vec<&str> = missing.by_ref().take(MAX_LISTED_NAMES).map(String::as_str).collect();
+    if listed.is_empty() {
         // Every variant was covered — the match is exhaustive.
         return;
     }
+    let total = listed.len() + missing.count();
+    let names = name_list(&listed, total);
 
-    // Build a readable list of the missing variant names.
-    let names = missing
-        .iter()
-        .map(|s| format!("`{s}`"))
-        .collect::<Vec<_>>()
-        .join(", ");
-
-    errors.push(TypeErrorDiagnostic {
-        message: format!(
-            "non-exhaustive match on union `{union_name}`: unmatched variants: {names}"
-        ),
-        line,
-        column,
-    });
+    push_bounded(
+        errors,
+        TypeErrorDiagnostic {
+            message: format!(
+                "non-exhaustive match on union `{union_name}`: unmatched variants: {names}"
+            ),
+            line,
+            column,
+        },
+    );
 }

@@ -149,6 +149,21 @@ root.tw  →  BFS discovery
   and check them at link time.  (Until #18432 *every* function name in the
   tree was an extern of every module, private ones included.)
 
+- **Budgets** — every file is held to `twig-ir-compiler`'s budgets (#18474).
+  `read_source` (on `bounded-source-file`) refuses anything but a regular
+  file without blocking, checks the size, then reads at most 1 MiB + 1
+  bytes.  Phase 1 then holds the whole graph's source to 4 MiB
+  (`MAX_PROGRAM_SOURCE_BYTES`) as each file is read, and runs the compiler's
+  tree budget (`check_cst_items`) right after parsing; the parser itself
+  caps names at 256 bytes and invented record names at 1 MiB.  Before any
+  export list is copied over an import edge, the edges' export clauses are
+  summed against `MAX_IMPORTED_NAMES` (2²⁰) and their bytes against
+  `MAX_IMPORTED_NAME_BYTES` (16 MiB).  The modules' instructions and
+  functions, summed as each is compiled, are held to one module's budgets
+  (2²⁰ and 2¹⁶), because the linker merges them into the one module the VM
+  runs.  A breach is `ModuleDriverError::Compile` naming the file.  The
+  import graph is capped separately at `MAX_MODULES` (1,000).
+
 - **Root module** — the root `.tw` file's `entry_point = Some("main")` is preserved.
   All other modules have their `entry_point` cleared so the linker uses the root's
   `main` as the program entry.

@@ -21,7 +21,8 @@
 //!   greet(greeting: "hi", name: "ada")  →  (hi ada)     // name supplied
 //! ```
 //!
-//! The Go backend does not accept string interpolation (`StrConcat`), so —
+//! The Go backend did not accept string interpolation (`StrConcat`) when
+//! this proof was written (it does since #18798), so —
 //! unlike the Python/Rust reference backends that print the literal string
 //! `hi, world` — this proof returns a **cons pair** of the two string params
 //! and prints it, which the Go runtime formats as `(hi world)`.  The *content*

@@ -1,9 +1,12 @@
 import {
+  closeSync,
   existsSync,
   lstatSync,
   mkdtempSync,
   mkdirSync,
+  openSync,
   readFileSync,
+  readSync,
   readdirSync,
   rmSync,
   symlinkSync,
@@ -48,6 +51,29 @@ const materializeBookCompileInputs = (outputRoot: string, root: string) =>
   materializeBookCompileInputsImpl(outputRoot, root, legacyFixture);
 const runBookGeneration = (args?: string[], root?: string) =>
   runBookGenerationImpl(args, root, legacyFixture);
+
+const GENERATED_BANNER = "% GENERATED FILE.";
+
+/**
+ * Whether the file at `path` opens with `prefix`, reading only that many bytes.
+ *
+ * The committed-chapter checks below ask one question of thousands of files --
+ * is this the generator's banner -- and reading each whole file (~130 MB in
+ * all) to answer it was most of a 10s test. `prefix` is ASCII, so its UTF-8
+ * byte length is its string length and a byte comparison is the same test as
+ * `readFileSync(path, "utf8").startsWith(prefix)`.
+ */
+function startsWithBytes(path: string, prefix: string): boolean {
+  const expected = Buffer.from(prefix, "utf8");
+  const actual = Buffer.alloc(expected.length);
+  const fd = openSync(path, "r");
+  try {
+    const read = readSync(fd, actual, 0, expected.length, 0);
+    return read === expected.length && actual.equals(expected);
+  } finally {
+    closeSync(fd);
+  }
+}
 
 function fixture(output = "test/book/chapters/ch01-first.tex"): string {
   const root = mkdtempSync(join(tmpdir(), "human-language-book-"));
@@ -1015,7 +1041,7 @@ describe("hand-written chapters", () => {
       const path = join(root, relative);
       if (!existsSync(path)) continue;
       expect(
-        readFileSync(path, "utf8").startsWith("% GENERATED FILE."),
+        startsWithBytes(path, GENERATED_BANNER),
         `${relative} is a generation target but the committed file is hand-authored`,
       ).toBe(true);
     }
@@ -1069,7 +1095,9 @@ describe("hand-written chapters", () => {
   });
 
   it("keeps title and label ownership out of every manifest chapter declaration", () => {
-    const raw = loadBookGenerationConfig(root) as {
+    // The same parse this describe block already made; re-reading ~450 owner
+    // files to ask a question of the identical document cost this test 5s.
+    const raw = config as unknown as {
       targets: Record<string, unknown>[];
       handwritten?: Record<string, unknown>[];
     };
@@ -1312,11 +1340,14 @@ describe("the manifest covers the corpus", () => {
     // "Reaches a file" is the weaker claim, and the weaker claim is what let the
     // original bug through in spirit: a chapter can have a declaration, and a file on
     // disk, and still be invisible because `book.tex` never \input's it.
-    const byLanguage = new Map<string, Set<number>>();
+    // Indexed once, first declaration winning, which is what the `find` this
+    // replaced returned. `find` inside the loop over every ledgered chapter was
+    // a scan of all declarations per chapter -- quadratic in the corpus (see
+    // lessons.d/a-corpus-wide-test-that-scans-the-whole-list-per-item-goes.md).
+    const declarationOf = new Map<string, (typeof declared)[number]>();
     for (const entry of declared) {
-      const set = byLanguage.get(entry.language) ?? new Set<number>();
-      set.add(entry.chapter);
-      byLanguage.set(entry.language, set);
+      const key = `${entry.language}:${entry.chapter}`;
+      if (!declarationOf.has(key)) declarationOf.set(key, entry);
     }
     const inputs = new Map<string, string>();
     const outputs = realBookOutputs;
@@ -1331,9 +1362,7 @@ describe("the manifest covers the corpus", () => {
       }
       const bookTex = inputs.get(language)!;
       for (const entry of track.chapters) {
-        const match = declared.find(
-          (d) => d.language === language && d.chapter === entry.chapter,
-        );
+        const match = declarationOf.get(`${language}:${entry.chapter}`);
         if (!match) {
           offenders.push(`${language} ch${entry.chapter}: no declaration`);
           continue;

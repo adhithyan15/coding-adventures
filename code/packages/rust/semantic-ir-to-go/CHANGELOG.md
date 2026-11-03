@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased — interpolation, `nil`'s display, `[]`/`[]=` (#18798)
+
+- **`StrConcat` (string interpolation) is accepted.**  It renders as
+  `_sir_str_concat(parts…)`, which joins each part's Ruby `to_s`; it was a
+  capability refusal, so `"a#{x}b"` did not compile.
+- **`puts nil` prints an empty line** under the Ruby display convention:
+  the new `_sir_to_s` is `_sir_format` except that `nil` is `""`, and the
+  `__sys_write__` paths use it.  (An array element keeps `nil`.)
+- **`a[i]`, `a[i] = v` and `h[k]`.**  `[]`/`[]=` were missing from the
+  Array catalog and `[]` from the Hash catalog, so `z[1]` panicked
+  `undefined method '[]' for Array`.  A negative index counts from the
+  end, a read out of range is `nil`, a write past the end pads with `nil`,
+  a write before the start is `IndexError`, and a non-integer index is
+  `TypeError`.  A write past index 2^28 is `IndexError: index N too big`,
+  the limit every backend shares.
+- End-to-end checks: `sir-conformance`'s `ruby_sir_gaps` programs
+  `rb_puts_and_print_show_booleans_and_nil_the_ruby_way`,
+  `rb_keyword_literals_inside_interpolation`,
+  `rb_array_index_size_and_index_assignment` and
+  `rb_hash_index_and_index_assignment`.
+
 ## Unreleased — `not` is a builtin (#18798)
 
 Every Ruby `unless`, `until` and `!x` lowers to `BuiltinCall("not", [x])`,

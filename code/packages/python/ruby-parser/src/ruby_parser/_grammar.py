@@ -51,9 +51,51 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='for_statement', is_token=False),
                 RuleReference(name='case_statement', is_token=False),
                 RuleReference(name='begin_statement', is_token=False),
-                RuleReference(name='return_statement', is_token=False),
-                RuleReference(name='break_statement', is_token=False),
-                RuleReference(name='next_statement', is_token=False),
+                Sequence(elements=[
+                    RuleReference(name='return_statement', is_token=False),
+                    NegativeLookahead(element=
+                        Literal(value='if_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='unless_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='while_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='until_modifier'),
+                    ),
+                ]),
+                Sequence(elements=[
+                    RuleReference(name='break_statement', is_token=False),
+                    NegativeLookahead(element=
+                        Literal(value='if_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='unless_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='while_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='until_modifier'),
+                    ),
+                ]),
+                Sequence(elements=[
+                    RuleReference(name='next_statement', is_token=False),
+                    NegativeLookahead(element=
+                        Literal(value='if_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='unless_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='while_modifier'),
+                    ),
+                    NegativeLookahead(element=
+                        Literal(value='until_modifier'),
+                    ),
+                ]),
                 RuleReference(name='redo_statement', is_token=False),
                 RuleReference(name='retry_statement', is_token=False),
                 RuleReference(name='yield_statement', is_token=False),
@@ -169,6 +211,9 @@ PARSER_GRAMMAR = ParserGrammar(
             Sequence(elements=[
                 Group(element=
                     Alternation(choices=[
+                        RuleReference(name='return_statement', is_token=False),
+                        RuleReference(name='break_statement', is_token=False),
+                        RuleReference(name='next_statement', is_token=False),
                         RuleReference(name='assignment', is_token=False),
                         RuleReference(name='method_call_no_paren', is_token=False),
                         Sequence(elements=[

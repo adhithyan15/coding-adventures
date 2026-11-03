@@ -137,11 +137,11 @@ fn class_reflection_matches_ruby_on_every_backend() {
 /// `(ruby source, expected output)` — the `is_a?` family and `case/when
 /// SomeClass`, whose class argument is a bare CONSTANT in the source.
 const IS_A_CASES: &[(&str, &str)] = &[
-    ("puts(7.is_a?(Integer))\n", "#t"),
-    ("puts(7.is_a?(String))\n", "#f"),
-    ("puts(7.kind_of?(Numeric))\n", "#t"),
-    ("puts(7.instance_of?(Integer))\n", "#t"),
-    ("puts(7.instance_of?(Numeric))\n", "#f"),
+    ("puts(7.is_a?(Integer))\n", "true"),
+    ("puts(7.is_a?(String))\n", "false"),
+    ("puts(7.kind_of?(Numeric))\n", "true"),
+    ("puts(7.instance_of?(Integer))\n", "true"),
+    ("puts(7.instance_of?(Numeric))\n", "false"),
     ("case 7\nwhen Integer\n  puts(\"int\")\nend\n", "int"),
     ("case \"s\"\nwhen Integer\n  puts(\"int\")\nelse\n  puts(\"other\")\nend\n", "other"),
 ];
@@ -188,9 +188,9 @@ fn is_a_and_case_when_match_ruby_on_every_backend() {
 /// `(ruby source, expected output)` — reflection on a RESCUED EXCEPTION.
 const EXCEPTION_CASES: &[(&str, &str)] = &[
     ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.class)\nend\n", "ArgumentError"),
-    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(ArgumentError))\nend\n", "#t"),
-    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(StandardError))\nend\n", "#t"),
-    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(TypeError))\nend\n", "#f"),
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(ArgumentError))\nend\n", "true"),
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(StandardError))\nend\n", "true"),
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(TypeError))\nend\n", "false"),
     ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.message)\nend\n", "boom"),
     // `puts e` renders the MESSAGE (Ruby's `Exception#to_s`), which must stay
     // true even where the rescued value became a real exception OBJECT.

@@ -103,7 +103,7 @@ fn array_write_then_read_back() {
 #[test]
 fn array_read_out_of_bounds_is_nil() {
     match run_ruby("a = [1, 2, 3]\nputs a[10]\n") {
-        Some(out) => assert_eq!(out, "nil\n"),
+        Some(out) => assert_eq!(out, "\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -140,7 +140,7 @@ fn hash_write_with_symbol_key_does_not_crash() {
 #[test]
 fn hash_read_missing_key_is_nil() {
     match run_ruby("h = {\"a\" => 1}\nputs h[\"missing\"]\n") {
-        Some(out) => assert_eq!(out, "nil\n"),
+        Some(out) => assert_eq!(out, "\n"),
         None => eprintln!("skip: no cc"),
     }
 }

@@ -747,6 +747,11 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ct_compare_conformance.py'
           python3 code/scripts/ct_compare_conformance.py
+          # TF01: the bootstrap harness's self-corpus and its independent
+          # reference. The crate's BUILD runs the validator too, but only when
+          # the build tool selects the crate; this keeps it always on.
+          python3 code/scripts/bootstrap_harness_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_bootstrap_harness_conformance.py'
           # rng spec v2: the shared corpus and its independent reference.
           python3 code/scripts/rng_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_rng_conformance.py'
@@ -797,6 +802,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_ensure_flutter_android_ndk.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_run_under_xvfb.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_release_launch.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_release_check_log.py'
           # Pins apt-install.sh's retry/timeout layers and that every apt step
           # carries its own timeout-minutes (#12163, #12181). It sat outside
           # this list before, which is how two deploy workflows drifted back to

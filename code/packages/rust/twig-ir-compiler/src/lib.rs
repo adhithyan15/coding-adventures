@@ -19,11 +19,16 @@
 //! GrammarASTNode  (the CST)
 //!     │
 //!     ▼  compile_ast / compile_source     ← THIS CRATE
+//!     │    0. budgets        — source bytes (compile_source) and CST
+//!     │                        items, before anything walks the tree
 //!     │    1. check_cst      — validate the tree's shape
 //!     │    2. TW05-B gate    — only for (typed lenient|strict) modules
 //!     │    3. lower          — walk the CST through borrowed views,
 //!     │                        after refusing reserved names
 //!     │                        (every `__` name; see RESERVED_PREFIXES)
+//!     │    4. budgets        — registers and instructions per function,
+//!     │                        instructions per module, as each
+//!     │                        function is finished (see [`budgets`])
 //! IIRModule  (functions: top-level fns + anonymous lambdas + main)
 //!     │
 //!     ▼  vm-core / jit-core
@@ -127,6 +132,7 @@
 //! assert_eq!(format!("{again:?}"), format!("{module:?}"));
 //! ```
 
+pub mod budgets;
 mod check_cst;
 pub mod compiler;
 mod cst;
@@ -134,6 +140,12 @@ pub mod errors;
 mod free_vars;
 mod reserved_names;
 
+pub use budgets::{
+    check_cst_items, MAX_CST_ITEMS, MAX_FUNCTIONS_PER_MODULE, MAX_GENERATED_NAME_BYTES,
+    MAX_IIR_INSTRUCTIONS_PER_FUNCTION, MAX_IIR_INSTRUCTIONS_PER_MODULE, MAX_IMPORTED_NAMES,
+    MAX_IMPORTED_NAME_BYTES,
+    MAX_NAME_BYTES, MAX_PROGRAM_SOURCE_BYTES, MAX_REGISTERS_PER_FUNCTION, MAX_SOURCE_BYTES,
+};
 pub use check_cst::check_cst;
 pub use reserved_names::{reserved_prefix, RESERVED_NAMESPACE, RESERVED_PREFIXES};
 pub use compiler::Compiler;
@@ -163,7 +175,11 @@ use type_declarations::AnnotatedNode;
 /// well-formed Twig `program` (reported as `parse error: …`, exactly as a
 /// malformed source would be), a strict-mode type error, a `(lambda ...)`
 /// that captures an unbound name, a name that doesn't resolve to a local /
-/// global / builtin, or nesting past [`compiler::MAX_COMPILE_DEPTH`].
+/// global / builtin, nesting past [`compiler::MAX_COMPILE_DEPTH`], or a
+/// program over one of the [`budgets`]: more than [`MAX_CST_ITEMS`] tree
+/// items, or a function over [`MAX_REGISTERS_PER_FUNCTION`] registers or
+/// [`MAX_IIR_INSTRUCTIONS_PER_FUNCTION`] instructions, or a module over
+/// [`MAX_IIR_INSTRUCTIONS_PER_MODULE`] instructions.
 ///
 /// # Example
 ///
@@ -242,6 +258,10 @@ pub fn compile_ast_with_externs_and_globals(
     extern_fns: &[&str],
     extra_globals: &HashMap<String, TwigKind>,
 ) -> Result<IIRModule, TwigCompileError> {
+    // 0. The CST-items budget (#18474), before anything else walks the
+    //    tree: the shape check and the type checker both cost time
+    //    proportional to its size.
+    budgets::check_cst_items(cst)?;
     // 1. Shape validation first: a malformed tree is a parse error, and
     //    the old pipeline reported parse errors before type errors.
     check_cst(cst)?;
@@ -304,7 +324,8 @@ fn type_check_gate(
 ///
 /// This is the most ergonomic entry point: [`twig_parser::parse_to_ast`]
 /// (the grammar-driven lexer + parser, with their depth guards) followed
-/// by [`compile_ast`].
+/// by [`compile_ast`].  Source longer than [`MAX_SOURCE_BYTES`] is refused
+/// before the lexer runs; every budget of [`compile_ast`] applies too.
 ///
 /// # Example
 ///
@@ -316,6 +337,9 @@ fn type_check_gate(
 /// assert_eq!(m.functions[0].name, "main");
 /// ```
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, TwigCompileError> {
+    // The source-bytes budget (#18474) bounds the lexer and parser, which
+    // run before any tree exists to measure.
+    budgets::check_source(source)?;
     let cst = parse_to_ast(source)?;
     compile_ast(&cst, module_name)
 }
@@ -374,6 +398,10 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Twig
 /// assert_eq!(hint, Some("i64"));
 /// ```
 pub fn compile_typed_source(source: &str, module_name: &str) -> Result<IIRModule, TwigCompileError> {
+    // ── 0. The source-bytes budget (#18474), before the type checker ─────
+    //    parses the source a first time.
+    budgets::check_source(source)?;
+
     // ── 1. Type-check via grammar-type-checker (LANG50). ──────────────────
     let tc = twig_type_checker::type_check_source(source)
         .map_err(|e| TwigCompileError { message: e.to_string(), line: 0, column: 0 })?;

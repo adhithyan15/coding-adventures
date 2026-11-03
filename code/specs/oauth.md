@@ -1238,6 +1238,21 @@ state, construct or search a path, apply anchor or intermediate constraints,
 check hostnames or revocation, perform TLS or HTTP, authorize OAuth transport,
 or cause an external effect. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A stronger bounded follow-up now consumes the exact target-server policy
+together with the reviewed SHA-512 two-link proof that already retains its
+advanced path-length state. It fails closed unless the server-policy
+certificate and the first link's authenticated target are the same exact
+decoded object; byte-equal independently decoded targets are insufficient.
+Success retains complete target policy, complete intermediate policy, both
+authenticated links, advanced path-length state, and exact reviewed-root
+selection in one distinct non-copyable result. The initial path-length state
+remains caller-owned and no additional transition is performed. This pure
+public-data binding performs no credential access, signing, storage, clock
+acquisition, audit event, trace emission, or external effect. It does not
+construct or search a path, apply anchor or intermediate constraints, verify a
+hostname, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+grant network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-rsa-signature-routing` prerequisite now separates
 caller-owned certificate algorithm selection from fixed repository-owned RSA
 verification. It consumes exact child-certificate algorithm-profile evidence

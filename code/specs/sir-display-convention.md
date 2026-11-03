@@ -17,6 +17,14 @@ boolean — and, as the table below shows, for `nil`, symbols, strings, and coll
 element rendering as well. The Python/TS *reference* backends are equally non-Ruby
 here; the whole stack was built Twig-first and Ruby display-conformance was never done.
 
+> **Update (#18798, item 11).** The backends' Ruby branch had landed, but the Ruby
+> frontend never set `source_language`, so a Ruby program still printed `#t`.
+> `ruby-to-semantic-ir` now sets it to `"ruby"`, and the `to_s` form's empty `nil`
+> is wired on every backend (`puts nil`, `print nil` and `"#{nil}"`; an Array or
+> Hash element keeps `nil`, as Ruby's `inspect` does).  `p` is still not lowered
+> by any backend, and an Array's string elements are not yet quoted (the
+> `inspect` half — see `sir-display-inspect-split.md`).
+
 This is a **cross-cutting foundational change** (the display path feeds `puts`/`print`/
 `p`/`inspect`, string interpolation, exception messages, and Array/Hash element
 rendering) touching seven crates. It is written spec-first for review **before** any

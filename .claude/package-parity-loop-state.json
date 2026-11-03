@@ -16,15 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18756,
+  "active_pr": 18842,
   "active_prs": [
-    18756
+    18842
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-30T20:46:24Z",
-    "pr_number": 18756,
-    "head_revision": "01d2f14a6a621b7ccdd38361d8024fefce583cc6",
-    "action": "Independently reviewed Lua Windows discovery fallback head 01d2f14a6a621b7ccdd38361d8024fefce583cc6 opened as ready PR #18756 over exact base 5b57bc21b6190c2216e38c847f4943fb1a766a59. GitHub reports the PR mergeable and fresh exact-head CI is queued. Main advanced through path-disjoint Rust TLS record-protection state work at publication, so normal merge 02aa0b7a9dcd1d8403caede08a22082e5d979ee2 incorporates it; the exact lifecycle head requires fresh review and CI, and auto-merge remains disabled.",
+    "observed_at": "2026-11-03T06:03:19Z",
+    "pr_number": 18842,
+    "head_revision": "a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a",
+    "action": "Independently reviewed current-main Lua CLI argument-validation head a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a opened as ready PR #18842 over exact base 4cedfcff47130c26823f2f54c1f1b333b0e98481 at 2026-11-03T06:03:19Z. GitHub reports it mergeable and fresh exact-head CI, CodeQL, and human-language detection are queued. Auto-merge remains disabled until every check on the final lifecycle head is terminal acceptable and GitHub still reports the PR mergeable.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2764,7 +2764,7 @@
     {
       "id": "build-tool-lua-windows-discovery-fallback-null-device-hardening",
       "title": "Correct the Lua build tool Windows discovery fallback null device",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/build-tool-lua-windows-fallback-hardening",
       "pr_number": 18756,
@@ -2782,17 +2782,33 @@
       "validation_notes": "The fallback now uses cmd.exe-compatible `cd /d` and `2>nul` on Windows while retaining POSIX `/dev/null`, quotes POSIX paths safely, rejects Windows expansion, quote, NUL, and record-framing inputs before execution, preserves legitimate POSIX leading and trailing whitespace, and strips only terminal carriage returns from Windows dir.exe records. Focused discovery tests pass 29/29, the canonical Lua build-tool suite passes 158/158, every Lua source parses, all 1,740 lesson shards validate, and diff plus ignored-inclusive hygiene checks are clean.",
       "security_review_revision": "ce030817f27ff6447ff95806a5637445fb87149e",
       "security_review_notes": "Independent review initially rejected trimming legitimate leading and trailing whitespace from fallback directory records. The final implementation preserves POSIX names exactly, removes only Windows record framing, fails closed on dangerous cmd.exe input, and keeps the injected fallback seams test-only and authority-neutral. Exact implementation-head re-review issued SHIP with no remaining findings.",
+      "final_head": "1daa366ad4f3f4c100086b7ca32aee353778a2da",
+      "merged_at": "2026-10-31T00:10:47Z",
+      "merge_commit": "d2c289290d885da155befaeb6f394d81fa738d41",
+      "merge_notes": "All 37 exact-head checks completed terminal acceptable: 13 succeeded and 24 were expected skips. The PR was externally squash-merged after exact-head review; the merge receipt is an ancestor of current origin/main. The completed worktree is archived, and no auto-merge claim is made.",
       "notes": "Discovered while diagnosing PR #18725 Windows job 124133234570. When lfs is unavailable, Discovery.dir_exists used POSIX 2>/dev/null even on Windows, so valid child probes failed and discovery could silently return zero packages. Repair the bounded fallback with platform-correct null devices, safe shell construction, deterministic forced-fallback regressions, and exact filename preservation. Keep strict CLI argument validation in its separately registered owner."
     },
     {
       "id": "build-tool-lua-cli-argument-validation-hardening",
       "title": "Reject unknown and value-less Lua build-tool CLI options",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-lua-cli-args-hardening",
+      "pr_number": 18842,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18842",
+      "pr_opened_at": "2026-11-03T06:03:19Z",
+      "publication_head": "a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a",
+      "publication_base": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
+      "publication_notes": "The independently reviewed current-main head opened as ready PR #18842. GitHub reports it mergeable; fresh CI, CodeQL, and human-language detection checks are queued. Guarded squash auto-merge remains disabled until the durable PR receipt is pushed and reviewed and every check on that resulting exact head is terminal acceptable while GitHub still reports it mergeable.",
       "registered_at": "2026-10-30T20:40:43Z",
-      "notes": "Discovered during independent review of the Lua Windows discovery fallback repair. The CLI currently ignores unknown options, treats a missing --root value as permission to auto-detect a root, and can accept a missing --language value before succeeding with zero packages. Define strict, path-redacted stable diagnostics for unknown options and every value-less option without widening filesystem or process authority. Keep this parser hardening separate from the Windows discovery fallback repair and reprioritize it before selection."
+      "selection_revision": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
+      "selection_notes": "Selected after Lua fallback PR #18756 completed 37 exact-head checks acceptably and was externally squash-merged. This concrete fail-open CLI defect was already under local implementation, has no dependency on the completed fallback internals, and ranks ahead of the broader Rust Cargo test-trigger follow-up because malformed invocations can silently target the wrong root or succeed after selecting no packages.",
+      "implementation_revision": "de3e5370036ad39c4f506868e22d27ed20cd3d28",
+      "main_refresh_revision": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
+      "main_merge_revision": "b10e0853d6c7175258bfa2c1502ae9df2dfc2979",
+      "main_merge_notes": "A normal current-main merge incorporated the completed discovery fallback, Lua graph/diff performance work, Cargo link-table resolution hardening, and all intervening repository changes. README.md and build.lua auto-merged disjoint hunks; the only textual merge conflict was the Lua build-tool changelog, whose resolution preserves both complete entry sets. Exact merged-head validation passes 11 focused CLI cases, 242 complete Lua build-tool cases, every Lua syntax check, 1,789 lesson shards, and 11 quirk shards with zero problems.",
+      "validation_notes": "The parser is now a process-free all-or-error module. It rejects unknown options, unexpected positional arguments, empty or value-less --root and --language options, and option tokens in value position before discovery; diagnostics name only fixed option labels and never echo untrusted path-bearing input. Supported flags, help, Windows paths with spaces, and single-hyphen values remain accepted. The exact current-main tree passes 11 focused cases, 242 complete Lua build-tool tests, all Lua syntax checks, 1,789 lesson shards, and 11 quirk shards with zero problems.",
+      "notes": "Discovered during independent review of the Lua Windows discovery fallback repair. Unknown options were ignored, a missing --root value fell through to auto-detection, and a missing --language value could succeed after selecting zero packages. Implement strict, path-redacted stable diagnostics without widening filesystem or process authority; keep this parser hardening separate from discovery fallback behavior."
     },
     {
       "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",

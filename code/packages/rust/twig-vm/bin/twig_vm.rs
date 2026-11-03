@@ -69,9 +69,18 @@ fn main() -> ExitCode {
     };
 
     // ── Load source ────────────────────────────────────────────────
-    let source = match std::fs::read_to_string(&path) {
+    //
+    // Never more than the compiler's source budget (1 MiB, #18474):
+    // `read_source` checks the file's size before reading and reads through
+    // a bounded reader, so a huge file, or one that grows (or never ends,
+    // like a pipe) is refused without being loaded into memory first.
+    let source = match twig_module_driver::read_source(&path) {
         Ok(s) => s,
-        Err(e) => { eprintln!("failed to read {}: {e}", path.display()); return ExitCode::from(1); }
+        Err(twig_module_driver::ModuleDriverError::Io { error, .. }) => {
+            eprintln!("failed to read {}: {error}", path.display());
+            return ExitCode::from(1);
+        }
+        Err(e) => { eprintln!("{e}"); return ExitCode::from(1); }
     };
 
     // ── Compile ────────────────────────────────────────────────────

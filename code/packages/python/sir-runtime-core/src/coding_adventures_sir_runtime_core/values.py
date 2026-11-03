@@ -84,13 +84,18 @@ def to_display(v: Any) -> str:
     """SIR display form of a value.
 
     Distinct from ``repr``: ``nil`` prints as ``nil``, a symbol as its bare
-    name, a pair as a Lisp list.  Booleans follow the active display convention
-    (see :func:`set_display_convention`): ``true`` / ``false`` under ``"ruby"``,
-    else the default Lisp ``#t`` / ``#f``.  Everything else falls back to
+    name, a pair as a Lisp list.  Booleans and ``nil`` follow the active display
+    convention (see :func:`set_display_convention`): ``true`` / ``false`` and
+    an empty ``nil`` under ``"ruby"`` (Ruby's ``to_s``), else the default Lisp
+    ``#t`` / ``#f`` and ``nil``.  Everything else falls back to
     ``str`` (which renders ints/floats/sequences/maps natively, and pairs via
     :meth:`Pair.__repr__`)."""
     if v is None:
-        return "nil"
+        # Ruby's ``nil.to_s`` is the empty string, so ``puts nil`` prints an
+        # empty line and ``"a#{nil}b"`` is ``ab`` (#18798, item 11).  Inside an
+        # array Ruby shows ``nil`` (``inspect``), but an array never reaches
+        # this branch: it renders through ``str`` below.
+        return "" if _DISPLAY_CONVENTION == "ruby" else "nil"
     if isinstance(v, bool):
         if _DISPLAY_CONVENTION == "ruby":
             return "true" if v else "false"

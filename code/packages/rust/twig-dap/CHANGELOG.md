@@ -1,5 +1,12 @@
 # Changelog — `twig-dap`
 
+## Unreleased — #18474 security review: bounded source read
+
+- `TwigDebugAdapter::compile` read the source with `std::fs::read_to_string`.
+  It now uses `bounded_source_file::read_to_string` with the compiler's
+  1 MiB budget: regular files only, never blocking on a FIFO or tty, at
+  most 1 MiB + 1 bytes read.
+
 ## 0.3.2 — 2026-05-11
 
 **LANG25 follow-up — Hide compiler-internal registers from Variables panel.**

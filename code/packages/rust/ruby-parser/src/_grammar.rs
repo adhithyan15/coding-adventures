@@ -1268,9 +1268,27 @@ mod legacy {
                     GrammarElement::RuleReference { name: r#"for_statement"#.to_string() },
                     GrammarElement::RuleReference { name: r#"case_statement"#.to_string() },
                     GrammarElement::RuleReference { name: r#"begin_statement"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"return_statement"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"break_statement"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"next_statement"#.to_string() },
+                    GrammarElement::Sequence { elements: vec![
+                        GrammarElement::RuleReference { name: r#"return_statement"#.to_string() },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"if_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"unless_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"while_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"until_modifier"#.to_string() }) },
+                    ] },
+                    GrammarElement::Sequence { elements: vec![
+                        GrammarElement::RuleReference { name: r#"break_statement"#.to_string() },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"if_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"unless_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"while_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"until_modifier"#.to_string() }) },
+                    ] },
+                    GrammarElement::Sequence { elements: vec![
+                        GrammarElement::RuleReference { name: r#"next_statement"#.to_string() },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"if_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"unless_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"while_modifier"#.to_string() }) },
+                        GrammarElement::NegativeLookahead { element: Box::new(GrammarElement::Literal { value: r#"until_modifier"#.to_string() }) },
+                    ] },
                     GrammarElement::RuleReference { name: r#"redo_statement"#.to_string() },
                     GrammarElement::RuleReference { name: r#"retry_statement"#.to_string() },
                     GrammarElement::RuleReference { name: r#"yield_statement"#.to_string() },
@@ -1340,6 +1358,9 @@ mod legacy {
                 name: r#"modifier_statement"#.to_string(),
                 body: GrammarElement::Sequence { elements: vec![
                     GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                            GrammarElement::RuleReference { name: r#"return_statement"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"break_statement"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"next_statement"#.to_string() },
                             GrammarElement::RuleReference { name: r#"assignment"#.to_string() },
                             GrammarElement::RuleReference { name: r#"method_call_no_paren"#.to_string() },
                             GrammarElement::Sequence { elements: vec![

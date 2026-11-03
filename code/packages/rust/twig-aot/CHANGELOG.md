@@ -1,5 +1,17 @@
 # Changelog — `twig-aot`
 
+## Unreleased — #18474 security review: bounded source reads
+
+- **Every `compile_file_*` entry point and `emit_object_to_disk` read the
+  source with `std::fs::read_to_string`**, so a huge file was read whole,
+  `/dev/zero` never returned and a FIFO blocked forever. They now read
+  through `read_twig_source` (`bounded-source-file`, limit
+  `twig_ir_compiler::MAX_SOURCE_BYTES`): only a regular file, size checked
+  first, at most 1 MiB + 1 bytes read. Errors stay `AotError::Io`
+  (`InvalidInput` / `FileTooLarge`).
+- Test `source_files_are_read_within_the_budget`: a sparse file one byte
+  over and a directory are refused; a file of exactly 1 MiB compiles.
+
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused before lowering
 
 - New `check_str_ceiling`, run first by `prepare_module_for_aot` (so by every module compile: Linux and Windows x86-64, macOS AArch64 objects and executables, `compile_module_to_arm64_bytes`) and by `compile_typed_module_to_arm64_bytes`, which skips that step. A `str_const` longer than the module's ceiling, or a `str_max_bytes` above `STR_MAX_BYTES`, is `AotError::Compile` with `interpreter-ir`'s `StrTooLong` / `StrMaxBytes` message. It runs on the module as given, because `lower_string_literals_for_aot` turns literals into `alloc_bytes` blocks. Before, the literal was baked in and the module compiled.

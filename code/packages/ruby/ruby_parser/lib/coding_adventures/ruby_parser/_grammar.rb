@@ -33,9 +33,27 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "for_statement", is_token: false),
         GT::RuleReference.new(name: "case_statement", is_token: false),
         GT::RuleReference.new(name: "begin_statement", is_token: false),
-        GT::RuleReference.new(name: "return_statement", is_token: false),
-        GT::RuleReference.new(name: "break_statement", is_token: false),
-        GT::RuleReference.new(name: "next_statement", is_token: false),
+        GT::Sequence.new(elements: [
+          GT::RuleReference.new(name: "return_statement", is_token: false),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "if_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "unless_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "while_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "until_modifier")),
+        ]),
+        GT::Sequence.new(elements: [
+          GT::RuleReference.new(name: "break_statement", is_token: false),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "if_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "unless_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "while_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "until_modifier")),
+        ]),
+        GT::Sequence.new(elements: [
+          GT::RuleReference.new(name: "next_statement", is_token: false),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "if_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "unless_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "while_modifier")),
+          GT::NegativeLookahead.new(element: GT::Literal.new(value: "until_modifier")),
+        ]),
         GT::RuleReference.new(name: "redo_statement", is_token: false),
         GT::RuleReference.new(name: "retry_statement", is_token: false),
         GT::RuleReference.new(name: "yield_statement", is_token: false),
@@ -105,6 +123,9 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
       name: "modifier_statement",
       body: GT::Sequence.new(elements: [
         GT::Group.new(element: GT::Alternation.new(choices: [
+            GT::RuleReference.new(name: "return_statement", is_token: false),
+            GT::RuleReference.new(name: "break_statement", is_token: false),
+            GT::RuleReference.new(name: "next_statement", is_token: false),
             GT::RuleReference.new(name: "assignment", is_token: false),
             GT::RuleReference.new(name: "method_call_no_paren", is_token: false),
             GT::Sequence.new(elements: [
