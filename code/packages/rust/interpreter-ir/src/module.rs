@@ -28,6 +28,56 @@ use crate::module_exports::{IIRExport, IIRImport};
 // ---------------------------------------------------------------------------
 // The string ceiling (LANG83 PR5a)
 // ---------------------------------------------------------------------------
+
+/// The most errors of one kind a string-literal check reports in full; the
+/// rest are counted in one closing line (LANG83 PR5b security re-review,
+/// L2-b).
+///
+/// Every column runs these checks on modules it did not write. One message
+/// per offending operand, each repeating the function's name, made the error
+/// text O(name length × operands): a 120 KB serialised module produced
+/// 402 MB of it. With the cap, and names cut to [`MAX_ERROR_NAME_CHARS`], the
+/// text of [`IIRModule::str_literal_errors`] is bounded whatever the module.
+pub const MAX_LITERAL_ERRORS: usize = 16;
+
+/// The most characters of a function, op or module name an error shows.
+pub const MAX_ERROR_NAME_CHARS: usize = 64;
+
+/// A name for an error message: quoted and escaped like `{:?}`, and cut to
+/// [`MAX_ERROR_NAME_CHARS`] characters with its full length in bytes noted.
+fn error_name(name: &str) -> String {
+    if name.chars().count() <= MAX_ERROR_NAME_CHARS {
+        return format!("{name:?}");
+    }
+    let head: String = name.chars().take(MAX_ERROR_NAME_CHARS).collect();
+    format!("{head:?}… ({} bytes)", name.len())
+}
+
+/// Collects at most [`MAX_LITERAL_ERRORS`] messages and counts the rest. A
+/// message is built only when it is kept, so a module with a million bad
+/// operands costs a count, not a million strings.
+#[derive(Default)]
+struct BoundedErrors {
+    errors: Vec<String>,
+    omitted: usize,
+}
+
+impl BoundedErrors {
+    fn push(&mut self, message: impl FnOnce() -> String) {
+        if self.errors.len() < MAX_LITERAL_ERRORS {
+            self.errors.push(message());
+        } else {
+            self.omitted += 1;
+        }
+    }
+
+    fn finish(mut self, kind: &str) -> Vec<String> {
+        if self.omitted > 0 {
+            self.errors.push(format!("{kind}: and {} more like these", self.omitted));
+        }
+        self.errors
+    }
+}
 //
 // An IIR `str` is an immutable sequence of bytes, and its length is bounded.
 // Every backend stores strings in a host structure with a hard size limit,
@@ -188,21 +238,24 @@ impl IIRModule {
     /// malformed, and [`IIRModule::str_literal_errors`] — the check every
     /// column runs — reports it.
     pub fn bytes_operand_errors(&self) -> Vec<String> {
-        let mut errors = Vec::new();
+        let mut errors = BoundedErrors::default();
         for fn_ in &self.functions {
             for instr in &fn_.instructions {
                 for (idx, src) in instr.srcs.iter().enumerate() {
                     if matches!(src, Operand::Bytes(_)) && !(instr.op == "str_const" && idx == 0) {
-                        errors.push(format!(
-                            "BytesOperand: function {:?}: op {:?} operand {idx} is a raw-byte \
-                             literal, which only str_const's literal may be",
-                            fn_.name, instr.op
-                        ));
+                        errors.push(|| {
+                            format!(
+                                "BytesOperand: function {}: op {} operand {idx} is a raw-byte \
+                                 literal, which only str_const's literal may be",
+                                error_name(&fn_.name),
+                                error_name(&instr.op)
+                            )
+                        });
                     }
                 }
             }
         }
-        errors
+        errors.finish("BytesOperand")
     }
 
     /// The string-literal checks every column runs before it compiles or runs
@@ -251,17 +304,18 @@ impl IIRModule {
     /// assert!(module.str_ceiling_errors()[0].starts_with("StrMaxBytes"));
     /// ```
     pub fn str_ceiling_errors(&self) -> Vec<String> {
-        let mut errors = Vec::new();
-        // A ceiling above the registry's is malformed.
+        // A ceiling above the registry's is malformed (at most one error).
+        let mut max_error = Vec::new();
         if let Some(max) = self.str_max_bytes {
             if max > STR_MAX_BYTES {
-                errors.push(format!(
-                    "StrMaxBytes: module {:?} sets str_max_bytes = {max}, above the registry \
+                max_error.push(format!(
+                    "StrMaxBytes: module {} sets str_max_bytes = {max}, above the registry \
                      ceiling STR_MAX_BYTES = {STR_MAX_BYTES}",
-                    self.name
+                    error_name(&self.name)
                 ));
             }
         }
+        let mut errors = BoundedErrors::default();
         // So is a literal longer than the (clamped) ceiling.
         let ceiling = self.str_ceiling() as usize;
         for fn_ in &self.functions {
@@ -269,17 +323,20 @@ impl IIRModule {
                 // A `Str` or a `Bytes` literal (LANG83 PR5b): both are bytes.
                 if let Some(literal) = instr.srcs.first().and_then(Operand::as_lit_bytes) {
                     if literal.len() > ceiling {
-                        errors.push(format!(
-                            "StrTooLong: function {:?}: a {}-byte str_const exceeds the module's \
-                             string ceiling of {ceiling} bytes",
-                            fn_.name,
-                            literal.len()
-                        ));
+                        errors.push(|| {
+                            format!(
+                                "StrTooLong: function {}: a {}-byte str_const exceeds the module's \
+                                 string ceiling of {ceiling} bytes",
+                                error_name(&fn_.name),
+                                literal.len()
+                            )
+                        });
                     }
                 }
             }
         }
-        errors
+        max_error.extend(errors.finish("StrTooLong"));
+        max_error
     }
 
     // -----------------------------------------------------------------------
@@ -606,6 +663,42 @@ mod tests {
         assert_eq!(module.bytes_operand_errors(), literal[1..].to_vec());
         assert!(literal.iter().all(|e| module.validate().contains(e)));
         assert!(module_with_literal("ok", None).str_literal_errors().is_empty());
+    }
+
+    /// PR5b security re-review (L2-b): the string-literal error text is
+    /// bounded whatever the module. A long function name times many bad
+    /// operands used to give one message per operand, each repeating the
+    /// name: here 2 000 × 2 000 characters, about 8 MB of text (the review's
+    /// 20 000 × 20 000 reproducer made 402 MB from a 120 KB stream). The
+    /// module goes through the wire format first, as an untrusted one would.
+    #[test]
+    fn string_literal_error_text_is_bounded() {
+        let name = "f".repeat(2_000);
+        let mut bytes = IIRModule::new("m", "iir");
+        bytes.functions.push(IIRFunction::new(&name, vec![], "void", vec![IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Bytes(vec![]); 2_000],
+            "void",
+        )]));
+        let mut long = IIRModule::new(&"m".repeat(2_000), "iir");
+        long.str_max_bytes = Some(0);
+        long.functions.push(IIRFunction::new(
+            &name,
+            vec![],
+            "void",
+            (0..2_000).map(|_| IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("x".into())], "str")).collect(),
+        ));
+        for module in [bytes, long] {
+            let module = crate::serialise::deserialise(&crate::serialise::serialise(&module)).unwrap();
+            let errors = module.str_literal_errors();
+            let text: usize = errors.iter().map(String::len).sum();
+            assert!(errors.len() <= MAX_LITERAL_ERRORS + 2, "{} errors", errors.len());
+            assert!(text < 8 * 1024, "{text} bytes of error text");
+            let last = errors.last().unwrap();
+            assert!(last.ends_with(&format!("and {} more like these", 2_000 - MAX_LITERAL_ERRORS)), "{last}");
+            assert!(errors[0].contains("… (2000 bytes)"), "{}", errors[0]);
+        }
     }
 
     #[test]

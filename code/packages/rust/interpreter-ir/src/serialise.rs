@@ -493,7 +493,7 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
     let minor = r.u8()?;
     // Accept 1.0 (legacy — no exports/imports), 1.1 (LANG33 — with
     // exports/imports), 1.2 (1.1 plus the string ceiling, #18800) and 1.3
-    // (raw-byte literals, an optional ceiling; LANG83 PR5b).
+    // (raw-byte literals, and a mandatory ceiling section with a presence byte; LANG83 PR5b).
     // Any other version is rejected.
     if major != VERSION_MAJOR || minor > VERSION_MINOR_BYTES {
         return Err(DeserialiseError(format!(
