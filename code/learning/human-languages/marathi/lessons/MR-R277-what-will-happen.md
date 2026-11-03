@@ -4,7 +4,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 id: MR-R277-what-will-happen
-spine_node: SPINE-TALK-ABOUT-FUTURE
+spine_node: SPINE-NARRATE-EVENTS
 sequence: 16060
 chapter: 277
 type: review

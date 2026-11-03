@@ -1,6 +1,6 @@
 {
   "id": "MR-PATH-277-FUTURE",
-  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
   "before": [],
   "inline": [
     "MR-EXT-277-FUTURE"

@@ -48,7 +48,10 @@ declares regular chapter 275 as the last admissible A2 chapter, chapter 276 as
 the first excluded B1-seam chapter, the five owned grammar lessons, their ten
 knowledge atoms, and the exact learner-facing forms that each lesson must make
 visible.  The C276 and C277 curriculum extensions are therefore B1-required,
-not A2-required.  The regression enumerates every required A2 extension and
+not A2-required, and their path segments realize the B1
+`SPINE-NARRATE-EVENTS` node.  Those two segments supply the seam's past/future
+tense contrast before C278–C279 complete the connected-story capability.  The
+regression enumerates every required A2 extension and
 requires every attached lesson to resolve at or before chapter 275, preventing
 an inline path declaration from silently reopening the gate.  The contract
 separately pins six earlier functional-language owners: **नको**
@@ -71,7 +74,9 @@ The regression must fail closed when:
 
 The regression also fails if any curriculum extension still marked required
 at A2 owns a lesson after chapter 275, including an inline extension on a path
-whose shared spine node was originally introduced at A2.
+whose shared spine node was originally introduced at A2.  It separately builds
+the derived A2 lesson slice: the new C159/C160 owners must be present, while
+every lesson attached to the C276/C277 seam extensions must be absent.
 
 This grammar contract complements the mock's token/source audit.  The mock
 implementation must still trace its complete learner-facing vocabulary and

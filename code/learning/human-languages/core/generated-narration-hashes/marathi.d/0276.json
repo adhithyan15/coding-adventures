@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 276,
-  "sourceHash": "fnv1a64:778fc2545df2fa79",
+  "sourceHash": "fnv1a64:2fd91a8a056a33b2",
   "lessonIds": [
     "MR-C276-gelo",
     "MR-C276-tyane-kela",
@@ -13,6 +13,6 @@
   "text": "marathi/narration/ch276.txt",
   "json": "marathi/narration/ch276.json",
   "textHash": "fnv1a64:150ad859f4bab5e9",
-  "jsonHash": "fnv1a64:83198e72ccd8b8ca",
+  "jsonHash": "fnv1a64:707a0099de2bed07",
   "findings": []
 }

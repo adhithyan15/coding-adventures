@@ -16,8 +16,11 @@
   knowledge behind.
 - Chapters 276–277 remain later B1-seam re-teaching under separate C276/C277
   atoms. Their curriculum extensions are now B1-required rather than
-  A2-required, and the boundary regression enumerates every required A2
-  extension to reject any lesson after chapter 275. They are no longer the
+  A2-required, and their path segments realize the B1 `SPINE-NARRATE-EVENTS`
+  node as tense-contrast preparation before C278–C279 complete its connected
+  story. The boundary regression enumerates every required A2 extension to
+  reject any lesson after chapter 275 and proves the derived A2 book slice
+  excludes every C276/C277 seam lesson. They are no longer the
   first evidence for the A2 past and future, are not relabelled as
   reinforcement of the new atoms, and cannot silently bless an A2 assessment
   surface.

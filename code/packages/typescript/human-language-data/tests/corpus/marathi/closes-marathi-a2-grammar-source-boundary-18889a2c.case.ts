@@ -1,9 +1,11 @@
 import { readFileSync } from "node:fs";
 import { expect, it } from "vitest";
 import {
+  loadCurriculumSpine,
   loadTrackLanguageCurriculum,
   loadTrackLessons,
 } from "../../../src/loader.js";
+import { lessonsUpToLevel } from "../../../src/levels.js";
 
 interface BoundaryLesson {
   id: string;
@@ -90,6 +92,26 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
     .toBe("B1");
   expect(curriculum?.extensions.find(({ id }) => id === "MR-EXT-277-FUTURE")?.stage)
     .toBe("B1");
+  const a2LessonIds = new Set(
+    lessonsUpToLevel(
+      lessons,
+      curriculum ? [curriculum] : [],
+      loadCurriculumSpine(),
+      "A2",
+    ).map((lesson) => lesson.realization.lessonId),
+  );
+  for (const declaration of boundary.grammarLessons) {
+    expect(a2LessonIds, `${declaration.id} must remain in the A2 level slice`)
+      .toContain(declaration.id);
+  }
+  for (const extensionId of ["MR-EXT-276-PAST", "MR-EXT-277-FUTURE"]) {
+    const extension = curriculum?.extensions.find(({ id }) => id === extensionId);
+    expect(extension, `${extensionId} must load`).toBeDefined();
+    for (const lessonId of extension?.lessons ?? []) {
+      expect(a2LessonIds, `${lessonId} must be excluded from the A2 level slice`)
+        .not.toContain(lessonId);
+    }
+  }
   const exactPriorAtoms = new Map<string, { required: string[]; forbidden: string[] }>([
     ["MR-C159-tyane-kela", {
       required: ["MR-LEX-C89-FOOD89-02"],
