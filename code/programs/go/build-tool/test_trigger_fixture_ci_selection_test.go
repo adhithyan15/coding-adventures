@@ -187,40 +187,57 @@ func TestTestTriggerFixturePlanKeepsPrerequisitesPlatformsAndToolchains(t *testi
 
 func TestTestTriggerFixtureConsumerMapTracksNativeReferences(t *testing.T) {
 	root := toolchainFixtureRepoRoot(t)
+	programs := filepath.Join(root, "code", "programs")
 	references := map[string]bool{}
-	for _, tc := range []struct {
-		consumer string
-		dir      string
-	}{
-		{"go/programs/build-tool", "code/programs/go/build-tool"},
-		{"rust/programs/build-tool", "code/programs/rust/build-tool"},
-	} {
-		err := filepath.WalkDir(filepath.Join(root, filepath.FromSlash(tc.dir)), func(path string, entry fs.DirEntry, walkErr error) error {
-			if walkErr != nil {
-				return walkErr
-			}
-			if entry.IsDir() {
-				switch entry.Name() {
-				case "target", "coverage":
-					return filepath.SkipDir
-				}
-				return nil
-			}
-			if entry.Name() == "test_trigger_fixture_ci_selection_test.go" {
-				return nil
-			}
-			data, err := os.ReadFile(path)
-			if err != nil {
-				return err
-			}
-			if bytes.Contains(data, []byte("test-trigger-selection-")) {
-				references[tc.consumer] = true
+	err := filepath.WalkDir(programs, func(path string, entry fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if entry.IsDir() {
+			switch entry.Name() {
+			case "node_modules", ".build", "target", "bin", "obj", "coverage", ".venv":
+				return filepath.SkipDir
 			}
 			return nil
-		})
-		if err != nil {
-			t.Fatal(err)
 		}
+		switch filepath.Ext(entry.Name()) {
+		case ".go", ".rs":
+		default:
+			return nil
+		}
+		rel, err := filepath.Rel(root, path)
+		if err != nil {
+			return err
+		}
+		portable := filepath.ToSlash(rel)
+		parts := strings.Split(portable, "/")
+		if len(parts) < 5 || parts[0] != "code" || parts[1] != "programs" || !strings.HasPrefix(parts[3], "build-tool") {
+			return nil
+		}
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		if info.Size() > 1<<20 {
+			return nil
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		isTest := strings.Contains("/"+portable+"/", "/tests/") ||
+			strings.Contains("/"+portable+"/", "/test/") ||
+			strings.Contains(entry.Name(), "Test") || strings.Contains(entry.Name(), "test")
+		if entry.Name() == "test_trigger_fixture_ci_selection_test.go" || !isTest {
+			return nil
+		}
+		if bytes.Contains(data, []byte("test-trigger-selection-")) {
+			references[parts[2]+"/programs/"+parts[3]] = true
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
 	}
 	if got, want := testTriggerSelectedNames(references), []string{"go/programs/build-tool", "rust/programs/build-tool"}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("native references = %v, detector consumers = %v", got, want)
