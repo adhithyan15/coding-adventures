@@ -39,6 +39,13 @@ Keywords and identifiers are case sensitive. Identifiers match
 join identifiers without whitespace. `--` starts an end-of-line comment;
 write subtraction of a negative as `a - -b`.
 
+Reserved words are `warrant model error op example claim assume platform
+environment none labels public secret input hostile rejects with ensures
+bound fresh if then else match forall exists not and or true false`. Built-in
+type, constructor and function names in §3–4 cannot be redeclared or shadowed;
+they need not be lexical keywords. Metric/ensures names are contextual NAME
+tokens constrained by their contract rules, not arbitrary extension points.
+
 Indentation follows the existing lexer indentation mode: NEWLINE, INDENT and
 DEDENT are synthetic tokens; parentheses and brackets suppress layout inside
 them. Leading tabs and inconsistent dedents are errors. Two spaces are the
@@ -67,6 +74,19 @@ expression/type nodes on any path, 4,096 declarations, 128 bytes per identifier
 and 4,096 decimal digits per integer literal. Check before unbounded allocation
 or recursion. An exceeded limit is an error, never truncated successful input.
 These limits constrain source representation, not mathematical Int values.
+
+All subsequent evaluation/checking/generation phases also need recorded work,
+memory and stack budgets supplied by a versioned tool profile, not by the
+untrusted document. V0's reference profile permits at most 1,000,000 charged
+work units, 64 MiB of owned intermediate/output data, 64 active model/expression
+frames, and 10,000 generated concrete instances per document. Charge traversed
+bits/elements and expanded nodes, not merely a top-level function call; reject
+an allocation or arithmetic expansion before it exceeds its budget. An acyclic
+model can still expand exponentially, and a short Int expression can allocate
+huge intermediates. Exhaustion produces incomplete checking (W0602), never a
+truncated value, skipped case or proof. Solver/property-engine profiles may
+define different explicit budgets in their own specifications; none changes
+the formula's mathematical meaning or silently raises this compiler profile.
 
 ## 3. Values and types
 
@@ -357,6 +377,12 @@ instrumentation and revision. WIR bounds and wall-clock time are distinct.
 `CT01.expected_work` is logical input shape: it cannot serve as an observed
 steps counter or a constant-time proof. Counts computed solely from input
 length cannot attest that the production code visited those positions.
+An observer must instrument the actual bound export; a constant observer or
+input-shape calculator fails its own negative controls. Include subjects whose
+result is unchanged while work/heap/depth changes, and require the relevant
+observer to distinguish them. Ordinary value-result mutation checks alone do
+not validate a resource observer. Without that independent control evidence,
+the bound target stays blocked/not-live.
 
 Secrecy is independent of hostility. Bytes have separate contents and public
 shape projections; labeling contents secret does not label length secret.
@@ -397,7 +423,7 @@ error; a wrong result is not excused by a coincidental different rejection.
 
 | ID | Phase / rejection |
 |---|---|
-| W0001 | Source/resource limit, forbidden encoding or malformed layout |
+| W0001 | Source admission limit, forbidden encoding or malformed layout |
 | W0101 | Invalid token/literal or unsupported syntax/block |
 | W0102 | Structurally incomplete declaration/expression |
 | W0201 | Duplicate symbol/test identity/contract declaration |
