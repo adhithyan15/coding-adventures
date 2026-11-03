@@ -695,9 +695,6 @@ fn sep() -> IIRInstr {
 fn print_sep() -> IIRInstr {
     print_str("pr5b.sep")
 }
-fn bytes_lit(d: &str, b: &[u8]) -> IIRInstr {
-    IIRInstr::new("str_const", Some(d.into()), vec![Operand::Bytes(b.to_vec())], "str")
-}
 fn putchar_const(d: &str, c: i64) -> Vec<IIRInstr> {
     vec![int(d, c), builtin("putchar", d)]
 }
