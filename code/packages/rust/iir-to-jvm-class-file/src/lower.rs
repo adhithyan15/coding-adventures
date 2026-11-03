@@ -5562,7 +5562,7 @@ fn lower_function(
     // ── Build method descriptor ────────────────────────────────────────────
     let descriptor = make_descriptor(&func.params, &func.return_type);
 
-    check_class_file_limits(cp, &code, &fname)?;
+    check_class_file_limits(cp, &code, fname)?;
     // max_stack is measured from the emitted bytecode, never guessed.
     let max_stack = compute_max_stack(&code, &cp.entries).map_err(|detail| {
         IIRJvmError::StackDepthAnalysis { function: fname.clone(), detail }
