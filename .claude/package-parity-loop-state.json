@@ -21,10 +21,10 @@
     18853
   ],
   "last_ci_action": {
-    "observed_at": "2026-11-03T09:09:44Z",
+    "observed_at": "2026-11-03T10:09:45Z",
     "pr_number": 18853,
-    "head_revision": "024d688e6f995085881aae3abaf2c5c757130e3b",
-    "action": "Exact-head CI failed the repo-wide metadata contract because the Java legacy graph/diff fixture roster attempted to decode the new closed Cargo trigger variant's package-name strings as legacy structured path-selection records. Keep auto-merge disabled. The bounded repair explicitly leaves trigger_relations fixtures to adopting consumers while preserving the Java legacy roster, and must be validated, committed, pushed normally, independently reviewed, and requalified on the resulting exact head.",
+    "head_revision": "6f334e07991729ed5b22779d502e4add1ea4c577",
+    "action": "Exact-head CI confirmed the Java repair and then failed at the analogous Kotlin legacy fixture roster; the aggregate CI gate failed only because that required contract job failed. Audit found Dart uses the same non-adopting roster shape and would run next. Keep auto-merge disabled. Apply the same closed trigger_relations discriminator to Kotlin and Dart, preserve all legacy mandatory case sets, validate all three consumers plus the canonical corpus, push normally, independently review the resulting exact head, and require fresh hosted qualification.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2955,6 +2955,8 @@
       "ready_at": "2026-11-03T08:27:37Z",
       "ci_failure_revision": "024d688e6f995085881aae3abaf2c5c757130e3b",
       "ci_failure_notes": "Repo-wide metadata contracts failed only the Java BuildToolCoreTest legacy fixture-roster test. The new closed diff_selection trigger variant carries package-name strings, while that non-adopting Java test assumes every diff_selection fixture carries legacy package records with source_mode. The repair makes the Java legacy roster ignore only options containing trigger_relations, matching the documented distinct variant while leaving all existing graph and path-selection fixtures mandatory.",
+      "ci_second_failure_revision": "6f334e07991729ed5b22779d502e4add1ea4c577",
+      "ci_second_failure_notes": "Fresh hosted qualification passed the repaired Java roster and then exposed the same closed-variant decoding assumption in the Kotlin roster; the CI gate failed only as the required-job aggregate. A complete audit found Dart has the same sequential legacy consumer. The bounded repair applies the exact trigger_relations discriminator to Kotlin and Dart while retaining each unchanged mandatory graph and path-selection case set; canonical schema and semantic validation continue to validate every trigger fixture independently.",
       "registered_at": "2026-10-30T12:39:41Z",
       "preparation_branch": "codex/build-tool-rust-cargo-test-trigger",
       "prepared_at": "2026-11-03T07:36:31Z",

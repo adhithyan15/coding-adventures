@@ -20398,3 +20398,17 @@ fixture as structured path-selection package records and rejected the absent
 complete Java graph and legacy path-selection roster. Validate, commit, and
 push the repair normally, then require independent exact-head review and fresh
 terminal acceptable hosted qualification before guarded squash auto-merge.
+
+#### Rust Cargo test-trigger core PR #18853 sequential consumer repair
+
+Fresh qualification on Java-repaired head
+`6f334e07991729ed5b22779d502e4add1ea4c577` passed Java and then failed the
+analogous Kotlin legacy fixture roster; the CI-gate failure only aggregates
+that required contract-job failure. A complete sequential-consumer audit found
+Dart uses the same non-adopting graph/diff roster and would run after Kotlin.
+Apply the same closed `trigger_relations` discriminator to Kotlin and Dart now,
+while leaving every existing mandatory graph and legacy path-selection case in
+their unchanged exact rosters. The canonical schema and semantic oracle still
+validate every trigger fixture independently. Keep auto-merge disabled; require
+all three consumer suites, the canonical corpus, independent exact-head review,
+and fresh terminal acceptable hosted qualification after a normal push.
