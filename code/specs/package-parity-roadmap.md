@@ -20575,3 +20575,16 @@ round-trip skipped because `pwsh` is unavailable in this environment. The
 change adds no fixture, workflow, selection-core, native-reader, or host
 authority. Reconcile current main and live PR overlap, then require independent
 correctness and security review before publication.
+
+#### Test-trigger fixture selector PR #18899 draft receipt
+
+Open draft PR #18899 at `2026-11-03T16:47:12Z` from exact independently
+reviewed head `ed80b9bba070755c30a1e5b6bed4a74f22ab9101` over exact base
+`d4c427403c0bcbef769e966b78338b45990ef4ff`. The branch did not previously
+exist remotely, the first push was normal, GitHub reported the draft mergeable,
+and all seven other live PRs had zero exact-path overlap with the four product
+paths or the state and roadmap receipts. Keep PR #18899 draft while this
+PR-number receipt is committed and pushed normally. Require fresh independent
+review of the resulting exact head before marking it ready; keep auto-merge
+disabled until every check on an exact reviewed head is terminal acceptable and
+GitHub still reports the PR mergeable.

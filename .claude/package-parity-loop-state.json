@@ -16,8 +16,10 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18899,
+  "active_prs": [
+    18899
+  ],
   "last_ci_action": {
     "observed_at": "2026-11-03T16:34:02Z",
     "pr_number": 18885,
@@ -2978,13 +2980,19 @@
     {
       "id": "build-tool-test-trigger-fixture-native-ci-selection-routing",
       "title": "Route test-trigger fixtures to native Go and Rust CI readers",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-ci-gate-fixture-native-ci-selection",
         "build-tool-rust-cargo-test-trigger-selection-parity"
       ],
       "branch": "codex/build-tool-test-trigger-fixture-routing",
-      "pr_number": null,
+      "pr_number": 18899,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18899",
+      "pr_opened_at": "2026-11-03T16:47:12Z",
+      "draft_creation_head": "ed80b9bba070755c30a1e5b6bed4a74f22ab9101",
+      "publication_head": "ed80b9bba070755c30a1e5b6bed4a74f22ab9101",
+      "publication_base": "d4c427403c0bcbef769e966b78338b45990ef4ff",
+      "publication_notes": "Draft PR #18899 was opened from independently reviewed head ed80b9bba070755c30a1e5b6bed4a74f22ab9101 over exact base d4c427403c0bcbef769e966b78338b45990ef4ff after a normal first push. All seven other live PRs had zero exact-path overlap with the four product paths or lifecycle receipts, GitHub reported the draft mergeable, and auto-merge remains disabled while queued hosted checks run. Commit and push this PR-number receipt normally, then require fresh independent review of the resulting exact head before marking the PR ready.",
       "registered_at": "2026-11-03T07:15:26Z",
       "selected_at": "2026-11-03T16:34:02Z",
       "selection_revision": "e98ddd9de5ee8812a8cd714122711b81351892cd",
