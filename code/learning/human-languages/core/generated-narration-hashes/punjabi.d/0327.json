@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:777018462991eaab",
+  "lessonIds": [
+    "PA-C327-russna",
+    "PA-C327-khijhna",
+    "PA-C327-ikalla",
+    "PA-C327-dukkh",
+    "PA-C327-hanjhu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch327.txt",
+  "json": "punjabi/narration/ch327.json",
+  "textHash": "fnv1a64:ca70bd74de5dd7fb",
+  "jsonHash": "fnv1a64:221d98717735e764",
+  "findings": []
+}

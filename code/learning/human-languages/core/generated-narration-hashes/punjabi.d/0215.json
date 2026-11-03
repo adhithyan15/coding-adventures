@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:546b41d87ed750ea",
+  "lessonIds": [
+    "PA-C215-ask-return",
+    "PA-C215-ki-pinde",
+    "PA-C215-ki-review",
+    "PA-C215-exchange",
+    "PA-C215-payoff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch215.txt",
+  "json": "punjabi/narration/ch215.json",
+  "textHash": "fnv1a64:3b0bcc6c2434004c",
+  "jsonHash": "fnv1a64:491fa50cceb3ed9f",
+  "findings": []
+}

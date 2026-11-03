@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C218-uthia-review",
+    "language": "punjabi",
+    "chapter": 218,
+    "sequence": 11930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:676fac105f23687e"
+  },
+  "findings": []
+}

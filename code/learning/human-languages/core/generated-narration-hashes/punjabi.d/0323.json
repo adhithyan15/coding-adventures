@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:f40fddd0cbae9a48",
+  "lessonIds": [
+    "PA-C323-dhidd",
+    "PA-C323-haddi",
+    "PA-C323-kaleja",
+    "PA-C323-pasli",
+    "PA-C323-dukhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch323.txt",
+  "json": "punjabi/narration/ch323.json",
+  "textHash": "fnv1a64:1c67f5d9f3f13f11",
+  "jsonHash": "fnv1a64:daf341bb8d356c70",
+  "findings": []
+}

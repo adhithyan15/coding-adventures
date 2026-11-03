@@ -1,0 +1,11 @@
+{
+  "id": "PA-C310-tuttna",
+  "pathSegment": "PA-PATH-310-SLIP310",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-310-SLIP310",
+      "order": 2
+    }
+  ]
+}

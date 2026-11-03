@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:d5792460a4ab9706",
+  "lessonIds": [
+    "PA-C327-russna",
+    "PA-C327-khijhna",
+    "PA-C327-ikalla",
+    "PA-C327-dukkh",
+    "PA-C327-hanjhu"
+  ],
+  "tex": "punjabi/book/chapters/ch327-hurt-feelings.tex"
+}

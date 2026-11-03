@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C224-message-questions",
+    "language": "punjabi",
+    "chapter": 224,
+    "sequence": 12300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70280465ce119719"
+  },
+  "findings": []
+}

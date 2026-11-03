@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:e620882a1970230b",
+  "lessonIds": [
+    "PA-C213-request-return",
+    "PA-C213-baitho",
+    "PA-C213-baitho-review",
+    "PA-C213-na-utthho",
+    "PA-C213-aje",
+    "PA-C213-payoff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch213.txt",
+  "json": "punjabi/narration/ch213.json",
+  "textHash": "fnv1a64:b9a76578e728df84",
+  "jsonHash": "fnv1a64:f77345cc296b416e",
+  "findings": []
+}

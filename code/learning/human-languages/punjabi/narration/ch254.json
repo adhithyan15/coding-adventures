@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 254,
+  "title": "A Form at the Counter",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cd64c2913b69bc36",
+  "lessons": [
+    {
+      "id": "PA-C254-faram",
+      "sequence": 15050,
+      "title": "ਫ਼ਾਰਮ (fāram) — a form to fill in",
+      "headword": "ਫ਼ਾਰਮ",
+      "romanization": "fāram",
+      "gloss": "a form to fill in",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4472b7a5206fe317",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to move out of the way, then the Punjabi for an advertisement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਫ਼ਾਰਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ਼ਾਰਮ — fāram — \"a form to fill in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੈਂਕ ਵਿੱਚ ਇਹ ਫ਼ਾਰਮ ਭਰੋ। baiṅk vich eh fāram bharo. Fill in this form at the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ਼ਾਰਮ (fāram) is borrowed from English form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baiṅk vich eh fāram bharo. — Fill in this form at the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baiṅk vich eh fāram bharo.* — Fill in this form at the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to move out of the way, then the Punjabi for an advertisement, then say fāram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to move out of the way, then the Punjabi for an advertisement, then say *fāram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਫ਼ਾਰਮ (fāram) mean? (\"A form to fill in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C254-arzi",
+      "sequence": 15060,
+      "title": "ਅਰਜ਼ੀ (arzī) — an application",
+      "headword": "ਅਰਜ਼ੀ",
+      "romanization": "arzī",
+      "gloss": "an application",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e02095791177992",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an advertisement, then the Punjabi for a form to fill in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਅਰਜ਼ੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਰਜ਼ੀ — arzī — \"an application\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੌਕਰੀ ਲਈ ਅਰਜ਼ੀ ਭੇਜੇਗਾ। Aman naukrī laī arzī bhejegā. Aman will send an application for the job."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਰਜ਼ੀ (arzī) is a loan, usually traced to Persian arzī, \"a petition\", itself from Arabic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arzī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arzī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arzī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aman naukrī laī arzī bhejegā. — Aman will send an application for the job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aman naukrī laī arzī bhejegā.* — Aman will send an application for the job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an advertisement, then the Punjabi for a form to fill in, then say arzī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an advertisement, then the Punjabi for a form to fill in, then say *arzī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅਰਜ਼ੀ (arzī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅਰਜ਼ੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਅਰਜ਼ੀ (arzī) mean? (\"An application\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C254-sahi",
+      "sequence": 15070,
+      "title": "ਸਹੀ (sahī) — correct",
+      "headword": "ਸਹੀ",
+      "romanization": "sahī",
+      "gloss": "correct",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5441f5feb54cb1ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a form to fill in, then the Punjabi for an application."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸਹੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਹੀ — sahī — \"correct\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਇਹ ਤਾਰੀਖ਼ ਸਹੀ ਹੈ? kī eh tārīkh sahī hai? Is this date correct?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਹੀ (sahī) is a loan, usually traced through Persian to Arabic sahīh, \"sound, right\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kī eh tārīkh sahī hai? — Is this date correct?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kī eh tārīkh sahī hai?* — Is this date correct?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a form to fill in, then the Punjabi for an application, then say sahī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a form to fill in, then the Punjabi for an application, then say *sahī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸਹੀ (sahī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸਹੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸਹੀ (sahī) mean? (\"Correct\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C254-ghalat",
+      "sequence": 15080,
+      "title": "ਗ਼ਲਤ (ghalat) — wrong; mistaken",
+      "headword": "ਗ਼ਲਤ",
+      "romanization": "ghalat",
+      "gloss": "wrong; mistaken",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e499949f478860a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an application, then the Punjabi for correct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗ਼ਲਤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗ਼ਲਤ — ghalat — \"wrong; mistaken\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਫ਼ਾਰਮ ਉੱਤੇ ਮੇਰੀ ਉਮਰ ਗ਼ਲਤ ਹੈ। fāram utte merī umar ghalat hai. My age is wrong on the form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗ਼ਲਤ (ghalat) is a loan, usually traced through Persian to Arabic ghalat, \"an error\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghalat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghalat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghalat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghalat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāram utte merī umar ghalat hai. — My age is wrong on the form.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāram utte merī umar ghalat hai.* — My age is wrong on the form.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an application, then the Punjabi for correct, then say ghalat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an application, then the Punjabi for correct, then say *ghalat* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗ਼ਲਤ (ghalat) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗ਼ਲਤ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗ਼ਲਤ (ghalat) mean? (\"Wrong; mistaken\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C254-mitauna",
+      "sequence": 15090,
+      "title": "ਮਿਟਾਉਣਾ (miṭāuṇā) — to rub out; to erase",
+      "headword": "ਮਿਟਾਉਣਾ",
+      "romanization": "miṭāuṇā",
+      "gloss": "to rub out; to erase",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9498031092a1e9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for correct, then the Punjabi for wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਿਟਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਿਟਾਉਣਾ — miṭāuṇā — \"to rub out; to erase\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਗ਼ਲਤ ਸ਼ਬਦ ਮਿਟਾਉਂਦਾ ਹਾਂ। maiṁ ghalat shabad miṭāundā hāṁ. I rub out the wrong word."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਗ਼ਲਤ ਸ਼ਬਦ ਮਿਟਾਇਆ, maiṁ ghalat shabad miṭāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਿਟਾਉਣਾ (miṭāuṇā) is the causative partner of miṭnā, \"is wiped out\", which goes back to Sanskrit mṛṣṭa, \"rubbed, washed\"; CDIAL lists Punjabi miṭnā under it (CDIAL 10299)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṭāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṭāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṭāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṭāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ ghalat shabad miṭāundā hāṁ. — I rub out the wrong word.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ ghalat shabad miṭāundā hāṁ.* — I rub out the wrong word.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for correct, then the Punjabi for wrong, then say miṭāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for correct, then the Punjabi for wrong, then say *miṭāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਿਟਾਉਣਾ (miṭāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਿਟਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਿਟਾਉਣਾ (miṭāuṇā) mean? (\"To rub out; to erase\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

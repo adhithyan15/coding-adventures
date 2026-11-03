@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-222-A2-KARANGA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say and ask what people will do tomorrow, and say what I will not do.",
+  "prerequisites": [
+    "PA-EXT-221-A2-JAVANGA"
+  ]
+}

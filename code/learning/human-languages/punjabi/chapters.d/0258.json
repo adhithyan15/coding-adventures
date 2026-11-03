@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Borrowing and Earning",
+  "label": "ch:pa-a2-borrowing-and-earning",
+  "canDo": "I can talk about money I owe and money I earn.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C258-kamauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can talk about money I owe and money I earn.",
+    "assesses": [
+      "PA-LEX-C258-LOAN258-03",
+      "PA-LEX-C258-LOAN258-04",
+      "PA-LEX-C258-LOAN258-05"
+    ]
+  }
+}

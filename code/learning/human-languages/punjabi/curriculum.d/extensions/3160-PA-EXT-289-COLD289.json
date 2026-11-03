@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-289-COLD289",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the cold months will be like.",
+  "prerequisites": []
+}

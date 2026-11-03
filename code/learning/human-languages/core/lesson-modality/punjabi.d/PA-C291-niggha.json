@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C291-niggha",
+    "language": "punjabi",
+    "chapter": 291,
+    "sequence": 17520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b00fd9114bc3663e"
+  },
+  "findings": []
+}

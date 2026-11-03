@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:3bf1ae194c04f8d2",
+  "lessonIds": [
+    "PA-C299-kandha",
+    "PA-C299-khal",
+    "PA-C299-lahir",
+    "PA-C299-khara",
+    "PA-C299-sohna"
+  ],
+  "tex": "punjabi/book/chapters/ch299-by-the-water.tex"
+}

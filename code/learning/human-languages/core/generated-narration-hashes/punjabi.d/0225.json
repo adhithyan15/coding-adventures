@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:09c3e49e82f54491",
+  "lessonIds": [
+    "PA-C225-pasarna",
+    "PA-C225-jagauna",
+    "PA-C225-vihla",
+    "PA-C225-letna",
+    "PA-C225-kahla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch225.txt",
+  "json": "punjabi/narration/ch225.json",
+  "textHash": "fnv1a64:f281bc5e6937a921",
+  "jsonHash": "fnv1a64:44f0696513ea928b",
+  "findings": []
+}

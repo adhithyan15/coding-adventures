@@ -1,0 +1,11 @@
+{
+  "id": "PA-C248-chaukhat",
+  "pathSegment": "PA-PATH-248-GHR248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-248-GHR248",
+      "order": 1
+    }
+  ]
+}

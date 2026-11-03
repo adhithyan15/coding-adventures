@@ -1,0 +1,11 @@
+{
+  "id": "PA-C302-sarhom",
+  "pathSegment": "PA-PATH-302-SOW302",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-302-SOW302",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Across the Line",
+  "label": "ch:pa-a2-across-the-line",
+  "canDo": "I can say how to get across a road or a line.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C264-kona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say how to get across a road or a line.",
+    "assesses": [
+      "PA-LEX-C264-CROSS264-03",
+      "PA-LEX-C264-CROSS264-04",
+      "PA-LEX-C264-CROSS264-05"
+    ]
+  }
+}

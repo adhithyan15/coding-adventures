@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:6adb3e76eaa421b9",
+  "lessonIds": [
+    "PA-C297-mulaim",
+    "PA-C297-barik",
+    "PA-C297-kula",
+    "PA-C297-khundha",
+    "PA-C297-chubhna"
+  ],
+  "tex": "punjabi/book/chapters/ch297-rough-and-smooth.tex"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-214-A2-POLAR",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask a yes-or-no question with ki at the front and answer it with han ji or nahin ji.",
+  "prerequisites": [
+    "PA-EXT-213-A2-NA-REQUEST"
+  ]
+}

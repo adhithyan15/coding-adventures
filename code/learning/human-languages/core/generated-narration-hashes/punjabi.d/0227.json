@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:9d9626f93514cb52",
+  "lessonIds": [
+    "PA-C227-aukha",
+    "PA-C227-malna",
+    "PA-C227-jhagg",
+    "PA-C227-mail",
+    "PA-C227-tuti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch227.txt",
+  "json": "punjabi/narration/ch227.json",
+  "textHash": "fnv1a64:5e034df9ae5953d3",
+  "jsonHash": "fnv1a64:3c6398aeb16bcff1",
+  "findings": []
+}

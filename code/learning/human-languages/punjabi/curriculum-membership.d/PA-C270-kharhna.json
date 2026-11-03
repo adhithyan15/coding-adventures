@@ -1,0 +1,11 @@
+{
+  "id": "PA-C270-kharhna",
+  "pathSegment": "PA-PATH-270-SEARCH270",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-270-SEARCH270",
+      "order": 1
+    }
+  ]
+}

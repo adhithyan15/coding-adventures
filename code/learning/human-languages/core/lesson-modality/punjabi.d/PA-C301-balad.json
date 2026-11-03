@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C301-balad",
+    "language": "punjabi",
+    "chapter": 301,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3011a4c7573e9c1c"
+  },
+  "findings": []
+}

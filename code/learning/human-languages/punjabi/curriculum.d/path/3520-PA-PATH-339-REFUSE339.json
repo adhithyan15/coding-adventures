@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-339-REFUSE339",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "PA-EXT-339-REFUSE339"
+  ],
+  "after": []
+}

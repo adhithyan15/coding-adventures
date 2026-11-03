@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 244,
+  "title": "From Pot to Plate",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4f694b1aa2623ea4",
+  "lessons": [
+    {
+      "id": "PA-C244-pona",
+      "sequence": 13970,
+      "title": "ਪੋਣਾ (poṇā) — a straining cloth",
+      "headword": "ਪੋਣਾ",
+      "romanization": "poṇā",
+      "gloss": "a straining cloth",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:014dc59393c90f23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to sift, then the Punjabi for to taste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੋਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੋਣਾ — poṇā — \"a straining cloth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪੋਣਾ ਚਿੱਟਾ ਅਤੇ ਸਾਫ਼ ਹੈ। poṇā chiṭṭā ate sāf hai. The straining cloth is white and clean."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੋਣਾ (poṇā) is inherited from Sanskrit pavana, \"sieve, strainer\"; CDIAL lists Punjabi poṇā, \"strainer, sieve\" (CDIAL 7977)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṇā chiṭṭā ate sāf hai. — The straining cloth is white and clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṇā chiṭṭā ate sāf hai.* — The straining cloth is white and clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to sift, then the Punjabi for to taste, then say poṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to sift, then the Punjabi for to taste, then say *poṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੋਣਾ (poṇā) mean? (\"A straining cloth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C244-punna",
+      "sequence": 13980,
+      "title": "ਪੁਣਨਾ (puṇnā) — to strain",
+      "headword": "ਪੁਣਨਾ",
+      "romanization": "puṇnā",
+      "gloss": "to strain",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:431e3f3b52ca4f54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to taste, then the Punjabi for a straining cloth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੁਣਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੁਣਨਾ — puṇnā — \"to strain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਪੋਣੇ ਨਾਲ ਚਾਹ ਪੁਣਦੀ ਹਾਂ। maiṁ poṇe nāl chāh puṇdī hāṁ. I strain the tea through a cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਚਾਹ ਪੁਣੀ, maiṁ chāh puṇī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੁਣਨਾ (puṇnā) is inherited from Sanskrit punāti, \"purifies\"; CDIAL lists Punjabi puṇnā, \"to strain, darn\" (CDIAL 8277)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṇnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṇnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṇnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṇnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ poṇe nāl chāh puṇdī hāṁ. — I strain the tea through a cloth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ poṇe nāl chāh puṇdī hāṁ.* — I strain the tea through a cloth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to taste, then the Punjabi for a straining cloth, then say puṇnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to taste, then the Punjabi for a straining cloth, then say *puṇnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪੁਣਨਾ (puṇnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪੁਣਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੁਣਨਾ (puṇnā) mean? (\"To strain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C244-nitarna",
+      "sequence": 13990,
+      "title": "ਨਿਤਾਰਨਾ (nitārnā) — to pour off (water)",
+      "headword": "ਨਿਤਾਰਨਾ",
+      "romanization": "nitārnā",
+      "gloss": "to pour off (water)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b60bbac694914901",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a straining cloth, then the Punjabi for to strain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਨਿਤਾਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਿਤਾਰਨਾ — nitārnā — \"to pour off (water)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਚੌਲਾਂ ਦਾ ਪਾਣੀ ਨਿਤਾਰਦੀ ਹਾਂ। maiṁ chaulāṁ dā pāṇī nitārdī hāṁ. I pour off the water from the rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਪਾਣੀ ਨਿਤਾਰਿਆ, maiṁ pāṇī nitāriā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਿਤਾਰਨਾ (nitārnā) is inherited from Sanskrit nistārayati, \"delivers from\"; CDIAL lists Punjabi nitārṇā, \"to clarify\" (CDIAL 7532). The sense \"pour off\" is CDIAL's Lahnda gloss: nitāraṇ, \"to skim, decant, pour off\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nitārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nitārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nitārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nitārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ chaulāṁ dā pāṇī nitārdī hāṁ. — I pour off the water from the rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ chaulāṁ dā pāṇī nitārdī hāṁ.* — I pour off the water from the rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a straining cloth, then the Punjabi for to strain, then say nitārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a straining cloth, then the Punjabi for to strain, then say *nitārnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਨਿਤਾਰਨਾ (nitārnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਨਿਤਾਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਨਿਤਾਰਨਾ (nitārnā) mean? (\"To pour off (water)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C244-parosna",
+      "sequence": 14000,
+      "title": "ਪਰੋਸਣਾ (parosṇā) — to serve food",
+      "headword": "ਪਰੋਸਣਾ",
+      "romanization": "parosṇā",
+      "gloss": "to serve food",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb384ab4f689f6a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to strain, then the Punjabi for to pour off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਰੋਸਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰੋਸਣਾ — parosṇā — \"to serve food\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਾਤਾ ਮਹਿਮਾਨਾਂ ਨੂੰ ਖਾਣਾ ਪਰੋਸਦੀ ਹੈ। mātā mahimānāṁ nū̃ khāṇā parosdī hai. Mother serves food to the guests."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਖਾਣਾ ਪਰੋਸਿਆ, maiṁ khāṇā parosiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰੋਸਣਾ (parosṇā) goes back to Sanskrit parivēṣati, \"attends, serves food\", as a word taken from Hindi: CDIAL lists Punjabi parosṇā, \"to offer food to a guest\", as borrowed from Hindi parosnā; the Punjabi form inherited directly is parīhṇā, \"to serve a meal\" (CDIAL 7888)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parosṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parosṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parosṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parosṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātā mahimānāṁ nū̃ khāṇā parosdī hai. — Mother serves food to the guests.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātā mahimānāṁ nū̃ khāṇā parosdī hai.* — Mother serves food to the guests.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to strain, then the Punjabi for to pour off, then say parosṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to strain, then the Punjabi for to pour off, then say *parosṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਰੋਸਣਾ (parosṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਰੋਸਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਰੋਸਣਾ (parosṇā) mean? (\"To serve food\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C244-ghotna",
+      "sequence": 14010,
+      "title": "ਘੋਟਣਾ (ghoṭṇā) — to mash; to grind smooth",
+      "headword": "ਘੋਟਣਾ",
+      "romanization": "ghoṭṇā",
+      "gloss": "to mash; to grind smooth",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:092e36c57c19713a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to pour off, then the Punjabi for to serve food."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਘੋਟਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘੋਟਣਾ — ghoṭṇā — \"to mash; to grind smooth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਸਾਗ ਬਹੁਤ ਦੇਰ ਘੋਟਦੀ ਹੈ। dādī sāg bahut der ghoṭdī hai. Grandmother mashes the greens for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਸਾਗ ਘੋਟਿਆ, maiṁ sāg ghoṭiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘੋਟਣਾ (ghoṭṇā) is inherited from Sanskrit ghaṭṭayati, \"rubs, touches, shakes\"; CDIAL lists Punjabi ghoṭṇā, \"to grind, rub, smoothe\" (CDIAL 4417)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoṭṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoṭṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoṭṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoṭṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī sāg bahut der ghoṭdī hai. — Grandmother mashes the greens for a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī sāg bahut der ghoṭdī hai.* — Grandmother mashes the greens for a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to pour off, then the Punjabi for to serve food, then say ghoṭṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to pour off, then the Punjabi for to serve food, then say *ghoṭṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਘੋਟਣਾ (ghoṭṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਘੋਟਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਘੋਟਣਾ (ghoṭṇā) mean? (\"To mash; to grind smooth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

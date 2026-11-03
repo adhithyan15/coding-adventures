@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C217-payoff",
+    "language": "punjabi",
+    "chapter": 217,
+    "sequence": 11900,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dac29b49d53f0769"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:b270897a6ea229d4",
+  "lessonIds": [
+    "PA-C263-mor",
+    "PA-C263-murna",
+    "PA-C263-pasa",
+    "PA-C263-sajja",
+    "PA-C263-khabba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch263.txt",
+  "json": "punjabi/narration/ch263.json",
+  "textHash": "fnv1a64:e503b1e5f1f9cbb7",
+  "jsonHash": "fnv1a64:c24026209489bec8",
+  "findings": []
+}

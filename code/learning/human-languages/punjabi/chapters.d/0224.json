@@ -1,0 +1,17 @@
+{
+  "chapter": 224,
+  "title": "A Message About Tomorrow",
+  "label": "ch:pa-a2-message",
+  "canDo": "I can follow a short message that says what happened, what did not, and what will happen at what time.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-R224-second-pass-past-and-future",
+    "kind": "production",
+    "summary": "Read a short message and answer by ear what happened, what did not, and when the train will come; then review the whole core.",
+    "assesses": [
+      "PA-READ-MESSAGE-224"
+    ]
+  }
+}

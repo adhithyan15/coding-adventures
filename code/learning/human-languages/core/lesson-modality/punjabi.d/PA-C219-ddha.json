@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "PA-C219-ddha",
+    "language": "punjabi",
+    "chapter": 219,
+    "sequence": 12010,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5ff935754625d1b0",
+    "detachableSegments": [
+      "Script you'll notice: ਢ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

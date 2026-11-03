@@ -1,0 +1,11 @@
+{
+  "id": "PA-C299-khara",
+  "pathSegment": "PA-PATH-299-WATER299",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-299-WATER299",
+      "order": 3
+    }
+  ]
+}

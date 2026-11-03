@@ -1,0 +1,11 @@
+{
+  "id": "PA-C349-vaja",
+  "pathSegment": "PA-PATH-349-SONG349",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-349-SONG349",
+      "order": 2
+    }
+  ]
+}

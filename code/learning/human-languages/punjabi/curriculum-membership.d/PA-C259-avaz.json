@@ -1,0 +1,11 @@
+{
+  "id": "PA-C259-avaz",
+  "pathSegment": "PA-PATH-259-PHONE259",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-259-PHONE259",
+      "order": 3
+    }
+  ]
+}

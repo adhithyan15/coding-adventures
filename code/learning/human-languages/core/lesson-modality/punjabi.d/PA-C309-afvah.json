@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C309-afvah",
+    "language": "punjabi",
+    "chapter": 309,
+    "sequence": 19020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02bc9147b692a335"
+  },
+  "findings": []
+}

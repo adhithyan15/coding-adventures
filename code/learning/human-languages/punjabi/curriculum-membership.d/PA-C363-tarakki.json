@@ -1,0 +1,11 @@
+{
+  "id": "PA-C363-tarakki",
+  "pathSegment": "PA-PATH-363-WORK363",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-363-WORK363",
+      "order": 4
+    }
+  ]
+}

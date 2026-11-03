@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-213-A2-NA-REQUEST",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask someone politely to sit or get up, and ask them not to, with na before the request.",
+  "prerequisites": [
+    "PA-EXT-212-A2-NEGATE"
+  ]
+}

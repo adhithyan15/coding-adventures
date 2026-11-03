@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:960d6acb5de01fd1",
+  "lessonIds": [
+    "PA-C272-vichharna",
+    "PA-C272-sipahi",
+    "PA-C272-chauki",
+    "PA-C272-riksha",
+    "PA-C272-parak"
+  ],
+  "tex": "punjabi/book/chapters/ch272-lost-in-the-crowd.tex"
+}

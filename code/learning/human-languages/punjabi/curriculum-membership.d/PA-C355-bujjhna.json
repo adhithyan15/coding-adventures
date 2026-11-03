@@ -1,0 +1,11 @@
+{
+  "id": "PA-C355-bujjhna",
+  "pathSegment": "PA-PATH-355-RIDDLE355",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-355-RIDDLE355",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Weeding and Ripening",
+  "label": "ch:pa-a2-weeding-and-ripening",
+  "canDo": "I can talk about the crop as it grows.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C304-dana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can talk about the crop as it grows.",
+    "assesses": [
+      "PA-LEX-C304-GROW304-03",
+      "PA-LEX-C304-GROW304-04",
+      "PA-LEX-C304-GROW304-05"
+    ]
+  }
+}

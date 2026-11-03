@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 275,
+  "title": "Too Loose, Too Tight",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:35a4e62b40a466ef",
+  "lessons": [
+    {
+      "id": "PA-C275-dhilla",
+      "sequence": 16130,
+      "title": "ਢਿੱਲਾ (ḍhillā) — loose; slack",
+      "headword": "ਢਿੱਲਾ",
+      "romanization": "ḍhillā",
+      "gloss": "loose; slack",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a1a4211b8432015",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a size, then the Punjabi for a pair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਢਿੱਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢਿੱਲਾ — ḍhillā — \"loose; slack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਕੁੜਤਾ ਮੈਨੂੰ ਢਿੱਲਾ ਹੈ। eh kuṛtā mainū̃ ḍhillā hai. This kurta is loose on me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢਿੱਲਾ (ḍhillā) is inherited from a reconstructed ḍhila, \"loose, slack\"; CDIAL lists Punjabi ḍhillā, \"slack, slow, late\", under it (CDIAL 5590)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhillā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhillā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhillā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhillā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh kuṛtā mainū̃ ḍhillā hai. — This kurta is loose on me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh kuṛtā mainū̃ ḍhillā hai.* — This kurta is loose on me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a size, then the Punjabi for a pair, then say ḍhillā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a size, then the Punjabi for a pair, then say *ḍhillā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਢਿੱਲਾ (ḍhillā) mean? (\"Loose; slack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C275-tang",
+      "sequence": 16140,
+      "title": "ਤੰਗ (taṅg) — tight",
+      "headword": "ਤੰਗ",
+      "romanization": "taṅg",
+      "gloss": "tight",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:294cf56e1e575746",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a pair, then the Punjabi for loose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤੰਗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੰਗ — taṅg — \"tight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਜੁੱਤੀ ਬਹੁਤ ਤੰਗ ਹੈ। eh juttī bahut taṅg hai. This shoe is very tight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੰਗ (taṅg) is a loan, usually traced to Persian tang, \"narrow, tight\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṅg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṅg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṅg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṅg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh juttī bahut taṅg hai. — This shoe is very tight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh juttī bahut taṅg hai.* — This shoe is very tight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a pair, then the Punjabi for loose, then say taṅg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a pair, then the Punjabi for loose, then say *taṅg* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤੰਗ (taṅg) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤੰਗ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤੰਗ (taṅg) mean? (\"Tight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C275-phabbna",
+      "sequence": 16150,
+      "title": "ਫੱਬਣਾ (phabbṇā) — to suit; to look good on someone",
+      "headword": "ਫੱਬਣਾ",
+      "romanization": "phabbṇā",
+      "gloss": "to suit; to look good on someone",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e342883f4c3d976c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for loose, then the Punjabi for tight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਫੱਬਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫੱਬਣਾ — phabbṇā — \"to suit; to look good on someone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨੀਲਾ ਕੁੜਤਾ ਅਮਨ ਨੂੰ ਬਹੁਤ ਫੱਬਦਾ ਹੈ। nīlā kuṛtā Aman nū̃ bahut phabbdā hai. The blue kurta really suits Aman."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਕੁੜਤਾ ਅਮਨ ਨੂੰ ਫੱਬਿਆ, oh kuṛtā Aman nū̃ phabbiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫੱਬਣਾ (phabbṇā) is inherited from a reconstructed sparvati, \"releases, succeeds, is fitting\"; CDIAL lists Punjabi phabbṇā, \"to look well, be profitable\", under it (CDIAL 13808)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phabbṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phabbṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phabbṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phabbṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīlā kuṛtā Aman nū̃ bahut phabbdā hai. — The blue kurta really suits Aman.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīlā kuṛtā Aman nū̃ bahut phabbdā hai.* — The blue kurta really suits Aman.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for loose, then the Punjabi for tight, then say phabbṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for loose, then the Punjabi for tight, then say *phabbṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਫੱਬਣਾ (phabbṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਫੱਬਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਫੱਬਣਾ (phabbṇā) mean? (\"To suit; to look good on someone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C275-darjan",
+      "sequence": 16160,
+      "title": "ਦਰਜਨ (darjan) — a dozen",
+      "headword": "ਦਰਜਨ",
+      "romanization": "darjan",
+      "gloss": "a dozen",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e3a7ef5bf2226f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for tight, then the Punjabi for to suit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਦਰਜਨ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਰਜਨ — darjan — \"a dozen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਇੱਕ ਦਰਜਨ ਕੇਲੇ ਖ਼ਰੀਦਾਂਗਾ। maiṁ ikk darjan kele kharīdāṅgā. I will buy a dozen bananas."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਰਜਨ (darjan) is borrowed from English dozen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darjan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darjan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darjan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darjan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ ikk darjan kele kharīdāṅgā. — I will buy a dozen bananas.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ ikk darjan kele kharīdāṅgā.* — I will buy a dozen bananas.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for tight, then the Punjabi for to suit, then say darjan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for tight, then the Punjabi for to suit, then say *darjan* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਦਰਜਨ (darjan) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਦਰਜਨ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਦਰਜਨ (darjan) mean? (\"A dozen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C275-thaila",
+      "sequence": 16170,
+      "title": "ਥੈਲਾ (thailā) — a bag; a shopping bag",
+      "headword": "ਥੈਲਾ",
+      "romanization": "thailā",
+      "gloss": "a bag; a shopping bag",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62f70bf8a23b758e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to suit, then the Punjabi for a dozen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਥੈਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥੈਲਾ — thailā — \"a bag; a shopping bag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਥੈਲਾ ਸਬਜ਼ੀ ਨਾਲ ਭਰਿਆ ਹੈ। merā thailā sabzī nāl bhariā hai. My bag is full of vegetables."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥੈਲਾ (thailā) is inherited from Sanskrit sthavi, \"sack, bag\"; CDIAL lists Punjabi thailā, \"bag\", under it (CDIAL 13746)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thailā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thailā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thailā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thailā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā thailā sabzī nāl bhariā hai. — My bag is full of vegetables.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā thailā sabzī nāl bhariā hai.* — My bag is full of vegetables.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to suit, then the Punjabi for a dozen, then say thailā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to suit, then the Punjabi for a dozen, then say *thailā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਥੈਲਾ (thailā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਥੈਲਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਥੈਲਾ (thailā) mean? (\"A bag; a shopping bag\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

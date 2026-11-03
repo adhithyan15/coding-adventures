@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Fire and Smoke",
+  "label": "ch:pa-a2-fire-and-smoke",
+  "canDo": "I can talk about lighting a kitchen fire.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C249-angiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can talk about lighting a kitchen fire.",
+    "assesses": [
+      "PA-LEX-C249-GHR249-03",
+      "PA-LEX-C249-GHR249-04",
+      "PA-LEX-C249-GHR249-05"
+    ]
+  }
+}

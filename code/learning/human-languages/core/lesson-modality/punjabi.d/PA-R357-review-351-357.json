@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R357-review-351-357",
+    "language": "punjabi",
+    "chapter": 357,
+    "sequence": 22070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4442485b015991c4"
+  },
+  "findings": []
+}

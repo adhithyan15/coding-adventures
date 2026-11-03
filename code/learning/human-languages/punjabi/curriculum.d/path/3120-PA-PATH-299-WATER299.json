@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-299-WATER299",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "PA-EXT-299-WATER299"
+  ],
+  "after": []
+}

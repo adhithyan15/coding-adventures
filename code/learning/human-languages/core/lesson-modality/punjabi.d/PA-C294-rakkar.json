@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C294-rakkar",
+    "language": "punjabi",
+    "chapter": 294,
+    "sequence": 17670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27226f1f4fe944a3"
+  },
+  "findings": []
+}

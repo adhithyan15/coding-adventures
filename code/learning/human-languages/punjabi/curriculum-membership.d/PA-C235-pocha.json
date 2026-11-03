@@ -1,0 +1,11 @@
+{
+  "id": "PA-C235-pocha",
+  "pathSegment": "PA-PATH-235-KAM235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-235-KAM235",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-347-DRUM347",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "before": [],
+  "inline": [
+    "PA-EXT-347-DRUM347"
+  ],
+  "after": []
+}

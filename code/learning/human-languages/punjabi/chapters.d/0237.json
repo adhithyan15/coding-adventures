@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Milk on the Fire",
+  "label": "ch:pa-a2-milk-on-the-fire",
+  "canDo": "I can talk about boiling milk and making curd.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C237-madhani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can talk about boiling milk and making curd.",
+    "assesses": [
+      "PA-LEX-C237-KAM237-03",
+      "PA-LEX-C237-KAM237-04",
+      "PA-LEX-C237-KAM237-05"
+    ]
+  }
+}

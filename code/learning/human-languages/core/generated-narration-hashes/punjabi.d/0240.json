@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:7e1f5155c7abb421",
+  "lessonIds": [
+    "PA-C240-sil",
+    "PA-C240-pihna",
+    "PA-C240-ukkhli",
+    "PA-C240-mohla",
+    "PA-C240-kuttna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch240.txt",
+  "json": "punjabi/narration/ch240.json",
+  "textHash": "fnv1a64:4579ee779feda1ac",
+  "jsonHash": "fnv1a64:8cefd52719ac62ed",
+  "findings": []
+}

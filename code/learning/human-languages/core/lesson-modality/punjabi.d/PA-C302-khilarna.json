@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C302-khilarna",
+    "language": "punjabi",
+    "chapter": 302,
+    "sequence": 18100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d07b4e3a0f0ae8e"
+  },
+  "findings": []
+}

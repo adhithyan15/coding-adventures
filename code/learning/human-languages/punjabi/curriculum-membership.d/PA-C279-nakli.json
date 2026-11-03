@@ -1,0 +1,11 @@
+{
+  "id": "PA-C279-nakli",
+  "pathSegment": "PA-PATH-279-SWAP279",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-279-SWAP279",
+      "order": 1
+    }
+  ]
+}

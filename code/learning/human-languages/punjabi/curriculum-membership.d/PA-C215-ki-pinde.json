@@ -1,0 +1,11 @@
+{
+  "id": "PA-C215-ki-pinde",
+  "pathSegment": "PA-PATH-215-A2-POLAR-HABITUAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-215-A2-POLAR-HABITUAL",
+      "order": 1
+    }
+  ]
+}

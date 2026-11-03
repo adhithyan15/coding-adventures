@@ -1,0 +1,11 @@
+{
+  "id": "PA-C342-karan",
+  "pathSegment": "PA-PATH-342-MEAN342",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-342-MEAN342",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C304-godna",
+  "pathSegment": "PA-PATH-304-GROW304",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-304-GROW304",
+      "order": 1
+    }
+  ]
+}

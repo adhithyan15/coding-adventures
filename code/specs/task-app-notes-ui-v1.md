@@ -353,3 +353,24 @@ refused. A case that passes on one host and fails on the other fails CI.
 already lowercases both sides with these same two functions and trims each
 comma-separated part; its trim differs in the same way as step 1 and is
 not changed here.
+
+## Addendum (v1.5): the task-name field is capped, at the task-name limit
+
+Mosaic backlog item 6e4. v1.2 left the *Attach to task* field uncapped
+because "task names themselves have no limit anywhere in TaskApp yet, so a
+cap on the name typed to find one would be arbitrary". Task names now have
+one: `MAX_TASK_NAME_CHARS`, 512 Unicode scalar values, stated with every
+path it guards in `task-app-data-model.md`, *Task names are bounded*. So
+the field takes that cap, with v1.2's semantics for the title:
+
+- an edit that would leave the field past 512 scalars is **refused as
+  typed**: the event fails, the field keeps its last value and shows it
+  again;
+- unless the edit is no longer than the value it replaces. A note attached
+  to a task named before the cap carries that whole name into the field
+  when it is opened, and the Save must still find the task, so an over-cap
+  value loads whole, saves, and can be edited down but never grown.
+
+A name past the cap can no longer be typed, and no task created since the
+cap has one, so the field loses nothing it could ever have matched. The
+matching rule (v1.4) is unchanged.

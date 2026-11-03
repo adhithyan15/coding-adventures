@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 334,
+  "title": "Wool and Cloth",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a652c81379ad3353",
+  "lessons": [
+    {
+      "id": "PA-C334-unn",
+      "sequence": 20280,
+      "title": "ਉੱਨ (unn) — wool",
+      "headword": "ਉੱਨ",
+      "romanization": "unn",
+      "gloss": "wool",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be268618a46e34c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a cobbler, then the Punjabi for a gardener."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਉੱਨ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉੱਨ — unn — \"wool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਰਦੀ ਲਈ ਦਾਦੀ ਉੱਨ ਖ਼ਰੀਦਦੀ ਹੈ। sardī laī dādī unn kharīddī hai. Grandmother buys wool for the winter."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉੱਨ (unn) is inherited from Sanskrit ūrṇā, \"wool\"; CDIAL lists Punjabi unn, \"wool\", under it (CDIAL 2424)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardī laī dādī unn kharīddī hai. — Grandmother buys wool for the winter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardī laī dādī unn kharīddī hai.* — Grandmother buys wool for the winter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a cobbler, then the Punjabi for a gardener, then say unn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a cobbler, then the Punjabi for a gardener, then say *unn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਉੱਨ (unn) mean? (\"Wool\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C334-kattna-spin",
+      "sequence": 20290,
+      "title": "ਕੱਤਣਾ (kattṇā) — to spin thread",
+      "headword": "ਕੱਤਣਾ",
+      "romanization": "kattṇā",
+      "gloss": "to spin thread",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:436544bfa1e1d491",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a gardener, then the Punjabi for wool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕੱਤਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੱਤਣਾ — kattṇā — \"to spin thread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਸ਼ਾਮ ਨੂੰ ਉੱਨ ਕੱਤਦੀ ਹੈ। dādī shām nū̃ unn kattdī hai. Grandmother spins wool in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਉੱਨ ਕੱਤੀ, maiṁ unn kattī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੱਤਣਾ (kattṇā) is inherited from a reconstructed kartati, \"spins\"; CDIAL lists Punjabi kattṇā, \"spins\", under it (CDIAL 2855)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kattṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kattṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kattṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kattṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī shām nū̃ unn kattdī hai. — Grandmother spins wool in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī shām nū̃ unn kattdī hai.* — Grandmother spins wool in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a gardener, then the Punjabi for wool, then say kattṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a gardener, then the Punjabi for wool, then say *kattṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੱਤਣਾ (kattṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੱਤਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕੱਤਣਾ (kattṇā) mean? (\"To spin thread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C334-bunna",
+      "sequence": 20300,
+      "title": "ਬੁਣਨਾ (buṇnā) — to knit",
+      "headword": "ਬੁਣਨਾ",
+      "romanization": "buṇnā",
+      "gloss": "to knit",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7de189a590e3daa2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for wool, then the Punjabi for to spin thread."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬੁਣਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੁਣਨਾ — buṇnā — \"to knit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਾਤਾ ਜੀ ਮੇਰੇ ਲਈ ਸਵੈਟਰ ਬੁਣਦੇ ਹਨ। mātā jī mere laī savaiṭar buṇde han. Mother knits a sweater for me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਇੱਕ ਸਵੈਟਰ ਬੁਣਿਆ, maiṁ ikk savaiṭar buṇiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੁਣਨਾ (buṇnā) is inherited from a reconstructed vināti, \"weaves\"; CDIAL lists Punjabi bunṇā, \"to weave\", under it (CDIAL 11773)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buṇnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buṇnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buṇnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buṇnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātā jī mere laī savaiṭar buṇde han. — Mother knits a sweater for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātā jī mere laī savaiṭar buṇde han.* — Mother knits a sweater for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for wool, then the Punjabi for to spin thread, then say buṇnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for wool, then the Punjabi for to spin thread, then say *buṇnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬੁਣਨਾ (buṇnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬੁਣਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬੁਣਨਾ (buṇnā) mean? (\"To knit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C334-julaha",
+      "sequence": 20310,
+      "title": "ਜੁਲਾਹਾ (julāhā) — a weaver",
+      "headword": "ਜੁਲਾਹਾ",
+      "romanization": "julāhā",
+      "gloss": "a weaver",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b4c690607f81045",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to spin thread, then the Punjabi for to knit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਜੁਲਾਹਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੁਲਾਹਾ — julāhā — \"a weaver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੁਲਾਹਾ ਸਾਰਾ ਦਿਨ ਖੇਸ ਬੁਣਦਾ ਹੈ। julāhā sārā din khes buṇdā hai. The weaver weaves thick cotton sheets all day."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੁਲਾਹਾ (julāhā) is a loan, usually traced to Persian jūlāh, \"a weaver\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "julāhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *julāhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "julāhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *julāhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "julāhā sārā din khes buṇdā hai. — The weaver weaves thick cotton sheets all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *julāhā sārā din khes buṇdā hai.* — The weaver weaves thick cotton sheets all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to spin thread, then the Punjabi for to knit, then say julāhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to spin thread, then the Punjabi for to knit, then say *julāhā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਜੁਲਾਹਾ (julāhā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਜੁਲਾਹਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਜੁਲਾਹਾ (julāhā) mean? (\"A weaver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C334-rangna",
+      "sequence": 20320,
+      "title": "ਰੰਗਣਾ (raṅgṇā) — to dye",
+      "headword": "ਰੰਗਣਾ",
+      "romanization": "raṅgṇā",
+      "gloss": "to dye",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87df33771a12b0b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to knit, then the Punjabi for a weaver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰੰਗਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੰਗਣਾ — raṅgṇā — \"to dye\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਚਿੱਟੀ ਉੱਨ ਨੂੰ ਲਾਲ ਰੰਗਦੀ ਹੈ। dādī chiṭṭī unn nū̃ lāl raṅgdī hai. Grandmother dyes the white wool red."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਆਪਣੀ ਚੁੰਨੀ ਪੀਲੀ ਰੰਗੀ, maiṁ āpṇī chunnī pīlī raṅgī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੰਗਣਾ (raṅgṇā) is inherited from a reconstructed raṅgayati, \"dyes\"; CDIAL lists Punjabi raṅgṇā, \"to dye, paint\", under it (CDIAL 10570)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṅgṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṅgṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṅgṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṅgṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī chiṭṭī unn nū̃ lāl raṅgdī hai. — Grandmother dyes the white wool red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī chiṭṭī unn nū̃ lāl raṅgdī hai.* — Grandmother dyes the white wool red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to knit, then the Punjabi for a weaver, then say raṅgṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to knit, then the Punjabi for a weaver, then say *raṅgṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਰੰਗਣਾ (raṅgṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਰੰਗਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰੰਗਣਾ (raṅgṇā) mean? (\"To dye\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C335-misatri",
+  "pathSegment": "PA-PATH-335-METAL335",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-335-METAL335",
+      "order": 4
+    }
+  ]
+}

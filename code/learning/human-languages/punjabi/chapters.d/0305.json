@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Harvest",
+  "label": "ch:pa-a2-harvest",
+  "canDo": "I can talk about the harvest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C305-dher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can talk about the harvest.",
+    "assesses": [
+      "PA-LEX-C305-HARVEST305-03",
+      "PA-LEX-C305-HARVEST305-04",
+      "PA-LEX-C305-HARVEST305-05"
+    ]
+  }
+}

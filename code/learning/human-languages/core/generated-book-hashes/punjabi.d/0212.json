@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:77f56e8637f96e70",
+  "lessonIds": [
+    "PA-C212-nahin-return",
+    "PA-C212-nahin-pinda",
+    "PA-C212-nahin-review",
+    "PA-C212-not-open",
+    "PA-C212-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch212-i-don-t-drink-tea.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C264-khambha",
+  "pathSegment": "PA-PATH-264-CROSS264",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-264-CROSS264",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C233-pakkha",
+  "pathSegment": "PA-PATH-233-DIN233",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-233-DIN233",
+      "order": 4
+    }
+  ]
+}

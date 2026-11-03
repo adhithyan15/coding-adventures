@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:62e39e0bcabaef70",
+  "lessonIds": [
+    "PA-C321-zukam",
+    "PA-C321-khangh",
+    "PA-C321-chhikk",
+    "PA-C321-sah",
+    "PA-C321-nigalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch321.txt",
+  "json": "punjabi/narration/ch321.json",
+  "textHash": "fnv1a64:a234053be44da0b1",
+  "jsonHash": "fnv1a64:540420991b589cc8",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:5363ef2dafcb4279",
+  "lessonIds": [
+    "PA-C343-ulajhna",
+    "PA-C343-ukkna",
+    "PA-C343-ishara",
+    "PA-C343-mamla",
+    "PA-C343-sabut",
+    "PA-R343-review-337-343"
+  ],
+  "tex": "punjabi/book/chapters/ch343-a-mix-up.tex"
+}

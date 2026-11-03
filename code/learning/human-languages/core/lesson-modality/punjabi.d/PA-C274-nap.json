@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C274-nap",
+    "language": "punjabi",
+    "chapter": 274,
+    "sequence": 16110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:623310ef19fe3792"
+  },
+  "findings": []
+}

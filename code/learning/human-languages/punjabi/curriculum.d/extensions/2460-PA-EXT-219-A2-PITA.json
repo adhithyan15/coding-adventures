@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-219-A2-PITA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I drank, ate and took out, with a past form that agrees with the thing.",
+  "prerequisites": [
+    "PA-EXT-218-A2-UTTHIA"
+  ]
+}

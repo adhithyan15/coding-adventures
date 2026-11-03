@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C330-bharjai",
+    "language": "punjabi",
+    "chapter": 330,
+    "sequence": 20080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32fc2cdaf909cb8b"
+  },
+  "findings": []
+}

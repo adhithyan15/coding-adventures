@@ -1,0 +1,11 @@
+{
+  "id": "PA-C297-mulaim",
+  "pathSegment": "PA-PATH-297-TOUCH297",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-297-TOUCH297",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:673b1e1f4ccbb2c5",
+  "lessonIds": [
+    "PA-C253-niyam",
+    "PA-C253-notis",
+    "PA-C253-katar",
+    "PA-C253-hatna",
+    "PA-C253-ishtihar"
+  ],
+  "tex": "punjabi/book/chapters/ch253-rules-at-the-gate.tex"
+}

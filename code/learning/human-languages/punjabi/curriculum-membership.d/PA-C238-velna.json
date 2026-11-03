@@ -1,0 +1,11 @@
+{
+  "id": "PA-C238-velna",
+  "pathSegment": "PA-PATH-238-KAM238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-238-KAM238",
+      "order": 4
+    }
+  ]
+}

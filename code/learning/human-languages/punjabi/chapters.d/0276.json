@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "What Is the Price?",
+  "label": "ch:pa-a2-what-is-the-price",
+  "canDo": "I can ask the price and ask for less.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-C276-mufat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can ask the price and ask for less.",
+    "assesses": [
+      "PA-LEX-C276-PRICE276-03",
+      "PA-LEX-C276-PRICE276-04",
+      "PA-LEX-C276-PRICE276-05"
+    ]
+  }
+}

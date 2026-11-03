@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 288,
+  "title": "The Hot Season Ahead",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:37c9fd184ad38435",
+  "lessons": [
+    {
+      "id": "PA-C288-dhupp",
+      "sequence": 17360,
+      "title": "ਧੁੱਪ (dhupp) — sunshine",
+      "headword": "ਧੁੱਪ",
+      "romanization": "dhupp",
+      "gloss": "sunshine",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5820adc6766eb2fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to drip, then the Punjabi for mud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਧੁੱਪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਧੁੱਪ — dhupp — \"sunshine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੱਲ੍ਹ ਤੇਜ਼ ਧੁੱਪ ਹੋਵੇਗੀ। kall tez dhupp hovegī. Tomorrow there will be strong sunshine."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਧੁੱਪ (dhupp) is inherited from a reconstructed dhuppā, \"sunshine\"; CDIAL lists Punjabi dhupp under it (CDIAL 6825)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhupp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhupp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhupp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhupp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kall tez dhupp hovegī. — Tomorrow there will be strong sunshine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kall tez dhupp hovegī.* — Tomorrow there will be strong sunshine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to drip, then the Punjabi for mud, then say dhupp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to drip, then the Punjabi for mud, then say *dhupp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਧੁੱਪ (dhupp) mean? (\"Sunshine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C288-lu",
+      "sequence": 17370,
+      "title": "ਲੂ (lū) — a hot wind; the summer heatwave",
+      "headword": "ਲੂ",
+      "romanization": "lū",
+      "gloss": "a hot wind; the summer heatwave",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15fb7d7ea2ff3112",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for mud, then the Punjabi for sunshine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਲੂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੂ — lū — \"a hot wind; the summer heatwave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਲੂ ਵਿੱਚ ਅਸੀਂ ਬਾਹਰ ਨਹੀਂ ਜਾਂਦੇ ਹਾਂ। lū vich asīṁ bāhar nahīṁ jānde hāṁ. We do not go out in the hot wind."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੂ (lū) goes back to a reconstructed lūṣā, \"burning\"; CDIAL lists Punjabi only lūh, \"burnt, scalded\", under it; the sense \"hot wind\" is the one it gives for Lahnda lō (CDIAL 11099)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lū vich asīṁ bāhar nahīṁ jānde hāṁ. — We do not go out in the hot wind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lū vich asīṁ bāhar nahīṁ jānde hāṁ.* — We do not go out in the hot wind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for mud, then the Punjabi for sunshine, then say lū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for mud, then the Punjabi for sunshine, then say *lū* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਲੂ (lū) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਲੂ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਲੂ (lū) mean? (\"A hot wind; the summer heatwave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C288-tapna",
+      "sequence": 17380,
+      "title": "ਤਪਣਾ (tapṇā) — to blaze with heat; to become very hot",
+      "headword": "ਤਪਣਾ",
+      "romanization": "tapṇā",
+      "gloss": "to blaze with heat; to become very hot",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bdfd9d32a721f92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for sunshine, then the Punjabi for a hot wind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਪਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਪਣਾ — tapṇā — \"to blaze with heat; to become very hot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੂਨ ਵਿੱਚ ਧਰਤੀ ਤਪੇਗੀ। jūn vich dhartī tapegī. In June the earth will blaze with heat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਪੱਥਰ ਤਪਿਆ, oh patthar tapiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਪਣਾ (tapṇā) is inherited from Sanskrit tapyati, \"is hot\"; CDIAL lists Punjabi tapṇā, \"to be heated\", under it (CDIAL 5684)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūn vich dhartī tapegī. — In June the earth will blaze with heat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūn vich dhartī tapegī.* — In June the earth will blaze with heat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for sunshine, then the Punjabi for a hot wind, then say tapṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for sunshine, then the Punjabi for a hot wind, then say *tapṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤਪਣਾ (tapṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤਪਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਪਣਾ (tapṇā) mean? (\"To blaze with heat; to become very hot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C288-hunal",
+      "sequence": 17390,
+      "title": "ਹੁਨਾਲ (hunāl) — the hot season",
+      "headword": "ਹੁਨਾਲ",
+      "romanization": "hunāl",
+      "gloss": "the hot season",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa22d17646851b1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a hot wind, then the Punjabi for to blaze with heat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹੁਨਾਲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੁਨਾਲ — hunāl — \"the hot season\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਹੁਨਾਲ ਵਿੱਚ ਅਸੀਂ ਛਾਂ ਵਿੱਚ ਬੈਠਦੇ ਹਾਂ। hunāl vich asīṁ chhāṁ vich baiṭhde hāṁ. In the hot season we sit in the shade."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੁਨਾਲ (hunāl) is inherited from Sanskrit uṣṇakāla, \"hot season\"; CDIAL lists Punjabi hunālā under it (CDIAL 2391)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hunāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hunāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hunāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hunāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hunāl vich asīṁ chhāṁ vich baiṭhde hāṁ. — In the hot season we sit in the shade.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hunāl vich asīṁ chhāṁ vich baiṭhde hāṁ.* — In the hot season we sit in the shade.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a hot wind, then the Punjabi for to blaze with heat, then say hunāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a hot wind, then the Punjabi for to blaze with heat, then say *hunāl* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹੁਨਾਲ (hunāl) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹੁਨਾਲ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹੁਨਾਲ (hunāl) mean? (\"The hot season\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C288-soka",
+      "sequence": 17400,
+      "title": "ਸੋਕਾ (sokā) — a drought",
+      "headword": "ਸੋਕਾ",
+      "romanization": "sokā",
+      "gloss": "a drought",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58248b8c264b99f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to blaze with heat, then the Punjabi for the hot season."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸੋਕਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੋਕਾ — sokā — \"a drought\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੇ ਮੀਂਹ ਨਹੀਂ ਆਵੇਗਾ ਤਾਂ ਸੋਕਾ ਹੋਵੇਗਾ। je mīṁh nahīṁ āvegā tāṁ sokā hovegā. If the rain does not come, there will be a drought."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੋਕਾ (sokā) is inherited from a reconstructed śauṣkya, \"dryness\"; CDIAL lists Punjabi sok and sokkā, \"dryness, drought\", under it (CDIAL 12652)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sokā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sokā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sokā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sokā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je mīṁh nahīṁ āvegā tāṁ sokā hovegā. — If the rain does not come, there will be a drought.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je mīṁh nahīṁ āvegā tāṁ sokā hovegā.* — If the rain does not come, there will be a drought.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to blaze with heat, then the Punjabi for the hot season, then say sokā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to blaze with heat, then the Punjabi for the hot season, then say *sokā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸੋਕਾ (sokā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸੋਕਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸੋਕਾ (sokā) mean? (\"A drought\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

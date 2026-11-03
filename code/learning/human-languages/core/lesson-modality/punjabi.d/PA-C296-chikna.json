@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C296-chikna",
+    "language": "punjabi",
+    "chapter": 296,
+    "sequence": 17800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f88e657e0af8a2f5"
+  },
+  "findings": []
+}

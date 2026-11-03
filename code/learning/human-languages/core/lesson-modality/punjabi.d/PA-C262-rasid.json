@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C262-rasid",
+    "language": "punjabi",
+    "chapter": 262,
+    "sequence": 15490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:552d41f84c8cd9b3"
+  },
+  "findings": []
+}

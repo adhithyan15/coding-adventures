@@ -1,0 +1,11 @@
+{
+  "id": "PA-C274-jora",
+  "pathSegment": "PA-PATH-274-SIZE274",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-274-SIZE274",
+      "order": 4
+    }
+  ]
+}

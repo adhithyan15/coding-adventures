@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C211-tea-every-day",
+    "language": "punjabi",
+    "chapter": 211,
+    "sequence": 11550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62663e7fbb012560"
+  },
+  "findings": []
+}

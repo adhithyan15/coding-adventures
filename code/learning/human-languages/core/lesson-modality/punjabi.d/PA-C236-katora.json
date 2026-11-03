@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C236-katora",
+    "language": "punjabi",
+    "chapter": 236,
+    "sequence": 13600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6db663e6e6dd29ee"
+  },
+  "findings": []
+}

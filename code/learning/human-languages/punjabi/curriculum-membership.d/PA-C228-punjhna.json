@@ -1,0 +1,11 @@
+{
+  "id": "PA-C228-punjhna",
+  "pathSegment": "PA-PATH-228-DIN228",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-228-DIN228",
+      "order": 4
+    }
+  ]
+}

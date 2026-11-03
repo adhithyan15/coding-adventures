@@ -1,0 +1,11 @@
+{
+  "id": "PA-C252-van",
+  "pathSegment": "PA-PATH-252-GHR252",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-252-GHR252",
+      "order": 2
+    }
+  ]
+}

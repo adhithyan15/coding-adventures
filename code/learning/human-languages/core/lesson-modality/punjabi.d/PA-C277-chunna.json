@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C277-chunna",
+    "language": "punjabi",
+    "chapter": 277,
+    "sequence": 16240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3af54ea9e84d80bb"
+  },
+  "findings": []
+}

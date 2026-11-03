@@ -1,0 +1,11 @@
+{
+  "id": "PA-C312-saddna",
+  "pathSegment": "PA-PATH-312-VISIT312",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-312-VISIT312",
+      "order": 1
+    }
+  ]
+}

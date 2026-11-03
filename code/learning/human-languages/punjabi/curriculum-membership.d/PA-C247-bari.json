@@ -1,0 +1,11 @@
+{
+  "id": "PA-C247-bari",
+  "pathSegment": "PA-PATH-247-GHR247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-247-GHR247",
+      "order": 1
+    }
+  ]
+}

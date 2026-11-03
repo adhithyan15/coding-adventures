@@ -1,0 +1,11 @@
+{
+  "id": "PA-C361-digri",
+  "pathSegment": "PA-PATH-361-COLLEGE361",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-361-COLLEGE361",
+      "order": 2
+    }
+  ]
+}

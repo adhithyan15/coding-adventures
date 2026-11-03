@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:00e7251680d3c5a3",
+  "lessonIds": [
+    "PA-C350-shauk",
+    "PA-C350-natak",
+    "PA-C350-filam",
+    "PA-C350-nachauna",
+    "PA-C350-parchauna",
+    "PA-R350-review-344-350"
+  ],
+  "tex": "punjabi/book/chapters/ch350-plays-films-and-fun.tex"
+}

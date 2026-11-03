@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:38f5b864de896376",
+  "lessonIds": [
+    "PA-C348-saz",
+    "PA-C348-tabla",
+    "PA-C348-dhun",
+    "PA-C348-riaz",
+    "PA-C348-gunjna"
+  ],
+  "tex": "punjabi/book/chapters/ch348-instruments-i-like.tex"
+}

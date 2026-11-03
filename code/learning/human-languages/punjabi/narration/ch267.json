@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 267,
+  "title": "Which Floor, Which Office?",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dd3d463ca1921f1e",
+  "lessons": [
+    {
+      "id": "PA-C267-thana",
+      "sequence": 15720,
+      "title": "ਥਾਣਾ (thāṇā) — a police station",
+      "headword": "ਥਾਣਾ",
+      "romanization": "thāṇā",
+      "gloss": "a police station",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d20de6a589c1a035",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a roadside eatery, then the Punjabi for a building."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਥਾਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥਾਣਾ — thāṇā — \"a police station\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਥਾਣਾ ਬਾਜ਼ਾਰ ਦੇ ਨੇੜੇ ਹੈ। thāṇā bāzār de neṛe hai. The police station is near the market."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥਾਣਾ (thāṇā) is inherited from Sanskrit sthāna, \"firm stance, place of abode\"; CDIAL lists Punjabi thāṇā, \"place, police station\", under it (CDIAL 13753)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāṇā bāzār de neṛe hai. — The police station is near the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāṇā bāzār de neṛe hai.* — The police station is near the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a roadside eatery, then the Punjabi for a building, then say thāṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a roadside eatery, then the Punjabi for a building, then say *thāṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਥਾਣਾ (thāṇā) mean? (\"A police station\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C267-manzil",
+      "sequence": 15730,
+      "title": "ਮੰਜ਼ਿਲ (manzil) — a storey; a floor of a building",
+      "headword": "ਮੰਜ਼ਿਲ",
+      "romanization": "manzil",
+      "gloss": "a storey; a floor of a building",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1cbfb854523b3e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a building, then the Punjabi for a police station."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੰਜ਼ਿਲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੰਜ਼ਿਲ — manzil — \"a storey; a floor of a building\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਦਫ਼ਤਰ ਦੂਜੀ ਮੰਜ਼ਿਲ ਉੱਤੇ ਹੈ। merā daftar dūjī manzil utte hai. My office is on the second floor."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੰਜ਼ਿਲ (manzil) is a loan, usually traced through Persian to Arabic manzil, \"a halting place\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manzil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manzil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manzil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manzil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā daftar dūjī manzil utte hai. — My office is on the second floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā daftar dūjī manzil utte hai.* — My office is on the second floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a building, then the Punjabi for a police station, then say manzil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a building, then the Punjabi for a police station, then say *manzil* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮੰਜ਼ਿਲ (manzil) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮੰਜ਼ਿਲ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮੰਜ਼ਿਲ (manzil) mean? (\"A storey; a floor of a building\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C267-dakkhana",
+      "sequence": 15740,
+      "title": "ਡਾਕਖ਼ਾਨਾ (ḍākkhānā) — a post office",
+      "headword": "ਡਾਕਖ਼ਾਨਾ",
+      "romanization": "ḍākkhānā",
+      "gloss": "a post office",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b14dcccafa93fe1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a police station, then the Punjabi for a storey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਡਾਕਖ਼ਾਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡਾਕਖ਼ਾਨਾ — ḍākkhānā — \"a post office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਡਾਕਖ਼ਾਨਾ ਥਾਣੇ ਦੇ ਸਾਹਮਣੇ ਹੈ। ḍākkhānā thāṇe de sāhmaṇe hai. The post office is opposite the police station."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡਾਕਖ਼ਾਨਾ (ḍākkhānā) is built from ḍāk, \"the post\", for which CDIAL gives no Punjabi form (CDIAL 5519), and khānā, \"house\", usually traced to Persian khāna."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākkhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākkhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākkhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākkhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākkhānā thāṇe de sāhmaṇe hai. — The post office is opposite the police station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākkhānā thāṇe de sāhmaṇe hai.* — The post office is opposite the police station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a police station, then the Punjabi for a storey, then say ḍākkhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a police station, then the Punjabi for a storey, then say *ḍākkhānā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਡਾਕਖ਼ਾਨਾ (ḍākkhānā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਡਾਕਖ਼ਾਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਡਾਕਖ਼ਾਨਾ (ḍākkhānā) mean? (\"A post office\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C267-adalat",
+      "sequence": 15750,
+      "title": "ਅਦਾਲਤ (adālat) — a court of law",
+      "headword": "ਅਦਾਲਤ",
+      "romanization": "adālat",
+      "gloss": "a court of law",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20bc696724f6d7ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a storey, then the Punjabi for a post office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਅਦਾਲਤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਦਾਲਤ — adālat — \"a court of law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਦਾਲਤ ਸ਼ਹਿਰ ਦੇ ਵਿਚਕਾਰ ਹੈ। adālat shahir de vichkār hai. The court is in the middle of the town."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਦਾਲਤ (adālat) is a loan, usually traced through Persian to Arabic adāla, \"justice\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adālat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adālat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adālat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adālat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adālat shahir de vichkār hai. — The court is in the middle of the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adālat shahir de vichkār hai.* — The court is in the middle of the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a storey, then the Punjabi for a post office, then say adālat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a storey, then the Punjabi for a post office, then say *adālat* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅਦਾਲਤ (adālat) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅਦਾਲਤ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਅਦਾਲਤ (adālat) mean? (\"A court of law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C267-thikana",
+      "sequence": 15760,
+      "title": "ਠਿਕਾਣਾ (ṭhikāṇā) — whereabouts; a place to stay",
+      "headword": "ਠਿਕਾਣਾ",
+      "romanization": "ṭhikāṇā",
+      "gloss": "whereabouts; a place to stay",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c6deefa512ddc13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a post office, then the Punjabi for a court of law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਠਿਕਾਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਠਿਕਾਣਾ — ṭhikāṇā — \"whereabouts; a place to stay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸ਼ਹਿਰ ਵਿੱਚ ਮੇਰਾ ਕੋਈ ਠਿਕਾਣਾ ਨਹੀਂ ਹੈ। shahir vich merā koī ṭhikāṇā nahīṁ hai. I have no place to stay in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਠਿਕਾਣਾ (ṭhikāṇā) is inherited from a reconstructed ṭhīkka, \"firm, right\"; CDIAL lists Punjabi ṭhikāṇā, \"station\", under it (CDIAL 5503)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhikāṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhikāṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhikāṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhikāṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahir vich merā koī ṭhikāṇā nahīṁ hai. — I have no place to stay in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahir vich merā koī ṭhikāṇā nahīṁ hai.* — I have no place to stay in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a post office, then the Punjabi for a court of law, then say ṭhikāṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a post office, then the Punjabi for a court of law, then say *ṭhikāṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਠਿਕਾਣਾ (ṭhikāṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਠਿਕਾਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਠਿਕਾਣਾ (ṭhikāṇā) mean? (\"Whereabouts; a place to stay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

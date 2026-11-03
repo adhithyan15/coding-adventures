@@ -1,0 +1,11 @@
+{
+  "id": "PA-C295-khokhla",
+  "pathSegment": "PA-PATH-295-CRACK295",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-295-CRACK295",
+      "order": 2
+    }
+  ]
+}

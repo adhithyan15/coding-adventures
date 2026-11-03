@@ -1,0 +1,11 @@
+{
+  "id": "PA-R238-review-232-238",
+  "pathSegment": "PA-PATH-238-KAM238",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-238-KAM238",
+      "order": 5
+    }
+  ]
+}

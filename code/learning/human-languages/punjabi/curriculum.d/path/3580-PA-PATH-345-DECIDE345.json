@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-345-DECIDE345",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "PA-EXT-345-DECIDE345"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C277-saman",
+    "language": "punjabi",
+    "chapter": 277,
+    "sequence": 16270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:264e7c1c9c767d8f"
+  },
+  "findings": []
+}

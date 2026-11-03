@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-255-POST255",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about sending a letter by post.",
+  "prerequisites": []
+}

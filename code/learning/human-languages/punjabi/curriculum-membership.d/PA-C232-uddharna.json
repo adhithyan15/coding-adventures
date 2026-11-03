@@ -1,0 +1,11 @@
+{
+  "id": "PA-C232-uddharna",
+  "pathSegment": "PA-PATH-232-DIN232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-232-DIN232",
+      "order": 3
+    }
+  ]
+}

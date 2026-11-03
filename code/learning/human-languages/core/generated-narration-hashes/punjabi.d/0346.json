@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:afa9a06971c9d45b",
+  "lessonIds": [
+    "PA-C346-kasur",
+    "PA-C346-lukauna",
+    "PA-C346-ilzam",
+    "PA-C346-majbur",
+    "PA-C346-afsos"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch346.txt",
+  "json": "punjabi/narration/ch346.json",
+  "textHash": "fnv1a64:8a2c43c6d04a4530",
+  "jsonHash": "fnv1a64:c56e4e3967ee6ffe",
+  "findings": []
+}

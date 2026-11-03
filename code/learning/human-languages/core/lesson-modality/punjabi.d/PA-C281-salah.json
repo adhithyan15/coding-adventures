@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C281-salah",
+    "language": "punjabi",
+    "chapter": 281,
+    "sequence": 17020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8806cef6f4ba2b92"
+  },
+  "findings": []
+}

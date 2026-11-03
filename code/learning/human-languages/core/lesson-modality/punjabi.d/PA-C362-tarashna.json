@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C362-tarashna",
+    "language": "punjabi",
+    "chapter": 362,
+    "sequence": 22310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5a8a94d231a987d"
+  },
+  "findings": []
+}

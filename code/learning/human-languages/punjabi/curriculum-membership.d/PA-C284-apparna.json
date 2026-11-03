@@ -1,0 +1,11 @@
+{
+  "id": "PA-C284-apparna",
+  "pathSegment": "PA-PATH-284-OFF284",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-284-OFF284",
+      "order": 4
+    }
+  ]
+}

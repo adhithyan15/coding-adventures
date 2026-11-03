@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:6a03eed7fe98a5bd",
+  "lessonIds": [
+    "PA-C266-mahalla",
+    "PA-C266-kasba",
+    "PA-C266-hatti",
+    "PA-C266-dhaba",
+    "PA-C266-imarat",
+    "PA-R266-review-260-266"
+  ],
+  "tex": "punjabi/book/chapters/ch266-around-the-town.tex"
+}

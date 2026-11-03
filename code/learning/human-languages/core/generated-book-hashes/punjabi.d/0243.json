@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:98f40e5130eedafe",
+  "lessonIds": [
+    "PA-C243-pauna",
+    "PA-C243-gholna",
+    "PA-C243-ralauna",
+    "PA-C243-chhanna",
+    "PA-C243-chakkhna"
+  ],
+  "tex": "punjabi/book/chapters/ch243-mixing-and-tasting.tex"
+}

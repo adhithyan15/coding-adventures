@@ -1,0 +1,21 @@
+{
+  "chapter": 273,
+  "title": "Two Kilos, Please",
+  "label": "ch:pa-a2-two-kilos-please",
+  "canDo": "I can ask for things by weight.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-R273-review-267-273",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can ask for things by weight.",
+    "assesses": [
+      "PA-LEX-C273-WEIGH273-01",
+      "PA-LEX-C273-WEIGH273-02",
+      "PA-LEX-C273-WEIGH273-03",
+      "PA-LEX-C273-WEIGH273-04",
+      "PA-LEX-C273-WEIGH273-05"
+    ]
+  }
+}

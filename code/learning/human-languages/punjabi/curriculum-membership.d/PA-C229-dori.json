@@ -1,0 +1,11 @@
+{
+  "id": "PA-C229-dori",
+  "pathSegment": "PA-PATH-229-DIN229",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-229-DIN229",
+      "order": 3
+    }
+  ]
+}

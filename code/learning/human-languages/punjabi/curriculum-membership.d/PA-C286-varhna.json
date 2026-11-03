@@ -1,0 +1,11 @@
+{
+  "id": "PA-C286-varhna",
+  "pathSegment": "PA-PATH-286-STORM286",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-286-STORM286",
+      "order": 2
+    }
+  ]
+}

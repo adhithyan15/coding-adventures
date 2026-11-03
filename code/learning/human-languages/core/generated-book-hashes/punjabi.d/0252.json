@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:470da1722f12e28c",
+  "lessonIds": [
+    "PA-C252-potli",
+    "PA-C252-pand",
+    "PA-C252-van",
+    "PA-C252-takhta",
+    "PA-C252-parda",
+    "PA-R252-review-246-252",
+    "PA-R252-review-final-252"
+  ],
+  "tex": "punjabi/book/chapters/ch252-bundles-and-curtains.tex"
+}

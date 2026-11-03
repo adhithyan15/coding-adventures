@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R224-second-pass-past-and-future",
+    "language": "punjabi",
+    "chapter": 224,
+    "sequence": 12320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58cf49eb5ec737b8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C282-ataichi",
+    "language": "punjabi",
+    "chapter": 282,
+    "sequence": 17050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dee55dae936a4b0"
+  },
+  "findings": []
+}

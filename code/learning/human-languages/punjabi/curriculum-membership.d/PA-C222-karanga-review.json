@@ -1,0 +1,11 @@
+{
+  "id": "PA-C222-karanga-review",
+  "pathSegment": "PA-PATH-222-A2-KARANGA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-222-A2-KARANGA",
+      "order": 3
+    }
+  ]
+}

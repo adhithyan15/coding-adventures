@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:2cb08e0edcead7c2",
+  "lessonIds": [
+    "PA-C216-gae-return",
+    "PA-C216-gia-gai",
+    "PA-C216-gia-review",
+    "PA-C216-kall",
+    "PA-C216-where-did-they-go",
+    "PA-C216-payoff"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch216.txt",
+  "json": "punjabi/narration/ch216.json",
+  "textHash": "fnv1a64:f0494e60e1d55794",
+  "jsonHash": "fnv1a64:26546db214644ed9",
+  "findings": []
+}

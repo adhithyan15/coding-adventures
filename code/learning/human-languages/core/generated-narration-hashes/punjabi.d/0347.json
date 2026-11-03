@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:39c3c1624c2ecfdc",
+  "lessonIds": [
+    "PA-C347-dhol",
+    "PA-C347-vajauna",
+    "PA-C347-tal",
+    "PA-C347-thap",
+    "PA-C347-tari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch347.txt",
+  "json": "punjabi/narration/ch347.json",
+  "textHash": "fnv1a64:ccd4796c7eff9ac9",
+  "jsonHash": "fnv1a64:e141bd6172bd02c2",
+  "findings": []
+}

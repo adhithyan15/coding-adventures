@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-218-A2-UTTHIA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that I got up or sat down, and that I did not go, with past forms that agree with me.",
+  "prerequisites": [
+    "PA-EXT-217-A2-AAIA"
+  ]
+}

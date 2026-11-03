@@ -116,23 +116,52 @@ class RandomGen g where
         let (w, g1) = nextU32 g0
         in  (fromIntegral w / floatDiv, g1)
 
-    -- | Return a uniform 'Int64' in [min, max] inclusive.
+    -- | Return a uniform 'Int64' in [min, max] inclusive (spec rng.md,
+    -- \"Rejection Sampling\", v2), identically in every language.
     --
-    -- Uses rejection sampling to eliminate modulo bias.  See the LCG
-    -- implementation notes below for a full explanation.
+    -- @span = max - min + 1@ lies between 1 and 2^64. Taking @r \`mod\` span@
+    -- of a raw draw over-samples small offsets whenever the number of
+    -- possible draws is not a multiple of span; rejecting the @threshold@
+    -- lowest draws removes exactly the excess. Three regimes, chosen by span
+    -- alone:
+    --
+    -- @
+    --   span <= 2^32    draw 32 bits,  threshold = (2^32 - span) mod span
+    --   span <  2^64    draw 64 bits,  threshold = (2^64 - span) mod span
+    --   span == 2^64    the whole Int64 domain: every Word64 is valid
+    -- @
+    --
+    -- 'Word64' arithmetic wraps, so the whole domain's span, 2^64, wraps to
+    -- 0, and @min + offset@ wraps back into [min, max].
+    --
+    -- v1 took the threshold modulo 2^64 while drawing 32 bits: biased, never
+    -- more than 2^32 - 1 above min, a division by zero for the whole domain,
+    -- and for spans such as 2^63 + 1 every draw was rejected, so it never
+    -- returned. Calls 'error' if @min > max@, before any draw.
     nextIntInRange :: Int64 -> Int64 -> g -> (Int64, g)
     nextIntInRange lo hi g0
       | lo > hi   = error "nextIntInRange: lo must be <= hi"
+      | width == 0 = finish (nextU64 g0)
+      | width <= twoTo32 =
+          let threshold = (twoTo32 - width) `mod` width
+              go gen =
+                  let (r, gen') = nextU32 gen
+                      r64       = fromIntegral r :: Word64
+                  in  if r64 >= threshold
+                      then (r64 `mod` width, gen')
+                      else go gen'
+          in  finish (go g0)
       | otherwise =
-        let rangeSize = fromIntegral (hi - lo + 1) :: Word64
-            threshold = (0 - rangeSize) `mod` rangeSize
-            go gen =
-                let (r, gen') = nextU32 gen
-                    r64       = fromIntegral r :: Word64
-                in  if r64 >= threshold
-                    then (lo + fromIntegral (r64 `mod` rangeSize), gen')
-                    else go gen'
-        in  go g0
+          let threshold = (0 - width) `mod` width  -- (2^64 - width) mod width
+              go gen =
+                  let (r, gen') = nextU64 gen
+                  in  if r >= threshold then (r `mod` width, gen') else go gen'
+          in  finish (go g0)
+      where
+        twoTo32 = 2 ^ (32 :: Int) :: Word64
+        -- max - min + 1 in Word64: exact, except that 2^64 wraps to 0.
+        width = fromIntegral hi - fromIntegral lo + 1 :: Word64
+        finish (offset, g) = (fromIntegral (fromIntegral lo + offset :: Word64), g)
 
 -- ── LCG ───────────────────────────────────────────────────────────────────────
 

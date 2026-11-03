@@ -1,0 +1,11 @@
+{
+  "id": "PA-C217-aurat",
+  "pathSegment": "PA-PATH-217-A2-AAIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-217-A2-AAIA",
+      "order": 3
+    }
+  ]
+}

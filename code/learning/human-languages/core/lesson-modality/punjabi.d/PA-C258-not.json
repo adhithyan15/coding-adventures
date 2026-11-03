@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C258-not",
+    "language": "punjabi",
+    "chapter": 258,
+    "sequence": 15280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1058ab961731f27d"
+  },
+  "findings": []
+}

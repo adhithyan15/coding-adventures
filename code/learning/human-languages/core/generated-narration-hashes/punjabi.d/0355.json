@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:0c271252a286cddd",
+  "lessonIds": [
+    "PA-C355-paheli",
+    "PA-C355-bujjhna",
+    "PA-C355-mazak",
+    "PA-C355-hasauna",
+    "PA-C355-chherna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch355.txt",
+  "json": "punjabi/narration/ch355.json",
+  "textHash": "fnv1a64:2cfa726a80bf1e59",
+  "jsonHash": "fnv1a64:1f7534eaa9959fa3",
+  "findings": []
+}

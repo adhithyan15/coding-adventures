@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "What Do You Mean?",
+  "label": "ch:pa-a2-what-do-you-mean",
+  "canDo": "I can ask what something means and give a reason.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C342-sujhauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can ask what something means and give a reason.",
+    "assesses": [
+      "PA-LEX-C342-MEAN342-03",
+      "PA-LEX-C342-MEAN342-04",
+      "PA-LEX-C342-MEAN342-05"
+    ]
+  }
+}

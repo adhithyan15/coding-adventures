@@ -1,0 +1,11 @@
+{
+  "id": "PA-C361-vazifa",
+  "pathSegment": "PA-PATH-361-COLLEGE361",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-361-COLLEGE361",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C322-malham",
+  "pathSegment": "PA-PATH-322-HURT322",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-322-HURT322",
+      "order": 4
+    }
+  ]
+}

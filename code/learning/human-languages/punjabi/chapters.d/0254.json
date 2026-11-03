@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "A Form at the Counter",
+  "label": "ch:pa-a2-a-form-at-the-counter",
+  "canDo": "I can answer the lines of a simple form.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C254-mitauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can answer the lines of a simple form.",
+    "assesses": [
+      "PA-LEX-C254-FORM254-03",
+      "PA-LEX-C254-FORM254-04",
+      "PA-LEX-C254-FORM254-05"
+    ]
+  }
+}

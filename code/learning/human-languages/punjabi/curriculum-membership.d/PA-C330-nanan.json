@@ -1,0 +1,11 @@
+{
+  "id": "PA-C330-nanan",
+  "pathSegment": "PA-PATH-330-SPOUSE330",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-330-SPOUSE330",
+      "order": 2
+    }
+  ]
+}

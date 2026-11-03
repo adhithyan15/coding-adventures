@@ -1,0 +1,21 @@
+{
+  "chapter": 315,
+  "title": "Bandits on the Road",
+  "label": "ch:pa-a2-bandits-on-the-road",
+  "canDo": "I can say what happened when someone was robbed.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-R315-review-309-315",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can say what happened when someone was robbed.",
+    "assesses": [
+      "PA-LEX-C315-BANDIT315-01",
+      "PA-LEX-C315-BANDIT315-02",
+      "PA-LEX-C315-BANDIT315-03",
+      "PA-LEX-C315-BANDIT315-04",
+      "PA-LEX-C315-BANDIT315-05"
+    ]
+  }
+}

@@ -1,0 +1,955 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 364,
+  "title": "Good at My Job",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d5257d78a6427f96",
+  "lessons": [
+    {
+      "id": "PA-C364-pesha",
+      "sequence": 22380,
+      "title": "ਪੇਸ਼ਾ (peshā) — a profession; a trade",
+      "headword": "ਪੇਸ਼ਾ",
+      "romanization": "peshā",
+      "gloss": "a profession; a trade",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9dc244b0caa08d5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to set in order, then the Punjabi for a promotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੇਸ਼ਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੇਸ਼ਾ — peshā — \"a profession; a trade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪੜ੍ਹਾਉਣਾ ਮੇਰਾ ਪੇਸ਼ਾ ਹੈ। paṛhāuṇā merā peshā hai. Teaching is my profession."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੇਸ਼ਾ (peshā) is a loan, usually traced to Persian pēsha, \"craft\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peshā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peshā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peshā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peshā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṛhāuṇā merā peshā hai. — Teaching is my profession.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṛhāuṇā merā peshā hai.* — Teaching is my profession.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to set in order, then the Punjabi for a promotion, then say peshā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to set in order, then the Punjabi for a promotion, then say *peshā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੇਸ਼ਾ (peshā) mean? (\"A profession; a trade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C364-karobar",
+      "sequence": 22390,
+      "title": "ਕਾਰੋਬਾਰ (kārobār) — a business",
+      "headword": "ਕਾਰੋਬਾਰ",
+      "romanization": "kārobār",
+      "gloss": "a business",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c773e99288301f63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a promotion, then the Punjabi for a profession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਾਰੋਬਾਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਾਰੋਬਾਰ — kārobār — \"a business\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਦਾ ਆਪਣਾ ਕਾਰੋਬਾਰ ਹੈ। Aman dā āpṇā kārobār hai. Aman has his own business."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਾਰੋਬਾਰ (kārobār) is a loan, usually traced to Persian kār-o-bār, \"work and business\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārobār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārobār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārobār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārobār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aman dā āpṇā kārobār hai. — Aman has his own business.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aman dā āpṇā kārobār hai.* — Aman has his own business.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a promotion, then the Punjabi for a profession, then say kārobār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a promotion, then the Punjabi for a profession, then say *kārobār* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਾਰੋਬਾਰ (kārobār) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਾਰੋਬਾਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਾਰੋਬਾਰ (kārobār) mean? (\"A business\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C364-kamyab",
+      "sequence": 22400,
+      "title": "ਕਾਮਯਾਬ (kāmyāb) — successful",
+      "headword": "ਕਾਮਯਾਬ",
+      "romanization": "kāmyāb",
+      "gloss": "successful",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c6c7d3c71a5ca46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a profession, then the Punjabi for a business."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਾਮਯਾਬ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਾਮਯਾਬ — kāmyāb — \"successful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਿਹਨਤ ਨਾਲ ਲੋਕ ਕਾਮਯਾਬ ਹੁੰਦੇ ਹਨ। mihnat nāl lok kāmyāb hunde han. People succeed through hard work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਾਮਯਾਬ (kāmyāb) is a loan, usually traced to Persian kāmyāb, \"successful\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmyāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmyāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmyāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmyāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mihnat nāl lok kāmyāb hunde han. — People succeed through hard work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mihnat nāl lok kāmyāb hunde han.* — People succeed through hard work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a profession, then the Punjabi for a business, then say kāmyāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a profession, then the Punjabi for a business, then say *kāmyāb* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਾਮਯਾਬ (kāmyāb) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਾਮਯਾਬ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਾਮਯਾਬ (kāmyāb) mean? (\"Successful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C364-sanad",
+      "sequence": 22410,
+      "title": "ਸਨਦ (sanad) — a certificate",
+      "headword": "ਸਨਦ",
+      "romanization": "sanad",
+      "gloss": "a certificate",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c08fda0e7a9ef9a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a business, then the Punjabi for successful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸਨਦ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਨਦ — sanad — \"a certificate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੇ ਕੋਲ ਦਰਜ਼ੀ ਦੇ ਕੰਮ ਦੀ ਸਨਦ ਹੈ। mere kol darzī de kamm dī sanad hai. I have a certificate in tailoring."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਨਦ (sanad) is a loan, usually traced through Persian to Arabic sanad, \"support\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere kol darzī de kamm dī sanad hai. — I have a certificate in tailoring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere kol darzī de kamm dī sanad hai.* — I have a certificate in tailoring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a business, then the Punjabi for successful, then say sanad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a business, then the Punjabi for successful, then say *sanad* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸਨਦ (sanad) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸਨਦ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸਨਦ (sanad) mean? (\"A certificate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C364-juttna",
+      "sequence": 22420,
+      "title": "ਜੁੱਟਣਾ (juṭṭṇā) — to get down to work; to set to",
+      "headword": "ਜੁੱਟਣਾ",
+      "romanization": "juṭṭṇā",
+      "gloss": "to get down to work; to set to",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7184782a6e29ceb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for successful, then the Punjabi for a certificate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਜੁੱਟਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੁੱਟਣਾ — juṭṭṇā — \"to get down to work; to set to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਸਵੇਰੇ ਛੇ ਵਜੇ ਕੰਮ ਵਿੱਚ ਜੁੱਟਦਾ ਹਾਂ। maiṁ savere chhe vaje kamm vich juṭṭdā hāṁ. I get down to work at six in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਕੰਮ ਵਿੱਚ ਜੁੱਟਿਆ, maiṁ kamm vich juṭṭiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੁੱਟਣਾ (juṭṭṇā) is inherited from a reconstructed yuṭati, \"is joined\"; CDIAL lists Punjabi juṛnā, \"to be joined\", and Lahnda juṭaṇ, \"to be joined, be engaged in\", under it (CDIAL 10496)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juṭṭṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juṭṭṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juṭṭṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juṭṭṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ savere chhe vaje kamm vich juṭṭdā hāṁ. — I get down to work at six in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ savere chhe vaje kamm vich juṭṭdā hāṁ.* — I get down to work at six in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for successful, then the Punjabi for a certificate, then say juṭṭṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for successful, then the Punjabi for a certificate, then say *juṭṭṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਜੁੱਟਣਾ (juṭṭṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਜੁੱਟਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਜੁੱਟਣਾ (juṭṭṇā) mean? (\"To get down to work; to set to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R364-review-358-364",
+      "sequence": 22430,
+      "title": "Looking back: from What We Study to Good at My Job",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from What We Study to Good at My Job",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55e3562a72e650a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a school subject and mathematics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a school subject, mathematics, science, history, to teach a subject",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a school subject, mathematics, science, history, to teach a subject]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lesson to learn, practice, hard work, attention, to put right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lesson to learn, practice, hard work, attention, to put right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an examination, an exam paper, a mark in a test, a result, passed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an examination, an exam paper, a mark in a test, a result, passed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a college, admission, a degree, a scholarship, a master of an art",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a college, admission, a degree, a scholarship, a master of an art]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capable, skilled, to polish, to carve, to try out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: capable, skilled, to polish, to carve, to try out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an effort, to put up a building, to carry out a duty, to set in order, a promotion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an effort, to put up a building, to carry out a duty, to set in order, a promotion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a profession, a business, successful, a certificate, to get down to work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a profession, a business, successful, a certificate, to get down to work]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A school subject? (ਵਿਸ਼ਾ, vishā.) Mathematics? (ਗਣਿਤ, gaṇit.) Science? (ਵਿਗਿਆਨ, vigiān.) History? (ਇਤਿਹਾਸ, itihās.) To teach a subject? (ਪੜ੍ਹਾਉਣਾ, paṛhāuṇā.) A lesson to learn? (ਸਬਕ, sabak.) Practice? (ਅਭਿਆਸ, abhiās.) Hard work? (ਮਿਹਨਤ, mihnat.) Attention? (ਧਿਆਨ, dhiān.) To put right? (ਸੁਧਾਰਨਾ, sudhārnā.) An examination? (ਇਮਤਿਹਾਨ, imtihān.) An exam paper? (ਪੇਪਰ, pepar.) A mark in a test? (ਅੰਕ, aṅk.) A result? (ਨਤੀਜਾ, natījā.) Passed? (ਪਾਸ, pās.) A college? (ਕਾਲਜ, kālaj.) Admission? (ਦਾਖ਼ਲਾ, dākhlā.) A degree? (ਡਿਗਰੀ, ḍigrī.) A scholarship? (ਵਜ਼ੀਫ਼ਾ, vazīfā.) A master of an art? (ਉਸਤਾਦ, ustād.) Capable? (ਕਾਬਲ, kābal.) Skilled? (ਨਿਪੁੰਨ, nipunn.) To polish? (ਚਮਕਾਉਣਾ, chamkāuṇā.) To carve? (ਤਰਾਸ਼ਣਾ, tarāshṇā.) To try out? (ਅਜ਼ਮਾਉਣਾ, azmāuṇā.) An effort? (ਕੋਸ਼ਿਸ਼, koshish.) To put up a building? (ਉਸਾਰਨਾ, usārnā.) To carry out a duty? (ਨਿਭਾਉਣਾ, nibhāuṇā.) To set in order? (ਸੰਵਾਰਨਾ, saṁvārnā.) A promotion? (ਤਰੱਕੀ, tarakkī.) A profession? (ਪੇਸ਼ਾ, peshā.) A business? (ਕਾਰੋਬਾਰ, kārobār.) Successful? (ਕਾਮਯਾਬ, kāmyāb.) A certificate? (ਸਨਦ, sanad.) To get down to work? (ਜੁੱਟਣਾ, juṭṭṇā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R364-review-final-364",
+      "sequence": 22440,
+      "title": "Good at My Job — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:666036f9a65c662f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a profession and a business."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a profession, a business, successful, a certificate, to get down to work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a profession, a business, successful, a certificate, to get down to work]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A profession? (ਪੇਸ਼ਾ, peshā.) A business? (ਕਾਰੋਬਾਰ, kārobār.) Successful? (ਕਾਮਯਾਬ, kāmyāb.) A certificate? (ਸਨਦ, sanad.) To get down to work? (ਜੁੱਟਣਾ, juṭṭṇā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

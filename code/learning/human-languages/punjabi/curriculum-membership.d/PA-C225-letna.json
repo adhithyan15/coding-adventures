@@ -1,0 +1,11 @@
+{
+  "id": "PA-C225-letna",
+  "pathSegment": "PA-PATH-225-DIN225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-225-DIN225",
+      "order": 3
+    }
+  ]
+}

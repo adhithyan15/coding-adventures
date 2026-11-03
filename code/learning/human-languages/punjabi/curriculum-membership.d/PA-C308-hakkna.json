@@ -1,0 +1,11 @@
+{
+  "id": "PA-C308-hakkna",
+  "pathSegment": "PA-PATH-308-FEED308",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-308-FEED308",
+      "order": 4
+    }
+  ]
+}

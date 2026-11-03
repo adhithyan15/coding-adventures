@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-283-ROAD283",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when we will arrive.",
+  "prerequisites": []
+}

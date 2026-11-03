@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:a8a4470c05ef2f40",
+  "lessonIds": [
+    "PA-C246-lakkar",
+    "PA-C246-kari",
+    "PA-C246-chhappar",
+    "PA-C246-parnala",
+    "PA-C246-parchhatti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch246.txt",
+  "json": "punjabi/narration/ch246.json",
+  "textHash": "fnv1a64:ea6281c5cd85c49a",
+  "jsonHash": "fnv1a64:7792caa909ba3dad",
+  "findings": []
+}

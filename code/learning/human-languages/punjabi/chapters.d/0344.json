@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "We Don't Agree",
+  "label": "ch:pa-a2-we-don-t-agree",
+  "canDo": "I can disagree and give my side of things.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C344-itraz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can disagree and give my side of things.",
+    "assesses": [
+      "PA-LEX-C344-ARGUE344-03",
+      "PA-LEX-C344-ARGUE344-04",
+      "PA-LEX-C344-ARGUE344-05"
+    ]
+  }
+}

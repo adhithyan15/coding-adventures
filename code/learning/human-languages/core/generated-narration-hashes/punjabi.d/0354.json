@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:6782ae249599eded",
+  "lessonIds": [
+    "PA-C354-kahani",
+    "PA-C354-sunauna",
+    "PA-C354-kissa",
+    "PA-C354-rani",
+    "PA-C354-jadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch354.txt",
+  "json": "punjabi/narration/ch354.json",
+  "textHash": "fnv1a64:3e30cb23d48f0c81",
+  "jsonHash": "fnv1a64:20aad08eac16cca5",
+  "findings": []
+}

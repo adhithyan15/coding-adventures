@@ -1,0 +1,21 @@
+{
+  "chapter": 301,
+  "title": "Ploughing the Field",
+  "label": "ch:pa-a2-ploughing-the-field",
+  "canDo": "I can talk about ploughing with oxen.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-R301-review-295-301",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can talk about ploughing with oxen.",
+    "assesses": [
+      "PA-LEX-C301-PLOUGH301-01",
+      "PA-LEX-C301-PLOUGH301-02",
+      "PA-LEX-C301-PLOUGH301-03",
+      "PA-LEX-C301-PLOUGH301-04",
+      "PA-LEX-C301-PLOUGH301-05"
+    ]
+  }
+}

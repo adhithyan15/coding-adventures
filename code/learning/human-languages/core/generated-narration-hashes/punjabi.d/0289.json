@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:f1e0662217dd853c",
+  "lessonIds": [
+    "PA-C289-dhund",
+    "PA-C289-kakkar",
+    "PA-C289-pala",
+    "PA-C289-tharna",
+    "PA-C289-sial"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch289.txt",
+  "json": "punjabi/narration/ch289.json",
+  "textHash": "fnv1a64:116fba10fa53cc79",
+  "jsonHash": "fnv1a64:556566c59cf65cc9",
+  "findings": []
+}

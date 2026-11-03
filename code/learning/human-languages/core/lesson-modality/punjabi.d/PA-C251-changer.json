@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C251-changer",
+    "language": "punjabi",
+    "chapter": 251,
+    "sequence": 14360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b534463b2fd65b12"
+  },
+  "findings": []
+}

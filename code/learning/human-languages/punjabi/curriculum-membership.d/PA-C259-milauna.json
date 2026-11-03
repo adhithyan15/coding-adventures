@@ -1,0 +1,11 @@
+{
+  "id": "PA-C259-milauna",
+  "pathSegment": "PA-PATH-259-PHONE259",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-259-PHONE259",
+      "order": 4
+    }
+  ]
+}

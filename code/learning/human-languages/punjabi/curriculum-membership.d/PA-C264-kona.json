@@ -1,0 +1,11 @@
+{
+  "id": "PA-C264-kona",
+  "pathSegment": "PA-PATH-264-CROSS264",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-264-CROSS264",
+      "order": 4
+    }
+  ]
+}

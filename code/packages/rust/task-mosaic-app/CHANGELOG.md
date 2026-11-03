@@ -1,5 +1,39 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — task names are capped at 512 characters (6e4)
+
+- **Added: a task-name limit wherever a task name is typed.** Nothing limited
+  one, so a pasted or restored multi-megabyte name was stored, re-rendered and
+  lowercased on every note Save's lookup. task-core now refuses a name past
+  `MAX_TASK_NAME_CHARS` (512 Unicode scalar values); this adapter applies the
+  same number where a person types, so the refusal is one they see
+  (`task-app-data-model.md`, "Task names are bounded"; notes-ui addendum v1.5):
+  - `newTaskNameChange`, `editTaskNameChange`, `noteTaskNameChange`, and
+    `sheetFormulaChange` / `sheetEditCommit` while the Sheet edits the Name
+    column, go through the note title's `capped_draft_payload`: an edit past
+    the cap fails, `dispatch` rolls back, and the field shows its last value.
+    An over-cap value may still shrink.
+  - `addTask` and `saveTaskEdit` with a draft over the cap (reachable only via
+    a restored `newTaskName`, or a legacy name loaded into the edit field and
+    then grown behind its back) set `new-task-name-error` /
+    `edit-task-name-error` to "Task names can be at most 512 characters." and
+    write nothing. A rename over the cap is allowed when it is no longer than
+    the stored name, as task-core allows it.
+  - Nothing stored is cut: a task named before the cap restores whole, opens
+    whole in the edit field, the Sheet and a note's attach field, still
+    matches, and can be edited down. A restored over-cap `newTaskName` draft
+    is kept whole, as note drafts are (the Checklists composers still clear
+    theirs).
+  - `MAX_CHECKLIST_TEXT_CHARS` is now defined as `MAX_TASK_NAME_CHARS`, which
+    it always equalled: each Checklists composer names a task.
+- Tests: `task_names_are_capped_by_the_shared_vectors` runs every case of
+  TaskApp's new `fixtures/task-name-limit-v1.json` (at the cap, one past, in
+  two-, three- and four-byte characters, combining marks, untrimmed drafts),
+  which the web host runs too; `the_task_name_limit_is_the_shared_one` pins
+  the constant to the fixture's `maxChars`; and five more cover the edit
+  field, the Sheet Name cell (and that other Sheet cells are not capped), the
+  attach field, a restored over-cap draft, and a legacy over-cap task.
+
 ## [Unreleased] — a note's task name matches with Unicode lowercasing (6e2)
 
 - **Fixed: "écrire" did not attach a note to the task "Écrire".**

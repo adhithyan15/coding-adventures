@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:4838490d80e0d1d3",
+  "lessonIds": [
+    "PA-C244-pona",
+    "PA-C244-punna",
+    "PA-C244-nitarna",
+    "PA-C244-parosna",
+    "PA-C244-ghotna"
+  ],
+  "tex": "punjabi/book/chapters/ch244-from-pot-to-plate.tex"
+}

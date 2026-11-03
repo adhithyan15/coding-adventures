@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C267-thana",
+    "language": "punjabi",
+    "chapter": 267,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d20de6a589c1a035"
+  },
+  "findings": []
+}

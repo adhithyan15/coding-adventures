@@ -1,0 +1,11 @@
+{
+  "id": "PA-C363-usarna",
+  "pathSegment": "PA-PATH-363-WORK363",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-363-WORK363",
+      "order": 1
+    }
+  ]
+}

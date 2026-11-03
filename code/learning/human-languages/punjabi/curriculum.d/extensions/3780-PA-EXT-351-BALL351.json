@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-351-BALL351",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say which ball games I like to play.",
+  "prerequisites": []
+}

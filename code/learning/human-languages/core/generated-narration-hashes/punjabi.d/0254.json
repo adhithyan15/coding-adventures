@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:cd64c2913b69bc36",
+  "lessonIds": [
+    "PA-C254-faram",
+    "PA-C254-arzi",
+    "PA-C254-sahi",
+    "PA-C254-ghalat",
+    "PA-C254-mitauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch254.txt",
+  "json": "punjabi/narration/ch254.json",
+  "textHash": "fnv1a64:0c64d38806b3d0bd",
+  "jsonHash": "fnv1a64:d09632fcc1f509e9",
+  "findings": []
+}

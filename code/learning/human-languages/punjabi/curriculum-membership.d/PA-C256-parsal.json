@@ -1,0 +1,11 @@
+{
+  "id": "PA-C256-parsal",
+  "pathSegment": "PA-PATH-256-DAK256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-256-DAK256",
+      "order": 1
+    }
+  ]
+}

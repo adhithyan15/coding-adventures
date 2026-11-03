@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:f794793a481dfaac",
+  "lessonIds": [
+    "PA-C323-dhidd",
+    "PA-C323-haddi",
+    "PA-C323-kaleja",
+    "PA-C323-pasli",
+    "PA-C323-dukhna"
+  ],
+  "tex": "punjabi/book/chapters/ch323-inside-the-body.tex"
+}

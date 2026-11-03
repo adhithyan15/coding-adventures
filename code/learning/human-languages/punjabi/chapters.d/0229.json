@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Knots and Strings",
+  "label": "ch:pa-a2-knots-and-strings",
+  "canDo": "I can say what I tie and tighten.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C229-ghundi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say what I tie and tighten.",
+    "assesses": [
+      "PA-LEX-C229-DIN229-03",
+      "PA-LEX-C229-DIN229-04",
+      "PA-LEX-C229-DIN229-05"
+    ]
+  }
+}

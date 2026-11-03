@@ -1,0 +1,11 @@
+{
+  "id": "PA-C275-thaila",
+  "pathSegment": "PA-PATH-275-FIT275",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-275-FIT275",
+      "order": 4
+    }
+  ]
+}

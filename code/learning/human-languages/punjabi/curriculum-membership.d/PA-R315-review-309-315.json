@@ -1,0 +1,11 @@
+{
+  "id": "PA-R315-review-309-315",
+  "pathSegment": "PA-PATH-315-BANDIT315",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-315-BANDIT315",
+      "order": 5
+    }
+  ]
+}

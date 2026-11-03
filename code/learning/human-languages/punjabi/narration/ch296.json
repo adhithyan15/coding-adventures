@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 296,
+  "title": "Slippery Paths",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6c7dec41ef40cff3",
+  "lessons": [
+    {
+      "id": "PA-C296-khisakna",
+      "sequence": 17770,
+      "title": "ਖਿਸਕਣਾ (khisakṇā) — to slide; to slip away",
+      "headword": "ਖਿਸਕਣਾ",
+      "romanization": "khisakṇā",
+      "gloss": "to slide; to slip away",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a50169b01e01679",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a ravine, then the Punjabi for to rot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਖਿਸਕਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖਿਸਕਣਾ — khisakṇā — \"to slide; to slip away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੀਂਹ ਵਿੱਚ ਪਹਾੜ ਤੋਂ ਪੱਥਰ ਖਿਸਕਦੇ ਹਨ। mīṁh vich pahāṛ ton patthar khisakde han. In the rain, stones slide down from the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਪੱਥਰ ਖਿਸਕਿਆ, oh patthar khiskiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖਿਸਕਣਾ (khisakṇā) is inherited from a reconstructed khis, \"slip\"; CDIAL lists Punjabi khiskaṇā, \"to slip away\", under it (CDIAL 3888)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khisakṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khisakṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khisakṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khisakṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṁh vich pahāṛ ton patthar khisakde han. — In the rain, stones slide down from the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṁh vich pahāṛ ton patthar khisakde han.* — In the rain, stones slide down from the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a ravine, then the Punjabi for to rot, then say khisakṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a ravine, then the Punjabi for to rot, then say *khisakṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਖਿਸਕਣਾ (khisakṇā) mean? (\"To slide; to slip away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C296-chipakna",
+      "sequence": 17780,
+      "title": "ਚਿਪਕਣਾ (chipakṇā) — to stick; to cling",
+      "headword": "ਚਿਪਕਣਾ",
+      "romanization": "chipakṇā",
+      "gloss": "to stick; to cling",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d672946d4b48fe28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to rot, then the Punjabi for to slide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚਿਪਕਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਿਪਕਣਾ — chipakṇā — \"to stick; to cling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਚਿੱਕੜ ਜੁੱਤੀ ਨਾਲ ਚਿਪਕਦਾ ਹੈ। chikkaṛ juttī nāl chipakdā hai. Mud sticks to the shoe."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਪੱਤਾ ਚਿਪਕਿਆ, oh pattā chipkiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਿਪਕਣਾ (chipakṇā) is inherited from a reconstructed cippa, \"gummy matter\"; CDIAL lists Punjabi cipakṇā, \"to stick\", under it (CDIAL 4819)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chipakṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chipakṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chipakṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chipakṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chikkaṛ juttī nāl chipakdā hai. — Mud sticks to the shoe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chikkaṛ juttī nāl chipakdā hai.* — Mud sticks to the shoe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to rot, then the Punjabi for to slide, then say chipakṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to rot, then the Punjabi for to slide, then say *chipakṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਿਪਕਣਾ (chipakṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਿਪਕਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚਿਪਕਣਾ (chipakṇā) mean? (\"To stick; to cling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C296-garha",
+      "sequence": 17790,
+      "title": "ਗਾੜ੍ਹਾ (gāṛhā) — thick (of a liquid)",
+      "headword": "ਗਾੜ੍ਹਾ",
+      "romanization": "gāṛhā",
+      "gloss": "thick (of a liquid)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c641cc66544fe762",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to slide, then the Punjabi for to stick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗਾੜ੍ਹਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਾੜ੍ਹਾ — gāṛhā — \"thick (of a liquid)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਦੁੱਧ ਬਹੁਤ ਗਾੜ੍ਹਾ ਹੈ। eh dudh bahut gāṛhā hai. This milk is very thick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਾੜ੍ਹਾ (gāṛhā) is inherited from Sanskrit gāḍha, \"pressed together, thick\"; CDIAL lists Punjabi gāṛhā, \"thick, close\", under it (CDIAL 4118)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṛhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṛhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṛhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṛhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh dudh bahut gāṛhā hai. — This milk is very thick.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh dudh bahut gāṛhā hai.* — This milk is very thick.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to slide, then the Punjabi for to stick, then say gāṛhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to slide, then the Punjabi for to stick, then say *gāṛhā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗਾੜ੍ਹਾ (gāṛhā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗਾੜ੍ਹਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗਾੜ੍ਹਾ (gāṛhā) mean? (\"Thick (of a liquid)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C296-chikna",
+      "sequence": 17800,
+      "title": "ਚਿਕਨਾ (chiknā) — slick; greasy",
+      "headword": "ਚਿਕਨਾ",
+      "romanization": "chiknā",
+      "gloss": "slick; greasy",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f88e657e0af8a2f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to stick, then the Punjabi for thick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚਿਕਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਿਕਨਾ — chiknā — \"slick; greasy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੀਂਹ ਤੋਂ ਬਾਅਦ ਫ਼ਰਸ਼ ਚਿਕਨਾ ਹੈ। mīṁh ton bāad farsh chiknā hai. After the rain the floor is slick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਿਕਨਾ (chiknā) is inherited from Sanskrit cikkaṇa, \"slippery, unctuous\"; CDIAL lists Punjabi ciknā, \"sticky, oily, smooth\", under it (CDIAL 4782)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṁh ton bāad farsh chiknā hai. — After the rain the floor is slick.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṁh ton bāad farsh chiknā hai.* — After the rain the floor is slick.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to stick, then the Punjabi for thick, then say chiknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to stick, then the Punjabi for thick, then say *chiknā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਿਕਨਾ (chiknā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਿਕਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚਿਕਨਾ (chiknā) mean? (\"Slick; greasy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C296-pighalna",
+      "sequence": 17810,
+      "title": "ਪਿਘਲਣਾ (pighalṇā) — to melt",
+      "headword": "ਪਿਘਲਣਾ",
+      "romanization": "pighalṇā",
+      "gloss": "to melt",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4ef1f6aaada3d11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for thick, then the Punjabi for slick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਿਘਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਿਘਲਣਾ — pighalṇā — \"to melt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਧੁੱਪ ਵਿੱਚ ਬਰਫ਼ ਪਿਘਲਦੀ ਹੈ। dhupp vich baraf pighaldī hai. Ice melts in the sunshine."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਬਰਫ਼ ਪਿਘਲੀ, oh baraf pighlī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਿਘਲਣਾ (pighalṇā) is inherited from a reconstructed praghirati, \"flows forth\"; CDIAL lists Punjabi pighalnā, \"to be dissolved, be melted\", under it (CDIAL 8486)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pighalṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pighalṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pighalṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pighalṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhupp vich baraf pighaldī hai. — Ice melts in the sunshine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhupp vich baraf pighaldī hai.* — Ice melts in the sunshine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for thick, then the Punjabi for slick, then say pighalṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for thick, then the Punjabi for slick, then say *pighalṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਿਘਲਣਾ (pighalṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਿਘਲਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਿਘਲਣਾ (pighalṇā) mean? (\"To melt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

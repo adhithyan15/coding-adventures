@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "North, South, East, West",
+  "label": "ch:pa-a2-north-south-east-west",
+  "canDo": "I can say in which direction a place lies.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C271-ghumauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say in which direction a place lies.",
+    "assesses": [
+      "PA-LEX-C271-COMPASS271-03",
+      "PA-LEX-C271-COMPASS271-04",
+      "PA-LEX-C271-COMPASS271-05"
+    ]
+  }
+}

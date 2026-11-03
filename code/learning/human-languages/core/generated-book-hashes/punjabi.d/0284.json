@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:c760672659fa41c4",
+  "lessonIds": [
+    "PA-C284-utarna",
+    "PA-C284-utaarna",
+    "PA-C284-dhakka",
+    "PA-C284-akhri",
+    "PA-C284-apparna"
+  ],
+  "tex": "punjabi/book/chapters/ch284-getting-off.tex"
+}

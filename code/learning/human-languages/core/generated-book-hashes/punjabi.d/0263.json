@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:6ef8a9186036b465",
+  "lessonIds": [
+    "PA-C263-mor",
+    "PA-C263-murna",
+    "PA-C263-pasa",
+    "PA-C263-sajja",
+    "PA-C263-khabba"
+  ],
+  "tex": "punjabi/book/chapters/ch263-right-left-and-the-bend.tex"
+}

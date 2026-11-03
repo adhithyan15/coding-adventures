@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C359-dhian",
+    "language": "punjabi",
+    "chapter": 359,
+    "sequence": 22160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b503e2b5bc917fea"
+  },
+  "findings": []
+}

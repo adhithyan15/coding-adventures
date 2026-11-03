@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:36dacaf2d5118a5a",
+  "lessonIds": [
+    "PA-C214-ki-return",
+    "PA-C214-ki-polar",
+    "PA-C214-polar-review",
+    "PA-C214-answers",
+    "PA-C214-payoff"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch214.txt",
+  "json": "punjabi/narration/ch214.json",
+  "textHash": "fnv1a64:0c53bb208c73d621",
+  "jsonHash": "fnv1a64:15c2db2b14c32b63",
+  "findings": []
+}

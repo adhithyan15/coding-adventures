@@ -1,0 +1,11 @@
+{
+  "id": "PA-C224-message",
+  "pathSegment": "PA-PATH-224-A2-MESSAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-224-A2-MESSAGE",
+      "order": 1
+    }
+  ]
+}

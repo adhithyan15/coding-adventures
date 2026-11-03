@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:60dab23167d25341",
+  "lessonIds": [
+    "PA-C278-hisab",
+    "PA-C278-laddna",
+    "PA-C278-vikna",
+    "PA-C278-paikat",
+    "PA-C278-jorna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch278.txt",
+  "json": "punjabi/narration/ch278.json",
+  "textHash": "fnv1a64:c65ebf19d1e2d11e",
+  "jsonHash": "fnv1a64:3c983077d6be56f2",
+  "findings": []
+}

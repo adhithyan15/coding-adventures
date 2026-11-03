@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:45653b083ab06d5d",
+  "lessonIds": [
+    "PA-C234-nind",
+    "PA-C234-diva",
+    "PA-C234-balna",
+    "PA-C234-bujhauna",
+    "PA-C234-palangh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch234.txt",
+  "json": "punjabi/narration/ch234.json",
+  "textHash": "fnv1a64:e61dbc077e231402",
+  "jsonHash": "fnv1a64:f3a23bd198757c41",
+  "findings": []
+}

@@ -1,0 +1,753 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 295,
+  "title": "Cracks and Hollows",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d0df402c85382b32",
+  "lessons": [
+    {
+      "id": "PA-C295-tarer",
+      "sequence": 17720,
+      "title": "ਤਰੇੜ (tareṛ) — a crack",
+      "headword": "ਤਰੇੜ",
+      "romanization": "tareṛ",
+      "gloss": "a crack",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69a3680e39f4837c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a clod, then the Punjabi for dust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਰੇੜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਰੇੜ — tareṛ — \"a crack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੰਧ ਵਿੱਚ ਇੱਕ ਲੰਮੀ ਤਰੇੜ ਹੈ। kandh vich ikk lammī tareṛ hai. There is a long crack in the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਰੇੜ (tareṛ) is inherited from a reconstructed tṛdi, \"crack, fissure\"; CDIAL lists Punjabi tareṛ, \"crack, crevice\", under it (CDIAL 5926)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tareṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tareṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tareṛ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tareṛ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kandh vich ikk lammī tareṛ hai. — There is a long crack in the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kandh vich ikk lammī tareṛ hai.* — There is a long crack in the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a clod, then the Punjabi for dust, then say tareṛ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a clod, then the Punjabi for dust, then say *tareṛ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਰੇੜ (tareṛ) mean? (\"A crack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C295-phatna",
+      "sequence": 17730,
+      "title": "ਫਟਣਾ (phaṭṇā) — to split open; to crack",
+      "headword": "ਫਟਣਾ",
+      "romanization": "phaṭṇā",
+      "gloss": "to split open; to crack",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bd7820a2017020f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for dust, then the Punjabi for a crack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਫਟਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫਟਣਾ — phaṭṇā — \"to split open; to crack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸੋਕੇ ਵਿੱਚ ਜ਼ਮੀਨ ਫਟਦੀ ਹੈ। soke vich zamīn phaṭdī hai. In a drought the ground splits open."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਘੜਾ ਫਟਿਆ, oh ghaṛā phaṭiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫਟਣਾ (phaṭṇā) goes back to Sanskrit sphāṭayati, \"causes to split\", as a word taken from Hindi: CDIAL lists Punjabi phāṭṇā, \"to be split\", under it, and derives the short-vowel phaṭṇā from Hindi phaṭnā (CDIAL 13825)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaṭṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaṭṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaṭṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaṭṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soke vich zamīn phaṭdī hai. — In a drought the ground splits open.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soke vich zamīn phaṭdī hai.* — In a drought the ground splits open.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for dust, then the Punjabi for a crack, then say phaṭṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for dust, then the Punjabi for a crack, then say *phaṭṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਫਟਣਾ (phaṭṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਫਟਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਫਟਣਾ (phaṭṇā) mean? (\"To split open; to crack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C295-khokhla",
+      "sequence": 17740,
+      "title": "ਖੋਖਲਾ (khokhlā) — hollow",
+      "headword": "ਖੋਖਲਾ",
+      "romanization": "khokhlā",
+      "gloss": "hollow",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f5a43d3e59baa93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a crack, then the Punjabi for to split open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਖੋਖਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖੋਖਲਾ — khokhlā — \"hollow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਪੁਰਾਣਾ ਰੁੱਖ ਖੋਖਲਾ ਹੈ। eh purāṇā rukkh khokhlā hai. This old tree is hollow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖੋਖਲਾ (khokhlā) is inherited from a reconstructed khōkkha, \"hollow\"; CDIAL lists Punjabi khokhlā under it (CDIAL 3927)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khokhlā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khokhlā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khokhlā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khokhlā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh purāṇā rukkh khokhlā hai. — This old tree is hollow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh purāṇā rukkh khokhlā hai.* — This old tree is hollow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a crack, then the Punjabi for to split open, then say khokhlā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a crack, then the Punjabi for to split open, then say *khokhlā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਖੋਖਲਾ (khokhlā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਖੋਖਲਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਖੋਖਲਾ (khokhlā) mean? (\"Hollow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C295-khadd",
+      "sequence": 17750,
+      "title": "ਖੱਡ (khaḍḍ) — a ravine; a deep pit",
+      "headword": "ਖੱਡ",
+      "romanization": "khaḍḍ",
+      "gloss": "a ravine; a deep pit",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36eb823049eeccd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to split open, then the Punjabi for hollow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਖੱਡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖੱਡ — khaḍḍ — \"a ravine; a deep pit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪਹਾੜ ਦੇ ਹੇਠਾਂ ਡੂੰਘੀ ਖੱਡ ਹੈ। pahāṛ de heṭhāṁ ḍūṅghī khaḍḍ hai. There is a deep ravine below the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖੱਡ (khaḍḍ) is inherited from a reconstructed khaḍḍa, \"hole, pit\"; CDIAL lists Punjabi khaḍḍ, \"pit, ravine\", under it (CDIAL 3790)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḍḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḍḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḍḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḍḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahāṛ de heṭhāṁ ḍūṅghī khaḍḍ hai. — There is a deep ravine below the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahāṛ de heṭhāṁ ḍūṅghī khaḍḍ hai.* — There is a deep ravine below the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to split open, then the Punjabi for hollow, then say khaḍḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to split open, then the Punjabi for hollow, then say *khaḍḍ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਖੱਡ (khaḍḍ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਖੱਡ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਖੱਡ (khaḍḍ) mean? (\"A ravine; a deep pit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C295-galna",
+      "sequence": 17760,
+      "title": "ਗਲਣਾ (galṇā) — to rot; to decay",
+      "headword": "ਗਲਣਾ",
+      "romanization": "galṇā",
+      "gloss": "to rot; to decay",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a16d84441084995",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for hollow, then the Punjabi for a ravine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਲਣਾ — galṇā — \"to rot; to decay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਿੱਲੇ ਫਲ ਜਲਦੀ ਗਲਦੇ ਹਨ। gille phal jaldī galde han. Wet fruit rots quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਸੇਬ ਗਲਿਆ, oh seb galiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਲਣਾ (galṇā) is inherited from Sanskrit galati, \"drips, oozes\"; CDIAL lists Punjabi galṇā, \"to melt, sink\", under it; the sense \"to rot\" is not among those it gives (CDIAL 4074)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gille phal jaldī galde han. — Wet fruit rots quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gille phal jaldī galde han.* — Wet fruit rots quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for hollow, then the Punjabi for a ravine, then say galṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for hollow, then the Punjabi for a ravine, then say *galṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗਲਣਾ (galṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗਲਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗਲਣਾ (galṇā) mean? (\"To rot; to decay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

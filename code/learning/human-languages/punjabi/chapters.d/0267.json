@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Which Floor, Which Office?",
+  "label": "ch:pa-a2-which-floor-which-office",
+  "canDo": "I can ask where an office is in a town.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C267-thikana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can ask where an office is in a town.",
+    "assesses": [
+      "PA-LEX-C267-OFFICE267-03",
+      "PA-LEX-C267-OFFICE267-04",
+      "PA-LEX-C267-OFFICE267-05"
+    ]
+  }
+}

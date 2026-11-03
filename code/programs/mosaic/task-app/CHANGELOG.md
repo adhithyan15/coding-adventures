@@ -7,6 +7,20 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.16` accumulate here until the next version is
 cut.
 
+### Added
+
+- Task names are capped at 512 characters on every host (backlog 6e4).
+  Nothing limited a task's name before, so a pasted or restored
+  multi-megabyte one was stored, re-rendered and lowercased on every note
+  Save's lookup. task-core now refuses a longer name, and both hosts refuse
+  one as it is typed into Add Task, the edit field, the Sheet's Name cell or
+  a note's *Attach to task* field, the way a note title's cap already works.
+  Characters are Unicode scalar values on both hosts, so 512 emoji fit on the
+  web as they do natively. A task named before the cap still loads whole and
+  can be shortened, never lengthened (`code/specs/task-app-data-model.md`,
+  "Task names are bounded"). New `fixtures/task-name-limit-v1.json` holds the
+  boundary cases, run by both `task-mosaic-app` and the web host.
+
 ### Fixed
 
 - A note's *Attach to task* name now finds the same task on every host

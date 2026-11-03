@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C257-nakad",
+    "language": "punjabi",
+    "chapter": 257,
+    "sequence": 15220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:744a3380a9d2679b"
+  },
+  "findings": []
+}

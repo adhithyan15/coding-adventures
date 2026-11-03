@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:1193d85c41db5e83",
+  "lessonIds": [
+    "PA-C256-dakia",
+    "PA-C256-parsal",
+    "PA-C256-pahunchauna",
+    "PA-C256-ghallna",
+    "PA-C256-parna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch256.txt",
+  "json": "punjabi/narration/ch256.json",
+  "textHash": "fnv1a64:fe15248527656083",
+  "jsonHash": "fnv1a64:f468bcd3537fa19f",
+  "findings": []
+}

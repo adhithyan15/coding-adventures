@@ -1,0 +1,11 @@
+{
+  "id": "PA-C230-lahuna",
+  "pathSegment": "PA-PATH-230-DIN230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-230-DIN230",
+      "order": 1
+    }
+  ]
+}

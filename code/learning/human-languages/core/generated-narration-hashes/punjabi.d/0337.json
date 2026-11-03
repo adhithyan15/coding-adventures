@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:312f82ba9b989874",
+  "lessonIds": [
+    "PA-C337-mangna",
+    "PA-C337-benti",
+    "PA-C337-thorha",
+    "PA-C337-zara",
+    "PA-C337-mangvauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch337.txt",
+  "json": "punjabi/narration/ch337.json",
+  "textHash": "fnv1a64:aaf32771d0cb2194",
+  "jsonHash": "fnv1a64:1cc01fbe1541a8de",
+  "findings": []
+}

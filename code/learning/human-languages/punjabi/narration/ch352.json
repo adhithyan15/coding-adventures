@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 352,
+  "title": "Games Indoors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:307184b43a0970b0",
+  "lessons": [
+    {
+      "id": "PA-C352-shatranj",
+      "sequence": 21770,
+      "title": "ਸ਼ਤਰੰਜ (shatranj) — chess",
+      "headword": "ਸ਼ਤਰੰਜ",
+      "romanization": "shatranj",
+      "gloss": "chess",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96155b5376beaa44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a match, then the Punjabi for to defeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸ਼ਤਰੰਜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸ਼ਤਰੰਜ — shatranj — \"chess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਦਾਦਾ ਸ਼ਾਮ ਨੂੰ ਸ਼ਤਰੰਜ ਖੇਡਦਾ ਹੈ। merā dādā shām nū̃ shatranj kheḍdā hai. My grandfather plays chess in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸ਼ਤਰੰਜ (shatranj) is a loan, usually traced to Persian shatranj, \"chess\", which goes back to Sanskrit caturaṅga, \"four-limbed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shatranj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shatranj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shatranj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shatranj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā dādā shām nū̃ shatranj kheḍdā hai. — My grandfather plays chess in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā dādā shām nū̃ shatranj kheḍdā hai.* — My grandfather plays chess in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a match, then the Punjabi for to defeat, then say shatranj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a match, then the Punjabi for to defeat, then say *shatranj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸ਼ਤਰੰਜ (shatranj) mean? (\"Chess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C352-bazi",
+      "sequence": 21780,
+      "title": "ਬਾਜ਼ੀ (bāzī) — a round (of a game); a game",
+      "headword": "ਬਾਜ਼ੀ",
+      "romanization": "bāzī",
+      "gloss": "a round (of a game); a game",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b49148979a0c5f10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to defeat, then the Punjabi for chess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬਾਜ਼ੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਜ਼ੀ — bāzī — \"a round (of a game); a game\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਪਹਿਲੀ ਬਾਜ਼ੀ ਜਿੱਤੀ। Aman ne pahilī bāzī jittī. Aman won the first round."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਜ਼ੀ (bāzī) is a loan, usually traced to Persian bāzī, \"play\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāzī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāzī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāzī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aman ne pahilī bāzī jittī. — Aman won the first round.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aman ne pahilī bāzī jittī.* — Aman won the first round.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to defeat, then the Punjabi for chess, then say bāzī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to defeat, then the Punjabi for chess, then say *bāzī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬਾਜ਼ੀ (bāzī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬਾਜ਼ੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬਾਜ਼ੀ (bāzī) mean? (\"A round (of a game); a game\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C352-vari",
+      "sequence": 21790,
+      "title": "ਵਾਰੀ (vārī) — one's turn (in a game or a queue)",
+      "headword": "ਵਾਰੀ",
+      "romanization": "vārī",
+      "gloss": "one's turn (in a game or a queue)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fddc3c1327b21e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for chess, then the Punjabi for a round of a game."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵਾਰੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਾਰੀ — vārī — \"one's turn (in a game or a queue)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਹੁਣ ਮੇਰੀ ਵਾਰੀ ਹੈ। huṇ merī vārī hai. Now it's my turn."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਾਰੀ (vārī) is inherited from Sanskrit vāra, \"appointed time, one's turn\"; CDIAL lists Punjabi vār, \"occasion\", and Lahnda vārī, \"turn, time\", under it (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huṇ merī vārī hai. — Now it's my turn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huṇ merī vārī hai.* — Now it's my turn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for chess, then the Punjabi for a round of a game, then say vārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for chess, then the Punjabi for a round of a game, then say *vārī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵਾਰੀ (vārī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵਾਰੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵਾਰੀ (vārī) mean? (\"One's turn (in a game or a queue)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C352-goti",
+      "sequence": 21800,
+      "title": "ਗੋਟੀ (goṭī) — a game piece; a counter on a board",
+      "headword": "ਗੋਟੀ",
+      "romanization": "goṭī",
+      "gloss": "a game piece; a counter on a board",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f333629808be9f36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a round of a game, then the Punjabi for one's turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗੋਟੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੋਟੀ — goṭī — \"a game piece; a counter on a board\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੇ ਕੋਲ ਚਾਰ ਲਾਲ ਗੋਟੀਆਂ ਹਨ। mere kol chār lāl goṭīāṁ han. I have four red pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੋਟੀ (goṭī) is inherited from a reconstructed goṭṭa, \"something round\"; CDIAL lists Punjabi goṭ, \"piece on a chequer board\", under it (CDIAL 4271), but not the form goṭī itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere kol chār lāl goṭīāṁ han. — I have four red pieces.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere kol chār lāl goṭīāṁ han.* — I have four red pieces.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a round of a game, then the Punjabi for one's turn, then say goṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a round of a game, then the Punjabi for one's turn, then say *goṭī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗੋਟੀ (goṭī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗੋਟੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗੋਟੀ (goṭī) mean? (\"A game piece; a counter on a board\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C352-inam",
+      "sequence": 21810,
+      "title": "ਇਨਾਮ (inām) — a prize; a reward",
+      "headword": "ਇਨਾਮ",
+      "romanization": "inām",
+      "gloss": "a prize; a reward",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:903ef175d2931586",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for one's turn, then the Punjabi for a game piece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਇਨਾਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਨਾਮ — inām — \"a prize; a reward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਕੂਲ ਹਰ ਸਾਲ ਚੰਗੇ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਇਨਾਮ ਦਿੰਦਾ ਹੈ। sakūl har sāl chaṅge vidiārthīāṁ nū̃ inām dindā hai. Every year the school gives prizes to good students."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਨਾਮ (inām) is a loan, usually traced through Persian to Arabic inʿām, \"favour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakūl har sāl chaṅge vidiārthīāṁ nū̃ inām dindā hai. — Every year the school gives prizes to good students.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakūl har sāl chaṅge vidiārthīāṁ nū̃ inām dindā hai.* — Every year the school gives prizes to good students.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for one's turn, then the Punjabi for a game piece, then say inām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for one's turn, then the Punjabi for a game piece, then say *inām* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਇਨਾਮ (inām) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਇਨਾਮ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਇਨਾਮ (inām) mean? (\"A prize; a reward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

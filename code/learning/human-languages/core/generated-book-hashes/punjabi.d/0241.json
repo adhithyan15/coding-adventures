@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:274a9ca597362f64",
+  "lessonIds": [
+    "PA-C241-chhillna",
+    "PA-C241-katarna",
+    "PA-C241-chirna",
+    "PA-C241-mirach",
+    "PA-C241-vesan"
+  ],
+  "tex": "punjabi/book/chapters/ch241-cutting-vegetables.tex"
+}

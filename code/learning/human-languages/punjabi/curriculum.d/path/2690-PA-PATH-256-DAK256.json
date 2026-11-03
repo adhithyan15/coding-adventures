@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-256-DAK256",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-256-DAK256"
+  ],
+  "after": []
+}

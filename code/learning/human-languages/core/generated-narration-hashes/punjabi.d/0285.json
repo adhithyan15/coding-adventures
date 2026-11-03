@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:34d05d0fc383f73d",
+  "lessonIds": [
+    "PA-C285-paratna",
+    "PA-C285-varna",
+    "PA-C285-mukkna",
+    "PA-C285-thakkna",
+    "PA-C285-pahu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch285.txt",
+  "json": "punjabi/narration/ch285.json",
+  "textHash": "fnv1a64:015d0ba215ed5846",
+  "jsonHash": "fnv1a64:f15321234d6b7a73",
+  "findings": []
+}

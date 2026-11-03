@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:881c93ff9204956b",
+  "lessonIds": [
+    "PA-C269-pachhanna",
+    "PA-C269-naksha",
+    "PA-C269-nishan",
+    "PA-C269-dhukkna",
+    "PA-C269-toa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch269.txt",
+  "json": "punjabi/narration/ch269.json",
+  "textHash": "fnv1a64:26d68a3b286b233d",
+  "jsonHash": "fnv1a64:23b8f8847518c49c",
+  "findings": []
+}

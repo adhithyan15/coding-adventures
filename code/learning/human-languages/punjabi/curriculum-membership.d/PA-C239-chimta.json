@@ -1,0 +1,11 @@
+{
+  "id": "PA-C239-chimta",
+  "pathSegment": "PA-PATH-239-KAM239",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-239-KAM239",
+      "order": 2
+    }
+  ]
+}

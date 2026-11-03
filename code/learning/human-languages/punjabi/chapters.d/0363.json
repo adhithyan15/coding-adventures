@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "At Work",
+  "label": "ch:pa-a2-at-work",
+  "canDo": "I can say what I do and manage at work.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C363-tarakki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can say what I do and manage at work.",
+    "assesses": [
+      "PA-LEX-C363-WORK363-03",
+      "PA-LEX-C363-WORK363-04",
+      "PA-LEX-C363-WORK363-05"
+    ]
+  }
+}

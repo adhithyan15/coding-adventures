@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-342-MEAN342",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask what something means and give a reason.",
+  "prerequisites": []
+}

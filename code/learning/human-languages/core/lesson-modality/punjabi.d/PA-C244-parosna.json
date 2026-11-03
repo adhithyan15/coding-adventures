@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C244-parosna",
+    "language": "punjabi",
+    "chapter": 244,
+    "sequence": 14000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb384ab4f689f6a8"
+  },
+  "findings": []
+}

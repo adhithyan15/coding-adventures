@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:ace9bc13f6608315",
+  "lessonIds": [
+    "PA-C265-ure",
+    "PA-C265-pare",
+    "PA-C265-vichkar",
+    "PA-C265-vat",
+    "PA-C265-koh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch265.txt",
+  "json": "punjabi/narration/ch265.json",
+  "textHash": "fnv1a64:da0917575b656937",
+  "jsonHash": "fnv1a64:f98bf1e03049a5f8",
+  "findings": []
+}

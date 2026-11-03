@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:a1db711333140aa5",
+  "lessonIds": [
+    "PA-C284-utarna",
+    "PA-C284-utaarna",
+    "PA-C284-dhakka",
+    "PA-C284-akhri",
+    "PA-C284-apparna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch284.txt",
+  "json": "punjabi/narration/ch284.json",
+  "textHash": "fnv1a64:f5f1f735c9104a2b",
+  "jsonHash": "fnv1a64:addbad51bd1ffe8c",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C276-mufat",
+  "pathSegment": "PA-PATH-276-PRICE276",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-276-PRICE276",
+      "order": 4
+    }
+  ]
+}

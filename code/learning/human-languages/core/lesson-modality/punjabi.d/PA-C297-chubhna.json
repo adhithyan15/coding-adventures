@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C297-chubhna",
+    "language": "punjabi",
+    "chapter": 297,
+    "sequence": 17860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea95efb6efc284c3"
+  },
+  "findings": []
+}

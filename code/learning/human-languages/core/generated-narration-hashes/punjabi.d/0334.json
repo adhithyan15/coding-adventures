@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:a652c81379ad3353",
+  "lessonIds": [
+    "PA-C334-unn",
+    "PA-C334-kattna-spin",
+    "PA-C334-bunna",
+    "PA-C334-julaha",
+    "PA-C334-rangna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch334.txt",
+  "json": "punjabi/narration/ch334.json",
+  "textHash": "fnv1a64:4a089c59c518929f",
+  "jsonHash": "fnv1a64:6f40c6e70fc3622f",
+  "findings": []
+}

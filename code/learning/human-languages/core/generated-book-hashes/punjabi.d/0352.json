@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:4c551ff6b5f04b7f",
+  "lessonIds": [
+    "PA-C352-shatranj",
+    "PA-C352-bazi",
+    "PA-C352-vari",
+    "PA-C352-goti",
+    "PA-C352-inam"
+  ],
+  "tex": "punjabi/book/chapters/ch352-games-indoors.tex"
+}

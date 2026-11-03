@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:a59ac6f40be489bb",
+  "lessonIds": [
+    "PA-C267-thana",
+    "PA-C267-manzil",
+    "PA-C267-dakkhana",
+    "PA-C267-adalat",
+    "PA-C267-thikana"
+  ],
+  "tex": "punjabi/book/chapters/ch267-which-floor-which-office.tex"
+}

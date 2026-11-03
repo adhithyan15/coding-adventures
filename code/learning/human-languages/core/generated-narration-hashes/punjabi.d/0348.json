@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:058b730171d67b30",
+  "lessonIds": [
+    "PA-C348-saz",
+    "PA-C348-tabla",
+    "PA-C348-dhun",
+    "PA-C348-riaz",
+    "PA-C348-gunjna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch348.txt",
+  "json": "punjabi/narration/ch348.json",
+  "textHash": "fnv1a64:43da2ea031d94c3f",
+  "jsonHash": "fnv1a64:774548d9606fde0e",
+  "findings": []
+}

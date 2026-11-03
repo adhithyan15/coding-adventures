@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:3c03897ce74de100",
+  "lessonIds": [
+    "PA-C328-hausla",
+    "PA-C328-pareshan",
+    "PA-C328-tasalli",
+    "PA-C328-dabauna",
+    "PA-C328-sahina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch328.txt",
+  "json": "punjabi/narration/ch328.json",
+  "textHash": "fnv1a64:c3e82baec139c282",
+  "jsonHash": "fnv1a64:149866b4be09fbd2",
+  "findings": []
+}

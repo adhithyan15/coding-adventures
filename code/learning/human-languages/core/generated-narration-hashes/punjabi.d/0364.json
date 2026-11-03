@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:d5257d78a6427f96",
+  "lessonIds": [
+    "PA-C364-pesha",
+    "PA-C364-karobar",
+    "PA-C364-kamyab",
+    "PA-C364-sanad",
+    "PA-C364-juttna",
+    "PA-R364-review-358-364",
+    "PA-R364-review-final-364"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch364.txt",
+  "json": "punjabi/narration/ch364.json",
+  "textHash": "fnv1a64:1588ea1ec3046f7b",
+  "jsonHash": "fnv1a64:317ead08920cbcee",
+  "findings": []
+}

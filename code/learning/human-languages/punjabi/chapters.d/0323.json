@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Inside the Body",
+  "label": "ch:pa-a2-inside-the-body",
+  "canDo": "I can say which part inside my body hurts.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C323-dukhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can say which part inside my body hurts.",
+    "assesses": [
+      "PA-LEX-C323-BODY323-03",
+      "PA-LEX-C323-BODY323-04",
+      "PA-LEX-C323-BODY323-05"
+    ]
+  }
+}
