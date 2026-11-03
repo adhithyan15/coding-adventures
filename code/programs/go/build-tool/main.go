@@ -193,6 +193,7 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 }
 
 const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
+const duplicateDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-duplicate-identity.json"
 const ciGateFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-"
 const toolchainDetectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/toolchain-detection-"
 const sourceCollectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/source-collection-"
@@ -217,6 +218,18 @@ var sharedDiscoveryFixtureConsumers = []struct{ name, language string }{
 	{"lua/programs/build-tool", "lua"},
 	{"perl/programs/build-tool", "perl"},
 	{"python/programs/build-tool", "python"},
+	{"ruby/programs/build-tool", "ruby"},
+	{"rust/programs/build-tool", "rust"},
+	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
+}
+
+// These are the program fronts whose native tests read the exact duplicate
+// discovery fixture. Keep this relation separate from the broader language
+// registry: the two fixtures have different native reader sets.
+var duplicateDiscoveryFixtureConsumers = []struct{ name, language string }{
+	{"elixir/programs/build-tool", "elixir"},
+	{"go/programs/build-tool", "go"},
 	{"ruby/programs/build-tool", "ruby"},
 	{"rust/programs/build-tool", "rust"},
 	{"swift/programs/build-tool", "swift"},
@@ -659,6 +672,7 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 	}
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
+	duplicateDiscoveryFixtureChanged := containsPath(changedFiles, duplicateDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
 	graphDiffFixtureChanged := hasGraphDiffFixturePath(changedFiles)
@@ -704,7 +718,7 @@ func changedPackageRootsForPlatformAndLanguage(
 			sourceFixtureFamilies[family] = true
 		}
 	}
-	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
+	if !discoveryFixtureChanged && !duplicateDiscoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -721,6 +735,17 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("shared discovery fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	if duplicateDiscoveryFixtureChanged {
+		for _, consumer := range duplicateDiscoveryFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("duplicate-discovery fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}

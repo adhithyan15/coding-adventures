@@ -2,6 +2,16 @@
 
 The **primary build tool** for the coding-adventures monorepo. Compiled to a native binary for fast, dependency-free CI execution.
 
+Changes to the exact shared
+`code/specs/fixtures/build-tool-v1/cases/discovery-duplicate-identity.json`
+fixture schedule its direct Elixir, Go, Ruby, Rust, Swift, and TypeScript
+build-tool readers on every platform. The relation is case- and path-exact,
+honors explicit language selection, unions ordinary package changes, and keeps
+normal prerequisite closure. Missing applicable readers fail before a plan is
+written; nested, renamed-target, backslash, backup, and other lookalike paths
+do not acquire the relation. A rename or deletion still schedules readers from
+the changed old path.
+
 Changes to the exact `code/specs/fixtures/starlark-opcode-provider-v1/cases.json`
 path also schedule the committed `go/starlark-compiler` native conformance reader
 on every platform for all/Go invocations. Nearby schema/docs paths and other

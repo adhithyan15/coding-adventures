@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-03 — Duplicate-discovery fixture CI routing
+
+- Changes to the exact checked `discovery-duplicate-identity.json` case now
+  schedule its six direct native build-tool readers in Elixir, Go, Ruby, Rust,
+  Swift, and TypeScript on Linux, macOS, and Windows plans. The bounded mapping
+  preserves explicit language filters, ordinary changed-package union and
+  prerequisite closure, retains renamed/deleted source paths, and fails before
+  plan output when an applicable reader root is missing. Lookalike, nested,
+  case-varied, backslash, extensionless, and backup paths remain unrelated.
+- A direct-reader drift check keeps the six-reader relation synchronized with
+  native test references without widening the separate twelve-reader language
+  registry or four-reader CI-gate fixture mappings.
+
 ## 2026-11-02 — Cargo link-table edges: security-review fixes
 
 - **Workspace inheritance is refused in link tables (review round 2).**

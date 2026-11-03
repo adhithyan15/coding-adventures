@@ -133,6 +133,21 @@ not merely the gate verdict, are the evidence that native tests can run.
 For an explicitly single-language invocation, only consumers in that language
 are seeded and checked; all-language CI retains the full twelve-consumer check.
 
+The exact
+`code/specs/fixtures/build-tool-v1/cases/discovery-duplicate-identity.json`
+fixture has its own smaller direct-native-consumer relation: the Elixir, Go,
+Ruby, Rust, Swift, and TypeScript build-tool fronts. Added, modified, deleted,
+and renamed-source changes to that exact path MUST seed those six roots before
+affected and prerequisite closure on detect, Linux, macOS, and Windows plans.
+Ordinary changed package roots are united with the fixture roots. Explicit
+single-language plans seed only the matching reader, and an applicable missing
+reader MUST abort planning before any partial plan is written. Nested,
+case-varied, backslash, extensionless, renamed-target, backup, and sibling paths
+MUST NOT trigger the relation. A direct native reader added to or removed from
+this fixture MUST update the relation and its source-reference drift test in
+the same change. This six-reader mapping is independent of both the broader
+language-registry mapping above and the CI-gate fixture family below.
+
 The exact flat case family
 `code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-*.json` has a
 separate direct-native-consumer relation: `go/programs/build-tool` (whose
