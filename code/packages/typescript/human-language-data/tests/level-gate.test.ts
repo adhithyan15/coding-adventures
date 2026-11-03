@@ -68,7 +68,7 @@ function realReport() {
 // REAL_REPORT is. The claim it carries is "an over-budget lesson at level L blocks
 // L, and only L": the track still attains the level below. The corpus stopped
 // holding a real example long ago, and the fixture's level cannot be fixed either:
-// it used A1 until the last A1 track (Punjabi) attained A2. So take the LOWEST
+// it used A1 until the last A1 track attained A2. So take the LOWEST
 // rung above pre-A1 that some track has attained on the real corpus, mark one of
 // that track's lessons at that rung over budget in the ramp report, and run the
 // gate again on otherwise identical inputs.
