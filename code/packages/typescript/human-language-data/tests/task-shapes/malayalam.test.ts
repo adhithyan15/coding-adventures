@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
+import { listTaskShapeInventories, loadTrackLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
 it("pins the project-defined Malayalam pre-A1 target without borrowing the Malayalam Mission's name", () => {
@@ -59,7 +59,7 @@ it("declares a published stimulus length, so reading reach can measure it rather
   // at 3, re-derived from the merged tree rather than composed from branches.
   const inventories = listTaskShapeInventories().map(({ language, level }) =>
     loadTaskShapeInventory(language, level));
-  const report = measureReadingReach(loadLessons(), inventories);
+  const report = measureReadingReach(loadTrackLessons("malayalam"), inventories);
   const row = report.rows.find((r) => r.language === "malayalam" && r.level === "pre-A1");
   expect(row?.status).toBe("measurable");
   expect(row?.partsMeasurable).toBe(3);
