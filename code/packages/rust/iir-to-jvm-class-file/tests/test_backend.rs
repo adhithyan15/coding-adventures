@@ -2548,6 +2548,46 @@ fn e4_a_literal_past_the_constant_pool_limit_is_chunked() {
     assert_eq!(&bytes[0..4], &[0xCA, 0xFE, 0xBA, 0xBE]);
 }
 
+/// PR5b security review (I2): a class whose constant pool would pass 65 535
+/// entries is an `Err`, never a panic. The review's reproducer is one literal
+/// of ~2³⁰ bytes ≥ 0x80 (~32 768 chunks, two entries each); the same pool
+/// overflow is reached here with 34 000 distinct short literals spread over
+/// 40 functions (so no method passes the code limit first). The pool's
+/// `assert!` used to panic.
+#[test]
+fn a_constant_pool_past_the_class_file_limit_is_an_error_not_a_panic() {
+    let mut module = module_with(void_fn("main"));
+    for f in 0..40 {
+        let mut body = Vec::new();
+        for i in 0..850 {
+            body.push(IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str(format!("{f}:{i}"))], "str"));
+        }
+        body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+        module.functions.push(IIRFunction::new(format!("f{f}"), vec![], "void", body));
+    }
+    let err = std::panic::catch_unwind(|| lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")))
+        .expect("no panic")
+        .unwrap_err();
+    assert!(matches!(err, IIRJvmError::ClassFileLimit { .. }), "{err}");
+    assert!(format!("{err}").contains("constant pool"), "{err}");
+}
+
+/// PR5b security review (I2): a method of more than 65 535 bytes of code is
+/// an `Err` too. It was emitted, and the JVM would have refused the class at
+/// load (`code_length` must be below 65 536).
+#[test]
+fn a_method_past_the_code_limit_is_an_error() {
+    let mut body = Vec::new();
+    for _ in 0..40_000 {
+        body.push(IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"));
+    }
+    body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+    let module = module_with(IIRFunction::new("big", vec![], "void", body));
+    let err = lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")).unwrap_err();
+    assert!(matches!(err, IIRJvmError::ClassFileLimit { ref function, .. } if function == "big"), "{err}");
+    assert!(format!("{err}").contains("bytes of code"), "{err}");
+}
+
 /// A module function may not take the synthetic writer's name.
 #[test]
 fn e4_a_function_may_not_be_named_iir_print_str() {

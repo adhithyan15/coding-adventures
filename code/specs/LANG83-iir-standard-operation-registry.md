@@ -1435,7 +1435,7 @@ CI executes them.
 | native (`twig-aot`) | every literal byte through `store_byte`; the fold table holds bytes |
 | LLVM | any literal; literal table and fold facts keyed on bytes |
 | WASM | any literal into the data segment; runtime blocks keyed on bytes |
-| JVM | one char per byte; chunked constants; modified UTF-8 in the pool; `__iir_print_str` |
+| JVM | one char per byte; chunked constants; modified UTF-8 in the pool; `__iir_print_str`; a class past the class-file limits (65 535 pool entries, 65 535 bytes of method code) is `IIRJvmError::ClassFileLimit`, never a panic (security review I2: a ceiling-sized literal of bytes ≥ 0x80 overflowed the pool) |
 | CLR | `ldstr bytearray` for a literal that is not printable ASCII; `__iir_write_bytes` behind `print_str` and `putchar`; Latin-1 `input_str` |
 | BEAM | any literal byte as a list element |
 | `lang-aot` | 14 `(PR5b)` cases and the gate `pr5b_strings_are_bytes_on_every_column`; byte-exact VM/JIT sinks and `input_str` line drain |

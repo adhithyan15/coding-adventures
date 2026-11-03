@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — strings are bytes
 
+- **Class-file limits are errors, not panics** (security review I2). A literal near the string ceiling made of bytes ≥ 0x80 is ~32 768 chunks of two pool entries each, which overflowed the constant pool's `assert!`. The pool now records the overflow and every method build, and the class assembly, return the new `IIRJvmError::ClassFileLimit`; a method with more than 65 535 bytes of code (which the JVM rejects at load) is refused the same way. Tests `a_constant_pool_past_the_class_file_limit_is_an_error_not_a_panic` and `a_method_past_the_code_limit_is_an_error` (the first panicked, the second returned `Ok`, on the previous lowering).
 - The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.
 - **A JVM string holds one char per byte (U+0000–U+00FF).** `str_const` accepts any `Str` or raw-byte `Operand::Bytes` literal (the printable-ASCII `checked_jvm_string_literal` is gone) and widens each byte to one char. `length`, `charAt`, `substring`, `concat` and `compareTo` then compute the byte semantics unchanged.
 - **Chunked literals.** A literal whose modified UTF-8 exceeds one constant-pool entry (65 535 bytes) is loaded in chunks and joined with `String.concat`.

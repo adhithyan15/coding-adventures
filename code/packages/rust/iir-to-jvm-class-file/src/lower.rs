@@ -860,6 +860,18 @@ pub enum IIRJvmError {
         /// What the analysis found.
         detail: String,
     },
+
+    /// The class would exceed a limit of the class-file format (JVMS §4): a
+    /// constant pool of more than 65 535 entries, or a method of more than
+    /// 65 535 bytes of code. Reported instead of panicking (LANG83 PR5b
+    /// security review, I2: a long literal of bytes ≥ 0x80 is ~32 768 chunks
+    /// of two pool entries each, which overflowed the pool's `assert!`).
+    ClassFileLimit {
+        /// Name of the function being lowered when the limit was reached.
+        function: String,
+        /// Which limit, and by how much.
+        detail: String,
+    },
 }
 
 impl std::fmt::Display for IIRJvmError {
@@ -912,6 +924,9 @@ impl std::fmt::Display for IIRJvmError {
                     "function {:?}: cannot size the JVM operand stack — {}",
                     function, detail
                 )
+            }
+            IIRJvmError::ClassFileLimit { function, detail } => {
+                write!(f, "function {:?}: exceeds a JVM class-file limit — {}", function, detail)
             }
         }
     }
@@ -2157,6 +2172,39 @@ struct ConstantPoolBuilder {
     entries: Vec<Option<JvmConstantPoolEntry>>,
     /// Quick lookup: key string → 1-based index.
     index_map: HashMap<String, u16>,
+    /// Set when an entry did not fit the 65 535-entry pool. The add methods
+    /// then return the unusable index 0 instead of panicking, and
+    /// [`check_class_file_limits`] turns the flag into
+    /// [`IIRJvmError::ClassFileLimit`] before any method is finished, so no
+    /// class with a 0 index is ever emitted (LANG83 PR5b security review, I2).
+    overflowed: bool,
+}
+
+/// The most entries a constant pool may hold: `constant_pool_count` is a `u2`
+/// and index 0 is reserved, so indices run 1..=65 534 (JVMS §4.1).
+const JVM_CP_MAX_ENTRIES: usize = u16::MAX as usize;
+
+/// The most bytes of code a method may have (JVMS §4.7.3: `code_length` <
+/// 65 536).
+const JVM_CODE_MAX: usize = 65_535;
+
+/// Refuse a method whose code, or a class whose pool, exceeds the class-file
+/// format: [`IIRJvmError::ClassFileLimit`], never a panic and never a class
+/// the JVM would reject at load.
+fn check_class_file_limits(cp: &ConstantPoolBuilder, code: &[u8], function: &str) -> Result<(), IIRJvmError> {
+    if cp.overflowed {
+        return Err(IIRJvmError::ClassFileLimit {
+            function: function.to_string(),
+            detail: format!("the constant pool needs more than {} entries", JVM_CP_MAX_ENTRIES - 1),
+        });
+    }
+    if code.len() > JVM_CODE_MAX {
+        return Err(IIRJvmError::ClassFileLimit {
+            function: function.to_string(),
+            detail: format!("the method has {} bytes of code (limit {JVM_CODE_MAX})", code.len()),
+        });
+    }
+    Ok(())
 }
 
 impl ConstantPoolBuilder {
@@ -2164,6 +2212,7 @@ impl ConstantPoolBuilder {
         Self {
             entries: vec![None], // index 0 is always unused in JVM
             index_map: HashMap::new(),
+            overflowed: false,
         }
     }
 
@@ -2177,12 +2226,12 @@ impl ConstantPoolBuilder {
         if let Some(&idx) = self.index_map.get(&key) {
             return idx;
         }
-        assert!(
-            self.entries.len() < u16::MAX as usize,
-            "JVM constant pool overflow: too many entries (limit 65535)"
-        );
+        if self.entries.len() >= JVM_CP_MAX_ENTRIES {
+            self.overflowed = true;
+            return 0;
+        }
         self.entries.push(Some(entry));
-        // Safe: bounded by the assert above.
+        // Safe: bounded by the check above.
         let idx = (self.entries.len() - 1) as u16;
         self.index_map.insert(key, idx);
         idx
@@ -2282,10 +2331,10 @@ impl ConstantPoolBuilder {
             return idx;
         }
         // We need two free slots.
-        assert!(
-            self.entries.len() + 1 < u16::MAX as usize,
-            "JVM constant pool overflow: too many entries (limit 65535)"
-        );
+        if self.entries.len() + 1 >= JVM_CP_MAX_ENTRIES {
+            self.overflowed = true;
+            return 0;
+        }
         self.entries.push(Some(JvmConstantPoolEntry::Long(value)));
         let idx = (self.entries.len() - 1) as u16;
         self.index_map.insert(key, idx);
@@ -2306,10 +2355,10 @@ impl ConstantPoolBuilder {
             return idx;
         }
         // We need two free slots.
-        assert!(
-            self.entries.len() + 1 < u16::MAX as usize,
-            "JVM constant pool overflow: too many entries (limit 65535)"
-        );
+        if self.entries.len() + 1 >= JVM_CP_MAX_ENTRIES {
+            self.overflowed = true;
+            return 0;
+        }
         self.entries.push(Some(JvmConstantPoolEntry::Double(value)));
         let idx = (self.entries.len() - 1) as u16;
         self.index_map.insert(key, idx);
@@ -5513,6 +5562,7 @@ fn lower_function(
     // ── Build method descriptor ────────────────────────────────────────────
     let descriptor = make_descriptor(&func.params, &func.return_type);
 
+    check_class_file_limits(cp, &code, &fname)?;
     // max_stack is measured from the emitted bytecode, never guessed.
     let max_stack = compute_max_stack(&code, &cp.entries).map_err(|detail| {
         IIRJvmError::StackDepthAnalysis { function: fname.clone(), detail }
@@ -5861,6 +5911,7 @@ fn generate_call_closure_dispatch(
     // A closure target whose return type the dispatch does not widen to
     // `long` leaves the stack short of the closing `lreturn`; that is
     // reported, not emitted.
+    check_class_file_limits(cp, &code, "__callClosure")?;
     let max_stack = compute_max_stack(&code, &cp.entries).map_err(|detail| {
         IIRJvmError::StackDepthAnalysis { function: "__callClosure".to_string(), detail }
     })?;
@@ -5993,6 +6044,7 @@ fn synthetic_method(
 ) -> Result<JvmMethodInfo, IIRJvmError> {
     let internal = |detail: String| IIRJvmError::StackDepthAnalysis { function: name.to_string(), detail };
     let code = b.finish().map_err(internal)?;
+    check_class_file_limits(cp, &code, name)?;
     let max_stack = compute_max_stack(&code, &cp.entries).map_err(internal)?;
     cp.add_utf8(name);
     cp.add_utf8(descriptor);
@@ -6589,6 +6641,9 @@ pub fn lower_iir_to_jvm(
         }
         methods.push(build_print_str_method(&mut cp)?);
     }
+
+    // The class-level entries (fields, the class's own name) must fit too.
+    check_class_file_limits(&cp, &[], &config.class_name)?;
 
     // ── Step 4: assemble JvmClassFile ─────────────────────────────────────────
     Ok(JvmClassFile {
