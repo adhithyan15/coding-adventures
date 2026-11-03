@@ -681,7 +681,7 @@ mod tests {
             vec![Operand::Bytes(vec![]); 2_000],
             "void",
         )]));
-        let mut long = IIRModule::new(&"m".repeat(2_000), "iir");
+        let mut long = IIRModule::new("m".repeat(2_000), "iir");
         long.str_max_bytes = Some(0);
         long.functions.push(IIRFunction::new(
             &name,
