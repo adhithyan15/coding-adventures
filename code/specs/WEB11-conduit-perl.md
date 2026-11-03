@@ -45,6 +45,9 @@ function built with those same Perl headers. On native Windows the headers may
 route allocation through Perl's allocator; Rust's C-runtime `free` is not a
 matching deallocator. A dying handler must reach `on_error` and leave the server
 able to answer subsequent requests.
+Windows E2E tests must track the server's real OS process, using asynchronous
+`system` rather than Perl's emulated `fork`, and terminate that owned process
+during cleanup so waiting for it cannot leave the test suite hanging.
 
 ## Architecture
 
