@@ -1,5 +1,3 @@
-# Changelog
-
 ## Unreleased
 
 - The Darwin BUILD now runs Cabal with the Command Line Tools developer dir
@@ -21,7 +19,3 @@
   record and never carries the POSIX prefix. Both are exported
   (`buildFileContents`, `buildWindowsFileContents`) and pinned by tests
   (spec section 5.8).
-
-## 0.1.0
-
-- Added the first Haskell scaffold-generator implementation for Haskell packages and programs.
