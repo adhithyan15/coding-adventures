@@ -18,3 +18,18 @@ Validate default/experimental output, the reproduced full-package Board crash,
 task lifecycle and persisted restart, plus repeated view switching and editing.
 Do not claim general IME, caret or accessibility acceptance from smoke alone.
 Never patch generated C# or suppress exceptions as the repair.
+
+## Local validation (2026-11-03)
+
+The full package compiler generated TaskApp from this repair with the deferred
+option enabled for the probe; production defaults were restored to false.
+Release x64 built successfully. The DPI-aware native smoke passed at 144 DPI:
+wide/narrow/wide pane changes, Board/List transition, task creation, scheduling,
+completion, reopen, deletion, and persisted restart. The generated listener for
+NewTaskName uses TextProperty registration instead of LostFocus.
+
+The probe used the retained mosaic_app.dll from the earlier eager artifact;
+this validates the emitted host repair, not a newly packaged runtime or release.
+The full emitter suite passed (397 unit tests plus integration/doc tests).
+Repeated editing across views, IME/caret behavior, and general accessibility
+remain acceptance work; the smoke result does not establish those properties.
