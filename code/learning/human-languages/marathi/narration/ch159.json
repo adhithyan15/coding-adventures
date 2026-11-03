@@ -4,7 +4,7 @@
   "chapter": 159,
   "title": "Recently, Formerly, Already, the Past, To Happen",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:a461c67f8edb8446",
+  "sourceHash": "fnv1a64:6e08c4af9543ae40",
   "lessons": [
     {
       "id": "MR-C159-alikade",
@@ -828,7 +828,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:114606ab2fcfce26",
+      "sourceHash": "fnv1a64:c130f02a27292239",
       "notice": null,
       "blocks": [
         {
@@ -870,7 +870,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The ending now follows what was acted on: त्याने आंबा खाल्ला, because आंबा is masculine; मी पोळी खाल्ली, because पोळी is feminine; त्याने पुस्तक वाचलं, because पुस्तक is neuter. So त्याने चित्रपट पाहिला has पाहिला following masculine चित्रपट."
+              "text": "The ending now follows what was acted on: त्याने आंबा खाल्ला, because आंबा is masculine; मी पोळी खाल्ली, because पोळी is feminine; त्याने पुस्तक वाचलं, because पुस्तक is neuter. So त्याने कुत्रा पाहिला has पाहिला following masculine कुत्रा."
             }
           ]
         },
@@ -897,11 +897,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"He watched a film\" — tyāne citrapaṭ pāhilā",
+              "instruction": "\"He saw a dog\" — tyāne kutrā pāhilā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"He watched a film\" — *tyāne citrapaṭ pāhilā*]"
+              "source": "[YOU SAY: \"He saw a dog\" — *tyāne kutrā pāhilā*]"
             },
             {
               "kind": "prompt",
@@ -917,19 +917,19 @@
               "scored": true,
               "spoken": true,
               "id": "MR-C159-tyane-kela-r1",
-              "prompt": "Say that you ate a chapati, then that he watched a film.",
+              "prompt": "Say that you ate a chapati, then that he saw a dog.",
               "assesses": [
                 "MR-GRAMMAR-C159-ERGATIVE-NE-01",
                 "MR-GRAMMAR-C159-OBJECT-AGREEMENT-01"
               ],
               "responseSeconds": 24,
               "acceptedResponses": [
-                "mī poḷī khāllī; tyāne citrapaṭ pāhilā",
-                "मी पोळी खाल्ली. त्याने चित्रपट पाहिला."
+                "mī poḷī khāllī; tyāne kutrā pāhilā",
+                "मी पोळी खाल्ली. त्याने कुत्रा पाहिला."
               ],
               "feedback": {
                 "correct": "मी stays plain; त्याने marks he, and each verb follows its object.",
-                "incorrect": "Use खाल्ली with पोळी and पाहिला with चित्रपट."
+                "incorrect": "Use खाल्ली with पोळी and पाहिला with कुत्रा."
               }
             }
           ]

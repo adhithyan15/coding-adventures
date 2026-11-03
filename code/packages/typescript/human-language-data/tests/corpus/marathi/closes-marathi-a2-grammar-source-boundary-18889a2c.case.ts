@@ -14,7 +14,8 @@ interface A2Boundary {
   level: string;
   maxRegularChapter: number;
   firstExcludedChapter: number;
-  lessons: BoundaryLesson[];
+  grammarLessons: BoundaryLesson[];
+  functionalLessons: BoundaryLesson[];
 }
 
 const trackRoot = new URL(
@@ -30,8 +31,9 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
 
   expect(Object.keys(boundary).sort()).toEqual([
     "firstExcludedChapter",
+    "functionalLessons",
+    "grammarLessons",
     "language",
-    "lessons",
     "level",
     "maxRegularChapter",
     "version",
@@ -43,22 +45,33 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
     maxRegularChapter: 275,
     firstExcludedChapter: 276,
   });
-  expect(boundary.lessons.map(({ id }) => id)).toEqual([
+  expect(boundary.grammarLessons.map(({ id }) => id)).toEqual([
     "MR-C159-gelo",
     "MR-C159-tyane-kela",
     "MR-C159-hota",
     "MR-C160-jain",
     "MR-C160-janar-ahe",
   ]);
+  expect(boundary.functionalLessons.map(({ id }) => id)).toEqual([
+    "MR-C32-nako",
+    "MR-C34-kaaran",
+    "MR-C111-adhi",
+    "MR-C111-nantar",
+    "MR-C171-mag",
+    "MR-C171-sevti",
+  ]);
 
   const lessons = loadTrackLessons("marathi");
   const declaredAtoms = new Set<string>();
-  for (const declaration of boundary.lessons) {
+  for (const declaration of [
+    ...boundary.grammarLessons,
+    ...boundary.functionalLessons,
+  ]) {
     expect(Object.keys(declaration).sort()).toEqual(["forms", "id", "introduces"]);
     expect(declaration.introduces.length).toBeGreaterThan(0);
     expect(declaration.forms.length).toBeGreaterThan(0);
 
-    const name = declaration.id.match(/^MR-C(\d{3})-[a-z0-9-]+$/u);
+    const name = declaration.id.match(/^MR-C(\d{2,3})-[a-z0-9-]+$/u);
     expect(name, `${declaration.id} must be a regular numbered lesson`).not.toBeNull();
     const filenameChapter = Number(name?.[1]);
     expect(filenameChapter).toBeLessThanOrEqual(boundary.maxRegularChapter);
@@ -71,11 +84,13 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
     expect(Number(lesson?.frontmatter.chapter)).toBe(filenameChapter);
     expect(Number(lesson?.frontmatter["duration.max_seconds"]))
       .toBeLessThanOrEqual(300);
-    expect(lesson?.frontmatter.spine_node).toBe(
-      filenameChapter === 159
-        ? "SPINE-TALK-ABOUT-PAST"
-        : "SPINE-TALK-ABOUT-FUTURE",
-    );
+    if (boundary.grammarLessons.includes(declaration)) {
+      expect(lesson?.frontmatter.spine_node).toBe(
+        filenameChapter === 159
+          ? "SPINE-TALK-ABOUT-PAST"
+          : "SPINE-TALK-ABOUT-FUTURE",
+      );
+    }
     expect(lesson?.frontmatter.introduces_idioms).toEqual([]);
     expect(lesson?.frontmatter.introduces_senses).toEqual([]);
     expect(lesson?.frontmatter.introduces_culture_claims).toEqual([]);
@@ -86,7 +101,9 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
       new URL(`lessons/${declaration.id}.md`, trackRoot),
       "utf8",
     );
-    expect(authored).toContain("<!-- hl-activity:");
+    if (boundary.grammarLessons.includes(declaration)) {
+      expect(authored).toContain("<!-- hl-activity:");
+    }
     for (const form of declaration.forms) {
       expect(authored, `${declaration.id} must visibly teach ${form}`).toContain(form);
     }
@@ -103,5 +120,5 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
     }
   }
 
-  expect(declaredAtoms.size).toBe(10);
+  expect(declaredAtoms.size).toBe(16);
 });

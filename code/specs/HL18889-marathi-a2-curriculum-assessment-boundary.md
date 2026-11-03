@@ -45,7 +45,11 @@ The repository evidence behind that decision is explicit and bounded:
 declares regular chapter 275 as the last admissible A2 chapter, chapter 276 as
 the first excluded B1-seam chapter, the five owned grammar lessons, their ten
 knowledge atoms, and the exact learner-facing forms that each lesson must make
-visible.  The contract is intentionally narrower than a token dictionary: it
+visible.  It separately pins six earlier functional-language owners: **नको**
+for declining, **कारण** for a reason, and **आधी / नंतर / मग / शेवटी** for
+sequencing.  A2 papers may use those owned forms; a bare later occurrence of
+**म्हणून**, **त्यानंतर**, or a B1 prohibition pattern is not admitted by this
+contract.  The contract is intentionally narrower than a token dictionary: it
 does not claim that a word occurrence alone proves productive grammar.
 
 The regression must fail closed when:
@@ -53,8 +57,8 @@ The regression must fail closed when:
 1. the contract shape, language, level, or numeric boundary changes;
 2. an evidence filename is not a regular `MR-C###-*` lesson at or before the
    declared gate;
-3. an atom has zero or multiple direct owners, or its owner is not the declared
-   evidence lesson;
+3. a grammar or functional-language atom has zero or multiple direct owners,
+   or its owner is not the declared evidence lesson;
 4. an evidence lesson omits its bounded response activity or any declared
    learner-facing form; or
 5. chapter 276 or later is admitted as A2 evidence.
@@ -73,8 +77,10 @@ past copula.  Chapter 160 orders the person-marked future before the plan form.
 The generated book and narration must include the new lessons in that order.
 
 The chapter payoffs and A2 curriculum extensions must own the new grammar
-atoms.  README and language-owned changelog text must distinguish first A2
-instruction from the later B1-seam reinforcement.
+atoms.  The two chapter-161 review passes must retrieve every new grammar atom,
+so the new path does not create thin one-use knowledge.  README and
+language-owned changelog text must distinguish first A2 instruction and owned
+functional language from the later B1-seam reinforcement.
 
 ## 4. Acceptance
 

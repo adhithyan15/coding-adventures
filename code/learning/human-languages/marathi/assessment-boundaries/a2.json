@@ -4,7 +4,7 @@
   "level": "A2",
   "maxRegularChapter": 275,
   "firstExcludedChapter": 276,
-  "lessons": [
+  "grammarLessons": [
     {
       "id": "MR-C159-gelo",
       "introduces": [
@@ -44,6 +44,38 @@
         "MR-GRAMMAR-C160-NAR-NAHI-01"
       ],
       "forms": ["जाणार आहे", "येणार नाही"]
+    }
+  ],
+  "functionalLessons": [
+    {
+      "id": "MR-C32-nako",
+      "introduces": ["MR-LEX-NAKO"],
+      "forms": ["नको"]
+    },
+    {
+      "id": "MR-C34-kaaran",
+      "introduces": ["MR-JOIN-KAARAN"],
+      "forms": ["कारण"]
+    },
+    {
+      "id": "MR-C111-adhi",
+      "introduces": ["MR-LEX-C111-TIME111-03"],
+      "forms": ["आधी"]
+    },
+    {
+      "id": "MR-C111-nantar",
+      "introduces": ["MR-LEX-C111-TIME111-04"],
+      "forms": ["नंतर"]
+    },
+    {
+      "id": "MR-C171-mag",
+      "introduces": ["MR-LEX-C171-VEL171-02"],
+      "forms": ["मग"]
+    },
+    {
+      "id": "MR-C171-sevti",
+      "introduces": ["MR-LEX-C171-VEL171-03"],
+      "forms": ["शेवटी"]
     }
   ]
 }

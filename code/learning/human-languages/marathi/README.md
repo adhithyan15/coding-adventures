@@ -36,9 +36,11 @@ structural project evidence only: recording provenance, qualified review,
 standard setting, calibration, and book-only human validation remain explicit
 backlog. The project-defined A2 four-skill task shape is also published.
 Chapters 159 and 160 now own its bounded past/future grammar path before the
-chapter-275 A2 source gate; chapters 276–277 revisit that grammar at the B1 seam
-and cannot be used to bless A2 evidence. Its two timed mock bundles and every
-later-rung mock bundle remain backlog.
+chapter-275 A2 source gate. The same boundary contract pins the earlier
+**नको**, **कारण**, **आधी / नंतर**, and **मग / शेवटी** lessons as the permitted
+refusal, reason, and sequencing path. Chapters 276–277 revisit the grammar at
+the B1 seam and cannot be used to bless A2 evidence. Its two timed mock bundles
+and every later-rung mock bundle remain backlog.
 
 ## Progress
 
@@ -380,7 +382,9 @@ first-person can-do sentence and the lesson that pays it off.
   with object agreement, and **होता / नव्हता** independently retrievable;
   two future lessons do the same for **मी जाईन** and **-णार आहे / नाही**.
   [`assessment-boundaries/a2.json`](./assessment-boundaries/a2.json) keeps the
-  source gate at chapter 275 and excludes the later B1 seam.
+  source gate at chapter 275, pins the already-owned refusal, reason, and
+  sequencing forms, and excludes the later B1 seam. Two chapter-161 review
+  passes retrieve every new grammar atom again.
 - **Chapters 276–287 — the B1 core** ([`lessons/`](./lessons/), `MR-C276-*`
   to `MR-W287-six-lines`): 276–277 spiral the A2 past and future once more at
   the seam, then two chapters for each of

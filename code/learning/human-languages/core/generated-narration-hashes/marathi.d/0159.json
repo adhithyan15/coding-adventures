@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 159,
-  "sourceHash": "fnv1a64:a461c67f8edb8446",
+  "sourceHash": "fnv1a64:6e08c4af9543ae40",
   "lessonIds": [
     "MR-C159-alikade",
     "MR-C159-purvi",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "marathi/narration/ch159.txt",
   "json": "marathi/narration/ch159.json",
-  "textHash": "fnv1a64:4f8b766216a669a8",
-  "jsonHash": "fnv1a64:72740adc8ae748fa",
+  "textHash": "fnv1a64:5f92f124daabdd30",
+  "jsonHash": "fnv1a64:60890989d61ba236",
   "findings": []
 }

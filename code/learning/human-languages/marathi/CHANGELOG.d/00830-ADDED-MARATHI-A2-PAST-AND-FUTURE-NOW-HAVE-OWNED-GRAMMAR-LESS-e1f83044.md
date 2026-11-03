@@ -8,7 +8,12 @@
 - `assessment-boundaries/a2.json` makes the project-owned source decision
   fail-closed: chapter 275 remains the last admissible regular A2 chapter,
   chapter 276 begins the excluded B1 seam, and every declared grammar atom and
-  learner-facing form must resolve to one of the five earlier lessons.
+  learner-facing form must resolve to one of the five earlier lessons. It also
+  pins the already-taught **नको**, **कारण**, **आधी / नंतर**, and **मग / शेवटी**
+  owners as the admissible refusal, reason, and sequencing surface.
+- The two chapter-161 review passes retrieve all ten new grammar atoms again,
+  preserving the track's reinforcement contract instead of leaving one-use
+  knowledge behind.
 - Chapters 276–277 remain later spiral reinforcement. They are no longer the
   first evidence for the A2 past and future and cannot silently bless an A2
   assessment surface.

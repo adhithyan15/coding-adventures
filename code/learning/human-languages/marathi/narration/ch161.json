@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9b771e98e3e8fee1",
+  "sourceHash": "fnv1a64:728e3f646fc243d4",
   "lessons": [
     {
       "id": "MR-C161-velapatrak",
@@ -764,7 +764,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d858868ae072402f",
+      "sourceHash": "fnv1a64:d6935ffdf68d8c15",
       "notice": null,
       "blocks": [
         {
@@ -803,6 +803,24 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: recently, formerly, already, the past, to happen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I went; he did the work; she was at home; he was not at school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I went; he did the work; she was at home; he was not at school]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I will go; it will rain; I am going to go; I will not come",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I will go; it will rain; I am going to go; I will not come]"
             }
           ]
         },
@@ -819,7 +837,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recently? (अलीकडे, alīkaḍe.) Formerly? (पूर्वी, pūrvī.) Already? (आधीच, ādhīc.) The past? (भूतकाळ, bhūtkāḷ.) To happen? (घडणे, ghaḍṇe.)"
+              "text": "Recently? (अलीकडे, alīkaḍe.) Formerly? (पूर्वी, pūrvī.) Already? (आधीच, ādhīc.) The past? (भूतकाळ, bhūtkāḷ.) To happen? (घडणे, ghaḍṇe.) I went? (मी गेलो / गेले.) He did the work? (त्याने काम केलं.) She was at home? (ती घरी होती.) He was not at school? (तो शाळेत नव्हता.) I will go? (मी जाईन.) It will rain? (पाऊस पडेल.) I am going to go? (मी जाणार आहे.) I will not come? (मी येणार नाही.)"
             }
           ]
         }
@@ -838,7 +856,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:774ee7d5cc7de981",
+      "sourceHash": "fnv1a64:bc5107139694f32f",
       "notice": null,
       "blocks": [
         {
@@ -886,6 +904,24 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: a timetable, a notice, rent; a fare, an advert, a receipt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I went; he did the work; she was at home; he was not at school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I went; he did the work; she was at home; he was not at school]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I will go; it will rain; I am going to go; I will not come",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I will go; it will rain; I am going to go; I will not come]"
             }
           ]
         },
@@ -902,7 +938,7 @@
             },
             {
               "kind": "speech",
-              "text": "The future? (भविष्य, bhaviṣya.) Soon? (लवकरच, lavkarac.) Next? (पुढचा / पुढची / पुढचे, puḍhcā / puḍhcī / puḍhce.) From now on? (यानंतर, yānantar.) To plan? (आखणे, ākhṇe.) A timetable? (वेळापत्रक, veḷāpatrak.) A notice? (सूचना, sūcanā.) Rent; a fare? (भाडे, bhāḍe.) An advert? (जाहिरात, jāhirāt.) A receipt? (पावती, pāvtī.)"
+              "text": "The future? (भविष्य, bhaviṣya.) Soon? (लवकरच, lavkarac.) Next? (पुढचा / पुढची / पुढचे, puḍhcā / puḍhcī / puḍhce.) From now on? (यानंतर, yānantar.) To plan? (आखणे, ākhṇe.) A timetable? (वेळापत्रक, veḷāpatrak.) A notice? (सूचना, sūcanā.) Rent; a fare? (भाडे, bhāḍe.) An advert? (जाहिरात, jāhirāt.) A receipt? (पावती, pāvtī.) I went? (मी गेलो / गेले.) He did the work? (त्याने काम केलं.) She was at home? (ती घरी होती.) He was not at school? (तो शाळेत नव्हता.) I will go? (मी जाईन.) It will rain? (पाऊस पडेल.) I am going to go? (मी जाणार आहे.) I will not come? (मी येणार नाही.)"
             }
           ]
         }
