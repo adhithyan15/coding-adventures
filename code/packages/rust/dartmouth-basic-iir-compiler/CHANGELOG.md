@@ -1,5 +1,13 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## Unreleased — test `print_str` sinks keep bytes (LANG83 PR5b)
+
+The JIT test harnesses (`tests/jit_smoke.rs`, `tests/jit_real_backend.rs`) read
+a printed string with `Value::as_bytes`. Since LANG83 PR5b an IIR `str` is
+bytes and `Value::as_str` answers only for valid UTF-8, so the old
+`as_str().unwrap_or("")` would have printed nothing for a string that splits a
+character. No compiler change.
+
 ## [0.41.0] — 2026-10-04 (shared portable numeric formatter)
 
 The existing typed-IIR numeric print helper family is now a public frontend

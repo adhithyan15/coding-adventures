@@ -84,8 +84,11 @@ fn run_with_real_jit(source: &str) -> String {
     {
         let chars = Arc::clone(&chars);
         vm.builtins_mut().register("print_str", move |args| {
-            let s = args.first().and_then(Value::as_str).unwrap_or("");
-            chars.lock().unwrap().extend_from_slice(s.as_bytes());
+            // The bytes, unchanged (LANG83 PR5b): a string is bytes, and
+            // `as_str` answers only for valid UTF-8, so it would silently drop
+            // a string that splits a character.
+            let s = args.first().and_then(Value::as_bytes).unwrap_or(b"");
+            chars.lock().unwrap().extend_from_slice(s);
             Ok(Value::Null)
         });
     }
@@ -160,8 +163,11 @@ fn real_jit_basic_print_string_literal_falls_back_to_vm() {
     {
         let chars = Arc::clone(&chars);
         vm.builtins_mut().register("print_str", move |args| {
-            let s = args.first().and_then(Value::as_str).unwrap_or("");
-            chars.lock().unwrap().extend_from_slice(s.as_bytes());
+            // The bytes, unchanged (LANG83 PR5b): a string is bytes, and
+            // `as_str` answers only for valid UTF-8, so it would silently drop
+            // a string that splits a character.
+            let s = args.first().and_then(Value::as_bytes).unwrap_or(b"");
+            chars.lock().unwrap().extend_from_slice(s);
             Ok(Value::Null)
         });
     }
