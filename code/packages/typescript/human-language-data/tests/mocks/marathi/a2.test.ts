@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot } from "../../../src/loader.js";
@@ -158,10 +158,21 @@ describe("Marathi A2 timed mock pair", () => {
     }
 
     const lessonDir = join(curriculumRoot, "marathi", "lessons");
-    const lessonCorpus = readdirSync(lessonDir)
-      .filter((name) => name.endsWith(".md"))
-      .map((name) => readFileSync(join(lessonDir, name), "utf8"))
-      .join("\n");
+    // Only numbered chapters already taught by the A2 gate may establish a
+    // scored token. Later chapters and non-chapter support files cannot make
+    // an otherwise untaught A2 word look source-bounded.
+    const chapterNames = readdirSync(lessonDir).filter((name) => name.startsWith("MR-C"));
+    const a2ChapterNames = chapterNames.filter((name) => {
+      const match = /^MR-C(\d+)-[a-z0-9-]+\.md$/u.exec(name);
+      expect(match, `invalid Marathi chapter filename: ${name}`).not.toBeNull();
+      return Number(match![1]) <= 275;
+    });
+    expect(a2ChapterNames.length).toBeGreaterThan(0);
+    const lessonCorpus = a2ChapterNames.map((name) => {
+      const lessonPath = join(lessonDir, name);
+      expect(lstatSync(lessonPath).isFile(), `regular Marathi lesson: ${name}`).toBe(true);
+      return readFileSync(lessonPath, "utf8");
+    }).join("\n");
     const lessonTokens = new Set(lessonCorpus.match(/[\u0900-\u097F]+/gu) ?? []);
     const scoredArtifacts = [1, 2].flatMap((form) => [
       read(`mock-${form}.md`),
