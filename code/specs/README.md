@@ -49,6 +49,18 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | BVM05 | Board VM Blink MVP | First end-to-end Arduino-style blink scenario |
 | BVM06 | Board VM Target Matrix | Explicit board/ISA/backend support plan |
 
+## Verified-shipping pilot
+
+| Spec | Contract / current boundary |
+|---|---|
+| [VER00](VER00-verified-shipping-program.md) | Parent verification program; publishing/approval blockers remain in §12.1 |
+| [VER26](VER26-ct-compare-pilot.md) | Rust ct-compare pilot and evidence requirements |
+| [TF01](TF01-bootstrap-harness.md) | Implemented Rust L0 harness, TFV transport and closed failure vocabulary |
+| [CT01](CT01-constant-time-compare.md) | Portable operations and corpus; logical work is not a timing proof |
+| [VER04](VER04-warrant-language.md) | Warrant v0 language/binding specification; parser, checker and generated tests follow separately |
+| [Warrant design inventory](fixtures/warrant-v0/README.md) | Named future acceptance cases; not an executed conformance corpus |
+| [Delivery backlog](VER-BACKLOG.md) | Current bounded work, prerequisites and deferred ownership |
+
 ## Spec Template
 
 Each spec follows this structure:
