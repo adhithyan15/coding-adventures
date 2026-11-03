@@ -94,6 +94,45 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
+func TestCtCompareInputsSelectOnlyTheRustAdapter(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "rust/test-bootstrap", Language: "rust"},
+	}
+	for _, input := range []string{
+		"code/specs/fixtures/ct-compare-v1/cases.json",
+		"code/specs/fixtures/ct-compare-v1/cases.tfv",
+		"code/scripts/ct_compare_tfv.py",
+		"code/scripts/ct_compare_conformance.py",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/ct-compare": true}) {
+			t.Fatalf("%s: got %v, err %v", input, got, err)
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[1:], "all"); err == nil {
+			t.Fatal("missing CT01 consumer must fail closed")
+		}
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "go"); err != nil || len(got) != 0 {
+			t.Fatalf("single-language filtering: %v, %v", got, err)
+		}
+	}
+	for _, input := range []string{
+		"code/specs/fixtures/ct-compare-v10/cases.json",
+		"code/specs/fixtures/ct-compare-v1",
+		"docs/code/specs/fixtures/ct-compare-v1/cases.json",
+		`code\specs\fixtures\ct-compare-v1\cases.json`,
+		"code/scripts/ct_compare_tfv.pyc",
+		"code/scripts/tests/test_ct_compare_tfv.py",
+	} {
+		if isCtCompareInput(input) {
+			t.Errorf("lookalike selected CT01 consumer: %s", input)
+		}
+	}
+	if !isCtCompareInput("code/scripts/tfv.py") {
+		t.Fatal("TFV reference changes must select the CT01 adapter too")
+	}
+}
+
 func TestIsTestBootstrapInput(t *testing.T) {
 	cases := []struct {
 		path string

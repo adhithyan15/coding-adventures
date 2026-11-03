@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Run every CT01 shared corpus case through TF01's L0 harness, using the real
+  fixed-array API, exact u64 values, native length-error mapping and selection
+  ownership checks. Add five negative checks that catch broken adapter behavior.
+- Generate TFV transport and const-generic dispatch from the independent JSON
+  oracle; fail on drift and schedule the adapter on corpus/reference changes.
+- Check all logical public-shape work fields without treating them as measured
+  runtime counts or constant-time proofs. Keep the optimized equality CFG gate.
+- Add the bootstrap harness as a development-only dependency and equivalent
+  regeneration checks in BUILD and BUILD_windows; runtime dependencies stay empty.
+
 - Harden equal-length slice and fixed-array comparison so every loop iteration
   retains volatile reads of both inputs and the accumulator plus a volatile
   accumulator write, preventing the optimizer from eliding later work after an

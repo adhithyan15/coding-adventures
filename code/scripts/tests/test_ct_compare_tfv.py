@@ -10,10 +10,12 @@ import unittest
 
 SCRIPTS = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS))
-import ct_compare_conformance as oracle  # noqa: E402
-import tfv  # noqa: E402
+import ct_compare_conformance as oracle
+import tfv
 
-SPEC = importlib.util.spec_from_file_location("ct_compare_tfv", SCRIPTS / "ct_compare_tfv.py")
+SPEC = importlib.util.spec_from_file_location(
+    "ct_compare_tfv", SCRIPTS / "ct_compare_tfv.py"
+)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
@@ -21,25 +23,35 @@ SPEC.loader.exec_module(MODULE)
 
 class CtCompareTransportTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.document = oracle.parse_json(oracle.DEFAULT_CORPUS.read_text(encoding="utf-8"))
+        self.document = oracle.parse_json(
+            oracle.DEFAULT_CORPUS.read_text(encoding="utf-8")
+        )
 
     def test_transport_keeps_every_identity_and_exact_u64(self) -> None:
         transport, dispatch = MODULE.render(self.document)
         records = tfv.parse_file(transport)
-        self.assertEqual([name for name, _ in records], [c["id"] for c in self.document["cases"]])
-        maximum = dict(next(fields for name, fields in records if name == "u64-max-equal"))
+        self.assertEqual(
+            [name for name, _ in records], [c["id"] for c in self.document["cases"]]
+        )
+        maximum = dict(
+            next(fields for name, fields in records if name == "u64-max-equal")
+        )
         self.assertEqual(maximum["left_u64"], ("int", 2**64 - 1))
         self.assertIn("fixed::<0>", dispatch)
         self.assertIn("fixed::<16>", dispatch)
-        self.assertIn("Err(\"fixed width has no generated arm\"", dispatch)
+        self.assertIn('Err("fixed width has no generated arm"', dispatch)
         MODULE.check_generated(self.document, transport, dispatch)
 
     def test_transport_and_dispatch_drift_fail_separately(self) -> None:
         transport, dispatch = MODULE.render(self.document)
         with self.assertRaisesRegex(ValueError, "cases.tfv"):
-            MODULE.check_generated(self.document, transport.replace("I64", "I63", 1), dispatch)
+            MODULE.check_generated(
+                self.document, transport.replace("I64", "I63", 1), dispatch
+            )
         with self.assertRaisesRegex(ValueError, "fixed_widths.rs"):
-            MODULE.check_generated(self.document, transport, dispatch.replace("fixed::<16>", "fixed::<15>"))
+            MODULE.check_generated(
+                self.document, transport, dispatch.replace("fixed::<16>", "fixed::<15>")
+            )
 
     def test_wrong_functional_answer_and_work_never_generate(self) -> None:
         for field in ("expected", "expected_work"):

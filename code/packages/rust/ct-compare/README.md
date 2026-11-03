@@ -89,6 +89,35 @@ Self-contained: no runtime dependencies. Two private safe wrappers contain the
 audited volatile-pointer operations; public callers never handle pointers or
 invoke `unsafe`.
 
+## CT01 conformance and the VER26 pilot
+
+`cargo test -p coding_adventures_ct_compare` runs the existing unit/optimized-IR
+tests and a TF01 L0 target (`tests/conformance.rs`, `harness = false`). Every
+shared CT01 case is embedded from `code/specs/fixtures/ct-compare-v1/cases.tfv`.
+Fixed-width cases call `ct_eq_fixed::<N>` through generated const-generic arms;
+selection cases check fresh ownership, and a real native length-mismatch panic
+maps to `CT_SELECT_LENGTH_MISMATCH` without changing the public API.
+
+Five negative adapter checks must reject inverted equality, wrong selection,
+missing length errors, wrong work metadata and an unsupported fixed width. The
+TF01 harness retains its own independent self-corpus and sabotage check.
+
+From the repository root, regenerate after editing the JSON oracle:
+
+```text
+python code/scripts/ct_compare_tfv.py --write
+python code/scripts/ct_compare_tfv.py
+```
+
+The second command only checks. CI rejects drift in either TFV or generated
+dispatch; the build tool selects this crate when the corpus/reference changes.
+Use `cargo test -p coding_adventures_ct_compare --test conformance -- --seed 7`
+to replay a shuffled L0 run. The bootstrap crate is a dev dependency only.
+
+`expected_work` checks logical public input shape, not observed instructions,
+elapsed time or a constant-time proof. Warrant-generated tests, properties,
+WIR-level trace proofs and the assurance report remain later VER26 steps.
+
 ## Implementation Notes
 
 - `#[inline(never)]` on the public functions. Inlining them into

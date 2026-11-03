@@ -82,6 +82,12 @@ type repositoryInputConsumer struct {
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "rust/ct-compare",
+		language: "rust",
+		inputs:   "the CT01 corpus, L0 transport and independent projection",
+		matches:  isCtCompareInput,
+	},
+	{
 		name:     "rust/mosaic-package-resolver",
 		language: "rust",
 		inputs:   "Mosaic manifests and sources under code/",
@@ -195,6 +201,16 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the TF01 self-corpus and its Python reference",
 		matches:  isTestBootstrapInput,
 	},
+}
+
+// CT01 is embedded in an L0 test, so edits outside the crate must still run it.
+// Exact reference paths and the slash-delimited fixture prefix exclude other
+// versions, path lookalikes and unrelated scripts. Missing consumers fail closed.
+func isCtCompareInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/ct-compare-v1/") ||
+		changed == "code/scripts/ct_compare_tfv.py" ||
+		changed == "code/scripts/ct_compare_conformance.py" ||
+		changed == "code/scripts/tfv.py"
 }
 
 // isTestBootstrapInput reports whether a changed path is one the bootstrap

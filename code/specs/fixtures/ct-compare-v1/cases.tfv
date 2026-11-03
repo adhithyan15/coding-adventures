@@ -1,0 +1,22 @@
+tfv 1
+eq-empty R8 Kop S6571 Kleft X Kright X Kequal T Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I0
+eq-one-equal R8 Kop S6571 Kleft X7f Kright X7f Kequal T Kbyte_positions I1 Kbyte_reads I2 Kbyte_writes I0 Ku64_bits I0
+eq-first-different R8 Kop S6571 Kleft X00aabbcc Kright X01aabbcc Kequal F Kbyte_positions I4 Kbyte_reads I8 Kbyte_writes I0 Ku64_bits I0
+eq-middle-different R8 Kop S6571 Kleft X00aabbcc Kright X00abbbcc Kequal F Kbyte_positions I4 Kbyte_reads I8 Kbyte_writes I0 Ku64_bits I0
+eq-last-different R8 Kop S6571 Kleft X00aabbcc Kright X00aabbcd Kequal F Kbyte_positions I4 Kbyte_reads I8 Kbyte_writes I0 Ku64_bits I0
+eq-all-different R8 Kop S6571 Kleft X00000000 Kright Xffffffff Kequal F Kbyte_positions I4 Kbyte_reads I8 Kbyte_writes I0 Ku64_bits I0
+eq-public-length-mismatch R8 Kop S6571 Kleft X00 Kright X0000 Kequal F Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I0
+eq-high-bit R8 Kop S6571 Kleft X80ff Kright X80ff Kequal T Kbyte_positions I2 Kbyte_reads I4 Kbyte_writes I0 Ku64_bits I0
+eq-256-byte-last-different R8 Kop S6571 Kleft X00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 Kright X00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001 Kequal F Kbyte_positions I256 Kbyte_reads I512 Kbyte_writes I0 Ku64_bits I0
+fixed-empty R9 Kop S65715f6669786564 Kleft X Kright X Kwidth I0 Kequal T Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I0
+fixed-16-equal R9 Kop S65715f6669786564 Kleft X0123456789abcdef0123456789abcdef Kright X0123456789abcdef0123456789abcdef Kwidth I16 Kequal T Kbyte_positions I16 Kbyte_reads I32 Kbyte_writes I0 Ku64_bits I0
+fixed-16-last-different R9 Kop S65715f6669786564 Kleft X0123456789abcdef0123456789abcdef Kright X0123456789abcdef0123456789abcdee Kwidth I16 Kequal F Kbyte_positions I16 Kbyte_reads I32 Kbyte_writes I0 Ku64_bits I0
+select-empty-left R10 Kop S73656c6563745f6279746573 Kleft X Kright X Kchoice T Koutput X Kfresh_output T Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I0
+select-left-fresh R10 Kop S73656c6563745f6279746573 Kleft X00ff80 Kright Xff0080 Kchoice T Koutput X00ff80 Kfresh_output T Kbyte_positions I3 Kbyte_reads I6 Kbyte_writes I3 Ku64_bits I0
+select-right-fresh R10 Kop S73656c6563745f6279746573 Kleft X00ff80 Kright Xff0080 Kchoice F Koutput Xff0080 Kfresh_output T Kbyte_positions I3 Kbyte_reads I6 Kbyte_writes I3 Ku64_bits I0
+select-public-length-mismatch R9 Kop S73656c6563745f6279746573 Kleft X00 Kright X0000 Kchoice T Kerror_id S43545f53454c4543545f4c454e4754485f4d49534d41544348 Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I0
+u64-zero-equal R8 Kop S65715f753634 Kleft_u64 I0 Kright_u64 I0 Kequal T Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I64
+u64-max-equal R8 Kop S65715f753634 Kleft_u64 I18446744073709551615 Kright_u64 I18446744073709551615 Kequal T Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I64
+u64-low-bit-different R8 Kop S65715f753634 Kleft_u64 I0 Kright_u64 I1 Kequal F Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I64
+u64-middle-bit-different R8 Kop S65715f753634 Kleft_u64 I0 Kright_u64 I4294967296 Kequal F Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I64
+u64-sign-bit-different R8 Kop S65715f753634 Kleft_u64 I0 Kright_u64 I9223372036854775808 Kequal F Kbyte_positions I0 Kbyte_reads I0 Kbyte_writes I0 Ku64_bits I64
