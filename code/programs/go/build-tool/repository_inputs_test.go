@@ -221,6 +221,38 @@ func TestNativePerlBuildInputsSelectTheirRuntimeConsumers(t *testing.T) {
 	}
 }
 
+func TestNativePerlRecipesRequestRustForHelperOnlyChanges(t *testing.T) {
+	root := findRepoRoot("")
+	names := []string{"perl/conduit", "perl/irc-server-native", "perl/programs/conduit-hello"}
+	paths := []string{"code/packages/perl/conduit", "code/packages/perl/irc-server-native", "code/programs/perl/conduit-hello"}
+	for _, platform := range []string{"linux", "darwin", "windows"} {
+		var packages []discovery.Package
+		for i, path := range paths {
+			fronts := make(map[string]string)
+			for _, front := range []string{"BUILD", "BUILD_windows"} {
+				raw, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(path), front))
+				if err != nil {
+					t.Fatal(err)
+				}
+				fronts[front] = string(raw)
+			}
+			packages = append(packages, discovery.Package{
+				Name: names[i], Language: "perl",
+				ExtraToolchains: discovery.ExtraToolchainsForSnapshot(fronts, platform),
+			})
+		}
+		consumers, err := repositoryInputConsumersForChange(
+			[]string{"code/scripts/check-perl-extension-windows.ps1"}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		needed := computeLanguagesNeeded(packages, consumers, false, nil)
+		if !needed["perl"] || !needed["rust"] {
+			t.Fatalf("%s helper-only edit needs Perl and Rust: %v", platform, needed)
+		}
+	}
+}
+
 func TestRepositoryInputConsumersForChange(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/mosaic-package-resolver", Language: "rust"},
