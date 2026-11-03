@@ -1467,6 +1467,13 @@ CI executes them.
 - LLVM: a literal `str_slice` that split a UTF-8 character was skipped by the
   literal pre-pass and then refused by the lowering ("does not preserve
   UTF-8"), so `"é"[1..2]` did not compile. It folds to `A9`.
+- On Windows, an LLVM module that writes output must select CRT binary stdout
+  before any output runs. The backend emits a module constructor that calls
+  `_setmode(1, 0x8000)` (`_O_BINARY`), for both MSVC and GNU Windows targets.
+  This covers `print_str`, `print_i64`, `write_i64` and bare `putchar`: byte
+  `0A` stays `0A`, including when no string helper or native runtime is linked.
+  Other targets and modules without output need no constructor. Conformance
+  compares the captured bytes without newline normalization.
 - `twig-vm`'s `str_slice` had the same UTF-8 check as vm-core; it is dropped
   too, so the two interpreters agree with the contract.
 
