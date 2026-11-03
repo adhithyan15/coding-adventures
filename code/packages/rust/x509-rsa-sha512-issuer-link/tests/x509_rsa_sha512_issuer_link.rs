@@ -21,12 +21,15 @@ use x509_rsa_algorithm_policy::{
 use x509_rsa_pkcs1_v1_5_sha512_signature::X509RsaSha512SignatureErrorKind;
 use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha512_issuer_link::{
+    advance_constructed_x509_rsa_sha512_intermediate_path_length,
     advance_x509_rsa_sha512_authenticated_intermediate_path_length,
     bind_x509_rsa_sha512_intermediate_issuer_policy_link,
+    verify_constructed_x509_rsa_sha512_intermediate_issuer_policy_link,
     verify_constructed_x509_rsa_sha512_issuer_link, verify_x509_rsa_sha512_issuer_link,
     verify_x509_rsa_sha512_issuer_link_with_policies,
     VerifiedX509RsaSha512IntermediateIssuerPolicyLink,
     X509RsaSha512ConstructedPathAdjacentLinkErrorKind,
+    X509RsaSha512ConstructedPathIntermediateIssuerPolicyLinkErrorKind,
     X509RsaSha512IntermediateIssuerPolicyLinkErrorKind, X509RsaSha512IssuerLinkErrorKind,
     X509RsaSha512IssuerLinkPolicy, X509RsaSha512IssuerPolicyLinkErrorKind,
 };
@@ -372,6 +375,243 @@ fn constructed_link_uses_the_preceding_candidate_at_later_depths() {
     ));
     assert!(!error.to_string().contains("sha512.inter1.fixture.example"));
     assert!(!error.to_string().contains("sha512.root01.fixture.example"));
+}
+
+#[test]
+fn constructed_intermediate_policy_advances_path_length_and_retains_ordered_proof() {
+    const ORIGINAL_NAME: &[u8] = b"sha512.issuer.fixture.example";
+    const ROOT_NAME: &[u8] = b"sha512.root01.fixture.example";
+
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(&mut intermediate_encoded, ORIGINAL_NAME, 0, ROOT_NAME);
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, ORIGINAL_NAME, 1, ROOT_NAME);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let authenticated = verify_constructed_x509_rsa_sha512_intermediate_issuer_policy_link(
+        path.adjacent_link(0).unwrap(),
+        intermediate_policy_with_self_issued(&candidates[0], false),
+        policy(),
+    )
+    .unwrap();
+
+    let advanced = advance_constructed_x509_rsa_sha512_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        authenticated,
+    )
+    .unwrap();
+
+    assert_eq!(
+        advanced
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert!(std::ptr::eq(
+        advanced
+            .authenticated_intermediate()
+            .verified_link()
+            .adjacent_link()
+            .constructed_path(),
+        &path
+    ));
+    assert_eq!(
+        advanced
+            .authenticated_intermediate()
+            .verified_link()
+            .adjacent_link()
+            .issuer_depth(),
+        0
+    );
+    assert!(std::ptr::eq(
+        advanced
+            .authenticated_intermediate()
+            .intermediate_policy()
+            .certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(
+        format!("{advanced:?}"),
+        "ValidatedX509RsaSha512ConstructedPathIntermediatePathLength"
+    );
+}
+
+#[test]
+fn constructed_intermediate_policy_rejects_terminal_issuer_before_link_crypto() {
+    const ORIGINAL_NAME: &[u8] = b"sha512.issuer.fixture.example";
+    const ROOT_NAME: &[u8] = b"sha512.root01.fixture.example";
+
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(&mut intermediate_encoded, ORIGINAL_NAME, 0, ROOT_NAME);
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, ORIGINAL_NAME, 1, ROOT_NAME);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+
+    let error = verify_constructed_x509_rsa_sha512_intermediate_issuer_policy_link(
+        path.adjacent_link(1).unwrap(),
+        intermediate_policy_with_self_issued(&candidates[1], false),
+        policy(),
+    )
+    .expect_err("the construction terminal is not an intermediate");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha512ConstructedPathIntermediateIssuerPolicyLinkErrorKind::TerminalIssuer
+    );
+    assert!(!error.to_string().contains("root01"));
+}
+
+#[test]
+fn constructed_intermediate_policy_rejects_detached_policy_before_link_crypto() {
+    const ORIGINAL_NAME: &[u8] = b"sha512.issuer.fixture.example";
+    const ROOT_NAME: &[u8] = b"sha512.root01.fixture.example";
+
+    let target_encoded = fixture();
+    let mut detached_intermediate_encoded = fixture();
+    replace_nth(
+        &mut detached_intermediate_encoded,
+        ORIGINAL_NAME,
+        0,
+        ROOT_NAME,
+    );
+    let mut invalid_intermediate_encoded = detached_intermediate_encoded.clone();
+    mutate_first(&mut invalid_intermediate_encoded, RSA_ENCRYPTION_OID_DER);
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, ORIGINAL_NAME, 1, ROOT_NAME);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&invalid_intermediate_encoded), decode(&root_encoded)];
+    let detached_intermediate = decode(&detached_intermediate_encoded);
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+
+    let error = verify_constructed_x509_rsa_sha512_intermediate_issuer_policy_link(
+        path.adjacent_link(0).unwrap(),
+        intermediate_policy_with_self_issued(&detached_intermediate, false),
+        policy(),
+    )
+    .expect_err("detached policy must fail before invalid issuer-key parsing");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha512ConstructedPathIntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch
+    );
+    assert!(!error.to_string().contains("sha512"));
+}
+
+#[test]
+fn constructed_intermediate_policy_rejects_byte_equal_redecode() {
+    const ORIGINAL_NAME: &[u8] = b"sha512.issuer.fixture.example";
+    const ROOT_NAME: &[u8] = b"sha512.root01.fixture.example";
+
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(&mut intermediate_encoded, ORIGINAL_NAME, 0, ROOT_NAME);
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, ORIGINAL_NAME, 1, ROOT_NAME);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let detached_intermediate = decode(&intermediate_encoded);
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    assert_eq!(
+        path.adjacent_link(0)
+            .unwrap()
+            .issuer_certificate()
+            .encoded(),
+        detached_intermediate.encoded()
+    );
+
+    let error = verify_constructed_x509_rsa_sha512_intermediate_issuer_policy_link(
+        path.adjacent_link(0).unwrap(),
+        intermediate_policy_with_self_issued(&detached_intermediate, false),
+        policy(),
+    )
+    .expect_err("byte-equal independently decoded policy is detached");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha512ConstructedPathIntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch
+    );
+    assert!(!error.to_string().contains("sha512"));
+}
+
+#[test]
+fn constructed_non_self_issued_intermediate_rejects_exhausted_path_length() {
+    const ORIGINAL_NAME: &[u8] = b"sha512.issuer.fixture.example";
+    const ROOT_NAME: &[u8] = b"sha512.root01.fixture.example";
+
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(&mut intermediate_encoded, ORIGINAL_NAME, 0, ROOT_NAME);
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, ORIGINAL_NAME, 1, ROOT_NAME);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let authenticated = verify_constructed_x509_rsa_sha512_intermediate_issuer_policy_link(
+        path.adjacent_link(0).unwrap(),
+        intermediate_policy_with_self_issued(&candidates[0], false),
+        policy(),
+    )
+    .unwrap();
+
+    let error = advance_constructed_x509_rsa_sha512_intermediate_path_length(
+        X509CertificatePathLengthState::new(0),
+        authenticated,
+    )
+    .expect_err("the non-self-issued intermediate consumes capacity");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathLengthErrorKind::MaximumExceeded
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 certificate path length policy error MaximumExceeded"
+    );
 }
 
 #[test]

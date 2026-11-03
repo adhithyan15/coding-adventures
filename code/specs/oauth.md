@@ -1169,6 +1169,20 @@ NameConstraints, construct or validate a complete path, grant trust, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or cause an
 external effect. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A construction-bound SHA-512 follow-up now consumes one exact adjacent-link
+projection together with complete intermediate policy for that projection's
+exact non-terminal issuer. It rejects a terminal issuer and policy retained by
+any other decoded certificate object, including a byte-equal re-decode, before
+the existing RSA key and signature work. Non-copyable success retains the
+constructed adjacency and complete policy together. A bounded path-length
+transition then derives role, self-issued classification, and any decoded
+`pathLenConstraint` only from that retained policy and retains the ordered
+proof with the advanced state. The caller still supplies the initial state;
+this public-data composition does not authenticate another adjacency, prove
+prior traversal, validate a complete path, establish reviewed trust, evaluate
+name constraints or hostname, check revocation, perform TLS or HTTP, authorize
+OAuth transport, emit audit or trace events, or cause a provider or network
+effect. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded `x509-rsa-sha512-reviewed-anchor-link` follow-up now consumes that
 strongest RSA SHA-512 issuer-policy link together with reviewed-root selection
 evidence. It fails closed unless both non-copyable inputs retain the same exact

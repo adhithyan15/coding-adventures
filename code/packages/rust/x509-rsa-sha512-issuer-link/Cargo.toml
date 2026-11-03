@@ -1,6 +1,6 @@
 [package]
 name = "x509-rsa-sha512-issuer-link"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "Bounded RSA SHA-512 authenticated X.509 issuer-link composition"
 
