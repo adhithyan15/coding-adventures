@@ -40,6 +40,12 @@ dependencies. Unix compilation and macOS dynamic lookup keep their existing
 behavior. Verification must load each staged DLL with Perl and run the Conduit,
 IRC native-extension and Conduit Hello tests; linking alone is insufficient.
 
+Callback error strings allocated by the C shim must also be released by a shim
+function built with those same Perl headers. On native Windows the headers may
+route allocation through Perl's allocator; Rust's C-runtime `free` is not a
+matching deallocator. A dying handler must reach `on_error` and leave the server
+able to answer subsequent requests.
+
 ## Architecture
 
 ```
