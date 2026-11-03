@@ -1,0 +1,22 @@
+{
+  "chapter": 323,
+  "title": "Decades and Eras",
+  "label": "ch:zh-decades-and-eras",
+  "canDo": "I can talk about a teenager, a period, a decade, ancient times and modern times.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R323-review-318-323",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can talk about a teenager, a period, a decade, ancient times and modern times.",
+    "assesses": [
+      "ZH-LEX-C323-ERA323-01",
+      "ZH-LEX-C323-ERA323-02",
+      "ZH-LEX-C323-ERA323-03",
+      "ZH-LEX-C323-ERA323-04",
+      "ZH-LEX-C323-ERA323-05",
+      "ZH-SCRIPT-DAI-ERA-01"
+    ]
+  }
+}

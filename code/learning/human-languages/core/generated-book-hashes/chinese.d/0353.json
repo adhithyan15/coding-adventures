@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:5aae9a95cf256abe",
+  "lessonIds": [
+    "ZH-C353-shuofu",
+    "ZH-C353-daoli",
+    "ZH-W353-dao-way",
+    "ZH-C353-bujiande",
+    "ZH-C353-fanbo",
+    "ZH-C353-rentong"
+  ],
+  "tex": "chinese/book/chapters/ch353-you-ve-got-a-point.tex"
+}

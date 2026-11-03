@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C515-bishu",
+    "language": "chinese",
+    "chapter": 515,
+    "sequence": 39080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:298ebe981546e984"
+  },
+  "findings": []
+}

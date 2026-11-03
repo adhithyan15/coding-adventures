@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C473-baya",
+  "pathSegment": "ZH-PATH-473-TEETH473",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-473-TEETH473",
+      "order": 4
+    }
+  ]
+}

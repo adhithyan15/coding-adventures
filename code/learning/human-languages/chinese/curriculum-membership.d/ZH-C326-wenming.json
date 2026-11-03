@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C326-wenming",
+  "pathSegment": "ZH-PATH-326-WORLD326",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-326-WORLD326",
+      "order": 5
+    }
+  ]
+}

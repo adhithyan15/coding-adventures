@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C340-jiangjiu",
+  "pathSegment": "ZH-PATH-340-CUSTOM340",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-340-CUSTOM340",
+      "order": 1
+    }
+  ]
+}

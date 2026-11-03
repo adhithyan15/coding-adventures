@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-335-LANTERN335",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-335-LANTERN335"
+  ],
+  "after": []
+}

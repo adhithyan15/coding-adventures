@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:bcb00dc801aa9fb4",
+  "lessonIds": [
+    "ZH-C302-huaiyun",
+    "ZH-C302-huo",
+    "ZH-W302-huo-alive",
+    "ZH-C302-yinger",
+    "ZH-C302-jiuhuo-revive",
+    "ZH-C302-shuangbaotai"
+  ],
+  "tex": "chinese/book/chapters/ch302-a-baby-on-the-way.tex"
+}

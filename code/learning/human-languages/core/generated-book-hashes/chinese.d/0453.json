@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:68eed98a3d0941b6",
+  "lessonIds": [
+    "ZH-C453-beibao",
+    "ZH-C453-xinglixiang",
+    "ZH-C453-sai",
+    "ZH-C453-lin",
+    "ZH-C453-biaoqian"
+  ],
+  "tex": "chinese/book/chapters/ch453-bags-and-cases.tex"
+}

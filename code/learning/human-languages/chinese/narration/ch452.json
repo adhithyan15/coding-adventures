@@ -1,0 +1,836 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 452,
+  "title": "After the Meal",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9fe76977ee138a07",
+  "lessons": [
+    {
+      "id": "ZH-C452-xiaohua",
+      "sequence": 34130,
+      "title": "xiāohuà — to digest",
+      "headword": "xiāohuà",
+      "romanization": "xiāohuà",
+      "gloss": "to digest",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcb80f57ba978529",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a meatless dish, then the Mandarin for to be left over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xiāohuà",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiāohuà — \"to digest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "chī le fàn mǎshàng shuìjiào duì xiāohuà bù hǎo — Going to bed right after a meal is bad for your digestion."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiāohuà is built from xiāo 'to melt away' and huà 'to change', both inherited from Middle Chinese, sjew and xwaeH (Guangyun, in Baxter's transcription), which glosses the first 'to use up' and the second 'to change'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiāohuà",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiāohuà*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiāohuà, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiāohuà*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chī le fàn mǎshàng shuìjiào duì xiāohuà bù hǎo — Going to bed right after a meal is bad for your digestion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chī le fàn mǎshàng shuìjiào duì xiāohuà bù hǎo* — Going to bed right after a meal is bad for your digestion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a meatless dish, then the Mandarin for to be left over, then say xiāohuà again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a meatless dish, then the Mandarin for to be left over, then say *xiāohuà* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xiāohuà mean? (\"To digest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C452-haoping",
+      "sequence": 34140,
+      "title": "hǎopíng — good review; favourable comment",
+      "headword": "hǎopíng",
+      "romanization": "hǎopíng",
+      "gloss": "good review; favourable comment",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72bda30bd071c877",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be left over, then the Mandarin for to digest food."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hǎopíng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hǎopíng — \"good review; favourable comment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè jiā fànguǎn yǒu hěn duō hǎopíng — This restaurant has lots of good reviews."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hǎopíng is built from 好 'good' and píng 'to judge', both inherited from Middle Chinese, xawX and bjaeng (Guangyun, in Baxter's transcription), which glosses the second 'to weigh up'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎopíng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎopíng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎopíng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎopíng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè jiā fànguǎn yǒu hěn duō hǎopíng — This restaurant has lots of good reviews.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè jiā fànguǎn yǒu hěn duō hǎopíng* — This restaurant has lots of good reviews.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be left over, then the Mandarin for to digest food, then say hǎopíng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be left over, then the Mandarin for to digest food, then say *hǎopíng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hǎopíng mean? (\"Good review; favourable comment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C452-xiaofei",
+      "sequence": 34150,
+      "title": "xiǎofèi — tip; a tip for the waiter",
+      "headword": "xiǎofèi",
+      "romanization": "xiǎofèi",
+      "gloss": "tip; a tip for the waiter",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10c2237fd49fb5a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to digest food, then the Mandarin for a good review online."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xiǎofèi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎofèi — \"tip; a tip for the waiter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zài Zhōngguó chīfàn yìbān bù gěi xiǎofèi — In China you don't usually leave a tip when you eat out."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎofèi is built from 小 'small' and fèi 'a cost', both inherited from Middle Chinese, sjewX and phj+jH (Guangyun, in Baxter's transcription), which glosses the second 'to spend'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎofèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎofèi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎofèi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎofèi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zài Zhōngguó chīfàn yìbān bù gěi xiǎofèi — In China you don't usually leave a tip when you eat out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zài Zhōngguó chīfàn yìbān bù gěi xiǎofèi* — In China you don't usually leave a tip when you eat out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to digest food, then the Mandarin for a good review online, then say xiǎofèi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to digest food, then the Mandarin for a good review online, then say *xiǎofèi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xiǎofèi mean? (\"Tip; a tip for the waiter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C452-tianse",
+      "sequence": 34160,
+      "title": "天色 (tiānsè) — the light of the sky; how dark the sky is getting",
+      "headword": "天色",
+      "romanization": "tiānsè",
+      "gloss": "the light of the sky; how dark the sky is getting",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:724026dd02e5e75d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a good review online, then the Mandarin for a tip for the waiter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 天色",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "天色 — tiānsè — \"the light of the sky; how dark the sky is getting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "天色不早了我们坐车回酒店 tiānsè bù zǎo le wǒmen zuò chē huí jiǔdiàn — It's getting late, so we're heading back to the hotel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "天色 (tiānsè) is built from 天 'the sky' and 色 'a colour', both inherited from Middle Chinese, then and srik (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiānsè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiānsè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiānsè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiānsè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiānsè bù zǎo le wǒmen zuò chē huí jiǔdiàn — It's getting late, so we're heading back to the hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiānsè bù zǎo le wǒmen zuò chē huí jiǔdiàn* — It's getting late, so we're heading back to the hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a good review online, then the Mandarin for a tip for the waiter, then say tiānsè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a good review online, then the Mandarin for a tip for the waiter, then say *tiānsè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 天色 (tiānsè) mean? (\"The light of the sky; how dark the sky is getting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C452-canjinzhi",
+      "sequence": 34170,
+      "title": "cānjīnzhǐ — paper napkin",
+      "headword": "cānjīnzhǐ",
+      "romanization": "cānjīnzhǐ",
+      "gloss": "paper napkin",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:612c67a378d2d611",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a tip for the waiter, then the Mandarin for how dark the sky is getting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cānjīnzhǐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cānjīnzhǐ — \"paper napkin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "fúwùyuán qǐng gěi wǒ jǐ zhāng cānjīnzhǐ — Excuse me, could I have a few napkins, please?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cānjīnzhǐ is built from cān 'a meal', jīn 'a cloth' and zhǐ 'paper', all inherited from Middle Chinese, tshan, kin and tsyeX (Guangyun, in Baxter's transcription), which glosses the first 'to swallow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cānjīnzhǐ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cānjīnzhǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cānjīnzhǐ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cānjīnzhǐ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fúwùyuán qǐng gěi wǒ jǐ zhāng cānjīnzhǐ — Excuse me, could I have a few napkins, please?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fúwùyuán qǐng gěi wǒ jǐ zhāng cānjīnzhǐ* — Excuse me, could I have a few napkins, please?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a tip for the waiter, then the Mandarin for how dark the sky is getting, then say cānjīnzhǐ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a tip for the waiter, then the Mandarin for how dark the sky is getting, then say *cānjīnzhǐ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cānjīnzhǐ mean? (\"Paper napkin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R452-review-448-452",
+      "sequence": 34180,
+      "title": "Looking back: from At the Market to After the Meal",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from At the Market to After the Meal",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62eac8a11007be4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a market stall and a marketplace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a market stall, a marketplace, the built-up part of a city, a market held at dawn, to set up a street stall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a market stall, a marketplace, the built-up part of a city, a market held at dawn, to set up a street stall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a night market, one's taste in food, a distinctive local flavour, light and mild (of food), greasy (of food)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a night market, one's taste in food, a distinctive local flavour, light and mild (of food), greasy (of food)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seafood, a distinguishing trait, specially for that reason, authentic, a restaurant's signature dish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: seafood, a distinguishing trait, specially for that reason, authentic, a restaurant's signature dish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to eat no meat, a special character of its own, outstanding, a meatless dish, to be left over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to eat no meat, a special character of its own, outstanding, a meatless dish, to be left over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to digest food, a good review online, a tip for the waiter, how dark the sky is getting, a paper napkin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to digest food, a good review online, a tip for the waiter, how dark the sky is getting, a paper napkin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "市 味 特 色 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 市 味 特 色 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A market stall? (tānwèi.) A marketplace? (市场, shìchǎng.) The built-up part of a city? (市区, shìqū.) A market held at dawn? (早市, zǎoshì.) To set up a street stall? (bǎitān.) A night market? (yèshì.) One's taste in food? (口味, kǒuwèi.) A distinctive local flavour? (风味, fēngwèi.) Light and mild (of food)? (qīngdàn.) Greasy (of food)? (yóunì.) Seafood? (hǎixiān.) A distinguishing trait? (特点, tèdiǎn.) Specially for that reason? (特意, tèyì.) Authentic? (zhèngzōng.) A restaurant's signature dish? (zhāopáicài.) To eat no meat? (chīsù.) A special character of its own? (特色, tèsè.) Outstanding? (出色, chūsè.) A meatless dish? (sùcài.) To be left over? (shèng.) To digest food? (xiāohuà.) A good review online? (hǎopíng.) A tip for the waiter? (xiǎofèi.) How dark the sky is getting? (天色, tiānsè.) A paper napkin? (cānjīnzhǐ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

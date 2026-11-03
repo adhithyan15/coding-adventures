@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C500-bifen",
+    "language": "chinese",
+    "chapter": 500,
+    "sequence": 37750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:023019e5c8d1054f"
+  },
+  "findings": []
+}

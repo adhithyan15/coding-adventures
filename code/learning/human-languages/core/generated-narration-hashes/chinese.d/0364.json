@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:dea1d36adb859942",
+  "lessonIds": [
+    "ZH-C364-quan",
+    "ZH-C364-buzhun",
+    "ZH-W364-zhun-allow",
+    "ZH-C364-biaozhun",
+    "ZH-C364-pizhun",
+    "ZH-C364-tixing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch364.txt",
+  "json": "chinese/narration/ch364.json",
+  "textHash": "fnv1a64:b58394aaaa12c3b8",
+  "jsonHash": "fnv1a64:59d5cab7f4e1219e",
+  "findings": []
+}

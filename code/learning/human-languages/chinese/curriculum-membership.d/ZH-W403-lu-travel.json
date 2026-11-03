@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W403-lu-travel",
+  "pathSegment": "ZH-PATH-403-TRAVELLER403",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-403-TRAVELLER403",
+      "order": 2
+    }
+  ]
+}

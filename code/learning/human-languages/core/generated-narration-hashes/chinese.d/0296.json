@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:2b1d25ce79cb7cdf",
+  "lessonIds": [
+    "ZH-C296-yiwai",
+    "ZH-C296-chehuo",
+    "ZH-C296-shache",
+    "ZH-C296-xinshou",
+    "ZH-C296-peiqian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch296.txt",
+  "json": "chinese/narration/ch296.json",
+  "textHash": "fnv1a64:16c440d6dd3f623d",
+  "jsonHash": "fnv1a64:b1c4f7f39385fc77",
+  "findings": []
+}

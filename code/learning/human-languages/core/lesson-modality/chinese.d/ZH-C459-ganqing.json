@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C459-ganqing",
+    "language": "chinese",
+    "chapter": 459,
+    "sequence": 35070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bf95de0260bcc82"
+  },
+  "findings": []
+}

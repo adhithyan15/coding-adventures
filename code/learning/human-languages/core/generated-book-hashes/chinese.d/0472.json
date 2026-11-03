@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:c8c9b18ac03a2d20",
+  "lessonIds": [
+    "ZH-C472-meimao",
+    "ZH-C472-lianse",
+    "ZH-W472-lian-face",
+    "ZH-C472-bianlian",
+    "ZH-C472-biaoqing",
+    "ZH-C472-etou"
+  ],
+  "tex": "chinese/book/chapters/ch472-faces.tex"
+}

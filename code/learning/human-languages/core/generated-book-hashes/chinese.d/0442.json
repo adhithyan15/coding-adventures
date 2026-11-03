@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:a096195a7d755081",
+  "lessonIds": [
+    "ZH-C442-duian",
+    "ZH-C442-he",
+    "ZH-W442-he-river",
+    "ZH-C442-shangyou",
+    "ZH-C442-zhangshui",
+    "ZH-C442-jiang"
+  ],
+  "tex": "chinese/book/chapters/ch442-the-river.tex"
+}

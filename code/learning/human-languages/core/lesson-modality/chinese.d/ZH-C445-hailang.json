@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C445-hailang",
+    "language": "chinese",
+    "chapter": 445,
+    "sequence": 33770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64ec22149ef8c5ea"
+  },
+  "findings": []
+}

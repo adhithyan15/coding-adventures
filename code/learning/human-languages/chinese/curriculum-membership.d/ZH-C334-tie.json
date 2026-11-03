@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C334-tie",
+  "pathSegment": "ZH-PATH-334-REDENV334",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-334-REDENV334",
+      "order": 3
+    }
+  ]
+}

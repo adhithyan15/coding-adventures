@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:4e9b33836d9d737e",
+  "lessonIds": [
+    "ZH-C378-zaoyin",
+    "ZH-C378-baoyuan",
+    "ZH-C378-geyin",
+    "ZH-C378-shengren",
+    "ZH-C378-wuye"
+  ],
+  "tex": "chinese/book/chapters/ch378-noise-next-door.tex"
+}

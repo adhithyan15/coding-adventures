@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:b7a870a94453d908",
+  "lessonIds": [
+    "ZH-C485-yali",
+    "ZH-C485-jingshen",
+    "ZH-C485-shenxin",
+    "ZH-C485-xintai",
+    "ZH-C485-jianya",
+    "ZH-R485-review-481-485",
+    "ZH-R485-review-final-485"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch485.txt",
+  "json": "chinese/narration/ch485.json",
+  "textHash": "fnv1a64:dd36184c379bb5cf",
+  "jsonHash": "fnv1a64:2f03c3ce2f08d781",
+  "findings": []
+}

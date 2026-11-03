@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C473-baya",
+    "language": "chinese",
+    "chapter": 473,
+    "sequence": 35800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aac75976360755d4"
+  },
+  "findings": []
+}

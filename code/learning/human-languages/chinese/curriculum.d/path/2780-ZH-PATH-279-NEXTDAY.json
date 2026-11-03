@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-279-NEXTDAY",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-279-NEXTDAY"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:87c07d880bf1fb2b",
+  "lessonIds": [
+    "ZH-C304-ruxue",
+    "ZH-C304-riji",
+    "ZH-W304-ji-note",
+    "ZH-C304-baodao-register",
+    "ZH-C304-xuefei",
+    "ZH-C304-jizhu"
+  ],
+  "tex": "chinese/book/chapters/ch304-starting-school.tex"
+}

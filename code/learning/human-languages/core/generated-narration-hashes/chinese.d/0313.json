@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:d481237b89e8c064",
+  "lessonIds": [
+    "ZH-C313-zhuangxiu",
+    "ZH-C313-cai",
+    "ZH-W313-cai-only",
+    "ZH-C313-dingju",
+    "ZH-C313-shebude",
+    "ZH-C313-shiying"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch313.txt",
+  "json": "chinese/narration/ch313.json",
+  "textHash": "fnv1a64:6be472b717c09947",
+  "jsonHash": "fnv1a64:c0c60eab166197e1",
+  "findings": []
+}

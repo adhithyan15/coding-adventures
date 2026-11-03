@@ -1,0 +1,22 @@
+{
+  "chapter": 280,
+  "title": "What I Think",
+  "label": "ch:zh-what-i-think",
+  "canDo": "I can say what I think, and ask what you think.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C280-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what you think with 我觉得 and a whole sentence, a suggestion or an objection, as if, and so much, built on one new written character: 意.",
+    "assesses": [
+      "ZH-LEX-C280-YIJIAN-01",
+      "ZH-SCRIPT-YI-IDEA-01",
+      "ZH-GRAMMAR-JUEDE-01",
+      "ZH-LEX-C280-HAOXIANG-01",
+      "ZH-LEX-C280-ZHEME-01",
+      "ZH-PERFORMANCE-OPINION-01"
+    ]
+  }
+}

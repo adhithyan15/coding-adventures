@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:3bbd69c5b6f67d4e",
+  "lessonIds": [
+    "ZH-C518-qinglang",
+    "ZH-C518-yangguang",
+    "ZH-W518-yang-sun",
+    "ZH-C518-taiyangneng",
+    "ZH-C518-dasan",
+    "ZH-C518-dawu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch518.txt",
+  "json": "chinese/narration/ch518.json",
+  "textHash": "fnv1a64:dd86a59773c4a4e9",
+  "jsonHash": "fnv1a64:e0b092f37e0c99fe",
+  "findings": []
+}

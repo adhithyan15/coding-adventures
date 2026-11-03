@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C432-shao",
+    "language": "chinese",
+    "chapter": 432,
+    "sequence": 33100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:277f801996a14f66"
+  },
+  "findings": []
+}

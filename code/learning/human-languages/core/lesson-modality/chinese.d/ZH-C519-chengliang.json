@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C519-chengliang",
+    "language": "chinese",
+    "chapter": 519,
+    "sequence": 39290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d87eb898a7a52f44"
+  },
+  "findings": []
+}

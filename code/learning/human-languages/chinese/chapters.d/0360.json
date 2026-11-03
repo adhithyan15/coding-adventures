@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "No Need",
+  "label": "ch:zh-no-need",
+  "canDo": "I can say what is necessary, what there is no need for, and what suits the occasion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C360-chadui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can say what is necessary, what there is no need for, and what suits the occasion.",
+    "assesses": [
+      "ZH-LEX-C360-NEED360-03",
+      "ZH-LEX-C360-NEED360-04",
+      "ZH-LEX-C360-NEED360-05"
+    ]
+  }
+}

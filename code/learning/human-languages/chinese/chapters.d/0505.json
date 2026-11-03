@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Dancing",
+  "label": "ch:zh-dancing",
+  "canDo": "I can talk about dance, a dance party, a dance partner, the stage and rehearsals.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C505-pailian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about dance, a dance party, a dance partner, the stage and rehearsals.",
+    "assesses": [
+      "ZH-LEX-C505-DANCE505-03",
+      "ZH-LEX-C505-DANCE505-04",
+      "ZH-LEX-C505-DANCE505-05"
+    ]
+  }
+}

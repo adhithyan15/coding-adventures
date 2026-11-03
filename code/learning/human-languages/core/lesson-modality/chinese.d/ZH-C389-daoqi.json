@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C389-daoqi",
+    "language": "chinese",
+    "chapter": 389,
+    "sequence": 29810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba00836cb93bbbce"
+  },
+  "findings": []
+}

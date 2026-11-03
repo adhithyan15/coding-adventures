@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C300-shengming",
+  "pathSegment": "ZH-PATH-300-DEATH300",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-300-DEATH300",
+      "order": 3
+    }
+  ]
+}

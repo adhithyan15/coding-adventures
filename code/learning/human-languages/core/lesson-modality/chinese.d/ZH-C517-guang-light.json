@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C517-guang-light",
+    "language": "chinese",
+    "chapter": 517,
+    "sequence": 39160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b24c53e38c937b6a"
+  },
+  "findings": []
+}

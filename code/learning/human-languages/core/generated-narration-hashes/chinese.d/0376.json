@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:87f3cb32225b1eb0",
+  "lessonIds": [
+    "ZH-C376-huodong",
+    "ZH-C376-shegong",
+    "ZH-C376-aihu",
+    "ZH-C376-rangzuo",
+    "ZH-C376-guangchangwu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch376.txt",
+  "json": "chinese/narration/ch376.json",
+  "textHash": "fnv1a64:a1e5e4c0a4d7d374",
+  "jsonHash": "fnv1a64:079a1c5ebe4fb865",
+  "findings": []
+}

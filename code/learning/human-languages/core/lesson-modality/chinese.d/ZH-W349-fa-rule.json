@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W349-fa-rule",
+    "language": "chinese",
+    "chapter": 349,
+    "sequence": 27165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3d54f0bd2a5d9e3f",
+    "detachableSegments": [
+      "Script — the water piece, then qù"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

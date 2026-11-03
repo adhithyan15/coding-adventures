@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — `not` is a builtin (#18798)
+
+Every Ruby `unless`, `until` and `!x` lowers to `BuiltinCall("not", [x])`,
+which had no arm in the emitter and no case in `_sir_call_builtin_by_name`,
+so it panicked `unknown builtin: not`.  The emitter now inlines
+`Value(!_sir_truthy(x))` (a real `bool`, SIR truthiness: only `nil` and
+`false` are falsy), and the runtime dispatch has a `"not"` case for a
+first-class reference.  Test `emit_not_builtin_negates_by_truthiness`; the
+end-to-end check is `sir-conformance`'s `rb_unless_until_and_bang`.
+
 ## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
 
 ### The Go tests use a build cache nothing else deletes (root cause of a flake)

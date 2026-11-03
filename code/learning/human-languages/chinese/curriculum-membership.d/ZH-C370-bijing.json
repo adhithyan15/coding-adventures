@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C370-bijing",
+  "pathSegment": "ZH-PATH-370-KEY370",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-370-KEY370",
+      "order": 1
+    }
+  ]
+}

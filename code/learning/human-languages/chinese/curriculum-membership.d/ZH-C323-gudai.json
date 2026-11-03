@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C323-gudai",
+  "pathSegment": "ZH-PATH-323-ERA323",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-323-ERA323",
+      "order": 4
+    }
+  ]
+}

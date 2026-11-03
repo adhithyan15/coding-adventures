@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W280-yi",
+    "language": "chinese",
+    "chapter": 280,
+    "sequence": 21170,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:797a85711401f7fa",
+    "detachableSegments": [
+      "Script — the left of 站 on top, then 日 and 心"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

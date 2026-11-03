@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Ways of Seeing",
+  "label": "ch:zh-ways-of-seeing",
+  "canDo": "I can ask how someone sees a question and talk about ideas and ways of doing things.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C349-zhuzhang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can ask how someone sees a question and talk about ideas and ways of doing things.",
+    "assesses": [
+      "ZH-LEX-C349-VIEW349-03",
+      "ZH-LEX-C349-VIEW349-04",
+      "ZH-LEX-C349-VIEW349-05"
+    ]
+  }
+}

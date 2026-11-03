@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Getting Results",
+  "label": "ch:zh-getting-results",
+  "canDo": "I can talk about dreams coming true, achieving something, results, finishing a job and a condition.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C395-tiaojian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can talk about dreams coming true, achieving something, results, finishing a job and a condition.",
+    "assesses": [
+      "ZH-LEX-C395-RESULT395-03",
+      "ZH-LEX-C395-RESULT395-04",
+      "ZH-LEX-C395-RESULT395-05"
+    ]
+  }
+}

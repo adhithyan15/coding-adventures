@@ -1539,12 +1539,20 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                         "{}{} (__SirExc.rescueMatches(__exc, {})) {{",
                         ipad, kw, types
                     );
-                    // `rescue Foo => e` binds the caught value as a local.
+                    // `rescue Foo => e` binds the caught value as a local:
+                    // `let` when the clause stores into it (`e = 5`), as for
+                    // any other binding (#18798; `const` failed to compile).
                     if let Some(bind) = &r.binding {
+                        let keyword = if MUTABLE_NAMES.with(|m| m.borrow().contains(bind)) {
+                            "let"
+                        } else {
+                            "const"
+                        };
                         let _ = writeln!(
                             out,
-                            "{}  const {}: __Sir.Val = __exc;",
+                            "{}  {} {}: __Sir.Val = __exc;",
                             ipad,
+                            keyword,
                             var_ident(bind)
                         );
                     }

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C426-ludian",
+  "pathSegment": "ZH-PATH-426-ROOM426",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-426-ROOM426",
+      "order": 2
+    }
+  ]
+}

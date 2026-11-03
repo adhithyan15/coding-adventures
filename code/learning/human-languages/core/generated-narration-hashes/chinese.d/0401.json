@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:3df6a99ceb778bc2",
+  "lessonIds": [
+    "ZH-C401-qiantu",
+    "ZH-C401-gaihang",
+    "ZH-C401-chengzhang",
+    "ZH-C401-bianlao",
+    "ZH-C401-yiqie",
+    "ZH-R401-review-397-401",
+    "ZH-R401-review-final-401"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch401.txt",
+  "json": "chinese/narration/ch401.json",
+  "textHash": "fnv1a64:879cc09798dcb892",
+  "jsonHash": "fnv1a64:5888b4edf2998ae4",
+  "findings": []
+}

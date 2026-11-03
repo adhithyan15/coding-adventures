@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C374-minzu",
+  "pathSegment": "ZH-PATH-374-SOCIETY374",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-374-SOCIETY374",
+      "order": 3
+    }
+  ]
+}

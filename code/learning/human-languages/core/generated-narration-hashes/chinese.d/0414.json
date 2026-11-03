@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:301817cec9cd073c",
+  "lessonIds": [
+    "ZH-C414-chengwuyuan",
+    "ZH-C414-kaochuang",
+    "ZH-C414-jingjicang",
+    "ZH-C414-yunji",
+    "ZH-C414-anquandai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch414.txt",
+  "json": "chinese/narration/ch414.json",
+  "textHash": "fnv1a64:9c750a1b420408e9",
+  "jsonHash": "fnv1a64:9d1b1745b2ecf883",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C496-chuji",
+    "language": "chinese",
+    "chapter": 496,
+    "sequence": 37540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bce80190d7be377"
+  },
+  "findings": []
+}

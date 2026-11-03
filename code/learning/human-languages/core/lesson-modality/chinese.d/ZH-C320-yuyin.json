@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C320-yuyin",
+    "language": "chinese",
+    "chapter": 320,
+    "sequence": 25140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c2f98a260d9c4ec"
+  },
+  "findings": []
+}

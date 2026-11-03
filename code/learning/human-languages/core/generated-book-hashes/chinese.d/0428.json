@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:a858c99bac6f3605",
+  "lessonIds": [
+    "ZH-C428-tongwang",
+    "ZH-C428-qianwang",
+    "ZH-C428-huicheng",
+    "ZH-C428-xingcheng",
+    "ZH-C428-fapiao"
+  ],
+  "tex": "chinese/book/chapters/ch428-moving-on.tex"
+}

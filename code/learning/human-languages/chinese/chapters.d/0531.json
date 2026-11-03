@@ -1,0 +1,21 @@
+{
+  "chapter": 531,
+  "title": "A Lucky Escape",
+  "label": "ch:zh-a-lucky-escape",
+  "canDo": "I can say it is a good thing that, all but, by a fluke and unfortunately, and talk about losing.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R531-review-526-531",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can say it is a good thing that, all but, by a fluke and unfortunately, and talk about losing.",
+    "assesses": [
+      "ZH-LEX-C531-ESCAPE531-01",
+      "ZH-LEX-C531-ESCAPE531-02",
+      "ZH-LEX-C531-ESCAPE531-03",
+      "ZH-LEX-C531-ESCAPE531-04",
+      "ZH-LEX-C531-ESCAPE531-05"
+    ]
+  }
+}

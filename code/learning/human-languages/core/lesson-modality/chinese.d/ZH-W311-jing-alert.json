@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W311-jing-alert",
+    "language": "chinese",
+    "chapter": 311,
+    "sequence": 24095,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:56a2ae9f82d9c6ca",
+    "detachableSegments": [
+      "Script — three pieces: top left, top right and the foot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

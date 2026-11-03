@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C486-jianli",
+  "pathSegment": "ZH-PATH-486-JOBHUNT486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-486-JOBHUNT486",
+      "order": 1
+    }
+  ]
+}

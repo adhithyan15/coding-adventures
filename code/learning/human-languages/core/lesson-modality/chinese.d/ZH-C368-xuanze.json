@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C368-xuanze",
+    "language": "chinese",
+    "chapter": 368,
+    "sequence": 28170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d56e5ed72da81c98"
+  },
+  "findings": []
+}

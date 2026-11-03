@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "I Hope So",
+  "label": "ch:zh-i-hope-so",
+  "canDo": "I can say what I hope, long for and yearn for, say when hope runs out, and wish someone well.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C533-xinxiangshicheng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can say what I hope, long for and yearn for, say when hope runs out, and wish someone well.",
+    "assesses": [
+      "ZH-LEX-C533-WISH533-03",
+      "ZH-LEX-C533-WISH533-04",
+      "ZH-LEX-C533-WISH533-05"
+    ]
+  }
+}

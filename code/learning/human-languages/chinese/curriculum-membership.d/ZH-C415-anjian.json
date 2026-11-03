@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C415-anjian",
+  "pathSegment": "ZH-PATH-415-TERMINAL415",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-415-TERMINAL415",
+      "order": 3
+    }
+  ]
+}

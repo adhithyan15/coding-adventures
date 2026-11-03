@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C387-shouru",
+    "language": "chinese",
+    "chapter": 387,
+    "sequence": 29670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48a392c892d19621"
+  },
+  "findings": []
+}

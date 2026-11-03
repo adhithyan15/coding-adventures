@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:bf35d33a45ce517c",
+  "lessonIds": [
+    "ZH-C356-jiaoxun",
+    "ZH-C356-cuoguo",
+    "ZH-W356-cuo-wrong",
+    "ZH-C356-chucuo",
+    "ZH-C356-cuowu",
+    "ZH-C356-gaizheng"
+  ],
+  "tex": "chinese/book/chapters/ch356-a-missed-chance.tex"
+}

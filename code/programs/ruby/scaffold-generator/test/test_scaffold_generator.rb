@@ -726,6 +726,49 @@ class TestGeneratePerl < Minitest::Test
 end
 
 # ===========================================================================
+# Test: File Generation - Haskell
+# ===========================================================================
+
+class TestGenerateHaskell < Minitest::Test
+  def setup
+    @tmpdir = Dir.mktmpdir("scaffold-haskell")
+  end
+
+  def teardown
+    FileUtils.rm_rf(@tmpdir)
+  end
+
+  def test_generates_cabal_with_spec_suite
+    SG.generate_haskell(@tmpdir, "my-package", "A test package", "", [], [])
+    content = File.read(File.join(@tmpdir, "coding-adventures-my-package.cabal"))
+    assert_includes content, "test-suite spec"
+  end
+
+  # The exact shape build-tool --validate-build-files accepts: the two-line
+  # explanation, then the Darwin-only DEVELOPER_DIR export in front of the
+  # unchanged `cabal test all`.
+  def test_build_selects_darwin_clt_linker
+    SG.generate_haskell(@tmpdir, "my-package", "A test package", "", [], [])
+    build = File.read(File.join(@tmpdir, "BUILD"))
+    expected = "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n" \
+      "# Scope the selection to Cabal and its children, keeping other packages intact.\n" \
+      'if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; ' \
+      "cabal test all\n"
+    assert_equal expected, build
+  end
+
+  # cmd /C cannot parse the POSIX prefix, so Windows gets the plain command
+  # it ran before the prefix existed.
+  def test_build_windows_keeps_plain_command
+    SG.generate_haskell(@tmpdir, "my-package", "A test package", "", [], [])
+    build_windows = File.read(File.join(@tmpdir, "BUILD_windows"))
+    assert_equal "cabal test all\n", build_windows
+    refute_includes build_windows, "uname"
+    refute_includes build_windows, "DEVELOPER_DIR"
+  end
+end
+
+# ===========================================================================
 # Test: Common Files
 # ===========================================================================
 

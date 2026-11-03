@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "By the Sea",
+  "label": "ch:zh-by-the-sea",
+  "canDo": "I can talk about the waves, fishing boats, going ashore, shells and the tide going out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C445-tuichao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about the waves, fishing boats, going ashore, shells and the tide going out.",
+    "assesses": [
+      "ZH-LEX-C445-SEA445-03",
+      "ZH-LEX-C445-SEA445-04",
+      "ZH-LEX-C445-SEA445-05"
+    ]
+  }
+}

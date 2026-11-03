@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Whose Fault?",
+  "label": "ch:zh-whose-fault",
+  "canDo": "I can say who is to blame, say something is strange, and talk about provoking someone, coming off worse and getting into trouble.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C539-chuanghuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can say who is to blame, say something is strange, and talk about provoking someone, coming off worse and getting into trouble.",
+    "assesses": [
+      "ZH-LEX-C539-BLAME539-03",
+      "ZH-LEX-C539-BLAME539-04",
+      "ZH-LEX-C539-BLAME539-05"
+    ]
+  }
+}

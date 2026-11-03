@@ -1,0 +1,21 @@
+{
+  "chapter": 391,
+  "title": "When Plans Change",
+  "label": "ch:zh-when-plans-change",
+  "canDo": "I can talk about a day's schedule, things at the last minute, still having time, catching a train and what we will do when the time comes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R391-review-386-391",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can talk about a day's schedule, things at the last minute, still having time, catching a train and what we will do when the time comes.",
+    "assesses": [
+      "ZH-LEX-C391-PLANS391-01",
+      "ZH-LEX-C391-PLANS391-02",
+      "ZH-LEX-C391-PLANS391-03",
+      "ZH-LEX-C391-PLANS391-04",
+      "ZH-LEX-C391-PLANS391-05"
+    ]
+  }
+}

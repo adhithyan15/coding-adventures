@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:991a2274bd3837ae",
+  "lessonIds": [
+    "ZH-C321-lishi",
+    "ZH-C321-guren",
+    "ZH-W321-gu-ancient",
+    "ZH-C321-gushu",
+    "ZH-C321-gulao",
+    "ZH-C321-wenzi"
+  ],
+  "tex": "chinese/book/chapters/ch321-people-of-long-ago.tex"
+}

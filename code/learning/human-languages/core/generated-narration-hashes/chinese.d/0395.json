@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:7815bd9e91ffdf6f",
+  "lessonIds": [
+    "ZH-C395-shixian",
+    "ZH-C395-qude",
+    "ZH-W395-qu-take",
+    "ZH-C395-chengguo",
+    "ZH-C395-wancheng",
+    "ZH-C395-tiaojian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch395.txt",
+  "json": "chinese/narration/ch395.json",
+  "textHash": "fnv1a64:cc6e5c9bea055e8c",
+  "jsonHash": "fnv1a64:53f3640983a45b83",
+  "findings": []
+}

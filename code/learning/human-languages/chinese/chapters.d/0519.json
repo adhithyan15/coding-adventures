@@ -1,0 +1,21 @@
+{
+  "chapter": 519,
+  "title": "Out in Nature",
+  "label": "ch:zh-out-in-nature",
+  "canDo": "I can talk about spring at its best, the early morning, a place that is mild all year, a snowy view and sitting in the cool.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R519-review-514-519",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about spring at its best, the early morning, a place that is mild all year, a snowy view and sitting in the cool.",
+    "assesses": [
+      "ZH-LEX-C519-OUTDOORS519-01",
+      "ZH-LEX-C519-OUTDOORS519-02",
+      "ZH-LEX-C519-OUTDOORS519-03",
+      "ZH-LEX-C519-OUTDOORS519-04",
+      "ZH-LEX-C519-OUTDOORS519-05"
+    ]
+  }
+}

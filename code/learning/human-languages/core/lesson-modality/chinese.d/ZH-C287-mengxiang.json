@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C287-mengxiang",
+    "language": "chinese",
+    "chapter": 287,
+    "sequence": 21730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:021d17c1736160f4"
+  },
+  "findings": []
+}

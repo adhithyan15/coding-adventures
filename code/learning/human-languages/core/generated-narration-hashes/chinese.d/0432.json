@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:2ac660f9bd873bbf",
+  "lessonIds": [
+    "ZH-C432-shao",
+    "ZH-C432-danji",
+    "ZH-C432-jiejiari",
+    "ZH-C432-quanpiao",
+    "ZH-C432-guanbi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch432.txt",
+  "json": "chinese/narration/ch432.json",
+  "textHash": "fnv1a64:5f986fa15d4d6de7",
+  "jsonHash": "fnv1a64:9258fb6c34644c38",
+  "findings": []
+}

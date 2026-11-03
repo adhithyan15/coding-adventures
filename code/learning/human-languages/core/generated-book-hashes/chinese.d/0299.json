@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:eb231d3587b49682",
+  "lessonIds": [
+    "ZH-C299-dejiu",
+    "ZH-C299-jishi",
+    "ZH-C299-jijiu",
+    "ZH-C299-yundao",
+    "ZH-C299-qiangjiu"
+  ],
+  "tex": "chinese/book/chapters/ch299-help-arrives.tex"
+}

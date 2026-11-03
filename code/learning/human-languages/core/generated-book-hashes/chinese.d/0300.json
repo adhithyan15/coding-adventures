@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:97a8f148297ebc55",
+  "lessonIds": [
+    "ZH-C300-dizhen",
+    "ZH-C300-si",
+    "ZH-W300-si-die",
+    "ZH-C300-shengming",
+    "ZH-C300-siyin",
+    "ZH-C300-baozha"
+  ],
+  "tex": "chinese/book/chapters/ch300-life-and-death.tex"
+}

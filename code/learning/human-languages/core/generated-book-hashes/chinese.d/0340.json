@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:5022d0d7ef6a1947",
+  "lessonIds": [
+    "ZH-C340-chuantong",
+    "ZH-C340-jiangjiu",
+    "ZH-C340-guiju",
+    "ZH-C340-jieqi",
+    "ZH-C340-saomu",
+    "ZH-R340-review-336-340"
+  ],
+  "tex": "chinese/book/chapters/ch340-old-ways.tex"
+}

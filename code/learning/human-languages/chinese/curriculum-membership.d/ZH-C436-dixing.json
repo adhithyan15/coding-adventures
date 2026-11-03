@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C436-dixing",
+  "pathSegment": "ZH-PATH-436-SOUTH436",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-436-SOUTH436",
+      "order": 0
+    }
+  ]
+}

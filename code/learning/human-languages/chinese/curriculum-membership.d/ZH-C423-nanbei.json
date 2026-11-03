@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C423-nanbei",
+  "pathSegment": "ZH-PATH-423-SOUTH423",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-423-SOUTH423",
+      "order": 5
+    }
+  ]
+}

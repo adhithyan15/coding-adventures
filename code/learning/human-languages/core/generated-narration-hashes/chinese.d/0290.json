@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:4078b8ba148784f0",
+  "lessonIds": [
+    "ZH-C290-xinwen",
+    "ZH-C290-baodao",
+    "ZH-C290-diantai",
+    "ZH-C290-zhuchiren",
+    "ZH-C290-redian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch290.txt",
+  "json": "chinese/narration/ch290.json",
+  "textHash": "fnv1a64:77548c10d0acc112",
+  "jsonHash": "fnv1a64:1a7e6de855033f0f",
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W411-chuan-boat",
+    "language": "chinese",
+    "chapter": 411,
+    "sequence": 31475,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:11468da53b399949",
+    "detachableSegments": [
+      "Script — the boat piece, then 口 under a small frame"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

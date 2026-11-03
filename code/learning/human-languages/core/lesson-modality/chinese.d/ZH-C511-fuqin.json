@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C511-fuqin",
+    "language": "chinese",
+    "chapter": 511,
+    "sequence": 38300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efc4a25f23c21779"
+  },
+  "findings": []
+}

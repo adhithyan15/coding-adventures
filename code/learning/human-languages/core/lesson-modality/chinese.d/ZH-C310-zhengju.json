@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C310-zhengju",
+    "language": "chinese",
+    "chapter": 310,
+    "sequence": 24050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfa2db7d4518d303"
+  },
+  "findings": []
+}

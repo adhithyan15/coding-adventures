@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C477-changwei",
+    "language": "chinese",
+    "chapter": 477,
+    "sequence": 36010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:956dd1f9217d26ba"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C498-jinqiu",
+    "language": "chinese",
+    "chapter": 498,
+    "sequence": 37660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:028592fed9247a52"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C506-xiaotiqin",
+  "pathSegment": "ZH-PATH-506-BAND506",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-506-BAND506",
+      "order": 2
+    }
+  ]
+}

@@ -81,24 +81,6 @@ HASKELL_ROOTS = (ROOT / "code/packages/haskell", ROOT / "code/programs/haskell")
 # BUILD_linux can never run on Darwin, so they are out of scope.
 DARWIN_REACHABLE_FRONTS = ("BUILD_mac", "BUILD_mac_and_linux", "BUILD")
 
-# Fronts deliberately left WITHOUT the guard, each with the reason.
-#
-# barcode-layout-1d's package tree is pinned by the barcode-layout-1d-v1
-# conformance registry (code/specs/fixtures/barcode-layout-1d-v1/targets.json)
-# at a verified revision.  Any non-lockfile change to the package must repoint
-# that revision "at the durable merge commit", which a squash-merged PR cannot
-# name; doing it the only way available today turned main red for 2.5 hours
-# after #18527.  So the guard waits for #18824 to change that contract.
-#
-# Each entry is checked by test_registry_pinned_exceptions_are_still_needed:
-# the moment the front gains the guard, that test fails and the entry must go.
-REGISTRY_PINNED_FRONTS = {
-    "code/packages/haskell/barcode-layout-1d/BUILD": (
-        "code/specs/fixtures/barcode-layout-1d-v1/targets.json",
-        "#18824",
-    ),
-}
-
 CLT = "/Library/Developer/CommandLineTools"
 INHERITED = "/original/developer"
 
@@ -115,7 +97,9 @@ uname() { printf '%s\n' "$platform"; }
 cabal() { printf 'cabal\t%s\t%s\n' "${DEVELOPER_DIR-<unset>}" "$*"; return "$status"; }
 command_not_found_handle() { printf 'external\t%s\n' "$*"; return 0; }
 [ "$4" = 1 ] || unset -f cabal
-source "$1"
+# A subshell, like the build tool's per-line `sh -c`: an `export` in the
+# front must not leak into the caller.
+( source "$1" )
 front_status=$?
 printf 'parent\t%s\n' "${DEVELOPER_DIR-<unset>}"
 exit "$front_status"
@@ -128,8 +112,6 @@ def cabal_fronts() -> list[Path]:
     for root in HASKELL_ROOTS:
         for name in DARWIN_REACHABLE_FRONTS:
             for front in sorted(root.glob(f"*/{name}")):
-                if front.relative_to(ROOT).as_posix() in REGISTRY_PINNED_FRONTS:
-                    continue
                 if invokes_cabal(front.read_text(encoding="utf-8")):
                     fronts.append(front)
     return fronts
@@ -222,30 +204,18 @@ class HaskellDarwinCabalLinkerTests(unittest.TestCase):
             "code/packages/haskell/trig/BUILD",
         )
 
-    def test_registry_pinned_exceptions_are_still_needed(self) -> None:
-        # An exception is only honest while (a) the front still runs cabal,
-        # (b) it still lacks the guard, and (c) a registry still pins its
-        # package root.  Any of those changing means the entry must go.
-        for relative, (registry, issue) in REGISTRY_PINNED_FRONTS.items():
-            with self.subTest(front=relative):
-                text = (ROOT / relative).read_text(encoding="utf-8")
-                self.assertTrue(invokes_cabal(text), f"{relative} no longer runs cabal")
-                self.assertNotIn(
-                    f"DEVELOPER_DIR={CLT}",
-                    text,
-                    f"{relative} has the guard now; drop its {issue} exception",
-                )
-                package_root = Path(relative).parent.as_posix()
-                self.assertIn(
-                    f'"package_root": "{package_root}"',
-                    (ROOT / registry).read_text(encoding="utf-8"),
-                    f"{registry} no longer pins {package_root}; drop the exception",
-                )
-
     def test_helper_scripts_that_run_cabal_name_the_command_line_tools(self) -> None:
         # Some fronts delegate to `sh tools/*.sh` (conduit, conduit-hello), so
-        # the cabal call lives in the script, not the BUILD. Those scripts
-        # need the same Darwin selection.
+        # the cabal call lives in the script, not the BUILD. A script is
+        # covered in one of two ways:
+        #
+        #   * it selects DEVELOPER_DIR=<CLT> itself, or
+        #   * every Darwin-reachable BUILD line that runs it first does
+        #     `export DEVELOPER_DIR=<CLT>` on that same line (the build tool
+        #     runs each line in its own `sh -c`, so the export reaches the
+        #     script and nothing else).
+        #
+        # A script that no BUILD line runs at all is not covered.
         scripts = [
             script
             for root in HASKELL_ROOTS
@@ -253,16 +223,32 @@ class HaskellDarwinCabalLinkerTests(unittest.TestCase):
             if invokes_cabal(script.read_text(encoding="utf-8"))
         ]
         self.assertGreater(len(scripts), 0, "expected conduit's helper scripts")
-        missing = [
-            self.label(script)
-            for script in scripts
-            if f"DEVELOPER_DIR={CLT}" not in script.read_text(encoding="utf-8")
-        ]
+        export = f"export DEVELOPER_DIR={CLT}"
+        missing = []
+        for script in scripts:
+            if f"DEVELOPER_DIR={CLT}" in script.read_text(encoding="utf-8"):
+                continue
+            needle = f"tools/{script.name}"
+            callers = [
+                line
+                for name in DARWIN_REACHABLE_FRONTS
+                if (script.parent.parent / name).exists()
+                for line in (script.parent.parent / name)
+                .read_text(encoding="utf-8")
+                .splitlines()
+                if needle in line and not line.lstrip().startswith("#")
+            ]
+            if not callers or not all(
+                export in line and line.index(export) < line.index(needle)
+                for line in callers
+            ):
+                missing.append(self.label(script))
         self.assertEqual(
             missing,
             [],
             "these Haskell helper scripts run cabal without selecting "
-            f"DEVELOPER_DIR={CLT} on Darwin",
+            f"DEVELOPER_DIR={CLT} on Darwin, themselves or through an "
+            "`export` earlier on every BUILD line that runs them",
         )
 
     def test_windows_fronts_are_cmd_not_posix_shell(self) -> None:

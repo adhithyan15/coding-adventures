@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Blood",
+  "label": "ch:zh-blood",
+  "canDo": "I can talk about a scar, blood, stopping the bleeding, giving blood and blood pressure.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C479-xueya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about a scar, blood, stopping the bleeding, giving blood and blood pressure.",
+    "assesses": [
+      "ZH-LEX-C479-BLOOD479-03",
+      "ZH-LEX-C479-BLOOD479-04",
+      "ZH-LEX-C479-BLOOD479-05"
+    ]
+  }
+}

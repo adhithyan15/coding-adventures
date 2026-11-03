@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:fa6977c9ddc1edac",
+  "lessonIds": [
+    "ZH-C445-hailang",
+    "ZH-C445-yuchuan",
+    "ZH-C445-shangan",
+    "ZH-C445-beike",
+    "ZH-C445-tuichao"
+  ],
+  "tex": "chinese/book/chapters/ch445-by-the-sea.tex"
+}

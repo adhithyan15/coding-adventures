@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:4f3a7c86e2d4216a",
+  "lessonIds": [
+    "ZH-C303-qiming",
+    "ZH-C303-xiaoming",
+    "ZH-C303-youeryuan",
+    "ZH-C303-kaixue",
+    "ZH-C303-xinsheng"
+  ],
+  "tex": "chinese/book/chapters/ch303-a-name-and-a-school.tex"
+}

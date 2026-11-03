@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C383-jianshao",
+    "language": "chinese",
+    "chapter": 383,
+    "sequence": 29490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69880c1a05d1b9dc"
+  },
+  "findings": []
+}

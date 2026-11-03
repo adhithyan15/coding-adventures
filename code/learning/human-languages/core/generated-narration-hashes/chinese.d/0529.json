@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:db7c14c35c069b72",
+  "lessonIds": [
+    "ZH-C529-daomei",
+    "ZH-C529-yunqi",
+    "ZH-W529-yun-luck",
+    "ZH-C529-zouyun",
+    "ZH-C529-xingyun",
+    "ZH-C529-mingyun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch529.txt",
+  "json": "chinese/narration/ch529.json",
+  "textHash": "fnv1a64:6ba9f76125bdff15",
+  "jsonHash": "fnv1a64:1ec6d3ec58254a3b",
+  "findings": []
+}

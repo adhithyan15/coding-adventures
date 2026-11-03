@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C391-richeng",
+    "language": "chinese",
+    "chapter": 391,
+    "sequence": 29870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:669342da473f5e5e"
+  },
+  "findings": []
+}

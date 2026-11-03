@@ -1,0 +1,840 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 536,
+  "title": "When Wishes Come True",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:630ad8932a601b85",
+  "lessons": [
+    {
+      "id": "ZH-C536-chengzhen",
+      "sequence": 40130,
+      "title": "成真 (chéngzhēn) — to become reality (of a wish)",
+      "headword": "成真",
+      "romanization": "chéngzhēn",
+      "gloss": "to become reality (of a wish)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:995e567d68cbabda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for of one's own free will, then the Mandarin for let us hope that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 成真",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "成真 — chéngzhēn — \"to become reality (of a wish)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "希望我的愿望能成真 xīwàng wǒ de yuànwàng néng chéngzhēn — I hope my wish comes true."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "成真 (chéngzhēn) is built from 成 'to become' and 真 'true', both inherited from Middle Chinese, dzyeng and tsyin (Guangyun, in Baxter's transcription), which glosses the second as the true against the false."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngzhēn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngzhēn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngzhēn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngzhēn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīwàng wǒ de yuànwàng néng chéngzhēn — I hope my wish comes true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīwàng wǒ de yuànwàng néng chéngzhēn* — I hope my wish comes true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for of one's own free will, then the Mandarin for let us hope that, then say chéngzhēn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for of one's own free will, then the Mandarin for let us hope that, then say *chéngzhēn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 成真 (chéngzhēn) mean? (\"To become reality (of a wish)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C536-yuanmeng",
+      "sequence": 40140,
+      "title": "yuánmèng — to fulfil a dream",
+      "headword": "yuánmèng",
+      "romanization": "yuánmèng",
+      "gloss": "to fulfil a dream",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d084b197174933f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for let us hope that, then the Mandarin for to become reality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yuánmèng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yuánmèng — \"to fulfil a dream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ míngnián néng qù Zhōngguó wǒ jiù yuánmèng le — If I can go to China next year, my dream will have come true."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yuánmèng is built from yuán 'round, whole' and mèng 'a dream', both inherited from Middle Chinese, hjwen and mjuwngH (Guangyun, in Baxter's transcription), which glosses the second, after an older dictionary, as waking within sleep: a dream made whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuánmèng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuánmèng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuánmèng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuánmèng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ míngnián néng qù Zhōngguó wǒ jiù yuánmèng le — If I can go to China next year, my dream will have come true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ míngnián néng qù Zhōngguó wǒ jiù yuánmèng le* — If I can go to China next year, my dream will have come true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for let us hope that, then the Mandarin for to become reality, then say yuánmèng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for let us hope that, then the Mandarin for to become reality, then say *yuánmèng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yuánmèng mean? (\"To fulfil a dream\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C536-meihao",
+      "sequence": 40150,
+      "title": "měihǎo — fine and happy (of a life or a future)",
+      "headword": "měihǎo",
+      "romanization": "měihǎo",
+      "gloss": "fine and happy (of a life or a future)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfcfe0ee3f848131",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to become reality, then the Mandarin for to fulfil a dream."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: měihǎo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "měihǎo — \"fine and happy (of a life or a future)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhǐyào dàjiā nǔlì shēnghuó jiù huì gèng měihǎo — As long as everyone works hard, life will get better."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: měi is said with a rising tone before hǎo, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "měihǎo is built from měi 'beautiful' and 好 'good', both inherited from Middle Chinese, mijX and xawX (Guangyun, in Baxter's transcription), which glosses the first 'good-looking' and, after an older dictionary, 'sweet', and the second 'good, beautiful'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "měihǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *měihǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "měihǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *měihǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyào dàjiā nǔlì shēnghuó jiù huì gèng měihǎo — As long as everyone works hard, life will get better.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyào dàjiā nǔlì shēnghuó jiù huì gèng měihǎo* — As long as everyone works hard, life will get better.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to become reality, then the Mandarin for to fulfil a dream, then say měihǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to become reality, then the Mandarin for to fulfil a dream, then say *měihǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does měihǎo mean? (\"Fine and happy (of a life or a future)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C536-mengjian",
+      "sequence": 40160,
+      "title": "mèngjiàn — to dream of; to see in a dream",
+      "headword": "mèngjiàn",
+      "romanization": "mèngjiàn",
+      "gloss": "to dream of; to see in a dream",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7255f674fc2c0bed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to fulfil a dream, then the Mandarin for fine and happy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mèngjiàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mèngjiàn — \"to dream of; to see in a dream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zuótiān wǎnshang mèngjiàn wǒ zhòngjiǎng le — Last night I dreamt I had won a prize."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mèngjiàn is built from mèng 'a dream' and 见 'to see', both inherited from Middle Chinese, mjuwngH and kenH (Guangyun, in Baxter's transcription), which glosses the second 'to look'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mèngjiàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mèngjiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mèngjiàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mèngjiàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zuótiān wǎnshang mèngjiàn wǒ zhòngjiǎng le — Last night I dreamt I had won a prize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zuótiān wǎnshang mèngjiàn wǒ zhòngjiǎng le* — Last night I dreamt I had won a prize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to fulfil a dream, then the Mandarin for fine and happy, then say mèngjiàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to fulfil a dream, then the Mandarin for fine and happy, then say *mèngjiàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mèngjiàn mean? (\"To dream of; to see in a dream\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C536-pantou",
+      "sequence": 40170,
+      "title": "pàntou — something to look forward to",
+      "headword": "pàntou",
+      "romanization": "pàntou",
+      "gloss": "something to look forward to",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f25834a8e496d53e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for fine and happy, then the Mandarin for to see in a dream."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pàntou",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pàntou — \"something to look forward to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yǒu le gōngzuò shēnghuó jiù yǒu pàntou le — With a job, life has something to look forward to."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pàntou is built from pàn 'to long for' and 头, both inherited from Middle Chinese, pheanH and duw (Guangyun, in Baxter's transcription). The dictionary glosses the first as beautiful eyes; the sense 'to long for' is not given there. The second, 'the head', is said light here, as at the end of other nouns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pàntou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pàntou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pàntou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pàntou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒu le gōngzuò shēnghuó jiù yǒu pàntou le — With a job, life has something to look forward to.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒu le gōngzuò shēnghuó jiù yǒu pàntou le* — With a job, life has something to look forward to.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for fine and happy, then the Mandarin for to see in a dream, then say pàntou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for fine and happy, then the Mandarin for to see in a dream, then say *pàntou* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pàntou mean? (\"Something to look forward to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R536-review-532-536",
+      "sequence": 40180,
+      "title": "Looking back: from Hoping for More to When Wishes Come True",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Hoping for More to When Wishes Come True",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:302e71d70731a50d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for with good hopes of it and to be dying to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with good hopes of it, to be dying to, to expect much of someone, as one would wish it, to count on someone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with good hopes of it, to be dying to, to expect much of someone, as one would wish it, to count on someone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to yearn for, to hope that, to thirst for, to give up all hope, may your wishes all come true",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to yearn for, to hope that, to thirst for, to give up all hope, may your wishes all come true]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "would rather, as far as one can, supposing that, to give one's word, may all go as you wish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: would rather, as far as one can, supposing that, to give one's word, may all go as you wish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be willing, a wish one has, to get what one wished for, of one's own free will, let us hope that",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be willing, a wish one has, to get what one wished for, of one's own free will, let us hope that]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to become reality, to fulfil a dream, fine and happy, to see in a dream, something to look forward to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to become reality, to fulfil a dream, fine and happy, to see in a dream, something to look forward to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "望 希 愿 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 望 希 愿 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With good hopes of it? (有望, yǒuwàng.) To be dying to? (bābude.) To expect much of someone? (期望, qīwàng.) As one would wish it? (如意, rúyì.) To count on someone? (zhǐwàng.) To yearn for? (xiàngwǎng.) To hope that? (希望, xīwàng.) To thirst for? (kěwàng.) To give up all hope? (juéwàng.) May your wishes all come true? (心想事成, xīnxiǎng shìchéng.) Would rather? (nìngkě.) As far as one can? (jǐnliàng.) Supposing that? (假如, jiǎrú.) To give one's word? (xǔnuò.) May all go as you wish? (万事如意, wànshì rúyì.) To be willing? (愿意, yuànyì.) A wish one has? (愿望, yuànwàng.) To get what one wished for? (如愿, rúyuàn.) Of one's own free will? (自愿, zìyuàn.) Let us hope that? (但愿, dànyuàn.) To become reality? (成真, chéngzhēn.) To fulfil a dream? (yuánmèng.) Fine and happy? (měihǎo.) To see in a dream? (mèngjiàn.) Something to look forward to? (pàntou.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

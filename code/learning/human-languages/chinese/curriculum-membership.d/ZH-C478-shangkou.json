@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C478-shangkou",
+  "pathSegment": "ZH-PATH-478-HURT478",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-478-HURT478",
+      "order": 1
+    }
+  ]
+}

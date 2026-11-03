@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:f26f4f12bdd01255",
+  "lessonIds": [
+    "ZH-C283-zenme",
+    "ZH-W283-zen",
+    "ZH-C283-zenme-zou",
+    "ZH-W283-zou",
+    "ZH-C283-wang",
+    "ZH-C283-zai-again",
+    "ZH-C283-luguo",
+    "ZH-C283-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch283.txt",
+  "json": "chinese/narration/ch283.json",
+  "textHash": "fnv1a64:f7c784fc08fdcc03",
+  "jsonHash": "fnv1a64:3c4c7b856607f61a",
+  "findings": []
+}

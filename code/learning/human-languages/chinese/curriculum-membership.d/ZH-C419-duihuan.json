@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C419-duihuan",
+  "pathSegment": "ZH-PATH-419-ARRIVE419",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-419-ARRIVE419",
+      "order": 1
+    }
+  ]
+}

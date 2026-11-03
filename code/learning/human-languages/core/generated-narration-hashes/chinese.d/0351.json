@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:98995486c967e9a1",
+  "lessonIds": [
+    "ZH-C351-fenxi",
+    "ZH-C351-youli",
+    "ZH-W351-li-reason",
+    "ZH-C351-jiangli",
+    "ZH-C351-lixiang",
+    "ZH-C351-xinli",
+    "ZH-R351-review-346-351"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch351.txt",
+  "json": "chinese/narration/ch351.json",
+  "textHash": "fnv1a64:8de234635be8c73d",
+  "jsonHash": "fnv1a64:7bc31b80c9e7cc93",
+  "findings": []
+}

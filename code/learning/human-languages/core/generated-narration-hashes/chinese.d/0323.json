@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:32d77bdbd55e216f",
+  "lessonIds": [
+    "ZH-C323-shaonian",
+    "ZH-C323-shiqi",
+    "ZH-C323-niandai",
+    "ZH-W323-dai-era",
+    "ZH-C323-gudai",
+    "ZH-C323-xiandai",
+    "ZH-R323-review-318-323"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch323.txt",
+  "json": "chinese/narration/ch323.json",
+  "textHash": "fnv1a64:37dcbecf1efbcfbd",
+  "jsonHash": "fnv1a64:a5b7c576c7906bef",
+  "findings": []
+}

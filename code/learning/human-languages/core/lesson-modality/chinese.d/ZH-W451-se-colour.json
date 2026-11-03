@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W451-se-colour",
+    "language": "chinese",
+    "chapter": 451,
+    "sequence": 34095,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ff9fbbc6e4e04d3a",
+    "detachableSegments": [
+      "Script — a small top piece, then a frame with a long hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

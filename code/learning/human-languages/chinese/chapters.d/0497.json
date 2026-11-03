@@ -1,0 +1,21 @@
+{
+  "chapter": 497,
+  "title": "Learning on Your Own",
+  "label": "ch:zh-learning-on-your-own",
+  "canDo": "I can talk about teaching myself, time outside class, notes, knowledge and going on to further study.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R497-review-492-497",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about teaching myself, time outside class, notes, knowledge and going on to further study.",
+    "assesses": [
+      "ZH-LEX-C497-SELFSTUDY497-01",
+      "ZH-LEX-C497-SELFSTUDY497-02",
+      "ZH-LEX-C497-SELFSTUDY497-03",
+      "ZH-LEX-C497-SELFSTUDY497-04",
+      "ZH-LEX-C497-SELFSTUDY497-05"
+    ]
+  }
+}

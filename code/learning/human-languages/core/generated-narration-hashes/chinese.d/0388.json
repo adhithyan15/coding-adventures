@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:7dd8e4a3bb378754",
+  "lessonIds": [
+    "ZH-C388-choukong",
+    "ZH-C388-yuehui",
+    "ZH-W388-yue-arrange",
+    "ZH-C388-shiyue",
+    "ZH-C388-tiqian",
+    "ZH-C388-shiqu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch388.txt",
+  "json": "chinese/narration/ch388.json",
+  "textHash": "fnv1a64:e1d6cc458c6ce08d",
+  "jsonHash": "fnv1a64:0a432c19aab42e13",
+  "findings": []
+}

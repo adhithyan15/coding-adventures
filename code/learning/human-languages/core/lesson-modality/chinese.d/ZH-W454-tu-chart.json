@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W454-tu-chart",
+    "language": "chinese",
+    "chapter": 454,
+    "sequence": 34265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c5405a7104981a51",
+    "detachableSegments": [
+      "Script — a frame, and five strokes inside it"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

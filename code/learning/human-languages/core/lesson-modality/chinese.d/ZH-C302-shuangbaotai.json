@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C302-shuangbaotai",
+    "language": "chinese",
+    "chapter": 302,
+    "sequence": 23660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2afd9c835cb301c"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W323-dai-era",
+    "language": "chinese",
+    "chapter": 323,
+    "sequence": 25275,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dcb8eac2fbaf3625",
+    "detachableSegments": [
+      "Script — the person piece, then a slanting hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

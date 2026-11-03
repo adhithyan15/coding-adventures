@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C422-kuaisu",
+    "language": "chinese",
+    "chapter": 422,
+    "sequence": 32070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ac55a3a95e85454"
+  },
+  "findings": []
+}

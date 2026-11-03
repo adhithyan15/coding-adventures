@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C472-bianlian",
+    "language": "chinese",
+    "chapter": 472,
+    "sequence": 35740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e2790a155fee8ee"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C353-fanbo",
+  "pathSegment": "ZH-PATH-353-POINT353",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-353-POINT353",
+      "order": 4
+    }
+  ]
+}

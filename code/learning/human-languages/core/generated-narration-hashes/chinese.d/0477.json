@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:6627bea7995b249a",
+  "lessonIds": [
+    "ZH-C477-xinzang",
+    "ZH-C477-gutou",
+    "ZH-C477-danao",
+    "ZH-C477-changwei",
+    "ZH-C477-weikou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch477.txt",
+  "json": "chinese/narration/ch477.json",
+  "textHash": "fnv1a64:f2f861104b1e6f90",
+  "jsonHash": "fnv1a64:1886459aea08c66f",
+  "findings": []
+}

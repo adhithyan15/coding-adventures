@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C418-chaozhong",
+    "language": "chinese",
+    "chapter": 418,
+    "sequence": 31860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0553ec238e25049e"
+  },
+  "findings": []
+}

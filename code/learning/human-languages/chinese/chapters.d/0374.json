@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "People and Government",
+  "label": "ch:zh-people-and-government",
+  "canDo": "I can talk about a population, the government, culture, ethnic groups and how a place develops.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C374-fazhan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can talk about a population, the government, culture, ethnic groups and how a place develops.",
+    "assesses": [
+      "ZH-LEX-C374-SOCIETY374-03",
+      "ZH-LEX-C374-SOCIETY374-04",
+      "ZH-LEX-C374-SOCIETY374-05"
+    ]
+  }
+}

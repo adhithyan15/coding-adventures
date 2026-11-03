@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C529-daomei",
+    "language": "chinese",
+    "chapter": 529,
+    "sequence": 39770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54f8d057797734bc"
+  },
+  "findings": []
+}

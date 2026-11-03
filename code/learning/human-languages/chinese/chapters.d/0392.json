@@ -1,0 +1,20 @@
+{
+  "chapter": 392,
+  "title": "A Change of Plan",
+  "label": "ch:zh-a-change-of-plan",
+  "canDo": "I can talk about changing things, changing a date, changing plans, new names and someone changing their tune.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C392-gaikou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can talk about changing things, changing a date, changing plans, new names and someone changing their tune.",
+    "assesses": [
+      "ZH-LEX-C392-NEWPLAN392-03",
+      "ZH-LEX-C392-NEWPLAN392-04",
+      "ZH-LEX-C392-NEWPLAN392-05",
+      "ZH-SCRIPT-GAI-ALTER-01"
+    ]
+  }
+}

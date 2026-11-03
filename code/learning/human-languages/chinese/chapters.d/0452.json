@@ -1,0 +1,21 @@
+{
+  "chapter": 452,
+  "title": "After the Meal",
+  "label": "ch:zh-after-the-meal",
+  "canDo": "I can talk about digesting a meal, good reviews, tips, the light of the sky and paper napkins.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R452-review-448-452",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can talk about digesting a meal, good reviews, tips, the light of the sky and paper napkins.",
+    "assesses": [
+      "ZH-LEX-C452-AFTERMEAL452-01",
+      "ZH-LEX-C452-AFTERMEAL452-02",
+      "ZH-LEX-C452-AFTERMEAL452-03",
+      "ZH-LEX-C452-AFTERMEAL452-04",
+      "ZH-LEX-C452-AFTERMEAL452-05"
+    ]
+  }
+}

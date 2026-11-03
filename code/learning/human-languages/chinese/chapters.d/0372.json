@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Anyway",
+  "label": "ch:zh-anyway",
+  "canDo": "I can say anyway, ask what on earth someone means, and name someone's strong points.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C372-youdian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say anyway, ask what on earth someone means, and name someone's strong points.",
+    "assesses": [
+      "ZH-LEX-C372-ANYWAY372-03",
+      "ZH-LEX-C372-ANYWAY372-04",
+      "ZH-LEX-C372-ANYWAY372-05"
+    ]
+  }
+}

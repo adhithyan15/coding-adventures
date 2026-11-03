@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W421-su-speed",
+    "language": "chinese",
+    "chapter": 421,
+    "sequence": 31995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1de96697710cf6b9",
+    "detachableSegments": [
+      "Script — a bundle, then the walking piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

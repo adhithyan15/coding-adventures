@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Ordering Online",
+  "label": "ch:zh-ordering-online",
+  "canDo": "I can talk about placing an order, packaging, being a member, special deals and checked patterns.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C527-gezi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about placing an order, packaging, being a member, special deals and checked patterns.",
+    "assesses": [
+      "ZH-LEX-C527-ORDER527-03",
+      "ZH-LEX-C527-ORDER527-04",
+      "ZH-LEX-C527-ORDER527-05"
+    ]
+  }
+}

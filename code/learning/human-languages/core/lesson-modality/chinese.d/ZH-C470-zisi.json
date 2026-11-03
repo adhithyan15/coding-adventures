@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C470-zisi",
+    "language": "chinese",
+    "chapter": 470,
+    "sequence": 35620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:835bb5d6515ab12a"
+  },
+  "findings": []
+}

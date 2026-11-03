@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:2bd55684b835702f",
+  "lessonIds": [
+    "ZH-C469-chongdong",
+    "ZH-C469-wenhe",
+    "ZH-W469-wen-warm",
+    "ZH-C469-zhengjing",
+    "ZH-C469-wenzhong",
+    "ZH-C469-jixingzi",
+    "ZH-R469-review-464-469"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch469.txt",
+  "json": "chinese/narration/ch469.json",
+  "textHash": "fnv1a64:e31c849e19f05ba5",
+  "jsonHash": "fnv1a64:d866101f06bf3246",
+  "findings": []
+}

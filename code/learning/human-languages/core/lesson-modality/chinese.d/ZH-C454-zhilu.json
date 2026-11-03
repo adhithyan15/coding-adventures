@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C454-zhilu",
+    "language": "chinese",
+    "chapter": 454,
+    "sequence": 34270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2afc5558059ca83"
+  },
+  "findings": []
+}

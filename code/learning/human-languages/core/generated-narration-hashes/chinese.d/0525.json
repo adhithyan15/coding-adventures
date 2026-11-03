@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:39d1a240663140c3",
+  "lessonIds": [
+    "ZH-C525-zhoudao",
+    "ZH-C525-gewai",
+    "ZH-W525-ge-pattern",
+    "ZH-C525-shouhuoyuan",
+    "ZH-C525-tousu",
+    "ZH-C525-tuikuan",
+    "ZH-R525-review-520-525"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch525.txt",
+  "json": "chinese/narration/ch525.json",
+  "textHash": "fnv1a64:112d91c128370ed6",
+  "jsonHash": "fnv1a64:4f688f6e821cd059",
+  "findings": []
+}

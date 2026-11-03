@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C472-lianse",
+  "pathSegment": "ZH-PATH-472-FACE472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-472-FACE472",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-519-OUTDOORS519",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-519-OUTDOORS519"
+  ],
+  "after": []
+}

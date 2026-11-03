@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C490-hezuo",
+  "pathSegment": "ZH-PATH-490-PRESSURE490",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-490-PRESSURE490",
+      "order": 1
+    }
+  ]
+}

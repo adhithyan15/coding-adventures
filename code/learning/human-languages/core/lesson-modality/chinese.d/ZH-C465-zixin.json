@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C465-zixin",
+    "language": "chinese",
+    "chapter": 465,
+    "sequence": 35400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16d51fbb3a507eea"
+  },
+  "findings": []
+}

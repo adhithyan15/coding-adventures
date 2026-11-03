@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Success or Failure",
+  "label": "ch:zh-success-or-failure",
+  "canDo": "I can talk about succeeding, failing, taking a risk, effort going to waste and things staying the same.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C394-bubian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can talk about succeeding, failing, taking a risk, effort going to waste and things staying the same.",
+    "assesses": [
+      "ZH-LEX-C394-TRY394-03",
+      "ZH-LEX-C394-TRY394-04",
+      "ZH-LEX-C394-TRY394-05"
+    ]
+  }
+}

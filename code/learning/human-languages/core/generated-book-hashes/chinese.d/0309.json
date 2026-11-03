@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:d21d0b48764248af",
+  "lessonIds": [
+    "ZH-C309-qiangjie",
+    "ZH-C309-xiaotou",
+    "ZH-W309-tou-steal",
+    "ZH-C309-pian",
+    "ZH-C309-pianzi",
+    "ZH-C309-guyi"
+  ],
+  "tex": "chinese/book/chapters/ch309-a-thief.tex"
+}

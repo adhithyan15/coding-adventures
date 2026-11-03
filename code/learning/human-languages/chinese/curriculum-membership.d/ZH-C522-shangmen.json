@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C522-shangmen",
+  "pathSegment": "ZH-PATH-522-FIXIT522",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-522-FIXIT522",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C514-ronghua",
+  "pathSegment": "ZH-PATH-514-WEATHER514",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-514-WEATHER514",
+      "order": 4
+    }
+  ]
+}

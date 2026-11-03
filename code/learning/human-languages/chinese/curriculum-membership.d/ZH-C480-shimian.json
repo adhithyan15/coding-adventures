@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C480-shimian",
+  "pathSegment": "ZH-PATH-480-SYMPTOM480",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-480-SYMPTOM480",
+      "order": 4
+    }
+  ]
+}

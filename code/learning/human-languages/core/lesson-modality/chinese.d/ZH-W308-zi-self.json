@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W308-zi-self",
+    "language": "chinese",
+    "chapter": 308,
+    "sequence": 23945,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6743cf03ed6264d9",
+    "detachableSegments": [
+      "Script — a short sweep over a tall frame"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Yes, but",
+  "label": "ch:zh-yes-but",
+  "canDo": "I can say but, suggest what someone should do and say what goes to show.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C365-zhonggao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say but, suggest what someone should do and say what goes to show.",
+    "assesses": [
+      "ZH-LEX-C365-YESBUT365-03",
+      "ZH-LEX-C365-YESBUT365-04",
+      "ZH-LEX-C365-YESBUT365-05"
+    ]
+  }
+}

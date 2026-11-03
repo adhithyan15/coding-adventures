@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "The River",
+  "label": "ch:zh-the-river",
+  "canDo": "I can talk about the far bank, a river, its upper reaches, a river in flood and a great river.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C442-jiang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can talk about the far bank, a river, its upper reaches, a river in flood and a great river.",
+    "assesses": [
+      "ZH-LEX-C442-RIVER442-03",
+      "ZH-LEX-C442-RIVER442-04",
+      "ZH-LEX-C442-RIVER442-05"
+    ]
+  }
+}

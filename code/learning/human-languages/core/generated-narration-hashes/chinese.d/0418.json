@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:69c0f4df9d4bbe2f",
+  "lessonIds": [
+    "ZH-C418-zhiji",
+    "ZH-C418-shouxu",
+    "ZH-C418-tingfei",
+    "ZH-W418-ting-stop",
+    "ZH-C418-banli",
+    "ZH-C418-chaozhong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch418.txt",
+  "json": "chinese/narration/ch418.json",
+  "textHash": "fnv1a64:f3b906abd5277b02",
+  "jsonHash": "fnv1a64:8b158c0080604549",
+  "findings": []
+}

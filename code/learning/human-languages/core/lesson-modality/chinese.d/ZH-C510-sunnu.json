@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C510-sunnu",
+    "language": "chinese",
+    "chapter": 510,
+    "sequence": 38260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07d449aa1556c40b"
+  },
+  "findings": []
+}

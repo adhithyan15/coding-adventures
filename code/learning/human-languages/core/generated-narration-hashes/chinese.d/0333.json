@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:17fd6f8e6ef59362",
+  "lessonIds": [
+    "ZH-C333-chunwan",
+    "ZH-C333-chuxi",
+    "ZH-C333-nianyefan",
+    "ZH-C333-shousui",
+    "ZH-C333-bainian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch333.txt",
+  "json": "chinese/narration/ch333.json",
+  "textHash": "fnv1a64:23f38a769fb8aa61",
+  "jsonHash": "fnv1a64:8aa5b567200fdda4",
+  "findings": []
+}

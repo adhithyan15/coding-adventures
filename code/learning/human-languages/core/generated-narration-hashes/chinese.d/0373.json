@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:b5d64d54d127b8be",
+  "lessonIds": [
+    "ZH-C373-quedian",
+    "ZH-C373-haochu",
+    "ZH-C373-huaichu",
+    "ZH-C373-tianzhen",
+    "ZH-C373-dangzhen",
+    "ZH-R373-review-369-373",
+    "ZH-R373-review-final-373"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch373.txt",
+  "json": "chinese/narration/ch373.json",
+  "textHash": "fnv1a64:67436b682484f320",
+  "jsonHash": "fnv1a64:e216436dd8f03e6b",
+  "findings": []
+}

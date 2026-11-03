@@ -1,0 +1,22 @@
+{
+  "chapter": 413,
+  "title": "Up in the Air",
+  "label": "ch:zh-up-in-the-air",
+  "canDo": "I can board a plane, say how high it flies, talk about the captain and landing, and say time flies.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R413-review-408-413",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can board a plane, say how high it flies, talk about the captain and landing, and say time flies.",
+    "assesses": [
+      "ZH-LEX-C413-FLY413-01",
+      "ZH-LEX-C413-FLY413-02",
+      "ZH-LEX-C413-FLY413-03",
+      "ZH-LEX-C413-FLY413-04",
+      "ZH-LEX-C413-FLY413-05",
+      "ZH-SCRIPT-FEI-FLY-01"
+    ]
+  }
+}

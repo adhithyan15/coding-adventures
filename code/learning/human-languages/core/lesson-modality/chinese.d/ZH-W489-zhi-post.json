@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W489-zhi-post",
+    "language": "chinese",
+    "chapter": 489,
+    "sequence": 37165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ecf9dd4ec4093b24",
+    "detachableSegments": [
+      "Script — an ear piece, then zhǐ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

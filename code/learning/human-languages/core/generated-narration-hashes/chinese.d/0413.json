@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:72f910a766ca0b33",
+  "lessonIds": [
+    "ZH-C413-dengji-board",
+    "ZH-C413-fei",
+    "ZH-W413-fei-fly",
+    "ZH-C413-jizhang",
+    "ZH-C413-jiangluo",
+    "ZH-C413-feikuai",
+    "ZH-R413-review-408-413"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch413.txt",
+  "json": "chinese/narration/ch413.json",
+  "textHash": "fnv1a64:1962a49fd32c33cb",
+  "jsonHash": "fnv1a64:951360580bc1cef6",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C283-zenme-zou",
+    "language": "chinese",
+    "chapter": 283,
+    "sequence": 21400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5b333d3e5bba7be"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C343-yueguang",
+    "language": "chinese",
+    "chapter": 343,
+    "sequence": 26290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60b0602bb0761811"
+  },
+  "findings": []
+}
