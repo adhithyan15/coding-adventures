@@ -1,5 +1,15 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- **A JVM string holds one char per byte (U+0000–U+00FF).** `str_const` accepts any `Str` or raw-byte `Operand::Bytes` literal (the printable-ASCII `checked_jvm_string_literal` is gone) and widens each byte to one char. `length`, `charAt`, `substring`, `concat` and `compareTo` then compute the byte semantics unchanged.
+- **Chunked literals.** A literal whose modified UTF-8 exceeds one constant-pool entry (65 535 bytes) is loaded in chunks and joined with `String.concat`.
+- **The constant pool is written in modified UTF-8**: U+0000 is `C0 80` (a zero byte is illegal there). Every name is ASCII, where nothing changes.
+- **`print_str` calls a synthetic `private static void __iir_print_str(String)`**: `getBytes("ISO-8859-1")`, then `System.out.write([BII)V`. `PrintStream.print(String)` encoded with the platform charset, so the byte 0xE9 came out as `C3 A9`. A module function may not take that name.
+- `input_str`'s comment states the host contract: `BasicRuntime.readLine()` returns one char per input byte (the matrix harness already does).
+- `const`, `call` and `ret` refuse a `Bytes` operand.
+- `e4_string_print_lowers_to_ldc_and_printstream_print` pinned `print(String)`; it is now `e4_string_print_lowers_to_ldc_and_the_byte_writer`. New: `e4_any_literal_byte_is_one_latin1_char`, `e4_a_literal_past_the_constant_pool_limit_is_chunked`, `e4_a_function_may_not_be_named_iir_print_str`. All four fail on the previous lowering.
+
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused at compile time
 
 - `validate_for_jvm` (and so `lower_iir_to_jvm` and the codegen registry) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.

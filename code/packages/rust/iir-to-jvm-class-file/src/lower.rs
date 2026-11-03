@@ -649,23 +649,129 @@ fn compute_max_stack(code: &[u8], cp: &[Option<JvmConstantPoolEntry>]) -> Result
     Ok(max)
 }
 
-fn checked_jvm_string_literal(ctx: &str, s: &str) -> Result<(), IIRJvmError> {
-    for ch in s.chars() {
-        match ch {
-            '\n' | '\r' | '\t' => {}
-            c if c.is_ascii_graphic() || c == ' ' => {}
-            c => {
-                return Err(IIRJvmError::InvalidOperand {
-                    function: ctx.to_string(),
-                    detail: format!(
-                        "str_const literal contains unsupported non-printable/non-ASCII character U+{:04X}",
-                        c as u32
-                    ),
-                })
+// ---------------------------------------------------------------------------
+// LANG83 PR5b — a JVM string holds one char per byte
+// ---------------------------------------------------------------------------
+//
+// An IIR `str` is bytes. On the JVM it is a `java.lang.String` whose every
+// char is one byte, U+0000–U+00FF ("Latin-1 chars"). The host's own string
+// operations then compute the byte semantics exactly:
+//
+// | IIR op       | JVM                      | why it is the byte op               |
+// |--------------|--------------------------|-------------------------------------|
+// | `str_len`    | `length()`               | one char per byte                   |
+// | `str_index`  | `charAt(i)`              | the char *is* the byte value        |
+// | `str_slice`  | `substring(a, b)`        | char offsets are byte offsets       |
+// | `str_concat` | `concat`                 |                                     |
+// | `str_cmp`    | `compareTo`              | chars 0–255 order as unsigned bytes |
+//
+// So only what ENTERS a string (a literal, `input_str`) and what LEAVES one
+// (`print_str`) must know the rule:
+//
+// - a literal's bytes are widened to chars here (`latin1_chunks`);
+// - `print_str` calls the synthetic `__iir_print_str`, which narrows each char
+//   back to a byte with `getBytes("ISO-8859-1")` and writes the bytes to
+//   `System.out` (`PrintStream.print(String)` would encode with the platform
+//   charset, turning the char U+00E9 into the two bytes `C3 A9`);
+// - `input_str`'s host `BasicRuntime.readLine()` appends each input byte as
+//   one `(char)`, which is ISO-8859-1 decoding.
+
+/// The most bytes one `CONSTANT_Utf8` entry may hold (JVMS §4.4.7: a `u2`).
+const JVM_UTF8_MAX: usize = 65_535;
+
+/// The bytes a char U+00bb takes in the constant pool's **modified UTF-8**
+/// (JVMS §4.4.7): one for U+0001–U+007F, two for U+0000 (written `C0 80`,
+/// never a zero byte) and for U+0080–U+00FF.
+fn modified_utf8_len(byte: u8) -> usize {
+    if (0x01..=0x7F).contains(&byte) { 1 } else { 2 }
+}
+
+/// Split a literal's bytes into Latin-1 strings (one char per byte) whose
+/// modified UTF-8 fits one constant-pool entry each (LANG83 PR5b).
+///
+/// A literal of up to 65 535 ASCII bytes is one chunk, as before. A longer
+/// one, or one heavy in two-byte chars, is several, which `str_const` loads
+/// and joins with `String.concat`. The empty literal is one empty chunk.
+///
+/// ```text
+///   bytes  68 C3 A9 00            → one chunk "h\u{C3}\u{A9}\u{0}"
+///   modified UTF-8 in the pool    → 68 C3 83 C2 A9 C0 80   (7 bytes)
+/// ```
+fn latin1_chunks(bytes: &[u8]) -> Vec<String> {
+    let mut chunks = Vec::new();
+    let mut current = String::new();
+    let mut encoded = 0usize;
+    for &b in bytes {
+        let n = modified_utf8_len(b);
+        if encoded + n > JVM_UTF8_MAX {
+            chunks.push(std::mem::take(&mut current));
+            encoded = 0;
+        }
+        current.push(char::from(b));
+        encoded += n;
+    }
+    chunks.push(current);
+    chunks
+}
+
+/// Encode `s` as the constant pool's modified UTF-8 (JVMS §4.4.7): standard
+/// UTF-8, except U+0000 is `C0 80` and a supplementary character is its two
+/// UTF-16 surrogates, each encoded as three bytes.
+///
+/// Every name this backend writes is ASCII, where the two encodings agree; a
+/// string literal (LANG83 PR5b) may hold U+0000, which standard UTF-8 would
+/// write as a zero byte that the JVM rejects ("Illegal UTF8 string in
+/// constant pool").
+fn modified_utf8(s: &str) -> Vec<u8> {
+    let mut out = Vec::with_capacity(s.len());
+    for c in s.chars() {
+        match c as u32 {
+            0 => out.extend_from_slice(&[0xC0, 0x80]),
+            0x1_0000.. => {
+                let mut units = [0u16; 2];
+                for unit in c.encode_utf16(&mut units).iter() {
+                    let u = u32::from(*unit);
+                    out.push(0xE0 | (u >> 12) as u8);
+                    out.push(0x80 | ((u >> 6) & 0x3F) as u8);
+                    out.push(0x80 | (u & 0x3F) as u8);
+                }
+            }
+            _ => {
+                let mut buf = [0u8; 4];
+                out.extend_from_slice(c.encode_utf8(&mut buf).as_bytes());
             }
         }
     }
-    Ok(())
+    out
+}
+
+/// The synthetic `print_str` method (LANG83 PR5b), and its descriptor.
+const PRINT_STR_METHOD: &str = "__iir_print_str";
+const PRINT_STR_DESCRIPTOR: &str = "(Ljava/lang/String;)V";
+
+/// Build `private static void __iir_print_str(String s)`:
+///
+/// ```java
+/// byte[] b = s.getBytes("ISO-8859-1");   // one byte per char (every char < 256)
+/// System.out.write(b, 0, b.length);       // the same PrintStream as print(J)
+/// ```
+///
+/// `getBytes(String)` and `PrintStream.write([BII)V` are Java 1.1 APIs, so a
+/// version-49 class may call them on any JVM. `write` goes through the same
+/// `System.out` buffer as `print(J)` and the host `BFRuntime.putchar`, so the
+/// ordered output stream stays ordered.
+fn build_print_str_method(cp: &mut ConstantPoolBuilder) -> Result<JvmMethodInfo, IIRJvmError> {
+    const S: u8 = 0;
+    const B: u8 = 1;
+    let out = cp.add_fieldref("java/lang/System", "out", "Ljava/io/PrintStream;");
+    let latin1 = cp.add_string("ISO-8859-1");
+    let get_bytes = cp.add_methodref("java/lang/String", "getBytes", "(Ljava/lang/String;)[B");
+    let write = cp.add_methodref("java/io/PrintStream", "write", "([BII)V");
+    let mut b = Bytecode::new();
+    b.op_u8(ALOAD, S).op_u16(LDC_W, latin1).op_u16(INVOKEVIRTUAL, get_bytes).op_u8(ASTORE, B);
+    b.op_u16(GETSTATIC, out).op_u8(ALOAD, B).op(ICONST_0).op_u8(ALOAD, B).op(ARRAYLENGTH);
+    b.op_u16(INVOKEVIRTUAL, write).op(RETURN);
+    synthetic_method(cp, PRINT_STR_METHOD, PRINT_STR_DESCRIPTOR, b, 2)
 }
 
 // ---------------------------------------------------------------------------
@@ -2402,16 +2508,19 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "str_const instruction has no dest".to_string(),
                 })?;
-                let literal = match instr.srcs.first() {
-                    Some(Operand::Str(s)) => s,
-                    other => {
+                // A `Str` or raw-byte `Bytes` literal: any bytes (LANG83
+                // PR5b; this accepted printable ASCII only). Each byte is one
+                // char, and a literal too long for one constant is loaded in
+                // chunks joined with `String.concat` (see `latin1_chunks`).
+                let literal = match instr.srcs.first().and_then(Operand::as_lit_bytes) {
+                    Some(bytes) => bytes,
+                    None => {
                         return Err(IIRJvmError::InvalidOperand {
                             function: fname.clone(),
-                            detail: format!("str_const expects a string literal, got {other:?}"),
+                            detail: format!("str_const expects a string literal, got {:?}", instr.srcs.first()),
                         })
                     }
                 };
-                checked_jvm_string_literal(fname, literal)?;
                 let (dest_slot, dest_type) = lookup_var(dest_name)?;
                 if dest_type != JvmType::Ref {
                     return Err(IIRJvmError::UnsupportedType {
@@ -2419,8 +2528,18 @@ fn lower_function(
                         type_hint: instr.type_hint.clone(),
                     });
                 }
-                let idx = cp.add_string(literal);
-                emit_ldc_index(&mut code, idx);
+                let chunks = latin1_chunks(literal);
+                let concat = (chunks.len() > 1).then(|| {
+                    cp.add_methodref("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;")
+                });
+                for (i, chunk) in chunks.iter().enumerate() {
+                    let idx = cp.add_string(chunk);
+                    emit_ldc_index(&mut code, idx);
+                    if let (true, Some(concat)) = (i > 0, concat) {
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&concat.to_be_bytes());
+                    }
+                }
                 emit_astore(&mut code, dest_slot);
             }
 
@@ -2799,20 +2918,12 @@ fn lower_function(
                         type_hint: instr.type_hint.clone(),
                     });
                 }
-                let out_ref = cp.add_fieldref(
-                    "java/lang/System",
-                    "out",
-                    "Ljava/io/PrintStream;",
-                );
-                code.push(GETSTATIC);
-                code.extend_from_slice(&out_ref.to_be_bytes());
+                // LANG83 PR5b: the class's own `__iir_print_str`, which writes
+                // one byte per char. `PrintStream.print(String)` encoded with
+                // the platform charset, so the byte 0xE9 came out as C3 A9.
                 emit_aload(&mut code, src_slot);
-                let print_ref = cp.add_methodref(
-                    "java/io/PrintStream",
-                    "print",
-                    "(Ljava/lang/String;)V",
-                );
-                code.push(INVOKEVIRTUAL);
+                let print_ref = cp.add_methodref(class_name, PRINT_STR_METHOD, PRINT_STR_DESCRIPTOR);
+                code.push(INVOKESTATIC);
                 code.extend_from_slice(&print_ref.to_be_bytes());
             }
 
@@ -4150,7 +4261,9 @@ fn lower_function(
                     "input_str" => {
                         // BASIC string `INPUT A$` (E4-dyn): read a whole line *as
                         // the string value itself* — no numeric parse, unlike
-                        // `input_i64`. The host `BasicRuntime.readLine()` returns a
+                        // `input_i64`. LANG83 PR5b host contract: `readLine()`
+                        // returns one char per input byte (ISO-8859-1), the
+                        // representation every string op here assumes. The host `BasicRuntime.readLine()` returns a
                         // `java.lang.String`, which is exactly how a `str` value is
                         // carried on the JVM (`iir_type_to_jvm("str") = Ref`), so the
                         // returned reference `astore`s straight into the `str`-typed
@@ -6208,7 +6321,9 @@ fn serialize_cp_entry(out: &mut Vec<u8>, entry: &JvmConstantPoolEntry) {
     match entry {
         JvmConstantPoolEntry::Utf8(s) => {
             out.push(1); // CONSTANT_Utf8
-            let b = s.as_bytes();
+            // Modified UTF-8 (LANG83 PR5b): a string literal may hold U+0000,
+            // which must be `C0 80`; every name is ASCII, where it is the same.
+            let b = &modified_utf8(s);
             // JVMS §4.4.7: the length field is u16 — guard against truncation.
             // In practice JVM class-name and method-name strings are always
             // well under 65,535 bytes; the check catches adversarially long
@@ -6462,6 +6577,17 @@ pub fn lower_iir_to_jvm(
         if uses_exp10 {
             methods.push(build_f64_query_method(&mut cp, &config.class_name, false)?);
         }
+    }
+
+    // ── Step 3d: LANG83 PR5b byte-exact `print_str` ──────────────────────────
+    if module_uses_op(module, "print_str") {
+        if let Some(f) = module.functions.iter().find(|f| f.name == PRINT_STR_METHOD) {
+            return Err(IIRJvmError::InvalidOperand {
+                function: f.name.clone(),
+                detail: format!("a module function may not take the synthetic method name {PRINT_STR_METHOD}"),
+            });
+        }
+        methods.push(build_print_str_method(&mut cp)?);
     }
 
     // ── Step 4: assemble JvmClassFile ─────────────────────────────────────────
